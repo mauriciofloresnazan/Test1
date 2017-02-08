@@ -1,0 +1,57 @@
+body {
+    padding-bottom: 40px;
+}
+
+.navbar-main {
+    min-height: 80px;
+    background-color: #fff;
+    background-image: none;
+}
+
+.navbar-main .navbar-nav > .active > a,
+.navbar-main .navbar-nav > .active > a:focus,
+.navbar-main .navbar-nav > .active > a:hover {
+    background-color: #222;
+}
+
+.navbar-main .nav {
+    margin-top: 15px;
+}
+
+.navbar-main .navbar-nav>li>a {
+    color: #666;
+}
+
+.navbar-main .navbar-nav>li>a:focus {
+    color: #000;
+}
+
+.navbar-main .navbar-nav>li>a:hover {
+    color: #000;
+}
+
+.form-legend {
+    margin-top: 0px;
+    border: solid 1px #ccc;
+    padding-left: 20px;
+    font-size: 1em;
+    width: 100%;
+    color: #bbb;
+    background: #222;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #222;
+    border-color: #ccc;
+    background-image: none;
+}
+
+    .btn-primary:hover, .btn-primary:focus {
+        background-color: #111;
+        border-color: #ccc;
+    }
+
+.pagination > li > a, .pagination > li > span {
+    color: #000;
+}
