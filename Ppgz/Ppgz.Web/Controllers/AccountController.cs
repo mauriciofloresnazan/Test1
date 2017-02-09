@@ -76,10 +76,22 @@ namespace Ppgz.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
+
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser() { UserName = model.UserName };
+                var user = new ApplicationUser()
+                {
+                    UserName = model.NombreUsuario,
+                    EmpresaRfc = model.EmpresaRfc,
+                    EmpresaRazonSocial = model.EmpresaRazonSocial,
+                    ResponsableNombre = model.ResponsableNombre,
+                    ResponsableApellido = model.ResponsableApellido,
+                    ResponsableEmail = model.ResponsableEmail,
+                    ResponsableTelefono = model.ResponsableTelefono
+                };
+
                 var result = await UserManager.CreateAsync(user, model.Password);
+                
                 if (result.Succeeded)
                 {
                     await SignInAsync(user, isPersistent: false);

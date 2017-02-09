@@ -45,22 +45,46 @@ namespace Ppgz.Web.Models
 
     public class RegisterViewModel
     {
-        [Required]
-        [Display(Name = "RFC")]
-        public string Rfc { get; set; }
+        // Company Info
 
         [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
+        [Display(Name = "RFC")]
+        public string EmpresaRfc { get; set; }
+
+        [Required]
+        [Display(Name = "Razón social")]
+        public string EmpresaRazonSocial { get; set; }
+
+        // Responsible Info
+
+        [Required]
+        [Display(Name = "Nombre")]
+        public string ResponsableNombre { get; set; }
+        
+        [Required]
+        [Display(Name = "Apellido")]
+        public string ResponsableApellido { get; set; }
+
+        [Required]
+        [Display(Name = "Correo electrónico")]
+        public string ResponsableEmail { get; set; }
+
+        [Required]
+        [Display(Name = "Teléfono")]
+        public string ResponsableTelefono { get; set; }
+
+        [Required]
+        [Display(Name = "Nombre de Usuario")]
+        public string NombreUsuario { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Contraseña")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
+        [Display(Name = "Confirmar contraseña")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }

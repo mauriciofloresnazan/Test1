@@ -37,8 +37,7 @@
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">Usuario Maestro</a></li>
-                    <li><a href="#about">...</a></li>
+                    <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
 
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -51,7 +50,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - Implus</p>
+            <p>&copy; @DateTime.Now.Year - Grupo Nazan</p>
         </footer>
     </div>
 

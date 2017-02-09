@@ -6,12 +6,14 @@ body {
     min-height: 80px;
     background-color: #fff;
     background-image: none;
+    border-color: #66aaaa;
 }
 
 .navbar-main .navbar-nav > .active > a,
 .navbar-main .navbar-nav > .active > a:focus,
 .navbar-main .navbar-nav > .active > a:hover {
-    background-color: #222;
+    background-color: #66aaaa;
+    background-image: none;
 }
 
 .navbar-main .nav {
@@ -19,15 +21,15 @@ body {
 }
 
 .navbar-main .navbar-nav>li>a {
-    color: #666;
+    color: #66aaaa;
 }
 
 .navbar-main .navbar-nav>li>a:focus {
-    color: #000;
+    color: #22aaaa;
 }
 
 .navbar-main .navbar-nav>li>a:hover {
-    color: #000;
+    color: #22aaaa;
 }
 
 .form-legend {
@@ -36,22 +38,27 @@ body {
     padding-left: 20px;
     font-size: 1em;
     width: 100%;
-    color: #bbb;
-    background: #222;
+    color: #fff;
+    background: #66aaaa;
 }
 
 .btn-primary {
     color: #fff;
-    background-color: #222;
+    background-color: #66aaaa;
     border-color: #ccc;
     background-image: none;
 }
 
     .btn-primary:hover, .btn-primary:focus {
-        background-color: #111;
+        background-color: #22aaaa;
         border-color: #ccc;
     }
 
 .pagination > li > a, .pagination > li > span {
     color: #000;
+}
+
+
+.jumbotron {
+    background-color: #eeeedd;
 }
