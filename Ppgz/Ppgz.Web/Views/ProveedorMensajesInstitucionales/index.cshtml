@@ -22,42 +22,42 @@
                     </tr>
                 </thead>
                 <tbody>
-                
-                @foreach (var mensaje in (ViewBag.mensajes))
-                {
-                    <tr>
-                        <td class="text-center vert-align">@mensaje.fecha_publicacion.ToString("dd/MM/yyyy")</td>
 
-                        <td class="text-center vert-align"><i>@mensaje.titulo</i></td>
-                        <td>
-                            @{ var leido = "NO"; }
-                            @foreach (var usuarioMensaje in (mensaje.usuario_mensajes))
-                            {
-                                if (usuarioMensaje.usuario_id.ToString() == User.Identity.GetUserId() && usuarioMensaje.mensaje_id == mensaje.id)
+                    @foreach (var mensaje in (ViewBag.mensajes))
+                    {
+                        <tr id="mensaje-tr-id-@mensaje.id">
+                            <td class="text-center vert-align">@mensaje.fecha_publicacion.ToString("dd/MM/yyyy")</td>
+
+                            <td class="text-center vert-align"><i>@mensaje.titulo</i></td>
+                            <td class="leido-flag text-center">
+                                @{ var leido = "NO"; }
+                                @foreach (var usuarioMensaje in (mensaje.usuario_mensajes))
                                 {
-                                    leido = "SI";
+                                    if (usuarioMensaje.usuario_id.ToString() == User.Identity.GetUserId() && usuarioMensaje.mensaje_id == mensaje.id)
+                                    {
+                                        leido = "SI";
+                                    }
                                 }
-                            }
-                            @MvcHtmlString.Create(leido)
+                                @MvcHtmlString.Create(leido)
 
 
-                        </td>
-                        <td class="text-center">
+                            </td>
+                            <td class="text-center">
 
-                            @if (mensaje.archivo != null)
-                            {
-                                <a href="@Url.Content(@mensaje.archivo)" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
+                                @if (mensaje.archivo != null)
+                                {
+                                    <a href="@Url.Content(@mensaje.archivo)" target="_blank" data-id="@mensaje.id" class="descargar-mensaje"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
 
-                            }
-                            else
-                            {
-                                <a href="#" class="ver-mensaje" data-toggle="modal" data-target="#myModal" data-titulo="@mensaje.titulo" data-id="@mensaje.id" data-contenido="@mensaje.contenido"><i class="fa fa-envelope-o" aria-hidden="true"></i> Ver</a>
+                                }
+                                else
+                                {
+                                    <a href="#" class="ver-mensaje" data-toggle="modal" data-target="#myModal" data-titulo="@mensaje.titulo" data-id="@mensaje.id" data-contenido="@mensaje.contenido"><i class="fa fa-envelope-o" aria-hidden="true"></i> Ver</a>
 
-                            }
-                        </td>
+                                }
+                            </td>
 
-                    </tr>
-                }
+                        </tr>
+                    }
                 </tbody>
             </table>
 
@@ -66,17 +66,17 @@
 
     </div>
 </div>
- <!-- Modal -->
+<!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Mensaje 01/01/2017</h4>
+                <h4 class="modal-title" id="myModalLabel"><span id="mensaje-titulo"></span></h4>
             </div>
             <div class="modal-body">
 
-                <p id="contenido"></p>
+                <p id="mensaje-contenido"></p>
 
             </div>
             <div class="modal-footer">
@@ -87,20 +87,25 @@
     </div>
 </div>
 
-<form id="form-leer" action="/ProveedorMensajesInstitucionales/Leer" method="post" style="display: none;">
-    @Html.AntiForgeryToken()
-    <input type="hidden" id="mensaje-id" />
-</form>
+
 @section Scripts {
     <script type="text/javascript">
-        var usuarioMensajes  = "@ViewBag.mensajesUsuario";
+        var usuarioMensajes = "@ViewBag.mensajesUsuario";
 
         $(document).ready(function () {
 
             $(document).on("click", ".ver-mensaje", function () {
                 Visualizar($(this).data('id'));
+                var titulo = $(this).data('titulo');
                 var contenido = $(this).data('contenido');
-                $(".modal-body #contenido").text(contenido);
+                $('.modal-title').text(titulo);
+        
+                $(".modal-body #mensaje-contenido").text(contenido);
+
+            });
+
+            $(document).on("click", ".descargar-mensaje", function () {
+                Visualizar($(this).data('id'));
 
             });
 
@@ -119,7 +124,8 @@
                 data: { id: mensajeId },
                 type: 'POST',
                 success: function (data) {
-                    alert(data);
+                    $("#mensaje-tr-id-" + mensajeId + " .leido-flag").text("SI");
+                    //alert(data);
                 }
             });
         }
