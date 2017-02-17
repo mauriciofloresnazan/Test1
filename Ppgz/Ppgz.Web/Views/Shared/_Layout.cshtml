@@ -78,11 +78,23 @@
                                 {
                                     if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "ProveedorAdministrarUsuarios")
                                     {
-                                        <li class="active"><a href="@Url.Action("Index", "ProveedorAdministrarUsuarios")"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Proveedores</a></li>
+                                        <li class="active"><a href="@Url.Action("Index", "ProveedorAdministrarUsuarios")"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Proveedor</a></li>
                                     }
                                     else
                                     {
-                                        <li class=""><a href="@Url.Action("Index", "ProveedorAdministrarUsuarios")"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Proveedores</a></li>
+                                        <li class=""><a href="@Url.Action("Index", "ProveedorAdministrarUsuarios")"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Proveedor</a></li>
+
+                                    }
+                                    if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "ProveedorMensajesInstitucionales")
+                                    {
+
+                                        <li class="active"><a href="@Url.Action("Index", "ProveedorMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Mensajes Institucionales</a></li>
+
+                                    }
+                                    else
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "ProveedorMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Mensajes Institucionales</a></li>
+
 
                                     }
                                 }
@@ -112,6 +124,12 @@
                             <li class="active">
                                 <a href="@Url.Action("Index", "ProveedorAdministrarUsuarios")"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Proveedores</a>
                             </li>
+                        }
+                        if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "ProveedorMensajesInstitucionales")
+                        {
+
+                            <li class="active"><a href="@Url.Action("Index", "ProveedorMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Mensajes Institucionales</a></li>
+
                         }
 
                     }

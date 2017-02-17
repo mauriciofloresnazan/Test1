@@ -8,7 +8,9 @@ namespace Ppgz.Web.Models
 {
     public class CuentaViewModel
     {
-  
+        [Required]
+        [Display(Name = "Tipo de Proveedor")]
+        public string TipoProveedor { get; set; }
         [Required]
         [Display(Name = "Nombre de Usuario (Login)")]
         public string UserName { get; set; }

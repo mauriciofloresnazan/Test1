@@ -186,7 +186,7 @@
     <Compile Include="Models\CustomUserSore.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\MensajeViewModel.cs" />
-    <Compile Include="Models\ProveedoUsuarioViewModel.cs" />
+    <Compile Include="Models\ProveedorUsuarioViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

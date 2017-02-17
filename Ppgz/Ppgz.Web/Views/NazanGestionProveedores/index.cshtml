@@ -18,7 +18,7 @@
                     <th class="text-center">Código</th>
                     <th class="text-center">Nombre</th>
                     <th class="text-center">Responsable</th>
-                    <th class="text-center">Cant. RFC</th>
+                    <th class="text-center">Tipo</th>
                     <th class="text-center">Estatus</th>
                 </tr>
             </thead>
@@ -28,9 +28,29 @@
                     <tr>
                         <td class="text-center vert-align">@proveedor.codigo_proveedor</td>
                         <td class="text-center vert-align">@proveedor.nombre_proveedor</td>
-                        <td class="text-center vert-align">@proveedor.usuario.nombre</td>
-                        <td class="text-center vert-align">@proveedor.usuario.nombre</td>
-                        <td class="text-center vert-align">@proveedor.activo</td>
+                        <td class="text-center vert-align">@proveedor.usuario.nombre &nbsp @proveedor.usuario.apellido</td>
+                        <td class="text-center vert-align">
+
+                            @if (ViewBag.proveedorServicio.id != @proveedor.tipo_proveedor_id)
+                            {
+                                <span>MERCADERÍA</span>
+                            }
+                            else
+                            {
+                                <span>SERVICIO</span>
+
+                            }
+                        </td>
+                        <td class="text-center vert-align">
+                            @if (@proveedor.activo != null)
+                            {
+                                if (@proveedor.activo)
+                                {
+                                    <span>ACTIVO</span>
+                                }
+                            }
+
+                        </td>
 
                     </tr>
                 }

@@ -70,10 +70,7 @@ namespace Ppgz.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Leido(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+
             var mensaje = _db.mensajes.Single(i => i.id == id);
                 
         

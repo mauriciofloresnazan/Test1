@@ -22,8 +22,12 @@ namespace Ppgz.Web.Controllers
 
 
             var proveedores = cuentaManager.GetAll();
-            
 
+            var proveedorMercaderia = _db.tipos_proveedor.Single(p => p.codigo == "MERCADERIA");
+            var proveedorServicio = _db.tipos_proveedor.Single(p => p.codigo == "SERVICIO");
+
+            ViewBag.proveedorMercaderia = proveedorMercaderia;
+            ViewBag.proveedorServicio = proveedorServicio;
             ViewBag.proveedores = proveedores;
 
             return View();
@@ -51,6 +55,9 @@ namespace Ppgz.Web.Controllers
 
                 var tipoUsuarioNazan = _db.tipos_usuario.First(t => t.codigo == "NAZAN");
 
+
+                var tipoProveedor = _db.tipos_proveedor.First(t => t.codigo == model.TipoProveedor);
+
                 var usuario = new usuario()
                 {
                     userName = model.UserName,
@@ -61,7 +68,8 @@ namespace Ppgz.Web.Controllers
                     telefono = model.ResponsableTelefono,
                     PasswordHash = model.ResponsablePassword,
                     SecurityStamp = model.ResponsablePassword,
-                    tipo_usuario_id = tipoUsuarioNazan.id
+                    tipo_usuario_id = tipoUsuarioNazan.id,
+
 
                 };
 
@@ -75,7 +83,9 @@ namespace Ppgz.Web.Controllers
                     nombre_proveedor = model.ProveedorNombre,
 
                     codigo_proveedor = DateTime.Now.ToString("yyyyMMddHHmmssf"),
-                    reponsable_usuario_id = usuario.Id 
+                    reponsable_usuario_id = usuario.Id ,
+                    tipo_proveedor_id = tipoProveedor.id,
+                    activo = true
 
                 };
 
