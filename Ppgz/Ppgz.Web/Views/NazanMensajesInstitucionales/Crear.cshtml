@@ -1,5 +1,5 @@
 ﻿@model Ppgz.Web.Models.MensajeViewModel
-{
+@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -99,3 +99,26 @@
     </div>
 </div>
 
+@section Scripts {
+    <script type="text/javascript">
+
+
+        $('#fecha-hora').datetimepicker({
+            locale: 'es',
+
+            format: 'DD/MM/YYYY hh:mm A',
+            showClose: true,
+            sideBySide: true,
+            minDate: new Date(),
+
+            disabledDates: [
+                moment("02/23/2017"),
+                moment("02/24/2017"),
+                moment("02/25/2017"),
+            ],
+            disabledTimeIntervals: [[moment({ h: 20 }), moment({ h: 24 })]]
+        });
+
+
+    </script>
+}
