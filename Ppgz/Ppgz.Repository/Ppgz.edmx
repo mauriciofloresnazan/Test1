@@ -25,17 +25,9 @@
           <Property Name="titulo" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="contenido" Type="longtext" />
           <Property Name="archivo" Type="varchar" MaxLength="100" />
-          <Property Name="fecha_registro" Type="datetime" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="fecha_hasta" Type="datetime" Precision="0" />
-        </EntityType>
-        <EntityType Name="mensajes_usuarios_xref">
-          <Key>
-            <PropertyRef Name="mensaje_id" />
-            <PropertyRef Name="usuario_id" />
-          </Key>
-          <Property Name="mensaje_id" Type="int" Nullable="false" />
-          <Property Name="usuario_id" Type="int" Nullable="false" />
-          <Property Name="fecha_visualizacion" Type="datetime" Precision="0" />
+          <Property Name="fecha_publicacion" Type="datetime" Precision="0" />
+          <Property Name="fecha_caducidad" Type="datetime" Precision="0" />
+          <Property Name="enviado_a" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="tipos_proveedor">
           <Key>
@@ -54,6 +46,15 @@
           <Property Name="codigo" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="nombre" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="descripcion" Type="varchar" MaxLength="2000" Nullable="false" />
+        </EntityType>
+        <EntityType Name="usuario_mensajes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="mensaje_id" Type="int" Nullable="false" />
+          <Property Name="usuario_id" Type="int" Nullable="false" />
+          <Property Name="fecha_visualizacion" Type="datetime" Precision="0" />
         </EntityType>
         <EntityType Name="usuarios">
           <Key>
@@ -97,27 +98,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_mensajes">
+        <Association Name="fk_mensaje">
           <End Role="mensajes" Type="Self.mensajes" Multiplicity="1" />
-          <End Role="mensajes_usuarios_xref" Type="Self.mensajes_usuarios_xref" Multiplicity="*" />
+          <End Role="usuario_mensajes" Type="Self.usuario_mensajes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="mensajes">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="mensajes_usuarios_xref">
+            <Dependent Role="usuario_mensajes">
               <PropertyRef Name="mensaje_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_menusuarios">
-          <End Role="usuarios" Type="Self.usuarios" Multiplicity="1" />
-          <End Role="mensajes_usuarios_xref" Type="Self.mensajes_usuarios_xref" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="usuarios">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="mensajes_usuarios_xref">
-              <PropertyRef Name="usuario_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -160,22 +149,18 @@
         <EntityContainer Name="ppgzModelStoreContainer">
           <EntitySet Name="cuentas" EntityType="Self.cuentas" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="mensajes" EntityType="Self.mensajes" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="mensajes_usuarios_xref" EntityType="Self.mensajes_usuarios_xref" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="tipos_proveedor" EntityType="Self.tipos_proveedor" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="tipos_usuario" EntityType="Self.tipos_usuario" Schema="ppgz" store:Type="Tables" />
+          <EntitySet Name="usuario_mensajes" EntityType="Self.usuario_mensajes" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="usuarios" EntityType="Self.usuarios" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="usuarios_cuentas_xref" EntityType="Self.usuarios_cuentas_xref" Schema="ppgz" store:Type="Tables" />
           <AssociationSet Name="fk_cuentas" Association="Self.fk_cuentas">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="usuarios_cuentas_xref" EntitySet="usuarios_cuentas_xref" />
           </AssociationSet>
-          <AssociationSet Name="fk_mensajes" Association="Self.fk_mensajes">
+          <AssociationSet Name="fk_mensaje" Association="Self.fk_mensaje">
             <End Role="mensajes" EntitySet="mensajes" />
-            <End Role="mensajes_usuarios_xref" EntitySet="mensajes_usuarios_xref" />
-          </AssociationSet>
-          <AssociationSet Name="fk_menusuarios" Association="Self.fk_menusuarios">
-            <End Role="usuarios" EntitySet="usuarios" />
-            <End Role="mensajes_usuarios_xref" EntitySet="mensajes_usuarios_xref" />
+            <End Role="usuario_mensajes" EntitySet="usuario_mensajes" />
           </AssociationSet>
           <AssociationSet Name="fk_responsable" Association="Self.fk_responsable">
             <End Role="usuarios" EntitySet="usuarios" />
@@ -217,20 +202,10 @@
           <Property Name="titulo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="contenido" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="archivo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="fecha_registro" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="fecha_hasta" Type="DateTime" />
-          <NavigationProperty Name="mensajes_usuarios_xref" Relationship="Self.fk_mensajes" FromRole="mensajes" ToRole="mensajes_usuarios_xref" />
-        </EntityType>
-        <EntityType Name="mensajes_usuarios_xref">
-          <Key>
-            <PropertyRef Name="mensaje_id" />
-            <PropertyRef Name="usuario_id" />
-          </Key>
-          <Property Name="mensaje_id" Type="Int32" Nullable="false" />
-          <Property Name="usuario_id" Type="Int32" Nullable="false" />
-          <Property Name="fecha_visualizacion" Type="DateTime" />
-          <NavigationProperty Name="mensaje" Relationship="Self.fk_mensajes" FromRole="mensajes_usuarios_xref" ToRole="mensajes" />
-          <NavigationProperty Name="usuario" Relationship="Self.fk_menusuarios" FromRole="mensajes_usuarios_xref" ToRole="usuarios" />
+          <Property Name="fecha_publicacion" Type="DateTime" />
+          <Property Name="fecha_caducidad" Type="DateTime" />
+          <Property Name="enviado_a" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="usuario_mensajes" Relationship="Self.fk_mensaje" FromRole="mensajes" ToRole="usuario_mensajes" />
         </EntityType>
         <EntityType Name="tipos_proveedor">
           <Key>
@@ -250,6 +225,16 @@
           <Property Name="nombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="descripcion" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="usuarios" Relationship="Self.fk_tipo_usuario" FromRole="tipos_usuario" ToRole="usuarios" />
+        </EntityType>
+        <EntityType Name="usuario_mensajes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="mensaje_id" Type="Int32" Nullable="false" />
+          <Property Name="usuario_id" Type="Int32" Nullable="false" />
+          <Property Name="fecha_visualizacion" Type="DateTime" />
+          <NavigationProperty Name="mensaje" Relationship="Self.fk_mensaje" FromRole="usuario_mensajes" ToRole="mensajes" />
         </EntityType>
         <EntityType Name="usuario">
           <Key>
@@ -272,7 +257,6 @@
           <Property Name="activo" Type="Boolean" />
           <Property Name="fecha_desactivado" Type="DateTime" />
           <NavigationProperty Name="cuentas" Relationship="Self.fk_responsable" FromRole="usuarios" ToRole="cuentas" />
-          <NavigationProperty Name="mensajes_usuarios_xref" Relationship="Self.fk_menusuarios" FromRole="usuarios" ToRole="mensajes_usuarios_xref" />
           <NavigationProperty Name="tipos_usuario" Relationship="Self.fk_tipo_usuario" FromRole="usuarios" ToRole="tipos_usuario" />
           <NavigationProperty Name="usuarios_cuentas_xref" Relationship="Self.fk_usuarios" FromRole="usuarios" ToRole="usuarios_cuentas_xref" />
         </EntityType>
@@ -311,27 +295,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_mensajes">
+        <Association Name="fk_mensaje">
           <End Role="mensajes" Type="Self.mensaje" Multiplicity="1" />
-          <End Role="mensajes_usuarios_xref" Type="Self.mensajes_usuarios_xref" Multiplicity="*" />
+          <End Role="usuario_mensajes" Type="Self.usuario_mensajes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="mensajes">
               <PropertyRef Name="id" />
             </Principal>
-            <Dependent Role="mensajes_usuarios_xref">
+            <Dependent Role="usuario_mensajes">
               <PropertyRef Name="mensaje_id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_menusuarios">
-          <End Role="usuarios" Type="Self.usuario" Multiplicity="1" />
-          <End Role="mensajes_usuarios_xref" Type="Self.mensajes_usuarios_xref" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="usuarios">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="mensajes_usuarios_xref">
-              <PropertyRef Name="usuario_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -362,9 +334,9 @@
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="cuentas" EntityType="Self.cuenta" />
           <EntitySet Name="mensajes" EntityType="Self.mensaje" />
-          <EntitySet Name="mensajes_usuarios_xref" EntityType="Self.mensajes_usuarios_xref" />
           <EntitySet Name="tipos_proveedor" EntityType="Self.tipos_proveedor" />
           <EntitySet Name="tipos_usuario" EntityType="Self.tipos_usuario" />
+          <EntitySet Name="usuario_mensajes" EntityType="Self.usuario_mensajes" />
           <EntitySet Name="usuarios" EntityType="Self.usuario" />
           <EntitySet Name="usuarios_cuentas_xref" EntityType="Self.usuarios_cuentas_xref" />
           <AssociationSet Name="fk_cuentas" Association="Self.fk_cuentas">
@@ -375,13 +347,9 @@
             <End Role="usuarios" EntitySet="usuarios" />
             <End Role="cuentas" EntitySet="cuentas" />
           </AssociationSet>
-          <AssociationSet Name="fk_mensajes" Association="Self.fk_mensajes">
+          <AssociationSet Name="fk_mensaje" Association="Self.fk_mensaje">
             <End Role="mensajes" EntitySet="mensajes" />
-            <End Role="mensajes_usuarios_xref" EntitySet="mensajes_usuarios_xref" />
-          </AssociationSet>
-          <AssociationSet Name="fk_menusuarios" Association="Self.fk_menusuarios">
-            <End Role="usuarios" EntitySet="usuarios" />
-            <End Role="mensajes_usuarios_xref" EntitySet="mensajes_usuarios_xref" />
+            <End Role="usuario_mensajes" EntitySet="usuario_mensajes" />
           </AssociationSet>
           <AssociationSet Name="fk_tipo_usuario" Association="Self.fk_tipo_usuario">
             <End Role="tipos_usuario" EntitySet="tipos_usuario" />
@@ -418,17 +386,9 @@
                 <ScalarProperty Name="titulo" ColumnName="titulo" />
                 <ScalarProperty Name="contenido" ColumnName="contenido" />
                 <ScalarProperty Name="archivo" ColumnName="archivo" />
-                <ScalarProperty Name="fecha_registro" ColumnName="fecha_registro" />
-                <ScalarProperty Name="fecha_hasta" ColumnName="fecha_hasta" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="mensajes_usuarios_xref">
-            <EntityTypeMapping TypeName="ppgzModel.mensajes_usuarios_xref">
-              <MappingFragment StoreEntitySet="mensajes_usuarios_xref">
-                <ScalarProperty Name="mensaje_id" ColumnName="mensaje_id" />
-                <ScalarProperty Name="usuario_id" ColumnName="usuario_id" />
-                <ScalarProperty Name="fecha_visualizacion" ColumnName="fecha_visualizacion" />
+                <ScalarProperty Name="fecha_publicacion" ColumnName="fecha_publicacion" />
+                <ScalarProperty Name="fecha_caducidad" ColumnName="fecha_caducidad" />
+                <ScalarProperty Name="enviado_a" ColumnName="enviado_a" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -449,6 +409,16 @@
                 <ScalarProperty Name="codigo" ColumnName="codigo" />
                 <ScalarProperty Name="nombre" ColumnName="nombre" />
                 <ScalarProperty Name="descripcion" ColumnName="descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="usuario_mensajes">
+            <EntityTypeMapping TypeName="ppgzModel.usuario_mensajes">
+              <MappingFragment StoreEntitySet="usuario_mensajes">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="mensaje_id" ColumnName="mensaje_id" />
+                <ScalarProperty Name="usuario_id" ColumnName="usuario_id" />
+                <ScalarProperty Name="fecha_visualizacion" ColumnName="fecha_visualizacion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

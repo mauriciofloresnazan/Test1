@@ -12,10 +12,10 @@ namespace Ppgz.Web.Models
 
         [Required]
         [Display(Name = "Tipo de Proveedor")]
-        public tipos_proveedor TipoProveedor { get; set; }
+        public string TipoProveedor { get; set; }
         [Required]
         [Display(Name = "Fecha de Publicación")]
-        public DateTime FechaPublicacion { get; set; }
+        public string FechaPublicacion { get; set; }
         [Required]
         [Display(Name = "Fecha de Caducidad")]
         public string FechaCaducidad { get; set; }

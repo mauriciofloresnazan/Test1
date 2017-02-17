@@ -17,7 +17,6 @@ namespace Ppgz.Repository
         public usuario()
         {
             this.cuentas = new HashSet<cuenta>();
-            this.mensajes_usuarios_xref = new HashSet<mensajes_usuarios_xref>();
             this.usuarios_cuentas_xref = new HashSet<usuarios_cuentas_xref>();
         }
     
@@ -39,7 +38,6 @@ namespace Ppgz.Repository
         public Nullable<System.DateTime> fecha_desactivado { get; set; }
     
         public virtual ICollection<cuenta> cuentas { get; set; }
-        public virtual ICollection<mensajes_usuarios_xref> mensajes_usuarios_xref { get; set; }
         public virtual tipos_usuario tipos_usuario { get; set; }
         public virtual ICollection<usuarios_cuentas_xref> usuarios_cuentas_xref { get; set; }
     }

@@ -7,6 +7,7 @@ using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers
 {
+    [Authorize]
     public class ProveedorAdministrarUsuariosController : Controller
     {
         private readonly PpgzEntities _db = new PpgzEntities();

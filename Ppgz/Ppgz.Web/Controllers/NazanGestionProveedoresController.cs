@@ -7,6 +7,7 @@ using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers
 {
+    [Authorize]
     public class NazanGestionProveedoresController : Controller
     {
 

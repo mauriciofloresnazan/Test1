@@ -1,19 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Web;
+using System.Net;
 using System.Web.Mvc;
 using Ppgz.Repository;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers
 {
+    [Authorize]
     public class NazanMensajesInstitucionalesController : Controller
     {
+
+        private readonly PpgzEntities _db = new PpgzEntities();
         //
         // GET: /NazanMensajesInstitucionales/
         public ActionResult Index()
         {
+            var mensajes = _db.mensajes.ToList();
+
+            ViewBag.mensajes = mensajes;
             return View();
         }
 
@@ -24,66 +33,210 @@ namespace Ppgz.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Crear(MensajeViewModel model)
+        public ActionResult Crear(MensajeViewModel model, FormCollection collection)
         {
-            throw new NotImplementedException();
-            /*
+
+
+
             if (ModelState.IsValid)
             {
 
-                if (_db.usuarios.Any(u => u.userName == model.UserName))
-                {
 
-                    ModelState.AddModelError(string.Empty, "Este nombre de usuario ya fue utilizado. Por favor intente con otro");
-                    return View(model);
+
+                var mensaje = new mensaje()
+                {
+                    fecha_publicacion = DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
+                    fecha_caducidad = DateTime.ParseExact(model.FechaCaducidad, "d/M/yyyy", CultureInfo.InvariantCulture),
+                    titulo = model.Titulo
+
+                };
+
+                if (!String.IsNullOrEmpty(Request["pdf-mensaje"]))
+                {
+                    if (Request.Files.Count == 0)
+                    {
+                        ModelState.AddModelError(string.Empty, "Debe agregar un contenido textual para el mensaje o un Archivo PDF.");
+                        return View(model);
+                    }
+
+                    var file = Request.Files[0];
+
+                    if (file != null && file.ContentType != "application/pdf")
+                    {
+                        ModelState.AddModelError(string.Empty, "El archivo debe ser de tipo PDF.");
+                        return View(model);
+                    }
+
+
+                    if (file != null)
+                    {
+                        var fileName = Path.GetFileName(file.FileName);
+
+                        if (fileName != null)
+                        {
+                            var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+                            file.SaveAs(path);
+
+                            mensaje.archivo = "~/Uploads/"+ fileName;
+                        }
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(model.Contenido))
+                    {
+                        ModelState.AddModelError(string.Empty, "Debe agregar un contenido textual para el mensaje o un Archivo PDF.");
+                        return View(model);
+                    }
+
+                    mensaje.contenido = model.Contenido;
                 }
 
-                var tipoUsuarioNazan = _db.tipos_usuario.First(t => t.codigo == "NAZAN");
 
-                var usuario = new usuario()
-                {
-                    userName = model.UserName,
-                    nombre = model.ResponsableNombre,
-                    apellido = model.ResponsableApellido,
-                    cargo = model.ResponsableCargo,
-                    email = model.ResponsableEmail,
-                    telefono = model.ResponsableTelefono,
-                    PasswordHash = model.ResponsablePassword,
-                    SecurityStamp = model.ResponsablePassword,
-                    tipo_usuario_id = tipoUsuarioNazan.id
+                mensaje.enviado_a = model.TipoProveedor;
+                _db.mensajes.Add(mensaje);
 
-                };
-
-                _db.usuarios.Add(usuario);
 
                 _db.SaveChanges();
 
-
-                var cuenta = new cuenta
-                {
-                    nombre_proveedor = model.ProveedorNombre,
-
-                    codigo_proveedor = DateTime.Now.ToString("yyyyMMddHHmmssf"),
-                    reponsable_usuario_id = usuario.Id
-
-                };
-
-                _db.cuentas.Add(cuenta);
-
-                _db.SaveChanges();
-
-                var xref = new usuarios_cuentas_xref
-                {
-                    usuario_id = usuario.Id,
-                    cuenta_id = cuenta.id
-                };
-                _db.SaveChanges();
 
                 return RedirectToAction("Index");
             }
 
             return View(model);
-            */
+
         }
-	}
+
+
+        public ActionResult Editar(int? id)
+        {
+
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+
+            var mensaje = _db.mensajes.Single(i => i.id == id);
+
+
+            if (mensaje == null)
+            {
+                return HttpNotFound();
+            }
+            
+
+            var mensajeModel = new MensajeViewModel()
+            {
+                Contenido = mensaje.contenido,
+                FechaCaducidad = ((DateTime)mensaje.fecha_caducidad).ToString("dd/MM/yyyy"),
+                FechaPublicacion = ((DateTime)mensaje.fecha_publicacion).ToString("dd/MM/yyyy"),
+                TipoProveedor = mensaje.enviado_a,
+                Titulo=  mensaje.titulo
+                
+            };
+
+            return View(mensajeModel);
+        }
+
+        [HttpPost, ActionName("Editar")]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditarPost(int? id, FormCollection collection)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var mensajeParaActualizar = _db.mensajes.Single(i => i.id == id);
+            var oldMensajeModel = new MensajeViewModel()
+            {
+                Contenido = mensajeParaActualizar.contenido,
+                FechaCaducidad = ((DateTime)mensajeParaActualizar.fecha_caducidad).ToString("dd/MM/yyyy"),
+                FechaPublicacion = ((DateTime)mensajeParaActualizar.fecha_publicacion).ToString("dd/MM/yyyy"),
+                TipoProveedor = mensajeParaActualizar.enviado_a,
+                Titulo = mensajeParaActualizar.titulo
+
+            };
+
+            mensajeParaActualizar.archivo = null;
+
+            if (!String.IsNullOrEmpty(Request["pdf-mensaje"]))
+            {
+                if (Request.Files.Count == 0)
+                {
+                    ModelState.AddModelError(string.Empty, "Debe agregar un contenido textual para el mensaje o un Archivo PDF.");
+                    return View(oldMensajeModel);
+                }
+
+                var file = Request.Files[0];
+
+                if (file != null && file.ContentType != "application/pdf")
+                {
+                    ModelState.AddModelError(string.Empty, "El archivo debe ser de tipo PDF.");
+                    return View(oldMensajeModel);
+                }
+
+
+                if (file != null)
+                {
+                    var fileName = Path.GetFileName(file.FileName);
+
+                    if (fileName != null)
+                    {
+                        var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+                        file.SaveAs(path);
+
+                        mensajeParaActualizar.archivo = "~/Uploads/" + fileName;
+                    }
+                }
+            }
+            else
+            {
+                if (string.IsNullOrWhiteSpace(collection["Contenido"]))
+                {
+                    ModelState.AddModelError(string.Empty, "Debe agregar un contenido textual para el mensaje o un Archivo PDF.");
+                    return View(oldMensajeModel);
+                }
+
+                mensajeParaActualizar.contenido = collection["Contenido"];
+            }
+
+            mensajeParaActualizar.titulo = collection["Titulo"];
+
+            mensajeParaActualizar.enviado_a = collection["TipoProveedor"];
+            
+            _db.Entry(mensajeParaActualizar).State = EntityState.Modified;
+            
+            _db.SaveChanges();
+
+
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Eliminar(int id)
+        {
+            
+            var mensaje = _db.mensajes.Single(i => i.id == id);
+
+
+            if (mensaje == null)
+            {
+                return HttpNotFound();
+            }
+            
+
+            try
+            {
+                _db.mensajes.Remove(mensaje);
+                _db.SaveChanges();
+            }
+            catch (RetryLimitExceededException)
+            {
+
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+        }
+    }
 }

@@ -12,13 +12,13 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class mensajes_usuarios_xref
+    public partial class usuario_mensajes
     {
+        public int id { get; set; }
         public int mensaje_id { get; set; }
         public int usuario_id { get; set; }
         public Nullable<System.DateTime> fecha_visualizacion { get; set; }
     
         public virtual mensaje mensaje { get; set; }
-        public virtual usuario usuario { get; set; }
     }
 }

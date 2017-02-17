@@ -1,0 +1,141 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Mensajes Institucionales";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="form-signin-heading">Gestión de Proveedores</h2>
+<p class="page-description-title"><i class="fa fa-envelope" aria-hidden="true"></i> <i>Mensajes del Grupo Nazan</i></p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Lista de Mensajes</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <table id="mensajes" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Fecha</th>
+                        <th class="text-center">Detalle</th>
+                        <th class="text-center">Leído</th>
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                
+                @foreach (var mensaje in (ViewBag.mensajes))
+                {
+                    <tr>
+                        <td class="text-center vert-align">@mensaje.fecha_publicacion.ToString("dd/MM/yyyy")</td>
+
+                        <td class="text-center vert-align"><i>@mensaje.titulo</i></td>
+                        <td>
+                            @{ var leido = "NO"; }
+                            @foreach (var usuarioMensaje in (mensaje.usuario_mensajes))
+                            {
+                                if (usuarioMensaje.usuario_id.ToString() == User.Identity.GetUserId() && usuarioMensaje.mensaje_id == mensaje.id)
+                                {
+                                    leido = "SI";
+                                }
+                            }
+                            @MvcHtmlString.Create(leido)
+
+
+                        </td>
+                        <td class="text-center">
+
+                            @if (mensaje.archivo != null)
+                            {
+                                <a href="@Url.Content(@mensaje.archivo)" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
+
+                            }
+                            else
+                            {
+                                <a href="#" class="ver-mensaje" data-toggle="modal" data-target="#myModal" data-titulo="@mensaje.titulo" data-id="@mensaje.id" data-contenido="@mensaje.contenido"><i class="fa fa-envelope-o" aria-hidden="true"></i> Ver</a>
+
+                            }
+                        </td>
+
+                    </tr>
+                }
+                </tbody>
+            </table>
+
+
+        </div>
+
+    </div>
+</div>
+ <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Mensaje 01/01/2017</h4>
+            </div>
+            <div class="modal-body">
+
+                <p id="contenido"></p>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<form id="form-leer" action="/ProveedorMensajesInstitucionales/Leer" method="post" style="display: none;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="mensaje-id" />
+</form>
+@section Scripts {
+    <script type="text/javascript">
+        var usuarioMensajes  = "@ViewBag.mensajesUsuario";
+
+        $(document).ready(function () {
+
+            $(document).on("click", ".ver-mensaje", function () {
+                Visualizar($(this).data('id'));
+                var contenido = $(this).data('contenido');
+                $(".modal-body #contenido").text(contenido);
+
+            });
+
+            $('#mensajes').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+            });
+        });
+
+
+        function Visualizar(mensajeId) {
+            $.ajax({
+                url: '@Url.Action("Visualizar", "ProveedorMensajesInstitucionales")',
+                data: { id: mensajeId },
+                type: 'POST',
+                success: function (data) {
+                    alert(data);
+                }
+            });
+        }
+
+        function leido(mensajeId) {
+            $.ajax({
+                url: '@Url.Action("Leido", "ProveedorMensajesInstitucionales")',
+                data: { id: mensajeId },
+                type: 'POST',
+                success: function (data) {
+                    alert(data);
+                }
+            });
+        }
+
+    </script>
+}
+
+

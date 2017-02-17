@@ -16,16 +16,17 @@ namespace Ppgz.Repository
     {
         public mensaje()
         {
-            this.mensajes_usuarios_xref = new HashSet<mensajes_usuarios_xref>();
+            this.usuario_mensajes = new HashSet<usuario_mensajes>();
         }
     
         public int id { get; set; }
         public string titulo { get; set; }
         public string contenido { get; set; }
         public string archivo { get; set; }
-        public System.DateTime fecha_registro { get; set; }
-        public Nullable<System.DateTime> fecha_hasta { get; set; }
+        public Nullable<System.DateTime> fecha_publicacion { get; set; }
+        public Nullable<System.DateTime> fecha_caducidad { get; set; }
+        public string enviado_a { get; set; }
     
-        public virtual ICollection<mensajes_usuarios_xref> mensajes_usuarios_xref { get; set; }
+        public virtual ICollection<usuario_mensajes> usuario_mensajes { get; set; }
     }
 }
