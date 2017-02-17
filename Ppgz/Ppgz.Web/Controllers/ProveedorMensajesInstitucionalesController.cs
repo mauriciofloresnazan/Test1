@@ -21,7 +21,17 @@ namespace Ppgz.Web.Controllers
 		// GET: /ProveedorMensajesInstitucionales/
 		public ActionResult Index()
 		{
-			var mensajes = _db.mensajes.ToList();
+
+            //CUENTAS
+		    var userName = User.Identity.GetUserName();
+            var usuarioAutenticado = _db.usuarios.Single(u => u.userName == userName);
+		    var cuenta = usuarioAutenticado.cuentas.First();
+		    var tipoProveedor = _db.tipos_proveedor.Single(a => a.id == cuenta.tipo_proveedor_id);
+
+ 			var mensajes = _db
+                .mensajes
+                .Where(m=>  m.enviado_a == tipoProveedor.codigo || m.enviado_a == "TODOS")
+                .ToList();
 
 		    var id = Int32.Parse(User.Identity.GetUserId());
 

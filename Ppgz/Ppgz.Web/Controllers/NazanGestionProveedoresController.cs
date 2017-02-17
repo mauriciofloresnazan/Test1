@@ -98,6 +98,8 @@ namespace Ppgz.Web.Controllers
                     usuario_id = usuario.Id,
                     cuenta_id = cuenta.id
                 };
+
+                _db.usuarios_cuentas_xref.Add(xref);
                 _db.SaveChanges();
 
                 return RedirectToAction("Index");

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
 using Ppgz.Repository;
 using Ppgz.Web.Models;
 
@@ -47,6 +48,10 @@ namespace Ppgz.Web.Controllers
 
                 var tipoUsuarioNazan = _db.tipos_usuario.First(t => t.codigo == "PROVEEDOR");
 
+                var userName = User.Identity.GetUserName();
+                var usuarioAutenticado = _db.usuarios.Single(u => u.userName == userName);
+                var cuenta = usuarioAutenticado.cuentas.First();
+
                 var usuario = new usuario()
                 {
                     userName = model.UserName,
@@ -58,6 +63,8 @@ namespace Ppgz.Web.Controllers
                     tipo_usuario_id = tipoUsuarioNazan.id
 
                 };
+                
+                usuario.cuentas.Add(cuenta);
 
                 _db.usuarios.Add(usuario);
 
