@@ -18,9 +18,12 @@
 
     <!-- Custom styles  -->
     @Styles.Render("~/assets/css/main.css")
-
+    
     @Scripts.Render("~/bundles/modernizr")
 
+    @Styles.Render("~/assets/vendor/dataTables-1.10.13/media/css/dataTables.bootstrap.min.css")
+
+    
 </head>
 <body>
     <!-- Static navbar -->
@@ -33,11 +36,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#"><img src="@Url.Content("~/assets/img/logo.png")" class="img-responsive" width="150px"></a>
+                <a class="navbar-brand" href="#"><img src="@Url.Content("~/assets/img/logo.png")" class="img-responsive" width="80"></a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Administrar Proveedores", "Index", "NazanGestionProveedores")</li>
+                    <li>@Html.ActionLink("Administrar Usuarios Proveedores", "Index", "ProveedorAdministrarUsuarios")</li>
+        
 
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -57,5 +62,21 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/assets/vendor/bootstrap-3.3.6/js/bootstrap.min.js")
     @RenderSection("scripts", required: false)
+    @Scripts.Render("~/assets/vendor/dataTables-1.10.13/media/js/jquery.dataTables.min.js")
+    @Scripts.Render("~/assets/vendor/dataTables-1.10.13/media/js/dataTables.bootstrap.min.js")
+
+
+    @Scripts.Render("~/assets/vendor/bootstrap-confirmation.min.js")
+
+    <script type="text/javascript">
+        $('[data-toggle=confirmation]').confirmation({
+            rootSelector: '[data-toggle=confirmation]',
+            container: 'body'
+        });
+
+    </script>
+
+
+
 </body>
 </html>

@@ -2,9 +2,15 @@ body {
     padding-bottom: 40px;
 }
 
+@media (min-width: 1200px) {
+    .container{
+        max-width: 970px;
+    }
+}
+
 .navbar-main {
-    min-height: 80px;
-    background-color: #fff;
+    /*min-height: 80px;*/
+    background-color: #404040;
     background-image: none;
     border-color: #66aaaa;
 }
@@ -17,11 +23,11 @@ body {
 }
 
 .navbar-main .nav {
-    margin-top: 15px;
+    /*margin-top: 15px;*/
 }
 
 .navbar-main .navbar-nav>li>a {
-    color: #66aaaa;
+    color: #fff;
 }
 
 .navbar-main .navbar-nav>li>a:focus {
@@ -32,14 +38,19 @@ body {
     color: #22aaaa;
 }
 
+.navbar-main .dropdown-menu>.active>a, 
+.navbar-main .dropdown-menu>.active>a:focus, 
+.navbar-main .dropdown-menu>.active>a:hover {
+    background-color: #66aaaa;    
+}
+
 .form-legend {
     margin-top: 0px;
-    border: solid 1px #ccc;
+    border-bottom: solid 1px #ccc;
     padding-left: 20px;
     font-size: 1em;
     width: 100%;
-    color: #fff;
-    background: #66aaaa;
+    color: #808e8e;
 }
 
 .btn-primary {
@@ -61,4 +72,55 @@ body {
 
 .jumbotron {
     background-color: #eeeedd;
+}
+
+h2{
+  color: #66aaaa;
+}
+h1{
+  color: #66aaaa;
+  font-size: 2.5em;
+}
+
+.panel-heading {
+    padding: 5px 15px;
+ 
+}
+.panel-default>.panel-heading {
+    background-color: #808e8e;
+    background-image: none;
+    color: white;
+}
+
+.pagination {
+    margin: 5px 0;
+}
+.well{ 
+    background-color: #a3d4d4; 
+
+ }
+
+ .well2 {
+    background-color: #fff;
+ }
+
+ .filters .form-control {
+    height: auto;
+    text-align: center;
+    font-size: .8em;
+ }
+
+.table tbody>tr>td.vert-align{
+    vertical-align: middle;
+}
+
+.field-validation-error {
+    color: red;
+}
+.validation-summary-errors {
+    color: red;
+}
+
+.page-description-title {
+    border-bottom: solid 1px #eee; color: #888; 
 }
