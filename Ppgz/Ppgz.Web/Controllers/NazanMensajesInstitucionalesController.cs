@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Ppgz.Repository;
+using Ppgz.Services;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers
@@ -14,15 +15,15 @@ namespace Ppgz.Web.Controllers
     [Authorize]
     public class NazanMensajesInstitucionalesController : Controller
     {
-
-        private readonly PpgzEntities _db = new PpgzEntities();
+        readonly MensajesManager _mensajesManager = new MensajesManager();
         //
         // GET: /NazanMensajesInstitucionales/
         public ActionResult Index()
         {
-            var mensajes = _db.mensajes.ToList();
+            var mensajes = _mensajesManager.FindAll();
 
             ViewBag.mensajes = mensajes;
+            
             return View();
         }
 
@@ -35,20 +36,13 @@ namespace Ppgz.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Crear(MensajeViewModel model, FormCollection collection)
         {
-
-
-
             if (ModelState.IsValid)
             {
-
-
-
                 var mensaje = new mensaje()
                 {
                     fecha_publicacion = DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
                     fecha_caducidad = DateTime.ParseExact(model.FechaCaducidad, "d/M/yyyy", CultureInfo.InvariantCulture),
                     titulo = model.Titulo
-
                 };
 
                 if (!String.IsNullOrEmpty(Request["pdf-mensaje"]))
@@ -86,6 +80,7 @@ namespace Ppgz.Web.Controllers
                     if (string.IsNullOrWhiteSpace(model.Contenido))
                     {
                         ModelState.AddModelError(string.Empty, "Debe agregar un contenido textual para el mensaje o un Archivo PDF.");
+
                         return View(model);
                     }
 
@@ -94,10 +89,8 @@ namespace Ppgz.Web.Controllers
 
 
                 mensaje.enviado_a = model.TipoProveedor;
-                _db.mensajes.Add(mensaje);
 
-
-                _db.SaveChanges();
+                _mensajesManager.Add(mensaje);
 
 
                 return RedirectToAction("Index");
@@ -108,31 +101,22 @@ namespace Ppgz.Web.Controllers
         }
 
 
-        public ActionResult Editar(int? id)
+        public ActionResult Editar(int id)
         {
-
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-
-            var mensaje = _db.mensajes.Single(i => i.id == id);
-
-
+            var mensaje = _mensajesManager.FindById(id);
+            
             if (mensaje == null)
             {
                 return HttpNotFound();
             }
             
-
             var mensajeModel = new MensajeViewModel()
             {
                 Contenido = mensaje.contenido,
                 FechaCaducidad = ((DateTime)mensaje.fecha_caducidad).ToString("dd/MM/yyyy"),
                 FechaPublicacion = ((DateTime)mensaje.fecha_publicacion).ToString("dd/MM/yyyy"),
                 TipoProveedor = mensaje.enviado_a,
-                Titulo=  mensaje.titulo
+                Titulo = mensaje.titulo
                 
             };
 
@@ -141,13 +125,10 @@ namespace Ppgz.Web.Controllers
 
         [HttpPost, ActionName("Editar")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditarPost(int? id, FormCollection collection)
+        public ActionResult EditarPost(int id, FormCollection collection)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var mensajeParaActualizar = _db.mensajes.Single(i => i.id == id);
+            var mensajeParaActualizar = _mensajesManager.FindById(id);
+
             var oldMensajeModel = new MensajeViewModel()
             {
                 Contenido = mensajeParaActualizar.contenido,
@@ -155,7 +136,6 @@ namespace Ppgz.Web.Controllers
                 FechaPublicacion = ((DateTime)mensajeParaActualizar.fecha_publicacion).ToString("dd/MM/yyyy"),
                 TipoProveedor = mensajeParaActualizar.enviado_a,
                 Titulo = mensajeParaActualizar.titulo
-
             };
 
             mensajeParaActualizar.archivo = null;
@@ -205,31 +185,16 @@ namespace Ppgz.Web.Controllers
 
             mensajeParaActualizar.enviado_a = collection["TipoProveedor"];
             
-            _db.Entry(mensajeParaActualizar).State = EntityState.Modified;
-            
-            _db.SaveChanges();
-
-
+            _mensajesManager.Update(id, mensajeParaActualizar);
 
             return RedirectToAction("Index");
         }
 
         public ActionResult Eliminar(int id)
         {
-            
-            var mensaje = _db.mensajes.Single(i => i.id == id);
-
-
-            if (mensaje == null)
-            {
-                return HttpNotFound();
-            }
-            
-
             try
             {
-                _db.mensajes.Remove(mensaje);
-                _db.SaveChanges();
+                _mensajesManager.Remove(id);
             }
             catch (RetryLimitExceededException)
             {

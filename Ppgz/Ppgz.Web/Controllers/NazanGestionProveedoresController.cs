@@ -10,21 +10,19 @@ namespace Ppgz.Web.Controllers
     [Authorize]
     public class NazanGestionProveedoresController : Controller
     {
-
-        private readonly PpgzEntities _db = new PpgzEntities();
-
+        readonly CuentaManager _cuentaManager = new CuentaManager();
+        readonly TipoProveedorManager _tipoProveedorManager = new TipoProveedorManager();
+        readonly UsuarioManager _usuarioManager = new UsuarioManager();
+        readonly TipoUsuarioManager _tipoUsuarioManager = new TipoUsuarioManager();
+        readonly CommonManager _commonManager = new CommonManager();
         //
         // GET: /NazanGestionProveedores/
         public ActionResult Index()
         {
-            var cuentaManager = new CuentaManager();
+            var proveedores = _cuentaManager.FinAll();
 
-
-
-            var proveedores = cuentaManager.GetAll();
-
-            var proveedorMercaderia = _db.tipos_proveedor.Single(p => p.codigo == "MERCADERIA");
-            var proveedorServicio = _db.tipos_proveedor.Single(p => p.codigo == "SERVICIO");
+            var proveedorMercaderia = _tipoProveedorManager.GetByCodigo("MERCADERIA");
+            var proveedorServicio = _tipoProveedorManager.GetByCodigo("SERVICIO");
 
             ViewBag.proveedorMercaderia = proveedorMercaderia;
             ViewBag.proveedorServicio = proveedorServicio;
@@ -46,17 +44,15 @@ namespace Ppgz.Web.Controllers
             if (ModelState.IsValid)
             {
 
-                if (_db.usuarios.Any(u => u.userName == model.UserName))
+                if (_usuarioManager.FindUsuarioByUserName(model.UserName) != null)
                 {
-
                     ModelState.AddModelError(string.Empty, "Este nombre de usuario ya fue utilizado. Por favor intente con otro");
                     return View(model);
                 }
 
-                var tipoUsuarioNazan = _db.tipos_usuario.First(t => t.codigo == "NAZAN");
+                _tipoUsuarioManager.GetNazan();
 
-
-                var tipoProveedor = _db.tipos_proveedor.First(t => t.codigo == model.TipoProveedor);
+                var tipoProveedor = _tipoProveedorManager.GetByCodigo(model.TipoProveedor);
 
                 var usuario = new usuario()
                 {
@@ -68,14 +64,10 @@ namespace Ppgz.Web.Controllers
                     telefono = model.ResponsableTelefono,
                     PasswordHash = model.ResponsablePassword,
                     SecurityStamp = model.ResponsablePassword,
-                    tipo_usuario_id = tipoUsuarioNazan.id,
-
-
+                    tipo_usuario_id = _tipoUsuarioManager.GetNazan().id,
                 };
 
-                _db.usuarios.Add(usuario);
-
-                _db.SaveChanges();
+                _usuarioManager.Add(usuario);
 
 
                 var cuenta = new cuenta
@@ -83,15 +75,13 @@ namespace Ppgz.Web.Controllers
                     nombre_proveedor = model.ProveedorNombre,
 
                     codigo_proveedor = DateTime.Now.ToString("yyyyMMddHHmmssf"),
-                    reponsable_usuario_id = usuario.Id ,
+                    reponsable_usuario_id = usuario.Id,
                     tipo_proveedor_id = tipoProveedor.id,
                     activo = true
 
                 };
 
-                _db.cuentas.Add(cuenta);
-
-                _db.SaveChanges();
+                _cuentaManager.Add(cuenta);
 
                 var xref = new usuarios_cuentas_xref
                 {
@@ -99,9 +89,8 @@ namespace Ppgz.Web.Controllers
                     cuenta_id = cuenta.id
                 };
 
-                _db.usuarios_cuentas_xref.Add(xref);
-                _db.SaveChanges();
 
+                _commonManager.UsuarioCuentaXrefAdd(xref);
                 return RedirectToAction("Index");
             }
 

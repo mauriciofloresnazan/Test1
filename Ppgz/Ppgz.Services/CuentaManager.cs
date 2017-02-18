@@ -1,21 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Ppgz.Repository;
 
 namespace Ppgz.Services
 {
     public class CuentaManager
     {
-        public IEnumerable<cuenta> GetAll()
+        private readonly PpgzEntities _db = new PpgzEntities();
+
+        public void Add(cuenta cuenta)
+        {
+            _db.cuentas.Add(cuenta);
+
+            _db.SaveChanges();
+        }
+
+        public List<cuenta> FinAll()
         {
 
-            var repository = new PpgzEntities();
+            return _db.cuentas.ToList();
 
-            return repository.cuentas.ToList();
-
-        } 
+        }
     }
 }

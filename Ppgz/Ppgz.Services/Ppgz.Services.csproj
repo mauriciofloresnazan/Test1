@@ -57,8 +57,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonManager.cs" />
     <Compile Include="CuentaManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TipoUsuarioManager.cs" />
+    <Compile Include="TipoProveedorManager.cs" />
+    <Compile Include="MensajesManager.cs" />
     <Compile Include="UsuarioManager.cs" />
   </ItemGroup>
   <ItemGroup>
