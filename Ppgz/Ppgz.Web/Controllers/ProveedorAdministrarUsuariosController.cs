@@ -1,11 +1,12 @@
-﻿using System;
-using System.Data.Entity.Infrastructure;
+﻿using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Ppgz.Repository;
+using Ppgz.Services;
+using Ppgz.Web.Infraestructure;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers
@@ -13,21 +14,14 @@ namespace Ppgz.Web.Controllers
     [Authorize]
     public class ProveedorAdministrarUsuariosController : Controller
     {
-        private readonly PpgzEntities _db = new PpgzEntities();
-
+        private readonly CommonManager _commonManager = new CommonManager();
+        private readonly UsuarioManager _usuarioManager = new UsuarioManager();
+        private readonly TipoUsuarioManager _tipoUsuarioManager = new TipoUsuarioManager();
         //
         // GET: /ProveedorAdministrarUsuarios/
         public ActionResult Index()
         {
-
-
-
-
-
-
-            var tipoUsuarioProveedor = _db.tipos_usuario.First(t => t.codigo == "PROVEEDOR");
-
-            var usuarios = _db.usuarios.Where(u => u.tipo_usuario_id == tipoUsuarioProveedor.id).ToList();
+            var usuarios = _usuarioManager.FindUsuariosProveedorByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().id);
 
             ViewBag.usuarios = usuarios;
 
@@ -36,7 +30,6 @@ namespace Ppgz.Web.Controllers
 
         public ActionResult Registrar()
         {
-
             return View();
         }
 
@@ -46,27 +39,11 @@ namespace Ppgz.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                if (_db.usuarios.Any(u => u.userName == model.UserName))
+                if (_usuarioManager.FindUsuarioByUserName(model.UserName) != null)
                 {
-
                     ModelState.AddModelError(string.Empty, "Este nombre de usuario ya fue utilizado. Por favor intente con otro");
                     return View(model);
                 }
-
-                var tipoUsuarioNazan = _db.tipos_usuario.First(t => t.codigo == "PROVEEDOR");
-
-                var userName = User.Identity.GetUserName();
-                var usuarioAutenticado = _db.usuarios.Single(u => u.userName == userName);
-                var cuenta = usuarioAutenticado.cuentas.First();
-
-
-                var store = new UserStore<IdentityUser>(_db);
-
-                var userManager = new UserManager<IdentityUser>(store);
-
-                var  passwordHash = userManager.PasswordHasher.HashPassword(model.Password);
-
 
                 var usuario = new usuario()
                 {
@@ -74,22 +51,16 @@ namespace Ppgz.Web.Controllers
                     nombre = model.Nombre,
                     apellido = model.Apellido,
                     email = model.Email,
-                    PasswordHash = passwordHash,
-                    SecurityStamp = string.Empty,
-                    tipo_usuario_id = tipoUsuarioNazan.id
+                    tipo_usuario_id = _tipoUsuarioManager.GetProveedor().id
 
                 };
 
-                _db.usuarios.Add(usuario);
+                _usuarioManager.Add(usuario, model.Password);
 
-                _db.SaveChanges();
+                _commonManager.UsuarioCuentaXrefAdd(
+                   usuario,
+                    _commonManager.GetCuentaUsuarioAutenticado().id);
 
-
-                var xref = new usuarios_cuentas_xref {cuenta_id = cuenta.id, usuario_id = usuario.Id};
-                
-                _db.usuarios_cuentas_xref.Add(xref);
-
-                _db.SaveChanges();
 
                 return RedirectToAction("Index");
 
@@ -98,29 +69,19 @@ namespace Ppgz.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Editar(int? id)
+        public ActionResult Editar(int id)
         {
+            var usuario = _usuarioManager.Find(id);
 
-            if (id == null)
+            if (usuario == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-
-            var usuario = _db.usuarios.Single(i => i.Id == id);
-
-
-            if (usuario == null)
-            {
-                return HttpNotFound();
-            }
-
-
-            var tipoUsuarioProveedor = _db.tipos_usuario.First(t => t.codigo == "PROVEEDOR");
+            var tipoUsuarioProveedor = _tipoUsuarioManager.GetProveedor();
 
             if (usuario.tipo_usuario_id != tipoUsuarioProveedor.id)
             {
-
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
             }
 
@@ -137,28 +98,39 @@ namespace Ppgz.Web.Controllers
 
         [HttpPost, ActionName("Editar")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditarPost(int? id, FormCollection collection)
+        public ActionResult EditarPost(int id, FormCollection collection)
         {
-            if (id == null)
+            var usuario = _usuarioManager.Find(id);
+
+            if (usuario == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var usuarioParaActualizar = _db.usuarios.Single(i => i.Id == id);
 
-            if (TryUpdateModel(usuarioParaActualizar, "",
-               new string[] { "nombre", "apellido", "email", "password" }))
+            var tipoUsuarioProveedor = _tipoUsuarioManager.GetProveedor();
+
+            if (usuario.tipo_usuario_id != tipoUsuarioProveedor.id)
             {
-                try
-                {
-                    _db.SaveChanges();
-
-                    return RedirectToAction("Index");
-                }
-                catch (RetryLimitExceededException)
-                {
-                    ModelState.AddModelError("", "No se pudo guardar. Intente nuevamente si el problema persiste contacte los adminsitradores del sistema.");
-                }
+                return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
             }
+
+            try
+            {
+                _usuarioManager.UpdateUsuario(
+                                id,
+                                collection["nombre"],
+                                collection["apellido"],
+                                collection["telefono"],
+                                collection["email"],
+                                collection["password"]);
+
+                return RedirectToAction("Index");
+            }
+            catch (RetryLimitExceededException)
+            {
+                ModelState.AddModelError("", "No se pudo guardar. Intente nuevamente si el problema persiste contacte los adminsitradores del sistema.");
+            }
+
 
             var usuarioProveedor = new ProveedorUsuarioViewModel
             {
@@ -173,9 +145,11 @@ namespace Ppgz.Web.Controllers
 
         public ActionResult Eliminar(int id)
         {
+            var usuario = _usuarioManager.Find(id);
 
+            // TODO VALIDAR QUE LA CUENTA DEL USUARIO ELIMINADO SEA IGUAL A LA DEL AUTENTICADO
 
-            var usuario = _db.usuarios.Single(i => i.Id == id);
+            // TODO VALIDAR QUE EL USUARIO ELIMINADO NO SEA EL AUTENTICADO
 
 
             if (usuario == null)
@@ -184,9 +158,7 @@ namespace Ppgz.Web.Controllers
             }
 
 
-            var tipoUsuarioProveedor = _db.tipos_usuario.First(t => t.codigo == "PROVEEDOR");
-
-            if (usuario.tipo_usuario_id != tipoUsuarioProveedor.id)
+            if (usuario.tipo_usuario_id != _tipoUsuarioManager.GetProveedor().id)
             {
 
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
@@ -196,23 +168,11 @@ namespace Ppgz.Web.Controllers
             try
             {
 
-                var xrefs = _db.usuarios_cuentas_xref.Where(c => c.usuario_id == usuario.Id);
-
-
-                foreach (var xref in xrefs)
-                {
-                    _db.usuarios_cuentas_xref.Remove(xref);
-                    _db.SaveChanges();
-
-                }
-    
-
-                _db.usuarios.Remove(usuario);
-                _db.SaveChanges();
+                _usuarioManager.Remove(id);
             }
             catch (RetryLimitExceededException)
             {
-      
+
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index");

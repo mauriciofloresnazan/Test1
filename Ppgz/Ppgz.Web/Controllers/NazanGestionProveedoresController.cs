@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Ppgz.Repository;
 using Ppgz.Services;
+using Ppgz.Web.Infraestructure;
 using Ppgz.Web.Models;
 using UsuarioManager = Ppgz.Web.Infraestructure.UsuarioManager;
 
@@ -49,9 +50,7 @@ namespace Ppgz.Web.Controllers
                     ModelState.AddModelError(string.Empty, "Este nombre de usuario ya fue utilizado. Por favor intente con otro.");
                     return View(model);
                 }
-
-                _tipoUsuarioManager.GetNazan();
-
+                
                 var tipoProveedor = _tipoProveedorManager.GetByCodigo(model.TipoProveedor);
                 
                 // Registro del Usairo
@@ -63,7 +62,7 @@ namespace Ppgz.Web.Controllers
                     cargo = model.ResponsableCargo,
                     email = model.ResponsableEmail,
                     telefono = model.ResponsableTelefono,
-                    tipo_usuario_id = _tipoUsuarioManager.GetNazan().id,
+                    tipo_usuario_id = _tipoUsuarioManager.GetProveedor().id,
                 };
                 _usuarioManager.Add(usuario, model.ResponsablePassword);
 
@@ -78,13 +77,7 @@ namespace Ppgz.Web.Controllers
                 };
                 _cuentaManager.Add(cuenta);
 
-                // Relación de la cuenta y el usuario
-                var xref = new usuarios_cuentas_xref
-                {
-                    usuario_id = usuario.Id,
-                    cuenta_id = cuenta.id
-                };
-                _commonManager.UsuarioCuentaXrefAdd(xref);
+                _commonManager.UsuarioCuentaXrefAdd(usuario, cuenta.id);
 
                 return RedirectToAction("Index");
             }

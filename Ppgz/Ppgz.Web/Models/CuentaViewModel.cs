@@ -58,7 +58,7 @@ namespace Ppgz.Web.Models
 
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
-        [Phone(ErrorMessage = "Debe ingresar un númerop de teléfono valido.")]
+        [Phone(ErrorMessage = "Debe ingresar un número de teléfono valido.")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "Debe ingresar un númerop de teléfono valido.")]
         [Display(Name = "Telefono")]
         public string ResponsableTelefono { get; set; }

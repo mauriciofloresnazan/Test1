@@ -20,8 +20,19 @@ namespace Ppgz.Services
             var tiposUsuario = FindAll();
 
             // TODO VALIDAR LOST CODIGOS DE TIPOS DE USUARIO
-            return tiposUsuario.First(t => t.codigo == "NAZAN");
+            return _db.tipos_usuario.First(t => t.codigo == "NAZAN");
             
+        }
+
+        // TODO VALIDAR LOST CODIGOS DE TIPOS DE USUARIO
+        public tipos_usuario GetProveedor()
+        {
+
+            var tiposUsuario = FindAll();
+
+            // TODO VALIDAR LOST CODIGOS DE TIPOS DE USUARIO
+            return _db.tipos_usuario.First(t => t.codigo == "PROVEEDOR");
+
         }
     }
 }

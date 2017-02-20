@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Ppgz.Repository;
+using Ppgz.Services;
 
 namespace Ppgz.Web.Infraestructure
 {
@@ -28,12 +31,64 @@ namespace Ppgz.Web.Infraestructure
             _db.SaveChanges();
         }
 
+        public usuario Find(int id)
+        {
+            return _db.usuarios.FirstOrDefault(i => i.Id == id);
+        }
+
         public usuario FindUsuarioByUserName(string username)
         {
             return _db.usuarios.FirstOrDefault(u => u.userName == username);
         }
 
- 
+        public List<usuario> FindUsuariosProveedorByCuentaId(int cuentaId)
+        {
+            return _db.Database.SqlQuery<usuario>(@"
+                SELECT  * 
+                FROM    usuarios
+                WHERE   id IN (SELECT usuario_id 
+                               FROM usuarios_cuentas_xref 
+                               WHERE cuenta_id = {0})", cuentaId).ToList();
+            
 
+            var tipoUsuarioProveedor = _db.tipos_usuario.First(t => t.codigo == "PROVEEDOR");
+
+            var cuentaManager = new CuentaManager();
+
+            var cuenta = cuentaManager.Find(cuentaId);
+
+            return _db.usuarios
+                        .Where(
+                            u => u.tipo_usuario_id == tipoUsuarioProveedor.id
+                            && u.cuentas.Contains(cuenta)).ToList();
+
+
+        }
+
+
+        public void UpdateUsuario(int id, string nombre, string apellido, string telefono, string email, 
+            string password)
+        {
+            var commonManager =  new CommonManager();
+
+            var usuario = _db.usuarios.Single(u => u.Id == id);
+
+            usuario.nombre = nombre;
+            usuario.apellido = apellido;
+            usuario.telefono = telefono;
+            usuario.email = email;
+            usuario.PasswordHash = commonManager.HashPassword(password);
+
+            _db.Entry(usuario).State = EntityState.Modified;
+
+            _db.SaveChanges();
+        }
+
+        public void Remove(int id)
+        {
+            var usuario = _db.usuarios.Single(u => u.Id == id);
+            _db.usuarios.Remove(usuario);
+            _db.SaveChanges();
+        }
     }
 }

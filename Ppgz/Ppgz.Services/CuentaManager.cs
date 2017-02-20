@@ -17,9 +17,11 @@ namespace Ppgz.Services
 
         public List<cuenta> FinAll()
         {
-
             return _db.cuentas.ToList();
-
+        }
+        public cuenta Find(int id)
+        {
+            return _db.cuentas.Find(id);
         }
     }
 }
