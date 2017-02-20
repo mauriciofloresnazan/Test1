@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Models;
+using UsuarioManager = Ppgz.Web.Infraestructure.UsuarioManager;
 
 namespace Ppgz.Web.Controllers
 {
@@ -47,21 +46,15 @@ namespace Ppgz.Web.Controllers
 
                 if (_usuarioManager.FindUsuarioByUserName(model.UserName) != null)
                 {
-                    ModelState.AddModelError(string.Empty, "Este nombre de usuario ya fue utilizado. Por favor intente con otro");
+                    ModelState.AddModelError(string.Empty, "Este nombre de usuario ya fue utilizado. Por favor intente con otro.");
                     return View(model);
                 }
 
                 _tipoUsuarioManager.GetNazan();
 
                 var tipoProveedor = _tipoProveedorManager.GetByCodigo(model.TipoProveedor);
-
-
-                var db = new PpgzEntities();
-
-                var store = new UserStore<IdentityUser>(db);
-
-                var userManager = new UserManager<IdentityUser>(store);
                 
+                // Registro del Usairo
                 var usuario = new usuario()
                 {
                     userName = model.UserName.ToLower(),
@@ -70,37 +63,29 @@ namespace Ppgz.Web.Controllers
                     cargo = model.ResponsableCargo,
                     email = model.ResponsableEmail,
                     telefono = model.ResponsableTelefono,
-                    PasswordHash = userManager.PasswordHasher.HashPassword(model.ResponsablePassword),
-                    SecurityStamp =string.Empty,
                     tipo_usuario_id = _tipoUsuarioManager.GetNazan().id,
                 };
+                _usuarioManager.Add(usuario, model.ResponsablePassword);
 
-
-
-                _usuarioManager.Add(usuario);
-
-
+                // Registro de la cuenta
                 var cuenta = new cuenta
                 {
                     nombre_proveedor = model.ProveedorNombre,
-
                     codigo_proveedor = DateTime.Now.ToString("yyyyMMddHHmmssf"),
                     reponsable_usuario_id = usuario.Id,
                     tipo_proveedor_id = tipoProveedor.id,
                     activo = true
-
                 };
-
                 _cuentaManager.Add(cuenta);
 
+                // Relación de la cuenta y el usuario
                 var xref = new usuarios_cuentas_xref
                 {
                     usuario_id = usuario.Id,
                     cuenta_id = cuenta.id
                 };
-
-
                 _commonManager.UsuarioCuentaXrefAdd(xref);
+
                 return RedirectToAction("Index");
             }
 

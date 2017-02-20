@@ -79,7 +79,6 @@ namespace Ppgz.Web.Controllers
                     tipo_usuario_id = tipoUsuarioNazan.id
 
                 };
-                
 
                 _db.usuarios.Add(usuario);
 
