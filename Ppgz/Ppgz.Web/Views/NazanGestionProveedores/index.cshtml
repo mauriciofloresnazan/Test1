@@ -28,7 +28,7 @@
                     <tr>
                         <td class="text-center vert-align">@proveedor.codigo_proveedor</td>
                         <td class="text-center vert-align">@proveedor.nombre_proveedor</td>
-                        <td class="text-center vert-align">@proveedor.usuario.nombre &nbsp @proveedor.usuario.apellido</td>
+                        <td class="text-center vert-align"><a href="#">@proveedor.usuario.email</a>  @(proveedor.usuario.nombre + " " + proveedor.usuario.apellido)</td>
                         <td class="text-center vert-align">
 
                             @if (ViewBag.proveedorServicio.id != @proveedor.tipo_proveedor_id)

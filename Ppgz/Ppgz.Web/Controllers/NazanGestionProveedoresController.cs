@@ -64,7 +64,7 @@ namespace Ppgz.Web.Controllers
                 
                 var usuario = new usuario()
                 {
-                    userName = model.UserName,
+                    userName = model.UserName.ToLower(),
                     nombre = model.ResponsableNombre,
                     apellido = model.ResponsableApellido,
                     cargo = model.ResponsableCargo,
