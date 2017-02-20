@@ -184,8 +184,8 @@
     <Compile Include="Infraestructure\PermisosAttribute.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CuentaViewModel.cs" />
-    <Compile Include="Models\CustomUserManager.cs" />
-    <Compile Include="Models\CustomUserSore.cs" />
+    <Compile Include="Infraestructure\CustomUserManager.cs" />
+    <Compile Include="Infraestructure\CustomUserSore.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\MensajeViewModel.cs" />
     <Compile Include="Models\ProveedorUsuarioViewModel.cs" />

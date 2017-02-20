@@ -1,8 +1,10 @@
-﻿using System.Data.Entity.Infrastructure;
+﻿using System;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Ppgz.Repository;
 using Ppgz.Web.Models;
 
@@ -17,6 +19,12 @@ namespace Ppgz.Web.Controllers
         // GET: /ProveedorAdministrarUsuarios/
         public ActionResult Index()
         {
+
+
+
+
+
+
             var tipoUsuarioProveedor = _db.tipos_usuario.First(t => t.codigo == "PROVEEDOR");
 
             var usuarios = _db.usuarios.Where(u => u.tipo_usuario_id == tipoUsuarioProveedor.id).ToList();
@@ -64,12 +72,17 @@ namespace Ppgz.Web.Controllers
 
                 };
                 
-                usuario.cuentas.Add(cuenta);
 
                 _db.usuarios.Add(usuario);
 
                 _db.SaveChanges();
 
+
+                var xref = new usuarios_cuentas_xref {cuenta_id = cuenta.id, usuario_id = usuario.Id};
+                
+                _db.usuarios_cuentas_xref.Add(xref);
+
+                _db.SaveChanges();
 
                 return RedirectToAction("Index");
 
@@ -174,7 +187,19 @@ namespace Ppgz.Web.Controllers
 
 
             try
-            { 
+            {
+
+                var xrefs = _db.usuarios_cuentas_xref.Where(c => c.usuario_id == usuario.Id);
+
+
+                foreach (var xref in xrefs)
+                {
+                    _db.usuarios_cuentas_xref.Remove(xref);
+                    _db.SaveChanges();
+
+                }
+    
+
                 _db.usuarios.Remove(usuario);
                 _db.SaveChanges();
             }

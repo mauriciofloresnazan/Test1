@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -8,6 +9,8 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
+using Ppgz.Repository;
+using Ppgz.Web.Infraestructure;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers
@@ -50,19 +53,42 @@ namespace Ppgz.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await CustomUserManager.FindAsync(model.UserName, model.Password);
-                if (user != null)
+                var db = new PpgzEntities();
+
+                var usuario = db.usuarios.FirstOrDefault(u => u.userName == model.UserName);
+
+                if (usuario == null)
                 {
-                    await SignInAsync(user, model.RememberMe);
-                    return RedirectToLocal(returnUrl);
+                    ModelState.AddModelError("", "Invalid username or password.");
+
+                    return View(model);
                 }
-                else
+
+
+                var store = new UserStore<IdentityUser>(db);
+
+                var userManager = new UserManager<IdentityUser>(store);
+                
+
+                var result = userManager.PasswordHasher.VerifyHashedPassword(usuario.PasswordHash, model.Password);
+
+                if (result == PasswordVerificationResult.Success)
+                {
+                    await SignInAsync(
+                        new ApplicationUser
+                        {
+                            Id = usuario.Id.ToString(), 
+                            UserName = usuario.userName
+                        }, 
+                        model.RememberMe);
+
+                    return RedirectToLocal(returnUrl);
+                }else
                 {
                     ModelState.AddModelError("", "Invalid username or password.");
                 }
             }
 
-            // If we got this far, something failed, redisplay form
             return View(model);
         }
 

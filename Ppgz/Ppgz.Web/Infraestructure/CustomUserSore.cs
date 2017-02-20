@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using Microsoft.AspNet.Identity;
+using Ppgz.Web.Models;
 
-namespace Ppgz.Web.Models
+namespace Ppgz.Web.Infraestructure
 {
 
     public class CustomUserSore<T> : IUserStore<T> where T : ApplicationUser
@@ -17,6 +15,7 @@ namespace Ppgz.Web.Models
 
         public Task CreateAsync(T user)
         {
+
             throw new NotImplementedException();
         }
 

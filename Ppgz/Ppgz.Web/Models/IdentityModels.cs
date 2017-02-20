@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Ppgz.Repository;
 
 namespace Ppgz.Web.Models
 {
