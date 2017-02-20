@@ -76,7 +76,8 @@
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="home">
-                                <textarea class="form-control" rows="5" name="Contenido" placeholder="Contenido del mensaje"></textarea>
+                                @Html.TextAreaFor(m => m.Contenido, new { @class = "form-control", @rows = "5", placeholder = "Contenido del mensaje" })
+
                             </div>
                             <div role="tabpanel" class="tab-pane" id="profile">
 
