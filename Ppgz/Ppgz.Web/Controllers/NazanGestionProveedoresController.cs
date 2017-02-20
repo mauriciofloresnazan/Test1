@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Mvc;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Models;
@@ -54,6 +55,13 @@ namespace Ppgz.Web.Controllers
 
                 var tipoProveedor = _tipoProveedorManager.GetByCodigo(model.TipoProveedor);
 
+
+                var db = new PpgzEntities();
+
+                var store = new UserStore<IdentityUser>(db);
+
+                var userManager = new UserManager<IdentityUser>(store);
+                
                 var usuario = new usuario()
                 {
                     userName = model.UserName,
@@ -62,10 +70,12 @@ namespace Ppgz.Web.Controllers
                     cargo = model.ResponsableCargo,
                     email = model.ResponsableEmail,
                     telefono = model.ResponsableTelefono,
-                    PasswordHash = model.ResponsablePassword,
-                    SecurityStamp = model.ResponsablePassword,
+                    PasswordHash = userManager.PasswordHasher.HashPassword(model.ResponsablePassword),
+                    SecurityStamp =string.Empty,
                     tipo_usuario_id = _tipoUsuarioManager.GetNazan().id,
                 };
+
+
 
                 _usuarioManager.Add(usuario);
 

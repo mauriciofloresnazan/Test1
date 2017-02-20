@@ -60,14 +60,22 @@ namespace Ppgz.Web.Controllers
                 var usuarioAutenticado = _db.usuarios.Single(u => u.userName == userName);
                 var cuenta = usuarioAutenticado.cuentas.First();
 
+
+                var store = new UserStore<IdentityUser>(_db);
+
+                var userManager = new UserManager<IdentityUser>(store);
+
+                var  passwordHash = userManager.PasswordHasher.HashPassword(model.Password);
+
+
                 var usuario = new usuario()
                 {
                     userName = model.UserName,
                     nombre = model.Nombre,
                     apellido = model.Apellido,
                     email = model.Email,
-                    PasswordHash = model.Password,
-                    SecurityStamp = model.Password,
+                    PasswordHash = passwordHash,
+                    SecurityStamp = string.Empty,
                     tipo_usuario_id = tipoUsuarioNazan.id
 
                 };
