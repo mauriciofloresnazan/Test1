@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Ppgz.Repository;
+using Ppgz.Web.Infraestructure;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers
@@ -17,6 +18,9 @@ namespace Ppgz.Web.Controllers
 	{
 		private readonly PpgzEntities _db = new PpgzEntities();
 
+        private readonly CommonManager _commonManager = new CommonManager();
+
+
 		//
 		// GET: /ProveedorMensajesInstitucionales/
 		public ActionResult Index()
@@ -24,9 +28,10 @@ namespace Ppgz.Web.Controllers
 
             //CUENTAS
 		    var userName = User.Identity.GetUserName();
-            var usuarioAutenticado = _db.usuarios.Single(u => u.userName == userName);
-		    var cuenta = usuarioAutenticado.cuentas.First();
-		    var tipoProveedor = _db.tipos_proveedor.Single(a => a.id == cuenta.tipo_proveedor_id);
+
+		    var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+		    
+            var tipoProveedor = _db.tipos_proveedor.Single(a => a.id == cuenta.tipo_proveedor_id);
 
  			var mensajes = _db
                 .mensajes

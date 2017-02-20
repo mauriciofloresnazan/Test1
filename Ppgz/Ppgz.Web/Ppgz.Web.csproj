@@ -184,6 +184,7 @@
     <Compile Include="Infraestructure\CommonManager.cs" />
     <Compile Include="Infraestructure\ExtendedMethods_Principal.cs" />
     <Compile Include="Infraestructure\PermisosAttribute.cs" />
+    <Compile Include="Infraestructure\PermisosManager.cs" />
     <Compile Include="Infraestructure\UsuarioManager.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CuentaViewModel.cs" />

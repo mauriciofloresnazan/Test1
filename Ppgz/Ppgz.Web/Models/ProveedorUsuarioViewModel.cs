@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Ppgz.Web.Models
 {
     public class ProveedorUsuarioViewModel
     {
+        [Required(ErrorMessage = "El campo es obligatorio.")]
+        [Display(Name = "Tipo de Acceso")]
+        public string Acceso { get; set; }
+
+
         [Required(ErrorMessage = "El campo es obligatorio.")]
         [RegularExpression(
             "^[a-zA-Z0-9][a-zA-Z0-9_]{2,15}$",

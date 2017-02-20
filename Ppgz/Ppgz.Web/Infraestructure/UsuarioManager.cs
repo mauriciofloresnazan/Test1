@@ -11,7 +11,7 @@ namespace Ppgz.Web.Infraestructure
     public class UsuarioManager
     {
         private readonly PpgzEntities _db = new PpgzEntities();
-        public void Add(usuario usuario, string password)
+        public void Add(usuario usuario, string password, string permiso = "")
         {
 
             // Encriptacion del password
@@ -25,7 +25,7 @@ namespace Ppgz.Web.Infraestructure
             usuario.email = usuario.email.ToLower().Trim();
 
             // TODO SECURITY STAMP
-            usuario.SecurityStamp = string.Empty;
+            usuario.SecurityStamp = permiso;
             
             _db.usuarios.Add(usuario);
             _db.SaveChanges();
@@ -66,8 +66,8 @@ namespace Ppgz.Web.Infraestructure
         }
 
 
-        public void UpdateUsuario(int id, string nombre, string apellido, string telefono, string email, 
-            string password)
+        public void UpdateUsuario(int id, string nombre, string apellido, string telefono, string email,
+            string password, string permiso = "")
         {
             var commonManager =  new CommonManager();
 
@@ -78,7 +78,8 @@ namespace Ppgz.Web.Infraestructure
             usuario.telefono = telefono;
             usuario.email = email;
             usuario.PasswordHash = commonManager.HashPassword(password);
-
+            // TODO SECURITY STAMP
+            usuario.SecurityStamp = permiso;
             _db.Entry(usuario).State = EntityState.Modified;
 
             _db.SaveChanges();
@@ -88,6 +89,14 @@ namespace Ppgz.Web.Infraestructure
         {
             var usuario = _db.usuarios.Single(u => u.Id == id);
             _db.usuarios.Remove(usuario);
+
+            var xrefs = _db.usuarios_cuentas_xref.Where(a => a.usuario_id== id);
+
+            foreach (var xref in xrefs)
+            {
+                _db.usuarios_cuentas_xref.Remove(xref);
+            }
+
             _db.SaveChanges();
         }
     }

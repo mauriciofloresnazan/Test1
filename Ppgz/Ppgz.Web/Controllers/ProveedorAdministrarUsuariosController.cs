@@ -30,6 +30,9 @@ namespace Ppgz.Web.Controllers
 
         public ActionResult Registrar()
         {
+
+            ViewBag.Accesos = new SelectList(PermisosManager.NazanAccessos); 
+
             return View();
         }
 
@@ -37,6 +40,8 @@ namespace Ppgz.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Registrar(ProveedorUsuarioViewModel model)
         {
+            ViewBag.Accesos = new SelectList(PermisosManager.NazanAccessos); 
+
             if (ModelState.IsValid)
             {
                 if (_usuarioManager.FindUsuarioByUserName(model.UserName) != null)
@@ -55,7 +60,7 @@ namespace Ppgz.Web.Controllers
 
                 };
 
-                _usuarioManager.Add(usuario, model.Password);
+                _usuarioManager.Add(usuario, model.Password, model.Acceso);
 
                 _commonManager.UsuarioCuentaXrefAdd(
                    usuario,
@@ -85,12 +90,16 @@ namespace Ppgz.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
             }
 
+
+            ViewBag.Accesos = new SelectList(PermisosManager.NazanAccessos); 
+
             var usuarioProveedor = new ProveedorUsuarioViewModel
             {
                 UserName = usuario.userName,
                 Nombre = usuario.nombre,
                 Apellido = usuario.apellido,
                 Email = usuario.email,
+                Acceso = usuario.SecurityStamp
             };
 
             return View(usuarioProveedor);
@@ -122,7 +131,8 @@ namespace Ppgz.Web.Controllers
                                 collection["apellido"],
                                 collection["telefono"],
                                 collection["email"],
-                                collection["password"]);
+                                collection["password"],
+                                collection["acceso"]);
 
                 return RedirectToAction("Index");
             }
@@ -140,16 +150,26 @@ namespace Ppgz.Web.Controllers
                 Email = collection["Email"],
             };
 
+            ViewBag.Accesos = new SelectList(PermisosManager.NazanAccessos); 
+
             return View(usuarioProveedor);
         }
 
         public ActionResult Eliminar(int id)
         {
+
+
+            // TODO INFRORMAR QUE NO PUEDE ELIMINAR EL USUARIO AUTENTICADO
+            if (_commonManager.GetUsuarioAutenticado().Id == id)
+            {
+                return RedirectToAction("Index");
+            }
+
             var usuario = _usuarioManager.Find(id);
 
             // TODO VALIDAR QUE LA CUENTA DEL USUARIO ELIMINADO SEA IGUAL A LA DEL AUTENTICADO
 
-            // TODO VALIDAR QUE EL USUARIO ELIMINADO NO SEA EL AUTENTICADO
+   
 
 
             if (usuario == null)
