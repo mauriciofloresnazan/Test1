@@ -1,6 +1,6 @@
 ﻿@model Ppgz.Web.Models.RegisterViewModel
 @{
-    ViewBag.Title = "Pre Registro Usuario Maestro";
+    ViewBag.Title = "Register";
 }
 
 <h2>@ViewBag.Title.</h2>
@@ -8,78 +8,30 @@
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
-    <h4>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat.</h4>
+    <h4>Create a new account.</h4>
     <hr />
     @Html.ValidationSummary()
-    
-        
     <div class="form-group">
-        @Html.LabelFor(m => m.NombreUsuario, new { @class = "col-sm-3 control-label" })
-        <div class="col-sm-7">
-            @Html.TextBoxFor(m => m.NombreUsuario, new { @class = "form-control", @placeholder = "Ingrese el nombre de usuario" })
-        </div>
-    </div>
-    
-    <p class="form-legend" style=""><i>Datos de Empresa</i></p>
-    
-    <div class="form-group">
-        @Html.LabelFor(m => m.EmpresaRfc, new { @class = "col-sm-3 control-label" })
-        <div class="col-sm-7">
-            @Html.TextBoxFor(m => m.EmpresaRfc, new { @class = "form-control", @placeholder = "Ingrese 1 RFC asociado a alguna de sus empresas" })
-        </div>
-    </div>
-    
-    <div class="form-group">
-        @Html.LabelFor(m => m.EmpresaRazonSocial, new { @class = "col-sm-3 control-label" })
-        <div class="col-sm-7">
-            @Html.TextBoxFor(m => m.EmpresaRazonSocial, new { @class = "form-control", @placeholder = "Ingrese la razon social de la Empresa" })
-        </div>
-    </div>
-    
-    <p class="form-legend" style=""><i>Datos del Responsable</i></p>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.ResponsableNombre, new { @class = "col-sm-3 control-label" })
-        <div class="col-sm-7">
-            @Html.TextBoxFor(m => m.ResponsableNombre, new { @class = "form-control", @placeholder = "Nombre del Responsable" })
+        @Html.LabelFor(m => m.UserName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.ResponsableApellido, new { @class = "col-sm-3 control-label" })
-        <div class="col-sm-7">
-            @Html.TextBoxFor(m => m.ResponsableApellido, new { @class = "form-control", @placeholder = "Apellido del Responsable" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ResponsableEmail, new { @class = "col-sm-3 control-label" })
-        <div class="col-sm-7">
-            @Html.TextBoxFor(m => m.ResponsableEmail, new { @class = "form-control", @placeholder = "Email del Responsable" })
-        </div>
-    </div>
-     <div class="form-group">
-        @Html.LabelFor(m => m.ResponsableTelefono, new { @class = "col-sm-3 control-label" })
-        <div class="col-sm-7">
-            @Html.TextBoxFor(m => m.ResponsableTelefono, new { @class = "form-control", @placeholder = "Teléfono del Responsable" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-sm-3 control-label" })
-        <div class="col-sm-7">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
             @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
         </div>
     </div>
     <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-sm-3 control-label" })
-        <div class="col-sm-7">
+        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
             @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
         </div>
     </div>
     <div class="form-group">
-        <div class="col-md-offset-3 col-sm-7">
-            <button type="submit" class="btn btn-primary"><i class="fa fa-user-plus" aria-hidden="true"></i> Registrar</button>
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Register" />
         </div>
     </div>
 }

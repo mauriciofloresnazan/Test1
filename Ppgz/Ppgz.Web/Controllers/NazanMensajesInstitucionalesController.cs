@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Web.Mvc;
-using Ppgz.Repository;
-using Ppgz.Services;
+using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers

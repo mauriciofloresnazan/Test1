@@ -26,9 +26,9 @@
                     @foreach (var usuario in (ViewBag.usuarios))
                     {
                         <tr>
-                            <td class="text-center vert-align">@usuario.userName</td>
+                            <td class="text-center vert-align">@usuario.UserName</td>
                             <td class="text-center vert-align">@usuario.nombre @usuario.apellido</td>
-                            <td class="text-center vert-align">@usuario.email</td>
+                            <td class="text-center vert-align">@usuario.Email</td>
                             <td class="text-center">
                                 <div class="btn-group " role="group" aria-label="...">
                                     <a class="btn btn-warning btn-xs" href="@Url.Action("Editar", "ProveedorAdministrarUsuarios",new { @id = @usuario.Id})" ><i class=" fa fa-pencil" aria-hidden="true"></i> Editar</a>

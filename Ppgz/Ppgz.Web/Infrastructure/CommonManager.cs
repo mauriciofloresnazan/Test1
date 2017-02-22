@@ -1,20 +1,22 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Ppgz.Repository;
+using Ppgz.Web.Models;
 
-namespace Ppgz.Web.Infraestructure
+namespace Ppgz.Web.Infrastructure
 {
     public class CommonManager 
     {
-        private readonly PpgzEntities _db = new PpgzEntities();
+        private readonly Entities _db = new Entities();
+        private readonly UserManager<ApplicationUser> _applicationUserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+       
 
-
-        public usuario  GetUsuarioAutenticado()
+        public aspnetuser  GetUsuarioAutenticado()
         {
             var userName = HttpContext.Current.User.Identity.GetUserName();
-            var usuarioAutenticado = _db.usuarios.Single(u => u.userName == userName);
+            var usuarioAutenticado = _db.aspnetusers.Single(u => u.UserName == userName);
             return usuarioAutenticado;
         }
 
@@ -44,12 +46,12 @@ namespace Ppgz.Web.Infraestructure
 
         }
 
-        public void UsuarioCuentaXrefAdd(usuario usuario, int cuentaId )
+        public void UsuarioCuentaXrefAdd(string usuarioId, int cuentaId )
         {
             const string sql = @"
                         INSERT INTO  usuarios_cuentas_xref (usuario_id, cuenta_id)
                         VALUES ({0},{1})";
-            _db.Database.ExecuteSqlCommand(sql, usuario.Id, cuentaId);
+            _db.Database.ExecuteSqlCommand(sql, usuarioId, cuentaId);
 
             _db.SaveChanges();
 
@@ -57,9 +59,9 @@ namespace Ppgz.Web.Infraestructure
 
         public string HashPassword(string password)
         {
-            var store = new UserStore<IdentityUser>(_db);
-            var userManager = new UserManager<IdentityUser>(store);
-            return userManager.PasswordHasher.HashPassword(password);
+            return  _applicationUserManager.PasswordHasher.HashPassword(password);
         }
+
+
     }
 }

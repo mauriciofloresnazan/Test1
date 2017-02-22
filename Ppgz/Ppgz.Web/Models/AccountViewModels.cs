@@ -30,13 +30,13 @@ namespace Ppgz.Web.Models
 
     public class LoginViewModel
     {
-        [Required(ErrorMessage = "El Nombre es obligatorio")]
-        [Display(Name = "Nombre de Usuario")]
+        [Required]
+        [Display(Name = "User name")]
         public string UserName { get; set; }
 
-        [Required(ErrorMessage = "La contraseña es obligatoria")]
+        [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Contraseña")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
         [Display(Name = "Remember me?")]
@@ -45,46 +45,18 @@ namespace Ppgz.Web.Models
 
     public class RegisterViewModel
     {
-        // Company Info
-
         [Required]
-        [Display(Name = "RFC")]
-        public string EmpresaRfc { get; set; }
-
-        [Required]
-        [Display(Name = "Razón social")]
-        public string EmpresaRazonSocial { get; set; }
-
-        // Responsible Info
-
-        [Required]
-        [Display(Name = "Nombre")]
-        public string ResponsableNombre { get; set; }
-        
-        [Required]
-        [Display(Name = "Apellido")]
-        public string ResponsableApellido { get; set; }
-
-        [Required]
-        [Display(Name = "Correo electrónico")]
-        public string ResponsableEmail { get; set; }
-
-        [Required]
-        [Display(Name = "Teléfono")]
-        public string ResponsableTelefono { get; set; }
-
-        [Required]
-        [Display(Name = "Nombre de Usuario")]
-        public string NombreUsuario { get; set; }
+        [Display(Name = "User name")]
+        public string UserName { get; set; }
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Contraseña")]
+        [Display(Name = "Password")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
-        [Display(Name = "Confirmar contraseña")]
+        [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }

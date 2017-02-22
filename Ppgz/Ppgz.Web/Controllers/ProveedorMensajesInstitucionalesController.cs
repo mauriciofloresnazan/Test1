@@ -1,111 +1,86 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
-using Ppgz.Repository;
-using Ppgz.Web.Infraestructure;
-using Ppgz.Web.Models;
+using Ppgz.Web.Infrastructure;
 
 namespace Ppgz.Web.Controllers
 {
-    [Authorize]
+	[Authorize]
 	public class ProveedorMensajesInstitucionalesController : Controller
 	{
-		private readonly PpgzEntities _db = new PpgzEntities();
 
-        private readonly CommonManager _commonManager = new CommonManager();
 
+		private readonly CommonManager _commonManager = new CommonManager();
+
+        private readonly TipoProveedorManager _tipoProveedorManager  = new TipoProveedorManager();
+
+        private readonly MensajesManager _mensajesManager = new MensajesManager();
 
 		//
 		// GET: /ProveedorMensajesInstitucionales/
 		public ActionResult Index()
 		{
 
-            //CUENTAS
-		    var userName = User.Identity.GetUserName();
-
+			//CUENTAS
 		    var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-		    
-            var tipoProveedor = _db.tipos_proveedor.Single(a => a.id == cuenta.tipo_proveedor_id);
 
- 			var mensajes = _db
-                .mensajes
-                .Where(m=>  m.enviado_a == tipoProveedor.codigo || m.enviado_a == "TODOS")
-                .ToList();
+		    var tipoProveedor = _tipoProveedorManager.Find(cuenta.tipo_proveedor_id);
 
-		    var id = Int32.Parse(User.Identity.GetUserId());
+            var mensajes = _mensajesManager.GetByEnviadoA(tipoProveedor.codigo);
 
-            var mensajesUsuario = _db.usuario_mensajes.Where(u => u.usuario_id == id).ToList();
+            var mensajesUsuario = _mensajesManager.GetByUsuarioId(User.Identity.GetUserId());
 
-            //var test = _db.usuario_mensajes.FirstOrDefault(u => u.usuario_id == id);
+			ViewBag.mensajes = mensajes;
 
-
-            ViewBag.mensajes = mensajes;
-
-
-
-
-            ViewBag.mensajesUsuario = Json(mensajesUsuario);
+			ViewBag.mensajesUsuario = Json(mensajesUsuario);
 
 			return View();
 		}
 
-        [HttpPost]
-        public ActionResult Visualizar(int? id)
-        {
-            var mensaje = _db.mensajes.Single(i => i.id == id);
+		[HttpPost]
+		public ActionResult Visualizar(int id)
+		{
+			var mensaje = _mensajesManager.FindById(id);
+            
+            
+            var mensajes = _mensajesManager.GetByUsuarioId(User.Identity.GetUserId());
 
+            if (mensajes.Any(i => i.mensaje_id == id))
+			{
+				return Content("Actualizado"); ;
+			}
 
-            var usuarioId = Int32.Parse(User.Identity.GetUserId());
+		    _mensajesManager.Visualizar(User.Identity.GetUserId(), id);
 
-            if (_db.usuario_mensajes.Any(i => i.mensaje_id == id && i.usuario_id == usuarioId))
-            {
-                return Content("Actualizado"); ;
-            }
+			return Content("Actualizado");
+		}
 
-            var usuarioMensaje = new usuario_mensajes
-            {
-                mensaje_id = mensaje.id,
-                usuario_id = int.Parse(User.Identity.GetUserId())
-            };
+        /*
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Leido(int id)
+		{
 
-            _db.usuario_mensajes.Add(usuarioMensaje);
+			var mensaje = _db.mensajes.Single(i => i.id == id);
+				
+		
+			if(_db.usuario_mensajes.Any(i => i.mensaje_id == id && i.usuario_id ==int.Parse(User.Identity.GetUserId())))
+			{
+			   return Content("Leido");;
+			}
 
-            _db.SaveChanges();
+			var usuarioMensaje = new usuario_mensajes
+			{
+				mensaje_id = mensaje.id,
+				usuario_id = int.Parse(User.Identity.GetUserId())
+			};
 
-            return Content("Actualizado");
-        }
+			_db.usuario_mensajes.Add(usuarioMensaje);
 
+			_db.SaveChanges();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Leido(int id)
-        {
-
-            var mensaje = _db.mensajes.Single(i => i.id == id);
-                
-        
-            if(_db.usuario_mensajes.Any(i => i.mensaje_id == id && i.usuario_id ==int.Parse(User.Identity.GetUserId())))
-            {
-               return Content("Leido");;
-            }
-
-            var usuarioMensaje = new usuario_mensajes
-            {
-                mensaje_id = mensaje.id,
-                usuario_id = int.Parse(User.Identity.GetUserId())
-            };
-
-            _db.usuario_mensajes.Add(usuarioMensaje);
-
-            _db.SaveChanges();
-
-            return Content("Leido");
-        }
+			return Content("Leido");
+		}*/
 	}
 }

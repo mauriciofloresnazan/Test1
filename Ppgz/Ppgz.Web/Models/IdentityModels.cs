@@ -1,13 +1,24 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Ppgz.Repository;
 
 namespace Ppgz.Web.Models
 {
-    public class ApplicationUser : IUser
+    // You can add profile data for the user by adding more properties to your ApplicationUser
+    // class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
+    public class ApplicationUser : IdentityUser
     {
-        public string Id { get; set; }
-        public string UserName { get; set; }
     }
 
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    {
+        static ApplicationDbContext()
+        {
+            Database.SetInitializer(new MySqlInitializer());
+        }
+
+        public ApplicationDbContext()
+            : base("DefaultConnection")
+        {
+        }
+    }
 }

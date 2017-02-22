@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Web.Mvc;
-using Ppgz.Repository;
-using Ppgz.Services;
-using Ppgz.Web.Infraestructure;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Models;
-using UsuarioManager = Ppgz.Web.Infraestructure.UsuarioManager;
+
 
 namespace Ppgz.Web.Controllers
 {
@@ -13,8 +13,8 @@ namespace Ppgz.Web.Controllers
     {
         readonly CuentaManager _cuentaManager = new CuentaManager();
         readonly TipoProveedorManager _tipoProveedorManager = new TipoProveedorManager();
+        readonly UserManager<ApplicationUser> _applicationUserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
         readonly UsuarioManager _usuarioManager = new UsuarioManager();
-        readonly TipoUsuarioManager _tipoUsuarioManager = new TipoUsuarioManager();
         readonly CommonManager _commonManager = new CommonManager();
         //
         // GET: /NazanGestionProveedores/
@@ -44,42 +44,50 @@ namespace Ppgz.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                if (_usuarioManager.FindUsuarioByUserName(model.UserName) != null)
+          
+                if (_applicationUserManager.FindByName(model.UserName) != null)
                 {
-                    ModelState.AddModelError(string.Empty, "Este nombre de usuario ya fue utilizado. Por favor intente con otro.");
+                    ModelState.AddModelError(string.Empty, ResourceErrores.NombreUsuarioExistente);
                     return View(model);
                 }
-                
-                var tipoProveedor = _tipoProveedorManager.GetByCodigo(model.TipoProveedor);
-                
-                // Registro del Usairo
-                var usuario = new usuario()
+
+                var usuario = new ApplicationUser() { UserName = model.UserName };
+
+                var result = _applicationUserManager.Create(usuario, model.ResponsablePassword);
+              
+                if (result.Succeeded)
                 {
-                    userName = model.UserName.ToLower(),
-                    nombre = model.ResponsableNombre,
-                    apellido = model.ResponsableApellido,
-                    cargo = model.ResponsableCargo,
-                    email = model.ResponsableEmail,
-                    telefono = model.ResponsableTelefono,
-                    tipo_usuario_id = _tipoUsuarioManager.GetProveedor().id,
-                };
-                _usuarioManager.Add(usuario, model.ResponsablePassword);
+                    var tipoProveedor = _tipoProveedorManager.GetByCodigo(model.TipoProveedor);
 
-                // Registro de la cuenta
-                var cuenta = new cuenta
-                {
-                    nombre_proveedor = model.ProveedorNombre,
-                    codigo_proveedor = DateTime.Now.ToString("yyyyMMddHHmmssf"),
-                    reponsable_usuario_id = usuario.Id,
-                    tipo_proveedor_id = tipoProveedor.id,
-                    activo = true
-                };
-                _cuentaManager.Add(cuenta);
+                    _usuarioManager.Update(
+                        usuario.Id, 
+                        model.ProveedorNombre, 
+                        model.ResponsableApellido,
+                        model.ResponsableCargo, 
+                        model.ResponsableEmail,
+                        model.ResponsableTelefono, 
+                        tipoProveedor.id);
+                    
+                    // Registro de la cuenta
+                    var cuenta = new cuenta
+                    {
+                        nombre_proveedor = model.ProveedorNombre,
+                        // TODO MERJORAR EL CODIGO DEL PROVEDOR
+                        codigo_proveedor = DateTime.Now.ToString("yyyyMMddHHmmssf"),
+                        reponsable_usuario_id = usuario.Id,
+                        tipo_proveedor_id = tipoProveedor.id,
+                        activo = true
+                    };
+                    
+                    _cuentaManager.Add(cuenta);
 
-                _commonManager.UsuarioCuentaXrefAdd(usuario, cuenta.id);
+                    _commonManager.UsuarioCuentaXrefAdd(usuario.Id, cuenta.id);
 
-                return RedirectToAction("Index");
+                    return RedirectToAction("Index");
+                }
+
+                
+                
             }
 
             return View(model);

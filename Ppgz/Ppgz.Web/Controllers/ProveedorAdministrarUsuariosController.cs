@@ -1,12 +1,10 @@
 ﻿using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Ppgz.Repository;
 using Ppgz.Services;
-using Ppgz.Web.Infraestructure;
+using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers
@@ -17,6 +15,9 @@ namespace Ppgz.Web.Controllers
         private readonly CommonManager _commonManager = new CommonManager();
         private readonly UsuarioManager _usuarioManager = new UsuarioManager();
         private readonly TipoUsuarioManager _tipoUsuarioManager = new TipoUsuarioManager();
+        readonly UserManager<ApplicationUser> _applicationUserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+
         //
         // GET: /ProveedorAdministrarUsuarios/
         public ActionResult Index()
@@ -31,7 +32,11 @@ namespace Ppgz.Web.Controllers
         public ActionResult Registrar()
         {
 
-            ViewBag.Accesos = new SelectList(PermisosManager.NazanAccessos); 
+            ViewBag.Accesos = new SelectList(new[]{
+                    "*FULL*",
+                    "ProveedorAdministrarUsuarios",
+                    "ProveedorMensajesInstitucionales"
+                });
 
             return View();
         }
@@ -40,30 +45,39 @@ namespace Ppgz.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Registrar(ProveedorUsuarioViewModel model)
         {
-            ViewBag.Accesos = new SelectList(PermisosManager.NazanAccessos); 
+            ViewBag.Accesos = new SelectList(new[]{
+                    "*FULL*",
+                    "ProveedorAdministrarUsuarios",
+                    "ProveedorMensajesInstitucionales"
+                });
 
             if (ModelState.IsValid)
             {
-                if (_usuarioManager.FindUsuarioByUserName(model.UserName) != null)
+
+                if (_applicationUserManager.FindByName(model.UserName) != null)
                 {
-                    ModelState.AddModelError(string.Empty, "Este nombre de usuario ya fue utilizado. Por favor intente con otro");
+                    ModelState.AddModelError(string.Empty, ResourceErrores.NombreUsuarioExistente);
                     return View(model);
                 }
 
-                var usuario = new usuario()
+                var usuario = new ApplicationUser() { UserName = model.UserName };
+
+                var result = _applicationUserManager.Create(usuario, model.Password);
+
+                if (result.Succeeded)
                 {
-                    userName = model.UserName,
-                    nombre = model.Nombre,
-                    apellido = model.Apellido,
-                    email = model.Email,
-                    tipo_usuario_id = _tipoUsuarioManager.GetProveedor().id
-
-                };
-
-                _usuarioManager.Add(usuario, model.Password, model.Acceso);
+                    _usuarioManager.Update(
+                    usuario.Id,
+                    model.Nombre,
+                    model.Apellido,
+                    string.Empty,
+                    model.Email,
+                    string.Empty,
+                    _tipoUsuarioManager.GetProveedor().id);
+                }
 
                 _commonManager.UsuarioCuentaXrefAdd(
-                   usuario,
+                   usuario.Id,
                     _commonManager.GetCuentaUsuarioAutenticado().id);
 
 
@@ -74,7 +88,7 @@ namespace Ppgz.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Editar(int id)
+        public ActionResult Editar(string id)
         {
             var usuario = _usuarioManager.Find(id);
 
@@ -91,14 +105,18 @@ namespace Ppgz.Web.Controllers
             }
 
 
-            ViewBag.Accesos = new SelectList(PermisosManager.NazanAccessos); 
+            ViewBag.Accesos = new SelectList(new[]{
+                    "*FULL*",
+                    "ProveedorAdministrarUsuarios",
+                    "ProveedorMensajesInstitucionales"
+                });
 
             var usuarioProveedor = new ProveedorUsuarioViewModel
             {
-                UserName = usuario.userName,
+                UserName = usuario.UserName,
                 Nombre = usuario.nombre,
                 Apellido = usuario.apellido,
-                Email = usuario.email,
+                Email = usuario.Email,
                 Acceso = usuario.SecurityStamp
             };
 
@@ -107,7 +125,7 @@ namespace Ppgz.Web.Controllers
 
         [HttpPost, ActionName("Editar")]
         [ValidateAntiForgeryToken]
-        public ActionResult EditarPost(int id, FormCollection collection)
+        public ActionResult EditarPost(string id, FormCollection collection)
         {
             var usuario = _usuarioManager.Find(id);
 
@@ -125,14 +143,15 @@ namespace Ppgz.Web.Controllers
 
             try
             {
-                _usuarioManager.UpdateUsuario(
-                                id,
+                _usuarioManager.Update(
+                    id,
                                 collection["nombre"],
                                 collection["apellido"],
-                                collection["telefono"],
+                usuario.cargo,
                                 collection["email"],
-                                collection["password"],
-                                collection["acceso"]);
+                                collection["telefono"],
+                                int.Parse(usuario.tipo_usuario_id.ToString()),
+                                collection["password"]);
 
                 return RedirectToAction("Index");
             }
@@ -150,12 +169,16 @@ namespace Ppgz.Web.Controllers
                 Email = collection["Email"],
             };
 
-            ViewBag.Accesos = new SelectList(PermisosManager.NazanAccessos); 
+            ViewBag.Accesos = new SelectList(new[]{
+                    "*FULL*",
+                    "ProveedorAdministrarUsuarios",
+                    "ProveedorMensajesInstitucionales"
+                });
 
             return View(usuarioProveedor);
         }
 
-        public ActionResult Eliminar(int id)
+        public ActionResult Eliminar(string id)
         {
 
 
@@ -169,7 +192,7 @@ namespace Ppgz.Web.Controllers
 
             // TODO VALIDAR QUE LA CUENTA DEL USUARIO ELIMINADO SEA IGUAL A LA DEL AUTENTICADO
 
-   
+
 
 
             if (usuario == null)
