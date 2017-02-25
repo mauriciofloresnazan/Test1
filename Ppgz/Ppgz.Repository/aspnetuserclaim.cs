@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Ppgz.Web
+namespace Ppgz.Repository
 {
     using System;
     using System.Collections.Generic;

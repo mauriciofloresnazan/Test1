@@ -3,7 +3,6 @@ using System.Net;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
-using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Models;
 
@@ -14,7 +13,7 @@ namespace Ppgz.Web.Controllers
     {
         private readonly CommonManager _commonManager = new CommonManager();
         private readonly UsuarioManager _usuarioManager = new UsuarioManager();
-        private readonly TipoUsuarioManager _tipoUsuarioManager = new TipoUsuarioManager();
+
         readonly UserManager<ApplicationUser> _applicationUserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
 
@@ -73,7 +72,7 @@ namespace Ppgz.Web.Controllers
                     string.Empty,
                     model.Email,
                     string.Empty,
-                    _tipoUsuarioManager.GetProveedor().id);
+                    TipoUsuario.Proveedor);
                 }
 
                 _commonManager.UsuarioCuentaXrefAdd(
@@ -97,9 +96,7 @@ namespace Ppgz.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var tipoUsuarioProveedor = _tipoUsuarioManager.GetProveedor();
-
-            if (usuario.tipo_usuario_id != tipoUsuarioProveedor.id)
+            if (usuario.Tipo != TipoUsuario.Proveedor)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
             }
@@ -114,8 +111,8 @@ namespace Ppgz.Web.Controllers
             var usuarioProveedor = new ProveedorUsuarioViewModel
             {
                 UserName = usuario.UserName,
-                Nombre = usuario.nombre,
-                Apellido = usuario.apellido,
+                Nombre = usuario.Nombre,
+                Apellido = usuario.Apellido,
                 Email = usuario.Email,
                 Acceso = usuario.SecurityStamp
             };
@@ -134,9 +131,7 @@ namespace Ppgz.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var tipoUsuarioProveedor = _tipoUsuarioManager.GetProveedor();
-
-            if (usuario.tipo_usuario_id != tipoUsuarioProveedor.id)
+            if (usuario.Tipo != TipoUsuario.Proveedor)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
             }
@@ -145,19 +140,19 @@ namespace Ppgz.Web.Controllers
             {
                 _usuarioManager.Update(
                     id,
-                                collection["nombre"],
-                                collection["apellido"],
-                usuario.cargo,
-                                collection["email"],
-                                collection["telefono"],
-                                int.Parse(usuario.tipo_usuario_id.ToString()),
-                                collection["password"]);
+                    collection["nombre"],
+                    collection["apellido"],
+                    usuario.Cargo,
+                    collection["email"],
+                    collection["telefono"],
+                    usuario.Tipo,
+                    collection["password"]);
 
                 return RedirectToAction("Index");
             }
             catch (RetryLimitExceededException)
             {
-                ModelState.AddModelError("", "No se pudo guardar. Intente nuevamente si el problema persiste contacte los adminsitradores del sistema.");
+                ModelState.AddModelError("", ResourceErrores.RegistroGeneral);
             }
 
 
@@ -201,7 +196,7 @@ namespace Ppgz.Web.Controllers
             }
 
 
-            if (usuario.tipo_usuario_id != _tipoUsuarioManager.GetProveedor().id)
+            if (usuario.Tipo != TipoUsuario.Proveedor)
             {
 
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);

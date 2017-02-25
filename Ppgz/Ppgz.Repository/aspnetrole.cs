@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Ppgz.Web
+namespace Ppgz.Repository
 {
     using System;
     using System.Collections.Generic;
@@ -17,11 +17,14 @@ namespace Ppgz.Web
         public aspnetrole()
         {
             this.aspnetusers = new HashSet<aspnetuser>();
+            this.perfiles = new HashSet<perfil>();
         }
     
         public string Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
     
         public virtual ICollection<aspnetuser> aspnetusers { get; set; }
+        public virtual ICollection<perfil> perfiles { get; set; }
     }
 }

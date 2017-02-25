@@ -120,4 +120,8 @@
   <data name="NombreUsuarioExistente" xml:space="preserve">
     <value>El nombre de usuario ya fue utilizado. Por favor intente con otro.</value>
   </data>
+  <data name="RegistroGeneral" xml:space="preserve">
+    <value>No se pudo guardar. Intente nuevamente si el problema persiste contacte los adminsitradores del sistema.</value>
+    <comment>Error de registro general </comment>
+  </data>
 </root>

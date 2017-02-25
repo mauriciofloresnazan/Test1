@@ -1,20 +1,21 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Ppgz.Repository;
 
 namespace Ppgz.Web.Infrastructure
 {
     public class UsuarioManager
     {
         private readonly Entities _db = new Entities();
-        public void Update(string id, string nombre, string apellido, string cargo,string email,string telefono, int tipoUsuarioId, string password = null )
+        public void Update(string id, string nombre, string apellido, string cargo,string email,string telefono, string tipo, string password = null )
         {
             var usuario = _db.aspnetusers.Find(id);
 
-            usuario.nombre = nombre;
-            usuario.apellido = apellido;
-            usuario.cargo = cargo;
-            usuario.tipo_usuario_id = tipoUsuarioId;
+            usuario.Nombre = nombre;
+            usuario.Apellido = apellido;
+            usuario.Cargo = cargo;
+            usuario.Tipo = tipo;
 
             if (!string.IsNullOrWhiteSpace(email))
             {
@@ -83,8 +84,8 @@ namespace Ppgz.Web.Infrastructure
 
             var usuario = _db.aspnetusers.Single(u => u.Id == id);
 
-            usuario.nombre = nombre;
-            usuario.apellido = apellido;
+            usuario.Nombre = nombre;
+            usuario.Apellido = apellido;
             usuario.PhoneNumber = telefono;
             usuario.Email = email;
             usuario.PasswordHash = commonManager.HashPassword(password);

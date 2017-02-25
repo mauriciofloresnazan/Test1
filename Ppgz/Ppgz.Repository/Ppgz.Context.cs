@@ -13,10 +13,10 @@ namespace Ppgz.Repository
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class PpgzEntities : DbContext
+    public partial class Entities : DbContext
     {
-        public PpgzEntities()
-            : base("name=PpgzEntities")
+        public Entities()
+            : base("name=Entities")
         {
         }
     
@@ -25,12 +25,15 @@ namespace Ppgz.Repository
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<aspnetrole> aspnetroles { get; set; }
+        public virtual DbSet<aspnetuserclaim> aspnetuserclaims { get; set; }
+        public virtual DbSet<aspnetuserlogin> aspnetuserlogins { get; set; }
+        public virtual DbSet<aspnetuser> aspnetusers { get; set; }
         public virtual DbSet<cuenta> cuentas { get; set; }
         public virtual DbSet<mensaje> mensajes { get; set; }
         public virtual DbSet<tipos_proveedor> tipos_proveedor { get; set; }
         public virtual DbSet<tipos_usuario> tipos_usuario { get; set; }
         public virtual DbSet<usuario_mensajes> usuario_mensajes { get; set; }
-        public virtual DbSet<usuario> usuarios { get; set; }
-        public virtual DbSet<usuarios_cuentas_xref> usuarios_cuentas_xref { get; set; }
+        public virtual DbSet<perfil> perfiles { get; set; }
     }
 }

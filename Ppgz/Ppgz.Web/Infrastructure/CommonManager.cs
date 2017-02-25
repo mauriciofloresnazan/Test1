@@ -1,8 +1,8 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Ppgz.Repository;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Infrastructure
@@ -21,6 +21,7 @@ namespace Ppgz.Web.Infrastructure
         }
 
 
+
         public cuenta GetCuentaUsuarioAutenticado()
         {
             var usuarioAutenticado =  GetUsuarioAutenticado();
@@ -32,10 +33,7 @@ namespace Ppgz.Web.Infrastructure
                                FROM usuarios_cuentas_xref 
                                WHERE usuario_id = {0})", usuarioAutenticado.Id).FirstOrDefault();
 
-
-
-
-
+            
 
             return usuarioAutenticado.cuentas.First();
 

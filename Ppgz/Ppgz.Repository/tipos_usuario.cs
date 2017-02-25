@@ -14,16 +14,9 @@ namespace Ppgz.Repository
     
     public partial class tipos_usuario
     {
-        public tipos_usuario()
-        {
-            this.usuarios = new HashSet<usuario>();
-        }
-    
         public int id { get; set; }
         public string codigo { get; set; }
         public string nombre { get; set; }
         public string descripcion { get; set; }
-    
-        public virtual ICollection<usuario> usuarios { get; set; }
     }
 }

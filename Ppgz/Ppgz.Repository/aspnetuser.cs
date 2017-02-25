@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Ppgz.Web
+namespace Ppgz.Repository
 {
     using System;
     using System.Collections.Generic;
@@ -36,13 +36,12 @@ namespace Ppgz.Web
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
         public string UserName { get; set; }
-        public Nullable<bool> activo { get; set; }
-        public string aspnetuserscol { get; set; }
+        public string Tipo { get; set; }
+        public bool Activo { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public string Cargo { get; set; }
         public Nullable<int> perfil_id { get; set; }
-        public Nullable<int> tipo_usuario_id { get; set; }
-        public string nombre { get; set; }
-        public string apellido { get; set; }
-        public string cargo { get; set; }
     
         public virtual ICollection<aspnetuserclaim> aspnetuserclaims { get; set; }
         public virtual ICollection<aspnetuserlogin> aspnetuserlogins { get; set; }

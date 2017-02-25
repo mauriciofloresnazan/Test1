@@ -16,7 +16,7 @@ namespace Ppgz.Repository
     {
         public cuenta()
         {
-            this.usuarios_cuentas_xref = new HashSet<usuarios_cuentas_xref>();
+            this.aspnetusers = new HashSet<aspnetuser>();
         }
     
         public int id { get; set; }
@@ -25,9 +25,9 @@ namespace Ppgz.Repository
         public System.DateTime fecha_registro { get; set; }
         public int tipo_proveedor_id { get; set; }
         public Nullable<bool> activo { get; set; }
-        public int reponsable_usuario_id { get; set; }
+        public string reponsable_usuario_id { get; set; }
     
-        public virtual ICollection<usuarios_cuentas_xref> usuarios_cuentas_xref { get; set; }
-        public virtual usuario usuario { get; set; }
+        public virtual aspnetuser aspnetuser { get; set; }
+        public virtual ICollection<aspnetuser> aspnetusers { get; set; }
     }
 }

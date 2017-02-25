@@ -142,7 +142,23 @@
     </nav>
 
     <div class="container body-content">
+        @if (TempData["FlashError"] != null)
+        {
+            <div class="alert alert-dismissible alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @TempData["FlashError"]
+            </div>
+        }
+        @if (TempData["FlashSuccess"] != null)
+        {
+            <div class="alert alert-dismissible alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @TempData["FlashSuccess"]
+            </div>
+        }
+
         @RenderBody()
+
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - Grupo Nazan</p>
@@ -156,8 +172,6 @@
     @Scripts.Render("~/assets/vendor/moment/moment-with-locales.min.js")
     @Scripts.Render("~/assets/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js")
 
-
-
     <script type="text/javascript">
         $('[data-toggle=confirmation]').confirmation({
             rootSelector: '[data-toggle=confirmation]',
@@ -166,7 +180,6 @@
 
     </script>
     @RenderSection("scripts", required: false)
-
 
 </body>
 </html>

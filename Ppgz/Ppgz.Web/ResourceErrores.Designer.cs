@@ -68,5 +68,14 @@ namespace Ppgz.Web {
                 return ResourceManager.GetString("NombreUsuarioExistente", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No se pudo guardar. Intente nuevamente si el problema persiste contacte los adminsitradores del sistema..
+        /// </summary>
+        internal static string RegistroGeneral {
+            get {
+                return ResourceManager.GetString("RegistroGeneral", resourceCulture);
+            }
+        }
     }
 }

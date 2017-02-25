@@ -2,6 +2,7 @@
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Models;
 
@@ -57,7 +58,6 @@ namespace Ppgz.Web.Controllers
               
                 if (result.Succeeded)
                 {
-                    var tipoProveedor = _tipoProveedorManager.GetByCodigo(model.TipoProveedor);
 
                     _usuarioManager.Update(
                         usuario.Id, 
@@ -66,8 +66,10 @@ namespace Ppgz.Web.Controllers
                         model.ResponsableCargo, 
                         model.ResponsableEmail,
                         model.ResponsableTelefono, 
-                        tipoProveedor.id);
+                        TipoUsuario.ProveedorMaestro);
                     
+                    var tipoProveedor = _tipoProveedorManager.GetByCodigo(model.TipoProveedor);
+
                     // Registro de la cuenta
                     var cuenta = new cuenta
                     {

@@ -172,20 +172,13 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
-    <Compile Include="aspnetrole.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="aspnetuser.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="aspnetuserclaim.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="aspnetuserlogin.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
+    <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
+    <Compile Include="Areas\Nazan\Controllers\TestController.cs" />
+    <Compile Include="Areas\Nazan\NazanAreaRegistration.cs" />
+    <Compile Include="Areas\Servicio\ServicioAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\NazanController.cs" />
     <Compile Include="Controllers\NazanGestionProveedoresController.cs" />
     <Compile Include="Controllers\NazanMensajesInstitucionalesController.cs">
       <SubType>Code</SubType>
@@ -196,44 +189,27 @@
     <Compile Include="Controllers\ProveedorMensajesInstitucionalesController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="cuenta.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\CommonManager.cs" />
     <Compile Include="Infrastructure\CuentaManager.cs" />
     <Compile Include="Infrastructure\MensajesManager.cs" />
+    <Compile Include="Infrastructure\Nazan\PerfilManager.cs" />
+    <Compile Include="Infrastructure\Nazan\UsuarioManager.cs" />
     <Compile Include="Infrastructure\TipoProveedorManager.cs" />
-    <Compile Include="Infrastructure\TipoUsuarioManager.cs" />
+    <Compile Include="Infrastructure\TipoUsuario.cs" />
     <Compile Include="Infrastructure\UsuarioManager.cs" />
-    <Compile Include="mensaje.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CuentaViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\MensajeViewModel.cs" />
+    <Compile Include="Models\Nazan\PerfilViewModel.cs" />
+    <Compile Include="Models\Nazan\UsuarioViewModel.cs" />
     <Compile Include="Models\ProveedorUsuarioViewModel.cs" />
     <Compile Include="MySqlConfiguration.cs" />
     <Compile Include="MySqlHistoryContext.cs" />
     <Compile Include="MySqlInitializer.cs" />
-    <Compile Include="Ppgz.Context.cs">
-      <DependentUpon>Ppgz.Context.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Ppgz.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Ppgz.Designer.cs">
-      <DependentUpon>Ppgz.edmx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -246,15 +222,6 @@
       <DependentUpon>ResourceErrores.resx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
-    <Compile Include="tipos_proveedor.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tipos_usuario.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="usuario_mensajes.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\main.css" />
@@ -1021,23 +988,10 @@
     <Content Include="assets\vendor\font-awesome-4.7.0\scss\_variables.scss" />
     <Content Include="assets\vendor\trumbowyg\plugins\colors\ui\sass\trumbowyg.colors.scss" />
     <Content Include="assets\vendor\trumbowyg\ui\sass\trumbowyg.scss" />
-    <EntityDeploy Include="Ppgz.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Ppgz.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Ppgz.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Ppgz.edmx</DependentUpon>
-      <LastGenOutput>Ppgz.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Ppgz.edmx.diagram">
-      <DependentUpon>Ppgz.edmx</DependentUpon>
-    </Content>
-    <Content Include="Ppgz.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Ppgz.edmx</DependentUpon>
-      <LastGenOutput>Ppgz.cs</LastGenOutput>
-    </Content>
+    <Content Include="assets\vendor\dataTables-1.10.13\Spanish.json" />
+    <Content Include="Areas\Nazan\Views\web.config" />
+    <Content Include="Areas\Mercaderia\Views\web.config" />
+    <Content Include="Areas\Servicio\Views\web.config" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -1050,7 +1004,11 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <None Include="Web.config--" />
+    <Content Include="Views\Nazan\AdministrarUsuariosNazan.cshtml" />
+    <Content Include="Views\Nazan\CrearUsuarioNazan.cshtml" />
+    <Content Include="Views\Nazan\EditarUsuarioNazan.cshtml" />
+    <Content Include="Views\Nazan\AdministrarPerfilesNazan.cshtml" />
+    <Content Include="Views\Nazan\CrearPerfilNazan.cshtml" />
     <None Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1085,16 +1043,20 @@
     <Content Include="Views\NazanMensajesInstitucionales\Crear.cshtml" />
     <Content Include="Views\NazanMensajesInstitucionales\Editar.cshtml" />
     <Content Include="Views\NazanMensajesInstitucionales\Index.cshtml" />
-    <None Include="Web.Debug.config--">
-      <DependentUpon>Web.config--</DependentUpon>
-    </None>
-    <None Include="Web.Release.config--">
-      <DependentUpon>Web.config--</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Mercaderia\Controllers\" />
+    <Folder Include="Areas\Mercaderia\Models\" />
+    <Folder Include="Areas\Mercaderia\Views\Shared\" />
+    <Folder Include="Areas\Nazan\Models\" />
+    <Folder Include="Areas\Nazan\Views\Shared\" />
+    <Folder Include="Areas\Nazan\Views\Test\" />
+    <Folder Include="Areas\Servicio\Controllers\" />
+    <Folder Include="Areas\Servicio\Models\" />
+    <Folder Include="Areas\Servicio\Views\Shared\" />
     <Folder Include="assets\js\" />
+    <Folder Include="Infrastructure\Proveedor\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -1115,6 +1077,12 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ResourceErrores.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ppgz.Repository\Ppgz.Repository.csproj">
+      <Project>{805197A6-6948-483E-A738-7AE7745AC953}</Project>
+      <Name>Ppgz.Repository</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

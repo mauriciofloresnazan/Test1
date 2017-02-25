@@ -3,6 +3,7 @@ using System.Data.Entity.Infrastructure;
 using System.Globalization;
 using System.IO;
 using System.Web.Mvc;
+using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Models;
 

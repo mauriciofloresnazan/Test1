@@ -12,13 +12,17 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class usuarios_cuentas_xref
+    public partial class perfil
     {
-        public int usuario_id { get; set; }
-        public int cuenta_id { get; set; }
-        public string usuarios_cuentas_xrefcol { get; set; }
+        public perfil()
+        {
+            this.aspnetroles = new HashSet<aspnetrole>();
+        }
     
-        public virtual cuenta cuenta { get; set; }
-        public virtual usuario usuario { get; set; }
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Tipo { get; set; }
+    
+        public virtual ICollection<aspnetrole> aspnetroles { get; set; }
     }
 }

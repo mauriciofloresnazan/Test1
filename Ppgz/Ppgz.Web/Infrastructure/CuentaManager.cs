@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ppgz.Repository;
 
 namespace Ppgz.Web.Infrastructure
 {
@@ -11,7 +12,7 @@ namespace Ppgz.Web.Infrastructure
         public void Add(cuenta cuenta)
         {
             cuenta.codigo_proveedor = Guid.NewGuid().ToString("D");
-
+            
             _db.cuentas.Add(cuenta);
 
             _db.SaveChanges();

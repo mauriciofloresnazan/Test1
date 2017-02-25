@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Ppgz.Repository;
 
 namespace Ppgz.Web.Infrastructure
 {

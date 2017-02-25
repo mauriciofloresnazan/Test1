@@ -16,9 +16,10 @@ namespace Ppgz.Repository
     {
         public int id { get; set; }
         public int mensaje_id { get; set; }
-        public int usuario_id { get; set; }
+        public string usuario_id { get; set; }
         public Nullable<System.DateTime> fecha_visualizacion { get; set; }
     
+        public virtual aspnetuser aspnetuser { get; set; }
         public virtual mensaje mensaje { get; set; }
     }
 }
