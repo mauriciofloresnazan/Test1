@@ -174,6 +174,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
+    <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
     <Compile Include="Areas\Nazan\Errores.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -190,24 +191,27 @@
     <Content Include="Areas\Nazan\Views\AdministrarUsuariosNazan\Editar.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarUsuariosNazan\Crear.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarUsuariosNazan\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarProveedores\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarProveedores\Registrar.cshtml" />
     <None Include="Controllers\NazanController.cs.old" />
-    <Compile Include="Controllers\NazanGestionProveedoresController.cs" />
+    <None Include="Controllers\NazanGestionProveedoresController.cs.old" />
     <Compile Include="Controllers\NazanMensajesInstitucionalesController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controllers\ProveedorAdministrarUsuariosController.cs">
+    <None Include="Controllers\ProveedorAdministrarUsuariosController.cs.old">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controllers\ProveedorMensajesInstitucionalesController.cs">
+    </None>
+    <None Include="Controllers\ProveedorMensajesInstitucionalesController.cs.old">
       <SubType>Code</SubType>
-    </Compile>
+    </None>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\CommonManager.cs" />
-    <Compile Include="Infrastructure\CuentaManager.cs" />
+    <Compile Include="Infrastructure\Nazan\CuentaManager.cs" />
     <Compile Include="Infrastructure\MensajesManager.cs" />
-    <Compile Include="Infrastructure\Nazan\PerfilManager.cs" />
+    <Compile Include="Infrastructure\Nazan\PerfilProveedorManager.cs" />
+    <Compile Include="Infrastructure\Nazan\UsuarioProveedorManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioNazanManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilNazanManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioManager.cs" />
@@ -215,7 +219,7 @@
     <Compile Include="Infrastructure\TipoUsuario.cs" />
     <Compile Include="Infrastructure\UsuarioManager.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\CuentaViewModel.cs" />
+    <Compile Include="Areas\Nazan\Models\CuentaViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\MensajeViewModel.cs" />
     <Compile Include="Models\Nazan\PerfilViewModel.cs" />

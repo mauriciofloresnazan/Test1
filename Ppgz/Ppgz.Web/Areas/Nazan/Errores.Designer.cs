@@ -61,6 +61,15 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CuentaNombreProveedorExistente.
+        /// </summary>
+        internal static string CuentaNombreProveedorExistente {
+            get {
+                return ResourceManager.GetString("CuentaNombreProveedorExistente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to PerfilNazanNombreExistente.
         /// </summary>
         internal static string PerfilNazanNombreExistente {

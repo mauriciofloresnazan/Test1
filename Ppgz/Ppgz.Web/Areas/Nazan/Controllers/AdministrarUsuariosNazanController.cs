@@ -10,6 +10,7 @@ using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
+    [Authorize]
 	public class AdministrarUsuariosNazanController : Controller
 	{
 		

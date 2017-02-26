@@ -5,6 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Ppgz.Repository;
+using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers
@@ -32,14 +34,18 @@ namespace Ppgz.Web.Controllers
 
         public void CreateRole()
         {
-            /*
-
-            var context = new ApplicationDbContext();
-            context.Roles.Add(new IdentityRole()
+            var role = new aspnetrole()
             {
-                Name = "MAESTRO"
-            });
-            context.SaveChanges();*/
+                Id = "SERVICIO-MAESTRO",
+                Name = "SERVICIO-MAESTRO",
+                Description = "PERFIL MAESTR tiene acceso a toda la aplicación.",
+                Tipo = "SERVICIO-MAESTRO"
+
+
+            };
+           var db = new Entities();
+            db.aspnetroles.Add(role);
+            db.SaveChanges();
 
         }
 
@@ -58,5 +64,7 @@ namespace Ppgz.Web.Controllers
             userManager.AddToRole(User.Identity.GetUserId(), "MAESTRO");
             Response.Write("TENGO ACCESO MAESTRO");*/
         }
+
+
     }
 }

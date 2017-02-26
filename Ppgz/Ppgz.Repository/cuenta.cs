@@ -19,15 +19,13 @@ namespace Ppgz.Repository
             this.aspnetusers = new HashSet<aspnetuser>();
         }
     
-        public int id { get; set; }
-        public string codigo_proveedor { get; set; }
-        public string nombre_proveedor { get; set; }
-        public System.DateTime fecha_registro { get; set; }
-        public int tipo_proveedor_id { get; set; }
-        public Nullable<bool> activo { get; set; }
-        public string reponsable_usuario_id { get; set; }
+        public int Id { get; set; }
+        public string CodigoProveedor { get; set; }
+        public string NombreProveedor { get; set; }
+        public System.DateTime FechaRegistro { get; set; }
+        public string Tipo { get; set; }
+        public bool Activo { get; set; }
     
-        public virtual aspnetuser aspnetuser { get; set; }
         public virtual ICollection<aspnetuser> aspnetusers { get; set; }
     }
 }

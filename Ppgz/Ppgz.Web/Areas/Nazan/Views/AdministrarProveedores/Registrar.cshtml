@@ -10,12 +10,12 @@
     <div class="panel-heading">Formulario de registro</div>
     <div class="panel-body">
 
-        @using (Html.BeginForm("Registrar", "NazanGestionProveedores", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("Registrar", "AdministrarProveedores", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
 
             @Html.ValidationSummary(true)
-                        <div class="form-group">
+            <div class="form-group">
                 <label class="col-sm-3 control-label">Tipo de Proveedor</label>
                 <div class="col-sm-7">
                     <div class="radio">
@@ -27,9 +27,9 @@
                     </div>
                     <div class="radio">
                         <label>
-                             @Html.RadioButtonFor(m => m.TipoProveedor, "SERVICIO") Servicio
+                            @Html.RadioButtonFor(m => m.TipoProveedor, "SERVICIO") Servicio
                         </label>
-                    </div> 
+                    </div>
                     @Html.ValidationMessageFor(m => m.TipoProveedor)
                 </div>
             </div>
@@ -117,7 +117,7 @@
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-7">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-user-plus" aria-hidden="true"></i> Registrar</button>
-                    <a class="btn btn-default" href="@Url.Action("Index", "NazanGestionProveedores")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                    <a class="btn btn-default" href="@Url.Action("Index", "AdministrarProveedores")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
 
                 </div>
             </div>
