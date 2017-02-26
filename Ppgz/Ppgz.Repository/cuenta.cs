@@ -25,7 +25,9 @@ namespace Ppgz.Repository
         public System.DateTime FechaRegistro { get; set; }
         public string Tipo { get; set; }
         public bool Activo { get; set; }
+        public string ResponsableUsuarioId { get; set; }
     
+        public virtual aspnetuser aspnetuser { get; set; }
         public virtual ICollection<aspnetuser> aspnetusers { get; set; }
     }
 }

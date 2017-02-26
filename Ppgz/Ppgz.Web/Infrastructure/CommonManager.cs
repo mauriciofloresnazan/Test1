@@ -1,7 +1,11 @@
-﻿using System.Linq;
+﻿using System.Data;
+using System.Data.Common;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using MySql.Data.MySqlClient;
 using Ppgz.Repository;
 using Ppgz.Web.Models;
 
@@ -60,6 +64,21 @@ namespace Ppgz.Web.Infrastructure
             return  _applicationUserManager.PasswordHasher.HashPassword(password);
         }
 
+
+
+        public DataTable QueryToTable(string queryText, SqlParameter[] parametes = null)
+        {
+            using (DbDataAdapter adapter = new MySqlDataAdapter())
+            {
+                adapter.SelectCommand = _db.Database.Connection.CreateCommand();
+                adapter.SelectCommand.CommandText = queryText;
+                if (parametes != null)
+                    adapter.SelectCommand.Parameters.AddRange(parametes);
+                var table = new DataTable();
+                adapter.Fill(table);
+                return table;
+            }
+        }
 
     }
 }

@@ -22,8 +22,8 @@ namespace Ppgz.Repository
     
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public string Tipo { get; set; }
         public Nullable<int> ProveedorId { get; set; }
+        public string Tipo { get; set; }
     
         public virtual ICollection<aspnetuser> aspnetusers { get; set; }
         public virtual ICollection<aspnetrole> aspnetroles { get; set; }

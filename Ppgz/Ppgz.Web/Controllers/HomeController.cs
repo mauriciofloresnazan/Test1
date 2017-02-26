@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Ppgz.Repository;
+using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Models;
 
@@ -34,18 +36,11 @@ namespace Ppgz.Web.Controllers
 
         public void CreateRole()
         {
-            var role = new aspnetrole()
-            {
-                Id = "SERVICIO-MAESTRO",
-                Name = "SERVICIO-MAESTRO",
-                Description = "PERFIL MAESTR tiene acceso a toda la aplicación.",
-                Tipo = "SERVICIO-MAESTRO"
+           CommonManager commonManager= new CommonManager();
 
+           var table = commonManager.QueryToTable("SELECT * FROM cuentas;");
+           
 
-            };
-           var db = new Entities();
-            db.aspnetroles.Add(role);
-            db.SaveChanges();
 
         }
 

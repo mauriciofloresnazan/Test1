@@ -18,9 +18,10 @@ namespace Ppgz.Repository
         {
             this.aspnetuserclaims = new HashSet<aspnetuserclaim>();
             this.aspnetuserlogins = new HashSet<aspnetuserlogin>();
+            this.cuentas = new HashSet<cuenta>();
             this.usuario_mensajes = new HashSet<usuario_mensajes>();
             this.aspnetroles = new HashSet<aspnetrole>();
-            this.cuentas = new HashSet<cuenta>();
+            this.cuentas1 = new HashSet<cuenta>();
         }
     
         public string Id { get; set; }
@@ -45,8 +46,9 @@ namespace Ppgz.Repository
         public virtual ICollection<aspnetuserclaim> aspnetuserclaims { get; set; }
         public virtual ICollection<aspnetuserlogin> aspnetuserlogins { get; set; }
         public virtual perfile perfile { get; set; }
+        public virtual ICollection<cuenta> cuentas { get; set; }
         public virtual ICollection<usuario_mensajes> usuario_mensajes { get; set; }
         public virtual ICollection<aspnetrole> aspnetroles { get; set; }
-        public virtual ICollection<cuenta> cuentas { get; set; }
+        public virtual ICollection<cuenta> cuentas1 { get; set; }
     }
 }

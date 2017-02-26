@@ -47,8 +47,14 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .FirstOrDefault(u => u.UserName == login && u.Tipo == "PROVEEDOR-MAESTRO");
         }
         public void Create(string userName, string nombre, string apellido, string email,
-            string password, int perfilId)
+            string password, int perfilId, string tipo = "PROVEEDOR-MAESTRO")
         {
+            if (!Tipos.Contains(tipo))
+            {
+                // TODO CARLOS Y JUAN DELGADO
+                throw new Exception("TIPO INCORRECTO");
+                
+            }
             if (_applicationUserManager.FindByName(userName) != null)
             {
                 // TODO CARLOS Y JUAN DELGADO
@@ -68,7 +74,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 Nombre = nombre,
                 Apellido = apellido,
                 Email = email.Trim(),
-                Tipo = TipoUsuario.Nazan,
+                Tipo = tipo,
                 Activo = true,
                 PerfilId = perfil.Id
             };

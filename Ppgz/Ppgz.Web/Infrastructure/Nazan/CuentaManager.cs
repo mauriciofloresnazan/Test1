@@ -94,11 +94,16 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 NombreProveedor = nombreProveedor,
                 Activo = true,
                 Tipo = GetTipoString(tipo),
+                ResponsableUsuarioId = usuarioMaestro.Id
 
             };
-            
-            cuenta.aspnetusers.Add(usuarioMaestro);
+
+            //cuenta.aspnetusers.Add(usuarioMaestro);
+ 
             _db.cuentas.Add(cuenta);
+            _db.SaveChanges();
+
+            usuarioMaestro.cuentas.Add(cuenta);
             _db.SaveChanges();
 
        
