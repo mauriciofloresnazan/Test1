@@ -17,14 +17,15 @@ namespace Ppgz.Repository
         public aspnetrole()
         {
             this.aspnetusers = new HashSet<aspnetuser>();
-            this.perfiles = new HashSet<perfil>();
+            this.perfiles = new HashSet<perfile>();
         }
     
         public string Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public string Tipo { get; set; }
     
         public virtual ICollection<aspnetuser> aspnetusers { get; set; }
-        public virtual ICollection<perfil> perfiles { get; set; }
+        public virtual ICollection<perfile> perfiles { get; set; }
     }
 }

@@ -117,20 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ErrorEspecifico" xml:space="preserve">
-    <value />
+  <data name="PerfilNazanNombreExistente" xml:space="preserve">
+    <value>PerfilNazanNombreExistente</value>
   </data>
-  <data name="ErrorGeneral" xml:space="preserve">
-    <value>sdafasd</value>
+  <data name="PerfilNazanRolesEliminarConUsuarios" xml:space="preserve">
+    <value>PerfilNazanRolesEliminarConUsuarios</value>
   </data>
-  <data name="NombreUsuarioExistente" xml:space="preserve">
-    <value>El nombre de usuario ya fue utilizado. Por favor intente con otro.</value>
-  </data>
-  <data name="RegistroGeneral" xml:space="preserve">
-    <value>No se pudo guardar. Intente nuevamente si el problema persiste contacte los adminsitradores del sistema.</value>
-    <comment>Error de registro general </comment>
-  </data>
-  <data name="Validacriasdfasd" xml:space="preserve">
-    <value />
+  <data name="PerfilNazanRolesRequeridos" xml:space="preserve">
+    <value>PerfilNazanRolesRequeridos</value>
   </data>
 </root>

@@ -66,12 +66,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ppgz.Repository\Ppgz.Repository.csproj">
-      <Project>{805197a6-6948-483e-a738-7ae7745ac953}</Project>
-      <Name>Ppgz.Repository</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

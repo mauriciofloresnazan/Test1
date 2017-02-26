@@ -73,7 +73,7 @@
     <Compile Include="mensaje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
-    <Compile Include="perfil.cs">
+    <Compile Include="perfile.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="Ppgz.Context.cs">

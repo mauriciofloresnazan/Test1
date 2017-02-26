@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Ppgz.Web {
+namespace Ppgz.Web.Areas.Nazan {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Ppgz.Web {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ResourceErrores {
+    internal class Errores {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ResourceErrores() {
+        internal Errores() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Ppgz.Web {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ppgz.Web.ResourceErrores", typeof(ResourceErrores).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ppgz.Web.Areas.Nazan.Errores", typeof(Errores).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,47 +61,29 @@ namespace Ppgz.Web {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to PerfilNazanNombreExistente.
         /// </summary>
-        internal static string ErrorEspecifico {
+        internal static string PerfilNazanNombreExistente {
             get {
-                return ResourceManager.GetString("ErrorEspecifico", resourceCulture);
+                return ResourceManager.GetString("PerfilNazanNombreExistente", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to sdafasd.
+        ///   Looks up a localized string similar to PerfilNazanRolesEliminarConUsuarios.
         /// </summary>
-        internal static string ErrorGeneral {
+        internal static string PerfilNazanRolesEliminarConUsuarios {
             get {
-                return ResourceManager.GetString("ErrorGeneral", resourceCulture);
+                return ResourceManager.GetString("PerfilNazanRolesEliminarConUsuarios", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to El nombre de usuario ya fue utilizado. Por favor intente con otro..
+        ///   Looks up a localized string similar to PerfilNazanRolesRequeridos.
         /// </summary>
-        internal static string NombreUsuarioExistente {
+        internal static string PerfilNazanRolesRequeridos {
             get {
-                return ResourceManager.GetString("NombreUsuarioExistente", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No se pudo guardar. Intente nuevamente si el problema persiste contacte los adminsitradores del sistema..
-        /// </summary>
-        internal static string RegistroGeneral {
-            get {
-                return ResourceManager.GetString("RegistroGeneral", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string Validacriasdfasd {
-            get {
-                return ResourceManager.GetString("Validacriasdfasd", resourceCulture);
+                return ResourceManager.GetString("PerfilNazanRolesRequeridos", resourceCulture);
             }
         }
     }

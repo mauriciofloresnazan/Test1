@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ppgzModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.6" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="ppgzModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.6" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="aspnetroles">
           <Key>
             <PropertyRef Name="Id" />
@@ -12,6 +12,7 @@
           <Property Name="Id" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="256" Nullable="false" />
           <Property Name="Description" Type="varchar" MaxLength="1000" />
+          <Property Name="Tipo" Type="enum" />
         </EntityType>
         <EntityType Name="aspnetuserclaims">
           <Key>
@@ -61,7 +62,7 @@
           <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Apellido" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Cargo" Type="varchar" MaxLength="200" />
-          <Property Name="perfil_id" Type="int" />
+          <Property Name="PerfilId" Type="int" />
         </EntityType>
         <EntityType Name="cuentas">
           <Key>
@@ -94,6 +95,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="Tipo" Type="enum" Nullable="false" />
+          <Property Name="ProveedorId" Type="int" />
         </EntityType>
         <EntityType Name="perfilesroles">
           <Key>
@@ -216,6 +218,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_perfil2">
+          <End Role="perfiles" Type="Self.perfiles" Multiplicity="0..1" />
+          <End Role="aspnetusers" Type="Self.aspnetusers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="perfiles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="aspnetusers">
+              <PropertyRef Name="PerfilId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_responsable">
           <End Role="aspnetusers" Type="Self.aspnetusers" Multiplicity="1" />
           <End Role="cuentas" Type="Self.cuentas" Multiplicity="*" />
@@ -316,6 +330,10 @@
             <End Role="perfiles" EntitySet="perfiles" />
             <End Role="perfilesroles" EntitySet="perfilesroles" />
           </AssociationSet>
+          <AssociationSet Name="fk_perfil2" Association="Self.fk_perfil2">
+            <End Role="perfiles" EntitySet="perfiles" />
+            <End Role="aspnetusers" EntitySet="aspnetusers" />
+          </AssociationSet>
           <AssociationSet Name="fk_responsable" Association="Self.fk_responsable">
             <End Role="aspnetusers" EntitySet="aspnetusers" />
             <End Role="cuentas" EntitySet="cuentas" />
@@ -337,7 +355,8 @@
             <End Role="aspnetuserroles" EntitySet="aspnetuserroles" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="ppgzModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -347,9 +366,10 @@
           </Key>
           <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="aspnetusers" Relationship="Self.aspnetuserroles" FromRole="aspnetroles" ToRole="aspnetusers" />
           <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="perfiles" Relationship="ppgzModel.perfilesroles" FromRole="aspnetrole" ToRole="perfil" />
+          <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="aspnetusers" Relationship="Self.aspnetuserroles" FromRole="aspnetroles" ToRole="aspnetusers" />
+          <NavigationProperty Name="perfiles" Relationship="Self.perfilesroles" FromRole="aspnetroles" ToRole="perfiles" />
         </EntityType>
         <EntityType Name="aspnetuserclaim">
           <Key>
@@ -378,24 +398,25 @@
           </Key>
           <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
-          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="EmailConfirmed" Type="Boolean" />
           <Property Name="PasswordHash" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="SecurityStamp" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="PhoneNumber" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
-          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
-          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" />
           <Property Name="LockoutEndDateUtc" Type="DateTime" />
-          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
-          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="LockoutEnabled" Type="Boolean" />
+          <Property Name="AccessFailedCount" Type="Int32" />
           <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Apellido" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Cargo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="perfil_id" Type="Int32" />
+          <Property Name="PerfilId" Type="Int32" />
           <NavigationProperty Name="aspnetuserclaims" Relationship="Self.ApplicationUser_Claims" FromRole="aspnetusers" ToRole="aspnetuserclaims" />
           <NavigationProperty Name="aspnetuserlogins" Relationship="Self.ApplicationUser_Logins" FromRole="aspnetusers" ToRole="aspnetuserlogins" />
+          <NavigationProperty Name="perfile" Relationship="Self.fk_perfil2" FromRole="aspnetusers" ToRole="perfiles" />
           <NavigationProperty Name="cuentas" Relationship="Self.fk_responsable" FromRole="aspnetusers" ToRole="cuentas" />
           <NavigationProperty Name="usuario_mensajes" Relationship="Self.fk_usuario" FromRole="aspnetusers" ToRole="usuario_mensajes" />
           <NavigationProperty Name="aspnetroles" Relationship="Self.aspnetuserroles" FromRole="aspnetusers" ToRole="aspnetroles" />
@@ -427,6 +448,17 @@
           <Property Name="fecha_caducidad" Type="DateTime" />
           <Property Name="enviado_a" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="usuario_mensajes" Relationship="Self.fk_mensaje" FromRole="mensajes" ToRole="usuario_mensajes" />
+        </EntityType>
+        <EntityType Name="perfile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProveedorId" Type="Int32" />
+          <NavigationProperty Name="aspnetusers" Relationship="Self.fk_perfil2" FromRole="perfiles" ToRole="aspnetusers" />
+          <NavigationProperty Name="aspnetroles" Relationship="Self.perfilesroles" FromRole="perfiles" ToRole="aspnetroles" />
         </EntityType>
         <EntityType Name="tipos_proveedor">
           <Key>
@@ -485,6 +517,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_perfil2">
+          <End Role="perfiles" Type="Self.perfile" Multiplicity="0..1" />
+          <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="perfiles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="aspnetusers">
+              <PropertyRef Name="PerfilId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_responsable">
           <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="1" />
           <End Role="cuentas" Type="Self.cuenta" Multiplicity="*" />
@@ -525,6 +569,10 @@
           <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="*" />
           <End Role="aspnetroles" Type="Self.aspnetrole" Multiplicity="*" />
         </Association>
+        <Association Name="perfilesroles">
+          <End Role="perfiles" Type="Self.perfile" Multiplicity="*" />
+          <End Role="aspnetroles" Type="Self.aspnetrole" Multiplicity="*" />
+        </Association>
         <Association Name="usuarios_cuentas_xref">
           <End Role="cuentas" Type="Self.cuenta" Multiplicity="*" />
           <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="*" />
@@ -536,6 +584,7 @@
           <EntitySet Name="aspnetusers" EntityType="Self.aspnetuser" />
           <EntitySet Name="cuentas" EntityType="Self.cuenta" />
           <EntitySet Name="mensajes" EntityType="Self.mensaje" />
+          <EntitySet Name="perfiles" EntityType="Self.perfile" />
           <EntitySet Name="tipos_proveedor" EntityType="Self.tipos_proveedor" />
           <EntitySet Name="tipos_usuario" EntityType="Self.tipos_usuario" />
           <EntitySet Name="usuario_mensajes" EntityType="Self.usuario_mensajes" />
@@ -546,6 +595,10 @@
           <AssociationSet Name="ApplicationUser_Logins" Association="Self.ApplicationUser_Logins">
             <End Role="aspnetusers" EntitySet="aspnetusers" />
             <End Role="aspnetuserlogins" EntitySet="aspnetuserlogins" />
+          </AssociationSet>
+          <AssociationSet Name="fk_perfil2" Association="Self.fk_perfil2">
+            <End Role="perfiles" EntitySet="perfiles" />
+            <End Role="aspnetusers" EntitySet="aspnetusers" />
           </AssociationSet>
           <AssociationSet Name="fk_responsable" Association="Self.fk_responsable">
             <End Role="aspnetusers" EntitySet="aspnetusers" />
@@ -563,29 +616,15 @@
             <End Role="aspnetusers" EntitySet="aspnetusers" />
             <End Role="aspnetroles" EntitySet="aspnetroles" />
           </AssociationSet>
+          <AssociationSet Name="perfilesroles" Association="Self.perfilesroles">
+            <End Role="perfiles" EntitySet="perfiles" />
+            <End Role="aspnetroles" EntitySet="aspnetroles" />
+          </AssociationSet>
           <AssociationSet Name="usuarios_cuentas_xref" Association="Self.usuarios_cuentas_xref">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="aspnetusers" EntitySet="aspnetusers" />
           </AssociationSet>
-          <EntitySet Name="perfils" EntityType="ppgzModel.perfil" />
-          <AssociationSet Name="perfilesroles" Association="ppgzModel.perfilesroles">
-            <End Role="perfil" EntitySet="perfils" />
-            <End Role="aspnetrole" EntitySet="aspnetroles" />
-          </AssociationSet>
         </EntityContainer>
-        <EntityType Name="perfil">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Tipo" Type="String" Nullable="false" MaxLength="65532" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="aspnetroles" Relationship="ppgzModel.perfilesroles" FromRole="perfil" ToRole="aspnetrole" />
-        </EntityType>
-        <Association Name="perfilesroles">
-          <End Type="ppgzModel.perfil" Role="perfil" Multiplicity="*" />
-          <End Type="ppgzModel.aspnetrole" Role="aspnetrole" Multiplicity="*" />
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -595,9 +634,10 @@
           <EntitySetMapping Name="aspnetroles">
             <EntityTypeMapping TypeName="ppgzModel.aspnetrole">
               <MappingFragment StoreEntitySet="aspnetroles">
-                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -640,7 +680,7 @@
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Apellido" ColumnName="Apellido" />
                 <ScalarProperty Name="Cargo" ColumnName="Cargo" />
-                <ScalarProperty Name="perfil_id" ColumnName="perfil_id" />
+                <ScalarProperty Name="PerfilId" ColumnName="PerfilId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -667,6 +707,16 @@
                 <ScalarProperty Name="fecha_publicacion" ColumnName="fecha_publicacion" />
                 <ScalarProperty Name="fecha_caducidad" ColumnName="fecha_caducidad" />
                 <ScalarProperty Name="enviado_a" ColumnName="enviado_a" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="perfiles">
+            <EntityTypeMapping TypeName="ppgzModel.perfile">
+              <MappingFragment StoreEntitySet="perfiles">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -708,29 +758,20 @@
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
+          <AssociationSetMapping Name="perfilesroles" TypeName="ppgzModel.perfilesroles" StoreEntitySet="perfilesroles">
+            <EndProperty Name="perfiles">
+              <ScalarProperty Name="Id" ColumnName="PerfilId" />
+            </EndProperty>
+            <EndProperty Name="aspnetroles">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+          </AssociationSetMapping>
           <AssociationSetMapping Name="usuarios_cuentas_xref" TypeName="ppgzModel.usuarios_cuentas_xref" StoreEntitySet="usuarios_cuentas_xref">
             <EndProperty Name="cuentas">
               <ScalarProperty Name="id" ColumnName="cuenta_id" />
             </EndProperty>
             <EndProperty Name="aspnetusers">
               <ScalarProperty Name="Id" ColumnName="usuario_id" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <EntitySetMapping Name="perfils">
-            <EntityTypeMapping TypeName="ppgzModel.perfil">
-              <MappingFragment StoreEntitySet="perfiles">
-                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <AssociationSetMapping Name="perfilesroles" TypeName="ppgzModel.perfilesroles" StoreEntitySet="perfilesroles">
-            <EndProperty Name="aspnetrole">
-              <ScalarProperty Name="Id" ColumnName="RoleId" />
-            </EndProperty>
-            <EndProperty Name="perfil">
-              <ScalarProperty Name="Id" ColumnName="PerfilId" />
             </EndProperty>
           </AssociationSetMapping>
         </EntityContainerMapping>

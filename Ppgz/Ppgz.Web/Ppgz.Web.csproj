@@ -173,12 +173,19 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
-    <Compile Include="Areas\Nazan\Controllers\TestController.cs" />
+    <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
+    <Compile Include="Areas\Nazan\Errores.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Errores.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Nazan\Models\PefilNazanViewModel.cs" />
     <Compile Include="Areas\Nazan\NazanAreaRegistration.cs" />
     <Compile Include="Areas\Servicio\ServicioAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\NazanController.cs" />
+    <Content Include="Areas\Nazan\Views\AdministrarPerfilesNazan\Editar.cshtml" />
+    <None Include="Controllers\NazanController.cs.old" />
     <Compile Include="Controllers\NazanGestionProveedoresController.cs" />
     <Compile Include="Controllers\NazanMensajesInstitucionalesController.cs">
       <SubType>Code</SubType>
@@ -196,6 +203,7 @@
     <Compile Include="Infrastructure\CuentaManager.cs" />
     <Compile Include="Infrastructure\MensajesManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilManager.cs" />
+    <Compile Include="Infrastructure\Nazan\PerfilNazanManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioManager.cs" />
     <Compile Include="Infrastructure\TipoProveedorManager.cs" />
     <Compile Include="Infrastructure\TipoUsuario.cs" />
@@ -992,6 +1000,8 @@
     <Content Include="Areas\Nazan\Views\web.config" />
     <Content Include="Areas\Mercaderia\Views\web.config" />
     <Content Include="Areas\Servicio\Views\web.config" />
+    <Content Include="Areas\Nazan\Views\AdministrarPerfilesNazan\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarPerfilesNazan\Crear.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -1049,9 +1059,7 @@
     <Folder Include="Areas\Mercaderia\Controllers\" />
     <Folder Include="Areas\Mercaderia\Models\" />
     <Folder Include="Areas\Mercaderia\Views\Shared\" />
-    <Folder Include="Areas\Nazan\Models\" />
     <Folder Include="Areas\Nazan\Views\Shared\" />
-    <Folder Include="Areas\Nazan\Views\Test\" />
     <Folder Include="Areas\Servicio\Controllers\" />
     <Folder Include="Areas\Servicio\Models\" />
     <Folder Include="Areas\Servicio\Views\Shared\" />
@@ -1069,6 +1077,10 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Areas\Nazan\Errores.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Errores.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -1080,7 +1092,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ppgz.Repository\Ppgz.Repository.csproj">
-      <Project>{805197A6-6948-483E-A738-7AE7745AC953}</Project>
+      <Project>{805197a6-6948-483e-a738-7ae7745ac953}</Project>
       <Name>Ppgz.Repository</Name>
     </ProjectReference>
   </ItemGroup>

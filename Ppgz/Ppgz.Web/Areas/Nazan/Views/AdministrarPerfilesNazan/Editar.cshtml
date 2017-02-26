@@ -1,0 +1,57 @@
+﻿@model Ppgz.Web.Areas.Nazan.Models.PefilNazanViewModel
+
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Editar Pefil Nazan</h2>
+<p class="page-description-title">
+    <i class="fa fa-info" aria-hidden="true"></i> <i>Editar perfil</i>
+</p>
+<div class="panel panel-default">
+    <div class="panel-heading">Formulario de edición</div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("Editar", "AdministrarPerfilesNazan", new {ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true)
+
+
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Nombre, new {@class = "col-sm-3 control-label"})
+                <div class="col-sm-7">
+                    @Html.TextBoxFor(m => m.Nombre, new {@class = "form-control"})
+                    @Html.ValidationMessageFor(m => m.Nombre)
+                </div>
+            </div>
+            
+            <div class="form-group">
+                @Html.LabelFor(m => m.RolesIds, new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-7">
+
+                    @Html.ListBoxFor(model => model.RolesIds, Model.Roles, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.RolesIds)
+                </div>
+            </div>
+            
+
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-save" aria-hidden="true"></i> Registrar</button>
+                    <a class="btn btn-default" href="@Url.Action("Index", "AdministrarPerfilesNazan")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

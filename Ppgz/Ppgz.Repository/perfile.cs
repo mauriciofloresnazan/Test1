@@ -12,17 +12,20 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class perfil
+    public partial class perfile
     {
-        public perfil()
+        public perfile()
         {
+            this.aspnetusers = new HashSet<aspnetuser>();
             this.aspnetroles = new HashSet<aspnetrole>();
         }
     
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Tipo { get; set; }
+        public Nullable<int> ProveedorId { get; set; }
     
+        public virtual ICollection<aspnetuser> aspnetusers { get; set; }
         public virtual ICollection<aspnetrole> aspnetroles { get; set; }
     }
 }

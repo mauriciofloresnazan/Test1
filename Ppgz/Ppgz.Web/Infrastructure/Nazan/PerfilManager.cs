@@ -20,13 +20,13 @@ namespace Ppgz.Web.Infrastructure.Nazan
             }
         }
 
-        public List<perfil> FindAll()
+        public List<perfile> FindAll()
         {
             return _db.perfiles.Where(
                 u => Tipos.Contains(u.Tipo)).ToList();
         }
 
-        public perfil Find(int id)
+        public perfile Find(int id)
         {
             return _db.perfiles.Find(id);
 
