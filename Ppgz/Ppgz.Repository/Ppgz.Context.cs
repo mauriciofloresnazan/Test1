@@ -32,8 +32,6 @@ namespace Ppgz.Repository
         public virtual DbSet<cuenta> cuentas { get; set; }
         public virtual DbSet<mensaje> mensajes { get; set; }
         public virtual DbSet<perfile> perfiles { get; set; }
-        public virtual DbSet<tipos_proveedor> tipos_proveedor { get; set; }
-        public virtual DbSet<tipos_usuario> tipos_usuario { get; set; }
-        public virtual DbSet<usuario_mensajes> usuario_mensajes { get; set; }
+        public virtual DbSet<usuariomensaje> usuariomensajes { get; set; }
     }
 }

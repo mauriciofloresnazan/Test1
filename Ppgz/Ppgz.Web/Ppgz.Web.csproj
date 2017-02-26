@@ -173,6 +173,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
+    <Compile Include="Areas\Nazan\Controllers\AdministrarMensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
@@ -193,11 +194,14 @@
     <Content Include="Areas\Nazan\Views\AdministrarUsuariosNazan\Index.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarProveedores\Index.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarProveedores\Registrar.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarMensajesInstitucionales\Crear.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarMensajesInstitucionales\Editar.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarMensajesInstitucionales\Index.cshtml" />
     <None Include="Controllers\NazanController.cs.old" />
     <None Include="Controllers\NazanGestionProveedoresController.cs.old" />
-    <Compile Include="Controllers\NazanMensajesInstitucionalesController.cs">
+    <None Include="Controllers\NazanMensajesInstitucionalesController.cs.old">
       <SubType>Code</SubType>
-    </Compile>
+    </None>
     <None Include="Controllers\ProveedorAdministrarUsuariosController.cs.old">
       <SubType>Code</SubType>
     </None>
@@ -210,18 +214,19 @@
     <Compile Include="Infrastructure\CommonManager.cs" />
     <Compile Include="Infrastructure\Nazan\CuentaManager.cs" />
     <Compile Include="Infrastructure\MensajesManager.cs" />
+    <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilProveedorManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioProveedorManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioNazanManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilNazanManager.cs" />
-    <Compile Include="Infrastructure\Nazan\UsuarioManager.cs" />
-    <Compile Include="Infrastructure\TipoProveedorManager.cs" />
+    <None Include="Infrastructure\Nazan\UsuarioManager.cs.old" />
+    <None Include="Infrastructure\TipoProveedorManager.cs.old" />
     <Compile Include="Infrastructure\TipoUsuario.cs" />
     <Compile Include="Infrastructure\UsuarioManager.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Areas\Nazan\Models\CuentaViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\MensajeViewModel.cs" />
+    <Compile Include="Areas\Nazan\Models\MensajeViewModel.cs" />
     <Compile Include="Models\Nazan\PerfilViewModel.cs" />
     <Compile Include="Models\Nazan\UsuarioViewModel.cs" />
     <Compile Include="Models\ProveedorUsuarioViewModel.cs" />
@@ -1098,6 +1103,7 @@
     <EmbeddedResource Include="ResourceErrores.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ResourceErrores.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

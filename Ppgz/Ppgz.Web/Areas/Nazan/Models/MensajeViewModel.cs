@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Ppgz.Web.Models
+namespace Ppgz.Web.Areas.Nazan.Models
 {
     public class MensajeViewModel
     {

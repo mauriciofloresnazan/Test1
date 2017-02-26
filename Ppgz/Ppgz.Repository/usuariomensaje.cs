@@ -12,11 +12,14 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class tipos_proveedor
+    public partial class usuariomensaje
     {
-        public int id { get; set; }
-        public string codigo { get; set; }
-        public string nombre { get; set; }
-        public string descripcion { get; set; }
+        public int Id { get; set; }
+        public int MensajeId { get; set; }
+        public string UsuarioId { get; set; }
+        public Nullable<System.DateTime> FechaVisualizacion { get; set; }
+    
+        public virtual aspnetuser aspnetuser { get; set; }
+        public virtual mensaje mensaje { get; set; }
     }
 }

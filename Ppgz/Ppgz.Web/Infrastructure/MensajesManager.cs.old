@@ -22,18 +22,18 @@ namespace Ppgz.Web.Infrastructure
 
         public mensaje FindById(int id)
         {
-            return _db.mensajes.Single(i => i.id == id);
+            return _db.mensajes.Single(i => i.Id == id);
         }
 
         public void Update(int id, mensaje valores)
         {
             var mensaje = FindById(id);
 
-            mensaje.titulo = valores.titulo;
-            mensaje.fecha_publicacion = valores.fecha_publicacion;
-            mensaje.fecha_caducidad = valores.fecha_caducidad;
-            mensaje.archivo = valores.archivo;
-            mensaje.enviado_a = valores.enviado_a;
+            mensaje.Titulo = valores.Titulo;
+            mensaje.FechaPublicacion= valores.FechaPublicacion;
+            mensaje.FechaCaducidad= valores.FechaCaducidad;
+            mensaje.Archivo= valores.Archivo;
+            mensaje.EnviadoA = valores.EnviadoA;
 
             _db.Entry(mensaje).State = EntityState.Modified;
 
@@ -69,9 +69,9 @@ namespace Ppgz.Web.Infrastructure
                 WHERE   enviado_a IN ({0},  'TODOS' )", enviadoA).ToList();
         }
 
-        public List<usuario_mensajes> GetByUsuarioId(string usuarioId)
+        public List<usuariomensaje> GetByUsuarioId(string usuarioId)
         {
-            return _db.usuario_mensajes.Where(u => u.usuario_id == usuarioId).ToList();
+            return _db.usuariomensajes.Where(u => u.UsuarioId == usuarioId).ToList();
 
   
         }
