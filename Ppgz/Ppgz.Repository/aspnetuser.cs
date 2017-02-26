@@ -41,7 +41,7 @@ namespace Ppgz.Repository
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Cargo { get; set; }
-        public Nullable<int> PerfilId { get; set; }
+        public int PerfilId { get; set; }
     
         public virtual ICollection<aspnetuserclaim> aspnetuserclaims { get; set; }
         public virtual ICollection<aspnetuserlogin> aspnetuserlogins { get; set; }

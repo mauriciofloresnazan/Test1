@@ -14,8 +14,8 @@ namespace Ppgz.Web.Models
         public string Nombre { get; set; }
         public string Apellido { get; set; }
         public string Cargo { get; set; }
-        
 
+        public int PerfilId { get; set; }
         
 
     }

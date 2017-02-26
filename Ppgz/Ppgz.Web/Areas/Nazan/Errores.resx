@@ -126,4 +126,13 @@
   <data name="PerfilNazanRolesRequeridos" xml:space="preserve">
     <value>PerfilNazanRolesRequeridos</value>
   </data>
+  <data name="UsuarioNazanIncorrecto" xml:space="preserve">
+    <value>UsuarioNazanIncorrecto</value>
+  </data>
+  <data name="UsuarioNazanLoginExistente" xml:space="preserve">
+    <value>UsuarioNazanLoginExistente</value>
+  </data>
+  <data name="UsuarioNazanPerfilIncorrecto" xml:space="preserve">
+    <value>UsuarioNazanPerfilIncorrecto</value>
+  </data>
 </root>

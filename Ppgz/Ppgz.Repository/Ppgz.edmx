@@ -62,7 +62,7 @@
           <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Apellido" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Cargo" Type="varchar" MaxLength="200" />
-          <Property Name="PerfilId" Type="int" />
+          <Property Name="PerfilId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="cuentas">
           <Key>
@@ -219,7 +219,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_perfil2">
-          <End Role="perfiles" Type="Self.perfiles" Multiplicity="0..1" />
+          <End Role="perfiles" Type="Self.perfiles" Multiplicity="1" />
           <End Role="aspnetusers" Type="Self.aspnetusers" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="perfiles">
@@ -413,7 +413,7 @@
           <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Apellido" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Cargo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="PerfilId" Type="Int32" />
+          <Property Name="PerfilId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="aspnetuserclaims" Relationship="Self.ApplicationUser_Claims" FromRole="aspnetusers" ToRole="aspnetuserclaims" />
           <NavigationProperty Name="aspnetuserlogins" Relationship="Self.ApplicationUser_Logins" FromRole="aspnetusers" ToRole="aspnetuserlogins" />
           <NavigationProperty Name="perfile" Relationship="Self.fk_perfil2" FromRole="aspnetusers" ToRole="perfiles" />
@@ -518,7 +518,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_perfil2">
-          <End Role="perfiles" Type="Self.perfile" Multiplicity="0..1" />
+          <End Role="perfiles" Type="Self.perfile" Multiplicity="1" />
           <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="perfiles">

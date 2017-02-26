@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="474dbc95658043b9a198c7bbee6161a1" Name="Diagram1">
+      <Diagram DiagramId="6e6361058c1a47e099eac234c6d1b795" Name="Diagram1">
         <EntityTypeShape EntityType="ppgzModel.aspnetrole" Width="1.5" PointX="5.25" PointY="5" IsExpanded="true" />
         <EntityTypeShape EntityType="ppgzModel.aspnetuserclaim" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
         <EntityTypeShape EntityType="ppgzModel.aspnetuserlogin" Width="1.5" PointX="5.25" PointY="10.625" IsExpanded="true" />

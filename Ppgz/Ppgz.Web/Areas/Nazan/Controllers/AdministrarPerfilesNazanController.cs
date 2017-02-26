@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure.Nazan;
 
@@ -15,14 +13,14 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		
 		//
 		// GET: /Nazan/AdministrarPerfilesNazan/
-		[Authorize(Roles = "NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
+		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
 		public ActionResult Index()
 		{
 			ViewBag.Perfiles = _perfilNazanManager.FindAll();
 
 			return View();
 		}
-		[Authorize(Roles = "NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
+		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
 		public ActionResult Crear()
 		{
 			
@@ -35,7 +33,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return View(model);
 		}
 
-		[Authorize(Roles = "NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
+		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult Crear(PefilNazanViewModel model)
@@ -60,7 +58,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return RedirectToAction("Index");
 		}
 
-		[Authorize(Roles = "NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
+		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
 		public ActionResult Editar(int id)
 		{
 			var perfil = _perfilNazanManager.Find(id);
@@ -83,15 +81,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				
 			};
 
-
-
-
-
 			return View(model);
 		}
 
 
-        [Authorize(Roles = "NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
+		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Editar(int id, PefilNazanViewModel model)
@@ -134,7 +128,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return View(model);
 		}
 
-        [Authorize(Roles = "NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
+		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
 		public ActionResult Eliminar(int id)
 		{
 	  

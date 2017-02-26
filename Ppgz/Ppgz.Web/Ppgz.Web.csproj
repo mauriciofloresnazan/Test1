@@ -174,17 +174,22 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
+    <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
     <Compile Include="Areas\Nazan\Errores.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Errores.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Nazan\Models\PefilNazanViewModel.cs" />
+    <Compile Include="Areas\Nazan\Models\UsuarioNazanViewModel.cs" />
     <Compile Include="Areas\Nazan\NazanAreaRegistration.cs" />
     <Compile Include="Areas\Servicio\ServicioAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Content Include="Areas\Nazan\Views\AdministrarPerfilesNazan\Editar.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarUsuariosNazan\Editar.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarUsuariosNazan\Crear.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarUsuariosNazan\Index.cshtml" />
     <None Include="Controllers\NazanController.cs.old" />
     <Compile Include="Controllers\NazanGestionProveedoresController.cs" />
     <Compile Include="Controllers\NazanMensajesInstitucionalesController.cs">
@@ -203,6 +208,7 @@
     <Compile Include="Infrastructure\CuentaManager.cs" />
     <Compile Include="Infrastructure\MensajesManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilManager.cs" />
+    <Compile Include="Infrastructure\Nazan\UsuarioNazanManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilNazanManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioManager.cs" />
     <Compile Include="Infrastructure\TipoProveedorManager.cs" />

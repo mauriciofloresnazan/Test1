@@ -86,5 +86,32 @@ namespace Ppgz.Web.Areas.Nazan {
                 return ResourceManager.GetString("PerfilNazanRolesRequeridos", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UsuarioNazanIncorrecto.
+        /// </summary>
+        internal static string UsuarioNazanIncorrecto {
+            get {
+                return ResourceManager.GetString("UsuarioNazanIncorrecto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UsuarioNazanLoginExistente.
+        /// </summary>
+        internal static string UsuarioNazanLoginExistente {
+            get {
+                return ResourceManager.GetString("UsuarioNazanLoginExistente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UsuarioNazanPerfilIncorrecto.
+        /// </summary>
+        internal static string UsuarioNazanPerfilIncorrecto {
+            get {
+                return ResourceManager.GetString("UsuarioNazanPerfilIncorrecto", resourceCulture);
+            }
+        }
     }
 }
