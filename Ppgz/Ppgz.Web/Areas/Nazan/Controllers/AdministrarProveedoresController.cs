@@ -105,7 +105,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			entities.SaveChanges();
 
 			TempData["FlashSuccess"] = "Cuenta Actualizada con éxito.";
-			return RedirectToAction("Editar", new { id = id });
+			return RedirectToAction("Editar", new { id });
 		}
 
 
@@ -123,6 +123,34 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             catch (Exception exception)
             {
                 return Json(new { error = exception.Message}) ;
+            }
+
+        }
+
+
+        public ActionResult AsociarProveedor(int id, string numeroProveedor)
+        {
+            var sapManager = new SapManager();
+
+            try
+            {
+                var proveedor = sapManager.GetProveedor(numeroProveedor);
+
+                var cuenta = _cuentaManager.Find(id);
+                
+                proveedor.CuentaId = cuenta.Id;
+
+                var entities = new Entities();
+                entities.cuentaproveedores.Add(proveedor);
+                entities.SaveChanges();
+
+                TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
+                return RedirectToAction("Editar", new { id = id });
+            }
+            catch (Exception exception)
+            {
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("Editar", new { id = id }); 
             }
 
         }

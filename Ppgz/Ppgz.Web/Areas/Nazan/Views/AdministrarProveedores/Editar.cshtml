@@ -116,12 +116,40 @@
                 </tr>
             </thead>
             <tbody>
+            @foreach (var proveedor in ViewBag.cuenta.cuentaproveedores)
+            {
                 <tr>
-                   
-
-         
- 
+                    <td>@proveedor.NumeroProveedor</td>
+                    <td>@proveedor.Nombre</td>
+                    <td>@proveedor.Ciudad</td>
+                    <td>@proveedor.Distrito</td>
+                    <td>@proveedor.VendedorNombre</td>
+                    <td>@proveedor.VendedorTelefono</td> 
+                    <td>@proveedor.CompradorImpulsNombre</td>
+                    <td>@proveedor.CompradorImpulsTelefono</td>
+                    <td>@proveedor.CompradorImpulsEmail</td>
+                    <td>
+                        
+                        <div class="btn-group-vertical hidden-xs">
+                            <a class="btn btn-warning btn-xs" href="@Url.Action("Editar", "AdministrarProveedores", new { @id = @proveedor.CuentaId })">
+                                <i class="fa fa-pencil" aria-hidden="true"></i> Editar
+                            </a>
+                            <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarProveedores", new { @id = @proveedor.CuentaId })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El usuario será eliminado.">
+                                <i class="fa fa-times" aria-hidden="true"></i> Eliminar
+                            </a>
+                        </div>
+                        <div class="btn-group-vertical visible-xs">
+                            <a class="btn btn-warning btn-xs" href="@Url.Action("Editar", "AdministrarProveedores", new { @id = @proveedor.CuentaId })">
+                                <i class="fa fa-pencil" aria-hidden="true"></i> Editar
+                            </a>
+                            <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarProveedores", new { @id = @proveedor.CuentaId })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El usuario será eliminado.">
+                                <i class="fa fa-times" aria-hidden="true"></i> Eliminar
+                            </a>
+                        </div>
+                    </td>
                 </tr>
+                
+            }
 
 
             </tbody>
@@ -163,7 +191,7 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-lg" data-dismiss="modal">Asociar</button>
+                <a id="asociar-proveedor" class="btn btn-primary btn-lg">Asociar</a>
 
             </div>
         </div>
@@ -217,6 +245,9 @@
         });
         
         var urlBuscarProveedor = "@Url.Action("BuscarProveedor", "AdministrarProveedores")";
+
+        var urlAsociarProveedor =  "@Url.Action("AsociarProveedor", "AdministrarProveedores")";
+
         function buscarNumeroProveedor(numeroProveedor) {
 
 
@@ -261,6 +292,10 @@
                 $("#modalBuscarCompradorImpulsNombre").text(result.CompradorImpulsNombre);
                 $("#modalBuscarCompradorImpulseTelefono").text(result.CompradorImpulsTelefono);
                 $("#modalBuscarCompradorImpulseEmail").text(result.CompradorImpulsEmail);
+
+
+                $("#asociar-proveedor").attr("href", urlAsociarProveedor + "/" + cuentaId + "?numeroProveedor=" + numeroProveedor);
+                
 
                 $('#buscarModal').modal('show');
 
