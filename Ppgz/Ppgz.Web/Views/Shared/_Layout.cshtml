@@ -47,67 +47,40 @@
 
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Acciones <span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                @if (User.Identity.GetUserName() == "superadmin")
+                                @if (Request.IsAuthenticated)
                                 {
-                                    if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "NazanGestionProveedores")
+                                    // NAZAN-ADMINISTRARPERFILESNAZAN
+                                    if (User.IsInRole("SUPERADMIN") || User.IsInRole("NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR"))
                                     {
-
-                                        <li class="active"><a href="@Url.Action("Index", "NazanGestionProveedores")"><i class="fa fa fa-info" aria-hidden="true"></i> Administrar Proveedores</a></li>
-
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarPerfilesNazan", new { area = "Nazan" })"><i class="fa fa fa-road" aria-hidden="true"></i> Administrar Pefiles Nazan</a></li>
                                     }
-                                    else
+                                    // NAZAN-ADMINISTRARUSUARIOSNAZAN
+
+                                    if (User.IsInRole("SUPERADMIN") || User.IsInRole("NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")) 
                                     {
-                                        <li class=""><a href="@Url.Action("Index", "NazanGestionProveedores")"><i class="fa fa fa-info" aria-hidden="true"></i> Administrar Proveedores</a></li>
-
-
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarUsuariosNazan", new { area = "Nazan" })"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Nazan</a></li>
                                     }
-                                    if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "NazanMensajesInstitucionales")
+                                    // NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES
+                                    if (User.IsInRole("SUPERADMIN") || User.IsInRole("NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR"))
                                     {
-
-                                        <li class="active"><a href="@Url.Action("Index", "NazanMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Administrar Mensajes</a></li>
-
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarMensajesInstitucionales", new { area = "Nazan" })"><i class="fa fa fa-envelope-o" aria-hidden="true"></i> Administrar Mensajes Insitucionales</a></li>
                                     }
-                                    else
+                                    // NAZAN-ADMINISTRARPROVEEDORESNAZAN
+                                    if (User.IsInRole("SUPERADMIN") || User.IsInRole("NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR"))
                                     {
-                                        <li class=""><a href="@Url.Action("Index", "NazanMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Administrar Mensajes</a></li>
-
-
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarProveedores", new { area = "Nazan" })"><i class="fa fa fa-info" aria-hidden="true"></i> Administrar Proveedores</a></li>
                                     }
+                                    
                                 }
-                                else
-                                {
-                                    if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "ProveedorAdministrarUsuarios")
-                                    {
-                                        <li class="active"><a href="@Url.Action("Index", "ProveedorAdministrarUsuarios")"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Proveedor</a></li>
-                                    }
-                                    else
-                                    {
-                                        <li class=""><a href="@Url.Action("Index", "ProveedorAdministrarUsuarios")"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Proveedor</a></li>
-
-                                    }
-                                    if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "ProveedorMensajesInstitucionales")
-                                    {
-
-                                        <li class="active"><a href="@Url.Action("Index", "ProveedorMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Mensajes Institucionales</a></li>
-
-                                    }
-                                    else
-                                    {
-                                        <li class=""><a href="@Url.Action("Index", "ProveedorMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Mensajes Institucionales</a></li>
-
-
-                                    }
-                                }
-
-
                             </ul>
                         </li>
                     }
-                    @if (Request.IsAuthenticated && User.Identity.GetUserName() == "superadmin")
+                    @if (Request.IsAuthenticated)
                     {
-                        if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "NazanGestionProveedores")
+                        if (@HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"].ToString() == "Nazan" &&
+                            @HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "AdministrarPerfilesNazan")
                         {
-                            <li class="active">@Html.ActionLink("Administrar Proveedores", "Index", "NazanGestionProveedores", null, new { @class = "active" })</li>
+                            <li class="active">@Html.ActionLink("Administrar Perfiles", "Index", "AdministrarPerfilesNazan",  new { area = "Nazan" }, new { @class = "active" })</li>
 
                         }
                         if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "NazanMensajesInstitucionales")
