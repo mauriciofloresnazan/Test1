@@ -16,6 +16,7 @@ namespace Ppgz.Repository
     {
         public cuenta()
         {
+            this.perfiles = new HashSet<perfile>();
             this.aspnetusers = new HashSet<aspnetuser>();
         }
     
@@ -28,6 +29,7 @@ namespace Ppgz.Repository
         public string ResponsableUsuarioId { get; set; }
     
         public virtual aspnetuser aspnetuser { get; set; }
+        public virtual ICollection<perfile> perfiles { get; set; }
         public virtual ICollection<aspnetuser> aspnetusers { get; set; }
     }
 }

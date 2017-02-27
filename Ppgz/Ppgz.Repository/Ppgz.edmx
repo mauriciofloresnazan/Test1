@@ -88,7 +88,7 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Titulo" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Contenido" Type="longtext" />
           <Property Name="Archivo" Type="varchar" MaxLength="100" />
@@ -102,8 +102,8 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="45" Nullable="false" />
-          <Property Name="ProveedorId" Type="int" />
-          <Property Name="Tipo" Type="enum" />
+          <Property Name="Tipo" Type="enum" Nullable="false" />
+          <Property Name="CuentaId" Type="int" />
         </EntityType>
         <EntityType Name="perfilesroles">
           <Key>
@@ -161,6 +161,18 @@
             </Principal>
             <Dependent Role="aspnetuserroles">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cuenta">
+          <End Role="cuentas" Type="Self.cuentas" Multiplicity="0..1" />
+          <End Role="perfiles" Type="Self.perfiles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuentas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="perfiles">
+              <PropertyRef Name="CuentaId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -298,6 +310,10 @@
             <End Role="aspnetusers" EntitySet="aspnetusers" />
             <End Role="aspnetuserroles" EntitySet="aspnetuserroles" />
           </AssociationSet>
+          <AssociationSet Name="fk_cuenta" Association="Self.fk_cuenta">
+            <End Role="cuentas" EntitySet="cuentas" />
+            <End Role="perfiles" EntitySet="perfiles" />
+          </AssociationSet>
           <AssociationSet Name="fk_cuentas" Association="Self.fk_cuentas">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentasusuarios" EntitySet="cuentasusuarios" />
@@ -414,13 +430,14 @@
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <Property Name="ResponsableUsuarioId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="aspnetuser" Relationship="Self.fk_responsable" FromRole="cuentas" ToRole="aspnetusers" />
+          <NavigationProperty Name="perfiles" Relationship="Self.fk_cuenta" FromRole="cuentas" ToRole="perfiles" />
           <NavigationProperty Name="aspnetusers" Relationship="Self.cuentasusuarios" FromRole="cuentas" ToRole="aspnetusers" />
         </EntityType>
         <EntityType Name="mensaje">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Titulo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Contenido" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="Archivo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -435,9 +452,10 @@
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Nombre" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ProveedorId" Type="Int32" />
-          <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
+          <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CuentaId" Type="Int32" />
           <NavigationProperty Name="aspnetusers" Relationship="Self.fk_perfil2" FromRole="perfiles" ToRole="aspnetusers" />
+          <NavigationProperty Name="cuenta" Relationship="Self.fk_cuenta" FromRole="perfiles" ToRole="cuentas" />
           <NavigationProperty Name="aspnetroles" Relationship="Self.perfilesroles" FromRole="perfiles" ToRole="aspnetroles" />
         </EntityType>
         <EntityType Name="usuariomensaje">
@@ -515,6 +533,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_cuenta">
+          <End Role="cuentas" Type="Self.cuenta" Multiplicity="0..1" />
+          <End Role="perfiles" Type="Self.perfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuentas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="perfiles">
+              <PropertyRef Name="CuentaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_mensaje">
           <End Role="mensajes" Type="Self.mensaje" Multiplicity="1" />
           <End Role="usuariomensajes" Type="Self.usuariomensaje" Multiplicity="*" />
@@ -567,6 +597,10 @@
           <AssociationSet Name="fk_usuario" Association="Self.fk_usuario">
             <End Role="aspnetusers" EntitySet="aspnetusers" />
             <End Role="usuariomensajes" EntitySet="usuariomensajes" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cuenta" Association="Self.fk_cuenta">
+            <End Role="cuentas" EntitySet="cuentas" />
+            <End Role="perfiles" EntitySet="perfiles" />
           </AssociationSet>
           <AssociationSet Name="fk_mensaje" Association="Self.fk_mensaje">
             <End Role="mensajes" EntitySet="mensajes" />
@@ -675,8 +709,8 @@
               <MappingFragment StoreEntitySet="perfiles">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

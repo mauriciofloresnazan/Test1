@@ -33,18 +33,9 @@ namespace Ppgz.Web.Infrastructure
             return _db.Database.SqlQuery<cuenta>(@"
                 SELECT  * 
                 FROM    cuentas
-                WHERE   id IN (SELECT cuenta_id 
-                               FROM usuarios_cuentas_xref 
-                               WHERE usuario_id = {0})", usuarioAutenticado.Id).FirstOrDefault();
-
-            
-
-            return usuarioAutenticado.cuentas.First();
-
-        
-
-
-
+                WHERE   id IN (SELECT CuentaId 
+                               FROM cuentasusuarios 
+                               WHERE UsuarioId = {0})", usuarioAutenticado.Id).FirstOrDefault();
 
         }
 

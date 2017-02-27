@@ -22,10 +22,11 @@ namespace Ppgz.Repository
     
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public Nullable<int> ProveedorId { get; set; }
         public string Tipo { get; set; }
+        public Nullable<int> CuentaId { get; set; }
     
         public virtual ICollection<aspnetuser> aspnetusers { get; set; }
+        public virtual cuenta cuenta { get; set; }
         public virtual ICollection<aspnetrole> aspnetroles { get; set; }
     }
 }

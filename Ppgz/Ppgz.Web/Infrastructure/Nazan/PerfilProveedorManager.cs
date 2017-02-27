@@ -18,6 +18,11 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 p => p.Tipo == Tipo).ToList();
         }
 
+        public List<perfile> FindByCuentaId(int cuentaId)
+        {
+            return _db.perfiles.Where(p => p.CuentaId == cuentaId).ToList();
+        } 
+
         public perfile Find(int id)
         {
             return _db.perfiles

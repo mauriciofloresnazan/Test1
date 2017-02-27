@@ -53,6 +53,11 @@ namespace Ppgz.Web.Infrastructure.Nazan
             return _db.cuentas.FirstOrDefault(c => c.NombreProveedor == nombreProveedor);
         }
 
+        public cuenta FindByResponsableUsuarioId(string id)
+        {
+            return _db.cuentas.FirstOrDefault(c => c.ResponsableUsuarioId == id);
+        }
+
         public void Create(string nombreProveedor, Tipo tipo, string responsableLogin,
             string reponsableNombre, string reponsableApellido, string responsableCargo, 
             string responsableEmail, string responableTelefono, string responsablePassword
@@ -98,14 +103,20 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             };
 
-            //cuenta.aspnetusers.Add(usuarioMaestro);
- 
+            
             _db.cuentas.Add(cuenta);
             _db.SaveChanges();
 
+            /*cuenta.aspnetusers.Add(usuarioMaestro);
             usuarioMaestro.cuentas.Add(cuenta);
-            _db.SaveChanges();
+            usuarioMaestro.cuentas1.Add(cuenta);*/
 
+            //TODO 
+            const string sql = @"
+                        INSERT INTO  cuentasusuarios (UsuarioId, CuentaId)
+                        VALUES ({0},{1})";
+            _db.Database.ExecuteSqlCommand(sql, usuarioMaestro.Id, cuenta.Id);
+            _db.SaveChanges();
        
         }
 

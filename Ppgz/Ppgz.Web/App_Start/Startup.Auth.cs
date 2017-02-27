@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System.Linq;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using Ppgz.Repository;
 using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Models;
 
@@ -13,10 +15,11 @@ namespace Ppgz.Web
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)
         {
-
+            // Fix DbContext
             var applicationUserManager =
             new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 
+            // SuperUsuario
             var usuarioNazanManager = new UsuarioNazanManager();
             var perfilNazanManager = new PerfilNazanManager();
 
@@ -31,6 +34,40 @@ namespace Ppgz.Web
                     "123456",
                     perfilNazanManager.GetMaestro().Id);
             }
+
+            //Roles
+            var db = new Entities();
+
+            string [] rolesNazan = 
+            {
+                "SUPERADMIN",
+                "NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR",
+                "NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR",
+                "NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR",
+                "NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR",
+                "NAZAN-ADMINISTRAMENSAJESINSTITUCIONALES-LISTAR",
+                "NAZAN-ADMINISTRAMENSAJESINSTITUCIONALES-MODIFICAR",
+            };
+
+            foreach (var role in rolesNazan)
+            {
+                if (db.aspnetroles
+                    .FirstOrDefault(r => r.Name == role) != null) continue;
+
+                var aspnetrole = new aspnetrole()
+                {
+                    Id = role,
+                    Name = role,
+                    Description = role,
+                    Tipo = "NAZAN"
+                };
+
+                db.aspnetroles.Add(aspnetrole);
+                db.SaveChanges();
+            }
+
+
+
 
             // Enable the application to use a cookie to store information for the signed in user
             app.UseCookieAuthentication(new CookieAuthenticationOptions
