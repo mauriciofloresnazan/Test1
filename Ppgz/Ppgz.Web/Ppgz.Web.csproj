@@ -191,6 +191,7 @@
     <Compile Include="Areas\PefilProveedorViewModel.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarUsuariosController.cs" />
+    <Compile Include="Areas\Servicio\Controllers\MensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Servicio\ServicioAreaRegistration.cs" />
     <Compile Include="Areas\UsuarioProveedorViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -217,6 +218,7 @@
     <Content Include="Areas\Servicio\Views\AdministrarUsuarios\Editar.cshtml" />
     <Content Include="Areas\Servicio\Views\AdministrarUsuarios\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\MensajesInstitucionales\index.cshtml" />
+    <Content Include="Areas\Servicio\Views\MensajesInstitucionales\index.cshtml" />
     <None Include="Controllers\NazanController.cs.old" />
     <None Include="Controllers\NazanGestionProveedoresController.cs.old" />
     <None Include="Controllers\NazanMensajesInstitucionalesController.cs.old">

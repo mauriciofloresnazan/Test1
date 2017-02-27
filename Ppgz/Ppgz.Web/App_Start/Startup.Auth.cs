@@ -83,8 +83,8 @@ namespace Ppgz.Web
                 "NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR",
                 "NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR",
                 "NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR",
-                "NAZAN-ADMINISTRAMENSAJESINSTITUCIONALES-LISTAR",
-                "NAZAN-ADMINISTRAMENSAJESINSTITUCIONALES-MODIFICAR",
+                "NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR",
+                "NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR",
             };
 
             foreach (var role in rolesNazan)
@@ -106,6 +106,7 @@ namespace Ppgz.Web
 
             string[] rolesMercaderia = 
             {
+                "MAESTRO-MERCADERIA",
                 "MERCADERIA-ADMINISTRARPERFILES-LISTAR",
                 "MERCADERIA-ADMINISTRARPERFILES-MODIFICAR",
                 "MERCADERIA-ADMINISTRARUSUARIOS-LISTAR",
@@ -132,6 +133,7 @@ namespace Ppgz.Web
 
             string[] rolesServicio = 
             {
+                "MAESTRO-SERVICIO",
                 "SERVICIO-ADMINISTRARPERFILES-LISTAR",
                 "SERVICIO-ADMINISTRARPERFILES-MODIFICAR",
                 "SERVICIO-ADMINISTRARUSUARIOS-LISTAR",

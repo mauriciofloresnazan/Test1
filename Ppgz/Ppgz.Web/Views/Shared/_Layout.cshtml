@@ -70,6 +70,42 @@
                                     {
                                         <li class=""><a href="@Url.Action("Index", "AdministrarProveedores", new { area = "Nazan" })"><i class="fa fa fa-info" aria-hidden="true"></i> Administrar Proveedores</a></li>
                                     }
+
+
+                                    // MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-LISTAR,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR
+                                    if (User.IsInRole("MAESTRO-MERCADERIA") || User.IsInRole("MERCADERIA-ADMINISTRARPERFILES-LISTAR") || User.IsInRole("MERCADERIA-ADMINISTRARPERFILES-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarPerfiles", new { area = "Mercaderia" })"><i class="fa fa fa-road" aria-hidden="true"></i> Administrar Pefiles</a></li>
+                                    }
+                                    // MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARUSUARIOS-LISTAR,MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR
+
+                                    if (User.IsInRole(" MAESTRO-MERCADERIA") || User.IsInRole("MERCADERIA-ADMINISTRARUSUARIOS-LISTAR") || User.IsInRole("MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR")) 
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarUsuarios", new { area = "Mercaderia" })"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios</a></li>
+                                    }
+                                    // MAESTRO-MERCADERIA,MERCADERIA-MENSAJESINSTITUCIONALES
+                                    if (User.IsInRole("MAESTRO-MERCADERIA") || User.IsInRole("MERCADERIA-MENSAJESINSTITUCIONALES"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "MensajesInstitucionales", new { area = "Mercaderia" })"><i class="fa fa fa-envelope-o" aria-hidden="true"></i> Mensajes Insitucionales</a></li>
+                                    }
+
+
+                                    // MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-LISTAR,SERVICIO-ADMINISTRARPERFILES-MODIFICAR
+                                    if (User.IsInRole("MAESTRO-SERVICIO") || User.IsInRole("MERCADERIA-ADMINISTRARPERFILES-LISTAR") || User.IsInRole("SERVICIO-ADMINISTRARPERFILES-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarPerfiles", new { area = "Servicio" })"><i class="fa fa fa-road" aria-hidden="true"></i> Administrar Pefiles</a></li>
+                                    }
+                                    // MAESTRO-SERVICIO,SERVICIO-ADMINISTRARUSUARIOS-LISTAR,SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR
+                                 
+                                    if (User.IsInRole("MAESTRO-SERVICIO") || User.IsInRole("SERVICIO-ADMINISTRARUSUARIOS-LISTAR") || User.IsInRole("SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR")) 
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarUsuarios", new { area = "Servicio" })"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios</a></li>
+                                    }
+                                    // MAESTRO-SERVICIO,SERVICIO-MENSAJESINSTITUCIONALES
+                                    if (User.IsInRole("MAESTRO-SERVICIO") || User.IsInRole("SERVICIO-MENSAJESINSTITUCIONALES"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "MensajesInstitucionales", new { area = "Servicio" })"><i class="fa fa fa-envelope-o" aria-hidden="true"></i> Mensajes Insitucionales</a></li>
+                                    }
                                     
                                 }
                             </ul>
