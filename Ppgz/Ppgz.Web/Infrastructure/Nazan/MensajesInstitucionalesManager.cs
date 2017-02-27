@@ -59,6 +59,14 @@ namespace Ppgz.Web.Infrastructure.Nazan
         public void CreateTexto(string titulo, string contenido,
             DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
         {
+
+            if (fechaCaducidad <= fechaPublicacion)
+            {
+                // TODO carlos campos y juan delgado
+
+                throw new Exception("La fecha de caducidad debe ser superior a la fecha de publicación.");
+            }
+
             var mensaje = new mensaje()
             {
                 Titulo = titulo.Trim(),
@@ -76,6 +84,12 @@ namespace Ppgz.Web.Infrastructure.Nazan
         public void CreateArchivo(string titulo, string archivo,
             DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
         {
+            if (fechaCaducidad <= fechaPublicacion)
+            {
+                // TODO carlos campos y juan delgado
+
+                throw new Exception("La fecha de caducidad debe ser superior a la fecha de publicación.");
+            }
             var mensaje = new mensaje()
             {
                 Titulo = titulo.Trim(),
@@ -92,6 +106,12 @@ namespace Ppgz.Web.Infrastructure.Nazan
         public void UpdateTexto(int id, string titulo, string contenido,
             DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
         {
+            if (fechaCaducidad <= fechaPublicacion)
+            {
+                // TODO carlos campos y juan delgado
+
+                throw new Exception("La fecha de caducidad debe ser superior a la fecha de publicación.");
+            }
             if(string.IsNullOrWhiteSpace(contenido.Trim()))
             {
                 // TODO CARLOS Y  JUAN DELGADO
@@ -117,6 +137,12 @@ namespace Ppgz.Web.Infrastructure.Nazan
         public void UpdateArchivo(int id, string titulo, string archivo,
             DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
         {
+            if (fechaCaducidad <= fechaPublicacion)
+            {
+                // TODO carlos campos y juan delgado
+
+                throw new Exception("La fecha de caducidad debe ser superior a la fecha de publicación.");
+            }
             if (string.IsNullOrWhiteSpace(archivo.Trim()))
             {
                 // TODO CARLOS Y  JUAN DELGADO
@@ -151,5 +177,35 @@ namespace Ppgz.Web.Infrastructure.Nazan
             _db.SaveChanges();
         }
 
+        public List<mensaje> FindPublicadosByCuentaId(int cuentaId)
+        {
+            var cuentaManager = new CuentaManager();
+
+            var cuenta = cuentaManager.Find(cuentaId);
+            
+            return _db.mensajes
+                .Where(m => m.FechaPublicacion < DateTime.Now && (m.EnviadoA == "TODOS" || m.EnviadoA == cuenta.Tipo))
+                .ToList();
+        }
+
+        public List<usuariomensaje> FindUsuarioMensajes(string usuarioId)
+        {
+            return _db.usuariomensajes.Where(um => um.UsuarioId == usuarioId).ToList();
+        }
+
+        public void Visualizar(string usuarioId, int mensajeId)
+        {
+            var usuarioMensaje = new usuariomensaje()
+            {
+                UsuarioId = usuarioId,
+                MensajeId = mensajeId,
+                FechaVisualizacion = DateTime.Now
+            };
+
+            _db.usuariomensajes.Add(usuarioMensaje);
+            _db.SaveChanges();
+
+
+        }
     }
 }

@@ -13,8 +13,12 @@ using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers
 {
+    
+    [Authorize]
     public class HomeController : Controller
     {
+    
+        [TerminosCondiciones]
         public ActionResult Index()
         {
             return View();
@@ -58,6 +62,11 @@ namespace Ppgz.Web.Controllers
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             userManager.AddToRole(User.Identity.GetUserId(), "MAESTRO");
             Response.Write("TENGO ACCESO MAESTRO");*/
+        }
+
+        public void Terminos()
+        {
+            Response.Write("DEBE ACEPTAR");
         }
 
 

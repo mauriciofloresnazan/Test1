@@ -70,7 +70,7 @@ namespace Ppgz.Web {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to sdafasd.
+        ///   Looks up a localized string similar to Error al procesar el registro..
         /// </summary>
         internal static string ErrorGeneral {
             get {

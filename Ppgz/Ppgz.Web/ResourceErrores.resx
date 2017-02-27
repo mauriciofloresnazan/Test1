@@ -121,7 +121,7 @@
     <value />
   </data>
   <data name="ErrorGeneral" xml:space="preserve">
-    <value>sdafasd</value>
+    <value>Error al procesar el registro.</value>
   </data>
   <data name="NombreUsuarioExistente" xml:space="preserve">
     <value>El nombre de usuario ya fue utilizado. Por favor intente con otro.</value>

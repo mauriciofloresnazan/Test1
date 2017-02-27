@@ -8,6 +8,7 @@ using Ppgz.Web.Infrastructure.Nazan;
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
     [Authorize]
+    [TerminosCondiciones]
 	public class AdministrarUsuariosController : Controller
 	{
 		

@@ -63,6 +63,7 @@
           <Property Name="Apellido" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Cargo" Type="varchar" MaxLength="200" />
           <Property Name="PerfilId" Type="int" Nullable="false" />
+          <Property Name="TerminosCondicionesFecha" Type="datetime" Precision="0" />
         </EntityType>
         <EntityType Name="cuentas">
           <Key>
@@ -410,6 +411,7 @@
           <Property Name="Apellido" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Cargo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="PerfilId" Type="Int32" Nullable="false" />
+          <Property Name="TerminosCondicionesFecha" Type="DateTime" />
           <NavigationProperty Name="aspnetuserclaims" Relationship="Self.ApplicationUser_Claims" FromRole="aspnetusers" ToRole="aspnetuserclaims" />
           <NavigationProperty Name="aspnetuserlogins" Relationship="Self.ApplicationUser_Logins" FromRole="aspnetusers" ToRole="aspnetuserlogins" />
           <NavigationProperty Name="perfile" Relationship="Self.fk_perfil2" FromRole="aspnetusers" ToRole="perfiles" />
@@ -675,6 +677,7 @@
                 <ScalarProperty Name="Apellido" ColumnName="Apellido" />
                 <ScalarProperty Name="Cargo" ColumnName="Cargo" />
                 <ScalarProperty Name="PerfilId" ColumnName="PerfilId" />
+                <ScalarProperty Name="TerminosCondicionesFecha" ColumnName="TerminosCondicionesFecha" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

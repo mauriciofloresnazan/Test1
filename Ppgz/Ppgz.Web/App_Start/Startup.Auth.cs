@@ -5,6 +5,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using Ppgz.Repository;
+using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Models;
 
@@ -18,6 +19,43 @@ namespace Ppgz.Web
             // Fix DbContext
             var applicationUserManager =
             new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+            /*
+
+            if (filterContext.RouteData.Values.ContainsValue("Cancel"))
+            {
+                filterContext.Result = new RedirectResult("~/Home/Index");
+                //Trace.WriteLine(" Redirecting from Simple filter to /Home/Index");
+            }
+
+
+            app.Use(async (context, next) =>
+            {
+                // Do work that doesn't write to the Response.
+                await next.Invoke();
+                // Do logging or other work that doesn't write to the Response.
+            });
+            /*
+            app.Run(async context =>
+            {
+                await context.Response.WriteAsync("Hello from 2nd delegate.");
+            });
+
+            app.Run(async (context, next) =>
+            {
+                
+                CommonManager commonManager = new CommonManager();
+                var usuarioAutenticado = commonManager.GetUsuarioAutenticado();
+                if(usuarioAutenticado.Tipo == "PROVEEDOR"|| usuarioAutenticado.Tipo == "PROVEEDOR")
+                {                 
+                    context.Response.ContentType = "text/plain";
+                    await context.Response.WriteAsync("Hello ASP.NET 5!");
+
+                } 
+            });
+
+            */
+
 
             // SuperUsuario
             var usuarioNazanManager = new UsuarioNazanManager();

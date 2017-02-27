@@ -174,6 +174,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\AdministrarUsuariosController.cs" />
+    <Compile Include="Areas\Mercaderia\Controllers\MensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarMensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
@@ -215,6 +216,7 @@
     <Content Include="Areas\Servicio\Views\AdministrarUsuarios\Crear.cshtml" />
     <Content Include="Areas\Servicio\Views\AdministrarUsuarios\Editar.cshtml" />
     <Content Include="Areas\Servicio\Views\AdministrarUsuarios\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\MensajesInstitucionales\index.cshtml" />
     <None Include="Controllers\NazanController.cs.old" />
     <None Include="Controllers\NazanGestionProveedoresController.cs.old" />
     <None Include="Controllers\NazanMensajesInstitucionalesController.cs.old">
@@ -226,6 +228,7 @@
     <None Include="Controllers\ProveedorMensajesInstitucionalesController.cs.old">
       <SubType>Code</SubType>
     </None>
+    <Compile Include="Controllers\PoliticasController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -239,6 +242,7 @@
     <Compile Include="Infrastructure\Nazan\PerfilNazanManager.cs" />
     <None Include="Infrastructure\Nazan\UsuarioManager.cs.old" />
     <None Include="Infrastructure\TipoProveedorManager.cs.old" />
+    <Compile Include="Infrastructure\TerminosCondiciones.cs" />
     <Compile Include="Infrastructure\TipoUsuario.cs" />
     <Compile Include="Infrastructure\UsuarioManager.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -268,6 +272,7 @@
     <Content Include="assets\css\main.css" />
     <Content Include="assets\img\logo-grupo-nazan.png" />
     <Content Include="assets\img\logo.png" />
+    <Content Include="App_Data\politicas.txt" />
     <Content Include="assets\vendor\bootstrap-3.3.6\css\bootstrap-theme.css" />
     <Content Include="assets\vendor\bootstrap-3.3.6\css\bootstrap-theme.min.css" />
     <Content Include="assets\vendor\bootstrap-3.3.6\css\bootstrap.css" />
@@ -1053,6 +1058,7 @@
     <Content Include="Views\Nazan\AdministrarPerfilesNazan.cshtml" />
     <Content Include="Views\Nazan\CrearPerfilNazan.cshtml" />
     <Content Include="Uploads\960_sketch_16_col.pdf" />
+    <Content Include="Views\Politicas\Index.cshtml" />
     <None Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1089,7 +1095,6 @@
     <Content Include="Views\NazanMensajesInstitucionales\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Areas\Mercaderia\Models\" />
     <Folder Include="Areas\Mercaderia\Views\Shared\" />
     <Folder Include="Areas\Nazan\Views\Shared\" />

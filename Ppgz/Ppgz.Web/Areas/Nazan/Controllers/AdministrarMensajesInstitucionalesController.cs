@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using Ppgz.Repository;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure.Nazan;
-using WebGrease.Css.Ast.MediaQuery;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
@@ -102,12 +97,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				TempData["FlashSuccess"] = "Mensaje creado con éxito.";
 				return RedirectToAction("Index");
 			}
-			catch (Exception)
+			catch (Exception exception)
 			{
 						
 				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = ResourceErrores.ErrorGeneral;
-				return RedirectToAction("Index");
+                ModelState.AddModelError(string.Empty, exception.Message);
+                return View(model);
 			}
 		}
 
