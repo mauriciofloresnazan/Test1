@@ -186,6 +186,8 @@
     <Compile Include="Areas\Nazan\Models\PefilNazanViewModel.cs" />
     <Compile Include="Areas\Nazan\Models\UsuarioNazanViewModel.cs" />
     <Compile Include="Areas\Nazan\NazanAreaRegistration.cs" />
+    <Compile Include="Areas\PefilProveedorViewModel.cs" />
+    <Compile Include="Areas\Servicio\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Servicio\ServicioAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -199,6 +201,11 @@
     <Content Include="Areas\Nazan\Views\AdministrarMensajesInstitucionales\Editar.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarMensajesInstitucionales\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\AdministrarPerfiles\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\AdministrarPerfiles\Crear.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\AdministrarPerfiles\Editar.cshtml" />
+    <Content Include="Areas\Servicio\Views\AdministrarPerfiles\Crear.cshtml" />
+    <Content Include="Areas\Servicio\Views\AdministrarPerfiles\Editar.cshtml" />
+    <Content Include="Areas\Servicio\Views\AdministrarPerfiles\Index.cshtml" />
     <None Include="Controllers\NazanController.cs.old" />
     <None Include="Controllers\NazanGestionProveedoresController.cs.old" />
     <None Include="Controllers\NazanMensajesInstitucionalesController.cs.old">
@@ -1077,7 +1084,6 @@
     <Folder Include="Areas\Mercaderia\Models\" />
     <Folder Include="Areas\Mercaderia\Views\Shared\" />
     <Folder Include="Areas\Nazan\Views\Shared\" />
-    <Folder Include="Areas\Servicio\Controllers\" />
     <Folder Include="Areas\Servicio\Models\" />
     <Folder Include="Areas\Servicio\Views\Shared\" />
     <Folder Include="assets\js\" />

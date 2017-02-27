@@ -5,7 +5,7 @@ using Ppgz.Web.Areas.Nazan;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 
-namespace Ppgz.Web.Areas.Mercaderia.Controllers
+namespace Ppgz.Web.Areas.Servicio.Controllers
 {
 	public class AdministrarPerfilesController : Controller
 	{
@@ -13,26 +13,25 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		private readonly CommonManager _commonManager = new CommonManager();
 		
 
-		//
-		// GET: /Mercaderia/AdministrarPerfiles/
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-LISTAR,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+
+        [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-LISTAR,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
         public ActionResult Index()
 		{
 		   
 			var perfiles = _perfilProveedorManager
 				.FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
 
-			 perfiles .Add(_perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.MERCADERIA));
+			 perfiles .Add(_perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.SERVICIO));
 
 			ViewBag.Perfiles = perfiles;
 			return View();
 		}
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
 		public ActionResult Crear()
 		{
 
-            var roles = _perfilProveedorManager.GetRoles("MERCADERIA");
+            var roles = _perfilProveedorManager.GetRoles("SERVICIO");
 
 			var model = new PefilProveedorViewModel
 			{
@@ -41,12 +40,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return View(model);
 		}
 
-      [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+      [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult Crear(PefilProveedorViewModel model)
 		{
-            var roles = _perfilProveedorManager.GetRoles("MERCADERIA");
+            var roles = _perfilProveedorManager.GetRoles("SERVICIO");
 			model.Roles = new MultiSelectList(roles, "Id", "Name");
 
 			if (!ModelState.IsValid) return View(model);
@@ -68,7 +67,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return RedirectToAction("Index");
 		}
 
-      [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+      [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
 		public ActionResult Editar(int id)
 		{
 			var perfil = _perfilProveedorManager.Find(id);
@@ -82,7 +81,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 
 
-            var roles = _perfilProveedorManager.GetRoles("MERCADERIA");
+            var roles = _perfilProveedorManager.GetRoles("SERVICIO");
 
 			var model = new PefilProveedorViewModel
 			{
@@ -95,7 +94,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		}
 
 
-      [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+      [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Editar(int id, PefilProveedorViewModel model)
@@ -131,14 +130,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				TempData["FlashError"] = exception.Message;
 				return RedirectToAction("Index");
 			}
-            var roles = _perfilProveedorManager.GetRoles("MERCADERIA");
+            var roles = _perfilProveedorManager.GetRoles("SERVICIO");
 
 			model.Roles = new MultiSelectList(roles, "Id", "Name");
 
 			return View(model);
 		}
 
-      [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+      [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
 		public ActionResult Eliminar(int id)
 		{
 

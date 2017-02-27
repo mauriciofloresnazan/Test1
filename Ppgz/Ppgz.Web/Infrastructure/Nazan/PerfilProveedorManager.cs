@@ -35,7 +35,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .FirstOrDefault(p => p.Nombre == nombre && p.Tipo == Tipo);
         }
 
-        public void Create(string nombre, string[] rolesIds)
+        public void Create(string nombre, string[] rolesIds, int? cuentaId = null)
         {
             nombre = nombre.Trim();
 
@@ -60,7 +60,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 throw new Exception(Areas.Nazan.Errores.PerfilNazanRolesRequeridos);
 
 
-            perfil = new perfile {Nombre = nombre, Tipo = Tipo};
+            perfil = new perfile { Nombre = nombre, Tipo = Tipo, CuentaId = cuentaId };
 
             foreach (var role in aspnetroles)
             {
@@ -123,10 +123,10 @@ namespace Ppgz.Web.Infrastructure.Nazan
         }
 
 
-        public List<aspnetrole> GetRoles()
+        public List<aspnetrole> GetRoles(string tipo)
         {
             return _db.aspnetroles
-                .Where(r => r.Tipo == Tipo).ToList();
+                .Where(r => r.Tipo == tipo).ToList();
 
         }
 

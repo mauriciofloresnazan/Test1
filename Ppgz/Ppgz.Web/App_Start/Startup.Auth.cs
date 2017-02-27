@@ -66,8 +66,57 @@ namespace Ppgz.Web
                 db.SaveChanges();
             }
 
+            string[] rolesMercaderia = 
+            {
+                "MERCADERIA-ADMINISTRARPERFILES-LISTAR",
+                "MERCADERIA-ADMINISTRARPERFILES-MODIFICAR",
+                "MERCADERIA-ADMINISTRARUSUARIOS-LISTAR",
+                "MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR",
+                "MERCADERIA-MENSAJESINSTITUCIONALES",
+            };
 
+            foreach (var role in rolesMercaderia)
+            {
+                if (db.aspnetroles
+                    .FirstOrDefault(r => r.Name == role) != null) continue;
 
+                var aspnetrole = new aspnetrole()
+                {
+                    Id = role,
+                    Name = role,
+                    Description = role,
+                    Tipo = "MERCADERIA"
+                };
+
+                db.aspnetroles.Add(aspnetrole);
+                db.SaveChanges();
+            }
+
+            string[] rolesServicio = 
+            {
+                "SERVICIO-ADMINISTRARPERFILES-LISTAR",
+                "SERVICIO-ADMINISTRARPERFILES-MODIFICAR",
+                "SERVICIO-ADMINISTRARUSUARIOS-LISTAR",
+                "SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR",
+                "SERVICIO-MENSAJESINSTITUCIONALES",
+            };
+
+            foreach (var role in rolesServicio)
+            {
+                if (db.aspnetroles
+                    .FirstOrDefault(r => r.Name == role) != null) continue;
+
+                var aspnetrole = new aspnetrole()
+                {
+                    Id = role,
+                    Name = role,
+                    Description = role,
+                    Tipo = "SERVICIO"
+                };
+
+                db.aspnetroles.Add(aspnetrole);
+                db.SaveChanges();
+            }
 
             // Enable the application to use a cookie to store information for the signed in user
             app.UseCookieAuthentication(new CookieAuthenticationOptions
