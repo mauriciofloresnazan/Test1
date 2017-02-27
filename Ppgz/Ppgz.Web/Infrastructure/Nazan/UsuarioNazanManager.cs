@@ -12,7 +12,8 @@ namespace Ppgz.Web.Infrastructure.Nazan
 {
     public class UsuarioNazanManager
     {
-        private readonly UserManager<ApplicationUser> _applicationUserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+        private readonly UserManager<ApplicationUser> _applicationUserManager = 
+            new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
        
         private readonly Entities _db = new Entities();
        

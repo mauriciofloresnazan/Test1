@@ -213,7 +213,7 @@
     </Compile>
     <Compile Include="Infrastructure\CommonManager.cs" />
     <Compile Include="Infrastructure\Nazan\CuentaManager.cs" />
-    <Compile Include="Infrastructure\MensajesManager.cs" />
+    <None Include="Infrastructure\MensajesManager.cs.old" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilProveedorManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioProveedorManager.cs" />
@@ -1034,6 +1034,7 @@
     <Content Include="Views\Nazan\EditarUsuarioNazan.cshtml" />
     <Content Include="Views\Nazan\AdministrarPerfilesNazan.cshtml" />
     <Content Include="Views\Nazan\CrearPerfilNazan.cshtml" />
+    <Content Include="Uploads\960_sketch_16_col.pdf" />
     <None Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
