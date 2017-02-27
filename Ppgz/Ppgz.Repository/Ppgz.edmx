@@ -65,6 +65,22 @@
           <Property Name="PerfilId" Type="int" Nullable="false" />
           <Property Name="TerminosCondicionesFecha" Type="datetime" Precision="0" />
         </EntityType>
+        <EntityType Name="cuentaproveedores">
+          <Key>
+            <PropertyRef Name="NumeroProveedor" />
+            <PropertyRef Name="CuentaId" />
+          </Key>
+          <Property Name="NumeroProveedor" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="45" />
+          <Property Name="Ciudad" Type="varchar" MaxLength="45" />
+          <Property Name="Distrito" Type="varchar" MaxLength="45" />
+          <Property Name="VendedorNombre" Type="varchar" MaxLength="45" />
+          <Property Name="VendedorTelefono" Type="varchar" MaxLength="45" />
+          <Property Name="CompradorImpulsNombre" Type="varchar" MaxLength="45" />
+          <Property Name="CompradorImpulsTelefono" Type="varchar" MaxLength="45" />
+          <Property Name="CompradorImpulsEmail" Type="varchar" MaxLength="45" />
+          <Property Name="CuentaId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="cuentas">
           <Key>
             <PropertyRef Name="Id" />
@@ -84,6 +100,39 @@
           </Key>
           <Property Name="UsuarioId" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="CuentaId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="fakedataproveedor">
+          <Key>
+            <PropertyRef Name="NumeroDeProveedor" />
+          </Key>
+          <Property Name="NumeroDeProveedor" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="ClavePais" Type="varchar" MaxLength="45" />
+          <Property Name="Nombre1" Type="varchar" MaxLength="45" />
+          <Property Name="Nombre2" Type="varchar" MaxLength="45" />
+          <Property Name="Nombre3" Type="varchar" MaxLength="45" />
+          <Property Name="Nombre4" Type="varchar" MaxLength="45" />
+          <Property Name="Ciudad" Type="varchar" MaxLength="45" />
+          <Property Name="Distrito" Type="varchar" MaxLength="45" />
+          <Property Name="POBox" Type="varchar" MaxLength="45" />
+          <Property Name="CodigoPostalDePOBox" Type="varchar" MaxLength="45" />
+          <Property Name="CodigoPostal" Type="varchar" MaxLength="45" />
+          <Property Name="Region" Type="varchar" MaxLength="45" />
+          <Property Name="Direccion" Type="varchar" MaxLength="45" />
+          <Property Name="Direccioncomplementaria" Type="varchar" MaxLength="45" />
+          <Property Name="Compania" Type="varchar" MaxLength="45" />
+          <Property Name="OrganizaciondeCompras" Type="varchar" MaxLength="45" />
+          <Property Name="MonedadelaOrdendeCompra" Type="varchar" MaxLength="45" />
+          <Property Name="Vendedor" Type="varchar" MaxLength="45" />
+          <Property Name="TelefonodelVendedor" Type="varchar" MaxLength="45" />
+          <Property Name="TerminosdePago" Type="varchar" MaxLength="45" />
+          <Property Name="ClavedeIncoterm" Type="varchar" MaxLength="45" />
+          <Property Name="DescripcinIncoterm" Type="varchar" MaxLength="45" />
+          <Property Name="GrupodeCompras" Type="varchar" MaxLength="45" />
+          <Property Name="NombredelCompradorImpuls" Type="varchar" MaxLength="45" />
+          <Property Name="TelefonodelCompradorImpuls" Type="varchar" MaxLength="45" />
+          <Property Name="Telefono2delCompradorImpuls" Type="varchar" MaxLength="45" />
+          <Property Name="ExtiensiondelCompradorImpuls" Type="varchar" MaxLength="45" />
+          <Property Name="EmaildelCompradorImpuls" Type="varchar" MaxLength="45" />
         </EntityType>
         <EntityType Name="mensajes">
           <Key>
@@ -185,6 +234,18 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="cuentasusuarios">
+              <PropertyRef Name="CuentaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cuetnasprov">
+          <End Role="cuentas" Type="Self.cuentas" Multiplicity="1" />
+          <End Role="cuentaproveedores" Type="Self.cuentaproveedores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuentas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="cuentaproveedores">
               <PropertyRef Name="CuentaId" />
             </Dependent>
           </ReferentialConstraint>
@@ -293,8 +354,10 @@
           <EntitySet Name="aspnetuserlogins" EntityType="Self.aspnetuserlogins" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="aspnetuserroles" EntityType="Self.aspnetuserroles" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="aspnetusers" EntityType="Self.aspnetusers" Schema="ppgz" store:Type="Tables" />
+          <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedores" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="cuentas" EntityType="Self.cuentas" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="cuentasusuarios" EntityType="Self.cuentasusuarios" Schema="ppgz" store:Type="Tables" />
+          <EntitySet Name="fakedataproveedor" EntityType="Self.fakedataproveedor" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="mensajes" EntityType="Self.mensajes" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="perfiles" EntityType="Self.perfiles" Schema="ppgz" store:Type="Tables" />
           <EntitySet Name="perfilesroles" EntityType="Self.perfilesroles" Schema="ppgz" store:Type="Tables" />
@@ -318,6 +381,10 @@
           <AssociationSet Name="fk_cuentas" Association="Self.fk_cuentas">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentasusuarios" EntitySet="cuentasusuarios" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cuetnasprov" Association="Self.fk_cuetnasprov">
+            <End Role="cuentas" EntitySet="cuentas" />
+            <End Role="cuentaproveedores" EntitySet="cuentaproveedores" />
           </AssociationSet>
           <AssociationSet Name="fk_mensaje" Association="Self.fk_mensaje">
             <End Role="mensajes" EntitySet="mensajes" />
@@ -420,6 +487,23 @@
           <NavigationProperty Name="aspnetroles" Relationship="Self.aspnetuserroles" FromRole="aspnetusers" ToRole="aspnetroles" />
           <NavigationProperty Name="cuentas1" Relationship="Self.cuentasusuarios" FromRole="aspnetusers" ToRole="cuentas" />
         </EntityType>
+        <EntityType Name="cuentaproveedore">
+          <Key>
+            <PropertyRef Name="NumeroProveedor" />
+            <PropertyRef Name="CuentaId" />
+          </Key>
+          <Property Name="NumeroProveedor" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Ciudad" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Distrito" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="VendedorNombre" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="VendedorTelefono" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="CompradorImpulsNombre" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="CompradorImpulsTelefono" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="CompradorImpulsEmail" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="CuentaId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="cuenta" Relationship="Self.fk_cuetnasprov" FromRole="cuentaproveedores" ToRole="cuentas" />
+        </EntityType>
         <EntityType Name="cuenta">
           <Key>
             <PropertyRef Name="Id" />
@@ -432,8 +516,42 @@
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <Property Name="ResponsableUsuarioId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="aspnetuser" Relationship="Self.fk_responsable" FromRole="cuentas" ToRole="aspnetusers" />
+          <NavigationProperty Name="cuentaproveedores" Relationship="Self.fk_cuetnasprov" FromRole="cuentas" ToRole="cuentaproveedores" />
           <NavigationProperty Name="perfiles" Relationship="Self.fk_cuenta" FromRole="cuentas" ToRole="perfiles" />
           <NavigationProperty Name="aspnetusers" Relationship="Self.cuentasusuarios" FromRole="cuentas" ToRole="aspnetusers" />
+        </EntityType>
+        <EntityType Name="fakedataproveedor">
+          <Key>
+            <PropertyRef Name="NumeroDeProveedor" />
+          </Key>
+          <Property Name="NumeroDeProveedor" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ClavePais" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Nombre1" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Nombre2" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Nombre3" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Nombre4" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Ciudad" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Distrito" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="POBox" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoPostalDePOBox" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoPostal" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Region" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Direccion" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Direccioncomplementaria" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Compania" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizaciondeCompras" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="MonedadelaOrdendeCompra" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Vendedor" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="TelefonodelVendedor" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="TerminosdePago" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="ClavedeIncoterm" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="DescripcinIncoterm" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="GrupodeCompras" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="NombredelCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="TelefonodelCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Telefono2delCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="ExtiensiondelCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="EmaildelCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="mensaje">
           <Key>
@@ -535,6 +653,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_cuetnasprov">
+          <End Role="cuentas" Type="Self.cuenta" Multiplicity="1" />
+          <End Role="cuentaproveedores" Type="Self.cuentaproveedore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuentas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="cuentaproveedores">
+              <PropertyRef Name="CuentaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_cuenta">
           <End Role="cuentas" Type="Self.cuenta" Multiplicity="0..1" />
           <End Role="perfiles" Type="Self.perfile" Multiplicity="*" />
@@ -576,7 +706,9 @@
           <EntitySet Name="aspnetuserclaims" EntityType="Self.aspnetuserclaim" />
           <EntitySet Name="aspnetuserlogins" EntityType="Self.aspnetuserlogin" />
           <EntitySet Name="aspnetusers" EntityType="Self.aspnetuser" />
+          <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedore" />
           <EntitySet Name="cuentas" EntityType="Self.cuenta" />
+          <EntitySet Name="fakedataproveedors" EntityType="Self.fakedataproveedor" />
           <EntitySet Name="mensajes" EntityType="Self.mensaje" />
           <EntitySet Name="perfiles" EntityType="Self.perfile" />
           <EntitySet Name="usuariomensajes" EntityType="Self.usuariomensaje" />
@@ -599,6 +731,10 @@
           <AssociationSet Name="fk_usuario" Association="Self.fk_usuario">
             <End Role="aspnetusers" EntitySet="aspnetusers" />
             <End Role="usuariomensajes" EntitySet="usuariomensajes" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cuetnasprov" Association="Self.fk_cuetnasprov">
+            <End Role="cuentas" EntitySet="cuentas" />
+            <End Role="cuentaproveedores" EntitySet="cuentaproveedores" />
           </AssociationSet>
           <AssociationSet Name="fk_cuenta" Association="Self.fk_cuenta">
             <End Role="cuentas" EntitySet="cuentas" />
@@ -681,6 +817,22 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="cuentaproveedores">
+            <EntityTypeMapping TypeName="ppgzModel.cuentaproveedore">
+              <MappingFragment StoreEntitySet="cuentaproveedores">
+                <ScalarProperty Name="NumeroProveedor" ColumnName="NumeroProveedor" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="Distrito" ColumnName="Distrito" />
+                <ScalarProperty Name="VendedorNombre" ColumnName="VendedorNombre" />
+                <ScalarProperty Name="VendedorTelefono" ColumnName="VendedorTelefono" />
+                <ScalarProperty Name="CompradorImpulsNombre" ColumnName="CompradorImpulsNombre" />
+                <ScalarProperty Name="CompradorImpulsTelefono" ColumnName="CompradorImpulsTelefono" />
+                <ScalarProperty Name="CompradorImpulsEmail" ColumnName="CompradorImpulsEmail" />
+                <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="cuentas">
             <EntityTypeMapping TypeName="ppgzModel.cuenta">
               <MappingFragment StoreEntitySet="cuentas">
@@ -691,6 +843,40 @@
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
                 <ScalarProperty Name="Activo" ColumnName="Activo" />
                 <ScalarProperty Name="ResponsableUsuarioId" ColumnName="ResponsableUsuarioId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="fakedataproveedors">
+            <EntityTypeMapping TypeName="ppgzModel.fakedataproveedor">
+              <MappingFragment StoreEntitySet="fakedataproveedor">
+                <ScalarProperty Name="NumeroDeProveedor" ColumnName="NumeroDeProveedor" />
+                <ScalarProperty Name="ClavePais" ColumnName="ClavePais" />
+                <ScalarProperty Name="Nombre1" ColumnName="Nombre1" />
+                <ScalarProperty Name="Nombre2" ColumnName="Nombre2" />
+                <ScalarProperty Name="Nombre3" ColumnName="Nombre3" />
+                <ScalarProperty Name="Nombre4" ColumnName="Nombre4" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="Distrito" ColumnName="Distrito" />
+                <ScalarProperty Name="POBox" ColumnName="POBox" />
+                <ScalarProperty Name="CodigoPostalDePOBox" ColumnName="CodigoPostalDePOBox" />
+                <ScalarProperty Name="CodigoPostal" ColumnName="CodigoPostal" />
+                <ScalarProperty Name="Region" ColumnName="Region" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Direccioncomplementaria" ColumnName="Direccioncomplementaria" />
+                <ScalarProperty Name="Compania" ColumnName="Compania" />
+                <ScalarProperty Name="OrganizaciondeCompras" ColumnName="OrganizaciondeCompras" />
+                <ScalarProperty Name="MonedadelaOrdendeCompra" ColumnName="MonedadelaOrdendeCompra" />
+                <ScalarProperty Name="Vendedor" ColumnName="Vendedor" />
+                <ScalarProperty Name="TelefonodelVendedor" ColumnName="TelefonodelVendedor" />
+                <ScalarProperty Name="TerminosdePago" ColumnName="TerminosdePago" />
+                <ScalarProperty Name="ClavedeIncoterm" ColumnName="ClavedeIncoterm" />
+                <ScalarProperty Name="DescripcinIncoterm" ColumnName="DescripcinIncoterm" />
+                <ScalarProperty Name="GrupodeCompras" ColumnName="GrupodeCompras" />
+                <ScalarProperty Name="NombredelCompradorImpuls" ColumnName="NombredelCompradorImpuls" />
+                <ScalarProperty Name="TelefonodelCompradorImpuls" ColumnName="TelefonodelCompradorImpuls" />
+                <ScalarProperty Name="Telefono2delCompradorImpuls" ColumnName="Telefono2delCompradorImpuls" />
+                <ScalarProperty Name="ExtiensiondelCompradorImpuls" ColumnName="ExtiensiondelCompradorImpuls" />
+                <ScalarProperty Name="EmaildelCompradorImpuls" ColumnName="EmaildelCompradorImpuls" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

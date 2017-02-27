@@ -70,6 +70,12 @@
     <Compile Include="cuenta.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="cuentaproveedore.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="fakedataproveedor.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="mensaje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>

@@ -245,6 +245,7 @@
     <Compile Include="Infrastructure\Nazan\PerfilNazanManager.cs" />
     <None Include="Infrastructure\Nazan\UsuarioManager.cs.old" />
     <None Include="Infrastructure\TipoProveedorManager.cs.old" />
+    <Compile Include="Infrastructure\SapManager.cs" />
     <Compile Include="Infrastructure\TerminosCondiciones.cs" />
     <Compile Include="Infrastructure\TipoUsuario.cs" />
     <Compile Include="Infrastructure\UsuarioManager.cs" />
