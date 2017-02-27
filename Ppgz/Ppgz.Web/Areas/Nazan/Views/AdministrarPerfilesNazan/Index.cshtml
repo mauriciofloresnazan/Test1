@@ -32,10 +32,10 @@
                             <tr>
                                 <td class="text-center vert-align">@(pefil.Nombre)</td>
                                 <td class="text-center vert-align">
-                                    
+
                                     @foreach (var role in pefil.aspnetroles)
                                     {
-                                        @role.Name<br/>
+                                        @role.Name<br />
                                     }
                                 </td>
                                 <td class="text-center vert-align">
@@ -45,7 +45,7 @@
 
                                             <i class="fa fa-pencil" aria-hidden="true"></i> Editar
                                         </a>
-                                        <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarPerfilesNazan", new { @id = @pefil.Id })" d data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El perfil será eliminado.">
+                                        <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarPerfilesNazan", new { @id = @pefil.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El perfil será eliminado.">
                                             <i class="fa fa-times" aria-hidden="true"></i> Eliminar
                                         </a>
                                     </div>
@@ -54,13 +54,13 @@
 
                                             <i class="fa fa-pencil" aria-hidden="true"></i> Editar
                                         </a>
-                                        <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarPerfilesNazan", new { @id = @pefil.Id })" d data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El perfil será eliminado.">
+                                        <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarPerfilesNazan", new { @id = @pefil.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El perfil será eliminado.">
                                             <i class="fa fa-times" aria-hidden="true"></i> Eliminar
                                         </a>
                                     </div>
                                     <div class="btn-group " role="group" aria-label="...">
                                     </div>
-</tr>
+                            </tr>
 
                         }
 

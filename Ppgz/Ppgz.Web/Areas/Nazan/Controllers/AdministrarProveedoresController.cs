@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Web.Mvc;
 using Ppgz.Repository;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
-using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
@@ -67,5 +67,46 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return View(model);
 
 		}
+
+
+		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+		public ActionResult Editar(int id)
+		{
+			var cuenta = _cuentaManager.Find(id);
+
+			if (cuenta == null)
+			{
+				//TODO ACTUALIZAR MENSAJE AL RESOURCE
+				TempData["FlashError"] = "Proveedor incorrecto.";
+				return RedirectToAction("Index");
+			}
+
+			ViewBag.Cuenta = cuenta;
+			return View();
+		}
+
+        
+		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        public ActionResult ModificarUsuarioMaestro(int id, string usuarioId)
+		{
+            var entities = new Entities();
+		    var cuenta = entities.cuentas.Find(id);
+		    var usuario = entities.aspnetusers.Find(usuarioId);
+            
+            var perfilProveedorManager = new PerfilProveedorManager();
+		    var perfilMaestro = perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.GetTipoByString(cuenta.Tipo));
+		    usuario.PerfilId = perfilMaestro.Id;
+
+            entities.Entry(usuario).State = EntityState.Modified;
+		    entities.SaveChanges();
+
+		    cuenta.ResponsableUsuarioId = usuario.Id;
+            entities.Entry(cuenta).State = EntityState.Modified;
+            entities.SaveChanges();
+
+            TempData["FlashSuccess"] = "Cuenta Actualizada con éxito.";
+            return RedirectToAction("Editar", new { id = id });
+		}
+
 	}
 }

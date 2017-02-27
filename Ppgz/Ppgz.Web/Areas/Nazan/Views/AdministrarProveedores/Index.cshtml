@@ -19,6 +19,7 @@
                     <th class="text-center">Responsable</th>
                     <th class="text-center">Tipo</th>
                     <th class="text-center">Estatus</th>
+                    <th class="text-center"></th>
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +41,25 @@
                                     <span>ACTIVO</span>
                                 }
                             }
+
+                        </td>
+                        <td class="text-center vert-align">
+                            <div class="btn-group hidden-xs">
+                                <a class="btn btn-warning btn-xs" href="@Url.Action("Editar", "AdministrarProveedores", new { @id = @cuenta.Id })">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i> Editar
+                                </a>
+                                <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarProveedores", new { @id = @cuenta.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El usuario será eliminado.">
+                                    <i class="fa fa-times" aria-hidden="true"></i> Eliminar
+                                </a>
+                            </div>
+                            <div class="btn-group-vertical visible-xs">
+                                <a class="btn btn-warning btn-xs" href="@Url.Action("Editar", "AdministrarProveedores", new { @id = @cuenta.Id })">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i> Editar
+                                </a>
+                                <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarProveedores", new { @id = @cuenta.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El usuario será eliminado.">
+                                    <i class="fa fa-times" aria-hidden="true"></i> Eliminar
+                                </a>
+                            </div>
 
                         </td>
 

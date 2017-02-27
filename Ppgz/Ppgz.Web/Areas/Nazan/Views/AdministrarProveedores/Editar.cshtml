@@ -1,0 +1,191 @@
+﻿@using System.Data.Entity.Core.Mapping
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <h2>Editar cuenta de Proveedor</h2>
+    <p class="page-description-title"><i class="fa fa-info" aria-hidden="true"></i> <i>Información de la cuenta</i>
+    </p>
+
+    <div class="col-sm-6">
+
+        <div class="row">
+            <div class="col-sm-3"><strong>Codigo</strong>
+            </div>
+            <div class=" col-sm-9" style="line-height: 1.2em"><span style="color: #66aaaa; font-size: 1.2em">@ViewBag.cuenta.CodigoProveedor</span></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3"><strong>Resp. Nombre</strong>
+            </div>
+            <div class=" col-sm-9">@ViewBag.cuenta.NombreProveedor</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-3"><strong>Contacto</strong>
+            </div>
+            <div class=" col-sm-9">
+
+
+                <p>
+                    @(ViewBag.cuenta.aspnetuser.Nombre + ' ' + ViewBag.cuenta.aspnetuser.Apellido)<i>
+                        <br>
+                        @ViewBag.cuenta.aspnetuser.PhoneNumber
+                    </i><br>
+                    @ViewBag.cuenta.aspnetuser.Email
+                </p>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="col-sm-6">
+        <div class="row">
+            <div class="col-sm-3"><strong>Estatus</strong>
+            </div>
+            <div class=" col-sm-9">
+                <p>
+                    @if (ViewBag.cuenta.aspnetuser.Activo)
+                    {
+                        <span>ACTIVO</span>
+                    }
+                    else
+                    {
+                        <span>SUSPENDIDO</span>
+                    }
+                </p>
+            </div>
+        </div>
+        <div>
+            <div class="col-md-6">
+                <select class="form-control" id="usuariosMaestrosSelect">
+                    <option value="">Usuario Maestro</option>
+                    @foreach (var usuario in ViewBag.cuenta.aspnetusers)
+                    {
+                        <option value="@usuario.Id">@(usuario.Nombre + ' ' + usuario.Apellido)</option>
+
+                    }
+
+                </select>
+            </div>
+            <div class="col-md-6"><a id="cambiarMaestro" class="btn btn-danger center-block">
+    <i class="fa fa-pencil" aria-hidden="true"></i>
+    Modificar
+</a>
+            </div>
+
+        </div>
+        <p>
+            
+
+            
+        </p>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Registros de Razones Sociales</div>
+    <div class="panel-body">
+
+        <table class="table table-striped table-condensed table-bordered" style="font-size: .8em;">
+            <thead>
+                <tr>
+                    <th colspan="3">
+                        <a href="#" data-toggle="modal" data-target="#myModal" class="btn btn-primary btn-block"><i class="fa fa-plus" aria-hidden="true"></i>  Incluir Nueva</a>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="text-center">RFC</th>
+                    <th class="text-center">Razon Social</th>
+                    <th>
+
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-center">CUPU000000001</td>
+                    <td class="text-center">Dsitribuidora 001</td>
+                    <td class="text-center">
+                        <a href="#" class="">
+                            <div class="btn-group " role="group" aria-label="...">
+                                <a class="btn btn-warning btn-xs" data-toggle="modal" data-target="#myModal"><i class="fa fa-pencil" aria-hidden="true"></i> Editar</a>
+                                <a class="btn btn-danger btn-xs" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="La Razon Social será eliminada."><i class="fa fa-times" aria-hidden="true"></i> Eliminar</a>
+                            </div>
+                    </td>
+                </tr>
+      
+                <tr>
+                    <td class="text-center">CUPU000000002</td>
+                    <td class="text-center">Dsitribuidora 002</td>
+                    <td class="text-center">
+                        <a href="#" class="">
+                            <div class="btn-group " role="group" aria-label="...">
+                                <a class="btn btn-warning btn-xs" data-toggle="modal" data-target="#myModal"><i class="fa fa-pencil" aria-hidden="true"></i> Editar</a>
+                                <a class="btn btn-danger btn-xs" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="La Razon Social será eliminada."><i class="fa fa-times" aria-hidden="true"></i> Eliminar</a>
+                            </div>
+                    </td>
+                </tr>
+
+                </tr>
+                <tr>
+                    <td class="text-center">CUPU000000003</td>
+                    <td class="text-center">Dsitribuidora 003</td>
+                    <td class="text-center">
+                        <a href="#" class="">
+                            <div class="btn-group " role="group" aria-label="...">
+                                <a class="btn btn-warning btn-xs" data-toggle="modal" data-target="#myModal"><i class="fa fa-pencil" aria-hidden="true"></i> Editar</a>
+                                <a class="btn btn-danger btn-xs" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="La Razon Social será eliminada."><i class="fa fa-times" aria-hidden="true"></i> Eliminar</a>
+                            </div>
+                    </td>
+                </tr>
+
+                </tr>
+                <tr>
+                    <td class="text-center">CUPU000000004</td>
+                    <td class="text-center">Dsitribuidora 004</td>
+                    <td class="text-center">
+                        <a href="#" class="">
+                            <div class="btn-group " role="group" aria-label="...">
+                                <a class="btn btn-warning btn-xs" data-toggle="modal" data-target="#myModal"><i class="fa fa-pencil" aria-hidden="true"></i> Editar</a>
+                                <a class="btn btn-danger btn-xs" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="La Razon Social será eliminada."><i class="fa fa-times" aria-hidden="true"></i> Eliminar</a>
+                            </div>
+                    </td>
+                </tr>
+
+                </tr>
+
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        var urlModUsuarioMaestro = "@Url.Action("ModificarUsuarioMaestro", "AdministrarProveedores")";
+        var cuentaId = "@ViewBag.cuenta.Id";
+
+        function modificarUsuarioMaestro(id, usuarioId ) {
+            var link = urlModUsuarioMaestro + "/" +id + "?usuarioId=" + usuarioId;
+
+            location.href = link;
+
+        }
+
+
+        $("#cambiarMaestro").click(function () {
+            var usuariosMaestrosSelect = $("#usuariosMaestrosSelect");
+
+            if (usuariosMaestrosSelect.val() !== "") {
+                modificarUsuarioMaestro(cuentaId, usuariosMaestrosSelect.val());
+            }
+        });
+    </script>
+}

@@ -219,6 +219,7 @@
     <Content Include="Areas\Servicio\Views\AdministrarUsuarios\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\MensajesInstitucionales\index.cshtml" />
     <Content Include="Areas\Servicio\Views\MensajesInstitucionales\index.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarProveedores\Editar.cshtml" />
     <None Include="Controllers\NazanController.cs.old" />
     <None Include="Controllers\NazanGestionProveedoresController.cs.old" />
     <None Include="Controllers\NazanMensajesInstitucionalesController.cs.old">
