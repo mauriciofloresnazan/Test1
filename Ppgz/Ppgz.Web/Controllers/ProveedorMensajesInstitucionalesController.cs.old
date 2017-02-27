@@ -13,9 +13,9 @@ namespace Ppgz.Web.Controllers
 
 		private readonly CommonManager _commonManager = new CommonManager();
 
-        private readonly TipoProveedorManager _tipoProveedorManager  = new TipoProveedorManager();
+		private readonly TipoProveedorManager _tipoProveedorManager  = new TipoProveedorManager();
 
-        private readonly MensajesManager _mensajesManager = new MensajesManager();
+		private readonly MensajesManager _mensajesManager = new MensajesManager();
 
 		//
 		// GET: /ProveedorMensajesInstitucionales/
@@ -23,13 +23,13 @@ namespace Ppgz.Web.Controllers
 		{
 
 			//CUENTAS
-		    var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-		    var tipoProveedor = _tipoProveedorManager.Find(cuenta.tipo_proveedor_id);
+			var tipoProveedor = _tipoProveedorManager.Find(cuenta.tipo_proveedor_id);
 
-            var mensajes = _mensajesManager.GetByEnviadoA(tipoProveedor.codigo);
+			var mensajes = _mensajesManager.GetByEnviadoA(tipoProveedor.codigo);
 
-            var mensajesUsuario = _mensajesManager.GetByUsuarioId(User.Identity.GetUserId());
+			var mensajesUsuario = _mensajesManager.GetByUsuarioId(User.Identity.GetUserId());
 
 			ViewBag.mensajes = mensajes;
 
@@ -42,21 +42,21 @@ namespace Ppgz.Web.Controllers
 		public ActionResult Visualizar(int id)
 		{
 			var mensaje = _mensajesManager.FindById(id);
-            
-            
-            var mensajes = _mensajesManager.GetByUsuarioId(User.Identity.GetUserId());
+			
+			
+			var mensajes = _mensajesManager.GetByUsuarioId(User.Identity.GetUserId());
 
-            if (mensajes.Any(i => i.mensaje_id == id))
+			if (mensajes.Any(i => i.mensaje_id == id))
 			{
 				return Content("Actualizado"); ;
 			}
 
-		    _mensajesManager.Visualizar(User.Identity.GetUserId(), id);
+			_mensajesManager.Visualizar(User.Identity.GetUserId(), id);
 
 			return Content("Actualizado");
 		}
 
-        /*
+		/*
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Leido(int id)
