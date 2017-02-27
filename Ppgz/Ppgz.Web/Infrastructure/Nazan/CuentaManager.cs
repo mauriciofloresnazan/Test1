@@ -58,6 +58,23 @@ namespace Ppgz.Web.Infrastructure.Nazan
             return _db.cuentas.FirstOrDefault(c => c.ResponsableUsuarioId == id);
         }
 
+        public void AsociarUsuarioEnCuenta(string usuarioId, int cuentaId)
+        {
+            const string sql = @"
+                        INSERT INTO  cuentasusuarios (UsuarioId, CuentaId)
+                        VALUES ({0},{1})";
+            _db.Database.ExecuteSqlCommand(sql, usuarioId, cuentaId);
+            _db.SaveChanges();
+        }
+
+        public void DesAsociarUsuarioEnCuenta(string usuarioId, int cuentaId)
+        {
+            const string sql = @"
+                        DELETE FROM cuentasusuarios 
+                        WHERE  UsuarioId = {0} AND CuentaId = {1}";
+            _db.Database.ExecuteSqlCommand(sql, usuarioId, cuentaId);
+            _db.SaveChanges();
+        }
         public void Create(string nombreProveedor, Tipo tipo, string responsableLogin,
             string reponsableNombre, string reponsableApellido, string responsableCargo, 
             string responsableEmail, string responableTelefono, string responsablePassword

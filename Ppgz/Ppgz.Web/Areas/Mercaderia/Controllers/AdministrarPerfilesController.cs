@@ -7,6 +7,7 @@ using Ppgz.Web.Infrastructure.Nazan;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
+    [Authorize]
 	public class AdministrarPerfilesController : Controller
 	{
 		private readonly PerfilProveedorManager _perfilProveedorManager = new  PerfilProveedorManager();

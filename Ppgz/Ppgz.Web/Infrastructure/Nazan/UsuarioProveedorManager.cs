@@ -41,6 +41,19 @@ namespace Ppgz.Web.Infrastructure.Nazan
             return _db.aspnetusers
                 .FirstOrDefault(u => u.Id == id && Tipos.Contains(u.Tipo));
         }
+
+
+        public List<aspnetuser> FindByCuentaId(int id)
+        {
+            return _db.Database.SqlQuery<aspnetuser>(@"
+                SELECT  * 
+                FROM    aspnetusers
+                WHERE   id IN (SELECT UsuarioId 
+                               FROM cuentasusuarios 
+                               WHERE CuentaId = {0})", id).ToList();
+      
+        }
+
         public aspnetuser FindMaestroByLogin(string login)
         {
             return _db.aspnetusers
