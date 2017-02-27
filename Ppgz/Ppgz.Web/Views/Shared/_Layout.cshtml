@@ -77,17 +77,23 @@
                     }
                     @if (Request.IsAuthenticated)
                     {
-                        if (@HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"].ToString() == "Nazan" &&
-                            @HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "AdministrarPerfilesNazan")
+
+                        if (HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"] != null)
                         {
+                            if (@HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"].ToString() == "Nazan" &&
+                            @HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "AdministrarPerfilesNazan")
+                            {
                             <li class="active">@Html.ActionLink("Administrar Perfiles", "Index", "AdministrarPerfilesNazan",  new { area = "Nazan" }, new { @class = "active" })</li>
 
-                        }
-                        if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "NazanMensajesInstitucionales")
-                        {
+                            }
+                            if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "NazanMensajesInstitucionales")
+                            {
 
-                            <li class="active"><a href="@Url.Action("Index", "NazanMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Administrar Mensajes</a></li>
+                                <li class="active"><a href="@Url.Action("Index", "NazanMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Administrar Mensajes</a></li>
+                            }
                         }
+                        
+
 
                     }
                     @if (Request.IsAuthenticated && User.Identity.GetUserName() != "superadmin")

@@ -45,8 +45,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
             if (!rolesIds.Any())
                 //TODO CARLOS CAMPOS
                 throw new Exception(Areas.Nazan.Errores.PerfilNazanRolesRequeridos);
-
-
+            
             var aspnetroles =
                 _db.aspnetroles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
 
@@ -123,6 +122,50 @@ namespace Ppgz.Web.Infrastructure.Nazan
             return _db.aspnetroles
                 .Where(r => r.Tipo == Tipo).ToList();
 
-        } 
+        }
+
+        public perfile GetMaestro()
+        {
+            const string perfilNombre = "MAESTRO-NAZAN";
+
+            var perfil = _db.perfiles.FirstOrDefault(pt => pt.Nombre == perfilNombre);
+
+            if (perfil == null)
+            {
+                // TODO PASAR A UN MANEJADOR DE ROLES
+                if (_db.aspnetroles
+                    .FirstOrDefault(ro => ro.Name == "SUPERADMIN") == null)
+                {
+                    var role = new aspnetrole()
+                    {
+                        Id = "SUPERADMIN",
+                        Name = "SUPERADMIN",
+                        Description = "SUPERADMIN tiene acceso a toda la aplicación.",
+                        Tipo = "NAZAN"
+                    };
+
+                    _db.aspnetroles.Add(role);
+                    _db.SaveChanges();
+
+                }
+
+                var perfilNazanManager = new PerfilNazanManager();
+                perfilNazanManager.Create(perfilNombre, new[] { "SUPERADMIN" });
+            }
+
+            perfil = _db.perfiles.FirstOrDefault(pt => pt.Nombre == perfilNombre);
+
+            if (perfil == null)
+            {
+
+                //todo carlos campos
+                throw new Exception("");
+
+            }
+
+            return perfil;
+
+        }
+
     }
 }

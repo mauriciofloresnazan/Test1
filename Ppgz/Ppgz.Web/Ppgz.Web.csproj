@@ -172,6 +172,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\Mercaderia\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarMensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
@@ -197,6 +198,7 @@
     <Content Include="Areas\Nazan\Views\AdministrarMensajesInstitucionales\Crear.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarMensajesInstitucionales\Editar.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarMensajesInstitucionales\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\AdministrarPerfiles\Index.cshtml" />
     <None Include="Controllers\NazanController.cs.old" />
     <None Include="Controllers\NazanGestionProveedoresController.cs.old" />
     <None Include="Controllers\NazanMensajesInstitucionalesController.cs.old">
@@ -1072,7 +1074,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Mercaderia\Controllers\" />
     <Folder Include="Areas\Mercaderia\Models\" />
     <Folder Include="Areas\Mercaderia\Views\Shared\" />
     <Folder Include="Areas\Nazan\Views\Shared\" />

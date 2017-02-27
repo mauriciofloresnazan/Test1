@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web
@@ -15,6 +16,22 @@ namespace Ppgz.Web
 
             var applicationUserManager =
             new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+            var usuarioNazanManager = new UsuarioNazanManager();
+            var perfilNazanManager = new PerfilNazanManager();
+
+            if (applicationUserManager.FindByName("superusuario") == null)
+            {
+
+               usuarioNazanManager.Create(
+                    "superusuario",
+                    "superusuario",
+                    "superusuario",
+                    "superusuario",
+                    "123456",
+                    perfilNazanManager.GetMaestro().Id);
+            }
+
             // Enable the application to use a cookie to store information for the signed in user
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
