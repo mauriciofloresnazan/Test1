@@ -164,13 +164,6 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 return RedirectToAction("Index");
             }
 
-            if (usuario.UserName.ToLower() == "superadmin")
-            {
-
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "No puede eliminar el usuario SuperAdmin.";
-                return RedirectToAction("Index");
-            }
 
             try
             {

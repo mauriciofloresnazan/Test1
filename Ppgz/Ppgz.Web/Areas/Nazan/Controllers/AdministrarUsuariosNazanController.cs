@@ -10,7 +10,7 @@ using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
-    [Authorize]
+	[Authorize]
 	public class AdministrarUsuariosNazanController : Controller
 	{
 		
@@ -21,7 +21,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 		//
 		// GET: /Nazan/
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
+		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
 		public ActionResult Index()
 		{
 			ViewBag.Usuarios = _usuarioNazanManager.FindAll();
@@ -29,7 +29,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return View();
 		}
 
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
+		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
 		public ActionResult Crear()
 		{
 			ViewBag.Perfiles = 
@@ -38,7 +38,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return View();
 		}
 
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult Crear(UsuarioNazanViewModel model)
@@ -67,7 +67,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 	
 		}
 
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
+		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
 		public ActionResult Editar(string id)
 		{
 			ViewBag.Perfiles =
@@ -94,7 +94,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return View(usuarioNazanViewModel);
 		}
 
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
+		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Editar(string id, UsuarioNazanViewModel model)
@@ -114,8 +114,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 					id,
 					model.Nombre,
 					model.Apellido,
-                    model.Email,
-                    model.Perfil,
+					model.Email,
+					model.Perfil,
 					model.Password);
 
 				TempData["FlashSuccess"] = "Usuario actualizado con éxito.";
@@ -132,7 +132,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return View(model);
 		}
 
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
+		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
 		public ActionResult Eliminar(string id)
 		{
 			var usuario = _usuarioNazanManager.Find(id);
@@ -151,11 +151,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				return RedirectToAction("Index");
 			}
 
-			if (usuario.UserName.ToLower() == "superadmin")
+			if (usuario.UserName.ToLower() == "superusuario")
 			{
 
 				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "No puede eliminar el usuario SuperAdmin.";
+				TempData["FlashError"] = "No puede eliminar el SuperUsuario.";
 				return RedirectToAction("Index");
 			}
 

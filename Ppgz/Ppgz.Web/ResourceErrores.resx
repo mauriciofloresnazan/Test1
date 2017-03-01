@@ -123,6 +123,12 @@
   <data name="ErrorGeneral" xml:space="preserve">
     <value>Error al procesar el registro.</value>
   </data>
+  <data name="Identity_UsuarioBloqueadoTemporalmente" xml:space="preserve">
+    <value>Su cuenta ha sido bloqueada por {0} minutos debido a {1} intentos fallidos.</value>
+  </data>
+  <data name="Identity_UsuarioPassword" xml:space="preserve">
+    <value>Usuario o Password incorrecto</value>
+  </data>
   <data name="NombreUsuarioExistente" xml:space="preserve">
     <value>El nombre de usuario ya fue utilizado. Por favor intente con otro.</value>
   </data>

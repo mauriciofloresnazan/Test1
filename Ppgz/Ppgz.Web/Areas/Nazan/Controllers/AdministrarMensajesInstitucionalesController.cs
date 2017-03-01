@@ -12,20 +12,20 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 	{
 		private readonly MensajesInstitucionalesManager  _mensajesInstitucionalesManager = new MensajesInstitucionalesManager();
 
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
 		public ActionResult Index()
 		{
 			ViewBag.mensajes  = _mensajesInstitucionalesManager.FindAll();
 			
 			return View();
 		}
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
 		public ActionResult Crear()
 		{
 			return View();
 		}
 
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Crear(MensajeViewModel model, FormCollection collection)
@@ -106,6 +106,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			}
 		}
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
 		   public ActionResult Editar(int id)
 		{
 			var mensaje = _mensajesInstitucionalesManager.Find(id);
@@ -131,6 +132,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 		[HttpPost, ActionName("Editar")]
 		[ValidateAntiForgeryToken]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
 		public ActionResult EditarPost(int id, MensajeViewModel model)
 		{
 			
@@ -210,6 +212,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			}
 		}
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
 		public ActionResult Eliminar(int id)
 		{
 			try

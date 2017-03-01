@@ -50,23 +50,23 @@
                                 @if (Request.IsAuthenticated)
                                 {
                                     // NAZAN-ADMINISTRARPERFILESNAZAN
-                                    if (User.IsInRole("SUPERADMIN") || User.IsInRole("NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR"))
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR"))
                                     {
                                         <li class=""><a href="@Url.Action("Index", "AdministrarPerfilesNazan", new { area = "Nazan" })"><i class="fa fa fa-road" aria-hidden="true"></i> Administrar Pefiles Nazan</a></li>
                                     }
                                     // NAZAN-ADMINISTRARUSUARIOSNAZAN
 
-                                    if (User.IsInRole("SUPERADMIN") || User.IsInRole("NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")) 
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")) 
                                     {
                                         <li class=""><a href="@Url.Action("Index", "AdministrarUsuariosNazan", new { area = "Nazan" })"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Nazan</a></li>
                                     }
                                     // NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES
-                                    if (User.IsInRole("SUPERADMIN") || User.IsInRole("NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR"))
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR"))
                                     {
                                         <li class=""><a href="@Url.Action("Index", "AdministrarMensajesInstitucionales", new { area = "Nazan" })"><i class="fa fa fa-envelope-o" aria-hidden="true"></i> Administrar Mensajes Insitucionales</a></li>
                                     }
                                     // NAZAN-ADMINISTRARPROVEEDORESNAZAN
-                                    if (User.IsInRole("SUPERADMIN") || User.IsInRole("NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR"))
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR"))
                                     {
                                         <li class=""><a href="@Url.Action("Index", "AdministrarProveedores", new { area = "Nazan" })"><i class="fa fa fa-info" aria-hidden="true"></i> Administrar Proveedores</a></li>
                                     }

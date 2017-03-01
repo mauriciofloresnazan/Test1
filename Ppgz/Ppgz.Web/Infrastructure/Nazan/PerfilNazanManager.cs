@@ -134,13 +134,13 @@ namespace Ppgz.Web.Infrastructure.Nazan
             {
                 // TODO PASAR A UN MANEJADOR DE ROLES
                 if (_db.aspnetroles
-                    .FirstOrDefault(ro => ro.Name == "SUPERADMIN") == null)
+                    .FirstOrDefault(ro => ro.Name == "MAESTRO-NAZAN") == null)
                 {
                     var role = new aspnetrole()
                     {
-                        Id = "SUPERADMIN",
-                        Name = "SUPERADMIN",
-                        Description = "SUPERADMIN tiene acceso a toda la aplicación.",
+                        Id = "MAESTRO-NAZAN",
+                        Name = "MAESTRO-NAZAN",
+                        Description = "MAESTRO-NAZAN tiene acceso a toda la aplicación.",
                         Tipo = "NAZAN"
                     };
 
@@ -150,7 +150,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 }
 
                 var perfilNazanManager = new PerfilNazanManager();
-                perfilNazanManager.Create(perfilNombre, new[] { "SUPERADMIN" });
+                perfilNazanManager.Create(perfilNombre, new[] { "MAESTRO-NAZAN" });
             }
 
             perfil = _db.perfiles.FirstOrDefault(pt => pt.Nombre == perfilNombre);

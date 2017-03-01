@@ -14,7 +14,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		readonly CuentaManager _cuentaManager = new CuentaManager();
 		//
 		// GET: /Nazan/AdministrarProveedores/
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Index()
 		{
 			var cuentas = _cuentaManager.FinAll();
@@ -23,7 +23,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return View();
 		}
 
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Registrar()
 		{
 			return View();
@@ -31,7 +31,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		
 		public ActionResult Registrar(CuentaViewModel model)
 		{
@@ -69,7 +69,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		}
 
 
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Editar(int id)
 		{
 			var cuenta = _cuentaManager.Find(id);
@@ -85,8 +85,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return View();
 		}
 
-		
-		[Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult ModificarUsuarioMaestro(int id, string usuarioId)
 		{
 			var entities = new Entities();
@@ -109,51 +109,87 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		}
 
 
-        [Authorize(Roles = "SUPERADMIN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
-        public JsonResult BuscarProveedor(string numeroProveedor)
-        {
-            var sapManager = new SapManager();
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+		public JsonResult BuscarProveedor(string numeroProveedor)
+		{
+			var sapManager = new SapManager();
 
-            try
-            {
-                var proveedor = sapManager.GetProveedor(numeroProveedor);
-                return Json(proveedor); ;
+			try
+			{
+				var proveedor = sapManager.GetProveedor(numeroProveedor);
+				return Json(proveedor); ;
 
-            }
-            catch (Exception exception)
-            {
-                return Json(new { error = exception.Message}) ;
-            }
+			}
+			catch (Exception exception)
+			{
+				return Json(new { error = exception.Message}) ;
+			}
 
-        }
+		}
 
 
-        public ActionResult AsociarProveedor(int id, string numeroProveedor)
-        {
-            var sapManager = new SapManager();
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+		public ActionResult AsociarProveedor(int id, string numeroProveedor)
+		{
+			var sapManager = new SapManager();
 
-            try
-            {
-                var proveedor = sapManager.GetProveedor(numeroProveedor);
+			try
+			{
+				var proveedor = sapManager.GetProveedor(numeroProveedor);
 
-                var cuenta = _cuentaManager.Find(id);
-                
-                proveedor.CuentaId = cuenta.Id;
+				var cuenta = _cuentaManager.Find(id);
+				
+				proveedor.CuentaId = cuenta.Id;
 
-                var entities = new Entities();
-                entities.cuentaproveedores.Add(proveedor);
-                entities.SaveChanges();
+				var entities = new Entities();
+				entities.cuentaproveedores.Add(proveedor);
+				entities.SaveChanges();
 
-                TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
-                return RedirectToAction("Editar", new { id = id });
-            }
-            catch (Exception exception)
-            {
-                TempData["FlashError"] = exception.Message;
-                return RedirectToAction("Editar", new { id = id }); 
-            }
+				TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
+				return RedirectToAction("Editar", new { id = id });
+			}
+			catch (Exception exception)
+			{
+				TempData["FlashError"] = exception.Message;
+				return RedirectToAction("Editar", new { id = id }); 
+			}
 
-        }
+		}
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+		public ActionResult Eliminar(int id)
+		{
+
+			//TODO ACTUALIZAR MENSAJE AL RESOURCE
+			TempData["FlashError"] = "En revision";
+			return RedirectToAction("Index");
+			
+		}
+		/*
+		public ActionResult DesasociarProveedor(string numeroProveedor)
+		{
+			// TODO MEJORAR
+			try
+			{
+				var proveedor = sapManager.GetProveedor(numeroProveedor);
+
+				var cuenta = _cuentaManager.Find(id);
+
+				proveedor.CuentaId = cuenta.Id;
+
+				var entities = new Entities();
+				entities.cuentaproveedores.FirstOrDefaultAsync(
+					c=> c.NumeroProveedor == numeroProveedor);
+				entities.SaveChanges();
+
+				TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
+				return RedirectToAction("Editar", new { id = id });
+			}
+			catch (Exception exception)
+			{
+				TempData["FlashError"] = exception.Message;
+				return RedirectToAction("Editar", new { id = id });
+			}
+		}*/
 
 	}
 }

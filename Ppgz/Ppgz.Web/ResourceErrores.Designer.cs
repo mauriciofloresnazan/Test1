@@ -79,6 +79,24 @@ namespace Ppgz.Web {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Su cuenta ha sido bloqueada por {0} minutos debido a {1} intentos fallidos..
+        /// </summary>
+        internal static string Identity_UsuarioBloqueadoTemporalmente {
+            get {
+                return ResourceManager.GetString("Identity_UsuarioBloqueadoTemporalmente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usuario o Password incorrecto.
+        /// </summary>
+        internal static string Identity_UsuarioPassword {
+            get {
+                return ResourceManager.GetString("Identity_UsuarioPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to El nombre de usuario ya fue utilizado. Por favor intente con otro..
         /// </summary>
         internal static string NombreUsuarioExistente {

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+using System.Configuration;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -43,21 +41,41 @@ namespace Ppgz.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(model);
+            
+            UserManager.UserLockoutEnabledByDefault = Convert.ToBoolean(ConfigurationManager.AppSettings["UserLockoutEnabled"]);
+            UserManager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(Convert.ToDouble(ConfigurationManager.AppSettings["AccountLockoutTimeSpan"]));
+            UserManager.MaxFailedAccessAttemptsBeforeLockout = Convert.ToInt32(ConfigurationManager.AppSettings["MaxFailedAccessAttemptsBeforeLockout"]);
+            
+            var usuario = await UserManager.FindByNameAsync(model.UserName);
+            if (usuario != null)
             {
-                var user = await UserManager.FindAsync(model.UserName, model.Password);
-                if (user != null)
+                UserManager.SetLockoutEnabled(usuario.Id, true);
+                
+                if (await UserManager.IsLockedOutAsync(usuario.Id))
                 {
-                    await SignInAsync(user, model.RememberMe);
-                    return RedirectToLocal(returnUrl);
+                    ModelState.AddModelError("",
+                        string.Format(ResourceErrores.Identity_UsuarioBloqueadoTemporalmente,
+                            ConfigurationManager.AppSettings["AccountLockoutTimeSpan"],
+                            ConfigurationManager.AppSettings["MaxFailedAccessAttemptsBeforeLockout"]));
+                    return View(model);
                 }
-                else
+
+                var passwordValid =  UserManager.PasswordHasher.VerifyHashedPassword(usuario.PasswordHash, model.Password);
+
+                if (passwordValid == PasswordVerificationResult.Failed)
                 {
-                    ModelState.AddModelError("", "Invalid username or password.");
+                    UserManager.AccessFailed(usuario.Id);
+                    ModelState.AddModelError("", ResourceErrores.Identity_UsuarioPassword);
+                    return View(model);
                 }
+
+                await SignInAsync(usuario, model.RememberMe);
+                return RedirectToLocal(returnUrl);
             }
 
-            // If we got this far, something failed, redisplay form
+            ModelState.AddModelError("", ResourceErrores.Identity_UsuarioPassword);
+
             return View(model);
         }
 
@@ -101,7 +119,7 @@ namespace Ppgz.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Disassociate(string loginProvider, string providerKey)
         {
-            ManageMessageId? message = null;
+            ManageMessageId? message;
             IdentityResult result = await UserManager.RemoveLoginAsync(User.Identity.GetUserId(), new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
