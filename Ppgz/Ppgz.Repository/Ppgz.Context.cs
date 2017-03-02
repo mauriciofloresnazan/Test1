@@ -31,9 +31,9 @@ namespace Ppgz.Repository
         public virtual DbSet<aspnetuser> aspnetusers { get; set; }
         public virtual DbSet<cuentaproveedore> cuentaproveedores { get; set; }
         public virtual DbSet<cuenta> cuentas { get; set; }
+        public virtual DbSet<cuentasmensaje> cuentasmensajes { get; set; }
         public virtual DbSet<fakedataproveedor> fakedataproveedors { get; set; }
         public virtual DbSet<mensaje> mensajes { get; set; }
         public virtual DbSet<perfile> perfiles { get; set; }
-        public virtual DbSet<usuariomensaje> usuariomensajes { get; set; }
     }
 }

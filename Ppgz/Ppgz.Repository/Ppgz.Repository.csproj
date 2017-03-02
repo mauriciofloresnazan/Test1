@@ -73,6 +73,9 @@
     <Compile Include="cuentaproveedore.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="cuentasmensaje.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="fakedataproveedor.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -98,9 +101,6 @@
       <DependentUpon>Ppgz.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="usuariomensaje.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -16,7 +16,7 @@ namespace Ppgz.Repository
     {
         public mensaje()
         {
-            this.usuariomensajes = new HashSet<usuariomensaje>();
+            this.cuentasmensajes = new HashSet<cuentasmensaje>();
         }
     
         public int Id { get; set; }
@@ -27,6 +27,6 @@ namespace Ppgz.Repository
         public System.DateTime FechaCaducidad { get; set; }
         public string EnviadoA { get; set; }
     
-        public virtual ICollection<usuariomensaje> usuariomensajes { get; set; }
+        public virtual ICollection<cuentasmensaje> cuentasmensajes { get; set; }
     }
 }

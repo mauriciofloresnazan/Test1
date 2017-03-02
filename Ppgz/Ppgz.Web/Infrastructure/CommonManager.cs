@@ -39,17 +39,6 @@ namespace Ppgz.Web.Infrastructure
 
         }
 
-        public void UsuarioCuentaXrefAdd(string usuarioId, int cuentaId )
-        {
-            const string sql = @"
-                        INSERT INTO  usuarios_cuentas_xref (usuario_id, cuenta_id)
-                        VALUES ({0},{1})";
-            _db.Database.ExecuteSqlCommand(sql, usuarioId, cuentaId);
-
-            _db.SaveChanges();
-
-        }
-
         public string HashPassword(string password)
         {
             return  _applicationUserManager.PasswordHasher.HashPassword(password);

@@ -188,21 +188,22 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .ToList();
         }
 
-        public List<usuariomensaje> FindUsuarioMensajes(string usuarioId)
+        public List<cuentasmensaje> FindCuentaMensajes(int cuentaId)
         {
-            return _db.usuariomensajes.Where(um => um.UsuarioId == usuarioId).ToList();
+            return _db.cuentasmensajes.Where(cm => cm.CuentaId == cuentaId).ToList();
         }
 
-        public void Visualizar(string usuarioId, int mensajeId)
+        public void Visualizar(int cuentaId, int mensajeId, string usuarioId)
         {
-            var usuarioMensaje = new usuariomensaje()
+            var cuentaMensaje = new cuentasmensaje()
             {
-                UsuarioId = usuarioId,
+                CuentaId = cuentaId,
                 MensajeId = mensajeId,
-                FechaVisualizacion = DateTime.Now
+                FechaVisualizacion = DateTime.Now,
+                UsuarioId = usuarioId
             };
 
-            _db.usuariomensajes.Add(usuarioMensaje);
+            _db.cuentasmensajes.Add(cuentaMensaje);
             _db.SaveChanges();
 
 
