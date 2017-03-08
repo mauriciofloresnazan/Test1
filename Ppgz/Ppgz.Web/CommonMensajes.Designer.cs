@@ -22,14 +22,14 @@ namespace Ppgz.Web {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class ResourceErrores {
+    internal class CommonMensajes {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal ResourceErrores() {
+        internal CommonMensajes() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Ppgz.Web {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ppgz.Web.ResourceErrores", typeof(ResourceErrores).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ppgz.Web.CommonMensajes", typeof(CommonMensajes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,47 +61,38 @@ namespace Ppgz.Web {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string ErrorEspecifico {
-            get {
-                return ResourceManager.GetString("ErrorEspecifico", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Error al procesar el registro..
         /// </summary>
-        internal static string ErrorGeneral {
+        internal static string ERROR_General {
             get {
-                return ResourceManager.GetString("ErrorGeneral", resourceCulture);
+                return ResourceManager.GetString("ERROR_General", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Su cuenta ha sido bloqueada por {0} minutos debido a {1} intentos fallidos..
         /// </summary>
-        internal static string Identity_UsuarioBloqueadoTemporalmente {
+        internal static string ERROR_Identity_UsuarioBloqueadoTemporalmente {
             get {
-                return ResourceManager.GetString("Identity_UsuarioBloqueadoTemporalmente", resourceCulture);
+                return ResourceManager.GetString("ERROR_Identity_UsuarioBloqueadoTemporalmente", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Usuario o Password incorrecto.
         /// </summary>
-        internal static string Identity_UsuarioPassword {
+        internal static string ERROR_Identity_UsuarioPassword {
             get {
-                return ResourceManager.GetString("Identity_UsuarioPassword", resourceCulture);
+                return ResourceManager.GetString("ERROR_Identity_UsuarioPassword", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to El nombre de usuario ya fue utilizado. Por favor intente con otro..
         /// </summary>
-        internal static string NombreUsuarioExistente {
+        internal static string ERROR_NombreUsuarioExistente {
             get {
-                return ResourceManager.GetString("NombreUsuarioExistente", resourceCulture);
+                return ResourceManager.GetString("ERROR_NombreUsuarioExistente", resourceCulture);
             }
         }
         
@@ -111,15 +102,6 @@ namespace Ppgz.Web {
         internal static string RegistroGeneral {
             get {
                 return ResourceManager.GetString("RegistroGeneral", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to .
-        /// </summary>
-        internal static string Validacriasdfasd {
-            get {
-                return ResourceManager.GetString("Validacriasdfasd", resourceCulture);
             }
         }
     }

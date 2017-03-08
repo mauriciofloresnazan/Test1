@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
+using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Controllers
@@ -41,43 +42,87 @@ namespace Ppgz.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            string log;
+
+            ActionResult actionResult = null;
+
             if (!ModelState.IsValid) return View(model);
-            
-            UserManager.UserLockoutEnabledByDefault = Convert.ToBoolean(ConfigurationManager.AppSettings["UserLockoutEnabled"]);
-            UserManager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(Convert.ToDouble(ConfigurationManager.AppSettings["AccountLockoutTimeSpan"]));
-            UserManager.MaxFailedAccessAttemptsBeforeLockout = Convert.ToInt32(ConfigurationManager.AppSettings["MaxFailedAccessAttemptsBeforeLockout"]);
-            
-            var usuario = await UserManager.FindByNameAsync(model.UserName);
-            if (usuario != null)
+
+            try
             {
-                UserManager.SetLockoutEnabled(usuario.Id, true);
-                
-                if (await UserManager.IsLockedOutAsync(usuario.Id))
+                UserManager.UserLockoutEnabledByDefault = Convert.ToBoolean(ConfigurationManager.AppSettings["UserLockoutEnabled"]);
+                UserManager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(Convert.ToDouble(ConfigurationManager.AppSettings["AccountLockoutTimeSpan"]));
+                UserManager.MaxFailedAccessAttemptsBeforeLockout = Convert.ToInt32(ConfigurationManager.AppSettings["MaxFailedAccessAttemptsBeforeLockout"]);
+
+                var usuario = await UserManager.FindByNameAsync(model.UserName);
+                if (usuario != null)
                 {
-                    ModelState.AddModelError("",
-                        string.Format(ResourceErrores.Identity_UsuarioBloqueadoTemporalmente,
-                            ConfigurationManager.AppSettings["AccountLockoutTimeSpan"],
-                            ConfigurationManager.AppSettings["MaxFailedAccessAttemptsBeforeLockout"]));
-                    return View(model);
+                    UserManager.SetLockoutEnabled(usuario.Id, true);
+
+                    if (await UserManager.IsLockedOutAsync(usuario.Id))
+                    {
+                        ModelState.AddModelError("",
+                            string.Format(CommonMensajes.ERROR_Identity_UsuarioBloqueadoTemporalmente,
+                                ConfigurationManager.AppSettings["AccountLockoutTimeSpan"],
+                                ConfigurationManager.AppSettings["MaxFailedAccessAttemptsBeforeLockout"]));
+                        return View(model);
+                    }
+
+                    var passwordValid = UserManager.PasswordHasher.VerifyHashedPassword(usuario.PasswordHash, model.Password);
+
+                    if (passwordValid == PasswordVerificationResult.Failed)
+                    {
+                        UserManager.AccessFailed(usuario.Id);
+                        ModelState.AddModelError("", CommonMensajes.ERROR_Identity_UsuarioPassword);
+                        return View(model);
+                    }
+
+                    await SignInAsync(usuario, model.RememberMe);
+
+                    return RedirectToLocal(returnUrl);
                 }
+            }
+            catch (BusinessException businessEx)
+            {
+                log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    businessEx.ToString(),
+                    Request);
 
-                var passwordValid =  UserManager.PasswordHasher.VerifyHashedPassword(usuario.PasswordHash, model.Password);
+                CommonManager.WriteBusinessLog(log, TipoMensaje.Error);
 
-                if (passwordValid == PasswordVerificationResult.Failed)
-                {
-                    UserManager.AccessFailed(usuario.Id);
-                    ModelState.AddModelError("", ResourceErrores.Identity_UsuarioPassword);
-                    return View(model);
-                }
+                actionResult = View(model);
+            }
+            catch (Exception e)
+            {
+                log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
 
-                await SignInAsync(usuario, model.RememberMe);
-                return RedirectToLocal(returnUrl);
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                actionResult = View(model);
             }
 
-            ModelState.AddModelError("", ResourceErrores.Identity_UsuarioPassword);
 
-            return View(model);
+
+
+            ModelState.AddModelError("", CommonMensajes.ERROR_Identity_UsuarioPassword);
+
+            return actionResult;
         }
+        
+
+   
+
+
+
+
+
 
         //
         // GET: /Account/Register

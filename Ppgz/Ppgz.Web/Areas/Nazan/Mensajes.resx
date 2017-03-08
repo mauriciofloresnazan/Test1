@@ -117,8 +117,17 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="CuentaNombreProveedorExistente" xml:space="preserve">
-    <value>CuentaNombreProveedorExistente</value>
+  <data name="ERROR_CuentaManager_Crear_LoginExistente" xml:space="preserve">
+    <value>Ya exíste un usuario con ese login</value>
+  </data>
+  <data name="ERROR_CuentaManager_Crear_NombreProveedorExistente" xml:space="preserve">
+    <value>Ya exíste una cuenta maestra de proveedor registrada con este nombre</value>
+  </data>
+  <data name="ERROR_CuentaManager_GetTipoByString" xml:space="preserve">
+    <value>Tipo de proveedor Incorrecto</value>
+  </data>
+  <data name="ERROR_General" xml:space="preserve">
+    <value>ERROR_General</value>
   </data>
   <data name="PerfilNazanNombreExistente" xml:space="preserve">
     <value>PerfilNazanNombreExistente</value>

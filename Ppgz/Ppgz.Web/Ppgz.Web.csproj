@@ -180,15 +180,20 @@
     <Compile Include="Areas\Mercaderia\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\AdministrarUsuariosController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\MensajesInstitucionalesController.cs" />
+    <Compile Include="Areas\Mercaderia\Mensajes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Mensajes.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarMensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
-    <Compile Include="Areas\Nazan\Errores.Designer.cs">
+    <Compile Include="Areas\Nazan\Mensajes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Errores.resx</DependentUpon>
+      <DependentUpon>Mensajes.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Nazan\Models\PefilNazanViewModel.cs" />
     <Compile Include="Areas\Nazan\Models\UsuarioNazanViewModel.cs" />
@@ -197,9 +202,13 @@
     <Compile Include="Areas\Servicio\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarUsuariosController.cs" />
     <Compile Include="Areas\Servicio\Controllers\MensajesInstitucionalesController.cs" />
+    <Compile Include="Areas\Servicio\Mensajes.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Mensajes.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Servicio\ServicioAreaRegistration.cs" />
     <Compile Include="Areas\UsuarioProveedorViewModel.cs" />
-    <Compile Include="BusinessException.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -245,14 +254,11 @@
     <Compile Include="Infrastructure\BusinessException.cs" />
     <Compile Include="Infrastructure\CommonManager.cs" />
     <Compile Include="Infrastructure\Nazan\CuentaManager.cs" />
-    <None Include="Infrastructure\MensajesManager.cs.old" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilProveedorManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioProveedorManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioNazanManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilNazanManager.cs" />
-    <None Include="Infrastructure\Nazan\UsuarioManager.cs.old" />
-    <None Include="Infrastructure\TipoProveedorManager.cs.old" />
     <Compile Include="Infrastructure\SapManager.cs" />
     <Compile Include="Infrastructure\TerminosCondiciones.cs" />
     <Compile Include="Infrastructure\TipoUsuario.cs" />
@@ -273,10 +279,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ResourceErrores.Designer.cs">
+    <Compile Include="CommonMensajes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>ResourceErrores.resx</DependentUpon>
+      <DependentUpon>CommonMensajes.resx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -1124,17 +1130,25 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Areas\Nazan\Errores.resx">
+    <EmbeddedResource Include="Areas\Mercaderia\Mensajes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Errores.Designer.cs</LastGenOutput>
+      <LastGenOutput>Mensajes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Nazan\Mensajes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Mensajes.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Servicio\Mensajes.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Mensajes.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="ResourceErrores.resx">
+    <EmbeddedResource Include="CommonMensajes.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ResourceErrores.Designer.cs</LastGenOutput>
+      <LastGenOutput>CommonMensajes.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

@@ -38,7 +38,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return View();
 		}
 
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
+		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult Crear(UsuarioNazanViewModel model)
@@ -123,7 +123,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			}
 			catch (RetryLimitExceededException)
 			{
-				ModelState.AddModelError("", ResourceErrores.RegistroGeneral);
+				ModelState.AddModelError("", Mensajes.ERROR_General);
 			}
 
 			ViewBag.Perfiles =

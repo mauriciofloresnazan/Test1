@@ -134,7 +134,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             }
             catch (RetryLimitExceededException)
             {
-                ModelState.AddModelError("", ResourceErrores.RegistroGeneral);
+                ModelState.AddModelError("", Mensajes.ERROR_General);
             }
 
             ViewBag.Perfiles =

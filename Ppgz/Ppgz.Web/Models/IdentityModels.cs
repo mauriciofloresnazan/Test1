@@ -7,8 +7,8 @@ namespace Ppgz.Web.Models
     // class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-        public string Email { get; set; }
-        public string PhoneNumber { get; set; }
+        public override string Email { get; set; }
+        public override string PhoneNumber { get; set; }
         public string Tipo { get; set; }
         public bool Activo { get; set; }
         public string Nombre { get; set; }

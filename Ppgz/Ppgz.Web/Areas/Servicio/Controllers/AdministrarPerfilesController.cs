@@ -54,7 +54,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
 			if (_perfilProveedorManager.FindByNombre(model.Nombre.Trim()) != null)
 			{
-				ModelState.AddModelError(string.Empty, Errores.PerfilNazanNombreExistente);
+				ModelState.AddModelError(string.Empty, Nazan.Mensajes.PerfilNazanNombreExistente);
 				return View(model);
 			}
 
@@ -124,7 +124,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 			}
 			catch (RetryLimitExceededException)
 			{
-				ModelState.AddModelError("", ResourceErrores.RegistroGeneral);
+				ModelState.AddModelError("", Mensajes.ERROR_General);
 			}
 			catch (Exception exception)
 			{

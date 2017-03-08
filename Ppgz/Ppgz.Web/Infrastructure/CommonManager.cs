@@ -22,16 +22,19 @@ namespace Ppgz.Web.Infrastructure
 		Error
 	}
 
+    /// <summary>
+    /// Manejadores comunes de la aplicacion que no estan separados en areas de negocio 
+    /// </summary>
 	public class CommonManager
 	{
 		/// <summary> Log para almacenar errores de negocio.</summary>
-		public static readonly ILog businessLog = LogManager.GetLogger(@"BusinessLog");
+		public static readonly ILog BusinessLog = LogManager.GetLogger(@"BusinessLog");
 
 		/// <summary> Log para almacenar errores de aplicación.</summary>
-		public static readonly ILog errorAppLog = LogManager.GetLogger(@"ErrorAppLog");
+		public static readonly ILog ErrorAppLog = LogManager.GetLogger(@"ErrorAppLog");
 
 		/// <summary> Log para ser visualizado en el navegador.</summary>
-		public static readonly ILog traceView = LogManager.GetLogger(@"TraceView");
+		public static readonly ILog TraceView = LogManager.GetLogger(@"TraceView");
 
 		private readonly UserManager<ApplicationUser> _applicationUserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
 		private readonly Entities _db = new Entities();
@@ -102,16 +105,16 @@ namespace Ppgz.Web.Infrastructure
 			switch (tipo)
 			{
 				case TipoMensaje.Informativo:
-					errorAppLog.Info(mensaje);
-					traceView.Info(mensaje);
+					ErrorAppLog.Info(mensaje);
+					TraceView.Info(mensaje);
 					break;
 				case TipoMensaje.Advertencia:
-					errorAppLog.Warn(mensaje);
-					traceView.Warn(mensaje);
+					ErrorAppLog.Warn(mensaje);
+					TraceView.Warn(mensaje);
 					break;
 				case TipoMensaje.Error:
-					errorAppLog.Error(mensaje);
-					traceView.Error(mensaje);
+					ErrorAppLog.Error(mensaje);
+					TraceView.Error(mensaje);
 					break;
 			}
 		}
@@ -123,16 +126,16 @@ namespace Ppgz.Web.Infrastructure
 			switch (tipo)
 			{
 				case TipoMensaje.Informativo:
-					businessLog.Info(mensaje);
-					traceView.Info(mensaje);
+					BusinessLog.Info(mensaje);
+					TraceView.Info(mensaje);
 					break;
 				case TipoMensaje.Advertencia:
-					businessLog.Warn(mensaje);
-					traceView.Warn(mensaje);
+					BusinessLog.Warn(mensaje);
+					TraceView.Warn(mensaje);
 					break;
 				case TipoMensaje.Error:
-					businessLog.Error(mensaje);
-					traceView.Error(mensaje);
+					BusinessLog.Error(mensaje);
+					TraceView.Error(mensaje);
 					break;
 			}
 		}

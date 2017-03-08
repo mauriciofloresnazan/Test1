@@ -72,7 +72,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				catch (Exception)
 				{
 					//TODO ACTUALIZAR MENSAJE AL RESOURCE
-					TempData["FlashError"] = ResourceErrores.ErrorGeneral;
+                    TempData["FlashError"] = Mensajes.ERROR_General;
 					return RedirectToAction("Index");
 				}
 			}
@@ -178,7 +178,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				catch (Exception)
 				{
 					//TODO ACTUALIZAR MENSAJE AL RESOURCE
-					TempData["FlashError"] = ResourceErrores.ErrorGeneral;
+					TempData["FlashError"] = Mensajes.ERROR_General;
 					return RedirectToAction("Index");
 				}
 			}
@@ -207,7 +207,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			catch (Exception)
 			{
 				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = ResourceErrores.ErrorGeneral;
+				TempData["FlashError"] = Mensajes.ERROR_General;
 				return RedirectToAction("Index");
 			}
 		}

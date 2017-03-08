@@ -38,20 +38,20 @@ namespace Ppgz.Web.Infrastructure.Nazan
             if (perfil != null)
             {
                 //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Errores.PerfilNazanNombreExistente);
+                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanNombreExistente);
                 
             }
 
             if (!rolesIds.Any())
                 //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Errores.PerfilNazanRolesRequeridos);
+                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanRolesRequeridos);
             
             var aspnetroles =
                 _db.aspnetroles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
 
             if (!aspnetroles.Any())
                 //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Errores.PerfilNazanRolesRequeridos);
+                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanRolesRequeridos);
 
 
             perfil = new perfile {Nombre = nombre, Tipo = Tipo};
@@ -73,7 +73,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
             if (perfil.aspnetusers.Any())
             {
                 //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Errores.PerfilNazanRolesEliminarConUsuarios);
+                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanRolesEliminarConUsuarios);
             }
             perfil.aspnetroles.Clear();
             _db.perfiles.Remove(perfil);
@@ -88,13 +88,13 @@ namespace Ppgz.Web.Infrastructure.Nazan
             {
                 if(perfil.Id != id)
                 //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Errores.PerfilNazanNombreExistente);
+                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanNombreExistente);
 
             }
 
             if (!rolesIds.Any())
                 //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Errores.PerfilNazanRolesRequeridos);
+                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanRolesRequeridos);
 
 
             var aspnetroles =
@@ -102,7 +102,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             if (!aspnetroles.Any())
                 //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Errores.PerfilNazanRolesRequeridos);
+                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanRolesRequeridos);
 
             perfil = Find(id);
             perfil.Nombre = nombre;

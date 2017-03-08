@@ -132,9 +132,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				TempData["FlashSuccess"] = "Usuario actualizado con éxito.";
 				return RedirectToAction("Index");
 			}
-			catch (RetryLimitExceededException)
+			catch (Exception)
 			{
-				ModelState.AddModelError("", ResourceErrores.RegistroGeneral);
+                // TODO JUAN DELGADO
+				ModelState.AddModelError("", "");
 			}
 
             ViewBag.Perfiles =

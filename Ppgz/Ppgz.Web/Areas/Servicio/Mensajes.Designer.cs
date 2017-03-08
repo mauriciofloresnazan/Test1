@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Ppgz.Web.Areas.Nazan {
+namespace Ppgz.Web.Areas.Servicio {
     using System;
     
     
@@ -22,14 +22,14 @@ namespace Ppgz.Web.Areas.Nazan {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Errores {
+    internal class Mensajes {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Errores() {
+        internal Mensajes() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Ppgz.Web.Areas.Nazan {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ppgz.Web.Areas.Nazan.Errores", typeof(Errores).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Ppgz.Web.Areas.Servicio.Mensajes", typeof(Mensajes).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,65 +61,11 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to CuentaNombreProveedorExistente.
+        ///   Looks up a localized string similar to ERROR_General.
         /// </summary>
-        internal static string CuentaNombreProveedorExistente {
+        internal static string ERROR_General {
             get {
-                return ResourceManager.GetString("CuentaNombreProveedorExistente", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PerfilNazanNombreExistente.
-        /// </summary>
-        internal static string PerfilNazanNombreExistente {
-            get {
-                return ResourceManager.GetString("PerfilNazanNombreExistente", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PerfilNazanRolesEliminarConUsuarios.
-        /// </summary>
-        internal static string PerfilNazanRolesEliminarConUsuarios {
-            get {
-                return ResourceManager.GetString("PerfilNazanRolesEliminarConUsuarios", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to PerfilNazanRolesRequeridos.
-        /// </summary>
-        internal static string PerfilNazanRolesRequeridos {
-            get {
-                return ResourceManager.GetString("PerfilNazanRolesRequeridos", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to UsuarioNazanIncorrecto.
-        /// </summary>
-        internal static string UsuarioNazanIncorrecto {
-            get {
-                return ResourceManager.GetString("UsuarioNazanIncorrecto", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to UsuarioNazanLoginExistente.
-        /// </summary>
-        internal static string UsuarioNazanLoginExistente {
-            get {
-                return ResourceManager.GetString("UsuarioNazanLoginExistente", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to UsuarioNazanPerfilIncorrecto.
-        /// </summary>
-        internal static string UsuarioNazanPerfilIncorrecto {
-            get {
-                return ResourceManager.GetString("UsuarioNazanPerfilIncorrecto", resourceCulture);
+                return ResourceManager.GetString("ERROR_General", resourceCulture);
             }
         }
     }
