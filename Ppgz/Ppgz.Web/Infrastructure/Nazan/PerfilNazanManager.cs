@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Ppgz.Repository;
+using Ppgz.Web.Areas.Nazan;
 
 namespace Ppgz.Web.Infrastructure.Nazan
 {
@@ -15,7 +16,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
         public List<perfile> FindAll()
         {
             return _db.perfiles.Where(
-                p => p.Tipo ==  Tipo).ToList();
+                p => p.Tipo == Tipo).ToList();
         }
 
         public perfile Find(int id)
@@ -30,83 +31,72 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .FirstOrDefault(p => p.Nombre == nombre && p.Tipo == Tipo);
         }
 
-        public void Create(string nombre, string[]rolesIds)
+        internal void ValidarPermisos(string[] rolesIds)
         {
-            nombre = nombre.Trim();
-
-            var perfil = FindByNombre(nombre);
-            if (perfil != null)
-            {
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanNombreExistente);
-                
-            }
 
             if (!rolesIds.Any())
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanRolesRequeridos);
-            
+            {
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_AccesosRequeridos);
+            }
             var aspnetroles =
                 _db.aspnetroles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
 
             if (!aspnetroles.Any())
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanRolesRequeridos);
+            {
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_AccesosRequeridos);
+            }
+        }
 
+        public void Crear(string nombre, string[] rolesIds)
+        {
+            nombre = nombre.Trim();
 
-            perfil = new perfile {Nombre = nombre, Tipo = Tipo};
+            var perfil = FindByNombre(nombre);
+
+            if (perfil != null)
+            {
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_NombreExistente);
+            }
+
+            ValidarPermisos(rolesIds);
+
+            var aspnetroles = _db.aspnetroles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
+            perfil = new perfile { Nombre = nombre, Tipo = Tipo };
 
             foreach (var role in aspnetroles)
             {
-                perfil.aspnetroles.Add( role);
+                perfil.aspnetroles.Add(role);
             }
-
 
             _db.perfiles.Add(perfil);
             _db.SaveChanges();
         }
-
-        public void Remove(int id)
-        {
-            var perfil = Find(id);
-
-            if (perfil.aspnetusers.Any())
-            {
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanRolesEliminarConUsuarios);
-            }
-            perfil.aspnetroles.Clear();
-            _db.perfiles.Remove(perfil);
-            _db.SaveChanges();
-        }
-
-
+        
         public void Update(int id, string nombre, string[] rolesIds)
         {
             var perfil = FindByNombre(nombre);
             if (perfil != null)
             {
-                if(perfil.Id != id)
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanNombreExistente);
+                if (perfil.Id != id)
+                    throw new BusinessException(MensajesResource.ERROR_PerfilNazan_NombreExistente);
 
             }
+            perfil = Find(id);
 
-            if (!rolesIds.Any())
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanRolesRequeridos);
+            if (perfil == null)
+            {
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_PefilIdIncorrecto);
+            }
 
+            ValidarPermisos(rolesIds);
 
             var aspnetroles =
                 _db.aspnetroles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
 
-            if (!aspnetroles.Any())
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.Mensajes.PerfilNazanRolesRequeridos);
-
             perfil = Find(id);
             perfil.Nombre = nombre;
             perfil.aspnetroles.Clear();
+
             foreach (var role in aspnetroles)
             {
                 perfil.aspnetroles.Add(role);
@@ -117,6 +107,18 @@ namespace Ppgz.Web.Infrastructure.Nazan
         }
 
 
+        public void Remove(int id)
+        {
+            var perfil = Find(id);
+
+            if (perfil.aspnetusers.Any())
+            {
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_EliminarConUsuarios);
+            }
+            perfil.aspnetroles.Clear();
+            _db.perfiles.Remove(perfil);
+            _db.SaveChanges();
+        }
         public List<aspnetrole> GetRoles()
         {
             return _db.aspnetroles
@@ -150,15 +152,14 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 }
 
                 var perfilNazanManager = new PerfilNazanManager();
-                perfilNazanManager.Create(perfilNombre, new[] { "MAESTRO-NAZAN" });
+                perfilNazanManager.Crear(perfilNombre, new[] { "MAESTRO-NAZAN" });
             }
 
             perfil = _db.perfiles.FirstOrDefault(pt => pt.Nombre == perfilNombre);
 
             if (perfil == null)
             {
-
-                //todo carlos campos
+                // TODO REVISAR ESTA FUNCION 
                 throw new Exception("");
 
             }

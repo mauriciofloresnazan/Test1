@@ -59,7 +59,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 				try
 				{
-					_mensajesInstitucionalesManager.CreateArchivo(
+					_mensajesInstitucionalesManager.CrearPdf(
 						model.Titulo,
 						"~/Uploads/" + fileName,
 						DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
@@ -72,7 +72,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				catch (Exception)
 				{
 					//TODO ACTUALIZAR MENSAJE AL RESOURCE
-                    TempData["FlashError"] = Mensajes.ERROR_General;
+                    TempData["FlashError"] = MensajesResource.ERROR_General;
 					return RedirectToAction("Index");
 				}
 			}
@@ -87,7 +87,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 			try
 			{
-				_mensajesInstitucionalesManager.CreateTexto(
+				_mensajesInstitucionalesManager.CrearTexto(
 					model.Titulo,
 					model.Contenido,
 					DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
@@ -163,7 +163,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				model.Pdf = "~/Uploads/" + fileName;
 				try
 				{
-					_mensajesInstitucionalesManager.UpdateArchivo(
+					_mensajesInstitucionalesManager.ActualizarPdf(
 						id,
 						model.Titulo,
 						model.Pdf,
@@ -178,7 +178,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				catch (Exception)
 				{
 					//TODO ACTUALIZAR MENSAJE AL RESOURCE
-					TempData["FlashError"] = Mensajes.ERROR_General;
+					TempData["FlashError"] = MensajesResource.ERROR_General;
 					return RedirectToAction("Index");
 				}
 			}
@@ -192,7 +192,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			try
 			{
 							
-				_mensajesInstitucionalesManager.UpdateTexto(
+				_mensajesInstitucionalesManager.ActualizarTexto(
 					id,
 					model.Titulo,
 					model.Contenido,
@@ -207,7 +207,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			catch (Exception)
 			{
 				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = Mensajes.ERROR_General;
+				TempData["FlashError"] = MensajesResource.ERROR_General;
 				return RedirectToAction("Index");
 			}
 		}
@@ -217,7 +217,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		{
 			try
 			{
-				_mensajesInstitucionalesManager.Remove(id);
+				_mensajesInstitucionalesManager.Eliminar(id);
 			}
 			catch (Exception exception)
 			{

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Ppgz.Repository;
+using Ppgz.Web.Areas.Nazan;
 
 namespace Ppgz.Web.Infrastructure.Nazan
 {
@@ -10,41 +11,46 @@ namespace Ppgz.Web.Infrastructure.Nazan
     {
         private readonly Entities _db = new Entities();
 
-
+        /// <summary>
+        /// Representa a quienes fue enviado el Mensaje
+        /// </summary>
         public enum EnviadoA
         {
-            TODOS,
-            MERCADERIA,
-            SERVICIO
+            Todos,
+            Mercaderia,
+            Servicio
         }
+
         internal static string GetEnviadoAString(EnviadoA enviadoA)
         {
             switch (enviadoA)
             {
-                case EnviadoA.MERCADERIA:
+                case EnviadoA.Mercaderia:
                     return "MERCADERIA";
-                case EnviadoA.SERVICIO:
+                case EnviadoA.Servicio:
                     return "SERVICIO";
-                case EnviadoA.TODOS:
+                case EnviadoA.Todos:
                     return "TODOS";
             }
             return null;
         }
+
         public static EnviadoA GetEnviadoAByString(string enviadoA)
         {
             switch (enviadoA)
             {
                 case "MERCADERIA":
-                    return EnviadoA.MERCADERIA;
+                    return EnviadoA.Mercaderia;
                 case "SERVICIO":
-                    return EnviadoA.SERVICIO;
+                    return EnviadoA.Servicio;
                 case "TODOS":
-                    return EnviadoA.TODOS;
+                    return EnviadoA.Todos;
             }
-            //TODO CARLOS Y JUAN DELGADO
-            throw new Exception("");
+
+            throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionalesManager_GetEnviadoAByString);
 
         }
+
         public List<mensaje> FindAll()
         {
             return _db.mensajes.ToList();
@@ -56,16 +62,81 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .FirstOrDefault(m => m.Id == id);
         }
 
-        public void CreateTexto(string titulo, string contenido,
-            DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
+        public List<mensaje> FindPublicadosByCuentaId(int cuentaId)
         {
+            var cuentaManager = new CuentaManager();
 
+            var cuenta = cuentaManager.Find(cuentaId);
+
+            return _db.mensajes
+                .Where(m => m.FechaPublicacion < DateTime.Now && (m.EnviadoA == "TODOS" || m.EnviadoA == cuenta.Tipo))
+                .ToList();
+        }
+
+        public List<cuentasmensaje> FindCuentaMensajes(int cuentaId)
+        {
+            return _db.cuentasmensajes.Where(cm => cm.CuentaId == cuentaId).ToList();
+        }
+
+        internal void ValidarFechas(DateTime fechaCaducidad, DateTime fechaPublicacion)
+        {
+            // validacion de las fechas
             if (fechaCaducidad <= fechaPublicacion)
             {
-                // TODO carlos campos y juan delgado
-
-                throw new Exception("La fecha de caducidad debe ser superior a la fecha de publicación.");
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionalesManager_Crear_FechaCadMayor);
             }
+            if (fechaPublicacion < DateTime.Today)
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_FechaPublicacion);
+            }
+        }
+
+        internal void ValidarMensajeId(int id)
+        {
+            var mensaje = Find(id);
+
+            if (mensaje == null)
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_MensajeNoExiste);
+            }
+        }
+
+        internal void ValidarPdf(string pdf)
+        {
+            if (string.IsNullOrWhiteSpace(pdf))
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionalesManager_PdfIncorrecto);
+            }
+            
+        }
+        internal void ValidarContenido(string contenido)
+        {
+            if (string.IsNullOrWhiteSpace(contenido))
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionalesManager_ContenidoIncorrecto);
+            }
+            //TODO ESTO DEBE SER CONFIGURADO
+            if (contenido.Length < 20)
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionalesManager_ContenidoIncorrecto);
+            }
+
+        }
+
+        /// <summary>
+        /// Crear mensaje de tipo texto en el contenido
+        /// </summary>
+        /// <param name="titulo"></param>
+        /// <param name="contenido"></param>
+        /// <param name="fechaPublicacion"></param>
+        /// <param name="fechaCaducidad"></param>
+        /// <param name="enviadoA"></param>
+        public void CrearTexto(string titulo, string contenido,
+            DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
+        {
+            // Validaciones
+            ValidarFechas(fechaCaducidad, fechaPublicacion);
+            ValidarContenido(contenido);
 
             var mensaje = new mensaje()
             {
@@ -81,19 +152,26 @@ namespace Ppgz.Web.Infrastructure.Nazan
             _db.SaveChanges();
 
         }
-        public void CreateArchivo(string titulo, string archivo,
+
+        /// <summary>
+        /// Crear mensaje de tipo PDF en el contenido
+        /// </summary>
+        /// <param name="titulo"></param>
+        /// <param name="pdf"></param>
+        /// <param name="fechaPublicacion"></param>
+        /// <param name="fechaCaducidad"></param>
+        /// <param name="enviadoA"></param>
+        public void CrearPdf(string titulo, string pdf,
             DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
         {
-            if (fechaCaducidad <= fechaPublicacion)
-            {
-                // TODO carlos campos y juan delgado
+            // Validaciones
+            ValidarFechas(fechaCaducidad, fechaPublicacion);
+            ValidarPdf(pdf);
 
-                throw new Exception("La fecha de caducidad debe ser superior a la fecha de publicación.");
-            }
             var mensaje = new mensaje()
             {
                 Titulo = titulo.Trim(),
-                Archivo = archivo.Trim(),
+                Archivo = pdf.Trim(),
                 FechaCaducidad = fechaCaducidad,
                 FechaPublicacion = fechaPublicacion,
                 EnviadoA = GetEnviadoAString(enviadoA)
@@ -103,98 +181,61 @@ namespace Ppgz.Web.Infrastructure.Nazan
             _db.SaveChanges();
         }
 
-        public void UpdateTexto(int id, string titulo, string contenido,
+        public void ActualizarTexto(int id, string titulo, string contenido,
             DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
         {
-            if (fechaCaducidad <= fechaPublicacion)
-            {
-                // TODO carlos campos y juan delgado
-
-                throw new Exception("La fecha de caducidad debe ser superior a la fecha de publicación.");
-            }
-            if(string.IsNullOrWhiteSpace(contenido.Trim()))
-            {
-                // TODO CARLOS Y  JUAN DELGADO
-                throw new Exception("");
-            }
+            // Validaciones
+            ValidarFechas(fechaCaducidad, fechaPublicacion);
+            ValidarMensajeId(id);
+            ValidarContenido(contenido);
 
             var mensaje = Find(id);
-            if (mensaje == null)
-            {
-                // TODO CARLOS Y  JUAN DELGADO
-                throw new Exception("");
-            }
 
             mensaje.Titulo = titulo.Trim();
             mensaje.FechaPublicacion = fechaPublicacion;
             mensaje.FechaCaducidad = fechaCaducidad;
             mensaje.EnviadoA = GetEnviadoAString(enviadoA);
             mensaje.Contenido = contenido;
+
             _db.Entry(mensaje).State = EntityState.Modified;
             _db.SaveChanges();
         }
 
-        public void UpdateArchivo(int id, string titulo, string archivo,
+        public void ActualizarPdf(int id, string titulo, string pdf,
             DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
         {
-            if (fechaCaducidad <= fechaPublicacion)
-            {
-                // TODO carlos campos y juan delgado
-
-                throw new Exception("La fecha de caducidad debe ser superior a la fecha de publicación.");
-            }
-            if (string.IsNullOrWhiteSpace(archivo.Trim()))
-            {
-                // TODO CARLOS Y  JUAN DELGADO
-                throw new Exception("");
-            }
+            ValidarFechas(fechaCaducidad, fechaPublicacion);
+            ValidarMensajeId(id);
+            ValidarPdf(pdf);
 
             var mensaje = Find(id);
-            if (mensaje == null)
-            {
-                // TODO CARLOS Y  JUAN DELGADO
-                throw new Exception("");
-            }
 
             mensaje.Titulo = titulo.Trim();
             mensaje.FechaPublicacion = fechaPublicacion;
             mensaje.FechaCaducidad = fechaCaducidad;
             mensaje.EnviadoA = GetEnviadoAString(enviadoA);
-            mensaje.Archivo = archivo;
+            mensaje.Archivo = pdf;
+
             _db.Entry(mensaje).State = EntityState.Modified;
             _db.SaveChanges();
         }
-        public void Remove(int id)
+        public void Eliminar(int id)
         {
+            ValidarMensajeId(id);
+
+            //TODO validar que hacer con los mensajes que ya han sido visualizados SOFT DELETE
+
             var mensaje = Find(id);
-            if (mensaje == null)
-            {
-                // TODO CARLOS Y  JUAN DELGADO
-                throw new Exception("");
-            }
 
             _db.mensajes.Remove(mensaje);
             _db.SaveChanges();
         }
 
-        public List<mensaje> FindPublicadosByCuentaId(int cuentaId)
-        {
-            var cuentaManager = new CuentaManager();
-
-            var cuenta = cuentaManager.Find(cuentaId);
-            
-            return _db.mensajes
-                .Where(m => m.FechaPublicacion < DateTime.Now && (m.EnviadoA == "TODOS" || m.EnviadoA == cuenta.Tipo))
-                .ToList();
-        }
-
-        public List<cuentasmensaje> FindCuentaMensajes(int cuentaId)
-        {
-            return _db.cuentasmensajes.Where(cm => cm.CuentaId == cuentaId).ToList();
-        }
-
         public void Visualizar(int cuentaId, int mensajeId, string usuarioId)
         {
+
+            ValidarMensajeId(mensajeId);
+
             var cuentaMensaje = new cuentasmensaje()
             {
                 CuentaId = cuentaId,

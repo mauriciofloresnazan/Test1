@@ -123,7 +123,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			}
 			catch (RetryLimitExceededException)
 			{
-				ModelState.AddModelError("", Mensajes.ERROR_General);
+				ModelState.AddModelError("", MensajesResource.ERROR_General);
 			}
 
 			ViewBag.Perfiles =

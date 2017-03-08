@@ -23,7 +23,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			var perfiles = _perfilProveedorManager
 				.FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
 
-			 perfiles .Add(_perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.MERCADERIA));
+			 perfiles .Add(_perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.Mercaderia));
 
 			ViewBag.Perfiles = perfiles;
 			return View();
@@ -54,7 +54,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			if (_perfilProveedorManager.FindByNombre(model.Nombre.Trim()) != null)
 			{
-                ModelState.AddModelError(string.Empty, Mensajes.ERROR_PerfilNombreExistente);
+                ModelState.AddModelError(string.Empty, MensajesResource.ERROR_PerfilNombreExistente);
 				return View(model);
 			}
 

@@ -15,19 +15,17 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
         public enum Tipo
         {
-            // ReSharper disable once InconsistentNaming
-            MERCADERIA,
-            // ReSharper disable once InconsistentNaming
-            SERVICIO
+            Mercaderia,
+            Servicio
         }
 
         internal static string GetTipoString(Tipo tipo)
         {
             switch (tipo)
             {
-                case Tipo.MERCADERIA:
+                case Tipo.Mercaderia:
                     return "MERCADERIA";
-                case Tipo.SERVICIO:
+                case Tipo.Servicio:
                     return "SERVICIO";
             }
             return null;
@@ -38,11 +36,11 @@ namespace Ppgz.Web.Infrastructure.Nazan
             switch (tipo)
             {
                 case "MERCADERIA":
-                    return Tipo.MERCADERIA;
+                    return Tipo.Mercaderia;
                 case "SERVICIO":
-                    return Tipo.SERVICIO;
+                    return Tipo.Servicio;
             }
-            throw new BusinessException(Mensajes.ERROR_CuentaManager_GetTipoByString);
+            throw new BusinessException(MensajesResource.ERROR_CuentaManager_GetTipoByString);
         }
 
         public cuenta FindByNombre(string nombreProveedor)
@@ -87,14 +85,14 @@ namespace Ppgz.Web.Infrastructure.Nazan
             // Valida si existe una cuenta con el mismo nombre
             if (cuenta != null)
             {
-                throw new BusinessException(Mensajes.ERROR_CuentaManager_Crear_NombreProveedorExistente);
+                throw new BusinessException(MensajesResource.ERROR_CuentaManager_Crear_NombreProveedorExistente);
             }
 
             var applicationUserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
           
             if (applicationUserManager.FindByName(responsableLogin) != null)
             {
-                throw new BusinessException(Mensajes.ERROR_CuentaManager_Crear_LoginExistente);
+                throw new BusinessException(MensajesResource.ERROR_CuentaManager_Crear_LoginExistente);
             }
 
             var perfilProveedorManager = new PerfilProveedorManager();
@@ -123,8 +121,8 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             _db.cuentas.Add(cuenta);
             _db.SaveChanges();
-            
-            //TODO 
+
+            // TODO PASAR LOS QUERIES A UN ARCHIVO DE RECURSO
             const string sql = @"
                         INSERT INTO  cuentasusuarios (UsuarioId, CuentaId)
                         VALUES ({0},{1})";
@@ -150,6 +148,12 @@ namespace Ppgz.Web.Infrastructure.Nazan
                         WHERE  UsuarioId = {0} AND CuentaId = {1}";
             _db.Database.ExecuteSqlCommand(sql, usuarioId, cuentaId);
             _db.SaveChanges();
+        }
+
+        //TODO
+        public void Eliminar()
+        {
+            throw new NotImplementedException();
         }
 
     }
