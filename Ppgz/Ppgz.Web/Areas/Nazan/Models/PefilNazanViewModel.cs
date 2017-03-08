@@ -19,6 +19,16 @@ namespace Ppgz.Web.Areas.Nazan.Models
        [Display(Name = "Permisos")]
         public string[] RolesIds { get; set; }
         public MultiSelectList Roles { get; set; }
+
+        public PefilNazanViewModel()
+        {
+            var perfilNazanManager = new PerfilNazanManager();
+
+            var roles = perfilNazanManager.GetRoles();
+
+            Roles = new MultiSelectList(roles, "Id", "Description");
+
+        }
    
     }
 }
