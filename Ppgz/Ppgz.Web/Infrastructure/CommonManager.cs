@@ -143,7 +143,7 @@ namespace Ppgz.Web.Infrastructure
 		public cuenta GetCuentaUsuarioAutenticado()
 		{
 			var usuarioAutenticado = GetUsuarioAutenticado();
-
+			// TODO PASAR A STORE O RECURSO
 			return _db.Database.SqlQuery<cuenta>(@"SELECT * FROM cuentas WHERE   id IN (SELECT CuentaId FROM cuentasusuarios WHERE UsuarioId = {0})", usuarioAutenticado.Id).FirstOrDefault();
 
 		}

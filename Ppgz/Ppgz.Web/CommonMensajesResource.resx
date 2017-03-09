@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ERROR_CuentaManager_IdIncorrecto" xml:space="preserve">
+    <value>Cuenta incorrecta</value>
+  </data>
   <data name="ERROR_General" xml:space="preserve">
     <value>Error al procesar el registro.</value>
   </data>
@@ -128,6 +131,57 @@
   </data>
   <data name="ERROR_NombreUsuarioExistente" xml:space="preserve">
     <value>El nombre de usuario ya fue utilizado. Por favor intente con otro.</value>
+  </data>
+  <data name="ERROR_PerfilProveedor_AccesosRequeridos" xml:space="preserve">
+    <value>Debe agregar por lo menos 1 acceso al perfil</value>
+  </data>
+  <data name="ERROR_PerfilProveedor_EditarEliminarMaestro" xml:space="preserve">
+    <value>No puede editar o eliminar el perfil Maestro</value>
+  </data>
+  <data name="ERROR_PerfilProveedor_EliminarConUsuarios" xml:space="preserve">
+    <value>No puede eliminar un perfil que tiene usuarios asociados</value>
+  </data>
+  <data name="ERROR_PerfilProveedor_EliminarMaestro" xml:space="preserve">
+    <value>No puede eliminar el Perfil Maestro</value>
+  </data>
+  <data name="ERROR_PerfilProveedor_NombreExistente" xml:space="preserve">
+    <value>El nombre para el perfil ya fue utilizado</value>
+  </data>
+  <data name="ERROR_PerfilProveedor_PefilIdIncorrecto" xml:space="preserve">
+    <value>Pefil incorrecto</value>
+  </data>
+  <data name="ERROR_UsuarioProveedor_EliminarMaestro" xml:space="preserve">
+    <value>No puede eliminar el Usuario Maestro</value>
+  </data>
+  <data name="ERROR_UsuarioProveedor_EliminarPropioUsuario" xml:space="preserve">
+    <value>No puede eliminar su propio usuario</value>
+  </data>
+  <data name="ERROR_UsuarioProveedor_IdIncorrecto" xml:space="preserve">
+    <value>Usuario Incorrecto</value>
+  </data>
+  <data name="ERROR_UsuarioProveedor_LoginExistente" xml:space="preserve">
+    <value>Ya existe un usuario registrado con este login</value>
+  </data>
+  <data name="ERROR_UsuarioProveedor_TipoIncorrecto" xml:space="preserve">
+    <value>Tipo de usuario incorrecto</value>
+  </data>
+  <data name="INFO_PerfilProveedor_ActualizadoCorrectamente" xml:space="preserve">
+    <value>Perfil actualizado correctamente, los usuarios deben reiniciar la sesión</value>
+  </data>
+  <data name="INFO_PerfilProveedor_CreadoCorrectamente" xml:space="preserve">
+    <value>Perfil creado correctamente</value>
+  </data>
+  <data name="INFO_PerfilProveedor_EliminadoCorrectamente" xml:space="preserve">
+    <value>Perfil eliminado correctamente</value>
+  </data>
+  <data name="INFO_UsuarioProveedor_ActualizadoCorrectamente" xml:space="preserve">
+    <value>Usuario actualizad correctamente, el usuarios deben reiniciar la sesión</value>
+  </data>
+  <data name="INFO_UsuarioProveedor_CreadoCorrectamente" xml:space="preserve">
+    <value>Usuario creado correctamente</value>
+  </data>
+  <data name="INFO_UsuarioProveedor_EliminadoCorrectamente" xml:space="preserve">
+    <value>Usuario eliminado correctamente</value>
   </data>
   <data name="RegistroGeneral" xml:space="preserve">
     <value>No se pudo guardar. Intente nuevamente si el problema persiste contacte los adminsitradores del sistema.</value>

@@ -79,7 +79,7 @@
                                     }
                                     // MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARUSUARIOS-LISTAR,MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR
 
-                                    if (User.IsInRole(" MAESTRO-MERCADERIA") || User.IsInRole("MERCADERIA-ADMINISTRARUSUARIOS-LISTAR") || User.IsInRole("MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR")) 
+                                    if (User.IsInRole("MAESTRO-MERCADERIA") || User.IsInRole("MERCADERIA-ADMINISTRARUSUARIOS-LISTAR") || User.IsInRole("MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR")) 
                                     {
                                         <li class=""><a href="@Url.Action("Index", "AdministrarUsuarios", new { area = "Mercaderia" })"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios</a></li>
                                     }

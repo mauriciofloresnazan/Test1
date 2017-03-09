@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Ppgz.Repository;
-using Ppgz.Web.Areas.Nazan;
+using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Models;
 
-namespace Ppgz.Web.Infrastructure.Nazan
+namespace Ppgz.Web.Infrastructure.Proveedor
 {
     public class UsuarioProveedorManager
     {
@@ -42,16 +41,15 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .FirstOrDefault(u => u.Id == id && Tipos.Contains(u.Tipo));
         }
 
-
         public List<aspnetuser> FindByCuentaId(int id)
         {
+            // TODO PASAR A UN ARCHIVO DE RECURSOS O STORE PROCEDURE
             return _db.Database.SqlQuery<aspnetuser>(@"
                 SELECT  * 
                 FROM    aspnetusers
                 WHERE   id IN (SELECT UsuarioId 
                                FROM cuentasusuarios 
                                WHERE CuentaId = {0})", id).ToList();
-      
         }
 
         public aspnetuser FindMaestroByLogin(string login)
@@ -59,27 +57,35 @@ namespace Ppgz.Web.Infrastructure.Nazan
             return _db.aspnetusers
                 .FirstOrDefault(u => u.UserName == login && u.Tipo == "PROVEEDOR-MAESTRO");
         }
-        public void Create(string userName, string nombre, string apellido, string email,
-            string password, int perfilId, string tipo = "PROVEEDOR-MAESTRO")
+        public void Crear(string userName, string nombre, string apellido, string email,
+            string password, int perfilId, string tipo, int? cuentaId = null)
         {
+            var cuentaManager = new CuentaManager();
+         
             if (!Tipos.Contains(tipo))
             {
-                // TODO CARLOS Y JUAN DELGADO
-                throw new Exception("TIPO INCORRECTO");
+                throw new BusinessException(CommonMensajesResource.ERROR_UsuarioProveedor_TipoIncorrecto);
                 
             }
             if (_applicationUserManager.FindByName(userName) != null)
             {
-                // TODO CARLOS Y JUAN DELGADO
-                throw new Exception(MensajesResource.ERROR_UsuarioNazan_LoginExistente);
+                throw new BusinessException(CommonMensajesResource.ERROR_UsuarioProveedor_LoginExistente);
             }
 
             var perfil = _perfilProveedorManager.Find(perfilId);
 
             if (perfil == null)
             {
-                // TODO CAMBIAR A PROVEEDOR
-                throw new Exception(MensajesResource.ERROR_PerfilNazan_PefilIdIncorrecto);
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto);
+            }
+
+            if (cuentaId != null)
+            {
+                var cuenta = cuentaManager.Find((int)cuentaId);
+                if (cuenta == null)
+                {
+                    throw new BusinessException(CommonMensajesResource.ERROR_CuentaManager_IdIncorrecto);                    
+                }
             }
 
             var usuario = new ApplicationUser()
@@ -97,23 +103,44 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             if (!result.Succeeded)
             {
-                throw new Exception(MensajesResource.ERROR_General);
+                throw new BusinessException(CommonMensajesResource.ERROR_General);
             }
-   
 
             foreach (var role in perfil.aspnetroles)
             {
                 _applicationUserManager.AddToRole(usuario.Id, role.Id);
             }
 
-  
 
+            if (cuentaId != null)
+            {
+                cuentaManager.AsociarUsuarioEnCuenta(usuario.Id, (int) cuentaId);
+            }
         }
 
-        public void Remove(string id)
+        public void Eliminar(string id)
         {
             var usuario = _db.aspnetusers
                 .Single(u => u.Id == id);
+
+            if (usuario == null)
+                throw new BusinessException(CommonMensajesResource.ERROR_UsuarioProveedor_IdIncorrecto);
+
+            var commonManager = new CommonManager();
+
+            if (usuario.Id == commonManager.GetUsuarioAutenticado().Id)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_UsuarioProveedor_EliminarPropioUsuario);
+            }
+
+            if (usuario.Tipo.ToUpper().Trim() == "PROVEEDOR-MAESTRO")
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_UsuarioProveedor_EliminarMaestro);
+            }
+
+            var cuentaManager = new CuentaManager();
+            cuentaManager.DesAsociarUsuarioEnCuenta(usuario.Id);
+
 
             _db.aspnetusers.Remove(usuario);
             _db.SaveChanges();
@@ -127,14 +154,14 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             if (usuario == null)
             {
-                throw new Exception(MensajesResource.ERROR_UsuarioNazan_IdIncorrecto);
+                throw new BusinessException(CommonMensajesResource.ERROR_UsuarioProveedor_IdIncorrecto);
             }
 
             var perfil = _perfilProveedorManager.Find(perfilId);
 
             if (perfil == null)
             {
-                throw new Exception(MensajesResource.ERROR_PerfilNazan_PefilIdIncorrecto);
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto);
             }
 
             usuario.Nombre = nombre;
@@ -162,7 +189,5 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 _applicationUserManager.AddToRole(usuario.Id, role.Id);
             }
         }
-
-
     }
 }

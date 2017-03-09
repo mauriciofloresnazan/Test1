@@ -110,12 +110,13 @@ namespace Ppgz.Web.Infrastructure.Nazan
             _db.Entry(perfil).State = EntityState.Modified;
             _db.SaveChanges();
 
+
+            // Relacionar los usuarios con los roles
             var commonManager = new CommonManager();
             commonManager.ActualizarPermisosByPefilId(perfil.Id);
         }
-
-
-        public void Remove(int id)
+        
+        public void Eliminar(int id)
         {
             var perfil = Find(id);
 

@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using Ppgz.Repository;
 
-namespace Ppgz.Web.Infrastructure.Nazan
+namespace Ppgz.Web.Infrastructure.Proveedor
 {
     public class PerfilProveedorManager
     {
@@ -29,37 +29,50 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .FirstOrDefault(p => p.Id == id && p.Tipo == Tipo);
         }
 
-        public perfile FindByNombre(string nombre)
+        public perfile FindByNombre(string nombre, int? cuentaId)
         {
             return _db.perfiles
-                .FirstOrDefault(p => p.Nombre == nombre && p.Tipo == Tipo);
+                .FirstOrDefault(p => p.Nombre == nombre && p.Tipo == Tipo && p.CuentaId == cuentaId);
         }
 
-        public void Create(string nombre, string[] rolesIds, int? cuentaId = null)
+        internal void ValidarPermisos(string[] rolesIds, CuentaManager.Tipo cuentaTipo)
+        {
+            var tipo = CuentaManager.GetTipoString(cuentaTipo);
+
+            if (!rolesIds.Any())
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_AccesosRequeridos);
+            }
+            var aspnetroles =
+                _db.aspnetroles.Where(r => r.Tipo == tipo && rolesIds.Contains(r.Name));
+
+            if (!aspnetroles.Any())
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_AccesosRequeridos);
+            }
+        }
+        public void Crear(string nombre, string[] rolesIds, int? cuentaId = null)
         {
             nombre = nombre.Trim();
+            var perfil = FindByNombre(nombre, cuentaId);
 
-            var perfil = FindByNombre(nombre);
             if (perfil != null)
             {
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.MensajesResource.ERROR_PerfilNazan_NombreExistente);
-
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_NombreExistente);
             }
 
             if (!rolesIds.Any())
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.MensajesResource.ERROR_PerfilNazan_AccesosRequeridos);
-
-
+            {
+                throw new Exception(CommonMensajesResource.ERROR_PerfilProveedor_AccesosRequeridos);
+            }
             var aspnetroles =
                 _db.aspnetroles.Where(r => rolesIds.Contains(r.Name));
 
             if (!aspnetroles.Any())
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.MensajesResource.ERROR_PerfilNazan_AccesosRequeridos);
-
-
+            {
+                throw new Exception(CommonMensajesResource.ERROR_PerfilProveedor_AccesosRequeridos);
+            }
+            
             perfil = new perfile { Nombre = nombre, Tipo = Tipo, CuentaId = cuentaId };
 
             foreach (var role in aspnetroles)
@@ -67,50 +80,63 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 perfil.aspnetroles.Add(role);
             }
 
-
             _db.perfiles.Add(perfil);
             _db.SaveChanges();
         }
 
-        public void Remove(int id)
+        public void Eliminar(int id)
         {
             var perfil = Find(id);
 
+            if (perfil == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto);
+            }
+            // TODO PASAR A UNA COLECCION DE LOS MAESTROS
+            if (perfil.Nombre == "MAESTRO-MERCADERIA" || perfil.Nombre == "MAESTRO-SERVICIO")
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_EditarEliminarMaestro);
+            }
+
             if (perfil.aspnetusers.Any())
             {
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.MensajesResource.ERROR_PerfilNazan_EliminarConUsuarios);
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_EliminarConUsuarios);
             }
+
             perfil.aspnetroles.Clear();
             _db.perfiles.Remove(perfil);
             _db.SaveChanges();
         }
 
-
-        public void Update(int id, string nombre, string[] rolesIds)
+        public void Actualizar(int id, string nombre, string[] rolesIds, int? cuentaId)
         {
-            var perfil = FindByNombre(nombre);
+            // Validacion del nombre que no este repetido
+            var perfil = FindByNombre(nombre, cuentaId);
             if (perfil != null)
             {
                 if (perfil.Id != id)
-                    //TODO CARLOS CAMPOS
-                    throw new Exception(Areas.Nazan.MensajesResource.ERROR_PerfilNazan_NombreExistente);
-
+                {
+                    throw new Exception(CommonMensajesResource.ERROR_PerfilProveedor_NombreExistente);
+                }
             }
 
-            if (!rolesIds.Any())
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.MensajesResource.ERROR_PerfilNazan_AccesosRequeridos);
+            perfil = Find(id);
+            if (perfil == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto);
+            }
+            // TODO PASAR A UNA COLECCION DE LOS MAESTROS
+            if (perfil.Nombre == "MAESTRO-MERCADERIA" || perfil.Nombre == "MAESTRO-SERVICIO")
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_EditarEliminarMaestro);
+            }
 
+            ValidarPermisos(rolesIds, CuentaManager.GetTipoByString(perfil.cuenta.Tipo));
 
             var aspnetroles =
-                _db.aspnetroles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
+                _db.aspnetroles.Where(r => r.Tipo == perfil.cuenta.Tipo && rolesIds.Contains(r.Name));
+            
 
-            if (!aspnetroles.Any())
-                //TODO CARLOS CAMPOS
-                throw new Exception(Areas.Nazan.MensajesResource.ERROR_PerfilNazan_AccesosRequeridos);
-
-            perfil = Find(id);
             perfil.Nombre = nombre;
             perfil.aspnetroles.Clear();
             foreach (var role in aspnetroles)
@@ -120,6 +146,10 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             _db.Entry(perfil).State = EntityState.Modified;
             _db.SaveChanges();
+
+
+            var commonManager = new CommonManager();
+            commonManager.ActualizarPermisosByPefilId(perfil.Id);
         }
 
 
@@ -127,7 +157,6 @@ namespace Ppgz.Web.Infrastructure.Nazan
         {
             return _db.aspnetroles
                 .Where(r => r.Tipo == tipo).ToList();
-
         }
 
         public perfile GetMaestroByUsuarioTipo(CuentaManager.Tipo tipo)
@@ -144,14 +173,6 @@ namespace Ppgz.Web.Infrastructure.Nazan
                     break;
             }
 
-
-
-            if (string.IsNullOrWhiteSpace(perfilNombre))
-            {
-                // TODO CARLOS CAMPOS
-                throw new NotImplementedException("");
-            }
-
             var perfil = _db.perfiles.FirstOrDefault(pt => pt.Nombre == perfilNombre);
 
             if (perfil == null)
@@ -166,27 +187,22 @@ namespace Ppgz.Web.Infrastructure.Nazan
                         Name = perfilNombre,
                         Description = "PERFIL MAESTR tiene acceso a toda la aplicación.",
                         Tipo =  CuentaManager.GetTipoString(tipo)
-                      
-
                     };
 
                     _db.aspnetroles.Add(role);
                     _db.SaveChanges();
-
                 }
 
                 var perfilProveedorManager = new PerfilProveedorManager();
-                perfilProveedorManager.Create(perfilNombre, new[] {perfilNombre});
+                perfilProveedorManager.Crear(perfilNombre, new[] {perfilNombre});
             }
 
             perfil = _db.perfiles.FirstOrDefault(pt => pt.Nombre == perfilNombre);
 
             if (perfil == null)
             {
-
-                //todo carlos campos
+                //todo revisar esto
                 throw new Exception("");
-
             }
 
             return perfil;

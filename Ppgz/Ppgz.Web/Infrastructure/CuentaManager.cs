@@ -5,9 +5,10 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Ppgz.Repository;
 using Ppgz.Web.Areas.Nazan;
+using Ppgz.Web.Infrastructure.Proveedor;
 using Ppgz.Web.Models;
 
-namespace Ppgz.Web.Infrastructure.Nazan
+namespace Ppgz.Web.Infrastructure
 {
     public class CuentaManager
     {
@@ -98,13 +99,15 @@ namespace Ppgz.Web.Infrastructure.Nazan
             var perfilProveedorManager = new PerfilProveedorManager();
 
             var usuarioProveedorManager = new UsuarioProveedorManager();
-            usuarioProveedorManager.Create(
+            usuarioProveedorManager.Crear(
                 responsableLogin,
                 reponsableNombre,
                 reponsableApellido,
                 responsableEmail,
                 responsablePassword,
-                perfilProveedorManager.GetMaestroByUsuarioTipo(tipo).Id
+                perfilProveedorManager.GetMaestroByUsuarioTipo(tipo).Id, 
+                // TODO MOVER A LA CLASE USUARIOPROVEEDORMANAGER PARA QUE LO RETORNE
+                "PROVEEDOR-MAESTRO"
                 );
 
             var usuarioMaestro = usuarioProveedorManager.FindMaestroByLogin(responsableLogin);
@@ -140,13 +143,13 @@ namespace Ppgz.Web.Infrastructure.Nazan
             _db.SaveChanges();
         }
 
-        public void DesAsociarUsuarioEnCuenta(string usuarioId, int cuentaId)
+        public void DesAsociarUsuarioEnCuenta(string usuarioId)
         {
-            // TODO PASAR LOS QUERIES A UN ARCHIVO DE RECURSO
+            // TODO PASAR LOS QUERIES A UN ARCHIVO DE RECURSO O STORE PROCEDURE
             const string sql = @"
                         DELETE FROM cuentasusuarios 
-                        WHERE  UsuarioId = {0} AND CuentaId = {1}";
-            _db.Database.ExecuteSqlCommand(sql, usuarioId, cuentaId);
+                        WHERE  UsuarioId = {0}";
+            _db.Database.ExecuteSqlCommand(sql, usuarioId);
             _db.SaveChanges();
         }
 

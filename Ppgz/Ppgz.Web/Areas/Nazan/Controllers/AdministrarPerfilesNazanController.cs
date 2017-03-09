@@ -135,7 +135,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         {
             try
             {
-                _perfilNazanManager.Remove(id);
+                _perfilNazanManager.Eliminar(id);
 
                 TempData["FlashSuccess"] = MensajesResource.INFO_PerfilNazan_EliminadoCorrectamente;
                 return RedirectToAction("Index");

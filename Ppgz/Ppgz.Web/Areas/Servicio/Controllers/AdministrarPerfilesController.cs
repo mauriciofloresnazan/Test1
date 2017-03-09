@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Web.Mvc;
 using Ppgz.Web.Areas.Servicio.Models;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Nazan;
+using Ppgz.Web.Infrastructure.Proveedor;
 
 namespace Ppgz.Web.Areas.Servicio.Controllers
 {
@@ -38,24 +37,35 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         [HttpPost]
         public ActionResult Crear(PefilProveedorViewModel model)
         {
-
             if (!ModelState.IsValid) return View(model);
 
-            if (_perfilProveedorManager.FindByNombre(model.Nombre.Trim()) != null)
+            try
             {
-                ModelState.AddModelError(string.Empty, Nazan.MensajesResource.ERROR_PerfilNazan_NombreExistente);
+                _perfilProveedorManager
+                    .Crear(
+                        model.Nombre, model.RolesIds,
+                        _commonManager.GetCuentaUsuarioAutenticado().Id);
+
+                TempData["FlashSuccess"] = CommonMensajesResource.INFO_PerfilProveedor_CreadoCorrectamente;
+                return RedirectToAction("Index");
+
+            }
+            catch (BusinessException businessEx)
+            {
+                ModelState.AddModelError(string.Empty, businessEx.Message);
                 return View(model);
             }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
 
-            _perfilProveedorManager
-                .Create(
-                    model.Nombre, model.RolesIds,
-                    _commonManager.GetCuentaUsuarioAutenticado().Id);
-
-
-
-            TempData["FlashSuccess"] = "Perfil creado con éxito.";
-            return RedirectToAction("Index");
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+                return View(model);
+            }
         }
 
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
@@ -65,12 +75,10 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             if (perfil == null)
             {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "Perfil incorrecto.";
+                TempData["FlashError"] = CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto;
                 return RedirectToAction("Index");
-
             }
-            
+
             var model = new PefilProveedorViewModel
             {
                 Nombre = perfil.Nombre,
@@ -92,70 +100,74 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             if (perfil == null)
             {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "Perfil incorrecto.";
+                TempData["FlashError"] = CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto;
                 return RedirectToAction("Index");
-
             }
 
             try
             {
-                _perfilProveedorManager.Update(
+                _perfilProveedorManager.Actualizar(
                     id,
                     model.Nombre,
-                    model.RolesIds);
+                    model.RolesIds,
+                    perfil.CuentaId);
 
                 TempData["FlashSuccess"] = "Perfil actualizado con éxito.";
                 return RedirectToAction("Index");
             }
-            catch (RetryLimitExceededException)
+            catch (BusinessException businessEx)
             {
-                ModelState.AddModelError("", Mensajes.ERROR_General);
+                ModelState.AddModelError(string.Empty, businessEx.Message);
+                return View(model);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = exception.Message;
-                return RedirectToAction("Index");
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+                return View(model);
             }
-
-
-            return View(model);
         }
 
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
         public ActionResult Eliminar(int id)
         {
-
             var perfil = _perfilProveedorManager.Find(id);
 
             if (perfil == null)
             {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "Perfil incorrecto.";
+                TempData["FlashError"] = CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto;
                 return RedirectToAction("Index");
             }
 
             try
             {
-
-                _perfilProveedorManager.Remove(id);
-            }
-            catch (RetryLimitExceededException)
-            {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "INTENTOS EXEDIDOS";
+                _perfilProveedorManager.Eliminar(id);
+                TempData["FlashSuccess"] = "Perfil eliminado con éxito.";
                 return RedirectToAction("Index");
             }
-            catch (Exception exception)
+            catch (BusinessException businessEx)
             {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = exception.Message;
+                TempData["FlashError"] = businessEx.Message;
                 return RedirectToAction("Index");
             }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
 
-            TempData["FlashSuccess"] = "Perfil eliminado con éxito.";
-            return RedirectToAction("Index");
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                TempData["FlashError"] = CommonMensajesResource.ERROR_General;
+                return RedirectToAction("Index");
+            }
         }
     }
 }

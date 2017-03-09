@@ -467,3 +467,177 @@ System.Data.Entity.Core.EntityException: An error occurred while starting a tran
    at Ppgz.Web.Infrastructure.CommonManager.ActualizarPermisosByPefilId(Int32 perfilId) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Infrastructure\CommonManager.cs:line 183
    at Ppgz.Web.Infrastructure.Nazan.PerfilNazanManager.Actualizar(Int32 id, String nombre, String[] rolesIds) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Infrastructure\Nazan\PerfilNazanManager.cs:line 114
    at Ppgz.Web.Areas.Nazan.Controllers.AdministrarPerfilesNazanController.Editar(Int32 id, PefilNazanViewModel model) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs:line 102
+2017-03-09 00:23:31,861 
+Nombre del Controlador = AdministrarPerfiles
+Nombre del método o acción solicitada = Eliminar
+Conjunto de parámetros enviados = 
+Tipo de mensaje = Error.
+Traza detallada: 
+System.Exception: No puede eliminar un perfil que tiene usuarios asociados
+   at Ppgz.Web.Infrastructure.Proveedor.PerfilProveedorManager.Eliminar(Int32 id) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Infrastructure\Proveedor\PerfilProveedorManager.cs:line 98
+   at Ppgz.Web.Areas.Mercaderia.Controllers.AdministrarPerfilesController.Eliminar(Int32 id) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Mercaderia\Controllers\AdministrarPerfilesController.cs:line 156
+2017-03-09 00:23:39,726 
+Nombre del Controlador = AdministrarPerfiles
+Nombre del método o acción solicitada = Eliminar
+Conjunto de parámetros enviados = 
+Tipo de mensaje = Error.
+Traza detallada: 
+System.Exception: No puede eliminar un perfil que tiene usuarios asociados
+   at Ppgz.Web.Infrastructure.Proveedor.PerfilProveedorManager.Eliminar(Int32 id) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Infrastructure\Proveedor\PerfilProveedorManager.cs:line 98
+   at Ppgz.Web.Areas.Mercaderia.Controllers.AdministrarPerfilesController.Eliminar(Int32 id) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Mercaderia\Controllers\AdministrarPerfilesController.cs:line 156
+2017-03-09 02:13:04,393 
+Nombre del Controlador = AdministrarUsuarios
+Nombre del método o acción solicitada = Crear
+Tipo de mensaje = Error.
+Traza detallada: 
+System.InvalidOperationException: The view 'Error' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Areas/Mercaderia/Views/AdministrarUsuarios/Error.aspx
+~/Areas/Mercaderia/Views/AdministrarUsuarios/Error.ascx
+~/Areas/Mercaderia/Views/Shared/Error.aspx
+~/Areas/Mercaderia/Views/Shared/Error.ascx
+~/Views/AdministrarUsuarios/Error.aspx
+~/Views/AdministrarUsuarios/Error.ascx
+~/Views/Shared/Error.aspx
+~/Views/Shared/Error.ascx
+~/Areas/Mercaderia/Views/AdministrarUsuarios/Error.cshtml
+~/Areas/Mercaderia/Views/AdministrarUsuarios/Error.vbhtml
+~/Areas/Mercaderia/Views/Shared/Error.cshtml
+~/Areas/Mercaderia/Views/Shared/Error.vbhtml
+~/Views/AdministrarUsuarios/Error.cshtml
+~/Views/AdministrarUsuarios/Error.vbhtml
+~/Views/Shared/Error.cshtml
+~/Views/Shared/Error.vbhtml
+   at System.Web.Mvc.ViewResult.FindView(ControllerContext context)
+   at System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass1e.<BeginInvokeAction>b__1b(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResult`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeAction(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1d(IAsyncResult asyncResult, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncResultWrapper.End(IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecute>b__15(IAsyncResult asyncResult, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncResultWrapper.End(IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(IAsyncResult asyncResult, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncResultWrapper.End(IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2017-03-09 02:14:52,803 
+Nombre del Controlador = AdministrarUsuarios
+Nombre del método o acción solicitada = Crear
+Tipo de mensaje = Error.
+Traza detallada: 
+System.InvalidOperationException: The view 'Error' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Areas/Mercaderia/Views/AdministrarUsuarios/Error.aspx
+~/Areas/Mercaderia/Views/AdministrarUsuarios/Error.ascx
+~/Areas/Mercaderia/Views/Shared/Error.aspx
+~/Areas/Mercaderia/Views/Shared/Error.ascx
+~/Views/AdministrarUsuarios/Error.aspx
+~/Views/AdministrarUsuarios/Error.ascx
+~/Views/Shared/Error.aspx
+~/Views/Shared/Error.ascx
+~/Areas/Mercaderia/Views/AdministrarUsuarios/Error.cshtml
+~/Areas/Mercaderia/Views/AdministrarUsuarios/Error.vbhtml
+~/Areas/Mercaderia/Views/Shared/Error.cshtml
+~/Areas/Mercaderia/Views/Shared/Error.vbhtml
+~/Views/AdministrarUsuarios/Error.cshtml
+~/Views/AdministrarUsuarios/Error.vbhtml
+~/Views/Shared/Error.cshtml
+~/Views/Shared/Error.vbhtml
+   at System.Web.Mvc.ViewResult.FindView(ControllerContext context)
+   at System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass1e.<BeginInvokeAction>b__1b(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResult`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeAction(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1d(IAsyncResult asyncResult, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncResultWrapper.End(IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecute>b__15(IAsyncResult asyncResult, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncResultWrapper.End(IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(IAsyncResult asyncResult, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncResultWrapper.End(IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2017-03-09 03:13:15,033 
+Nombre del Controlador = AdministrarPerfiles
+Nombre del método o acción solicitada = Crear
+Tipo de mensaje = Error.
+Traza detallada: 
+System.InvalidOperationException: The view 'Error' or its master was not found or no view engine supports the searched locations. The following locations were searched:
+~/Areas/Servicio/Views/AdministrarPerfiles/Error.aspx
+~/Areas/Servicio/Views/AdministrarPerfiles/Error.ascx
+~/Areas/Servicio/Views/Shared/Error.aspx
+~/Areas/Servicio/Views/Shared/Error.ascx
+~/Views/AdministrarPerfiles/Error.aspx
+~/Views/AdministrarPerfiles/Error.ascx
+~/Views/Shared/Error.aspx
+~/Views/Shared/Error.ascx
+~/Areas/Servicio/Views/AdministrarPerfiles/Error.cshtml
+~/Areas/Servicio/Views/AdministrarPerfiles/Error.vbhtml
+~/Areas/Servicio/Views/Shared/Error.cshtml
+~/Areas/Servicio/Views/Shared/Error.vbhtml
+~/Views/AdministrarPerfiles/Error.cshtml
+~/Views/AdministrarPerfiles/Error.vbhtml
+~/Views/Shared/Error.cshtml
+~/Views/Shared/Error.vbhtml
+   at System.Web.Mvc.ViewResult.FindView(ControllerContext context)
+   at System.Web.Mvc.ViewResultBase.ExecuteResult(ControllerContext context)
+   at System.Web.Mvc.ControllerActionInvoker.InvokeActionResult(ControllerContext controllerContext, ActionResult actionResult)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.<>c__DisplayClass1e.<BeginInvokeAction>b__1b(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResult`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncControllerActionInvoker.EndInvokeAction(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecuteCore>b__1d(IAsyncResult asyncResult, ExecuteCoreState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncResultWrapper.End(IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Controller.EndExecuteCore(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.<BeginExecute>b__15(IAsyncResult asyncResult, Controller controller)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncResultWrapper.End(IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Controller.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.Controller.System.Web.Mvc.Async.IAsyncController.EndExecute(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.<BeginProcessRequest>b__4(IAsyncResult asyncResult, ProcessRequestState innerState)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncVoid`1.CallEndDelegate(IAsyncResult asyncResult)
+   at System.Web.Mvc.Async.AsyncResultWrapper.WrappedAsyncResultBase`1.End()
+   at System.Web.Mvc.Async.AsyncResultWrapper.End[TResult](IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.Async.AsyncResultWrapper.End(IAsyncResult asyncResult, Object tag)
+   at System.Web.Mvc.MvcHandler.EndProcessRequest(IAsyncResult asyncResult)
+   at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)

@@ -44,8 +44,6 @@ namespace Ppgz.Web.Controllers
         {
             string log;
 
-            ActionResult actionResult = null;
-
             if (!ModelState.IsValid) return View(model);
 
             try
@@ -62,7 +60,7 @@ namespace Ppgz.Web.Controllers
                     if (await UserManager.IsLockedOutAsync(usuario.Id))
                     {
                         ModelState.AddModelError("",
-                            string.Format(CommonMensajes.ERROR_Identity_UsuarioBloqueadoTemporalmente,
+                            string.Format(CommonMensajesResource.ERROR_Identity_UsuarioBloqueadoTemporalmente,
                                 ConfigurationManager.AppSettings["AccountLockoutTimeSpan"],
                                 ConfigurationManager.AppSettings["MaxFailedAccessAttemptsBeforeLockout"]));
                         return View(model);
@@ -73,7 +71,7 @@ namespace Ppgz.Web.Controllers
                     if (passwordValid == PasswordVerificationResult.Failed)
                     {
                         UserManager.AccessFailed(usuario.Id);
-                        ModelState.AddModelError("", CommonMensajes.ERROR_Identity_UsuarioPassword);
+                        ModelState.AddModelError("", CommonMensajesResource.ERROR_Identity_UsuarioPassword);
                         return View(model);
                     }
 
@@ -93,7 +91,7 @@ namespace Ppgz.Web.Controllers
 
                 CommonManager.WriteBusinessLog(log, TipoMensaje.Error);
 
-                actionResult = View(model);
+               return View(model);
             }
             catch (Exception e)
             {
@@ -105,15 +103,14 @@ namespace Ppgz.Web.Controllers
 
                 CommonManager.WriteAppLog(log, TipoMensaje.Error);
 
-                actionResult = View(model);
             }
 
 
 
 
-            ModelState.AddModelError("", CommonMensajes.ERROR_Identity_UsuarioPassword);
+            ModelState.AddModelError("", CommonMensajesResource.ERROR_Identity_UsuarioPassword);
 
-            return actionResult;
+            return View(model);
         }
         
 

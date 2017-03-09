@@ -1,7 +1,6 @@
 ﻿using System.Data.Entity;
 
-
-namespace Ppgz.Web
+namespace Ppgz.Web.Infrastructure.MySqlIdentity
 {
     public class MySqlConfiguration : DbConfiguration
     {

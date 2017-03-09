@@ -5,6 +5,7 @@ using Ppgz.Repository;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
+using Ppgz.Web.Infrastructure.Proveedor;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {

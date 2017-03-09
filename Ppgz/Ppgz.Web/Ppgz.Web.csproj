@@ -252,10 +252,10 @@
     </Compile>
     <Compile Include="Infrastructure\BusinessException.cs" />
     <Compile Include="Infrastructure\CommonManager.cs" />
-    <Compile Include="Infrastructure\Nazan\CuentaManager.cs" />
+    <Compile Include="Infrastructure\CuentaManager.cs" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
-    <Compile Include="Infrastructure\Nazan\PerfilProveedorManager.cs" />
-    <Compile Include="Infrastructure\Nazan\UsuarioProveedorManager.cs" />
+    <Compile Include="Infrastructure\Proveedor\PerfilProveedorManager.cs" />
+    <Compile Include="Infrastructure\Proveedor\UsuarioProveedorManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioNazanManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilNazanManager.cs" />
     <Compile Include="Infrastructure\SapManager.cs" />
@@ -269,19 +269,19 @@
     <Compile Include="Models\Nazan\PerfilViewModel.cs" />
     <Compile Include="Models\Nazan\UsuarioViewModel.cs" />
     <Compile Include="Models\ProveedorUsuarioViewModel.cs" />
-    <Compile Include="MySqlConfiguration.cs" />
-    <Compile Include="MySqlHistoryContext.cs" />
-    <Compile Include="MySqlInitializer.cs" />
+    <Compile Include="Infrastructure\MySqlIdentity\MySqlConfiguration.cs" />
+    <Compile Include="Infrastructure\MySqlIdentity\MySqlHistoryContext.cs" />
+    <Compile Include="Infrastructure\MySqlIdentity\MySqlInitializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="CommonMensajes.Designer.cs">
+    <Compile Include="CommonMensajesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CommonMensajes.resx</DependentUpon>
+      <DependentUpon>CommonMensajesResource.resx</DependentUpon>
     </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -1123,7 +1123,6 @@
     <Folder Include="Areas\Nazan\Views\Shared\" />
     <Folder Include="Areas\Servicio\Views\Shared\" />
     <Folder Include="assets\js\" />
-    <Folder Include="Infrastructure\Proveedor\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -1151,9 +1150,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="CommonMensajes.resx">
+    <EmbeddedResource Include="CommonMensajesResource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>CommonMensajes.Designer.cs</LastGenOutput>
+      <LastGenOutput>CommonMensajesResource.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>

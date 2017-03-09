@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure.Nazan;
+using Ppgz.Web.Infrastructure.Proveedor;
 
 namespace Ppgz.Web.Areas.Mercaderia.Models
 {

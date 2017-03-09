@@ -2,7 +2,7 @@
 using System.Data.Entity;
 using System.Data.Entity.Migrations.History;
 
-namespace Ppgz.Web
+namespace Ppgz.Web.Infrastructure.MySqlIdentity
 {
     public class MySqlHistoryContext : HistoryContext
     {

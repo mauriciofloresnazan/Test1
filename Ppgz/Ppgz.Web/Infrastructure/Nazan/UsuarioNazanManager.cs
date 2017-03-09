@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Microsoft.AspNet.Identity;
@@ -73,7 +72,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             if (!result.Succeeded)
             {
-                throw new BusinessException(CommonMensajes.RegistroGeneral);
+                throw new BusinessException(CommonMensajesResource.RegistroGeneral);
             }
 
             foreach (var role in perfil.aspnetroles)

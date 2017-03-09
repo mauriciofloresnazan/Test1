@@ -1,170 +1,175 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Web.Mvc;
 using Ppgz.Web.Areas.Mercaderia.Models;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
+using Ppgz.Web.Infrastructure.Proveedor;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
-	[Authorize]
-	[TerminosCondiciones]
-	public class AdministrarPerfilesController : Controller
-	{
-		private readonly PerfilProveedorManager _perfilProveedorManager = new  PerfilProveedorManager();
-		private readonly CommonManager _commonManager = new CommonManager();
-		
+    [Authorize]
+    [TerminosCondiciones]
+    public class AdministrarPerfilesController : Controller
+    {
+        private readonly PerfilProveedorManager _perfilProveedorManager = new PerfilProveedorManager();
+        private readonly CommonManager _commonManager = new CommonManager();
 
-		//
-		// GET: /Mercaderia/AdministrarPerfiles/
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-LISTAR,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
-		public ActionResult Index()
-		{
-			var perfiles = _perfilProveedorManager
-				.FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
+        //
+        // GET: /Mercaderia/AdministrarPerfiles/
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-LISTAR,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+        public ActionResult Index()
+        {
+            var perfiles = _perfilProveedorManager
+                .FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
 
-			 perfiles .Add(_perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.Mercaderia));
+            perfiles.Add(_perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.Mercaderia));
 
-			ViewBag.Perfiles = perfiles;
-			return View();
-		}
+            ViewBag.Perfiles = perfiles;
+            return View();
+        }
 
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
-		public ActionResult Crear()
-		{
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+        public ActionResult Crear()
+        {
+            return View(new PefilProveedorViewModel());
+        }
 
-			var roles = _perfilProveedorManager.GetRoles("MERCADERIA");
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult Crear(PefilProveedorViewModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
 
-			var model = new PefilProveedorViewModel
-			{
-				Roles = new MultiSelectList(roles, "Id", "Name")
-			};
-			return View(model);
-		}
+            try
+            {
+                _perfilProveedorManager
+                    .Crear(
+                        model.Nombre, model.RolesIds,
+                        _commonManager.GetCuentaUsuarioAutenticado().Id);
 
-	  [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
-		[ValidateAntiForgeryToken]
-		[HttpPost]
-		public ActionResult Crear(PefilProveedorViewModel model)
-		{
-			var roles = _perfilProveedorManager.GetRoles("MERCADERIA");
-			model.Roles = new MultiSelectList(roles, "Id", "Name");
+                TempData["FlashSuccess"] = CommonMensajesResource.INFO_PerfilProveedor_CreadoCorrectamente;
+                return RedirectToAction("Index");
 
-			if (!ModelState.IsValid) return View(model);
+            }
+            catch (BusinessException businessEx)
+            {
+                ModelState.AddModelError(string.Empty, businessEx.Message);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
 
-			if (_perfilProveedorManager.FindByNombre(model.Nombre.Trim()) != null)
-			{
-				ModelState.AddModelError(string.Empty, MensajesResource.ERROR_PerfilNombreExistente);
-				return View(model);
-			}
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+                return View(model);
+            }
+        }
 
-			_perfilProveedorManager
-				.Create(
-					model.Nombre, model.RolesIds,
-					_commonManager.GetCuentaUsuarioAutenticado().Id);
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+        public ActionResult Editar(int id)
+        {
+            var perfil = _perfilProveedorManager.Find(id);
 
+            if (perfil == null)
+            {
+                TempData["FlashError"] = CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto;
+                return RedirectToAction("Index");
+            }
 
+            var model = new PefilProveedorViewModel
+            {
+                Nombre = perfil.Nombre,
+                RolesIds = perfil.aspnetroles.Select(p => p.Id).ToArray()
 
-			TempData["FlashSuccess"] = "Perfil creado con éxito.";
-			return RedirectToAction("Index");
-		}
+            };
 
-	  [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
-		public ActionResult Editar(int id)
-		{
-			var perfil = _perfilProveedorManager.Find(id);
-
-			if (perfil == null)
-			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "Perfil incorrecto.";
-				return RedirectToAction("Index");
-
-			}
-
-
-			var roles = _perfilProveedorManager.GetRoles("MERCADERIA");
-
-			var model = new PefilProveedorViewModel
-			{
-				Nombre = perfil.Nombre,
-				Roles = new MultiSelectList(roles, "Id", "Name")
-
-			};
-
-			return View(model);
-		}
+            return View(model);
+        }
 
 
-	  [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Editar(int id, PefilProveedorViewModel model)
-		{
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Editar(int id, PefilProveedorViewModel model)
+        {
+            var perfil = _perfilProveedorManager.Find(id);
 
-			var perfil = _perfilProveedorManager.Find(id);
+            if (perfil == null)
+            {
+                TempData["FlashError"] = CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto;
+                return RedirectToAction("Index");
+            }
 
-			if (perfil == null)
-			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "Perfil incorrecto.";
-				return RedirectToAction("Index");
+            try
+            {
+                _perfilProveedorManager.Actualizar(
+                    id,
+                    model.Nombre,
+                    model.RolesIds,
+                    perfil.CuentaId);
 
-			}
+                TempData["FlashSuccess"] = "Perfil actualizado con éxito.";
+                return RedirectToAction("Index");
+            }
+            catch (BusinessException businessEx)
+            {
+                ModelState.AddModelError(string.Empty, businessEx.Message);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
 
-			try
-			{
-				_perfilProveedorManager.Update(
-					id,
-					model.Nombre,
-					model.RolesIds);
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+                return View(model);
+            }
+        }
 
-				TempData["FlashSuccess"] = "Perfil actualizado con éxito.";
-				return RedirectToAction("Index");
-			}
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
+        public ActionResult Eliminar(int id)
+        {
+            var perfil = _perfilProveedorManager.Find(id);
 
-			catch (Exception exception)
-			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("Index");
-			}
+            if (perfil == null)
+            {
+                TempData["FlashError"] = CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto;
+                return RedirectToAction("Index");
+            }
 
-		}
+            try
+            {
+                _perfilProveedorManager.Eliminar(id);
+                TempData["FlashSuccess"] = "Perfil eliminado con éxito.";
+                return RedirectToAction("Index");
+            }
+            catch (BusinessException businessEx)
+            {
+                TempData["FlashError"] = businessEx.Message;
+                return RedirectToAction("Index");
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
 
-	  [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
-		public ActionResult Eliminar(int id)
-		{
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
 
-			var perfil = _perfilProveedorManager.Find(id);
-
-			if (perfil == null)
-			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "Perfil incorrecto.";
-				return RedirectToAction("Index");
-			}
-
-			try
-			{
-
-				_perfilProveedorManager.Remove(id);
-			}
-			catch (RetryLimitExceededException)
-			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "INTENTOS EXEDIDOS";
-				return RedirectToAction("Index");
-			}
-			catch (Exception exception)
-			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("Index");
-			}
-
-			TempData["FlashSuccess"] = "Perfil eliminado con éxito.";
-			return RedirectToAction("Index");
-		}
-	}
+                TempData["FlashError"] = CommonMensajesResource.ERROR_General;
+                return RedirectToAction("Index");
+            }
+        }
+    }
 }

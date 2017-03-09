@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Nazan;
+using Ppgz.Web.Infrastructure.Proveedor;
 
 namespace Ppgz.Web.Areas.Servicio.Controllers
 {
@@ -11,11 +9,19 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
     [TerminosCondiciones]
     public class AdministrarUsuariosController : Controller
     {
-
         private readonly UsuarioProveedorManager _usuarioProveedorManager = new UsuarioProveedorManager();
-        private readonly PerfilProveedorManager _perfilProveedorManager = new PerfilProveedorManager();
         private readonly CommonManager _commonManager = new CommonManager();
+        internal void CargarPerfiles()
+        {
+            var perfilProveedorManager = new PerfilProveedorManager();
 
+            var perfiles = perfilProveedorManager
+                .FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
+
+            perfiles.Add(perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.Servicio));
+
+            ViewBag.Perfiles = new SelectList(perfiles, "Id", "Nombre");
+        }
 
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARUSUARIOS-LISTAR,SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR")]
         public ActionResult Index()
@@ -29,11 +35,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR")]
         public ActionResult Crear()
         {
-            ViewBag.Perfiles =
-                new SelectList(
-                    _perfilProveedorManager.FindByCuentaId(
-                        _commonManager.GetCuentaUsuarioAutenticado().Id), "Id", "Nombre");
-
+            CargarPerfiles();
             return View();
         }
 
@@ -42,35 +44,33 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         [HttpPost]
         public ActionResult Crear(UsuarioProveedorViewModel model)
         {
-            ViewBag.Perfiles =
-                new SelectList(
-                    _perfilProveedorManager.FindByCuentaId(
-                        _commonManager.GetCuentaUsuarioAutenticado().Id), "Id", "Nombre");
-
             if (!ModelState.IsValid) return View(model);
 
             try
             {
                 _usuarioProveedorManager
-                    .Create(model.UserName, model.Nombre, model.Apellido,
-                    model.Email, model.Password, model.Perfil, "PROVEEDOR");
-
-                var usuarioManager = new UsuarioManager();
-                var usuario = usuarioManager.FindUsuarioByUserName(model.UserName);
-
-                var cuentaManager = new CuentaManager();
-                cuentaManager.AsociarUsuarioEnCuenta(
-                    usuario.Id,
+                    .Crear(model.UserName, model.Nombre, model.Apellido,
+                    model.Email, model.Password, model.Perfil, "PROVEEDOR",
                     _commonManager.GetCuentaUsuarioAutenticado().Id);
 
-                TempData["FlashSuccess"] = "Usuario creado con éxito.";
+
+                TempData["FlashSuccess"] = CommonMensajesResource.INFO_UsuarioProveedor_CreadoCorrectamente;
                 return RedirectToAction("Index");
             }
-            catch (Exception exception)
+            catch (BusinessException businessEx)
             {
+                ModelState.AddModelError(string.Empty, businessEx.Message);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
 
-                ModelState.AddModelError(string.Empty, exception.Message);
-
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
                 return View(model);
             }
 
@@ -79,19 +79,15 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR")]
         public ActionResult Editar(string id)
         {
-            ViewBag.Perfiles =
-                new SelectList(
-                    _perfilProveedorManager.FindByCuentaId(
-                        _commonManager.GetCuentaUsuarioAutenticado().Id), "Id", "Nombre");
-
             var usuario = _usuarioProveedorManager.Find(id);
 
             if (usuario == null)
             {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "Usuario incorrecto.";
+                TempData["FlashError"] = CommonMensajesResource.ERROR_UsuarioProveedor_IdIncorrecto;
                 return RedirectToAction("Index");
             }
+
+            CargarPerfiles();
 
             var usuarioProveedorViewModel = new UsuarioProveedorViewModel()
             {
@@ -114,8 +110,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             if (usuario == null)
             {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "Usuario incorrecto.";
+                TempData["FlashError"] = CommonMensajesResource.ERROR_UsuarioProveedor_IdIncorrecto;
                 return RedirectToAction("Index");
             }
 
@@ -129,20 +124,25 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                     model.Perfil,
                     model.Password);
 
-                TempData["FlashSuccess"] = "Usuario actualizado con éxito.";
+                TempData["FlashSuccess"] = CommonMensajesResource.INFO_UsuarioProveedor_ActualizadoCorrectamente;
                 return RedirectToAction("Index");
             }
-            catch (RetryLimitExceededException)
+            catch (BusinessException businessEx)
             {
-                ModelState.AddModelError("", Mensajes.ERROR_General);
+                ModelState.AddModelError(string.Empty, businessEx.Message);
+                return View(model);
             }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
 
-            ViewBag.Perfiles =
-                new SelectList(
-                    _perfilProveedorManager.FindByCuentaId(
-                        _commonManager.GetCuentaUsuarioAutenticado().Id), "Id", "Nombre");
-
-            return View(model);
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+                return View(model);
+            }
         }
 
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR")]
@@ -152,41 +152,35 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             if (usuario == null)
             {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "Usuario incorrecto.";
+                TempData["FlashError"] = CommonMensajesResource.ERROR_UsuarioProveedor_IdIncorrecto;
                 return RedirectToAction("Index");
             }
-
-            if (usuario.Id == User.Identity.GetUserId())
-            {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "No puede eliminar su propio usuario.";
-                return RedirectToAction("Index");
-            }
-
 
             try
             {
-                var cuentaManager = new CuentaManager();
-                cuentaManager.DesAsociarUsuarioEnCuenta(usuario.Id,
-                    _commonManager.GetCuentaUsuarioAutenticado().Id);
-                _usuarioProveedorManager.Remove(id);
-            }
-            catch (RetryLimitExceededException)
-            {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "INTENTOS EXEDIDOS";
-                return RedirectToAction("Index");
-            }
-            catch (Exception exception)
-            {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = exception.Message;
-                return RedirectToAction("Index");
-            }
+                _usuarioProveedorManager.Eliminar(id);
 
-            TempData["FlashSuccess"] = "Usuario eliminado con éxito.";
-            return RedirectToAction("Index");
+                TempData["FlashSuccess"] = CommonMensajesResource.INFO_UsuarioProveedor_EliminadoCorrectamente;
+                return RedirectToAction("Index");
+            }
+            catch (BusinessException businessEx)
+            {
+                TempData["FlashError"] = businessEx.Message;
+                return RedirectToAction("Index");
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                TempData["FlashError"] = CommonMensajesResource.ERROR_General;
+                return RedirectToAction("Index");
+            }
         }
     }
 }

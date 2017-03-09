@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Ppgz.Web.Infrastructure.MySqlIdentity;
 
 namespace Ppgz.Web.Models
 {
