@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Web.Mvc;
+using Ppgz.Web.Areas.Servicio.Models;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 
@@ -28,13 +30,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
         public ActionResult Crear()
         {
-            var roles = _perfilProveedorManager.GetRoles("SERVICIO");
-
-            var model = new PefilProveedorViewModel
-            {
-                Roles = new MultiSelectList(roles, "Id", "Name")
-            };
-            return View(model);
+            return View(new PefilProveedorViewModel());
         }
 
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
@@ -42,8 +38,6 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         [HttpPost]
         public ActionResult Crear(PefilProveedorViewModel model)
         {
-            var roles = _perfilProveedorManager.GetRoles("SERVICIO");
-            model.Roles = new MultiSelectList(roles, "Id", "Name");
 
             if (!ModelState.IsValid) return View(model);
 
@@ -76,14 +70,11 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 return RedirectToAction("Index");
 
             }
-
-
-            var roles = _perfilProveedorManager.GetRoles("SERVICIO");
-
+            
             var model = new PefilProveedorViewModel
             {
                 Nombre = perfil.Nombre,
-                Roles = new MultiSelectList(roles, "Id", "Name")
+                RolesIds = perfil.aspnetroles.Select(p => p.Id).ToArray()
 
             };
 
@@ -127,9 +118,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 TempData["FlashError"] = exception.Message;
                 return RedirectToAction("Index");
             }
-            var roles = _perfilProveedorManager.GetRoles("SERVICIO");
 
-            model.Roles = new MultiSelectList(roles, "Id", "Name");
 
             return View(model);
         }

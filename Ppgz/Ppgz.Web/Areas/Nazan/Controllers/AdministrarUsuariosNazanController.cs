@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
-using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
 	[Authorize]
 	public class AdministrarUsuariosNazanController : Controller
 	{
-		
 		private readonly UsuarioNazanManager _usuarioNazanManager = new UsuarioNazanManager();
 
 		private readonly PerfilNazanManager _perfilNazanManager = new PerfilNazanManager();
-		
 
 		//
 		// GET: /Nazan/
@@ -33,7 +27,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		public ActionResult Crear()
 		{
 			ViewBag.Perfiles = 
-				new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre"); ;
+				new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre"); 
 
 			return View();
 		}
@@ -44,25 +38,36 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		public ActionResult Crear(UsuarioNazanViewModel model)
 		{
 			ViewBag.Perfiles =
-				  new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre"); ;
+				  new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre"); 
 
 			if (!ModelState.IsValid) return View(model);
 
 			try
 			{
 				_usuarioNazanManager
-					.Create(model.UserName,model.Nombre,model.Apellido,
+					.Crear(model.UserName,model.Nombre,model.Apellido,
 					model.Email,model.Password, model.Perfil);
 
-				TempData["FlashSuccess"] = "Usuario creado con éxito.";
+				TempData["FlashSuccess"] =MensajesResource.INFO_UsuarioNazan_CreadoCorrectamente;
 				return RedirectToAction("Index");
 			}
-			catch (Exception exception)
+			catch (BusinessException businessEx)
 			{
-
-				ModelState.AddModelError(string.Empty, exception.Message);
+				ModelState.AddModelError(string.Empty, businessEx.Message);
 
 				return View(model);
+			}
+			catch (Exception e)
+			{
+				var log = CommonManager.BuildMessageLog(
+					TipoMensaje.Error,
+					ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+					ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+					e.ToString(), Request);
+
+				CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+			   return View(model);
 			}
 	
 		}
@@ -71,14 +76,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		public ActionResult Editar(string id)
 		{
 			ViewBag.Perfiles =
-				  new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre"); ;
+				  new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre"); 
 
 			var usuario = _usuarioNazanManager.Find(id);
 
 			if (usuario == null)
 			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "Usuario incorrecto.";
+				TempData["FlashError"] = MensajesResource.ERROR_UsuarioNazan_IdIncorrecto;
 				return RedirectToAction("Index");
 			}
 
@@ -103,14 +107,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 			if (usuario == null)
 			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "Usuario incorrecto.";
+				TempData["FlashError"] = MensajesResource.ERROR_UsuarioNazan_IdIncorrecto;
 				return RedirectToAction("Index");
 			}
 
 			try
 			{
-				_usuarioNazanManager.Update(
+				_usuarioNazanManager.Actualizar(
 					id,
 					model.Nombre,
 					model.Apellido,
@@ -121,15 +124,24 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				TempData["FlashSuccess"] = "Usuario actualizado con éxito.";
 				return RedirectToAction("Index");
 			}
-			catch (RetryLimitExceededException)
+			catch (BusinessException businessEx)
 			{
-				ModelState.AddModelError("", MensajesResource.ERROR_General);
+				ModelState.AddModelError(string.Empty, businessEx.Message);
+
+				return View(model);
 			}
+			catch (Exception e)
+			{
+				var log = CommonManager.BuildMessageLog(
+					TipoMensaje.Error,
+					ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+					ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+					e.ToString(), Request);
 
-			ViewBag.Perfiles =
-				  new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre"); ;
+				CommonManager.WriteAppLog(log, TipoMensaje.Error);
 
-			return View(model);
+				return View(model);
+			}
 		}
 
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
@@ -139,46 +151,36 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 			if (usuario == null)
 			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "Usuario incorrecto.";
-				return RedirectToAction("Index");
-			}
-
-			if (usuario.Id == User.Identity.GetUserId())
-			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "No puede eliminar su propio usuario.";
-				return RedirectToAction("Index");
-			}
-
-			if (usuario.UserName.ToLower() == "superusuario")
-			{
-
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "No puede eliminar el SuperUsuario.";
+				TempData["FlashError"] = MensajesResource.ERROR_UsuarioNazan_IdIncorrecto;
 				return RedirectToAction("Index");
 			}
 
 			try
 			{
-
-				_usuarioNazanManager.Remove(id);
-			}
-			catch (RetryLimitExceededException)
-			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "INTENTOS EXEDIDOS";
+				_usuarioNazanManager.Eliminar(id);
+				TempData["FlashSuccess"] = MensajesResource.INFO_UsuarioNazan_EliminadoCorrectamente;
 				return RedirectToAction("Index");
 			}
-			catch (Exception exception)
+			catch (BusinessException businessEx)
 			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = exception.Message;
+				TempData["FlashError"] = businessEx.Message;
+				return RedirectToAction("Index");
+			}
+			catch (Exception e)
+			{
+				var log = CommonManager.BuildMessageLog(
+					TipoMensaje.Error,
+					ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+					ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+					e.ToString(), Request);
+
+				CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+				TempData["FlashError"] = MensajesResource.ERROR_General;
 				return RedirectToAction("Index");
 			}
 
-			TempData["FlashSuccess"] = "Usuario eliminado con éxito.";
-			return RedirectToAction("Index");
+
 		}
 	}
 }

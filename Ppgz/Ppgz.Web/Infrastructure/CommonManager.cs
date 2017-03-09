@@ -1,16 +1,16 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using System.Web;
+using log4net;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using MySql.Data.MySqlClient;
 using Ppgz.Repository;
 using Ppgz.Web.Models;
-using log4net;
-using System;
-using System.Text;
 
 namespace Ppgz.Web.Infrastructure
 {
@@ -22,9 +22,9 @@ namespace Ppgz.Web.Infrastructure
 		Error
 	}
 
-    /// <summary>
-    /// Manejadores comunes de la aplicacion que no estan separados en areas de negocio 
-    /// </summary>
+	/// <summary>
+	/// Manejadores comunes de la aplicacion que no estan separados en areas de negocio 
+	/// </summary>
 	public class CommonManager
 	{
 		/// <summary> Log para almacenar errores de negocio.</summary>
@@ -157,6 +157,24 @@ namespace Ppgz.Web.Infrastructure
 		public string HashPassword(string password)
 		{
 			return _applicationUserManager.PasswordHasher.HashPassword(password);
+		}
+
+		internal void ActualizarPermisosByPefilId(int perfilId)
+		{
+			const string sql = @"
+
+						DELETE FROM aspnetuserroles 
+						WHERE UserId IN (SELECT Id FROM aspnetusers WHERE PerfilId = {0});
+						INSERT INTO aspnetuserroles 
+							(UserId, RoleId)
+						SELECT u.Id, r.RoleId
+						FROM   aspnetusers u
+						JOIN   perfilesroles r ON r.PerfilId = {0}
+						WHERE  u.PerfIlId = {0};";
+
+			_db.Database.ExecuteSqlCommand(sql, perfilId);
+			_db.SaveChanges();
+
 		}
 
 		public DataTable QueryToTable(string queryText, SqlParameter[] parametes = null)

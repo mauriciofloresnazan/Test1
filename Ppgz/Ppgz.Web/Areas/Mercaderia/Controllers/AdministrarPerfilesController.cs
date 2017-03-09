@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity.Infrastructure;
 using System.Web.Mvc;
+using Ppgz.Web.Areas.Mercaderia.Models;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 
@@ -19,7 +20,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-LISTAR,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
 		public ActionResult Index()
 		{
-		   
 			var perfiles = _perfilProveedorManager
 				.FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
 
@@ -54,7 +54,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			if (_perfilProveedorManager.FindByNombre(model.Nombre.Trim()) != null)
 			{
-                ModelState.AddModelError(string.Empty, MensajesResource.ERROR_PerfilNombreExistente);
+				ModelState.AddModelError(string.Empty, MensajesResource.ERROR_PerfilNombreExistente);
 				return View(model);
 			}
 

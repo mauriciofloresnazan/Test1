@@ -1,0 +1,9 @@
+2017-03-08 05:50:34,656 
+Nombre del Controlador = AdministrarPerfilesNazan
+Nombre del método o acción solicitada = Crear
+Conjunto de parámetros enviados = Nombre = MAESTRO-NAZAN, RolesIds = NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR
+Tipo de mensaje = Error.
+Traza detallada: 
+Ppgz.Web.Infrastructure.BusinessException: El nombre para el perfil ya fue utilizado
+   at Ppgz.Web.Infrastructure.Nazan.PerfilNazanManager.Crear(String nombre, String[] rolesIds) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Infrastructure\Nazan\PerfilNazanManager.cs:line 58
+   at Ppgz.Web.Areas.Nazan.Controllers.AdministrarPerfilesNazanController.Crear(PefilNazanViewModel model) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs:line 50

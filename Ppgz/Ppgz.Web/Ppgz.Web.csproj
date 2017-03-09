@@ -186,6 +186,7 @@
       <DependentUpon>MensajesResource.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
+    <Compile Include="Areas\Mercaderia\Models\PefilProveedorViewModel.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarMensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
@@ -198,7 +199,6 @@
     <Compile Include="Areas\Nazan\Models\PefilNazanViewModel.cs" />
     <Compile Include="Areas\Nazan\Models\UsuarioNazanViewModel.cs" />
     <Compile Include="Areas\Nazan\NazanAreaRegistration.cs" />
-    <Compile Include="Areas\PefilProveedorViewModel.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarUsuariosController.cs" />
     <Compile Include="Areas\Servicio\Controllers\MensajesInstitucionalesController.cs" />
@@ -207,6 +207,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Mensajes.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Servicio\Models\PefilProveedorViewModel.cs" />
     <Compile Include="Areas\Servicio\ServicioAreaRegistration.cs" />
     <Compile Include="Areas\UsuarioProveedorViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -236,17 +237,15 @@
     <Content Include="Areas\Mercaderia\Views\MensajesInstitucionales\index.cshtml" />
     <Content Include="Areas\Servicio\Views\MensajesInstitucionales\index.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarProveedores\Editar.cshtml" />
-    <None Include="Controllers\NazanController.cs.old" />
-    <None Include="Controllers\NazanGestionProveedoresController.cs.old" />
-    <None Include="Controllers\NazanMensajesInstitucionalesController.cs.old">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Controllers\ProveedorAdministrarUsuariosController.cs.old">
-      <SubType>Code</SubType>
-    </None>
-    <None Include="Controllers\ProveedorMensajesInstitucionalesController.cs.old">
-      <SubType>Code</SubType>
-    </None>
+    <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen-variables.less" />
+    <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen-variables.scss" />
+    <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen.less" />
+    <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen.scss" />
+    <Content Include="assets\vendor\bootstrap-chosen\bower.json" />
+    <Content Include="assets\vendor\bootstrap-chosen\package.json" />
+    <Content Include="assets\vendor\bootstrap-chosen\README.md" />
+    <Content Include="assets\vendor\chosen_v1.6.2\bower.json" />
+    <Content Include="assets\vendor\chosen_v1.6.2\package.json" />
     <Compile Include="Controllers\PoliticasController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -300,11 +299,33 @@
     <Content Include="assets\vendor\bootstrap-3.3.6\js\bootstrap.js" />
     <Content Include="assets\vendor\bootstrap-3.3.6\js\bootstrap.min.js" />
     <Content Include="assets\vendor\bootstrap-3.3.6\js\npm.js" />
+    <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen.css" />
+    <Content Include="assets\vendor\bootstrap-chosen\chosen-sprite%402x.png" />
+    <Content Include="assets\vendor\bootstrap-chosen\chosen-sprite.png" />
+    <Content Include="assets\vendor\bootstrap-chosen\example.html" />
+    <Content Include="assets\vendor\bootstrap-chosen\example.png" />
     <Content Include="assets\vendor\bootstrap-confirmation.min.js" />
     <Content Include="assets\vendor\bootstrap-datetimepicker\css\bootstrap-datetimepicker-standalone.css" />
     <Content Include="assets\vendor\bootstrap-datetimepicker\css\bootstrap-datetimepicker.css" />
     <Content Include="assets\vendor\bootstrap-datetimepicker\css\bootstrap-datetimepicker.min.css" />
     <Content Include="assets\vendor\bootstrap-datetimepicker\js\bootstrap-datetimepicker.min.js" />
+    <Content Include="assets\vendor\chosen_v1.6.2\chosen-sprite%402x.png" />
+    <Content Include="assets\vendor\chosen_v1.6.2\chosen-sprite.png" />
+    <Content Include="assets\vendor\chosen_v1.6.2\chosen.css" />
+    <Content Include="assets\vendor\chosen_v1.6.2\chosen.jquery.js" />
+    <Content Include="assets\vendor\chosen_v1.6.2\chosen.jquery.min.js" />
+    <Content Include="assets\vendor\chosen_v1.6.2\chosen.min.css" />
+    <Content Include="assets\vendor\chosen_v1.6.2\chosen.proto.js" />
+    <Content Include="assets\vendor\chosen_v1.6.2\chosen.proto.min.js" />
+    <Content Include="assets\vendor\chosen_v1.6.2\docsupport\chosen.png" />
+    <Content Include="assets\vendor\chosen_v1.6.2\docsupport\event.simulate.js" />
+    <Content Include="assets\vendor\chosen_v1.6.2\docsupport\oss-credit.png" />
+    <Content Include="assets\vendor\chosen_v1.6.2\docsupport\prism.css" />
+    <Content Include="assets\vendor\chosen_v1.6.2\docsupport\prism.js" />
+    <Content Include="assets\vendor\chosen_v1.6.2\docsupport\style.css" />
+    <Content Include="assets\vendor\chosen_v1.6.2\index.html" />
+    <Content Include="assets\vendor\chosen_v1.6.2\index.proto.html" />
+    <Content Include="assets\vendor\chosen_v1.6.2\options.html" />
     <Content Include="assets\vendor\dataTables-1.10.13\examples\advanced_init\column_render.html" />
     <Content Include="assets\vendor\dataTables-1.10.13\examples\advanced_init\complex_header.html" />
     <Content Include="assets\vendor\dataTables-1.10.13\examples\advanced_init\defaults.html" />
@@ -1069,11 +1090,6 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Views\Nazan\AdministrarUsuariosNazan.cshtml" />
-    <Content Include="Views\Nazan\CrearUsuarioNazan.cshtml" />
-    <Content Include="Views\Nazan\EditarUsuarioNazan.cshtml" />
-    <Content Include="Views\Nazan\AdministrarPerfilesNazan.cshtml" />
-    <Content Include="Views\Nazan\CrearPerfilNazan.cshtml" />
     <Content Include="Uploads\960_sketch_16_col.pdf" />
     <Content Include="Views\Politicas\Index.cshtml" />
     <Content Include="Views\Error\Error.cshtml" />
@@ -1101,21 +1117,10 @@
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\NazanGestionProveedores\index.cshtml" />
-    <Content Include="Views\NazanGestionProveedores\Registrar.cshtml" />
-    <Content Include="Views\ProveedorAdministrarUsuarios\Editar.cshtml" />
-    <Content Include="Views\ProveedorAdministrarUsuarios\Index.cshtml" />
-    <Content Include="Views\ProveedorAdministrarUsuarios\Registrar.cshtml" />
-    <Content Include="Views\ProveedorMensajesInstitucionales\index.cshtml" />
-    <Content Include="Views\NazanMensajesInstitucionales\Crear.cshtml" />
-    <Content Include="Views\NazanMensajesInstitucionales\Editar.cshtml" />
-    <Content Include="Views\NazanMensajesInstitucionales\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Areas\Mercaderia\Models\" />
     <Folder Include="Areas\Mercaderia\Views\Shared\" />
     <Folder Include="Areas\Nazan\Views\Shared\" />
-    <Folder Include="Areas\Servicio\Models\" />
     <Folder Include="Areas\Servicio\Views\Shared\" />
     <Folder Include="assets\js\" />
     <Folder Include="Infrastructure\Proveedor\" />

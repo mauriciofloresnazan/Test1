@@ -152,7 +152,7 @@ namespace Ppgz.Web
             if (applicationUserManager.FindByName("superusuario") == null)
             {
 
-                usuarioNazanManager.Create(
+                usuarioNazanManager.Crear(
                      "superusuario",
                      "superusuario",
                      "superusuario",

@@ -43,20 +43,19 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .FirstOrDefault(u => u.Id == id && Tipos.Contains(u.Tipo));
         }
 
-        public void Create(string userName, string nombre, string apellido, string email,
+        public void Crear(string userName, string nombre, string apellido, string email,
             string password, int perfilId)
         {
             if (_applicationUserManager.FindByName(userName) != null)
             {
-                // TODO CARLOS Y JUAN DELGADO
-                throw new Exception(MensajesResource.UsuarioNazanLoginExistente);
+                throw new BusinessException(MensajesResource.ERROR_UsuarioNazan_LoginExistente);
             }
 
             var perfil = _perfilNazanManager.Find(perfilId);
 
             if (perfil == null)
             {
-                throw new Exception(MensajesResource.UsuarioNazanPerfilIncorrecto);
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_PefilIdIncorrecto);
             }
 
             var usuario = new ApplicationUser()
@@ -74,43 +73,55 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             if (!result.Succeeded)
             {
-                throw new Exception(CommonMensajes.RegistroGeneral);
+                throw new BusinessException(CommonMensajes.RegistroGeneral);
             }
-   
 
             foreach (var role in perfil.aspnetroles)
             {
                 _applicationUserManager.AddToRole(usuario.Id, role.Id);
             }
 
-  
-
         }
 
-        public void Remove(string id)
+
+        public void Eliminar(string id)
         {
-            var usuario = _db.aspnetusers
-                .Single(u => u.Id == id);
+            var usuario = Find(id);
+
+            if(usuario == null)
+                throw new BusinessException(MensajesResource.ERROR_UsuarioNazan_IdIncorrecto);
+
+            var commonManager =  new CommonManager();
+
+            if (usuario.Id == commonManager.GetUsuarioAutenticado().Id)
+            {
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_EliminarPropioUsuario);
+            }
+
+            if (usuario.UserName.ToLower() == "superusuario")
+            {
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_EliminarSuperUsuario);
+            }
 
             _db.aspnetusers.Remove(usuario);
             _db.SaveChanges();
         }
 
-
-        public void Update(string id, string nombre, string apellido, string email, int perfilId, string password = null)
+        public void Actualizar(string id, string nombre, string apellido, string email, 
+            int perfilId, string password = null)
         {
             var usuario = Find(id);
 
             if (usuario == null)
             {
-                throw new Exception(MensajesResource.UsuarioNazanIncorrecto);
+                throw new BusinessException(MensajesResource.ERROR_UsuarioNazan_IdIncorrecto);
             }
 
             var perfil = _perfilNazanManager.Find(perfilId);
 
             if (perfil == null)
             {
-                throw new Exception(MensajesResource.UsuarioNazanPerfilIncorrecto);
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_PefilIdIncorrecto);
             }
 
             usuario.Nombre = nombre;

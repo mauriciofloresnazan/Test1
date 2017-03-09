@@ -32,11 +32,12 @@
                             <tr>
                                 <td class="text-center vert-align">@(pefil.Nombre)</td>
                                 <td class="text-center vert-align">
-
-                                    @foreach (var role in pefil.aspnetroles)
-                                    {
-                                        @role.Name<br />
-                                    }
+                                    <ul>
+                                        @foreach (var role in pefil.aspnetroles)
+                                        {
+                                            <li class="text-left"> @role.Description</li>
+                                        }
+                                    </ul>
                                 </td>
                                 <td class="text-center vert-align">
 

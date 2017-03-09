@@ -71,14 +71,15 @@ namespace Ppgz.Web.Infrastructure.Nazan
             if (_applicationUserManager.FindByName(userName) != null)
             {
                 // TODO CARLOS Y JUAN DELGADO
-                throw new Exception(MensajesResource.UsuarioNazanLoginExistente);
+                throw new Exception(MensajesResource.ERROR_UsuarioNazan_LoginExistente);
             }
 
             var perfil = _perfilProveedorManager.Find(perfilId);
 
             if (perfil == null)
             {
-                throw new Exception(MensajesResource.UsuarioNazanPerfilIncorrecto);
+                // TODO CAMBIAR A PROVEEDOR
+                throw new Exception(MensajesResource.ERROR_PerfilNazan_PefilIdIncorrecto);
             }
 
             var usuario = new ApplicationUser()
@@ -126,14 +127,14 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             if (usuario == null)
             {
-                throw new Exception(MensajesResource.UsuarioNazanIncorrecto);
+                throw new Exception(MensajesResource.ERROR_UsuarioNazan_IdIncorrecto);
             }
 
             var perfil = _perfilProveedorManager.Find(perfilId);
 
             if (perfil == null)
             {
-                throw new Exception(MensajesResource.UsuarioNazanPerfilIncorrecto);
+                throw new Exception(MensajesResource.ERROR_PerfilNazan_PefilIdIncorrecto);
             }
 
             usuario.Nombre = nombre;

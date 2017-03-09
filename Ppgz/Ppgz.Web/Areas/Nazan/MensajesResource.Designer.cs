@@ -169,11 +169,38 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No puede editar o eliminar el perfil Maestro.
+        /// </summary>
+        internal static string ERROR_PerfilNazan_EditarEliminarMaestro {
+            get {
+                return ResourceManager.GetString("ERROR_PerfilNazan_EditarEliminarMaestro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No puede eliminar un perfil que tiene usuarios asociados.
         /// </summary>
         internal static string ERROR_PerfilNazan_EliminarConUsuarios {
             get {
                 return ResourceManager.GetString("ERROR_PerfilNazan_EliminarConUsuarios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No puede eliminar su propio usuario..
+        /// </summary>
+        internal static string ERROR_PerfilNazan_EliminarPropioUsuario {
+            get {
+                return ResourceManager.GetString("ERROR_PerfilNazan_EliminarPropioUsuario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No puede eliminar el SuperUsuario..
+        /// </summary>
+        internal static string ERROR_PerfilNazan_EliminarSuperUsuario {
+            get {
+                return ResourceManager.GetString("ERROR_PerfilNazan_EliminarSuperUsuario", resourceCulture);
             }
         }
         
@@ -196,29 +223,74 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UsuarioNazanIncorrecto.
+        ///   Looks up a localized string similar to Usuario Incorrecto.
         /// </summary>
-        internal static string UsuarioNazanIncorrecto {
+        internal static string ERROR_UsuarioNazan_IdIncorrecto {
             get {
-                return ResourceManager.GetString("UsuarioNazanIncorrecto", resourceCulture);
+                return ResourceManager.GetString("ERROR_UsuarioNazan_IdIncorrecto", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UsuarioNazanLoginExistente.
+        ///   Looks up a localized string similar to Ya existe un usuario registrado con este login.
         /// </summary>
-        internal static string UsuarioNazanLoginExistente {
+        internal static string ERROR_UsuarioNazan_LoginExistente {
             get {
-                return ResourceManager.GetString("UsuarioNazanLoginExistente", resourceCulture);
+                return ResourceManager.GetString("ERROR_UsuarioNazan_LoginExistente", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to UsuarioNazanPerfilIncorrecto.
+        ///   Looks up a localized string similar to Perfil actualizado correctamente, los usuarios deben reiniciar la sesión.
         /// </summary>
-        internal static string UsuarioNazanPerfilIncorrecto {
+        internal static string INFO_PerfilNazan_ActualizadoCorrectamente {
             get {
-                return ResourceManager.GetString("UsuarioNazanPerfilIncorrecto", resourceCulture);
+                return ResourceManager.GetString("INFO_PerfilNazan_ActualizadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Perfil creado correctamente.
+        /// </summary>
+        internal static string INFO_PerfilNazan_CreadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_PerfilNazan_CreadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Perfil eliminado correctamente.
+        /// </summary>
+        internal static string INFO_PerfilNazan_EliminadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_PerfilNazan_EliminadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usuario actualizad correctamente, el usuarios deben reiniciar la sesión.
+        /// </summary>
+        internal static string INFO_UsuarioNazan_ActualizadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_UsuarioNazan_ActualizadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usuario creado correctamente.
+        /// </summary>
+        internal static string INFO_UsuarioNazan_CreadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_UsuarioNazan_CreadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usuario eliminado correctamente.
+        /// </summary>
+        internal static string INFO_UsuarioNazan_EliminadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_UsuarioNazan_EliminadoCorrectamente", resourceCulture);
             }
         }
     }

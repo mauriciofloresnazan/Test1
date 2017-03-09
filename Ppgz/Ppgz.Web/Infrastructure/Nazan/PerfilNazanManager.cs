@@ -72,7 +72,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
             _db.SaveChanges();
         }
         
-        public void Update(int id, string nombre, string[] rolesIds)
+        public void Actualizar(int id, string nombre, string[] rolesIds)
         {
             var perfil = FindByNombre(nombre);
             if (perfil != null)
@@ -86,6 +86,11 @@ namespace Ppgz.Web.Infrastructure.Nazan
             if (perfil == null)
             {
                 throw new BusinessException(MensajesResource.ERROR_PerfilNazan_PefilIdIncorrecto);
+            }
+
+            if (perfil.Nombre == "MAESTRO-NAZAN")
+            {
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_EditarEliminarMaestro);
             }
 
             ValidarPermisos(rolesIds);
@@ -104,12 +109,25 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             _db.Entry(perfil).State = EntityState.Modified;
             _db.SaveChanges();
+
+            var commonManager = new CommonManager();
+            commonManager.ActualizarPermisosByPefilId(perfil.Id);
         }
 
 
         public void Remove(int id)
         {
             var perfil = Find(id);
+
+            if (perfil == null)
+            {
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_PefilIdIncorrecto);
+            }
+
+            if (perfil.Nombre == "MAESTRO-NAZAN")
+            {
+                throw new BusinessException(MensajesResource.ERROR_PerfilNazan_EditarEliminarMaestro);
+            }
 
             if (perfil.aspnetusers.Any())
             {
@@ -167,6 +185,8 @@ namespace Ppgz.Web.Infrastructure.Nazan
             return perfil;
 
         }
+
+
 
     }
 }

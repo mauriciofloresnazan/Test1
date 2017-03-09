@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
+using System.Linq;
 using System.Web.Mvc;
 using Ppgz.Web.Areas.Nazan.Models;
+using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
@@ -31,24 +32,40 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [HttpPost]
         public ActionResult Crear(PefilNazanViewModel model)
         {
-           /* var roles = _perfilNazanManager.GetRoles();
-            model.Roles = new MultiSelectList(roles, "Id", "Name");
-            */
             if (!ModelState.IsValid) return View(model);
 
-            if (_perfilNazanManager.FindByNombre(model.Nombre.Trim()) != null)
+            ActionResult actionResult;
+
+            try
             {
-                ModelState.AddModelError(string.Empty, MensajesResource.ERROR_PerfilNazan_NombreExistente);
-                return View(model);
+                _perfilNazanManager
+                    .Crear(model.Nombre, model.RolesIds);
+
+
+                TempData["FlashSuccess"] = MensajesResource.INFO_PerfilNazan_CreadoCorrectamente;
+                return RedirectToAction("Index");
+
+            }
+            catch (BusinessException businessEx)
+            {
+                ModelState.AddModelError(string.Empty, businessEx.Message);
+
+                actionResult = View(model);
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                actionResult = View(model);
             }
 
-            _perfilNazanManager
-                .Crear(model.Nombre, model.RolesIds);
-
-
-
-            TempData["FlashSuccess"] = "Perfil creado con éxito.";
-            return RedirectToAction("Index");
+            return actionResult;
         }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
@@ -58,19 +75,15 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             if (perfil == null)
             {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "Perfil incorrecto.";
+                TempData["FlashError"] = MensajesResource.ERROR_PerfilNazan_PefilIdIncorrecto;
                 return RedirectToAction("Index");
 
             }
-
-
-            //var roles = _perfilNazanManager.GetRoles();
-
+            
             var model = new PefilNazanViewModel
             {
                 Nombre = perfil.Nombre,
-                //Roles = new MultiSelectList(roles, "Id", "Name")
+                RolesIds = perfil.aspnetroles.Select(p=> p.Id).ToArray()
 
             };
 
@@ -83,77 +96,70 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Editar(int id, PefilNazanViewModel model)
         {
-
-            var perfil = _perfilNazanManager.Find(id);
-
-            if (perfil == null)
-            {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "Perfil incorrecto.";
-                return RedirectToAction("Index");
-
-            }
-
+            ActionResult actionResult;
             try
             {
-                _perfilNazanManager.Update(
+                _perfilNazanManager.Actualizar(
                     id,
                     model.Nombre,
                     model.RolesIds);
 
-                TempData["FlashSuccess"] = "Perfil actualizado con éxito.";
+                TempData["FlashSuccess"] = MensajesResource.INFO_PerfilNazan_ActualizadoCorrectamente;
                 return RedirectToAction("Index");
             }
-            catch (RetryLimitExceededException)
+            catch (BusinessException businessEx)
             {
-                ModelState.AddModelError("", MensajesResource.ERROR_General);
+                ModelState.AddModelError(string.Empty, businessEx.Message);
+
+                actionResult = View(model);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = exception.Message;
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                TempData["FlashError"] = MensajesResource.ERROR_General;
                 return RedirectToAction("Index");
             }
-            //var roles = _perfilNazanManager.GetRoles();
 
-            //model.Roles = new MultiSelectList(roles, "Id", "Name");
-
-            return View(model);
+            return actionResult;
         }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
         public ActionResult Eliminar(int id)
         {
-
-            var perfil = _perfilNazanManager.Find(id);
-
-            if (perfil == null)
-            {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "Perfil incorrecto.";
-                return RedirectToAction("Index");
-            }
-
             try
             {
-
                 _perfilNazanManager.Remove(id);
-            }
-            catch (RetryLimitExceededException)
-            {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = "INTENTOS EXEDIDOS";
+
+                TempData["FlashSuccess"] = MensajesResource.INFO_PerfilNazan_EliminadoCorrectamente;
                 return RedirectToAction("Index");
             }
-            catch (Exception exception)
+            catch (BusinessException businessEx)
             {
-                //TODO ACTUALIZAR MENSAJE AL RESOURCE
-                TempData["FlashError"] = exception.Message;
+                TempData["FlashError"] = businessEx.Message;
+                return RedirectToAction("Index");
+   
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                TempData["FlashError"] = MensajesResource.ERROR_General;
                 return RedirectToAction("Index");
             }
 
-            TempData["FlashSuccess"] = "Perfil eliminado con éxito.";
-            return RedirectToAction("Index");
         }
     }
 }
