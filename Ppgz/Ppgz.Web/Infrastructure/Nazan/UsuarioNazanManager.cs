@@ -141,14 +141,12 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             _db.Entry(usuario).State = EntityState.Modified;
             _db.SaveChanges();
-
      
             foreach (var role in perfil.aspnetroles)
             {
                 _applicationUserManager.AddToRole(usuario.Id, role.Id);
             }
         }
-
 
     }
 }

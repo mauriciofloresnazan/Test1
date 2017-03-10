@@ -19,7 +19,6 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		public ActionResult Index()
 		{
 			ViewBag.Usuarios = _usuarioNazanManager.FindAll();
-
 			return View();
 		}
 
@@ -27,8 +26,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		public ActionResult Crear()
 		{
 			ViewBag.Perfiles = 
-				new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre"); 
-
+				new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre");
 			return View();
 		}
 
@@ -121,7 +119,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 					model.Perfil,
 					model.Password);
 
-				TempData["FlashSuccess"] = "Usuario actualizado con éxito.";
+				TempData["FlashSuccess"] = MensajesResource.INFO_UsuarioNazan_ActualizadoCorrectamente;
 				return RedirectToAction("Index");
 			}
 			catch (BusinessException businessEx)

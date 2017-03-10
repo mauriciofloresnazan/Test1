@@ -1,232 +1,237 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Web;
 using System.Web.Mvc;
 using Ppgz.Web.Areas.Nazan.Models;
+using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
-	[Authorize]
-	public class AdministrarMensajesInstitucionalesController : Controller
-	{
-		private readonly MensajesInstitucionalesManager  _mensajesInstitucionalesManager = new MensajesInstitucionalesManager();
+    [Authorize]
+    public class AdministrarMensajesInstitucionalesController : Controller
+    {
+        private readonly MensajesInstitucionalesManager _mensajesInstitucionalesManager = new MensajesInstitucionalesManager();
+
+        internal string CargarPdf(HttpPostedFileBase file)
+        {
+            if (file != null && file.ContentType != "application/pdf")
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_PdfInvalido);
+            }
+
+            if (file == null)
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_PdfInvalido);
+            }
+
+            var fileName = Path.GetFileName(file.FileName);
+
+            if (fileName == null)
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_PdfInvalido);
+            }
+
+            var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+
+            file.SaveAs(path);
+
+            return "~/Uploads/" + fileName;
+        }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
-		public ActionResult Index()
-		{
-			ViewBag.mensajes  = _mensajesInstitucionalesManager.FindAll();
-			
-			return View();
-		}
+        public ActionResult Index()
+        {
+            ViewBag.mensajes = _mensajesInstitucionalesManager.FindAll();
+            return View();
+        }
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
-		public ActionResult Crear()
-		{
-			return View();
-		}
+        public ActionResult Crear()
+        {
+            return View();
+        }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Crear(MensajeViewModel model, FormCollection collection)
-		{
-			if (!ModelState.IsValid) return View(model);
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Crear(MensajeViewModel model, FormCollection collection)
+        {
+            if (!ModelState.IsValid) return View(model);
 
-			if (!String.IsNullOrEmpty(Request["pdf-mensaje"]))
-			{
-				if (Request.Files.Count == 0)
-				{
-					ModelState.AddModelError(string.Empty, "Debe agregar un contenido textual para el mensaje o un Archivo PDF.");
-					return View(model);
-				}
+            try
+            {
+                if (!String.IsNullOrEmpty(Request["pdf-mensaje"]))
+                {
+                    if (Request.Files.Count == 0)
+                    {
+                        ModelState.AddModelError(string.Empty, MensajesResource.ERROR_MensajesInstitucionales_PdfInvalido);
+                        return View(model);
+                    }
 
-				var file = Request.Files[0];
+                    var pdfUrl = CargarPdf(Request.Files[0]);
 
-				if (file != null && file.ContentType != "application/pdf")
-				{
-					ModelState.AddModelError(string.Empty, "El archivo debe ser de tipo PDF.");
-					return View(model);
-				}
+                    _mensajesInstitucionalesManager.CrearPdf(
+                        model.Titulo,
+                        pdfUrl,
+                        DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
+                        DateTime.ParseExact(model.FechaCaducidad, "d/M/yyyy", CultureInfo.InvariantCulture),
+                        MensajesInstitucionalesManager.GetEnviadoAByString(model.TipoProveedor));
+                }
+                else // Mensaje solo texto
+                {
+                    _mensajesInstitucionalesManager.CrearTexto(
+                       model.Titulo,
+                       model.Contenido,
+                       DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
+                       DateTime.ParseExact(model.FechaCaducidad, "d/M/yyyy", CultureInfo.InvariantCulture),
+                       MensajesInstitucionalesManager.GetEnviadoAByString(model.TipoProveedor));
+                }
+                
+                TempData["FlashSuccess"] = MensajesResource.INFO_MensajesInstitucionales_CreadoCorrectamente;
+                return RedirectToAction("Index");
+            }
+            catch (BusinessException businessEx)
+            {
+                ModelState.AddModelError(string.Empty, businessEx.Message);
 
-				if (file == null) return RedirectToAction("Index");
-
-				var fileName = Path.GetFileName(file.FileName);
-
-				if (fileName == null) return RedirectToAction("Index");
-
-				var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
-				file.SaveAs(path);
-
-				try
-				{
-					_mensajesInstitucionalesManager.CrearPdf(
-						model.Titulo,
-						"~/Uploads/" + fileName,
-						DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
-						DateTime.ParseExact(model.FechaCaducidad, "d/M/yyyy", CultureInfo.InvariantCulture),
-						MensajesInstitucionalesManager.GetEnviadoAByString(model.TipoProveedor));
-
-					TempData["FlashSuccess"] = "Mensaje creado con éxito.";
-					return RedirectToAction("Index");
-				}
-				catch (Exception)
-				{
-					//TODO ACTUALIZAR MENSAJE AL RESOURCE
-                    TempData["FlashError"] = MensajesResource.ERROR_General;
-					return RedirectToAction("Index");
-				}
-			}
-
-			if (string.IsNullOrWhiteSpace(model.Contenido))
-			{
-				// TODO CARLOS Y JUAN DELGADO
-				ModelState.AddModelError(string.Empty, "Debe agregar un contenido textual para el mensaje o un Archivo PDF.");
-
-				return View(model);
-			}
-
-			try
-			{
-				_mensajesInstitucionalesManager.CrearTexto(
-					model.Titulo,
-					model.Contenido,
-					DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
-					DateTime.ParseExact(model.FechaCaducidad, "d/M/yyyy", CultureInfo.InvariantCulture),
-					MensajesInstitucionalesManager.GetEnviadoAByString(model.TipoProveedor));
-
-				TempData["FlashSuccess"] = "Mensaje creado con éxito.";
-				return RedirectToAction("Index");
-			}
-			catch (Exception exception)
-			{
-						
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-                ModelState.AddModelError(string.Empty, exception.Message);
                 return View(model);
-			}
-		}
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                return View(model);
+            }
+        }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
-		   public ActionResult Editar(int id)
-		{
-			var mensaje = _mensajesInstitucionalesManager.Find(id);
-			
-			if (mensaje == null)
-			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "Mensaje incorrecto.";
-				return RedirectToAction("Index");
-			}
-			
-			var mensajeModel = new MensajeViewModel()
-			{
-				Contenido = mensaje.Contenido,
-				FechaCaducidad = mensaje.FechaCaducidad.ToString("dd/MM/yyyy"),
-				FechaPublicacion = mensaje.FechaPublicacion.ToString("dd/MM/yyyy"),
-				TipoProveedor = mensaje.EnviadoA,
-				Titulo = mensaje.Titulo
-			};
+        public ActionResult Editar(int id)
+        {
+            var mensaje = _mensajesInstitucionalesManager.Find(id);
 
-			return View(mensajeModel);
-		}
+            if (mensaje == null)
+            {
+                TempData["FlashError"] = MensajesResource.ERROR_MensajesInstitucionales_IdIncorrecto;
+                return RedirectToAction("Index");
+            }
 
-		[HttpPost, ActionName("Editar")]
-		[ValidateAntiForgeryToken]
+            var mensajeModel = new MensajeViewModel()
+            {
+                Contenido = mensaje.Contenido,
+                FechaCaducidad = mensaje.FechaCaducidad.ToString("dd/MM/yyyy"),
+                FechaPublicacion = mensaje.FechaPublicacion.ToString("dd/MM/yyyy"),
+                TipoProveedor = mensaje.EnviadoA,
+                Titulo = mensaje.Titulo
+            };
+
+            return View(mensajeModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
-		public ActionResult EditarPost(int id, MensajeViewModel model)
-		{
-			
-			if (!String.IsNullOrEmpty(Request["pdf-mensaje"]))
-			{
-				if (Request.Files.Count == 0)
-				{
-					ModelState.AddModelError(string.Empty, "Debe agregar un contenido textual para el mensaje o un Archivo PDF.");
-					return View(model);
-				}
+        public ActionResult Editar(int id, MensajeViewModel model)
+        {
+            var mensaje = _mensajesInstitucionalesManager.Find(id);
 
-				var file = Request.Files[0];
+            if (mensaje == null)
+            {
+                TempData["FlashError"] = MensajesResource.ERROR_MensajesInstitucionales_IdIncorrecto;
+                return RedirectToAction("Index");
+            }
 
-				if (file != null && file.ContentType != "application/pdf")
-				{
-					ModelState.AddModelError(string.Empty, "El archivo debe ser de tipo PDF.");
-					return View(model);
-				}
+            try
+            {
+                if (!String.IsNullOrEmpty(Request["pdf-mensaje"]))
+                {
+                    if (Request.Files.Count == 0)
+                    {
+                        ModelState.AddModelError(string.Empty, MensajesResource.ERROR_MensajesInstitucionales_PdfInvalido);
+                        return View(model);
+                    }
 
+                    var pdfUrl = CargarPdf(Request.Files[0]);
 
-				if (file == null) return RedirectToAction("Index");
-				var fileName = Path.GetFileName(file.FileName);
+                    _mensajesInstitucionalesManager.ActualizarPdf(
+                        id,
+                        model.Titulo,
+                        pdfUrl,
+                        DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
+                        DateTime.ParseExact(model.FechaCaducidad, "d/M/yyyy", CultureInfo.InvariantCulture),
+                        MensajesInstitucionalesManager.GetEnviadoAByString(model.TipoProveedor));
+                }
+                else // Mensaje solo texto
+                {
+                    _mensajesInstitucionalesManager.ActualizarTexto(
+                        id,
+                        model.Titulo,
+                        model.Contenido,
+                        DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
+                        DateTime.ParseExact(model.FechaCaducidad, "d/M/yyyy", CultureInfo.InvariantCulture),
+                        MensajesInstitucionalesManager.GetEnviadoAByString(model.TipoProveedor));
+                }
 
-				if (fileName == null) return RedirectToAction("Index");
-				var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
-				file.SaveAs(path);
+                TempData["FlashSuccess"] = MensajesResource.INFO_MensajesInstitucionales_CreadoCorrectamente;
+                return RedirectToAction("Index");
+            }
+            catch (BusinessException businessEx)
+            {
+                ModelState.AddModelError(string.Empty, businessEx.Message);
 
-				model.Pdf = "~/Uploads/" + fileName;
-				try
-				{
-					_mensajesInstitucionalesManager.ActualizarPdf(
-						id,
-						model.Titulo,
-						model.Pdf,
-						DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
-						DateTime.ParseExact(model.FechaCaducidad, "d/M/yyyy", CultureInfo.InvariantCulture),
-						MensajesInstitucionalesManager.GetEnviadoAByString(model.TipoProveedor));
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
 
-					// TODO MENSAJES
-					TempData["FlashSuccess"] = "Mensaje creado con éxito.";
-					return RedirectToAction("Index");
-				}
-				catch (Exception)
-				{
-					//TODO ACTUALIZAR MENSAJE AL RESOURCE
-					TempData["FlashError"] = MensajesResource.ERROR_General;
-					return RedirectToAction("Index");
-				}
-			}
-			if (string.IsNullOrWhiteSpace(model.Contenido))
-			{
-				// TODO JUAN DELGADO CARLOS CAMPOS
-				ModelState.AddModelError(string.Empty, "Debe agregar un contenido textual para el mensaje o un Archivo PDF.");
-				return View(model);
-			}
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
 
-			try
-			{
-							
-				_mensajesInstitucionalesManager.ActualizarTexto(
-					id,
-					model.Titulo,
-					model.Contenido,
-					DateTime.ParseExact(model.FechaPublicacion, "d/M/yyyy", CultureInfo.InvariantCulture),
-					DateTime.ParseExact(model.FechaCaducidad, "d/M/yyyy", CultureInfo.InvariantCulture),
-					MensajesInstitucionalesManager.GetEnviadoAByString(model.TipoProveedor));
+                return View(model);
+            }
 
-				// TODO MENSAJES
-				TempData["FlashSuccess"] = "Mensaje creado con éxito.";
-				return RedirectToAction("Index");
-			}
-			catch (Exception)
-			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = MensajesResource.ERROR_General;
-				return RedirectToAction("Index");
-			}
-		}
+        }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
-		public ActionResult Eliminar(int id)
-		{
-			try
-			{
-				_mensajesInstitucionalesManager.Eliminar(id);
-			}
-			catch (Exception exception)
-			{
-				 //TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("Index");
-			}
-			return RedirectToAction("Index");
-		}
-	
-	}
+        public ActionResult Eliminar(int id)
+        {
+            try
+            {
+                _mensajesInstitucionalesManager.Eliminar(id);
+                TempData["FlashSuccess"] = MensajesResource.INFO_MensajesInstitucionales_EliminadoCorrectamente;
+                return RedirectToAction("Index");
+            }
+            catch (BusinessException businessEx)
+            {
+                TempData["FlashError"] = businessEx.Message;
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                TempData["FlashError"] = MensajesResource.ERROR_General;
+                return RedirectToAction("Index");
+            }
+
+        }
+
+    }
 }

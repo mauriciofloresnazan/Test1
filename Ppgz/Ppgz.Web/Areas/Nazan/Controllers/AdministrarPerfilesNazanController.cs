@@ -34,23 +34,18 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            ActionResult actionResult;
-
             try
             {
-                _perfilNazanManager
-                    .Crear(model.Nombre, model.RolesIds);
-
+                _perfilNazanManager.Crear(model.Nombre, model.RolesIds);
 
                 TempData["FlashSuccess"] = MensajesResource.INFO_PerfilNazan_CreadoCorrectamente;
                 return RedirectToAction("Index");
-
             }
             catch (BusinessException businessEx)
             {
                 ModelState.AddModelError(string.Empty, businessEx.Message);
 
-                actionResult = View(model);
+                return View(model);
             }
             catch (Exception e)
             {
@@ -62,10 +57,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
                 CommonManager.WriteAppLog(log, TipoMensaje.Error);
 
-                actionResult = View(model);
+                return View(model);
             }
-
-            return actionResult;
         }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]

@@ -30,17 +30,7 @@
 
                             <td class="text-center vert-align"><i>@mensaje.Titulo</i></td>
                             <td class="leido-flag text-center">
-                                @{ var leido = "NO"; }
-                                @foreach (var usuarioMensaje in (mensaje.usuariomensajes))
-                                {
-                                    if (usuarioMensaje.UsuarioId == User.Identity.GetUserId() && usuarioMensaje.MensajeId == mensaje.Id)
-                                    {
-                                        leido = "SI";
-                                    }
-                                }
-                                @MvcHtmlString.Create(leido)
-
-
+                                @mensaje.Visualizado
                             </td>
                             <td class="text-center">
 

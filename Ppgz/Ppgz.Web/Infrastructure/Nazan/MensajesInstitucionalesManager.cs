@@ -47,7 +47,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
                     return EnviadoA.Todos;
             }
 
-            throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionalesManager_GetEnviadoAByString);
+            throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_GetEnviadoAByString);
 
         }
 
@@ -62,7 +62,17 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .FirstOrDefault(m => m.Id == id);
         }
 
-        public List<mensaje> FindPublicadosByCuentaId(int cuentaId)
+        public List<vwmensaje> FindPublicadosByCuentaId(int cuentaId)
+        {
+            var cuentaManager = new CuentaManager();
+
+            var cuenta = cuentaManager.Find(cuentaId);
+
+            return _db.vwmensajes
+                .Where(m => m.FechaPublicacion < DateTime.Now && (m.EnviadoA == "TODOS" || m.EnviadoA == cuenta.Tipo))
+                .ToList();
+        }
+        /*public List<mensaje> FindPublicadosByCuentaId(int cuentaId)
         {
             var cuentaManager = new CuentaManager();
 
@@ -71,7 +81,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
             return _db.mensajes
                 .Where(m => m.FechaPublicacion < DateTime.Now && (m.EnviadoA == "TODOS" || m.EnviadoA == cuenta.Tipo))
                 .ToList();
-        }
+        }*/
 
         public List<cuentasmensaje> FindCuentaMensajes(int cuentaId)
         {
@@ -83,7 +93,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
             // validacion de las fechas
             if (fechaCaducidad <= fechaPublicacion)
             {
-                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionalesManager_Crear_FechaCadMayor);
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_Crear_FechaCadMayor);
             }
             if (fechaPublicacion < DateTime.Today)
             {
@@ -101,27 +111,37 @@ namespace Ppgz.Web.Infrastructure.Nazan
             }
         }
 
-        internal void ValidarPdf(string pdf)
+        internal void ValidarPdf(string titulo, string pdf,
+            DateTime fechaPublicacion, DateTime fechaCaducidad)
         {
+            ValidarFechas(fechaCaducidad, fechaPublicacion);
+
             if (string.IsNullOrWhiteSpace(pdf))
             {
-                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionalesManager_PdfIncorrecto);
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_PdfIncorrecto);
+            }
+            if (string.IsNullOrWhiteSpace(titulo))
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_TituloIncorrecto);
             }
             
         }
-        internal void ValidarContenido(string contenido)
+        internal void ValidarTexto(string titulo, string contenido,
+            DateTime fechaPublicacion, DateTime fechaCaducidad)
         {
+            ValidarFechas(fechaCaducidad, fechaPublicacion);
+
             if (string.IsNullOrWhiteSpace(contenido))
             {
-                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionalesManager_ContenidoIncorrecto);
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_ContenidoIncorrecto);
             }
-            //TODO ESTO DEBE SER CONFIGURADO
-            if (contenido.Length < 20)
+            if (string.IsNullOrWhiteSpace(titulo))
             {
-                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionalesManager_ContenidoIncorrecto);
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_TituloIncorrecto);
             }
 
         }
+        
 
         /// <summary>
         /// Crear mensaje de tipo texto en el contenido
@@ -135,8 +155,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
             DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
         {
             // Validaciones
-            ValidarFechas(fechaCaducidad, fechaPublicacion);
-            ValidarContenido(contenido);
+            ValidarTexto(titulo,contenido,fechaPublicacion,fechaCaducidad);
 
             var mensaje = new mensaje()
             {
@@ -164,9 +183,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
         public void CrearPdf(string titulo, string pdf,
             DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
         {
-            // Validaciones
-            ValidarFechas(fechaCaducidad, fechaPublicacion);
-            ValidarPdf(pdf);
+            ValidarPdf(titulo, pdf, fechaPublicacion, fechaCaducidad);
 
             var mensaje = new mensaje()
             {
@@ -185,9 +202,8 @@ namespace Ppgz.Web.Infrastructure.Nazan
             DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
         {
             // Validaciones
-            ValidarFechas(fechaCaducidad, fechaPublicacion);
             ValidarMensajeId(id);
-            ValidarContenido(contenido);
+            ValidarTexto(titulo, contenido, fechaPublicacion, fechaCaducidad);
 
             var mensaje = Find(id);
 
@@ -204,9 +220,8 @@ namespace Ppgz.Web.Infrastructure.Nazan
         public void ActualizarPdf(int id, string titulo, string pdf,
             DateTime fechaPublicacion, DateTime fechaCaducidad, EnviadoA enviadoA)
         {
-            ValidarFechas(fechaCaducidad, fechaPublicacion);
+            ValidarPdf(titulo, pdf, fechaPublicacion, fechaCaducidad);
             ValidarMensajeId(id);
-            ValidarPdf(pdf);
 
             var mensaje = Find(id);
 

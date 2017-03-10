@@ -129,26 +129,32 @@
   <data name="ERROR_General" xml:space="preserve">
     <value>ERROR_General</value>
   </data>
-  <data name="ERROR_MensajesInstitucionalesManager_ContenidoIncorrecto" xml:space="preserve">
+  <data name="ERROR_MensajesInstitucionales_ContenidoIncorrecto" xml:space="preserve">
     <value>El contenido del mensaje es incorrecto</value>
   </data>
-  <data name="ERROR_MensajesInstitucionalesManager_Crear_FechaCadMayor" xml:space="preserve">
+  <data name="ERROR_MensajesInstitucionales_Crear_FechaCadMayor" xml:space="preserve">
     <value>La fecha de caducidad debe ser superior a la fecha de publicación</value>
-  </data>
-  <data name="ERROR_MensajesInstitucionalesManager_Crear_Pdf" xml:space="preserve">
-    <value>Debe ser un archivo PDF válido</value>
-  </data>
-  <data name="ERROR_MensajesInstitucionalesManager_GetEnviadoAByString" xml:space="preserve">
-    <value>Enviado a Incorrecto</value>
-  </data>
-  <data name="ERROR_MensajesInstitucionalesManager_PdfIncorrecto" xml:space="preserve">
-    <value>El archivo de PDF es incorrecto</value>
   </data>
   <data name="ERROR_MensajesInstitucionales_FechaPublicacion" xml:space="preserve">
     <value>Fecha de publicación incorrecta, debe ser mayor o igual a la fecha actual</value>
   </data>
+  <data name="ERROR_MensajesInstitucionales_GetEnviadoAByString" xml:space="preserve">
+    <value>Enviado a Incorrecto</value>
+  </data>
+  <data name="ERROR_MensajesInstitucionales_IdIncorrecto" xml:space="preserve">
+    <value>Mensaje incorrecto</value>
+  </data>
   <data name="ERROR_MensajesInstitucionales_MensajeNoExiste" xml:space="preserve">
     <value>Mensaje no existe</value>
+  </data>
+  <data name="ERROR_MensajesInstitucionales_PdfIncorrecto" xml:space="preserve">
+    <value>El archivo de PDF es incorrecto</value>
+  </data>
+  <data name="ERROR_MensajesInstitucionales_PdfInvalido" xml:space="preserve">
+    <value>Debe ser un archivo PDF válido</value>
+  </data>
+  <data name="ERROR_MensajesInstitucionales_TituloIncorrecto" xml:space="preserve">
+    <value>Titulo incorrecto</value>
   </data>
   <data name="ERROR_PerfilNazan_AccesosRequeridos" xml:space="preserve">
     <value>Debe agregar por lo menos 1 acceso al perfil</value>
@@ -176,6 +182,15 @@
   </data>
   <data name="ERROR_UsuarioNazan_LoginExistente" xml:space="preserve">
     <value>Ya existe un usuario registrado con este login</value>
+  </data>
+  <data name="INFO_MensajesInstitucionales_ActualizadoCorrectamente" xml:space="preserve">
+    <value>Mensaje actualizado correctamente</value>
+  </data>
+  <data name="INFO_MensajesInstitucionales_CreadoCorrectamente" xml:space="preserve">
+    <value>Mensaje creado correctamente</value>
+  </data>
+  <data name="INFO_MensajesInstitucionales_EliminadoCorrectamente" xml:space="preserve">
+    <value>Mensaje eliminado correctamente</value>
   </data>
   <data name="INFO_PerfilNazan_ActualizadoCorrectamente" xml:space="preserve">
     <value>Perfil actualizado correctamente, los usuarios deben reiniciar la sesión</value>

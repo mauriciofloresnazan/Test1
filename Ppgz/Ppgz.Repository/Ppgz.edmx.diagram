@@ -27,6 +27,7 @@
         <AssociationConnector Association="ppgzModel.aspnetuserroles" ManuallyRouted="false" />
         <AssociationConnector Association="ppgzModel.cuentasusuarios" ManuallyRouted="false" />
         <AssociationConnector Association="ppgzModel.perfilesroles" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ppgzModel.vwmensaje" Width="1.5" PointX="0.75" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

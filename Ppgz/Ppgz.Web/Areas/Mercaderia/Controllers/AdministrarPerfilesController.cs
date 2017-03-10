@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web.Mvc;
 using Ppgz.Web.Areas.Mercaderia.Models;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Infrastructure.Proveedor;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
@@ -114,7 +113,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     model.RolesIds,
                     perfil.CuentaId);
 
-                TempData["FlashSuccess"] = "Perfil actualizado con éxito.";
+                TempData["FlashSuccess"] = CommonMensajesResource.INFO_PerfilProveedor_ActualizadoCorrectamente;
                 return RedirectToAction("Index");
             }
             catch (BusinessException businessEx)
@@ -149,7 +148,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             try
             {
                 _perfilProveedorManager.Eliminar(id);
-                TempData["FlashSuccess"] = "Perfil eliminado con éxito.";
+                TempData["FlashSuccess"] = CommonMensajesResource.INFO_PerfilProveedor_EliminadoCorrectamente;
                 return RedirectToAction("Index");
             }
             catch (BusinessException businessEx)

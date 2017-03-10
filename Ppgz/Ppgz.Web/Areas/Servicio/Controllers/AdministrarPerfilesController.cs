@@ -112,7 +112,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                     model.RolesIds,
                     perfil.CuentaId);
 
-                TempData["FlashSuccess"] = "Perfil actualizado con éxito.";
+                TempData["FlashSuccess"] = CommonMensajesResource.INFO_PerfilProveedor_ActualizadoCorrectamente;
                 return RedirectToAction("Index");
             }
             catch (BusinessException businessEx)
@@ -147,7 +147,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             try
             {
                 _perfilProveedorManager.Eliminar(id);
-                TempData["FlashSuccess"] = "Perfil eliminado con éxito.";
+                TempData["FlashSuccess"] = CommonMensajesResource.INFO_PerfilProveedor_EliminadoCorrectamente;
                 return RedirectToAction("Index");
             }
             catch (BusinessException businessEx)

@@ -97,11 +97,47 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to El contenido del mensaje es incorrecto.
+        /// </summary>
+        internal static string ERROR_MensajesInstitucionales_ContenidoIncorrecto {
+            get {
+                return ResourceManager.GetString("ERROR_MensajesInstitucionales_ContenidoIncorrecto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to La fecha de caducidad debe ser superior a la fecha de publicación.
+        /// </summary>
+        internal static string ERROR_MensajesInstitucionales_Crear_FechaCadMayor {
+            get {
+                return ResourceManager.GetString("ERROR_MensajesInstitucionales_Crear_FechaCadMayor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fecha de publicación incorrecta, debe ser mayor o igual a la fecha actual.
         /// </summary>
         internal static string ERROR_MensajesInstitucionales_FechaPublicacion {
             get {
                 return ResourceManager.GetString("ERROR_MensajesInstitucionales_FechaPublicacion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enviado a Incorrecto.
+        /// </summary>
+        internal static string ERROR_MensajesInstitucionales_GetEnviadoAByString {
+            get {
+                return ResourceManager.GetString("ERROR_MensajesInstitucionales_GetEnviadoAByString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mensaje incorrecto.
+        /// </summary>
+        internal static string ERROR_MensajesInstitucionales_IdIncorrecto {
+            get {
+                return ResourceManager.GetString("ERROR_MensajesInstitucionales_IdIncorrecto", resourceCulture);
             }
         }
         
@@ -115,47 +151,29 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to El contenido del mensaje es incorrecto.
+        ///   Looks up a localized string similar to El archivo de PDF es incorrecto.
         /// </summary>
-        internal static string ERROR_MensajesInstitucionalesManager_ContenidoIncorrecto {
+        internal static string ERROR_MensajesInstitucionales_PdfIncorrecto {
             get {
-                return ResourceManager.GetString("ERROR_MensajesInstitucionalesManager_ContenidoIncorrecto", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to La fecha de caducidad debe ser superior a la fecha de publicación.
-        /// </summary>
-        internal static string ERROR_MensajesInstitucionalesManager_Crear_FechaCadMayor {
-            get {
-                return ResourceManager.GetString("ERROR_MensajesInstitucionalesManager_Crear_FechaCadMayor", resourceCulture);
+                return ResourceManager.GetString("ERROR_MensajesInstitucionales_PdfIncorrecto", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Debe ser un archivo PDF válido.
         /// </summary>
-        internal static string ERROR_MensajesInstitucionalesManager_Crear_Pdf {
+        internal static string ERROR_MensajesInstitucionales_PdfInvalido {
             get {
-                return ResourceManager.GetString("ERROR_MensajesInstitucionalesManager_Crear_Pdf", resourceCulture);
+                return ResourceManager.GetString("ERROR_MensajesInstitucionales_PdfInvalido", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enviado a Incorrecto.
+        ///   Looks up a localized string similar to Titulo incorrecto.
         /// </summary>
-        internal static string ERROR_MensajesInstitucionalesManager_GetEnviadoAByString {
+        internal static string ERROR_MensajesInstitucionales_TituloIncorrecto {
             get {
-                return ResourceManager.GetString("ERROR_MensajesInstitucionalesManager_GetEnviadoAByString", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to El archivo de PDF es incorrecto.
-        /// </summary>
-        internal static string ERROR_MensajesInstitucionalesManager_PdfIncorrecto {
-            get {
-                return ResourceManager.GetString("ERROR_MensajesInstitucionalesManager_PdfIncorrecto", resourceCulture);
+                return ResourceManager.GetString("ERROR_MensajesInstitucionales_TituloIncorrecto", resourceCulture);
             }
         }
         
@@ -237,6 +255,33 @@ namespace Ppgz.Web.Areas.Nazan {
         internal static string ERROR_UsuarioNazan_LoginExistente {
             get {
                 return ResourceManager.GetString("ERROR_UsuarioNazan_LoginExistente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mensaje actualizado correctamente.
+        /// </summary>
+        internal static string INFO_MensajesInstitucionales_ActualizadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_MensajesInstitucionales_ActualizadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mensaje creado correctamente.
+        /// </summary>
+        internal static string INFO_MensajesInstitucionales_CreadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_MensajesInstitucionales_CreadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mensaje eliminado correctamente.
+        /// </summary>
+        internal static string INFO_MensajesInstitucionales_EliminadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_MensajesInstitucionales_EliminadoCorrectamente", resourceCulture);
             }
         }
         

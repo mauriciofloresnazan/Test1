@@ -23,7 +23,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
 			var mensajes = _mensajesInstitucionalesManager.FindPublicadosByCuentaId(cuenta.Id);
 
-            var mensajesUsuario = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
+			var mensajesUsuario = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
 
 			ViewBag.mensajes = mensajes;
 
@@ -35,10 +35,10 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 		[Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-MENSAJESINSTITUCIONALES")]
 		[HttpPost]
 		public ActionResult Visualizar(int id)
-        {
-            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+		{
+			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-            var mensajes = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
+			var mensajes = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
 
 			if (mensajes.Any(i => i.MensajeId == id))
 			{

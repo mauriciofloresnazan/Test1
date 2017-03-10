@@ -35,5 +35,6 @@ namespace Ppgz.Repository
         public virtual DbSet<fakedataproveedor> fakedataproveedors { get; set; }
         public virtual DbSet<mensaje> mensajes { get; set; }
         public virtual DbSet<perfile> perfiles { get; set; }
+        public virtual DbSet<vwmensaje> vwmensajes { get; set; }
     }
 }
