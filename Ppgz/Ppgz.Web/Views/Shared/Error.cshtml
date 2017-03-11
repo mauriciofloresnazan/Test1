@@ -1,0 +1,20 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+	ViewBag.Title = ViewBag.Title ?? "Página no disponible";
+}
+<section class="grid">
+	<section class="row cells12">
+		<article class="cell colspan12">
+			<h2>@ViewBag.Title</h2>
+			<hr />
+		</article>
+	</section>
+	<section class="row">
+		<p class="bg-grayLighter padding20">
+			@ViewData["Content"]
+		</p>
+		<section id="btnErrors">
+			<a class="button warning" href="@Url.Action("Index","Home")">Ir a Inicio</a>
+		</section>
+	</section>
+</section>

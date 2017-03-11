@@ -1093,6 +1093,7 @@
     <Content Include="Uploads\960_sketch_16_col.pdf" />
     <Content Include="Views\Politicas\Index.cshtml" />
     <Content Include="Views\Error\Error.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
     <None Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
