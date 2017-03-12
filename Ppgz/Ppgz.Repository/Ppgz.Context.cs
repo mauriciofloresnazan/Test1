@@ -38,7 +38,6 @@ namespace Ppgz.Repository
         public virtual DbSet<fakedataproveedor> fakedataproveedors { get; set; }
         public virtual DbSet<mensaje> mensajes { get; set; }
         public virtual DbSet<perfile> perfiles { get; set; }
-        public virtual DbSet<perfilesrole> perfilesroles { get; set; }
         public virtual DbSet<proveedore> proveedores { get; set; }
         public virtual DbSet<tipocuenta> tipocuentas { get; set; }
         public virtual DbSet<tipousuario> tipousuarios { get; set; }

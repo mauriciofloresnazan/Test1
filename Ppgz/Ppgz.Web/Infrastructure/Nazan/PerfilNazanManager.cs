@@ -39,7 +39,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 throw new BusinessException(MensajesResource.ERROR_PerfilNazan_AccesosRequeridos);
             }
             var aspnetroles =
-                _db.aspnetroles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
+                _db.AspNetRoles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
 
             if (!aspnetroles.Any())
             {
@@ -60,12 +60,12 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             ValidarPermisos(rolesIds);
 
-            var aspnetroles = _db.aspnetroles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
+            var aspnetroles = _db.AspNetRoles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
             perfil = new perfile { Nombre = nombre, Tipo = Tipo };
 
             foreach (var role in aspnetroles)
             {
-                perfil.aspnetroles.Add(role);
+                perfil.AspNetRoles.Add(role);
             }
 
             _db.perfiles.Add(perfil);
@@ -96,15 +96,15 @@ namespace Ppgz.Web.Infrastructure.Nazan
             ValidarPermisos(rolesIds);
 
             var aspnetroles =
-                _db.aspnetroles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
+                _db.AspNetRoles.Where(r => r.Tipo == Tipo && rolesIds.Contains(r.Name));
 
             perfil = Find(id);
             perfil.Nombre = nombre;
-            perfil.aspnetroles.Clear();
+            perfil.AspNetRoles.Clear();
 
             foreach (var role in aspnetroles)
             {
-                perfil.aspnetroles.Add(role);
+                perfil.AspNetRoles.Add(role);
             }
 
             _db.Entry(perfil).State = EntityState.Modified;
@@ -130,17 +130,17 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 throw new BusinessException(MensajesResource.ERROR_PerfilNazan_EditarEliminarMaestro);
             }
 
-            if (perfil.aspnetusers.Any())
+            if (perfil.AspNetUsers.Any())
             {
                 throw new BusinessException(MensajesResource.ERROR_PerfilNazan_EliminarConUsuarios);
             }
-            perfil.aspnetroles.Clear();
+            perfil.AspNetRoles.Clear();
             _db.perfiles.Remove(perfil);
             _db.SaveChanges();
         }
-        public List<aspnetrole> GetRoles()
+        public List<AspNetRole> GetRoles()
         {
-            return _db.aspnetroles
+            return _db.AspNetRoles
                 .Where(r => r.Tipo == Tipo).ToList();
 
         }
@@ -154,10 +154,10 @@ namespace Ppgz.Web.Infrastructure.Nazan
             if (perfil == null)
             {
                 // TODO PASAR A UN MANEJADOR DE ROLES
-                if (_db.aspnetroles
+                if (_db.AspNetRoles
                     .FirstOrDefault(ro => ro.Name == "MAESTRO-NAZAN") == null)
                 {
-                    var role = new aspnetrole()
+                    var role = new AspNetRole()
                     {
                         Id = "MAESTRO-NAZAN",
                         Name = "MAESTRO-NAZAN",
@@ -165,7 +165,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
                         Tipo = "NAZAN"
                     };
 
-                    _db.aspnetroles.Add(role);
+                    _db.AspNetRoles.Add(role);
                     _db.SaveChanges();
 
                 }

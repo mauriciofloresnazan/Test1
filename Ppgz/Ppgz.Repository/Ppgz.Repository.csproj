@@ -94,9 +94,6 @@
     <Compile Include="perfile.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
-    <Compile Include="perfilesrole.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
     <Compile Include="Ppgz.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

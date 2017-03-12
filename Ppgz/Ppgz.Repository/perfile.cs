@@ -18,7 +18,7 @@ namespace Ppgz.Repository
         {
             this.AspNetUsers = new HashSet<AspNetUser>();
             this.AspNetUsers1 = new HashSet<AspNetUser>();
-            this.perfilesroles = new HashSet<perfilesrole>();
+            this.AspNetRoles = new HashSet<AspNetRole>();
         }
     
         public int Id { get; set; }
@@ -28,6 +28,7 @@ namespace Ppgz.Repository
     
         public virtual ICollection<AspNetUser> AspNetUsers { get; set; }
         public virtual ICollection<AspNetUser> AspNetUsers1 { get; set; }
-        public virtual ICollection<perfilesrole> perfilesroles { get; set; }
+        public virtual cuenta cuenta { get; set; }
+        public virtual ICollection<AspNetRole> AspNetRoles { get; set; }
     }
 }

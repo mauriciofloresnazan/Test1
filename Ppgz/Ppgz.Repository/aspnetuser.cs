@@ -25,6 +25,7 @@ namespace Ppgz.Repository
             this.mensajes = new HashSet<mensaje>();
             this.proveedores = new HashSet<proveedore>();
             this.cuentas1 = new HashSet<cuenta>();
+            this.cuentas2 = new HashSet<cuenta>();
         }
     
         public string Id { get; set; }
@@ -62,5 +63,6 @@ namespace Ppgz.Repository
         public virtual perfile perfile1 { get; set; }
         public virtual ICollection<proveedore> proveedores { get; set; }
         public virtual ICollection<cuenta> cuentas1 { get; set; }
+        public virtual ICollection<cuenta> cuentas2 { get; set; }
     }
 }

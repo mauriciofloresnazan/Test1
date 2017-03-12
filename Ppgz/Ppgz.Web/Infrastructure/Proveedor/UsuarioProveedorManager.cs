@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Ppgz.Repository;
-using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web.Infrastructure.Proveedor
@@ -29,22 +28,22 @@ namespace Ppgz.Web.Infrastructure.Proveedor
             }
         }
 
-        public List<aspnetuser> FindAll()
+        public List<AspNetUser> FindAll()
         {
-            return _db.aspnetusers.Where(
+            return _db.AspNetUsers.Where(
                 u => Tipos.Contains(u.Tipo)).ToList();
         }
 
-        public aspnetuser Find(string id)
+        public AspNetUser Find(string id)
         {
-            return _db.aspnetusers
+            return _db.AspNetUsers
                 .FirstOrDefault(u => u.Id == id && Tipos.Contains(u.Tipo));
         }
 
-        public List<aspnetuser> FindByCuentaId(int id)
+        public List<AspNetUser> FindByCuentaId(int id)
         {
             // TODO PASAR A UN ARCHIVO DE RECURSOS O STORE PROCEDURE
-            return _db.Database.SqlQuery<aspnetuser>(@"
+            return _db.Database.SqlQuery<AspNetUser>(@"
                 SELECT  * 
                 FROM    aspnetusers
                 WHERE   id IN (SELECT UsuarioId 
@@ -52,9 +51,9 @@ namespace Ppgz.Web.Infrastructure.Proveedor
                                WHERE CuentaId = {0})", id).ToList();
         }
 
-        public aspnetuser FindMaestroByLogin(string login)
+        public AspNetUser FindMaestroByLogin(string login)
         {
-            return _db.aspnetusers
+            return _db.AspNetUsers
                 .FirstOrDefault(u => u.UserName == login && u.Tipo == "PROVEEDOR-MAESTRO");
         }
         public void Crear(string userName, string nombre, string apellido, string email,
@@ -106,7 +105,7 @@ namespace Ppgz.Web.Infrastructure.Proveedor
                 throw new BusinessException(CommonMensajesResource.ERROR_General);
             }
 
-            foreach (var role in perfil.aspnetroles)
+            foreach (var role in perfil.AspNetRoles)
             {
                 _applicationUserManager.AddToRole(usuario.Id, role.Id);
             }
@@ -120,7 +119,7 @@ namespace Ppgz.Web.Infrastructure.Proveedor
 
         public void Eliminar(string id)
         {
-            var usuario = _db.aspnetusers
+            var usuario = _db.AspNetUsers
                 .Single(u => u.Id == id);
 
             if (usuario == null)
@@ -142,7 +141,7 @@ namespace Ppgz.Web.Infrastructure.Proveedor
             cuentaManager.DesAsociarUsuarioEnCuenta(usuario.Id);
 
 
-            _db.aspnetusers.Remove(usuario);
+            _db.AspNetUsers.Remove(usuario);
             _db.SaveChanges();
         }
 
@@ -178,13 +177,13 @@ namespace Ppgz.Web.Infrastructure.Proveedor
                 usuario.PasswordHash = commonManager.HashPassword(password);
             }
             usuario.PerfilId = perfilId;
-            usuario.aspnetroles.Clear();
+            usuario.AspNetUserRoles.Clear();
 
             _db.Entry(usuario).State = EntityState.Modified;
             _db.SaveChanges();
 
      
-            foreach (var role in perfil.aspnetroles)
+            foreach (var role in perfil.AspNetRoles)
             {
                 _applicationUserManager.AddToRole(usuario.Id, role.Id);
             }

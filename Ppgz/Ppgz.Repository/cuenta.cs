@@ -17,6 +17,7 @@ namespace Ppgz.Repository
         public cuenta()
         {
             this.cuentaproveedores = new HashSet<cuentaproveedore>();
+            this.perfiles = new HashSet<perfile>();
             this.cuentasmensajes = new HashSet<cuentasmensaje>();
             this.proveedores = new HashSet<proveedore>();
             this.AspNetUsers = new HashSet<AspNetUser>();
@@ -27,14 +28,17 @@ namespace Ppgz.Repository
         public string NombreProveedor { get; set; }
         public System.DateTime FechaRegistro { get; set; }
         public string Tipo { get; set; }
-        public sbyte Activo { get; set; }
+        public Nullable<bool> Activo { get; set; }
         public sbyte Borrado { get; set; }
         public System.DateTime FechaTx { get; set; }
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }
+        public string ResponsableUsuarioId { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
+        public virtual AspNetUser AspNetUser1 { get; set; }
         public virtual ICollection<cuentaproveedore> cuentaproveedores { get; set; }
+        public virtual ICollection<perfile> perfiles { get; set; }
         public virtual ICollection<cuentasmensaje> cuentasmensajes { get; set; }
         public virtual ICollection<proveedore> proveedores { get; set; }
         public virtual ICollection<AspNetUser> AspNetUsers { get; set; }

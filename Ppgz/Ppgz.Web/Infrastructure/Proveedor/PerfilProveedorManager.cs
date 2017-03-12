@@ -44,7 +44,7 @@ namespace Ppgz.Web.Infrastructure.Proveedor
                 throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_AccesosRequeridos);
             }
             var aspnetroles =
-                _db.aspnetroles.Where(r => r.Tipo == tipo && rolesIds.Contains(r.Name));
+                _db.AspNetRoles.Where(r => r.Tipo == tipo && rolesIds.Contains(r.Name));
 
             if (!aspnetroles.Any())
             {
@@ -66,7 +66,7 @@ namespace Ppgz.Web.Infrastructure.Proveedor
                 throw new Exception(CommonMensajesResource.ERROR_PerfilProveedor_AccesosRequeridos);
             }
             var aspnetroles =
-                _db.aspnetroles.Where(r => rolesIds.Contains(r.Name));
+                _db.AspNetRoles.Where(r => rolesIds.Contains(r.Name));
 
             if (!aspnetroles.Any())
             {
@@ -77,7 +77,7 @@ namespace Ppgz.Web.Infrastructure.Proveedor
 
             foreach (var role in aspnetroles)
             {
-                perfil.aspnetroles.Add(role);
+                perfil.AspNetRoles.Add(role);
             }
 
             _db.perfiles.Add(perfil);
@@ -98,12 +98,12 @@ namespace Ppgz.Web.Infrastructure.Proveedor
                 throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_EditarEliminarMaestro);
             }
 
-            if (perfil.aspnetusers.Any())
+            if (perfil.AspNetUsers.Any())
             {
                 throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_EliminarConUsuarios);
             }
 
-            perfil.aspnetroles.Clear();
+            perfil.AspNetRoles.Clear();
             _db.perfiles.Remove(perfil);
             _db.SaveChanges();
         }
@@ -134,14 +134,14 @@ namespace Ppgz.Web.Infrastructure.Proveedor
             ValidarPermisos(rolesIds, CuentaManager.GetTipoByString(perfil.cuenta.Tipo));
 
             var aspnetroles =
-                _db.aspnetroles.Where(r => r.Tipo == perfil.cuenta.Tipo && rolesIds.Contains(r.Name));
+                _db.AspNetRoles.Where(r => r.Tipo == perfil.cuenta.Tipo && rolesIds.Contains(r.Name));
             
 
             perfil.Nombre = nombre;
-            perfil.aspnetroles.Clear();
+            perfil.AspNetRoles.Clear();
             foreach (var role in aspnetroles)
             {
-                perfil.aspnetroles.Add(role);
+                perfil.AspNetRoles.Add(role);
             }
 
             _db.Entry(perfil).State = EntityState.Modified;
@@ -153,9 +153,9 @@ namespace Ppgz.Web.Infrastructure.Proveedor
         }
 
 
-        public List<aspnetrole> GetRoles(string tipo)
+        public List<AspNetRole> GetRoles(string tipo)
         {
-            return _db.aspnetroles
+            return _db.AspNetRoles
                 .Where(r => r.Tipo == tipo).ToList();
         }
 
@@ -178,10 +178,10 @@ namespace Ppgz.Web.Infrastructure.Proveedor
             if (perfil == null)
             {
                 // TODO PASAR A UN MANEJADOR DE ROLES
-                if (_db.aspnetroles
+                if (_db.AspNetRoles
                     .FirstOrDefault(ro => ro.Name == perfilNombre) == null)
                 {
-                    var role = new aspnetrole()
+                    var role = new AspNetRole()
                     {
                         Id = perfilNombre,
                         Name = perfilNombre,
@@ -189,7 +189,7 @@ namespace Ppgz.Web.Infrastructure.Proveedor
                         Tipo =  CuentaManager.GetTipoString(tipo)
                     };
 
-                    _db.aspnetroles.Add(role);
+                    _db.AspNetRoles.Add(role);
                     _db.SaveChanges();
                 }
 

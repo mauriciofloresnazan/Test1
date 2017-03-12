@@ -148,10 +148,10 @@ namespace Ppgz.Web.Infrastructure
 
 		}
 
-		public aspnetuser GetUsuarioAutenticado()
+        public AspNetUser GetUsuarioAutenticado()
 		{
 			var userName = HttpContext.Current.User.Identity.GetUserName();
-			var usuarioAutenticado = _db.aspnetusers.Single(u => u.UserName == userName);
+            var usuarioAutenticado = _db.AspNetUsers.Single(u => u.UserName == userName);
 			return usuarioAutenticado;
 		}
 		public string HashPassword(string password)

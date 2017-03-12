@@ -92,7 +92,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		{
 			var entities = new Entities();
 			var cuenta = entities.cuentas.Find(id);
-			var usuario = entities.aspnetusers.Find(usuarioId);
+			var usuario = entities.AspNetUsers.Find(usuarioId);
 			
 			var perfilProveedorManager = new PerfilProveedorManager();
 			var perfilMaestro = perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.GetTipoByString(cuenta.Tipo));

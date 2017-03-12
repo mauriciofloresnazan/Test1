@@ -23,8 +23,8 @@ namespace Ppgz.Repository
         public string Titulo { get; set; }
         public string Contenido { get; set; }
         public string Archivo { get; set; }
-        public Nullable<System.DateTime> FechaPublicacion { get; set; }
-        public Nullable<System.DateTime> FechaCaducidad { get; set; }
+        public System.DateTime FechaPublicacion { get; set; }
+        public System.DateTime FechaCaducidad { get; set; }
         public string EnviadoA { get; set; }
         public sbyte Borrado { get; set; }
         public System.DateTime FechaTx { get; set; }

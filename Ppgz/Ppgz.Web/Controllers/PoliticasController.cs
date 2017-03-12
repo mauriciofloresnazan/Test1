@@ -32,7 +32,7 @@ namespace Ppgz.Web.Controllers
 
             var usuarioId = User.Identity.GetUserId();
 
-            var usuario = entities.aspnetusers
+            var usuario = entities.AspNetUsers
                 .Single(u => u.Id == usuarioId);
 
             if(usuario.TerminosCondicionesFecha == null)

@@ -116,10 +116,10 @@ namespace Ppgz.Web
 
             foreach (var role in rolesNazan)
             {
-                if (db.aspnetroles
+                if (db.AspNetRoles
                     .FirstOrDefault(r => r.Name == role.Key) != null) continue;
 
-                var aspnetrole = new aspnetrole()
+                var aspnetrole = new AspNetRole()
                 {
                     Id = role.Key,
                     Name = role.Key,
@@ -127,7 +127,7 @@ namespace Ppgz.Web
                     Tipo = "NAZAN"
                 };
 
-                db.aspnetroles.Add(aspnetrole);
+                db.AspNetRoles.Add(aspnetrole);
                 db.SaveChanges();
             }
             //AFI
@@ -135,10 +135,10 @@ namespace Ppgz.Web
 
             foreach (var role in rolesMercaderia)
             {
-                if (db.aspnetroles
+                if (db.AspNetRoles
                     .FirstOrDefault(r => r.Name == role.Key) != null) continue;
 
-                var aspnetrole = new aspnetrole()
+                var aspnetrole = new AspNetRole()
                 {
                     Id = role.Key,
                     Name = role.Key,
@@ -146,7 +146,7 @@ namespace Ppgz.Web
                     Tipo = "MERCADERIA"
                 };
 
-                db.aspnetroles.Add(aspnetrole);
+                db.AspNetRoles.Add(aspnetrole);
                 db.SaveChanges();
             }
 
@@ -155,10 +155,10 @@ namespace Ppgz.Web
 
             foreach (var role in rolesServicio)
             {
-                if (db.aspnetroles
+                if (db.AspNetRoles
                     .FirstOrDefault(r => r.Name == role.Key) != null) continue;
 
-                var aspnetrole = new aspnetrole()
+                var aspnetrole = new AspNetRole()
                 {
                     Id = role.Key,
                     Name = role.Key,
@@ -166,7 +166,7 @@ namespace Ppgz.Web
                     Tipo = "SERVICIO"
                 };
 
-                db.aspnetroles.Add(aspnetrole);
+                db.AspNetRoles.Add(aspnetrole);
                 db.SaveChanges();
             }
 

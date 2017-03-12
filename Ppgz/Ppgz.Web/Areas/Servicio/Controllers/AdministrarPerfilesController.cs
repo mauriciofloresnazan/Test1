@@ -82,7 +82,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             var model = new PefilProveedorViewModel
             {
                 Nombre = perfil.Nombre,
-                RolesIds = perfil.aspnetroles.Select(p => p.Id).ToArray()
+                RolesIds = perfil.AspNetRoles.Select(p => p.Id).ToArray()
 
             };
 

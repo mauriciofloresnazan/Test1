@@ -30,15 +30,15 @@ namespace Ppgz.Web.Infrastructure.Nazan
             }
         }
 
-        public List<aspnetuser> FindAll()
+        public List<AspNetUser> FindAll()
         {
-            return _db.aspnetusers.Where(
+            return _db.AspNetUsers.Where(
                 u => Tipos.Contains(u.Tipo)).ToList();
         }
 
-        public aspnetuser Find(string id)
+        public AspNetUser Find(string id)
         {
-            return _db.aspnetusers
+            return _db.AspNetUsers
                 .FirstOrDefault(u => u.Id == id && Tipos.Contains(u.Tipo));
         }
 
@@ -75,7 +75,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 throw new BusinessException(CommonMensajesResource.RegistroGeneral);
             }
 
-            foreach (var role in perfil.aspnetroles)
+            foreach (var role in perfil.AspNetRoles)
             {
                 _applicationUserManager.AddToRole(usuario.Id, role.Id);
             }
@@ -102,7 +102,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 throw new BusinessException(MensajesResource.ERROR_PerfilNazan_EliminarSuperUsuario);
             }
 
-            _db.aspnetusers.Remove(usuario);
+            _db.AspNetUsers.Remove(usuario);
             _db.SaveChanges();
         }
 
@@ -137,12 +137,12 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 usuario.PasswordHash = commonManager.HashPassword(password);
             }
             usuario.PerfilId = perfilId;
-            usuario.aspnetroles.Clear();
+            usuario.AspNetUserRoles.Clear();
 
             _db.Entry(usuario).State = EntityState.Modified;
             _db.SaveChanges();
      
-            foreach (var role in perfil.aspnetroles)
+            foreach (var role in perfil.AspNetRoles)
             {
                 _applicationUserManager.AddToRole(usuario.Id, role.Id);
             }

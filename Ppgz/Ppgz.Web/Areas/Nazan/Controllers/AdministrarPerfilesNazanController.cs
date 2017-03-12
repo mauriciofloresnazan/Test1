@@ -76,7 +76,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var model = new PefilNazanViewModel
             {
                 Nombre = perfil.Nombre,
-                RolesIds = perfil.aspnetroles.Select(p=> p.Id).ToArray()
+                RolesIds = perfil.AspNetRoles.Select(p=> p.Id).ToArray()
 
             };
 
