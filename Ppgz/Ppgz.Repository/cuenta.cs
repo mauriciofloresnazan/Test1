@@ -26,11 +26,11 @@ namespace Ppgz.Repository
         public int Id { get; set; }
         public string CodigoProveedor { get; set; }
         public string NombreProveedor { get; set; }
-        public System.DateTime FechaRegistro { get; set; }
+        public Nullable<System.DateTime> FechaRegistro { get; set; }
         public string Tipo { get; set; }
         public Nullable<bool> Activo { get; set; }
         public sbyte Borrado { get; set; }
-        public System.DateTime FechaTx { get; set; }
+        public Nullable<System.DateTime> FechaTx { get; set; }
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }
         public string ResponsableUsuarioId { get; set; }

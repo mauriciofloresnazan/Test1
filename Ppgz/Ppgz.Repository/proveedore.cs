@@ -30,6 +30,7 @@ namespace Ppgz.Repository
         public string direccion2 { get; set; }
         public string direccion3 { get; set; }
         public string email { get; set; }
+        public string Rfc { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual cuenta cuenta { get; set; }

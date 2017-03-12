@@ -39,7 +39,7 @@
             <PropertyRef Name="RoleId" />
           </Key>
           <Property Name="UserId" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="RoleId" Type="int" Nullable="false" />
+          <Property Name="RoleId" Type="varchar" MaxLength="128" Nullable="false" />
         </EntityType>
         <EntityType Name="AspNetUsers">
           <Key>
@@ -66,7 +66,7 @@
           <Property Name="TerminosCondicionesFecha" Type="datetime" Precision="0" />
           <Property Name="Borrado" Type="tinyint" Nullable="false" />
           <Property Name="FechaTx" Type="timestamp" Precision="0" Nullable="false" />
-          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
           <Property Name="OperacionTx" Type="enum" Nullable="false" />
         </EntityType>
         <EntityType Name="citas">
@@ -117,15 +117,15 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CodigoProveedor" Type="varchar" MaxLength="20" />
+          <Property Name="CodigoProveedor" Type="varchar" MaxLength="50" />
           <Property Name="NombreProveedor" Type="varchar" MaxLength="50" />
-          <Property Name="FechaRegistro" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="FechaRegistro" Type="datetime" Precision="0" />
           <Property Name="Tipo" Type="enum" />
           <Property Name="Activo" Type="bool" />
           <Property Name="Borrado" Type="tinyint" Nullable="false" />
-          <Property Name="FechaTx" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="FechaTx" Type="timestamp" Precision="0" />
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
-          <Property Name="OperacionTx" Type="enum" Nullable="false" />
+          <Property Name="OperacionTx" Type="enum" />
           <Property Name="ResponsableUsuarioId" Type="varchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="cuentasmensajes">
@@ -145,6 +145,21 @@
           </Key>
           <Property Name="UsuarioId" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="CuentaId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="cuentasxpagar">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NumeroCompensacion" Type="varchar" MaxLength="100" />
+          <Property Name="Referencia" Type="varchar" MaxLength="100" />
+          <Property Name="FechaDePago" Type="date" />
+          <Property Name="FechaBase" Type="date" />
+          <Property Name="Importe" Type="varchar" MaxLength="100" />
+          <Property Name="Ml" Type="varchar" MaxLength="10" />
+          <Property Name="TipoMovimiento" Type="varchar" MaxLength="5" />
+          <Property Name="ProveedoresId" Type="int" Nullable="false" />
+          <Property Name="FacturaId" Type="int" />
         </EntityType>
         <EntityType Name="fakedataproveedor">
           <Key>
@@ -195,6 +210,32 @@
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="OperacionTx" Type="enum" Nullable="false" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'def.impuls_portal.pagos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="pagos">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="RFC" />
+            <PropertyRef Name="RazonSocial" />
+            <PropertyRef Name="NumeroCompensacion" />
+            <PropertyRef Name="Referencia" />
+            <PropertyRef Name="FechaDePago" />
+            <PropertyRef Name="FechaBase" />
+            <PropertyRef Name="Importe" />
+            <PropertyRef Name="ML" />
+            <PropertyRef Name="TipoMovimiento" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="RFC" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="RazonSocial" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="NumeroCompensacion" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Referencia" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="FechaDePago" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="FechaBase" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Importe" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="ML" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="TipoMovimiento" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
         <EntityType Name="perfiles">
           <Key>
             <PropertyRef Name="Id" />
@@ -232,6 +273,7 @@
           <Property Name="direccion2" Type="varchar" MaxLength="300" />
           <Property Name="direccion3" Type="varchar" MaxLength="300" />
           <Property Name="email" Type="varchar" MaxLength="100" />
+          <Property Name="Rfc" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="tipocuentas">
           <Key>
@@ -295,6 +337,18 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
             </Principal>
             <Dependent Role="AspNetUserLogins">
               <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_aspnetuserroles_role">
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1" />
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetRoles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="RoleId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -514,6 +568,23 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="add_user" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="impuls_portal">
+          <Parameter Name="Email" Type="varchar" Mode="In" />
+          <Parameter Name="PasswordHash" Type="longtext" Mode="In" />
+          <Parameter Name="PhoneNumber" Type="longtext" Mode="In" />
+          <Parameter Name="pUserName" Type="varchar" Mode="In" />
+          <Parameter Name="Tipo" Type="varchar" Mode="In" />
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="Apellido" Type="varchar" Mode="In" />
+          <Parameter Name="Cargo" Type="varchar" Mode="In" />
+          <Parameter Name="PerfilId" Type="int" Mode="In" />
+          <Parameter Name="TerminosCondicionesFecha" Type="datetime" Mode="In" />
+          <Parameter Name="UsuarioIdTx" Type="int" Mode="In" />
+          <Parameter Name="CuentaId" Type="int" Mode="In" />
+          <Parameter Name="userId" Type="varchar" Mode="Out" />
+          <Parameter Name="messageError" Type="varchar" Mode="Out" />
+        </Function>
+        <Function Name="populate_pagos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="impuls_portal" />
         <EntityContainer Name="impuls_portalModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="impuls_portal" store:Type="Tables" />
@@ -526,6 +597,7 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           <EntitySet Name="cuentas" EntityType="Self.cuentas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensajes" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="cuentasusuarios" EntityType="Self.cuentasusuarios" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="cuentasxpagar" EntityType="Self.cuentasxpagar" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="fakedataproveedor" EntityType="Self.fakedataproveedor" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="mensajes" EntityType="Self.mensajes" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="perfiles" EntityType="Self.perfiles" Schema="impuls_portal" store:Type="Tables" />
@@ -533,6 +605,20 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="tipocuentas" EntityType="Self.tipocuentas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="tipousuario" EntityType="Self.tipousuario" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="pagos" EntityType="Self.pagos" store:Type="Tables" store:Schema="impuls_portal">
+            <DefiningQuery>SELECT
+`pagos`.`id`, 
+`pagos`.`RFC`, 
+`pagos`.`RazonSocial`, 
+`pagos`.`NumeroCompensacion`, 
+`pagos`.`Referencia`, 
+`pagos`.`FechaDePago`, 
+`pagos`.`FechaBase`, 
+`pagos`.`Importe`, 
+`pagos`.`ML`, 
+`pagos`.`TipoMovimiento`
+FROM `pagos` AS `pagos`</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="vwmensajes" EntityType="Self.vwmensajes" store:Type="Views" store:Schema="impuls_portal">
             <DefiningQuery>SELECT
 `vwmensajes`.`Id`, 
@@ -552,6 +638,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="ApplicationUser_Logins" Association="Self.ApplicationUser_Logins">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
+          </AssociationSet>
+          <AssociationSet Name="fk_aspnetuserroles_role" Association="Self.fk_aspnetuserroles_role">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
           </AssociationSet>
           <AssociationSet Name="fk_aspnetuserroles_usuario" Association="Self.fk_aspnetuserroles_usuario">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -639,6 +729,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.AspNetUserRoles" FromRole="AspNetRoles" ToRole="AspNetUsers" />
           <NavigationProperty Name="perfiles" Relationship="Self.perfilesroles" FromRole="AspNetRoles" ToRole="perfiles" />
         </EntityType>
         <EntityType Name="AspNetUserClaim">
@@ -661,15 +752,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.ApplicationUser_Logins" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
-        </EntityType>
-        <EntityType Name="AspNetUserRole">
-          <Key>
-            <PropertyRef Name="UserId" />
-            <PropertyRef Name="RoleId" />
-          </Key>
-          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="RoleId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="AspNetUser" Relationship="Self.fk_aspnetuserroles_usuario" FromRole="AspNetUserRoles" ToRole="AspNetUsers" />
         </EntityType>
         <EntityType Name="AspNetUser">
           <Key>
@@ -696,11 +778,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="TerminosCondicionesFecha" Type="DateTime" />
           <Property Name="Borrado" Type="SByte" Nullable="false" />
           <Property Name="FechaTx" Type="DateTime" Nullable="false" />
-          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="AspNetUserClaims" Relationship="Self.ApplicationUser_Claims" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.ApplicationUser_Logins" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
-          <NavigationProperty Name="AspNetUserRoles" Relationship="Self.fk_aspnetuserroles_usuario" FromRole="AspNetUsers" ToRole="AspNetUserRoles" />
           <NavigationProperty Name="perfile" Relationship="Self.fk_aspnetusers_perfil" FromRole="AspNetUsers" ToRole="perfiles" />
           <NavigationProperty Name="citas" Relationship="Self.fk_citas_usuario" FromRole="AspNetUsers" ToRole="citas" />
           <NavigationProperty Name="cuentas" Relationship="Self.fk_cuentas_usuario" FromRole="AspNetUsers" ToRole="cuentas" />
@@ -709,6 +790,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <NavigationProperty Name="perfile1" Relationship="Self.fk_perfil2" FromRole="AspNetUsers" ToRole="perfiles" />
           <NavigationProperty Name="proveedores" Relationship="Self.fk_proveedor_usuario" FromRole="AspNetUsers" ToRole="proveedores" />
           <NavigationProperty Name="cuentas1" Relationship="Self.fk_responsable" FromRole="AspNetUsers" ToRole="cuentas" />
+          <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
           <NavigationProperty Name="cuentas2" Relationship="Self.cuentasusuarios" FromRole="AspNetUsers" ToRole="cuentas" />
         </EntityType>
         <EntityType Name="cita">
@@ -761,15 +843,15 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CodigoProveedor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoProveedor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="NombreProveedor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FechaRegistro" Type="DateTime" Nullable="false" />
+          <Property Name="FechaRegistro" Type="DateTime" />
           <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
           <Property Name="Activo" Type="Boolean" />
           <Property Name="Borrado" Type="SByte" Nullable="false" />
-          <Property Name="FechaTx" Type="DateTime" Nullable="false" />
+          <Property Name="FechaTx" Type="DateTime" />
           <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
-          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
           <Property Name="ResponsableUsuarioId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_cuentas_usuario" FromRole="cuentas" ToRole="AspNetUsers" />
           <NavigationProperty Name="AspNetUser1" Relationship="Self.fk_responsable" FromRole="cuentas" ToRole="AspNetUsers" />
@@ -791,6 +873,21 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_cuentasmensajes_usuario" FromRole="cuentasmensajes" ToRole="AspNetUsers" />
           <NavigationProperty Name="cuenta" Relationship="Self.fk_cuentasmensajes_cuenta" FromRole="cuentasmensajes" ToRole="cuentas" />
           <NavigationProperty Name="mensaje" Relationship="Self.fk_cuentasmensajes_mensaje" FromRole="cuentasmensajes" ToRole="mensajes" />
+        </EntityType>
+        <EntityType Name="cuentasxpagar">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NumeroCompensacion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Referencia" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaDePago" Type="DateTime" />
+          <Property Name="FechaBase" Type="DateTime" />
+          <Property Name="Importe" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Ml" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TipoMovimiento" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="ProveedoresId" Type="Int32" Nullable="false" />
+          <Property Name="FacturaId" Type="Int32" />
         </EntityType>
         <EntityType Name="fakedataproveedor">
           <Key>
@@ -876,6 +973,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="direccion2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="direccion3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
           <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Rfc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_proveedor_usuario" FromRole="proveedores" ToRole="AspNetUsers" />
           <NavigationProperty Name="cuenta" Relationship="Self.fk_proveedor_cuenta" FromRole="proveedores" ToRole="cuentas" />
         </EntityType>
@@ -896,6 +994,30 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Codigo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="pago">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="RFC" />
+            <PropertyRef Name="RazonSocial" />
+            <PropertyRef Name="NumeroCompensacion" />
+            <PropertyRef Name="Referencia" />
+            <PropertyRef Name="FechaDePago" />
+            <PropertyRef Name="FechaBase" />
+            <PropertyRef Name="Importe" />
+            <PropertyRef Name="ML" />
+            <PropertyRef Name="TipoMovimiento" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="RFC" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RazonSocial" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NumeroCompensacion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Referencia" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaDePago" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaBase" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Importe" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ML" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="TipoMovimiento" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
         <EntityType Name="vwmensaje">
           <Key>
@@ -938,18 +1060,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="AspNetUserLogins">
-              <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_aspnetuserroles_usuario">
-          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
-          <End Role="AspNetUserRoles" Type="Self.AspNetUserRole" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="AspNetUserRoles">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
@@ -1110,6 +1220,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="AspNetUserRoles">
+          <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
+        </Association>
         <Association Name="cuentasusuarios">
           <End Role="cuentas" Type="Self.cuenta" Multiplicity="*" />
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
@@ -1122,19 +1236,20 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
-          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRole" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
           <EntitySet Name="citas" EntityType="Self.cita" />
           <EntitySet Name="configuraciones" EntityType="Self.configuracione" />
           <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedore" />
           <EntitySet Name="cuentas" EntityType="Self.cuenta" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensaje" />
+          <EntitySet Name="cuentasxpagars" EntityType="Self.cuentasxpagar" />
           <EntitySet Name="fakedataproveedors" EntityType="Self.fakedataproveedor" />
           <EntitySet Name="mensajes" EntityType="Self.mensaje" />
           <EntitySet Name="perfiles" EntityType="Self.perfile" />
           <EntitySet Name="proveedores" EntityType="Self.proveedore" />
           <EntitySet Name="tipocuentas" EntityType="Self.tipocuenta" />
           <EntitySet Name="tipousuarios" EntityType="Self.tipousuario" />
+          <EntitySet Name="pagos" EntityType="Self.pago" />
           <EntitySet Name="vwmensajes" EntityType="Self.vwmensaje" />
           <AssociationSet Name="ApplicationUser_Claims" Association="Self.ApplicationUser_Claims">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -1143,10 +1258,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="ApplicationUser_Logins" Association="Self.ApplicationUser_Logins">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
-          </AssociationSet>
-          <AssociationSet Name="fk_aspnetuserroles_usuario" Association="Self.fk_aspnetuserroles_usuario">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
           </AssociationSet>
           <AssociationSet Name="fk_aspnetusers_perfil" Association="Self.fk_aspnetusers_perfil">
             <End Role="perfiles" EntitySet="perfiles" />
@@ -1200,6 +1311,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="mensajes" EntitySet="mensajes" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
           </AssociationSet>
+          <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
+            <End Role="AspNetRoles" EntitySet="AspNetRoles" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
           <AssociationSet Name="cuentasusuarios" Association="Self.cuentasusuarios">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -1208,6 +1323,23 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="perfiles" EntitySet="perfiles" />
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
           </AssociationSet>
+          <FunctionImport Name="add_user">
+            <Parameter Name="Email" Mode="In" Type="String" />
+            <Parameter Name="PasswordHash" Mode="In" Type="String" />
+            <Parameter Name="PhoneNumber" Mode="In" Type="String" />
+            <Parameter Name="pUserName" Mode="In" Type="String" />
+            <Parameter Name="Tipo" Mode="In" Type="String" />
+            <Parameter Name="Nombre" Mode="In" Type="String" />
+            <Parameter Name="Apellido" Mode="In" Type="String" />
+            <Parameter Name="Cargo" Mode="In" Type="String" />
+            <Parameter Name="PerfilId" Mode="In" Type="Int32" />
+            <Parameter Name="TerminosCondicionesFecha" Mode="In" Type="DateTime" />
+            <Parameter Name="UsuarioIdTx" Mode="In" Type="Int32" />
+            <Parameter Name="CuentaId" Mode="In" Type="Int32" />
+            <Parameter Name="userId" Mode="Out" Type="String" />
+            <Parameter Name="messageError" Mode="Out" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="populate_pagos" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -1241,14 +1373,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
                 <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="AspNetUserRoles">
-            <EntityTypeMapping TypeName="impuls_portalModel.AspNetUserRole">
-              <MappingFragment StoreEntitySet="AspNetUserRoles">
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1354,6 +1478,22 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="cuentasxpagars">
+            <EntityTypeMapping TypeName="impuls_portalModel.cuentasxpagar">
+              <MappingFragment StoreEntitySet="cuentasxpagar">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NumeroCompensacion" ColumnName="NumeroCompensacion" />
+                <ScalarProperty Name="Referencia" ColumnName="Referencia" />
+                <ScalarProperty Name="FechaDePago" ColumnName="FechaDePago" />
+                <ScalarProperty Name="FechaBase" ColumnName="FechaBase" />
+                <ScalarProperty Name="Importe" ColumnName="Importe" />
+                <ScalarProperty Name="Ml" ColumnName="Ml" />
+                <ScalarProperty Name="TipoMovimiento" ColumnName="TipoMovimiento" />
+                <ScalarProperty Name="ProveedoresId" ColumnName="ProveedoresId" />
+                <ScalarProperty Name="FacturaId" ColumnName="FacturaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="fakedataproveedors">
             <EntityTypeMapping TypeName="impuls_portalModel.fakedataproveedor">
               <MappingFragment StoreEntitySet="fakedataproveedor">
@@ -1434,6 +1574,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="direccion2" ColumnName="direccion2" />
                 <ScalarProperty Name="direccion3" ColumnName="direccion3" />
                 <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="Rfc" ColumnName="Rfc" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1457,6 +1598,22 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="pagos">
+            <EntityTypeMapping TypeName="impuls_portalModel.pago">
+              <MappingFragment StoreEntitySet="pagos">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="RFC" ColumnName="RFC" />
+                <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
+                <ScalarProperty Name="NumeroCompensacion" ColumnName="NumeroCompensacion" />
+                <ScalarProperty Name="Referencia" ColumnName="Referencia" />
+                <ScalarProperty Name="FechaDePago" ColumnName="FechaDePago" />
+                <ScalarProperty Name="FechaBase" ColumnName="FechaBase" />
+                <ScalarProperty Name="Importe" ColumnName="Importe" />
+                <ScalarProperty Name="ML" ColumnName="ML" />
+                <ScalarProperty Name="TipoMovimiento" ColumnName="TipoMovimiento" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="vwmensajes">
             <EntityTypeMapping TypeName="impuls_portalModel.vwmensaje">
               <MappingFragment StoreEntitySet="vwmensajes">
@@ -1471,6 +1628,14 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="impuls_portalModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+            <EndProperty Name="AspNetRoles">
+              <ScalarProperty Name="Id" ColumnName="RoleId" />
+            </EndProperty>
+            <EndProperty Name="AspNetUsers">
+              <ScalarProperty Name="Id" ColumnName="UserId" />
+            </EndProperty>
+          </AssociationSetMapping>
           <AssociationSetMapping Name="cuentasusuarios" TypeName="impuls_portalModel.cuentasusuarios" StoreEntitySet="cuentasusuarios">
             <EndProperty Name="cuentas">
               <ScalarProperty Name="Id" ColumnName="CuentaId" />
@@ -1487,6 +1652,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="add_user" FunctionName="impuls_portalModel.Store.add_user" />
+          <FunctionImportMapping FunctionImportName="populate_pagos" FunctionName="impuls_portalModel.Store.populate_pagos" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

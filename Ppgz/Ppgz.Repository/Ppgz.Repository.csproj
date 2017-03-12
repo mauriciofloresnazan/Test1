@@ -67,9 +67,6 @@
     <Compile Include="AspNetUserLogin.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
-    <Compile Include="AspNetUserRole.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
     <Compile Include="cita.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -85,10 +82,16 @@
     <Compile Include="cuentasmensaje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="cuentasxpagar.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="fakedataproveedor.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="mensaje.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="pago.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="perfile.cs">

@@ -16,6 +16,7 @@ namespace Ppgz.Repository
     {
         public AspNetRole()
         {
+            this.AspNetUsers = new HashSet<AspNetUser>();
             this.perfiles = new HashSet<perfile>();
         }
     
@@ -24,6 +25,7 @@ namespace Ppgz.Repository
         public string Description { get; set; }
         public string Tipo { get; set; }
     
+        public virtual ICollection<AspNetUser> AspNetUsers { get; set; }
         public virtual ICollection<perfile> perfiles { get; set; }
     }
 }

@@ -137,7 +137,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 usuario.PasswordHash = commonManager.HashPassword(password);
             }
             usuario.PerfilId = perfilId;
-            usuario.AspNetUserRoles.Clear();
+            usuario.AspNetRoles.Clear();
 
             _db.Entry(usuario).State = EntityState.Modified;
             _db.SaveChanges();

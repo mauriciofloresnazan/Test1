@@ -124,7 +124,7 @@ namespace Ppgz.Web.Infrastructure
 
             _db.cuentas.Add(cuenta);
             _db.SaveChanges();
-
+            
             // TODO PASAR LOS QUERIES A UN ARCHIVO DE RECURSO
             const string sql = @"
                         INSERT INTO  cuentasusuarios (UsuarioId, CuentaId)

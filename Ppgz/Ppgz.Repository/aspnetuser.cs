@@ -18,13 +18,13 @@ namespace Ppgz.Repository
         {
             this.AspNetUserClaims = new HashSet<AspNetUserClaim>();
             this.AspNetUserLogins = new HashSet<AspNetUserLogin>();
-            this.AspNetUserRoles = new HashSet<AspNetUserRole>();
             this.citas = new HashSet<cita>();
             this.cuentas = new HashSet<cuenta>();
             this.cuentasmensajes = new HashSet<cuentasmensaje>();
             this.mensajes = new HashSet<mensaje>();
             this.proveedores = new HashSet<proveedore>();
             this.cuentas1 = new HashSet<cuenta>();
+            this.AspNetRoles = new HashSet<AspNetRole>();
             this.cuentas2 = new HashSet<cuenta>();
         }
     
@@ -54,7 +54,6 @@ namespace Ppgz.Repository
     
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }
-        public virtual ICollection<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual perfile perfile { get; set; }
         public virtual ICollection<cita> citas { get; set; }
         public virtual ICollection<cuenta> cuentas { get; set; }
@@ -63,6 +62,7 @@ namespace Ppgz.Repository
         public virtual perfile perfile1 { get; set; }
         public virtual ICollection<proveedore> proveedores { get; set; }
         public virtual ICollection<cuenta> cuentas1 { get; set; }
+        public virtual ICollection<AspNetRole> AspNetRoles { get; set; }
         public virtual ICollection<cuenta> cuentas2 { get; set; }
     }
 }

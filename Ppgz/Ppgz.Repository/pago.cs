@@ -12,11 +12,17 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class AspNetUserRole
+    public partial class pago
     {
-        public string UserId { get; set; }
-        public int RoleId { get; set; }
-    
-        public virtual AspNetUser AspNetUser { get; set; }
+        public int id { get; set; }
+        public string RFC { get; set; }
+        public string RazonSocial { get; set; }
+        public string NumeroCompensacion { get; set; }
+        public string Referencia { get; set; }
+        public string FechaDePago { get; set; }
+        public string FechaBase { get; set; }
+        public string Importe { get; set; }
+        public string ML { get; set; }
+        public string TipoMovimiento { get; set; }
     }
 }
