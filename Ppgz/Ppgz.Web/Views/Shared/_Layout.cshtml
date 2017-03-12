@@ -1,5 +1,4 @@
-﻿@using System.Text
-@using Microsoft.AspNet.Identity
+﻿﻿@using Microsoft.AspNet.Identity
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,53 +44,111 @@
                     @if (Request.IsAuthenticated)
                     {
                         <li class="dropdown">
+
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Acciones <span class="caret"></span></a>
-                            <ul id="menu" class="dropdown-menu">
+                            <ul class="dropdown-menu">
                                 @if (Request.IsAuthenticated)
                                 {
-                                    List<string> menuF = MenuConfig.GetMenuFuncionalidad(this.User);
-                                    foreach (var item in menuF)
+                                    // NAZAN-ADMINISTRARPERFILESNAZAN
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR"))
                                     {
-                                        if (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == item.Split('|')[1].ToString())
-                                        {
-                                            <li class="active"><a href="@Url.Action(item.Split('|')[2].ToString(), item.Split('|')[3].ToString(), new {area = item.Split('|')[5].ToString()})"><i class="@item.Split('|')[4].ToString()" aria-hidden="true"></i> @item.Split('|')[1].ToString() </a></li>
-                                        }
-                                        else
-                                        {
-                                            <li class=""><a href="@Url.Action(item.Split('|')[2].ToString(), item.Split('|')[3].ToString(), new {area = item.Split('|')[5].ToString()})"><i class="@item.Split('|')[4].ToString()" aria-hidden="true"></i> @item.Split('|')[1].ToString() </a></li>
-                                        }
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarPerfilesNazan", new { area = "Nazan" })"><i class="fa fa fa-road" aria-hidden="true"></i> Administrar Pefiles Nazan</a></li>
                                     }
+                                    // NAZAN-ADMINISTRARUSUARIOSNAZAN
+
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarUsuariosNazan", new { area = "Nazan" })"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Nazan</a></li>
+                                    }
+                                    // NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarMensajesInstitucionales", new { area = "Nazan" })"><i class="fa fa fa-envelope-o" aria-hidden="true"></i> Administrar Mensajes Insitucionales</a></li>
+                                    }
+                                    // NAZAN-ADMINISTRARPROVEEDORESNAZAN
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarProveedores", new { area = "Nazan" })"><i class="fa fa fa-info" aria-hidden="true"></i> Administrar Proveedores</a></li>
+                                    }
+
+
+                                    // MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-LISTAR,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR
+                                    if (User.IsInRole("MAESTRO-MERCADERIA") || User.IsInRole("MERCADERIA-ADMINISTRARPERFILES-LISTAR") || User.IsInRole("MERCADERIA-ADMINISTRARPERFILES-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarPerfiles", new { area = "Mercaderia" })"><i class="fa fa fa-road" aria-hidden="true"></i> Administrar Pefiles</a></li>
+                                    }
+                                    // MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARUSUARIOS-LISTAR,MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR
+
+                                    if (User.IsInRole("MAESTRO-MERCADERIA") || User.IsInRole("MERCADERIA-ADMINISTRARUSUARIOS-LISTAR") || User.IsInRole("MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarUsuarios", new { area = "Mercaderia" })"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios</a></li>
+                                    }
+                                    // MAESTRO-MERCADERIA,MERCADERIA-MENSAJESINSTITUCIONALES
+                                    if (User.IsInRole("MAESTRO-MERCADERIA") || User.IsInRole("MERCADERIA-MENSAJESINSTITUCIONALES"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "MensajesInstitucionales", new { area = "Mercaderia" })"><i class="fa fa fa-envelope-o" aria-hidden="true"></i> Mensajes Insitucionales</a></li>
+                                    }
+
+
+                                    // MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-LISTAR,SERVICIO-ADMINISTRARPERFILES-MODIFICAR
+                                    if (User.IsInRole("MAESTRO-SERVICIO") || User.IsInRole("MERCADERIA-ADMINISTRARPERFILES-LISTAR") || User.IsInRole("SERVICIO-ADMINISTRARPERFILES-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarPerfiles", new { area = "Servicio" })"><i class="fa fa fa-road" aria-hidden="true"></i> Administrar Pefiles</a></li>
+                                    }
+                                    // MAESTRO-SERVICIO,SERVICIO-ADMINISTRARUSUARIOS-LISTAR,SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR
+
+                                    if (User.IsInRole("MAESTRO-SERVICIO") || User.IsInRole("SERVICIO-ADMINISTRARUSUARIOS-LISTAR") || User.IsInRole("SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarUsuarios", new { area = "Servicio" })"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios</a></li>
+                                    }
+                                    // MAESTRO-SERVICIO,SERVICIO-MENSAJESINSTITUCIONALES
+                                    if (User.IsInRole("MAESTRO-SERVICIO") || User.IsInRole("SERVICIO-MENSAJESINSTITUCIONALES"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "MensajesInstitucionales", new { area = "Servicio" })"><i class="fa fa fa-envelope-o" aria-hidden="true"></i> Mensajes Insitucionales</a></li>
+                                    }
+
                                 }
                             </ul>
                         </li>
                     }
-
                     @if (Request.IsAuthenticated)
                     {
+
                         if (HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"] != null)
                         {
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    @if (Request.IsAuthenticated)
-                                    {
-                                        List<string> menuI = MenuConfig.GetMenuPaginaActual(HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString(), HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"].ToString());
-                                        foreach (var item in menuI)
-                                        {
-                                            if (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == item.Split('|')[1].ToString())
-                                            {
-                                                <li class="active"><a href="@Url.Action(item.Split('|')[2].ToString(), item.Split('|')[3].ToString(), new {area = item.Split('|')[5].ToString()})"><i class="@item.Split('|')[4].ToString()" aria-hidden="true"></i> @item.Split('|')[1].ToString() </a></li>
-                                            }
-                                            else
-                                            {
-                                                <li class=""><a href="@Url.Action(item.Split('|')[2].ToString(), item.Split('|')[3].ToString(), new {area = item.Split('|')[5].ToString()})"><i class="@item.Split('|')[4].ToString()" aria-hidden="true"></i> @item.Split('|')[1].ToString() </a></li>
-                                            }
-                                        }
-                                    }
-                                </ul>
+                            if (@HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"].ToString() == "Nazan" &&
+                            @HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "AdministrarPerfilesNazan")
+                            {
+                                <li class="active">@Html.ActionLink("Administrar Perfiles", "Index", "AdministrarPerfilesNazan", new { area = "Nazan" }, new { @class = "active" })</li>
+
+                            }
+                            if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "NazanMensajesInstitucionales")
+                            {
+
+                                <li class="active"><a href="@Url.Action("Index", "NazanMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Administrar Mensajes</a></li>
+                            }
+                        }
+
+
+
+                    }
+                    @if (Request.IsAuthenticated && User.Identity.GetUserName() != "superadmin")
+                    {
+                        if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "ProveedorAdministrarUsuarios")
+                        {
+                            <li class="active">
+                                <a href="@Url.Action("Index", "ProveedorAdministrarUsuarios")"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Proveedores</a>
                             </li>
                         }
+                        if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "ProveedorMensajesInstitucionales")
+                        {
+
+                            <li class="active"><a href="@Url.Action("Index", "ProveedorMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Mensajes Institucionales</a></li>
+
+                        }
+
                     }
+
                 </ul>
                 @Html.Partial("_LoginPartial")
                 <ul class="nav navbar-nav navbar-right"></ul>

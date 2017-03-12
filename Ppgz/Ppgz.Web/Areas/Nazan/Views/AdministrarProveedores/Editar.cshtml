@@ -12,25 +12,23 @@
     <div class="col-sm-6">
 
         <div class="row">
-            <div class="col-sm-3"><strong>Codigo</strong>
+            <div class="col-sm-4"><strong>Codigo</strong>
             </div>
-            <div class=" col-sm-9" style="line-height: 1.2em"><span style="color: #66aaaa; font-size: 1.2em">@ViewBag.cuenta.CodigoProveedor</span></div>
+            <div class=" col-sm-8" style=""><span style="color: #66aaaa;">@ViewBag.cuenta.CodigoProveedor</span></div>
         </div>
         <div class="row">
-            <div class="col-sm-3"><strong>Resp. Nombre</strong>
+            <div class="col-sm-4"><strong>Nombre</strong>
             </div>
-            <div class=" col-sm-9">@ViewBag.cuenta.NombreProveedor</div>
+            <div class="col-sm-8">@ViewBag.cuenta.NombreProveedor</div>
         </div>
+        <hr/>
         <div class="row">
-            <div class="col-sm-3"><strong>Contacto</strong>
+            <div class="col-sm-4"><strong>Resp.</strong>
             </div>
-            <div class=" col-sm-9">
-
-
+            <div class="col-sm-8">
                 <p>
                     @(ViewBag.cuenta.AspNetUser1.Nombre + ' ' + ViewBag.cuenta.AspNetUser1.Apellido)<i>
-                        <br>
-                        @ViewBag.cuenta.AspNetUser1.PhoneNumber
+                        
                     </i><br>
                     @ViewBag.cuenta.AspNetUser1.Email
                 </p>
@@ -56,10 +54,11 @@
                 </p>
             </div>
         </div>
+       <hr/>
         <div>
             <div class="col-md-6">
                 <select class="form-control" id="usuariosMaestrosSelect">
-                    <option value="">Usuario Maestro</option>
+                    <option value="">Cambiar U. Maestro</option>
                     @foreach (var usuario in ViewBag.cuenta.AspNetUsers)
                     {
                         <option value="@usuario.Id">@(usuario.Nombre + ' ' + usuario.Apellido)</option>
