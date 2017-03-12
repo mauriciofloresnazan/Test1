@@ -1005,3 +1005,61 @@ System.InvalidOperationException: The view 'Error' or its master was not found o
    at System.Web.Mvc.MvcHandler.System.Web.IHttpAsyncHandler.EndProcessRequest(IAsyncResult result)
    at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
    at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+2017-03-12 03:21:27,813 
+Nombre del Controlador = AdministrarPerfilesNazan
+Nombre del método o acción solicitada = Editar
+Conjunto de parámetros enviados = Nombre = Prueba de perfil, RolesIds = MAESTRO-NAZAN
+Tipo de mensaje = Error.
+Traza detallada: 
+MySql.Data.MySqlClient.MySqlException (0x80004005): Table 'impuls_portal.aspnetuserroles' doesn't exist
+   at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
+   at MySql.Data.MySqlClient.NativeDriver.GetResult(Int32& affectedRow, Int64& insertedId)
+   at MySql.Data.MySqlClient.Driver.GetResult(Int32 statementId, Int32& affectedRows, Int64& insertedId)
+   at MySql.Data.MySqlClient.Driver.NextResult(Int32 statementId, Boolean force)
+   at MySql.Data.MySqlClient.MySqlDataReader.NextResult()
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader(CommandBehavior behavior)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQuery()
+   at System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<NonQuery>b__0(DbCommand t, DbCommandInterceptionContext`1 c)
+   at System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   at System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.NonQuery(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   at System.Data.Entity.Internal.InterceptableDbCommand.ExecuteNonQuery()
+   at System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass59.<ExecuteStoreCommand>b__58()
+   at System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   at System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass59.<ExecuteStoreCommand>b__57()
+   at System.Data.Entity.Infrastructure.DefaultExecutionStrategy.Execute[TResult](Func`1 operation)
+   at System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreCommand(TransactionalBehavior transactionalBehavior, String commandText, Object[] parameters)
+   at System.Data.Entity.Internal.InternalContext.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(String sql, Object[] parameters)
+   at Ppgz.Web.Infrastructure.CommonManager.ActualizarPermisosByPefilId(Int32 perfilId) in C:\Temp\Implus\Source\Lombano\impuls\Ppgz\Ppgz.Web\Infrastructure\CommonManager.cs:line 175
+   at Ppgz.Web.Infrastructure.Nazan.PerfilNazanManager.Actualizar(Int32 id, String nombre, String[] rolesIds) in C:\Temp\Implus\Source\Lombano\impuls\Ppgz\Ppgz.Web\Infrastructure\Nazan\PerfilNazanManager.cs:line 116
+   at Ppgz.Web.Areas.Nazan.Controllers.AdministrarPerfilesNazanController.Editar(Int32 id, PefilNazanViewModel model) in C:\Temp\Implus\Source\Lombano\impuls\Ppgz\Ppgz.Web\Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs:line 95
+2017-03-12 03:31:28,345 
+Nombre del Controlador = AdministrarPerfilesNazan
+Nombre del método o acción solicitada = Editar
+Conjunto de parámetros enviados = Nombre = Prueba de perfil, RolesIds = MAESTRO-NAZAN
+Tipo de mensaje = Error.
+Traza detallada: 
+MySql.Data.MySqlClient.MySqlException (0x80004005): Table 'impuls_portal.aspnetuserroles' doesn't exist
+   at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
+   at MySql.Data.MySqlClient.NativeDriver.GetResult(Int32& affectedRow, Int64& insertedId)
+   at MySql.Data.MySqlClient.Driver.GetResult(Int32 statementId, Int32& affectedRows, Int64& insertedId)
+   at MySql.Data.MySqlClient.Driver.NextResult(Int32 statementId, Boolean force)
+   at MySql.Data.MySqlClient.MySqlDataReader.NextResult()
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader(CommandBehavior behavior)
+   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQuery()
+   at System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<NonQuery>b__0(DbCommand t, DbCommandInterceptionContext`1 c)
+   at System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   at System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.NonQuery(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   at System.Data.Entity.Internal.InterceptableDbCommand.ExecuteNonQuery()
+   at System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass59.<ExecuteStoreCommand>b__58()
+   at System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   at System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass59.<ExecuteStoreCommand>b__57()
+   at System.Data.Entity.Infrastructure.DefaultExecutionStrategy.Execute[TResult](Func`1 operation)
+   at System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreCommand(TransactionalBehavior transactionalBehavior, String commandText, Object[] parameters)
+   at System.Data.Entity.Internal.InternalContext.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(TransactionalBehavior transactionalBehavior, String sql, Object[] parameters)
+   at System.Data.Entity.Database.ExecuteSqlCommand(String sql, Object[] parameters)
+   at Ppgz.Web.Infrastructure.CommonManager.ActualizarPermisosByPefilId(Int32 perfilId) in C:\Temp\Implus\Source\Lombano\impuls\Ppgz\Ppgz.Web\Infrastructure\CommonManager.cs:line 175
+   at Ppgz.Web.Infrastructure.Nazan.PerfilNazanManager.Actualizar(Int32 id, String nombre, String[] rolesIds) in C:\Temp\Implus\Source\Lombano\impuls\Ppgz\Ppgz.Web\Infrastructure\Nazan\PerfilNazanManager.cs:line 116
+   at Ppgz.Web.Areas.Nazan.Controllers.AdministrarPerfilesNazanController.Editar(Int32 id, PefilNazanViewModel model) in C:\Temp\Implus\Source\Lombano\impuls\Ppgz\Ppgz.Web\Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs:line 95

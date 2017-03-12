@@ -163,12 +163,12 @@ namespace Ppgz.Web.Infrastructure
 		{
 			const string sql = @"
 
-						DELETE FROM aspnetuserroles 
-						WHERE UserId IN (SELECT Id FROM aspnetusers WHERE PerfilId = {0});
-						INSERT INTO aspnetuserroles 
+						DELETE FROM AspNetUserRoles 
+						WHERE UserId IN (SELECT Id FROM AspNetUsers WHERE PerfilId = {0});
+						INSERT INTO AspNetUserRoles 
 							(UserId, RoleId)
 						SELECT u.Id, r.RoleId
-						FROM   aspnetusers u
+						FROM   AspNetUsers u
 						JOIN   perfilesroles r ON r.PerfilId = {0}
 						WHERE  u.PerfIlId = {0};";
 
