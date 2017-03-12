@@ -15,6 +15,53 @@ namespace Ppgz.Web
     public partial class Startup
     {
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
+        //AFI
+        public Dictionary<string, string> GetRolesNazan()
+        {
+            var rolesNazan = new Dictionary<string, string>
+            {
+                {"MAESTRO-NAZAN", "Acceso Total al sistema de Nazan"},
+                {"NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR", "Consultar Perfiles"},
+                {"NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR", "Modificar Perfiles"},
+                {"NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR", "Consultar Usuarios"},
+                {"NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR", "Modificar Usuarios"},
+                {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR", "Consultar Mensajes Insitucionales"},
+                {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR", "Modificar Mensajes Institucionales"}
+            };
+            return rolesNazan;
+        }
+        //AFI
+        public Dictionary<string, string> GetRolesMercaderia()
+        {
+            var rolesMercaderia = new Dictionary<string, string>
+            {
+                {"MAESTRO-MERCADERIA","Acceso Total al sistema de Mercadería"},
+                {"MERCADERIA-ADMINISTRARPERFILES-LISTAR","Consultar perfiles"},
+                {"MERCADERIA-ADMINISTRARPERFILES-MODIFICAR","Modificar perfiles"},
+                {"MERCADERIA-ADMINISTRARUSUARIOS-LISTAR","Consultar usuarios"},
+                {"MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR","Modificar usuarios"},
+                {"MERCADERIA-MENSAJESINSTITUCIONALES","Mensajes Insitucionales"},
+                {"MERCADERIA-ORDENESCOMPRA-LISTAR","Acceso a Ordenes de Compra"},
+                {"MERCADERIA-ORDENESCOMPRA-MODIFICAR","Modificar Ordenes de Compra"}
+            };
+            return rolesMercaderia;
+        }
+        //AFI
+        public Dictionary<string,string> GetRolesServicio()
+        {
+            var rolesServicio = new Dictionary<string, string>
+            {
+                {"MAESTRO-SERVICIO","Acceso Total al sistema de Servicio"},
+                {"SERVICIO-ADMINISTRARPERFILES-LISTAR","Consultar perfiles"},
+                {"SERVICIO-ADMINISTRARPERFILES-MODIFICAR","Modificar perfiles"},
+                {"SERVICIO-ADMINISTRARUSUARIOS-LISTAR","Consultar usuarios"},
+                {"SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR","Modificar usuarios"},
+                {"SERVICIO-MENSAJESINSTITUCIONALES","Mensajes Insitucionales"},
+                {"SERVICIO-ORDENESCOMPRA-LISTAR","Acceso a Ordenes de Compra"},
+                {"SERVICIO-ORDENESCOMPRA-MODIFICAR","Modificar Ordenes de Compra"}
+            };
+            return rolesServicio;
+        }
         public void ConfigureAuth(IAppBuilder app)
         {
             // Fix DbContext
@@ -64,18 +111,8 @@ namespace Ppgz.Web
 
             //Roles
             var db = new Entities();
-
-            var rolesNazan = new Dictionary<string, string>
-            {
-                {"MAESTRO-NAZAN", "Acceso Total al sistema de Nazan"},
-                {"NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR", "Consultar Perfiles"},
-                {"NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR", "Modificar Perfiles"},
-                {"NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR", "Consultar Usuarios"},
-                {"NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR", "Modificar Usuarios"},
-                {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR", "Consultar Mensajes Insitucionales"},
-                {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR", "Modificar Mensajes Institucionales"}
-            };
- 
+            //AFI
+            var rolesNazan = GetRolesNazan();
 
             foreach (var role in rolesNazan)
             {
@@ -93,16 +130,8 @@ namespace Ppgz.Web
                 db.aspnetroles.Add(aspnetrole);
                 db.SaveChanges();
             }
-
-            var rolesMercaderia = new Dictionary<string, string>
-            {
-                {"MAESTRO-MERCADERIA","Acceso Total al sistema de Mercadería"},
-                {"MERCADERIA-ADMINISTRARPERFILES-LISTAR","Consultar perfiles"},
-                {"MERCADERIA-ADMINISTRARPERFILES-MODIFICAR","Modificar perfiles"},
-                {"MERCADERIA-ADMINISTRARUSUARIOS-LISTAR","Consultar usuarios"},
-                {"MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR","Modificar usuarios"},
-                {"MERCADERIA-MENSAJESINSTITUCIONALES","Mensajes Insitucionales"},
-            };
+            //AFI
+            var rolesMercaderia = GetRolesMercaderia();
 
             foreach (var role in rolesMercaderia)
             {
@@ -121,15 +150,8 @@ namespace Ppgz.Web
                 db.SaveChanges();
             }
 
-            var rolesServicio = new Dictionary<string, string>
-            {
-                {"MAESTRO-SERVICIO","Acceso Total al sistema de Servicio"},
-                {"SERVICIO-ADMINISTRARPERFILES-LISTAR","Consultar perfiles"},
-                {"SERVICIO-ADMINISTRARPERFILES-MODIFICAR","Modificar perfiles"},
-                {"SERVICIO-ADMINISTRARUSUARIOS-LISTAR","Consultar usuarios"},
-                {"SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR","Modificar usuarios"},
-                {"SERVICIO-MENSAJESINSTITUCIONALES","Mensajes Insitucionales"},
-            };
+            //AFI
+            var rolesServicio = GetRolesServicio();
 
             foreach (var role in rolesServicio)
             {

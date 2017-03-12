@@ -175,11 +175,13 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\MenuConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\AdministrarUsuariosController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\MensajesInstitucionalesController.cs" />
+    <Compile Include="Areas\Mercaderia\Controllers\OrdenesCompraController.cs" />
     <Compile Include="Areas\Mercaderia\MensajesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -202,6 +204,7 @@
     <Compile Include="Areas\Servicio\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarUsuariosController.cs" />
     <Compile Include="Areas\Servicio\Controllers\MensajesInstitucionalesController.cs" />
+    <Compile Include="Areas\Servicio\Controllers\OrdenesCompraController.cs" />
     <Compile Include="Areas\Servicio\Mensajes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1078,6 +1081,8 @@
     <Content Include="Areas\Servicio\Views\web.config" />
     <Content Include="Areas\Nazan\Views\AdministrarPerfilesNazan\Index.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarPerfilesNazan\Crear.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\OrdenesCompra\Index.cshtml" />
+    <Content Include="Areas\Servicio\Views\OrdenesCompra\Index.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
