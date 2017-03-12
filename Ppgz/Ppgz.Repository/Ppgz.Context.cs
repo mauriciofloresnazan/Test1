@@ -25,16 +25,23 @@ namespace Ppgz.Repository
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<aspnetrole> aspnetroles { get; set; }
-        public virtual DbSet<aspnetuserclaim> aspnetuserclaims { get; set; }
-        public virtual DbSet<aspnetuserlogin> aspnetuserlogins { get; set; }
-        public virtual DbSet<aspnetuser> aspnetusers { get; set; }
+        public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+        public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+        public virtual DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<cita> citas { get; set; }
+        public virtual DbSet<configuracione> configuraciones { get; set; }
         public virtual DbSet<cuentaproveedore> cuentaproveedores { get; set; }
         public virtual DbSet<cuenta> cuentas { get; set; }
         public virtual DbSet<cuentasmensaje> cuentasmensajes { get; set; }
         public virtual DbSet<fakedataproveedor> fakedataproveedors { get; set; }
         public virtual DbSet<mensaje> mensajes { get; set; }
         public virtual DbSet<perfile> perfiles { get; set; }
+        public virtual DbSet<perfilesrole> perfilesroles { get; set; }
+        public virtual DbSet<proveedore> proveedores { get; set; }
+        public virtual DbSet<tipocuenta> tipocuentas { get; set; }
+        public virtual DbSet<tipousuario> tipousuarios { get; set; }
         public virtual DbSet<vwmensaje> vwmensajes { get; set; }
     }
 }

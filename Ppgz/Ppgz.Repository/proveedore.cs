@@ -12,31 +12,26 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class cuenta
+    public partial class proveedore
     {
-        public cuenta()
-        {
-            this.cuentaproveedores = new HashSet<cuentaproveedore>();
-            this.cuentasmensajes = new HashSet<cuentasmensaje>();
-            this.proveedores = new HashSet<proveedore>();
-            this.AspNetUsers = new HashSet<AspNetUser>();
-        }
-    
         public int Id { get; set; }
         public string CodigoProveedor { get; set; }
-        public string NombreProveedor { get; set; }
-        public System.DateTime FechaRegistro { get; set; }
-        public string Tipo { get; set; }
-        public sbyte Activo { get; set; }
+        public Nullable<System.DateTime> FechaRegistro { get; set; }
+        public Nullable<int> CuentaId { get; set; }
         public sbyte Borrado { get; set; }
         public System.DateTime FechaTx { get; set; }
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }
+        public string NombreProveedor { get; set; }
+        public string Ciudad { get; set; }
+        public string Estado { get; set; }
+        public string CodigoPostal { get; set; }
+        public string direccion1 { get; set; }
+        public string direccion2 { get; set; }
+        public string direccion3 { get; set; }
+        public string email { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
-        public virtual ICollection<cuentaproveedore> cuentaproveedores { get; set; }
-        public virtual ICollection<cuentasmensaje> cuentasmensajes { get; set; }
-        public virtual ICollection<proveedore> proveedores { get; set; }
-        public virtual ICollection<AspNetUser> AspNetUsers { get; set; }
+        public virtual cuenta cuenta { get; set; }
     }
 }

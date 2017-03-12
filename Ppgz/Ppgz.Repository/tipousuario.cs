@@ -12,22 +12,11 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class perfile
+    public partial class tipousuario
     {
-        public perfile()
-        {
-            this.AspNetUsers = new HashSet<AspNetUser>();
-            this.AspNetUsers1 = new HashSet<AspNetUser>();
-            this.perfilesroles = new HashSet<perfilesrole>();
-        }
-    
         public int Id { get; set; }
+        public string Codigo { get; set; }
         public string Nombre { get; set; }
-        public string Tipo { get; set; }
-        public Nullable<int> CuentaId { get; set; }
-    
-        public virtual ICollection<AspNetUser> AspNetUsers { get; set; }
-        public virtual ICollection<AspNetUser> AspNetUsers1 { get; set; }
-        public virtual ICollection<perfilesrole> perfilesroles { get; set; }
+        public string Descripcion { get; set; }
     }
 }

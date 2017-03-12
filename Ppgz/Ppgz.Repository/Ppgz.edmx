@@ -4,17 +4,17 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="ppgzModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.6" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="aspnetroles">
+    <Schema Namespace="impuls_portalModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetRoles">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="256" />
           <Property Name="Description" Type="varchar" MaxLength="1000" />
           <Property Name="Tipo" Type="enum" />
         </EntityType>
-        <EntityType Name="aspnetuserclaims">
+        <EntityType Name="AspNetUserClaims">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -23,7 +23,7 @@
           <Property Name="ClaimType" Type="longtext" />
           <Property Name="ClaimValue" Type="longtext" />
         </EntityType>
-        <EntityType Name="aspnetuserlogins">
+        <EntityType Name="AspNetUserLogins">
           <Key>
             <PropertyRef Name="LoginProvider" />
             <PropertyRef Name="ProviderKey" />
@@ -33,15 +33,15 @@
           <Property Name="ProviderKey" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="UserId" Type="varchar" MaxLength="128" Nullable="false" />
         </EntityType>
-        <EntityType Name="aspnetuserroles">
+        <EntityType Name="AspNetUserRoles">
           <Key>
             <PropertyRef Name="UserId" />
             <PropertyRef Name="RoleId" />
           </Key>
           <Property Name="UserId" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="RoleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="RoleId" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="aspnetusers">
+        <EntityType Name="AspNetUsers">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -64,6 +64,37 @@
           <Property Name="Cargo" Type="varchar" MaxLength="200" />
           <Property Name="PerfilId" Type="int" Nullable="false" />
           <Property Name="TerminosCondicionesFecha" Type="datetime" Precision="0" />
+          <Property Name="Borrado" Type="tinyint" Nullable="false" />
+          <Property Name="FechaTx" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="OperacionTx" Type="enum" Nullable="false" />
+        </EntityType>
+        <EntityType Name="citas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Codigo" Type="varchar" MaxLength="5" />
+          <Property Name="FechaCita" Type="datetime" Precision="0" />
+          <Property Name="FechaCreacion" Type="datetime" Precision="0" />
+          <Property Name="Tienda" Type="varchar" MaxLength="5" />
+          <Property Name="CantidadAproximada" Type="int" />
+          <Property Name="Estatus" Type="varchar" MaxLength="5" />
+          <Property Name="DataEntrega" Type="varchar" MaxLength="5" />
+          <Property Name="ProveedorId" Type="int" Nullable="false" />
+          <Property Name="Borrado" Type="tinyint" Nullable="false" />
+          <Property Name="FechaTx" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="OperacionTx" Type="enum" Nullable="false" />
+        </EntityType>
+        <EntityType Name="configuraciones">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Clave" Type="varchar" MaxLength="50" />
+          <Property Name="Valor" Type="varchar" MaxLength="200" />
+          <Property Name="Habilitado" Type="int" />
         </EntityType>
         <EntityType Name="cuentaproveedores">
           <Key>
@@ -86,22 +117,25 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CodigoProveedor" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="NombreProveedor" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="CodigoProveedor" Type="varchar" MaxLength="20" />
+          <Property Name="NombreProveedor" Type="varchar" MaxLength="50" />
           <Property Name="FechaRegistro" Type="datetime" Precision="0" Nullable="false" />
-          <Property Name="Tipo" Type="enum" Nullable="false" />
-          <Property Name="Activo" Type="bool" Nullable="false" />
-          <Property Name="ResponsableUsuarioId" Type="varchar" MaxLength="128" />
+          <Property Name="Tipo" Type="enum" />
+          <Property Name="Activo" Type="tinyint" Nullable="false" />
+          <Property Name="Borrado" Type="tinyint" Nullable="false" />
+          <Property Name="FechaTx" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
+          <Property Name="OperacionTx" Type="enum" Nullable="false" />
         </EntityType>
         <EntityType Name="cuentasmensajes">
           <Key>
-            <PropertyRef Name="id" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="CuentaId" Type="int" Nullable="false" />
-          <Property Name="MensajeId" Type="int" Nullable="false" />
-          <Property Name="FechaVisualizacion" Type="datetime" Precision="0" Nullable="false" />
-          <Property Name="UsuarioId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FechaVisualizacion" Type="datetime" Precision="0" />
+          <Property Name="MensajeId" Type="int" />
+          <Property Name="CuentaId" Type="int" />
+          <Property Name="UsuarioId" Type="varchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="cuentasusuarios">
           <Key>
@@ -150,18 +184,22 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Titulo" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Contenido" Type="longtext" />
+          <Property Name="Contenido" Type="varchar" MaxLength="5000" />
           <Property Name="Archivo" Type="varchar" MaxLength="100" />
-          <Property Name="FechaPublicacion" Type="datetime" Precision="0" Nullable="false" />
-          <Property Name="FechaCaducidad" Type="datetime" Precision="0" Nullable="false" />
-          <Property Name="EnviadoA" Type="enum" Nullable="false" />
+          <Property Name="FechaPublicacion" Type="datetime" Precision="0" />
+          <Property Name="FechaCaducidad" Type="datetime" Precision="0" />
+          <Property Name="EnviadoA" Type="enum" />
+          <Property Name="Borrado" Type="tinyint" Nullable="false" />
+          <Property Name="FechaTx" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="OperacionTx" Type="enum" Nullable="false" />
         </EntityType>
         <EntityType Name="perfiles">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Nombre" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="30" />
           <Property Name="Tipo" Type="enum" Nullable="false" />
           <Property Name="CuentaId" Type="int" />
         </EntityType>
@@ -173,77 +211,123 @@
           <Property Name="PerfilId" Type="int" Nullable="false" />
           <Property Name="RoleId" Type="varchar" MaxLength="128" Nullable="false" />
         </EntityType>
+        <EntityType Name="proveedores">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CodigoProveedor" Type="varchar" MaxLength="20" />
+          <Property Name="FechaRegistro" Type="date" />
+          <Property Name="CuentaId" Type="int" />
+          <Property Name="Borrado" Type="tinyint" Nullable="false" />
+          <Property Name="FechaTx" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
+          <Property Name="OperacionTx" Type="enum" Nullable="false" />
+          <Property Name="NombreProveedor" Type="varchar" MaxLength="100" />
+          <Property Name="Ciudad" Type="varchar" MaxLength="50" />
+          <Property Name="Estado" Type="varchar" MaxLength="50" />
+          <Property Name="CodigoPostal" Type="varchar" MaxLength="10" />
+          <Property Name="direccion1" Type="varchar" MaxLength="300" />
+          <Property Name="direccion2" Type="varchar" MaxLength="300" />
+          <Property Name="direccion3" Type="varchar" MaxLength="300" />
+          <Property Name="email" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="tipocuentas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Codigo" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="tipousuario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Codigo" Type="varchar" MaxLength="5" />
+          <Property Name="Nombre" Type="varchar" MaxLength="30" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="200" />
+        </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'def.ppgz.vwmensajes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vwmensajes">
           <Key>
             <PropertyRef Name="Id" />
             <PropertyRef Name="Titulo" />
-            <PropertyRef Name="FechaPublicacion" />
-            <PropertyRef Name="FechaCaducidad" />
-            <PropertyRef Name="EnviadoA" />
             <PropertyRef Name="Visualizado" />
           </Key>
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Titulo" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Contenido" Type="longtext" />
+          <Property Name="Contenido" Type="varchar" MaxLength="5000" />
           <Property Name="Archivo" Type="varchar" MaxLength="100" />
-          <Property Name="FechaPublicacion" Type="datetime" Precision="0" Nullable="false" />
-          <Property Name="FechaCaducidad" Type="datetime" Precision="0" Nullable="false" />
-          <Property Name="EnviadoA" Type="enum" Nullable="false" />
+          <Property Name="FechaPublicacion" Type="datetime" Precision="0" />
+          <Property Name="FechaCaducidad" Type="datetime" Precision="0" />
+          <Property Name="EnviadoA" Type="enum" />
           <Property Name="Visualizado" Type="varchar" MaxLength="2" Nullable="false" />
         </EntityType>
         <Association Name="ApplicationUser_Claims">
-          <End Role="aspnetusers" Type="Self.aspnetusers" Multiplicity="1">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="aspnetuserclaims" Type="Self.aspnetuserclaims" Multiplicity="*" />
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaims" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="aspnetusers">
+            <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="aspnetuserclaims">
+            <Dependent Role="AspNetUserClaims">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="ApplicationUser_Logins">
-          <End Role="aspnetusers" Type="Self.aspnetusers" Multiplicity="1">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="aspnetuserlogins" Type="Self.aspnetuserlogins" Multiplicity="*" />
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogins" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="aspnetusers">
+            <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="aspnetuserlogins">
+            <Dependent Role="AspNetUserLogins">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="ApplicationUser_Roles">
-          <End Role="aspnetusers" Type="Self.aspnetusers" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="aspnetuserroles" Type="Self.aspnetuserroles" Multiplicity="*" />
+        <Association Name="fk_aspnetuserroles_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="aspnetusers">
+            <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="aspnetuserroles">
+            <Dependent Role="AspNetUserRoles">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_cuenta">
-          <End Role="cuentas" Type="Self.cuentas" Multiplicity="0..1" />
-          <End Role="perfiles" Type="Self.perfiles" Multiplicity="*" />
+        <Association Name="fk_aspnetusers_perfil">
+          <End Role="perfiles" Type="Self.perfiles" Multiplicity="1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="cuentas">
+            <Principal Role="perfiles">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="perfiles">
-              <PropertyRef Name="CuentaId" />
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="PerfilId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_citas_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="citas" Type="Self.citas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="citas">
+              <PropertyRef Name="UsuarioIdTx" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -259,8 +343,20 @@ warning 6002: The table/view 'def.ppgz.vwmensajes' does not have a primary key d
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_cuentasmensajes_cuetnas">
-          <End Role="cuentas" Type="Self.cuentas" Multiplicity="1" />
+        <Association Name="fk_cuentas_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="cuentas" Type="Self.cuentas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="cuentas">
+              <PropertyRef Name="UsuarioIdTx" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cuentasmensajes_cuenta">
+          <End Role="cuentas" Type="Self.cuentas" Multiplicity="0..1" />
           <End Role="cuentasmensajes" Type="Self.cuentasmensajes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="cuentas">
@@ -271,8 +367,8 @@ warning 6002: The table/view 'def.ppgz.vwmensajes' does not have a primary key d
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_cuentasmensajes_mensajes">
-          <End Role="mensajes" Type="Self.mensajes" Multiplicity="1" />
+        <Association Name="fk_cuentasmensajes_mensaje">
+          <End Role="mensajes" Type="Self.mensajes" Multiplicity="0..1" />
           <End Role="cuentasmensajes" Type="Self.cuentasmensajes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="mensajes">
@@ -283,11 +379,11 @@ warning 6002: The table/view 'def.ppgz.vwmensajes' does not have a primary key d
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_cuentasmensajes_usuarios">
-          <End Role="aspnetusers" Type="Self.aspnetusers" Multiplicity="1" />
+        <Association Name="fk_cuentasmensajes_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
           <End Role="cuentasmensajes" Type="Self.cuentasmensajes" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="aspnetusers">
+            <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="cuentasmensajes">
@@ -307,59 +403,71 @@ warning 6002: The table/view 'def.ppgz.vwmensajes' does not have a primary key d
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_perfil">
-          <End Role="perfiles" Type="Self.perfiles" Multiplicity="1" />
-          <End Role="perfilesroles" Type="Self.perfilesroles" Multiplicity="*" />
+        <Association Name="fk_mensajes_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="mensajes" Type="Self.mensajes" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="perfiles">
+            <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="perfilesroles">
-              <PropertyRef Name="PerfilId" />
+            <Dependent Role="mensajes">
+              <PropertyRef Name="UsuarioIdTx" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_perfil2">
           <End Role="perfiles" Type="Self.perfiles" Multiplicity="1" />
-          <End Role="aspnetusers" Type="Self.aspnetusers" Multiplicity="*" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="perfiles">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="aspnetusers">
+            <Dependent Role="AspNetUsers">
               <PropertyRef Name="PerfilId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_responsable">
-          <End Role="aspnetusers" Type="Self.aspnetusers" Multiplicity="0..1" />
-          <End Role="cuentas" Type="Self.cuentas" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="aspnetusers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="cuentas">
-              <PropertyRef Name="ResponsableUsuarioId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_role">
-          <End Role="aspnetroles" Type="Self.aspnetroles" Multiplicity="1" />
+        <Association Name="fk_perfilesroles_perfil">
+          <End Role="perfiles" Type="Self.perfiles" Multiplicity="1" />
           <End Role="perfilesroles" Type="Self.perfilesroles" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="aspnetroles">
+            <Principal Role="perfiles">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="perfilesroles">
-              <PropertyRef Name="RoleId" />
+              <PropertyRef Name="PerfilId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_proveedor_cuenta">
+          <End Role="cuentas" Type="Self.cuentas" Multiplicity="0..1" />
+          <End Role="proveedores" Type="Self.proveedores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuentas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="proveedores">
+              <PropertyRef Name="CuentaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_proveedor_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <End Role="proveedores" Type="Self.proveedores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="proveedores">
+              <PropertyRef Name="UsuarioIdTx" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_usuarios">
-          <End Role="aspnetusers" Type="Self.aspnetusers" Multiplicity="1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="cuentasusuarios" Type="Self.cuentasusuarios" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="aspnetusers">
+            <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="cuentasusuarios">
@@ -367,35 +475,26 @@ warning 6002: The table/view 'def.ppgz.vwmensajes' does not have a primary key d
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="IdentityRole_Users">
-          <End Role="aspnetroles" Type="Self.aspnetroles" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="aspnetuserroles" Type="Self.aspnetuserroles" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="aspnetroles">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="aspnetuserroles">
-              <PropertyRef Name="RoleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="ppgzModelStoreContainer">
-          <EntitySet Name="aspnetroles" EntityType="Self.aspnetroles" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="aspnetuserclaims" EntityType="Self.aspnetuserclaims" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="aspnetuserlogins" EntityType="Self.aspnetuserlogins" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="aspnetuserroles" EntityType="Self.aspnetuserroles" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="aspnetusers" EntityType="Self.aspnetusers" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedores" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="cuentas" EntityType="Self.cuentas" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensajes" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="cuentasusuarios" EntityType="Self.cuentasusuarios" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="fakedataproveedor" EntityType="Self.fakedataproveedor" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="mensajes" EntityType="Self.mensajes" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="perfiles" EntityType="Self.perfiles" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="perfilesroles" EntityType="Self.perfilesroles" Schema="ppgz" store:Type="Tables" />
-          <EntitySet Name="vwmensajes" EntityType="Self.vwmensajes" store:Type="Views" store:Schema="ppgz">
+        <EntityContainer Name="impuls_portalModelStoreContainer">
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="citas" EntityType="Self.citas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="configuraciones" EntityType="Self.configuraciones" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedores" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="cuentas" EntityType="Self.cuentas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensajes" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="cuentasusuarios" EntityType="Self.cuentasusuarios" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="fakedataproveedor" EntityType="Self.fakedataproveedor" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="mensajes" EntityType="Self.mensajes" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="perfiles" EntityType="Self.perfiles" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="perfilesroles" EntityType="Self.perfilesroles" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="tipocuentas" EntityType="Self.tipocuentas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="tipousuario" EntityType="Self.tipousuario" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="vwmensajes" EntityType="Self.vwmensajes" store:Type="Views" store:Schema="impuls_portal">
             <DefiningQuery>SELECT
 `vwmensajes`.`Id`, 
 `vwmensajes`.`Titulo`, 
@@ -408,82 +507,88 @@ warning 6002: The table/view 'def.ppgz.vwmensajes' does not have a primary key d
 FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="ApplicationUser_Claims" Association="Self.ApplicationUser_Claims">
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
-            <End Role="aspnetuserclaims" EntitySet="aspnetuserclaims" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
           </AssociationSet>
           <AssociationSet Name="ApplicationUser_Logins" Association="Self.ApplicationUser_Logins">
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
-            <End Role="aspnetuserlogins" EntitySet="aspnetuserlogins" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
           </AssociationSet>
-          <AssociationSet Name="ApplicationUser_Roles" Association="Self.ApplicationUser_Roles">
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
-            <End Role="aspnetuserroles" EntitySet="aspnetuserroles" />
+          <AssociationSet Name="fk_aspnetuserroles_usuario" Association="Self.fk_aspnetuserroles_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
           </AssociationSet>
-          <AssociationSet Name="fk_cuenta" Association="Self.fk_cuenta">
-            <End Role="cuentas" EntitySet="cuentas" />
+          <AssociationSet Name="fk_aspnetusers_perfil" Association="Self.fk_aspnetusers_perfil">
             <End Role="perfiles" EntitySet="perfiles" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="fk_citas_usuario" Association="Self.fk_citas_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="citas" EntitySet="citas" />
           </AssociationSet>
           <AssociationSet Name="fk_cuentas" Association="Self.fk_cuentas">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentasusuarios" EntitySet="cuentasusuarios" />
           </AssociationSet>
-          <AssociationSet Name="fk_cuentasmensajes_cuetnas" Association="Self.fk_cuentasmensajes_cuetnas">
+          <AssociationSet Name="fk_cuentas_usuario" Association="Self.fk_cuentas_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="cuentas" EntitySet="cuentas" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cuentasmensajes_cuenta" Association="Self.fk_cuentasmensajes_cuenta">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
           </AssociationSet>
-          <AssociationSet Name="fk_cuentasmensajes_mensajes" Association="Self.fk_cuentasmensajes_mensajes">
+          <AssociationSet Name="fk_cuentasmensajes_mensaje" Association="Self.fk_cuentasmensajes_mensaje">
             <End Role="mensajes" EntitySet="mensajes" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
           </AssociationSet>
-          <AssociationSet Name="fk_cuentasmensajes_usuarios" Association="Self.fk_cuentasmensajes_usuarios">
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
+          <AssociationSet Name="fk_cuentasmensajes_usuario" Association="Self.fk_cuentasmensajes_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
           </AssociationSet>
           <AssociationSet Name="fk_cuetnasprov" Association="Self.fk_cuetnasprov">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentaproveedores" EntitySet="cuentaproveedores" />
           </AssociationSet>
-          <AssociationSet Name="fk_perfil" Association="Self.fk_perfil">
-            <End Role="perfiles" EntitySet="perfiles" />
-            <End Role="perfilesroles" EntitySet="perfilesroles" />
+          <AssociationSet Name="fk_mensajes_usuario" Association="Self.fk_mensajes_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="mensajes" EntitySet="mensajes" />
           </AssociationSet>
           <AssociationSet Name="fk_perfil2" Association="Self.fk_perfil2">
             <End Role="perfiles" EntitySet="perfiles" />
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <AssociationSet Name="fk_responsable" Association="Self.fk_responsable">
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
-            <End Role="cuentas" EntitySet="cuentas" />
-          </AssociationSet>
-          <AssociationSet Name="fk_role" Association="Self.fk_role">
-            <End Role="aspnetroles" EntitySet="aspnetroles" />
+          <AssociationSet Name="fk_perfilesroles_perfil" Association="Self.fk_perfilesroles_perfil">
+            <End Role="perfiles" EntitySet="perfiles" />
             <End Role="perfilesroles" EntitySet="perfilesroles" />
           </AssociationSet>
-          <AssociationSet Name="fk_usuarios" Association="Self.fk_usuarios">
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
-            <End Role="cuentasusuarios" EntitySet="cuentasusuarios" />
+          <AssociationSet Name="fk_proveedor_cuenta" Association="Self.fk_proveedor_cuenta">
+            <End Role="cuentas" EntitySet="cuentas" />
+            <End Role="proveedores" EntitySet="proveedores" />
           </AssociationSet>
-          <AssociationSet Name="IdentityRole_Users" Association="Self.IdentityRole_Users">
-            <End Role="aspnetroles" EntitySet="aspnetroles" />
-            <End Role="aspnetuserroles" EntitySet="aspnetuserroles" />
+          <AssociationSet Name="fk_proveedor_usuario" Association="Self.fk_proveedor_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="proveedores" EntitySet="proveedores" />
+          </AssociationSet>
+          <AssociationSet Name="fk_usuarios" Association="Self.fk_usuarios">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="cuentasusuarios" EntitySet="cuentasusuarios" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="ppgzModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="aspnetrole">
+      <Schema Namespace="impuls_portalModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AspNetRole">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="aspnetusers" Relationship="Self.aspnetuserroles" FromRole="aspnetroles" ToRole="aspnetusers" />
-          <NavigationProperty Name="perfiles" Relationship="Self.perfilesroles" FromRole="aspnetroles" ToRole="perfiles" />
         </EntityType>
-        <EntityType Name="aspnetuserclaim">
+        <EntityType Name="AspNetUserClaim">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -491,9 +596,9 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ClaimType" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
           <Property Name="ClaimValue" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="aspnetuser" Relationship="Self.ApplicationUser_Claims" FromRole="aspnetuserclaims" ToRole="aspnetusers" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.ApplicationUser_Claims" FromRole="AspNetUserClaims" ToRole="AspNetUsers" />
         </EntityType>
-        <EntityType Name="aspnetuserlogin">
+        <EntityType Name="AspNetUserLogin">
           <Key>
             <PropertyRef Name="LoginProvider" />
             <PropertyRef Name="ProviderKey" />
@@ -502,9 +607,18 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="LoginProvider" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ProviderKey" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="aspnetuser" Relationship="Self.ApplicationUser_Logins" FromRole="aspnetuserlogins" ToRole="aspnetusers" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.ApplicationUser_Logins" FromRole="AspNetUserLogins" ToRole="AspNetUsers" />
         </EntityType>
-        <EntityType Name="aspnetuser">
+        <EntityType Name="AspNetUserRole">
+          <Key>
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RoleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.fk_aspnetuserroles_usuario" FromRole="AspNetUserRoles" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="AspNetUser">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -527,13 +641,49 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Cargo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="PerfilId" Type="Int32" Nullable="false" />
           <Property Name="TerminosCondicionesFecha" Type="DateTime" />
-          <NavigationProperty Name="aspnetuserclaims" Relationship="Self.ApplicationUser_Claims" FromRole="aspnetusers" ToRole="aspnetuserclaims" />
-          <NavigationProperty Name="aspnetuserlogins" Relationship="Self.ApplicationUser_Logins" FromRole="aspnetusers" ToRole="aspnetuserlogins" />
-          <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_usuarios" FromRole="aspnetusers" ToRole="cuentasmensajes" />
-          <NavigationProperty Name="perfile" Relationship="Self.fk_perfil2" FromRole="aspnetusers" ToRole="perfiles" />
-          <NavigationProperty Name="cuentas" Relationship="Self.fk_responsable" FromRole="aspnetusers" ToRole="cuentas" />
-          <NavigationProperty Name="aspnetroles" Relationship="Self.aspnetuserroles" FromRole="aspnetusers" ToRole="aspnetroles" />
-          <NavigationProperty Name="cuentas1" Relationship="Self.cuentasusuarios" FromRole="aspnetusers" ToRole="cuentas" />
+          <Property Name="Borrado" Type="SByte" Nullable="false" />
+          <Property Name="FechaTx" Type="DateTime" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="AspNetUserClaims" Relationship="Self.ApplicationUser_Claims" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
+          <NavigationProperty Name="AspNetUserLogins" Relationship="Self.ApplicationUser_Logins" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
+          <NavigationProperty Name="AspNetUserRoles" Relationship="Self.fk_aspnetuserroles_usuario" FromRole="AspNetUsers" ToRole="AspNetUserRoles" />
+          <NavigationProperty Name="perfile" Relationship="Self.fk_aspnetusers_perfil" FromRole="AspNetUsers" ToRole="perfiles" />
+          <NavigationProperty Name="citas" Relationship="Self.fk_citas_usuario" FromRole="AspNetUsers" ToRole="citas" />
+          <NavigationProperty Name="cuentas" Relationship="Self.fk_cuentas_usuario" FromRole="AspNetUsers" ToRole="cuentas" />
+          <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_usuario" FromRole="AspNetUsers" ToRole="cuentasmensajes" />
+          <NavigationProperty Name="mensajes" Relationship="Self.fk_mensajes_usuario" FromRole="AspNetUsers" ToRole="mensajes" />
+          <NavigationProperty Name="perfile1" Relationship="Self.fk_perfil2" FromRole="AspNetUsers" ToRole="perfiles" />
+          <NavigationProperty Name="proveedores" Relationship="Self.fk_proveedor_usuario" FromRole="AspNetUsers" ToRole="proveedores" />
+          <NavigationProperty Name="cuentas1" Relationship="Self.cuentasusuarios" FromRole="AspNetUsers" ToRole="cuentas" />
+        </EntityType>
+        <EntityType Name="cita">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Codigo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="FechaCita" Type="DateTime" />
+          <Property Name="FechaCreacion" Type="DateTime" />
+          <Property Name="Tienda" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="CantidadAproximada" Type="Int32" />
+          <Property Name="Estatus" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="DataEntrega" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="ProveedorId" Type="Int32" Nullable="false" />
+          <Property Name="Borrado" Type="SByte" Nullable="false" />
+          <Property Name="FechaTx" Type="DateTime" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.fk_citas_usuario" FromRole="citas" ToRole="AspNetUsers" />
+        </EntityType>
+        <EntityType Name="configuracione">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Clave" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Valor" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Habilitado" Type="Int32" />
         </EntityType>
         <EntityType Name="cuentaproveedore">
           <Key>
@@ -557,30 +707,33 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CodigoProveedor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="NombreProveedor" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CodigoProveedor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NombreProveedor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="FechaRegistro" Type="DateTime" Nullable="false" />
-          <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Activo" Type="Boolean" Nullable="false" />
-          <Property Name="ResponsableUsuarioId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="aspnetuser" Relationship="Self.fk_responsable" FromRole="cuentas" ToRole="aspnetusers" />
+          <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
+          <Property Name="Activo" Type="SByte" Nullable="false" />
+          <Property Name="Borrado" Type="SByte" Nullable="false" />
+          <Property Name="FechaTx" Type="DateTime" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.fk_cuentas_usuario" FromRole="cuentas" ToRole="AspNetUsers" />
           <NavigationProperty Name="cuentaproveedores" Relationship="Self.fk_cuetnasprov" FromRole="cuentas" ToRole="cuentaproveedores" />
-          <NavigationProperty Name="perfiles" Relationship="Self.fk_cuenta" FromRole="cuentas" ToRole="perfiles" />
-          <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_cuetnas" FromRole="cuentas" ToRole="cuentasmensajes" />
-          <NavigationProperty Name="aspnetusers" Relationship="Self.cuentasusuarios" FromRole="cuentas" ToRole="aspnetusers" />
+          <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_cuenta" FromRole="cuentas" ToRole="cuentasmensajes" />
+          <NavigationProperty Name="proveedores" Relationship="Self.fk_proveedor_cuenta" FromRole="cuentas" ToRole="proveedores" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.cuentasusuarios" FromRole="cuentas" ToRole="AspNetUsers" />
         </EntityType>
         <EntityType Name="cuentasmensaje">
           <Key>
-            <PropertyRef Name="id" />
+            <PropertyRef Name="Id" />
           </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="CuentaId" Type="Int32" Nullable="false" />
-          <Property Name="MensajeId" Type="Int32" Nullable="false" />
-          <Property Name="FechaVisualizacion" Type="DateTime" Nullable="false" />
-          <Property Name="UsuarioId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="aspnetuser" Relationship="Self.fk_cuentasmensajes_usuarios" FromRole="cuentasmensajes" ToRole="aspnetusers" />
-          <NavigationProperty Name="cuenta" Relationship="Self.fk_cuentasmensajes_cuetnas" FromRole="cuentasmensajes" ToRole="cuentas" />
-          <NavigationProperty Name="mensaje" Relationship="Self.fk_cuentasmensajes_mensajes" FromRole="cuentasmensajes" ToRole="mensajes" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FechaVisualizacion" Type="DateTime" />
+          <Property Name="MensajeId" Type="Int32" />
+          <Property Name="CuentaId" Type="Int32" />
+          <Property Name="UsuarioId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.fk_cuentasmensajes_usuario" FromRole="cuentasmensajes" ToRole="AspNetUsers" />
+          <NavigationProperty Name="cuenta" Relationship="Self.fk_cuentasmensajes_cuenta" FromRole="cuentasmensajes" ToRole="cuentas" />
+          <NavigationProperty Name="mensaje" Relationship="Self.fk_cuentasmensajes_mensaje" FromRole="cuentasmensajes" ToRole="mensajes" />
         </EntityType>
         <EntityType Name="fakedataproveedor">
           <Key>
@@ -621,58 +774,161 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Titulo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Contenido" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
+          <Property Name="Contenido" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
           <Property Name="Archivo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FechaPublicacion" Type="DateTime" Nullable="false" />
-          <Property Name="FechaCaducidad" Type="DateTime" Nullable="false" />
-          <Property Name="EnviadoA" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
-          <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_mensajes" FromRole="mensajes" ToRole="cuentasmensajes" />
+          <Property Name="FechaPublicacion" Type="DateTime" />
+          <Property Name="FechaCaducidad" Type="DateTime" />
+          <Property Name="EnviadoA" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
+          <Property Name="Borrado" Type="SByte" Nullable="false" />
+          <Property Name="FechaTx" Type="DateTime" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.fk_mensajes_usuario" FromRole="mensajes" ToRole="AspNetUsers" />
+          <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_mensaje" FromRole="mensajes" ToRole="cuentasmensajes" />
         </EntityType>
         <EntityType Name="perfile">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Nombre" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="CuentaId" Type="Int32" />
-          <NavigationProperty Name="aspnetusers" Relationship="Self.fk_perfil2" FromRole="perfiles" ToRole="aspnetusers" />
-          <NavigationProperty Name="cuenta" Relationship="Self.fk_cuenta" FromRole="perfiles" ToRole="cuentas" />
-          <NavigationProperty Name="aspnetroles" Relationship="Self.perfilesroles" FromRole="perfiles" ToRole="aspnetroles" />
+          <NavigationProperty Name="AspNetUsers" Relationship="Self.fk_aspnetusers_perfil" FromRole="perfiles" ToRole="AspNetUsers" />
+          <NavigationProperty Name="AspNetUsers1" Relationship="Self.fk_perfil2" FromRole="perfiles" ToRole="AspNetUsers" />
+          <NavigationProperty Name="perfilesroles" Relationship="Self.fk_perfilesroles_perfil" FromRole="perfiles" ToRole="perfilesroles" />
+        </EntityType>
+        <EntityType Name="perfilesrole">
+          <Key>
+            <PropertyRef Name="PerfilId" />
+            <PropertyRef Name="RoleId" />
+          </Key>
+          <Property Name="PerfilId" Type="Int32" Nullable="false" />
+          <Property Name="RoleId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="perfile" Relationship="Self.fk_perfilesroles_perfil" FromRole="perfilesroles" ToRole="perfiles" />
+        </EntityType>
+        <EntityType Name="proveedore">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodigoProveedor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FechaRegistro" Type="DateTime" />
+          <Property Name="CuentaId" Type="Int32" />
+          <Property Name="Borrado" Type="SByte" Nullable="false" />
+          <Property Name="FechaTx" Type="DateTime" Nullable="false" />
+          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NombreProveedor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Ciudad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoPostal" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="direccion1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="direccion2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="direccion3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.fk_proveedor_usuario" FromRole="proveedores" ToRole="AspNetUsers" />
+          <NavigationProperty Name="cuenta" Relationship="Self.fk_proveedor_cuenta" FromRole="proveedores" ToRole="cuentas" />
+        </EntityType>
+        <EntityType Name="tipocuenta">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Codigo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="tipousuario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Codigo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="ApplicationUser_Claims">
-          <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="1">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="aspnetuserclaims" Type="Self.aspnetuserclaim" Multiplicity="*" />
+          <End Role="AspNetUserClaims" Type="Self.AspNetUserClaim" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="aspnetusers">
+            <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="aspnetuserclaims">
+            <Dependent Role="AspNetUserClaims">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="ApplicationUser_Logins">
-          <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="1">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="aspnetuserlogins" Type="Self.aspnetuserlogin" Multiplicity="*" />
+          <End Role="AspNetUserLogins" Type="Self.AspNetUserLogin" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="aspnetusers">
+            <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="aspnetuserlogins">
+            <Dependent Role="AspNetUserLogins">
               <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_cuentasmensajes_usuarios">
-          <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="1" />
+        <Association Name="fk_aspnetuserroles_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
+          <End Role="AspNetUserRoles" Type="Self.AspNetUserRole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUserRoles">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_aspnetusers_perfil">
+          <End Role="perfiles" Type="Self.perfile" Multiplicity="1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="perfiles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="PerfilId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_citas_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
+          <End Role="citas" Type="Self.cita" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="citas">
+              <PropertyRef Name="UsuarioIdTx" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cuentas_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="0..1" />
+          <End Role="cuentas" Type="Self.cuenta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="cuentas">
+              <PropertyRef Name="UsuarioIdTx" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cuentasmensajes_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="0..1" />
           <End Role="cuentasmensajes" Type="Self.cuentasmensaje" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="aspnetusers">
+            <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="cuentasmensajes">
@@ -680,27 +936,39 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_mensajes_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
+          <End Role="mensajes" Type="Self.mensaje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="mensajes">
+              <PropertyRef Name="UsuarioIdTx" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_perfil2">
           <End Role="perfiles" Type="Self.perfile" Multiplicity="1" />
-          <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="*" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="perfiles">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="aspnetusers">
+            <Dependent Role="AspNetUsers">
               <PropertyRef Name="PerfilId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_responsable">
-          <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="0..1" />
-          <End Role="cuentas" Type="Self.cuenta" Multiplicity="*" />
+        <Association Name="fk_proveedor_usuario">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="0..1" />
+          <End Role="proveedores" Type="Self.proveedore" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="aspnetusers">
+            <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="cuentas">
-              <PropertyRef Name="ResponsableUsuarioId" />
+            <Dependent Role="proveedores">
+              <PropertyRef Name="UsuarioIdTx" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -716,20 +984,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_cuenta">
+        <Association Name="fk_cuentasmensajes_cuenta">
           <End Role="cuentas" Type="Self.cuenta" Multiplicity="0..1" />
-          <End Role="perfiles" Type="Self.perfile" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="cuentas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="perfiles">
-              <PropertyRef Name="CuentaId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_cuentasmensajes_cuetnas">
-          <End Role="cuentas" Type="Self.cuenta" Multiplicity="1" />
           <End Role="cuentasmensajes" Type="Self.cuentasmensaje" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="cuentas">
@@ -740,8 +996,20 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_cuentasmensajes_mensajes">
-          <End Role="mensajes" Type="Self.mensaje" Multiplicity="1" />
+        <Association Name="fk_proveedor_cuenta">
+          <End Role="cuentas" Type="Self.cuenta" Multiplicity="0..1" />
+          <End Role="proveedores" Type="Self.proveedore" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="cuentas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="proveedores">
+              <PropertyRef Name="CuentaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_cuentasmensajes_mensaje">
+          <End Role="mensajes" Type="Self.mensaje" Multiplicity="0..1" />
           <End Role="cuentasmensajes" Type="Self.cuentasmensaje" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="mensajes">
@@ -752,95 +1020,119 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="aspnetuserroles">
-          <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="*" />
-          <End Role="aspnetroles" Type="Self.aspnetrole" Multiplicity="*" />
+        <Association Name="fk_perfilesroles_perfil">
+          <End Role="perfiles" Type="Self.perfile" Multiplicity="1" />
+          <End Role="perfilesroles" Type="Self.perfilesrole" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="perfiles">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="perfilesroles">
+              <PropertyRef Name="PerfilId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         <Association Name="cuentasusuarios">
           <End Role="cuentas" Type="Self.cuenta" Multiplicity="*" />
-          <End Role="aspnetusers" Type="Self.aspnetuser" Multiplicity="*" />
-        </Association>
-        <Association Name="perfilesroles">
-          <End Role="perfiles" Type="Self.perfile" Multiplicity="*" />
-          <End Role="aspnetroles" Type="Self.aspnetrole" Multiplicity="*" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
         </Association>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="aspnetroles" EntityType="Self.aspnetrole" />
-          <EntitySet Name="aspnetuserclaims" EntityType="Self.aspnetuserclaim" />
-          <EntitySet Name="aspnetuserlogins" EntityType="Self.aspnetuserlogin" />
-          <EntitySet Name="aspnetusers" EntityType="Self.aspnetuser" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaim" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRole" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
+          <EntitySet Name="citas" EntityType="Self.cita" />
+          <EntitySet Name="configuraciones" EntityType="Self.configuracione" />
           <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedore" />
           <EntitySet Name="cuentas" EntityType="Self.cuenta" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensaje" />
           <EntitySet Name="fakedataproveedors" EntityType="Self.fakedataproveedor" />
           <EntitySet Name="mensajes" EntityType="Self.mensaje" />
           <EntitySet Name="perfiles" EntityType="Self.perfile" />
+          <EntitySet Name="perfilesroles" EntityType="Self.perfilesrole" />
+          <EntitySet Name="proveedores" EntityType="Self.proveedore" />
+          <EntitySet Name="tipocuentas" EntityType="Self.tipocuenta" />
+          <EntitySet Name="tipousuarios" EntityType="Self.tipousuario" />
           <AssociationSet Name="ApplicationUser_Claims" Association="Self.ApplicationUser_Claims">
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
-            <End Role="aspnetuserclaims" EntitySet="aspnetuserclaims" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
           </AssociationSet>
           <AssociationSet Name="ApplicationUser_Logins" Association="Self.ApplicationUser_Logins">
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
-            <End Role="aspnetuserlogins" EntitySet="aspnetuserlogins" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
           </AssociationSet>
-          <AssociationSet Name="fk_cuentasmensajes_usuarios" Association="Self.fk_cuentasmensajes_usuarios">
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
+          <AssociationSet Name="fk_aspnetuserroles_usuario" Association="Self.fk_aspnetuserroles_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="fk_aspnetusers_perfil" Association="Self.fk_aspnetusers_perfil">
+            <End Role="perfiles" EntitySet="perfiles" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="fk_citas_usuario" Association="Self.fk_citas_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="citas" EntitySet="citas" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cuentas_usuario" Association="Self.fk_cuentas_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="cuentas" EntitySet="cuentas" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cuentasmensajes_usuario" Association="Self.fk_cuentasmensajes_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
+          </AssociationSet>
+          <AssociationSet Name="fk_mensajes_usuario" Association="Self.fk_mensajes_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="mensajes" EntitySet="mensajes" />
           </AssociationSet>
           <AssociationSet Name="fk_perfil2" Association="Self.fk_perfil2">
             <End Role="perfiles" EntitySet="perfiles" />
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <AssociationSet Name="fk_responsable" Association="Self.fk_responsable">
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
-            <End Role="cuentas" EntitySet="cuentas" />
+          <AssociationSet Name="fk_proveedor_usuario" Association="Self.fk_proveedor_usuario">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="proveedores" EntitySet="proveedores" />
           </AssociationSet>
           <AssociationSet Name="fk_cuetnasprov" Association="Self.fk_cuetnasprov">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentaproveedores" EntitySet="cuentaproveedores" />
           </AssociationSet>
-          <AssociationSet Name="fk_cuenta" Association="Self.fk_cuenta">
-            <End Role="cuentas" EntitySet="cuentas" />
-            <End Role="perfiles" EntitySet="perfiles" />
-          </AssociationSet>
-          <AssociationSet Name="fk_cuentasmensajes_cuetnas" Association="Self.fk_cuentasmensajes_cuetnas">
+          <AssociationSet Name="fk_cuentasmensajes_cuenta" Association="Self.fk_cuentasmensajes_cuenta">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
           </AssociationSet>
-          <AssociationSet Name="fk_cuentasmensajes_mensajes" Association="Self.fk_cuentasmensajes_mensajes">
+          <AssociationSet Name="fk_proveedor_cuenta" Association="Self.fk_proveedor_cuenta">
+            <End Role="cuentas" EntitySet="cuentas" />
+            <End Role="proveedores" EntitySet="proveedores" />
+          </AssociationSet>
+          <AssociationSet Name="fk_cuentasmensajes_mensaje" Association="Self.fk_cuentasmensajes_mensaje">
             <End Role="mensajes" EntitySet="mensajes" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
           </AssociationSet>
-          <AssociationSet Name="aspnetuserroles" Association="Self.aspnetuserroles">
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
-            <End Role="aspnetroles" EntitySet="aspnetroles" />
+          <AssociationSet Name="fk_perfilesroles_perfil" Association="Self.fk_perfilesroles_perfil">
+            <End Role="perfiles" EntitySet="perfiles" />
+            <End Role="perfilesroles" EntitySet="perfilesroles" />
           </AssociationSet>
           <AssociationSet Name="cuentasusuarios" Association="Self.cuentasusuarios">
             <End Role="cuentas" EntitySet="cuentas" />
-            <End Role="aspnetusers" EntitySet="aspnetusers" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <AssociationSet Name="perfilesroles" Association="Self.perfilesroles">
-            <End Role="perfiles" EntitySet="perfiles" />
-            <End Role="aspnetroles" EntitySet="aspnetroles" />
-          </AssociationSet>
-          <EntitySet Name="vwmensajes" EntityType="ppgzModel.vwmensaje" />
+          <EntitySet Name="vwmensajes" EntityType="impuls_portalModel.vwmensaje" />
         </EntityContainer>
         <EntityType Name="vwmensaje">
           <Key>
             <PropertyRef Name="Id" />
             <PropertyRef Name="Titulo" />
-            <PropertyRef Name="FechaPublicacion" />
-            <PropertyRef Name="FechaCaducidad" />
-            <PropertyRef Name="EnviadoA" />
             <PropertyRef Name="Visualizado" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" />
           <Property Name="Titulo" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Contenido" Type="String" MaxLength="1073741823" FixedLength="false" Unicode="false" />
+          <Property Name="Contenido" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
           <Property Name="Archivo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FechaPublicacion" Type="DateTime" Nullable="false" />
-          <Property Name="FechaCaducidad" Type="DateTime" Nullable="false" />
-          <Property Name="EnviadoA" Type="String" Nullable="false" MaxLength="65532" FixedLength="false" Unicode="false" />
+          <Property Name="FechaPublicacion" Type="DateTime" />
+          <Property Name="FechaCaducidad" Type="DateTime" />
+          <Property Name="EnviadoA" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
           <Property Name="Visualizado" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
@@ -848,10 +1140,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="ppgzModelStoreContainer" CdmEntityContainer="Entities">
-          <EntitySetMapping Name="aspnetroles">
-            <EntityTypeMapping TypeName="ppgzModel.aspnetrole">
-              <MappingFragment StoreEntitySet="aspnetroles">
+        <EntityContainerMapping StorageEntityContainer="impuls_portalModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="AspNetRoles">
+            <EntityTypeMapping TypeName="impuls_portalModel.AspNetRole">
+              <MappingFragment StoreEntitySet="AspNetRoles">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -859,9 +1151,9 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="aspnetuserclaims">
-            <EntityTypeMapping TypeName="ppgzModel.aspnetuserclaim">
-              <MappingFragment StoreEntitySet="aspnetuserclaims">
+          <EntitySetMapping Name="AspNetUserClaims">
+            <EntityTypeMapping TypeName="impuls_portalModel.AspNetUserClaim">
+              <MappingFragment StoreEntitySet="AspNetUserClaims">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="ClaimType" ColumnName="ClaimType" />
@@ -869,18 +1161,26 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="aspnetuserlogins">
-            <EntityTypeMapping TypeName="ppgzModel.aspnetuserlogin">
-              <MappingFragment StoreEntitySet="aspnetuserlogins">
+          <EntitySetMapping Name="AspNetUserLogins">
+            <EntityTypeMapping TypeName="impuls_portalModel.AspNetUserLogin">
+              <MappingFragment StoreEntitySet="AspNetUserLogins">
                 <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
                 <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="aspnetusers">
-            <EntityTypeMapping TypeName="ppgzModel.aspnetuser">
-              <MappingFragment StoreEntitySet="aspnetusers">
+          <EntitySetMapping Name="AspNetUserRoles">
+            <EntityTypeMapping TypeName="impuls_portalModel.AspNetUserRole">
+              <MappingFragment StoreEntitySet="AspNetUserRoles">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="impuls_portalModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
@@ -900,11 +1200,44 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Cargo" ColumnName="Cargo" />
                 <ScalarProperty Name="PerfilId" ColumnName="PerfilId" />
                 <ScalarProperty Name="TerminosCondicionesFecha" ColumnName="TerminosCondicionesFecha" />
+                <ScalarProperty Name="Borrado" ColumnName="Borrado" />
+                <ScalarProperty Name="FechaTx" ColumnName="FechaTx" />
+                <ScalarProperty Name="UsuarioIdTx" ColumnName="UsuarioIdTx" />
+                <ScalarProperty Name="OperacionTx" ColumnName="OperacionTx" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="citas">
+            <EntityTypeMapping TypeName="impuls_portalModel.cita">
+              <MappingFragment StoreEntitySet="citas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="FechaCita" ColumnName="FechaCita" />
+                <ScalarProperty Name="FechaCreacion" ColumnName="FechaCreacion" />
+                <ScalarProperty Name="Tienda" ColumnName="Tienda" />
+                <ScalarProperty Name="CantidadAproximada" ColumnName="CantidadAproximada" />
+                <ScalarProperty Name="Estatus" ColumnName="Estatus" />
+                <ScalarProperty Name="DataEntrega" ColumnName="DataEntrega" />
+                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
+                <ScalarProperty Name="Borrado" ColumnName="Borrado" />
+                <ScalarProperty Name="FechaTx" ColumnName="FechaTx" />
+                <ScalarProperty Name="UsuarioIdTx" ColumnName="UsuarioIdTx" />
+                <ScalarProperty Name="OperacionTx" ColumnName="OperacionTx" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="configuraciones">
+            <EntityTypeMapping TypeName="impuls_portalModel.configuracione">
+              <MappingFragment StoreEntitySet="configuraciones">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Clave" ColumnName="Clave" />
+                <ScalarProperty Name="Valor" ColumnName="Valor" />
+                <ScalarProperty Name="Habilitado" ColumnName="Habilitado" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="cuentaproveedores">
-            <EntityTypeMapping TypeName="ppgzModel.cuentaproveedore">
+            <EntityTypeMapping TypeName="impuls_portalModel.cuentaproveedore">
               <MappingFragment StoreEntitySet="cuentaproveedores">
                 <ScalarProperty Name="NumeroProveedor" ColumnName="NumeroProveedor" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
@@ -920,7 +1253,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="cuentas">
-            <EntityTypeMapping TypeName="ppgzModel.cuenta">
+            <EntityTypeMapping TypeName="impuls_portalModel.cuenta">
               <MappingFragment StoreEntitySet="cuentas">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CodigoProveedor" ColumnName="CodigoProveedor" />
@@ -928,23 +1261,26 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
                 <ScalarProperty Name="Activo" ColumnName="Activo" />
-                <ScalarProperty Name="ResponsableUsuarioId" ColumnName="ResponsableUsuarioId" />
+                <ScalarProperty Name="Borrado" ColumnName="Borrado" />
+                <ScalarProperty Name="FechaTx" ColumnName="FechaTx" />
+                <ScalarProperty Name="UsuarioIdTx" ColumnName="UsuarioIdTx" />
+                <ScalarProperty Name="OperacionTx" ColumnName="OperacionTx" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="cuentasmensajes">
-            <EntityTypeMapping TypeName="ppgzModel.cuentasmensaje">
+            <EntityTypeMapping TypeName="impuls_portalModel.cuentasmensaje">
               <MappingFragment StoreEntitySet="cuentasmensajes">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
-                <ScalarProperty Name="MensajeId" ColumnName="MensajeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="FechaVisualizacion" ColumnName="FechaVisualizacion" />
+                <ScalarProperty Name="MensajeId" ColumnName="MensajeId" />
+                <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
                 <ScalarProperty Name="UsuarioId" ColumnName="UsuarioId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="fakedataproveedors">
-            <EntityTypeMapping TypeName="ppgzModel.fakedataproveedor">
+            <EntityTypeMapping TypeName="impuls_portalModel.fakedataproveedor">
               <MappingFragment StoreEntitySet="fakedataproveedor">
                 <ScalarProperty Name="NumeroDeProveedor" ColumnName="NumeroDeProveedor" />
                 <ScalarProperty Name="ClavePais" ColumnName="ClavePais" />
@@ -978,7 +1314,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="mensajes">
-            <EntityTypeMapping TypeName="ppgzModel.mensaje">
+            <EntityTypeMapping TypeName="impuls_portalModel.mensaje">
               <MappingFragment StoreEntitySet="mensajes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Titulo" ColumnName="Titulo" />
@@ -987,11 +1323,15 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="FechaPublicacion" ColumnName="FechaPublicacion" />
                 <ScalarProperty Name="FechaCaducidad" ColumnName="FechaCaducidad" />
                 <ScalarProperty Name="EnviadoA" ColumnName="EnviadoA" />
+                <ScalarProperty Name="Borrado" ColumnName="Borrado" />
+                <ScalarProperty Name="FechaTx" ColumnName="FechaTx" />
+                <ScalarProperty Name="UsuarioIdTx" ColumnName="UsuarioIdTx" />
+                <ScalarProperty Name="OperacionTx" ColumnName="OperacionTx" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="perfiles">
-            <EntityTypeMapping TypeName="ppgzModel.perfile">
+            <EntityTypeMapping TypeName="impuls_portalModel.perfile">
               <MappingFragment StoreEntitySet="perfiles">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
@@ -1000,32 +1340,66 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="aspnetuserroles" TypeName="ppgzModel.aspnetuserroles" StoreEntitySet="aspnetuserroles">
-            <EndProperty Name="aspnetusers">
-              <ScalarProperty Name="Id" ColumnName="UserId" />
-            </EndProperty>
-            <EndProperty Name="aspnetroles">
-              <ScalarProperty Name="Id" ColumnName="RoleId" />
-            </EndProperty>
-          </AssociationSetMapping>
-          <AssociationSetMapping Name="cuentasusuarios" TypeName="ppgzModel.cuentasusuarios" StoreEntitySet="cuentasusuarios">
+          <EntitySetMapping Name="perfilesroles">
+            <EntityTypeMapping TypeName="impuls_portalModel.perfilesrole">
+              <MappingFragment StoreEntitySet="perfilesroles">
+                <ScalarProperty Name="PerfilId" ColumnName="PerfilId" />
+                <ScalarProperty Name="RoleId" ColumnName="RoleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="proveedores">
+            <EntityTypeMapping TypeName="impuls_portalModel.proveedore">
+              <MappingFragment StoreEntitySet="proveedores">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CodigoProveedor" ColumnName="CodigoProveedor" />
+                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
+                <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
+                <ScalarProperty Name="Borrado" ColumnName="Borrado" />
+                <ScalarProperty Name="FechaTx" ColumnName="FechaTx" />
+                <ScalarProperty Name="UsuarioIdTx" ColumnName="UsuarioIdTx" />
+                <ScalarProperty Name="OperacionTx" ColumnName="OperacionTx" />
+                <ScalarProperty Name="NombreProveedor" ColumnName="NombreProveedor" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="CodigoPostal" ColumnName="CodigoPostal" />
+                <ScalarProperty Name="direccion1" ColumnName="direccion1" />
+                <ScalarProperty Name="direccion2" ColumnName="direccion2" />
+                <ScalarProperty Name="direccion3" ColumnName="direccion3" />
+                <ScalarProperty Name="email" ColumnName="email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipocuentas">
+            <EntityTypeMapping TypeName="impuls_portalModel.tipocuenta">
+              <MappingFragment StoreEntitySet="tipocuentas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="tipousuarios">
+            <EntityTypeMapping TypeName="impuls_portalModel.tipousuario">
+              <MappingFragment StoreEntitySet="tipousuario">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="cuentasusuarios" TypeName="impuls_portalModel.cuentasusuarios" StoreEntitySet="cuentasusuarios">
             <EndProperty Name="cuentas">
               <ScalarProperty Name="Id" ColumnName="CuentaId" />
             </EndProperty>
-            <EndProperty Name="aspnetusers">
+            <EndProperty Name="AspNetUsers">
               <ScalarProperty Name="Id" ColumnName="UsuarioId" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="perfilesroles" TypeName="ppgzModel.perfilesroles" StoreEntitySet="perfilesroles">
-            <EndProperty Name="perfiles">
-              <ScalarProperty Name="Id" ColumnName="PerfilId" />
-            </EndProperty>
-            <EndProperty Name="aspnetroles">
-              <ScalarProperty Name="Id" ColumnName="RoleId" />
-            </EndProperty>
-          </AssociationSetMapping>
           <EntitySetMapping Name="vwmensajes">
-            <EntityTypeMapping TypeName="ppgzModel.vwmensaje">
+            <EntityTypeMapping TypeName="impuls_portalModel.vwmensaje">
               <MappingFragment StoreEntitySet="vwmensajes">
                 <ScalarProperty Name="Visualizado" ColumnName="Visualizado" />
                 <ScalarProperty Name="EnviadoA" ColumnName="EnviadoA" />

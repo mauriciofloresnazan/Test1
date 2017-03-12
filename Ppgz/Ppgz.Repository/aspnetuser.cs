@@ -12,15 +12,18 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class aspnetuser
+    public partial class AspNetUser
     {
-        public aspnetuser()
+        public AspNetUser()
         {
-            this.aspnetuserclaims = new HashSet<aspnetuserclaim>();
-            this.aspnetuserlogins = new HashSet<aspnetuserlogin>();
-            this.cuentasmensajes = new HashSet<cuentasmensaje>();
+            this.AspNetUserClaims = new HashSet<AspNetUserClaim>();
+            this.AspNetUserLogins = new HashSet<AspNetUserLogin>();
+            this.AspNetUserRoles = new HashSet<AspNetUserRole>();
+            this.citas = new HashSet<cita>();
             this.cuentas = new HashSet<cuenta>();
-            this.aspnetroles = new HashSet<aspnetrole>();
+            this.cuentasmensajes = new HashSet<cuentasmensaje>();
+            this.mensajes = new HashSet<mensaje>();
+            this.proveedores = new HashSet<proveedore>();
             this.cuentas1 = new HashSet<cuenta>();
         }
     
@@ -43,13 +46,21 @@ namespace Ppgz.Repository
         public string Cargo { get; set; }
         public int PerfilId { get; set; }
         public Nullable<System.DateTime> TerminosCondicionesFecha { get; set; }
+        public sbyte Borrado { get; set; }
+        public System.DateTime FechaTx { get; set; }
+        public string UsuarioIdTx { get; set; }
+        public string OperacionTx { get; set; }
     
-        public virtual ICollection<aspnetuserclaim> aspnetuserclaims { get; set; }
-        public virtual ICollection<aspnetuserlogin> aspnetuserlogins { get; set; }
-        public virtual ICollection<cuentasmensaje> cuentasmensajes { get; set; }
+        public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
+        public virtual ICollection<AspNetUserLogin> AspNetUserLogins { get; set; }
+        public virtual ICollection<AspNetUserRole> AspNetUserRoles { get; set; }
         public virtual perfile perfile { get; set; }
+        public virtual ICollection<cita> citas { get; set; }
         public virtual ICollection<cuenta> cuentas { get; set; }
-        public virtual ICollection<aspnetrole> aspnetroles { get; set; }
+        public virtual ICollection<cuentasmensaje> cuentasmensajes { get; set; }
+        public virtual ICollection<mensaje> mensajes { get; set; }
+        public virtual perfile perfile1 { get; set; }
+        public virtual ICollection<proveedore> proveedores { get; set; }
         public virtual ICollection<cuenta> cuentas1 { get; set; }
     }
 }

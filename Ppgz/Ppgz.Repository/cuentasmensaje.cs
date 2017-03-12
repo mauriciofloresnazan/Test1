@@ -14,13 +14,13 @@ namespace Ppgz.Repository
     
     public partial class cuentasmensaje
     {
-        public int id { get; set; }
-        public int CuentaId { get; set; }
-        public int MensajeId { get; set; }
-        public System.DateTime FechaVisualizacion { get; set; }
+        public int Id { get; set; }
+        public Nullable<System.DateTime> FechaVisualizacion { get; set; }
+        public Nullable<int> MensajeId { get; set; }
+        public Nullable<int> CuentaId { get; set; }
         public string UsuarioId { get; set; }
     
-        public virtual aspnetuser aspnetuser { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
         public virtual cuenta cuenta { get; set; }
         public virtual mensaje mensaje { get; set; }
     }

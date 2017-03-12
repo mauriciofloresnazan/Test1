@@ -12,26 +12,22 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class mensaje
+    public partial class cita
     {
-        public mensaje()
-        {
-            this.cuentasmensajes = new HashSet<cuentasmensaje>();
-        }
-    
         public int Id { get; set; }
-        public string Titulo { get; set; }
-        public string Contenido { get; set; }
-        public string Archivo { get; set; }
-        public Nullable<System.DateTime> FechaPublicacion { get; set; }
-        public Nullable<System.DateTime> FechaCaducidad { get; set; }
-        public string EnviadoA { get; set; }
+        public string Codigo { get; set; }
+        public Nullable<System.DateTime> FechaCita { get; set; }
+        public Nullable<System.DateTime> FechaCreacion { get; set; }
+        public string Tienda { get; set; }
+        public Nullable<int> CantidadAproximada { get; set; }
+        public string Estatus { get; set; }
+        public string DataEntrega { get; set; }
+        public int ProveedorId { get; set; }
         public sbyte Borrado { get; set; }
         public System.DateTime FechaTx { get; set; }
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
-        public virtual ICollection<cuentasmensaje> cuentasmensajes { get; set; }
     }
 }
