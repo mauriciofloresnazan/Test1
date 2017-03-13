@@ -177,7 +177,7 @@ namespace Ppgz.Web.Infrastructure
 
 		}
 
-		public DataTable QueryToTable(string queryText, SqlParameter[] parametes = null)
+		public DataTable QueryToTable(string queryText, MySqlParameter[] parametes = null)
 		{
 			using (DbDataAdapter adapter = new MySqlDataAdapter())
 			{

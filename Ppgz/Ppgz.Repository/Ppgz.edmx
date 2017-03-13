@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="impuls_portalModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="impuls_portalModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AspNetRoles">
           <Key>
             <PropertyRef Name="Id" />
@@ -153,8 +153,8 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="NumeroCompensacion" Type="varchar" MaxLength="100" />
           <Property Name="Referencia" Type="varchar" MaxLength="100" />
-          <Property Name="FechaDePago" Type="date" />
-          <Property Name="FechaBase" Type="date" />
+          <Property Name="FechaDePago" Type="datetime" Precision="0" />
+          <Property Name="FechaBase" Type="datetime" Precision="0" />
           <Property Name="Importe" Type="varchar" MaxLength="100" />
           <Property Name="Ml" Type="varchar" MaxLength="10" />
           <Property Name="TipoMovimiento" Type="varchar" MaxLength="5" />
@@ -176,6 +176,24 @@
           <Property Name="ItemEstilo" Type="varchar" MaxLength="50" />
           <Property Name="ItemCantidad" Type="int" Nullable="false" />
           <Property Name="OrdenComprasId" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="devoluciones">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="Referencia" />
+            <PropertyRef Name="Material" />
+            <PropertyRef Name="Descripcion" />
+            <PropertyRef Name="Cantidad" />
+            <PropertyRef Name="Importe" />
+          </Key>
+          <Property Name="id" Type="int" Nullable="false" />
+          <Property Name="Referencia" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Material" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Cantidad" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Importe" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="fakedataproveedor">
           <Key>
@@ -238,8 +256,10 @@
           <Property Name="FechaEntrega" Type="date" />
           <Property Name="CantidadItem" Type="int" />
           <Property Name="TotalLinea" Type="int" />
-          <Property Name="ProveedoresId" Type="int" Nullable="false" />
+          <Property Name="ProveedoresId" Type="int" />
           <Property Name="FacturasId" Type="int" />
+          <Property Name="CodigoProveedor" Type="varchar" MaxLength="20" />
+          <Property Name="FechaSAP" Type="varchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.impuls_portal.pagos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -638,6 +658,16 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="tipocuentas" EntityType="Self.tipocuentas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="tipousuario" EntityType="Self.tipousuario" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="devoluciones" EntityType="Self.devoluciones" store:Type="Tables" store:Schema="impuls_portal">
+            <DefiningQuery>SELECT
+`devoluciones`.`id`, 
+`devoluciones`.`Referencia`, 
+`devoluciones`.`Material`, 
+`devoluciones`.`Descripcion`, 
+`devoluciones`.`Cantidad`, 
+`devoluciones`.`Importe`
+FROM `devoluciones` AS `devoluciones`</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="pagos" EntityType="Self.pagos" store:Type="Tables" store:Schema="impuls_portal">
             <DefiningQuery>SELECT
 `pagos`.`id`, 
@@ -749,7 +779,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="cuentasusuarios" EntitySet="cuentasusuarios" />
           </AssociationSet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="impuls_portalModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -921,6 +952,22 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="ProveedoresId" Type="Int32" Nullable="false" />
           <Property Name="FacturaId" Type="Int32" />
         </EntityType>
+        <EntityType Name="detalleordencompra">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Almacen" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NumeroLineaOrden" Type="SByte" />
+          <Property Name="ItemCodigo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ItemDescripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ItemPrecio" Type="Decimal" />
+          <Property Name="ItemSize" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="ItemColor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ItemEstilo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ItemCantidad" Type="Int32" Nullable="false" />
+          <Property Name="OrdenComprasId" Type="Int32" Nullable="false" />
+        </EntityType>
         <EntityType Name="fakedataproveedor">
           <Key>
             <PropertyRef Name="NumeroDeProveedor" />
@@ -971,6 +1018,23 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_mensajes_usuario" FromRole="mensajes" ToRole="AspNetUsers" />
           <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_mensaje" FromRole="mensajes" ToRole="cuentasmensajes" />
+        </EntityType>
+        <EntityType Name="ordencompra">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Fecha" Type="DateTime" />
+          <Property Name="NumeroOrden" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PrecioOrden" Type="Decimal" />
+          <Property Name="Almacen" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FechaEntrega" Type="DateTime" />
+          <Property Name="CantidadItem" Type="Int32" />
+          <Property Name="TotalLinea" Type="Int32" />
+          <Property Name="ProveedoresId" Type="Int32" />
+          <Property Name="FacturasId" Type="Int32" />
+          <Property Name="CodigoProveedor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FechaSAP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="perfile">
           <Key>
@@ -1026,6 +1090,22 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Codigo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="devolucione">
+          <Key>
+            <PropertyRef Name="id" />
+            <PropertyRef Name="Referencia" />
+            <PropertyRef Name="Material" />
+            <PropertyRef Name="Descripcion" />
+            <PropertyRef Name="Cantidad" />
+            <PropertyRef Name="Importe" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" />
+          <Property Name="Referencia" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Material" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Cantidad" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Importe" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="pago">
           <Key>
@@ -1275,12 +1355,15 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="cuentas" EntityType="Self.cuenta" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensaje" />
           <EntitySet Name="cuentasxpagars" EntityType="Self.cuentasxpagar" />
+          <EntitySet Name="detalleordencompras" EntityType="Self.detalleordencompra" />
           <EntitySet Name="fakedataproveedors" EntityType="Self.fakedataproveedor" />
           <EntitySet Name="mensajes" EntityType="Self.mensaje" />
+          <EntitySet Name="ordencompras" EntityType="Self.ordencompra" />
           <EntitySet Name="perfiles" EntityType="Self.perfile" />
           <EntitySet Name="proveedores" EntityType="Self.proveedore" />
           <EntitySet Name="tipocuentas" EntityType="Self.tipocuenta" />
           <EntitySet Name="tipousuarios" EntityType="Self.tipousuario" />
+          <EntitySet Name="devoluciones" EntityType="Self.devolucione" />
           <EntitySet Name="pagos" EntityType="Self.pago" />
           <EntitySet Name="vwmensajes" EntityType="Self.vwmensaje" />
           <AssociationSet Name="ApplicationUser_Claims" Association="Self.ApplicationUser_Claims">
@@ -1372,40 +1455,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <Parameter Name="messageError" Mode="Out" Type="String" />
           </FunctionImport>
           <FunctionImport Name="populate_pagos" />
-          <EntitySet Name="detalleordencompras" EntityType="impuls_portalModel.detalleordencompra" />
-          <EntitySet Name="ordencompras" EntityType="impuls_portalModel.ordencompra" />
         </EntityContainer>
-        <EntityType Name="detalleordencompra">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Almacen" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="NumeroLineaOrden" Type="SByte" />
-          <Property Name="ItemCodigo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ItemDescripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ItemPrecio" Type="Decimal" />
-          <Property Name="ItemSize" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="ItemColor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ItemEstilo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ItemCantidad" Type="Int32" Nullable="false" />
-          <Property Name="OrdenComprasId" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="ordencompra">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Fecha" Type="DateTime" />
-          <Property Name="NumeroOrden" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PrecioOrden" Type="Decimal" />
-          <Property Name="Almacen" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FechaEntrega" Type="DateTime" />
-          <Property Name="CantidadItem" Type="Int32" />
-          <Property Name="TotalLinea" Type="Int32" />
-          <Property Name="ProveedoresId" Type="Int32" Nullable="false" />
-          <Property Name="FacturasId" Type="Int32" />
-        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1559,6 +1609,23 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="detalleordencompras">
+            <EntityTypeMapping TypeName="impuls_portalModel.detalleordencompra">
+              <MappingFragment StoreEntitySet="detalleordencompra">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Almacen" ColumnName="Almacen" />
+                <ScalarProperty Name="NumeroLineaOrden" ColumnName="NumeroLineaOrden" />
+                <ScalarProperty Name="ItemCodigo" ColumnName="ItemCodigo" />
+                <ScalarProperty Name="ItemDescripcion" ColumnName="ItemDescripcion" />
+                <ScalarProperty Name="ItemPrecio" ColumnName="ItemPrecio" />
+                <ScalarProperty Name="ItemSize" ColumnName="ItemSize" />
+                <ScalarProperty Name="ItemColor" ColumnName="ItemColor" />
+                <ScalarProperty Name="ItemEstilo" ColumnName="ItemEstilo" />
+                <ScalarProperty Name="ItemCantidad" ColumnName="ItemCantidad" />
+                <ScalarProperty Name="OrdenComprasId" ColumnName="OrdenComprasId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="fakedataproveedors">
             <EntityTypeMapping TypeName="impuls_portalModel.fakedataproveedor">
               <MappingFragment StoreEntitySet="fakedataproveedor">
@@ -1607,6 +1674,24 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="FechaTx" ColumnName="FechaTx" />
                 <ScalarProperty Name="UsuarioIdTx" ColumnName="UsuarioIdTx" />
                 <ScalarProperty Name="OperacionTx" ColumnName="OperacionTx" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ordencompras">
+            <EntityTypeMapping TypeName="impuls_portalModel.ordencompra">
+              <MappingFragment StoreEntitySet="ordencompras">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="NumeroOrden" ColumnName="NumeroOrden" />
+                <ScalarProperty Name="PrecioOrden" ColumnName="PrecioOrden" />
+                <ScalarProperty Name="Almacen" ColumnName="Almacen" />
+                <ScalarProperty Name="FechaEntrega" ColumnName="FechaEntrega" />
+                <ScalarProperty Name="CantidadItem" ColumnName="CantidadItem" />
+                <ScalarProperty Name="TotalLinea" ColumnName="TotalLinea" />
+                <ScalarProperty Name="ProveedoresId" ColumnName="ProveedoresId" />
+                <ScalarProperty Name="FacturasId" ColumnName="FacturasId" />
+                <ScalarProperty Name="CodigoProveedor" ColumnName="CodigoProveedor" />
+                <ScalarProperty Name="FechaSAP" ColumnName="FechaSAP" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1660,6 +1745,18 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="devoluciones">
+            <EntityTypeMapping TypeName="impuls_portalModel.devolucione">
+              <MappingFragment StoreEntitySet="devoluciones">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Referencia" ColumnName="Referencia" />
+                <ScalarProperty Name="Material" ColumnName="Material" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="Importe" ColumnName="Importe" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1719,39 +1816,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           </AssociationSetMapping>
           <FunctionImportMapping FunctionImportName="add_user" FunctionName="impuls_portalModel.Store.add_user" />
           <FunctionImportMapping FunctionImportName="populate_pagos" FunctionName="impuls_portalModel.Store.populate_pagos" />
-          <EntitySetMapping Name="detalleordencompras">
-            <EntityTypeMapping TypeName="impuls_portalModel.detalleordencompra">
-              <MappingFragment StoreEntitySet="detalleordencompra">
-                <ScalarProperty Name="OrdenComprasId" ColumnName="OrdenComprasId" />
-                <ScalarProperty Name="ItemCantidad" ColumnName="ItemCantidad" />
-                <ScalarProperty Name="ItemEstilo" ColumnName="ItemEstilo" />
-                <ScalarProperty Name="ItemColor" ColumnName="ItemColor" />
-                <ScalarProperty Name="ItemSize" ColumnName="ItemSize" />
-                <ScalarProperty Name="ItemPrecio" ColumnName="ItemPrecio" />
-                <ScalarProperty Name="ItemDescripcion" ColumnName="ItemDescripcion" />
-                <ScalarProperty Name="ItemCodigo" ColumnName="ItemCodigo" />
-                <ScalarProperty Name="NumeroLineaOrden" ColumnName="NumeroLineaOrden" />
-                <ScalarProperty Name="Almacen" ColumnName="Almacen" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ordencompras">
-            <EntityTypeMapping TypeName="impuls_portalModel.ordencompra">
-              <MappingFragment StoreEntitySet="ordencompras">
-                <ScalarProperty Name="FacturasId" ColumnName="FacturasId" />
-                <ScalarProperty Name="ProveedoresId" ColumnName="ProveedoresId" />
-                <ScalarProperty Name="TotalLinea" ColumnName="TotalLinea" />
-                <ScalarProperty Name="CantidadItem" ColumnName="CantidadItem" />
-                <ScalarProperty Name="FechaEntrega" ColumnName="FechaEntrega" />
-                <ScalarProperty Name="Almacen" ColumnName="Almacen" />
-                <ScalarProperty Name="PrecioOrden" ColumnName="PrecioOrden" />
-                <ScalarProperty Name="NumeroOrden" ColumnName="NumeroOrden" />
-                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -88,6 +88,9 @@
     <Compile Include="detalleordencompra.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="devolucione.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="fakedataproveedor.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
