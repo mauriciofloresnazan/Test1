@@ -1,0 +1,200 @@
+﻿﻿@using Microsoft.AspNet.Identity
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - Portal de proveedores Grupo Nazan</title>
+
+    <!-- Bootstrap core CSS -->
+    @Styles.Render("~/assets/vendor/bootstrap-3.3.6/css/bootstrap.min.css")
+    @Styles.Render("~/assets/vendor/bootstrap-3.3.6/css/bootstrap-theme.min.css")
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    @Styles.Render("~/assets/vendor/bootstrap-3.3.6/css/ie10-viewport-bug-workaround.css")
+
+    @Styles.Render("~/assets/vendor/font-awesome-4.7.0/css/font-awesome.min.css")
+
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Styles.Render("~/assets/vendor/dataTables-1.10.13/media/css/dataTables.bootstrap.min.css")
+
+    @Styles.Render("~/assets/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css")
+
+    @Styles.Render("~/assets/css/main.css")
+
+
+</head>
+<body>
+    <!-- Static navbar -->
+    <nav class="navbar navbar-main navbar-inverse navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="~/"><img src="@Url.Content("~/assets/img/logo.png")" class="img-responsive" width="80"></a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li class="dropdown">
+
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Acciones <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                @if (Request.IsAuthenticated)
+                                {
+                                    // NAZAN-ADMINISTRARPERFILESNAZAN
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarPerfilesNazan", new { area = "Nazan" })"><i class="fa fa fa-road" aria-hidden="true"></i> Administrar Pefiles Nazan</a></li>
+                                    }
+                                    // NAZAN-ADMINISTRARUSUARIOSNAZAN
+
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarUsuariosNazan", new { area = "Nazan" })"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Nazan</a></li>
+                                    }
+                                    // NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarMensajesInstitucionales", new { area = "Nazan" })"><i class="fa fa fa-envelope-o" aria-hidden="true"></i> Administrar Mensajes Insitucionales</a></li>
+                                    }
+                                    // NAZAN-ADMINISTRARPROVEEDORESNAZAN
+                                    if (User.IsInRole("MAESTRO-NAZAN") || User.IsInRole("NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR") || User.IsInRole("NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarProveedores", new { area = "Nazan" })"><i class="fa fa fa-info" aria-hidden="true"></i> Administrar Proveedores</a></li>
+                                    }
+
+
+                                    // MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-LISTAR,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR
+                                    if (User.IsInRole("MAESTRO-MERCADERIA") || User.IsInRole("MERCADERIA-ADMINISTRARPERFILES-LISTAR") || User.IsInRole("MERCADERIA-ADMINISTRARPERFILES-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarPerfiles", new { area = "Mercaderia" })"><i class="fa fa fa-road" aria-hidden="true"></i> Administrar Pefiles</a></li>
+                                    }
+                                    // MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARUSUARIOS-LISTAR,MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR
+
+                                    if (User.IsInRole("MAESTRO-MERCADERIA") || User.IsInRole("MERCADERIA-ADMINISTRARUSUARIOS-LISTAR") || User.IsInRole("MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarUsuarios", new { area = "Mercaderia" })"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios</a></li>
+                                    }
+                                    // MAESTRO-MERCADERIA,MERCADERIA-MENSAJESINSTITUCIONALES
+                                    if (User.IsInRole("MAESTRO-MERCADERIA") || User.IsInRole("MERCADERIA-MENSAJESINSTITUCIONALES"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "MensajesInstitucionales", new { area = "Mercaderia" })"><i class="fa fa fa-envelope-o" aria-hidden="true"></i> Mensajes Insitucionales</a></li>
+                                    }
+
+
+                                    // MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-LISTAR,SERVICIO-ADMINISTRARPERFILES-MODIFICAR
+                                    if (User.IsInRole("MAESTRO-SERVICIO") || User.IsInRole("MERCADERIA-ADMINISTRARPERFILES-LISTAR") || User.IsInRole("SERVICIO-ADMINISTRARPERFILES-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarPerfiles", new { area = "Servicio" })"><i class="fa fa fa-road" aria-hidden="true"></i> Administrar Pefiles</a></li>
+                                    }
+                                    // MAESTRO-SERVICIO,SERVICIO-ADMINISTRARUSUARIOS-LISTAR,SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR
+
+                                    if (User.IsInRole("MAESTRO-SERVICIO") || User.IsInRole("SERVICIO-ADMINISTRARUSUARIOS-LISTAR") || User.IsInRole("SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "AdministrarUsuarios", new { area = "Servicio" })"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios</a></li>
+                                    }
+                                    // MAESTRO-SERVICIO,SERVICIO-MENSAJESINSTITUCIONALES
+                                    if (User.IsInRole("MAESTRO-SERVICIO") || User.IsInRole("SERVICIO-MENSAJESINSTITUCIONALES"))
+                                    {
+                                        <li class=""><a href="@Url.Action("Index", "MensajesInstitucionales", new { area = "Servicio" })"><i class="fa fa fa-envelope-o" aria-hidden="true"></i> Mensajes Insitucionales</a></li>
+                                    }
+
+                                }
+                            </ul>
+                        </li>
+                    }
+                    @if (Request.IsAuthenticated)
+                    {
+
+                        if (HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"] != null)
+                        {
+                            if (@HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"].ToString() == "Nazan" &&
+                            @HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "AdministrarPerfilesNazan")
+                            {
+                                <li class="active">@Html.ActionLink("Administrar Perfiles", "Index", "AdministrarPerfilesNazan", new { area = "Nazan" }, new { @class = "active" })</li>
+
+                            }
+                            if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "NazanMensajesInstitucionales")
+                            {
+
+                                <li class="active"><a href="@Url.Action("Index", "NazanMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Administrar Mensajes</a></li>
+                            }
+                        }
+
+
+
+                    }
+                    @if (Request.IsAuthenticated && User.Identity.GetUserName() != "superadmin")
+                    {
+                        if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "ProveedorAdministrarUsuarios")
+                        {
+                            <li class="active">
+                                <a href="@Url.Action("Index", "ProveedorAdministrarUsuarios")"><i class="fa fa fa-users" aria-hidden="true"></i> Administrar Usuarios Proveedores</a>
+                            </li>
+                        }
+                        if (@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == "ProveedorMensajesInstitucionales")
+                        {
+
+                            <li class="active"><a href="@Url.Action("Index", "ProveedorMensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> Mensajes Institucionales</a></li>
+
+                        }
+
+                    }
+
+                </ul>
+                @Html.Partial("_LoginPartial")
+                <ul class="nav navbar-nav navbar-right"></ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </nav>
+
+    <div class="container body-content">
+        @if (TempData["FlashError"] != null)
+        {
+            <div class="alert alert-dismissible alert-danger" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @TempData["FlashError"]
+            </div>
+        }
+        @if (TempData["FlashSuccess"] != null)
+        {
+            <div class="alert alert-dismissible alert-success" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @TempData["FlashSuccess"]
+            </div>
+        }
+
+        @RenderBody()
+
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Grupo Nazan</p>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/assets/vendor/bootstrap-3.3.6/js/bootstrap.min.js")
+    @Scripts.Render("~/assets/vendor/dataTables-1.10.13/media/js/jquery.dataTables.min.js")
+    @Scripts.Render("~/assets/vendor/dataTables-1.10.13/media/js/dataTables.bootstrap.min.js")
+    @Scripts.Render("~/assets/vendor/bootstrap-confirmation.min.js")
+    @Scripts.Render("~/assets/vendor/moment/moment-with-locales.min.js")
+    @Scripts.Render("~/assets/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js")
+
+    <script type="text/javascript">
+        $('[data-toggle=confirmation]').confirmation({
+            rootSelector: '[data-toggle=confirmation]',
+            container: 'body'
+        });
+
+    </script>
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
