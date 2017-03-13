@@ -8,43 +8,46 @@
 <p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i> <i>En esta sección podrá gestionar los pagos que tiene con el Grupo Nazan.</i></p>
 
 <div class="panel panel-default">
-    Rfc: @ViewBag.proveedor.Rfc<br />
-    Nombre: @ViewBag.proveedor.NombreProveedor<br />
-    Población: @ViewBag.proveedor.Ciudad<br /><br />
-    <div class="panel-heading">Detalle de Pagos</div>
-    <div class="panel-body">
-        <div class="col-md-12">
-            <table id="mensajes" class="table table-striped table-condensed table-bordered">
-                <thead>
-                    <tr>
-                        <th class="text-center">Referencia</th>
-                        <th class="text-center">Descripción</th>
-                        <th class="text-center">Importe</th>
-                        <th class="text-center">Ml</th>
-                        <th class="text-center">Fecha</th>
-                        <th class="text-center">Tipo de Movimiento</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var registro in (ViewBag.data))
-                    {
-                        <tr>
-                            <td class="text-center">@registro.Referencia</td>
-                            <td class="text-center"></td>
-                            <td class="text-center">@registro.Importe</td>
-                            <td class="text-center">@registro.Ml</td>
-                            <td class="text-center">@registro.FechaBase</td>
-                            <td class="text-center">@registro.TipoMovimiento (Factura a Proveedor)</td>
-   
-                        </tr>
-
-                    }
-
-                </tbody>
-            </table>
-            <b>Total Pagado: </b> 110.000 MXN
-        </div>
+    <b>RFC</b>: @ViewBag.proveedor.Rfc<br />
+    <b>Nombre</b>: @ViewBag.proveedor.NombreProveedor<br />
+    <b>Población</b>: @ViewBag.proveedor.Ciudad<br/><br/>
+    <div class="clearfix">
+        <a href="#" class="btn btn-primary pull-right"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
     </div>
+        <div class="panel-heading">Detalle de Pagos</div>
+        <div class="panel-body">
+            <div class="col-md-12">
+                <table id="mensajes" class="table table-striped table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Referencia</th>
+                            <th class="text-center">Descripción</th>
+                            <th class="text-center">Importe</th>
+                            <th class="text-center">Ml</th>
+                            <th class="text-center">Fecha</th>
+                            <th class="text-center">Tipo de Movimiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var registro in (ViewBag.data))
+                        {
+                            <tr>
+                                <td class="text-center">@registro.Referencia</td>
+                                <td class="text-center"></td>
+                                <td class="text-center">@registro.Importe</td>
+                                <td class="text-center">@registro.Ml</td>
+                                <td class="text-center">@registro.FechaBase</td>
+                                <td class="text-center">@registro.TipoMovimiento (Factura a Proveedor)</td>
+
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+                <b>Total Pagado: </b> 110.000 MXN
+            </div>
+        </div>
 </div>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
