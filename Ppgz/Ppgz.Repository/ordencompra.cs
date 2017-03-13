@@ -22,7 +22,9 @@ namespace Ppgz.Repository
         public Nullable<System.DateTime> FechaEntrega { get; set; }
         public Nullable<int> CantidadItem { get; set; }
         public Nullable<int> TotalLinea { get; set; }
-        public int ProveedoresId { get; set; }
+        public Nullable<int> ProveedoresId { get; set; }
         public Nullable<int> FacturasId { get; set; }
+        public string CodigoProveedor { get; set; }
+        public string FechaSAP { get; set; }
     }
 }

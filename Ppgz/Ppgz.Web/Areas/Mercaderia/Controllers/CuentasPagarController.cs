@@ -1,7 +1,11 @@
-﻿using System.EnterpriseServices.Internal;
+﻿using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.EnterpriseServices.Internal;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Web.Mvc;
 using System.Web.Util;
+using MySql.Data.MySqlClient;
 using Ppgz.Web.Infrastructure;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
@@ -22,6 +26,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
+
             ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
 
             return View();
@@ -31,6 +36,25 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         public ActionResult Pagos(int proveedorId)
         {
             ViewBag.pagos  = _cuentasPorPagarManager.FindPagosByProveedorId(proveedorId);
+
+
+            /* var commonManager = new CommonManager();
+
+  
+            MySqlParameter[] parametes = {
+                    new MySqlParameter("id", proveedorId)
+                };
+
+
+            const string sql = @"
+            SELECT * 
+            FROM   cuentasxpagar 
+            WHERE  Proveedoresid = @id AND Referencia IS NULL;";
+
+            ViewBag.pagos = commonManager.QueryToTable(sql, parametes);
+            */
+
+
             ViewBag.proveedor = _proveedorManager.Find(proveedorId);
             return View();
         }
