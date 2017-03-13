@@ -27,6 +27,7 @@
                             <td class="text-center">@proveedor.Rfc</td>
                             <td class="text-center vert-align">@proveedor.NombreProveedor</td>
                             <td class="text-center">
+                                <a href="@Url.Action("Pagos", "CuentasPagar", new { @proveedorId = @proveedor.Id })" ><i class="fa fa-file-excel-o" aria-hidden="true"></i> Ver Detalle</a>
                             </td>
                         </tr>
 
