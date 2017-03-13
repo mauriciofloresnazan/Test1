@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Util;
+using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
@@ -53,8 +54,21 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult PagosPendientes()
+        public ActionResult PagosPendientes(int proveedorId)
         {
+            Entities db = new Entities();
+
+            string[] tiposMovimientos = new string[] {"10","21","4"};
+
+            var datos  = db.cuentasxpagars.Where(c => tiposMovimientos.Contains(c.TipoMovimiento) && c.Referencia == null).ToList();
+
+            var result = db.cuentasxpagars
+                .Where(c => tiposMovimientos.Contains(c.TipoMovimiento) && c.Referencia == null && c.ProveedoresId == proveedorId)
+                .GroupBy(c => c.ProveedoresId)
+                   .Select(r => new {  total = r.Sum(i => decimal.Parse( i.Importe)) });
+            ViewBag.data = result;
+
+            ViewBag.proveedor = _proveedorManager.Find(proveedorId);
             return View();
         }
 
