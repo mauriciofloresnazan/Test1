@@ -75,7 +75,10 @@
                                 <ul class="dropdown-menu">
                                     @if (Request.IsAuthenticated)
                                     {
-                                        List<string> menuI = MenuConfig.GetMenuPaginaActual(HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString(), HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"].ToString());
+                                        List<string> menuI = MenuConfig.GetMenuPaginaActual(
+                                            HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString(),
+                                            HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"].ToString(),
+                                            HttpContext.Current.Request.Params);
                                         foreach (var item in menuI)
                                         {
                                             if (HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() == item.Split('|')[1].ToString())
@@ -84,7 +87,8 @@
                                             }
                                             else
                                             {
-                                                <li class=""><a href="@Url.Action(item.Split('|')[2].ToString(), item.Split('|')[3].ToString(), new {area = item.Split('|')[5].ToString()})"><i class="@item.Split('|')[4].ToString()" aria-hidden="true"></i> @item.Split('|')[1].ToString() </a></li>
+                                                @*<li class=""><a href="@Url.Action(item.Split('|')[2].ToString(), item.Split('|')[3].ToString(), new {area = item.Split('|')[5].ToString()})"><i class="@item.Split('|')[4].ToString()" aria-hidden="true"></i> @item.Split('|')[1].ToString() </a></li>*@
+                                                <li class=""><a href="~/@item.Split('|')[5]/@item.Split('|')[3]/@item.Split('|')[2]"><i class="@item.Split('|')[4].ToString()" aria-hidden="true"></i> @item.Split('|')[1].ToString() </a></li>
                                             }
                                         }
                                     }

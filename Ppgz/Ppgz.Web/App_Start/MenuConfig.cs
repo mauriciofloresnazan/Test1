@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -154,7 +155,7 @@ namespace Ppgz.Web
             };
             return menuLista;
         }
-        public static List<string> GetMenuPaginaActual(string nombreControllerActual, string areaActual)
+        public static List<string> GetMenuPaginaActual(string nombreControllerActual, string areaActual, NameValueCollection parametros = null)
         {
             List<string> menuInternolist = new List<string>();
             switch (areaActual.ToUpper())
@@ -163,7 +164,7 @@ namespace Ppgz.Web
                     menuInternolist = MenuInternoNazan(nombreControllerActual);
                     break;
                 case "MERCADERIA":
-                    menuInternolist = MenuInternoMercaderia(nombreControllerActual);
+                    menuInternolist = MenuInternoMercaderia(nombreControllerActual, parametros);
                     break;
                 case "SERVICIO":
                     menuInternolist = MenuInternoServicio(nombreControllerActual);
@@ -203,7 +204,7 @@ namespace Ppgz.Web
             }
             return menu;
         }
-        private static List<string> MenuInternoMercaderia(string nombreControllerActual)
+        private static List<string> MenuInternoMercaderia(string nombreControllerActual, NameValueCollection parametros = null)
         {
             List<string> menu;
             switch (nombreControllerActual)
@@ -219,9 +220,9 @@ namespace Ppgz.Web
                 case "CuentasPagar":
                     menu = new List<string>
                     {
-                        "CUENTASPAGAR|Pagos|Pagos|CuentasPagar|fa fa-calculator|Mercaderia",
-                        "CUENTASPAGAR|Pagos Pendientes|PagosPendientes|CuentasPagar|fa fa-calculator|Mercaderia",
-                        "CUENTASPAGAR|Devoluciones|Devoluciones|CuentasPagar|fa fa-calculator|Mercaderia"
+                        "CUENTASPAGAR|Pagos|Pagos?proveedorId=" + parametros["proveedorId"] + "|CuentasPagar|fa fa-calculator|Mercaderia",
+                        "CUENTASPAGAR|Pagos Pendientes|PagosPendientes?proveedorId=" + parametros["proveedorId"] + "|CuentasPagar|fa fa-calculator|Mercaderia",
+                        "CUENTASPAGAR|Devoluciones|Devoluciones?proveedorId=" + parametros["proveedorId"] + "|CuentasPagar|fa fa-calculator|Mercaderia"
                     };
                     break;
                 default:

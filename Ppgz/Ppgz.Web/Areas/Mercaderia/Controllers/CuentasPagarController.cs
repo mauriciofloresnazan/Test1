@@ -1,15 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.EnterpriseServices.Internal;
-using System.Linq;
-using System.Reflection.Emit;
+﻿using System.Linq;
 using System.Web.Mvc;
-using System.Web.Util;
-<<<<<<< HEAD
 using Ppgz.Repository;
-=======
-using MySql.Data.MySqlClient;
->>>>>>> b76980783290e9421e738925f9a1dd95b935ab26
 using Ppgz.Web.Infrastructure;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
@@ -87,21 +78,45 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             string[] tiposMovimientos = new string[] {"10","21","4"};
 
-            var datos  = db.cuentasxpagars.Where(c => tiposMovimientos.Contains(c.TipoMovimiento) && c.Referencia == null).ToList();
 
             var result = db.cuentasxpagars
-                .Where(c => tiposMovimientos.Contains(c.TipoMovimiento) && c.Referencia == null && c.ProveedoresId == proveedorId)
-                .GroupBy(c => c.ProveedoresId)
-                   .Select(r => new {  total = r.Sum(i => decimal.Parse( i.Importe)) });
-            ViewBag.data = result;
+                .Where(
+                    c =>
+                        tiposMovimientos.Contains(c.TipoMovimiento) && c.Referencia == null &&
+                        c.ProveedoresId == proveedorId).ToList();
+
+            decimal total = 0;
+
+            foreach (var data in result)
+            {
+                total = total + decimal.Parse(data.Importe);
+            }
+
+            ViewBag.importeTotal = total.ToString("f2");
 
             ViewBag.proveedor = _proveedorManager.Find(proveedorId);
             return View();
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult PagosPendientesDetalle()
+        public ActionResult PagosPendientesDetalle(int proveedorId)
         {
+            Entities db = new Entities();
+
+            string[] tiposMovimientos = new string[] { "10", "21", "4" };
+
+
+            var result = db.cuentasxpagars
+                .Where(
+                    c =>
+                        tiposMovimientos.Contains(c.TipoMovimiento) && c.Referencia == null &&
+                        c.ProveedoresId == proveedorId).ToList();
+
+            
+            
+            ViewBag.data = result;
+
+            ViewBag.proveedor = _proveedorManager.Find(proveedorId);
             return View();
         }
 

@@ -22,24 +22,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr id="mensaje-tr-id-">
-                        <td class="text-center">01/01/2017</td>
-                        <td class="text-center">XXXxxx</td>
-                        <td class="text-center">XXXxxx</td>
-                        <td class="text-center">1.000</td>
+   
+                    <tr>
+                        <td class="text-center">@DateTime.Today.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">@ViewBag.proveedor.Rfc</td>
+                        <td class="text-center">@ViewBag.proveedor.NombreProveedor</td>
+                        <td class="text-center">@ViewBag.importeTotal</td>
                         <td class="text-center">
-                            <a class="btn btn-success btn-xs" href="@Url.Action("PagosPendientesDetalle", "CuentasPagar")">Detalle</a>
+                            <a class="btn btn-success btn-xs" href="@Url.Action("PagosPendientesDetalle", "CuentasPagar", new { proveedorId = ViewBag.proveedor.Id })">Detalle</a>
                         </td>
                     </tr>
-                    <tr id="mensaje-tr-id-">
-                        <td class="text-center">01/01/2017</td>
-                        <td class="text-center">XXXxxx</td>
-                        <td class="text-center">XXXxxx</td>
-                        <td class="text-center">1.000</td>
-                        <td class="text-center">
-                            <a class="btn btn-success btn-xs" href="@Url.Action("PagosPendientesDetalle", "CuentasPagar")">Detalle</a>
-                        </td>
-                    </tr>
+
                 </tbody>
             </table>
         </div>
