@@ -20,20 +20,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr id="mensaje-tr-id-">
-                        <td class="text-center">XXXxx</td>
-                        <td class="text-center vert-align">XXxx</td>
-                        <td class="text-center">
-                            <a href="#" class="ver-mensaje" data-toggle="modal" data-target="#myModal" data-titulo="titulo" data-id="id" data-contenido="contenido"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Ver Detalle</a>
-                        </td>
-                    </tr>
-                    <tr id="mensaje-tr-id-">
-                        <td class="text-center">XXXxx</td>
-                        <td class="text-center vert-align">XXxx</td>
-                        <td class="text-center">
-                            <a href="#" class="ver-mensaje" data-toggle="modal" data-target="#myModal" data-titulo="titulo" data-id="id" data-contenido="contenido"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Ver Detalle</a>
-                        </td>
-                    </tr>
+
+                    @foreach (var proveedor in (ViewBag.proveedores))
+                    {
+                        <tr>
+                            <td class="text-center">@proveedor.Rfc</td>
+                            <td class="text-center vert-align">@proveedor.NombreProveedor</td>
+                            <td class="text-center">
+                                <a href="@Url.Action("Pagos", "CuentasPagar", new { @proveedorId = @proveedor.Id })" ><i class="fa fa-file-excel-o" aria-hidden="true"></i> Ver Detalle</a>
+                            </td>
+                        </tr>
+
+                    }
+
                 </tbody>
             </table>
         </div>
