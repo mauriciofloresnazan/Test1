@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
+using MySql.Data.MySqlClient;
 using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
 
@@ -121,8 +122,23 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult Devoluciones()
+        public ActionResult Devoluciones(int proveedorId)
         {
+            var commonManager = new CommonManager();
+
+
+            MySqlParameter[] parametes = {
+                    new MySqlParameter("id", proveedorId)
+                };
+
+
+            const string sql = @"
+            SELECT cp.*, p.Rfc, p.NombreProveedor 
+            FROM   cuentasxpagar cp
+                   JOIN proveedores p ON p.Id = cp.Proveedoresid
+            WHERE  cp.Proveedoresid = @id AND cp.TipoMovimiento = 'KR';";
+
+            ViewBag.devoluciones = commonManager.QueryToTable(sql, parametes);
             return View();
         }
         

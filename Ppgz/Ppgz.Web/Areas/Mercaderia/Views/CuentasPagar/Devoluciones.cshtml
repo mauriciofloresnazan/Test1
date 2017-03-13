@@ -1,4 +1,5 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using System.Data
+@using Microsoft.AspNet.Identity
 @{
     ViewBag.Title = "Devoluciones";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -23,14 +24,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr id="mensaje-tr-id-">
-                        <td class="text-center">Devolución</td>
-                        <td class="text-center vert-align">5821</td>
-                        <td class="text-center">01/01/2017</td>
-                        <td class="text-center">1.000</td>
-                        <td class="text-center">XXXxxx</td>
-                        <td class="text-center">XXXxxx</td>
-                    </tr>
+
+                    @foreach (DataRow registro in ((DataTable)ViewBag.devoluciones).Rows)
+                    {
+
+                        <tr>
+                            <td class="text-center">Devolución</td>
+                            <td class="text-center vert-align">@registro["NumeroCompensacion"]</td>
+                            <td class="text-center vert-align">@registro["FechaBase"]</td>
+                            <td class="text-center vert-align">@registro["Importe"]</td>
+                            <td class="text-center vert-align">@registro["Rfc"]</td>
+                            <td class="text-center vert-align">@registro["NombreProveedor"]</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
