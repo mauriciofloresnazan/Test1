@@ -45,6 +45,8 @@ namespace Ppgz.Repository
         public virtual DbSet<tipousuario> tipousuarios { get; set; }
         public virtual DbSet<pago> pagos { get; set; }
         public virtual DbSet<vwmensaje> vwmensajes { get; set; }
+        public virtual DbSet<detalleordencompra> detalleordencompras { get; set; }
+        public virtual DbSet<ordencompra> ordencompras { get; set; }
     
         public virtual int add_user(string email, string passwordHash, string phoneNumber, string pUserName, string tipo, string nombre, string apellido, string cargo, Nullable<int> perfilId, Nullable<System.DateTime> terminosCondicionesFecha, Nullable<int> usuarioIdTx, Nullable<int> cuentaId, ObjectParameter userId, ObjectParameter messageError)
         {

@@ -85,10 +85,16 @@
     <Compile Include="cuentasxpagar.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="detalleordencompra.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="fakedataproveedor.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="mensaje.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ordencompra.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="pago.cs">
