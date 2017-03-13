@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using Ppgz.Repository;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Infrastructure.Proveedor;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
@@ -15,10 +14,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 	public class AdministrarProveedoresController : Controller
 	{
 		readonly CuentaManager _cuentaManager = new CuentaManager();
-        readonly ProveedorManager _proveedorManager = new ProveedorManager();
-        //
-        // GET: /Nazan/AdministrarProveedores/
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+		readonly ProveedorManager _proveedorManager = new ProveedorManager();
+		//
+		// GET: /Nazan/AdministrarProveedores/
+		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Index()
 		{
 			var cuentas = _cuentaManager.FinAll();
@@ -116,56 +115,56 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public JsonResult BuscarProveedor(string numeroProveedor)
 		{
-            try
-            {
-                var proveedor = _proveedorManager.FindByCodigoProveedor(numeroProveedor);
+			try
+			{
+				var proveedor = _proveedorManager.FindByCodigoProveedor(numeroProveedor);
 
-                var table = new Hashtable();
-                table["Codigo"] = proveedor.CodigoProveedor;
-                table["RFC"] = proveedor.Rfc;
-                table["Nombre"] = proveedor.NombreProveedor;
-                table["Cidudad"] = proveedor.Ciudad;
-                table["Estado"] = proveedor.Estado;
-                table["Email"] = proveedor.email;
-                table["Direccion 1"] = proveedor.direccion1;
-                table["Dirección 2"] = proveedor.direccion2;
-                table["Dirección 3"] = proveedor.direccion3;
-                return Json(table);
-            }
-            catch (Exception exception)
-            {
-                return Json(new { error = exception.Message });
-            }
-        }
+				var table = new Hashtable();
+				table["Codigo"] = proveedor.CodigoProveedor;
+				table["RFC"] = proveedor.Rfc;
+				table["Nombre"] = proveedor.NombreProveedor;
+				table["Cidudad"] = proveedor.Ciudad;
+				table["Estado"] = proveedor.Estado;
+				table["Email"] = proveedor.email;
+				table["Direccion 1"] = proveedor.direccion1;
+				table["Dirección 2"] = proveedor.direccion2;
+				table["Dirección 3"] = proveedor.direccion3;
+				return Json(table);
+			}
+			catch (Exception exception)
+			{
+				return Json(new { error = exception.Message });
+			}
+		}
 
 
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult AsociarProveedor(int id, string numeroProveedor)
 		{
-            try
-            {
-                var entities = new Entities();
+			try
+			{
+				var entities = new Entities();
 
-                var proveedor = entities.proveedores.SingleOrDefault(a => a.CodigoProveedor == numeroProveedor); ;
+				var proveedor = entities.proveedores.SingleOrDefault(a => a.CodigoProveedor == numeroProveedor); ;
 
-                var cuenta = _cuentaManager.Find(id);
+				var cuenta = _cuentaManager.Find(id);
 
-                proveedor.CuentaId = cuenta.Id;
+				proveedor.CuentaId = cuenta.Id;
 
-                entities.Entry(proveedor).State  = EntityState.Modified;
-                entities.SaveChanges();
+				entities.Entry(proveedor).State  = EntityState.Modified;
+				entities.SaveChanges();
 
-                TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
-                return RedirectToAction("Editar", new { id = id });
-            }
-            catch (Exception exception)
-            {
-                TempData["FlashError"] = exception.Message;
-                return RedirectToAction("Editar", new { id = id });
-            }
+				TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
+				return RedirectToAction("Editar", new { id = id });
+			}
+			catch (Exception exception)
+			{
+				TempData["FlashError"] = exception.Message;
+				return RedirectToAction("Editar", new { id = id });
+			}
 
-        }
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+		}
+		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Eliminar(int id)
 		{
 
@@ -180,24 +179,24 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			// TODO MEJORAR
 
 
-            var entities = new Entities();
-            var proveedor = entities.proveedores.SingleOrDefault(a => a.Id == id);
+			var entities = new Entities();
+			var proveedor = entities.proveedores.SingleOrDefault(a => a.Id == id);
 
-            var cuentaId = proveedor.CuentaId; 
+			var cuentaId = proveedor.CuentaId; 
 			try
 			{
-                proveedor.CuentaId = null;
-                
+				proveedor.CuentaId = null;
+				
 				entities.Entry(proveedor).State = EntityState.Modified ;
 				entities.SaveChanges();
 
 				TempData["FlashSuccess"] = "Proveedor desvinculado con éxito.";
-                return RedirectToAction("Editar", new { id = cuentaId });
+				return RedirectToAction("Editar", new { id = cuentaId });
 			}
 			catch (Exception exception)
 			{
 				TempData["FlashError"] = exception.Message;
-                return RedirectToAction("Editar", new { id = cuentaId });
+				return RedirectToAction("Editar", new { id = cuentaId });
 			}
 		}
 
