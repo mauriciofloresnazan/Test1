@@ -11,7 +11,7 @@
     <div class="panel-heading">Pagos</div>
     <div class="panel-body">
         <div class="col-md-12">
-            <table id="mensajes" class="table table-striped table-condensed table-bordered">
+            <table id="pagos" class="table table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
                         <th class="text-center">N° de Compensación</th>
@@ -72,6 +72,21 @@
 
 
 @section Scripts {
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#pagos').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                    'excel'
+                ]
+            });
+        });
+
+    </script>
+
+
+
     <script type="text/javascript">
 
         var pagoDetalleUrl = "@Url.Action("PagoDetalle", "CuentasPagar")";

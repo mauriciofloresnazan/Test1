@@ -5,7 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
+using MySql.Data.MySqlClient;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Infrastructure.Proveedor;
@@ -16,8 +19,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     [TerminosCondiciones]
     public class OrdenesCompraController : Controller
     {
-        private readonly PerfilProveedorManager _perfilProveedorManager = new PerfilProveedorManager();
-        private readonly CommonManager _commonManager = new CommonManager();
+        private readonly OrdenCompraManager  _ordenCompraManager = new OrdenCompraManager();
+
 
         //
         // GET: /Mercaderia/OrdenesCompra/
@@ -26,6 +29,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         // GET: /Servicio/OrdenesCompra/
         public ActionResult Index()
         {
+            CommonManager commonManager =  new CommonManager();
+
+            var cuenta = commonManager.GetCuentaUsuarioAutenticado();
+
+
+
+
+           ViewBag.data= _ordenCompraManager.FindByCuentaId(cuenta.Id);
             //var perfiles = _perfilProveedorManager
             //    .FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
 
@@ -34,12 +45,41 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             //ViewBag.Perfiles = perfiles;
 
             
-            DataTable dt = crearDt();
+            /*DataTable dt = crearDt();
 
-            exportExcel(dt, "T_PROV_001");
+            exportExcel(dt, "T_PROV_001");*/
             
             return View();
         }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA-LISTAR,MERCADERIA-ORDENESCOMPRA-MODIFICAR")]
+        //
+        // GET: /Servicio/OrdenesCompra/
+        public void Descargar(int id)
+        {
+
+
+            var commonManager = new CommonManager();
+
+
+            MySqlParameter[] parametes = {
+                    new MySqlParameter("id", id)
+                };
+
+
+            const string sql = @"
+            SELECT * 
+            FROM   detalleordencompra
+            WHERE  OrdenComprasId = @id;";
+
+            var dt = commonManager.QueryToTable(sql, parametes);
+
+            ExportExcel(dt, id.ToString());
+
+            
+        }
+
+
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA-LISTAR,MERCADERIA-ORDENESCOMPRA-MODIFICAR")]
         [HttpPost]
         public ActionResult Visualizar(int id)
@@ -99,9 +139,32 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return dt;
         }
 
-        public void exportExcel(DataTable dt, string nombreXLS)
+
+        public void ExportExcel(DataTable dt, string nombreXls)
         {
-            StreamWriter wr = new StreamWriter(@"c:\\temp\" + nombreXLS + ".xls");
+
+            var grid = new GridView();
+            grid.DataSource = dt;
+            grid.DataBind();
+
+            Response.ClearContent();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", "attachment; filename=" + nombreXls + ".xls");
+            Response.ContentType = "application/ms-excel";
+
+            Response.Charset = "";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+
+            grid.RenderControl(htw);
+
+            Response.Output.Write(sw.ToString());
+            Response.Flush();
+            Response.End();
+
+            return;
+
+            StreamWriter wr = new StreamWriter(@"c:\\temp\" + nombreXls + ".xls");
             try
             {
                 for (int i = 0; i < dt.Columns.Count; i++)
