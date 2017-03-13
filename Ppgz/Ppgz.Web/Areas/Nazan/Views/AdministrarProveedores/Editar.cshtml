@@ -91,9 +91,11 @@
         <table class="table table-striped table-condensed table-bordered" style="font-size: .8em;">
             <thead>
                 <tr>
-                    <th colspan="10">
+                    <th colspan="12">
+                        <div class="col-sm-12"><label>Asociar proveedor desde SAP</label></div>
                         <div class="col-sm-3">
-                            <input type="text" name="numero-proveedor" id="numero-proveedor" class="form-control" />
+
+                            <input type="text" name="numero-proveedor" id="numero-proveedor" placeholder="Número de Proveedor" class="form-control"/>
                         </div>
                         <div class="col-sm-7">
                             <a id="buscar" class="btn btn-primary" href="#"><i class="fa fa-search" aria-hidden="true"></i> Buscar</a>
@@ -102,47 +104,39 @@
                 </tr>
                 <tr>
                     <th class="text-center vert-align">Numero</th>
+                    <th class="text-center vert-align">RFC</th>
                     <th class="text-center vert-align">Nombre</th>
                     <th class="text-center vert-align">Ciudad</th>
-                    <th class="text-center vert-align">Distrito</th>
-                    <th class="text-center vert-align">Vendedor</th>
-                    <th class="text-center vert-align">VendedorTelefono</th>
-                    <th class="text-center vert-align">Comprador Impuls</th>
-                    <th class="text-center vert-align">Comprador Impuls Tel.</th>
-                    <th class="text-center vert-align">Comprador Impuls Email</th>
+                    <th class="text-center vert-align">Estado</th>
+                    <th class="text-center vert-align">Codigo Postal</th>
+                    <th class="text-center vert-align">Dirección 1</th>
+                    <th class="text-center vert-align">Dirección 2</th>
+                    <th class="text-center vert-align">Dirección 3</th>
+                    <th class="text-center vert-align">Email</th>
                     <th>
                     </th>
 
                 </tr>
             </thead>
             <tbody>
-            @foreach (var proveedor in ViewBag.cuenta.cuentaproveedores)
+            @foreach (var proveedor in ViewBag.cuenta.proveedores)
             {
                 <tr>
-                    <td>@proveedor.NumeroProveedor</td>
-                    <td>@proveedor.Nombre</td>
+                    <td>@proveedor.CodigoProveedor</td>
+                    <td>@proveedor.Rfc</td>
+                    <td>@proveedor.NombreProveedor</td>
                     <td>@proveedor.Ciudad</td>
-                    <td>@proveedor.Distrito</td>
-                    <td>@proveedor.VendedorNombre</td>
-                    <td>@proveedor.VendedorTelefono</td> 
-                    <td>@proveedor.CompradorImpulsNombre</td>
-                    <td>@proveedor.CompradorImpulsTelefono</td>
-                    <td>@proveedor.CompradorImpulsEmail</td>
+                    <td>@proveedor.Estado</td>
+                    <td>@proveedor.CodigoPostal</td>
+                    <td>@proveedor.direccion1</td> 
+                    <td>@proveedor.direccion2</td>
+                    <td>@proveedor.direccion3</td>
+                    <td>@proveedor.email</td>
                     <td>
                         
-                        <div class="btn-group-vertical hidden-xs">
-                            <a class="btn btn-warning btn-xs" href="@Url.Action("Editar", "AdministrarProveedores", new { @id = @proveedor.CuentaId })">
-                                <i class="fa fa-pencil" aria-hidden="true"></i> Editar
-                            </a>
-                            <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarProveedores", new { @id = @proveedor.CuentaId })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El usuario será eliminado.">
-                                <i class="fa fa-times" aria-hidden="true"></i> Eliminar
-                            </a>
-                        </div>
-                        <div class="btn-group-vertical visible-xs">
-                            <a class="btn btn-warning btn-xs" href="@Url.Action("Editar", "AdministrarProveedores", new { @id = @proveedor.CuentaId })">
-                                <i class="fa fa-pencil" aria-hidden="true"></i> Editar
-                            </a>
-                            <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarProveedores", new { @id = @proveedor.CuentaId })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El usuario será eliminado.">
+                        <div class="">
+                            
+                            <a class="btn btn-danger btn-xs" href="@Url.Action("DesAsociarProveedor", "AdministrarProveedores", new { @id = @proveedor.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="Cuidad el proveedor será desvinculado de la cuenta.">
                                 <i class="fa fa-times" aria-hidden="true"></i> Eliminar
                             </a>
                         </div>
@@ -271,6 +265,8 @@
      
             });
         }
+
+
 
     </script>
 }

@@ -128,12 +128,21 @@
     @Scripts.Render("~/assets/vendor/dataTables-1.10.13/media/js/dataTables.bootstrap.min.js")
     @Scripts.Render("~/assets/vendor/bootstrap-confirmation.min.js")
     @Scripts.Render("~/assets/vendor/moment/moment-with-locales.min.js")
-    @Scripts.Render("~/assets/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js")
-
+        @Scripts.Render("~/assets/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js")
+    @Scripts.Render("~/assets/vendor/jquery.blockUI.js")
     <script type="text/javascript">
         $('[data-toggle=confirmation]').confirmation({
             rootSelector: '[data-toggle=confirmation]',
             container: 'body'
+        });
+
+        $(document).ready(function () {
+            $(document).ajaxStart(function () {
+                $.blockUI({
+                    message: 'Por favor espere...'
+                });
+
+            }).ajaxStop($.unblockUI);
         });
 
     </script>

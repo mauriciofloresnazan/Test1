@@ -116,16 +116,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public JsonResult BuscarProveedor(string numeroProveedor)
 		{
-
-
-            //return Json("test");
-
             try
             {
                 var proveedor = _proveedorManager.FindByCodigoProveedor(numeroProveedor);
-
-
-
 
                 var table = new Hashtable();
                 table["Codigo"] = proveedor.CodigoProveedor;
@@ -143,32 +136,14 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 return Json(new { error = exception.Message });
             }
-
-            /*var sapManager = new SapManager();
-
-			try
-			{
-				 proveedor = sapManager.GetProveedor(numeroProveedor);
-				return Json(proveedor); ;
-
-			}
-			catch (Exception exception)
-			{
-				return Json(new { error = exception.Message}) ;
-			}*/
-
-
         }
 
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult AsociarProveedor(int id, string numeroProveedor)
 		{
-
-
             try
             {
-
                 var entities = new Entities();
 
                 var proveedor = entities.proveedores.SingleOrDefault(a => a.CodigoProveedor == numeroProveedor); ;
@@ -177,9 +152,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
                 proveedor.CuentaId = cuenta.Id;
 
-
-
-                entities.proveedores.Add(proveedor);
+                entities.Entry(proveedor).State  = EntityState.Modified;
                 entities.SaveChanges();
 
                 TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
@@ -201,32 +174,32 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return RedirectToAction("Index");
 			
 		}
-		/*
-		public ActionResult DesasociarProveedor(string numeroProveedor)
+		
+		public ActionResult DesasociarProveedor(int id)
 		{
 			// TODO MEJORAR
+
+
+            var entities = new Entities();
+            var proveedor = entities.proveedores.SingleOrDefault(a => a.Id == id);
+
+            var cuentaId = proveedor.CuentaId; 
 			try
 			{
-				var proveedor = sapManager.GetProveedor(numeroProveedor);
-
-				var cuenta = _cuentaManager.Find(id);
-
-				proveedor.CuentaId = cuenta.Id;
-
-				var entities = new Entities();
-				entities.cuentaproveedores.FirstOrDefaultAsync(
-					c=> c.NumeroProveedor == numeroProveedor);
+                proveedor.CuentaId = null;
+                
+				entities.Entry(proveedor).State = EntityState.Modified ;
 				entities.SaveChanges();
 
-				TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
-				return RedirectToAction("Editar", new { id = id });
+				TempData["FlashSuccess"] = "Proveedor desvinculado con éxito.";
+                return RedirectToAction("Editar", new { id = cuentaId });
 			}
 			catch (Exception exception)
 			{
 				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("Editar", new { id = id });
+                return RedirectToAction("Editar", new { id = cuentaId });
 			}
-		}*/
+		}
 
 	}
 }

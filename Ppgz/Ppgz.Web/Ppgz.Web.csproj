@@ -949,6 +949,7 @@
     <Content Include="assets\vendor\font-awesome-4.7.0\css\font-awesome.min.css" />
     <Content Include="assets\vendor\font-awesome-4.7.0\fonts\fontawesome-webfont.svg" />
     <Content Include="assets\vendor\font-awesome-4.7.0\HELP-US-OUT.txt" />
+    <Content Include="assets\vendor\jquery.blockUI.js" />
     <Content Include="assets\vendor\moment\locales.min.js" />
     <Content Include="assets\vendor\moment\moment-with-locales.min.js" />
     <Content Include="assets\vendor\moment\moment.min.js" />
