@@ -258,6 +258,7 @@
     <Compile Include="Infrastructure\CommonManager.cs" />
     <Compile Include="Infrastructure\CuentaManager.cs" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
+    <Compile Include="Infrastructure\OrdenCompraManager.cs" />
     <Compile Include="Infrastructure\ProveedorManager.cs" />
     <Compile Include="Infrastructure\Proveedor\PerfilProveedorManager.cs" />
     <Compile Include="Infrastructure\Proveedor\UsuarioProveedorManager.cs" />
@@ -1186,7 +1187,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>16636</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
