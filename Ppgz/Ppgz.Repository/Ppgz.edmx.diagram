@@ -41,6 +41,8 @@
         <AssociationConnector Association="impuls_portalModel.AspNetUserRoles" ManuallyRouted="false" />
         <AssociationConnector Association="impuls_portalModel.cuentasusuarios" ManuallyRouted="false" />
         <AssociationConnector Association="impuls_portalModel.perfilesroles" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="impuls_portalModel.detalleordencompra" Width="1.5" PointX="3.375" PointY="8.75" />
+        <EntityTypeShape EntityType="impuls_portalModel.ordencompra" Width="1.5" PointX="9.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

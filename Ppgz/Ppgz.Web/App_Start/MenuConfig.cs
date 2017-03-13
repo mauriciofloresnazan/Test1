@@ -103,15 +103,15 @@ namespace Ppgz.Web
         {
             string[] menuLista =
             {
-                "|Gestión de Proveedor|||fa fa-address-book-o|Nazan",
-                "|Administración de Usuarios Proveedor|||fa fa-address-card|Nazan",
-                "|Administración de Perfiles Proveedor|||fa fa-address-card|Nazan",
-                "|Órdenes de Compra|||fa fa-address-book|Nazan",
-                "|Cuentas por Pagar|||fa fa-calculator|Nazan",
-                "|Administración de Facturas|||fa fa-calculator|Nazan",
+                //"|Gestión de Proveedor|||fa fa-address-book-o|Nazan",
+                //"|Administración de Usuarios Proveedor|||fa fa-address-card|Nazan",
+                //"|Administración de Perfiles Proveedor|||fa fa-address-card|Nazan",
+                //"|Órdenes de Compra|||fa fa-address-book|Nazan",
+                "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Nazan",
+                //"|Administración de Facturas|||fa fa-calculator|Nazan",
                 "ADMINISTRAMENSAJESINSTITUCIONALES|Administrar Mensajes Insitucionales|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan",
-                "|Control de Citas|||fa fa-calendar|Nazan",
-                "|Reportes|||fa fa-file-pdf-o|Nazan",
+                //"|Control de Citas|||fa fa-calendar|Nazan",
+                //"|Reportes|||fa fa-file-pdf-o|Nazan",
                 "ADMINISTRARUSUARIOSNAZAN|Administración de Usuarios Nazan|Index|AdministrarUsuariosNazan|fa fa fa-users|Nazan",
                 "ADMINISTRARPERFILESNAZAN|Administración de Perfiles Nazan|Index|AdministrarPerfilesNazan|fa fa fa-road|Nazan",
                 "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedoes Nazan|Index|AdministrarProveedores|fa fa-address-book-o|Nazan"
@@ -122,18 +122,18 @@ namespace Ppgz.Web
         {
             string[] menuLista =
             {
-                "|Gestión de Proveedor|||fa fa-address-book-o|Mercaderia",
+                //"|Gestión de Proveedor|||fa fa-address-book-o|Mercaderia",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-address-book|Mercaderia",
-                "|Control de Citas|||fa fa-calendar|Mercaderia",
-                "|Comprobante de Recibo|||fa fa-file-pdf-o|Mercaderia",
-                "|Impresión de Etiquetas|||fa fa-file-pdf-o|Mercaderia",
-                "|Cuentas por Pagar|||fa fa-calculator|Mercaderia",
-                "|Administración de Facturas|||fa fa-calculator|Mercaderia",
+                //"|Control de Citas|||fa fa-calendar|Mercaderia",
+                //"|Comprobante de Recibo|||fa fa-file-pdf-o|Mercaderia",
+                //"|Impresión de Etiquetas|||fa fa-file-pdf-o|Mercaderia",
+                //"|Cuentas por Pagar|||fa fa-calculator|Mercaderia",
+                //"|Administración de Facturas|||fa fa-calculator|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
-                "|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
+                //"|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
-                "ADMINISTRARUSUARIOS|Autenticación de Usuarios Proveedor|||fa fa-address-book-o|Mercaderia",
-                "|Reportes|||fa fa-file-pdf-o|Mercaderia"
+                //"|Autenticación de Usuarios Proveedor|||fa fa-address-book-o|Mercaderia"
+                //"|Reportes|||fa fa-file-pdf-o|Mercaderia"
             };
             return menuLista;
         }
@@ -141,15 +141,15 @@ namespace Ppgz.Web
         {
             string[] menuLista =
             {
-                "|Gestión de Proveedor|||fa fa-address-book-o|Servicio",
+                //"|Gestión de Proveedor|||fa fa-address-book-o|Servicio",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-address-book|Servicio",
-                "|Cuentas por Pagar|||fa fa-calculator|Servicio",
-                "|Administración de Facturas|||fa fa-calculator|Servicio",
-                "MENSAJESINSTITUCIONALES|Mensajes Insitucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio",
-                "|Administración de Usuarios Proveedor|||fa fa-address-card|Servicio",
+                //"|Cuentas por Pagar|||fa fa-calculator|Servicio",
+                //"|Administración de Facturas|||fa fa-calculator|Servicio",
+                "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio",
+                //"|Administración de Usuarios Proveedor|||fa fa-address-card|Servicio",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-users|Servicio",
-                "ADMINISTRARUSUARIOS|Autenticación de Usuarios|Index|AdministrarUsuarios|fa fa fa-road|Servicio",
-                "|Reportes|||fa fa-file-pdf-o|Servicio"
+                "ADMINISTRARUSUARIOS|Autenticación de Usuarios|Index|AdministrarUsuarios|fa fa fa-road|Servicio"
+                //"|Reportes|||fa fa-file-pdf-o|Servicio"
             };
             return menuLista;
         }
@@ -226,25 +226,12 @@ namespace Ppgz.Web
             List<string> menu;
             switch (nombreControllerActual)
             {
-                case "AdministrarMensajesInstitucionales":
+                case "CuentasPagar":
                     menu = new List<string>
                     {
-                        "ADMINISTRAMENSAJESINSTITUCIONALES|Recibidos|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan",
-                        "ADMINISTRAMENSAJESINSTITUCIONALES|Rechazados|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan",
-                        "ADMINISTRAMENSAJESINSTITUCIONALES|Descartados|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan"
-                    };
-                    break;
-                case "AdministrarProveedores":
-                    menu = new List<string>
-                    {
-                        "ADMINISTRARPERFILESNAZAN|Nuevo|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan",
-                        "ADMINISTRARPERFILESNAZAN|Proveedor|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan"
-                    };
-                    break;
-                case "AdministrarUsuariosNazan":
-                    menu = new List<string>
-                    {
-                        "ADMINISTRARUSUARIOS|Nuevo|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan"
+                        "CUENTASPAGAR|Pagos|Pagos|CuentasPagar|fa fa-calculator|Nazan",
+                        "CUENTASPAGAR|Pagos Pendientes|PagosPendientes|CuentasPagar|fa fa-calculator|Nazan",
+                        "CUENTASPAGAR|Devoluciones|Devoluciones|CuentasPagar|fa fa-calculator|Nazan"
                     };
                     break;
                 default:
