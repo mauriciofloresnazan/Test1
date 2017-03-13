@@ -107,7 +107,6 @@ namespace Ppgz.Web
                 //"|Administración de Usuarios Proveedor|||fa fa-address-card|Nazan",
                 //"|Administración de Perfiles Proveedor|||fa fa-address-card|Nazan",
                 //"|Órdenes de Compra|||fa fa-address-book|Nazan",
-                "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Nazan",
                 //"|Administración de Facturas|||fa fa-calculator|Nazan",
                 "ADMINISTRAMENSAJESINSTITUCIONALES|Administrar Mensajes Institucionales|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan",
                 //"|Control de Citas|||fa fa-calendar|Nazan",
@@ -132,6 +131,8 @@ namespace Ppgz.Web
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
                 //"|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
+
+                "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Mercaderia",
                 //"|Autenticación de Usuarios Proveedor|||fa fa-address-book-o|Mercaderia"
                 //"|Reportes|||fa fa-file-pdf-o|Mercaderia"
             };
@@ -229,9 +230,9 @@ namespace Ppgz.Web
                 case "CuentasPagar":
                     menu = new List<string>
                     {
-                        "CUENTASPAGAR|Pagos|Pagos|CuentasPagar|fa fa-calculator|Nazan",
-                        "CUENTASPAGAR|Pagos Pendientes|PagosPendientes|CuentasPagar|fa fa-calculator|Nazan",
-                        "CUENTASPAGAR|Devoluciones|Devoluciones|CuentasPagar|fa fa-calculator|Nazan"
+                        "CUENTASPAGAR|Pagos|Pagos|CuentasPagar|fa fa-calculator|Mercaderia",
+                        "CUENTASPAGAR|Pagos Pendientes|PagosPendientes|CuentasPagar|fa fa-calculator|Mercaderia",
+                        "CUENTASPAGAR|Devoluciones|Devoluciones|CuentasPagar|fa fa-calculator|Mercaderia"
                     };
                     break;
                 default:

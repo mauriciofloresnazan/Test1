@@ -194,7 +194,7 @@
     <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
-    <Compile Include="Areas\Nazan\Controllers\CuentasPagarController.cs" />
+    <Compile Include="Areas\Mercaderia\Controllers\CuentasPagarController.cs" />
     <Compile Include="Areas\Nazan\MensajesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1089,11 +1089,11 @@
     <Content Include="Areas\Mercaderia\Views\OrdenesCompra\Index.cshtml" />
     <Content Include="Areas\Servicio\Views\OrdenesCompra\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitas\Index.cshtml" />
-    <Content Include="Areas\Nazan\Views\CuentasPagar\Index.cshtml" />
-    <Content Include="Areas\Nazan\Views\CuentasPagar\Pagos.cshtml" />
-    <Content Include="Areas\Nazan\Views\CuentasPagar\PagosPendientes.cshtml" />
-    <Content Include="Areas\Nazan\Views\CuentasPagar\PagosPendientesDetalle.cshtml" />
-    <None Include="Areas\Nazan\Views\CuentasPagar\Devoluciones.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\CuentasPagar\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\CuentasPagar\Pagos.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\CuentasPagar\PagosPendientes.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\CuentasPagar\PagosPendientesDetalle.cshtml" />
+    <None Include="Areas\Mercaderia\Views\CuentasPagar\Devoluciones.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

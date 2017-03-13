@@ -42,7 +42,11 @@ namespace Ppgz.Web
                 {"MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR","Modificar usuarios"},
                 {"MERCADERIA-MENSAJESINSTITUCIONALES","Mensajes Insitucionales"},
                 {"MERCADERIA-ORDENESCOMPRA-LISTAR","Acceso a Ordenes de Compra"},
-                {"MERCADERIA-ORDENESCOMPRA-MODIFICAR","Modificar Ordenes de Compra"}
+                {"MERCADERIA-ORDENESCOMPRA-MODIFICAR","Modificar Ordenes de Compra"},
+                {" MERCADERIA-CUENTASPAGAR","Cuentas por pagar"},
+
+
+               
             };
             return rolesMercaderia;
         }

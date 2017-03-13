@@ -1,0 +1,98 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Devoluciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="form-signin-heading">Devoluciones</h2>
+<p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i> <i>En esta sección podrá gestionar los pagos que tiene con el Grupo Nazan.</i></p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Devoluciones</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <table id="mensajes" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Estado</th>
+                        <th class="text-center">N° de Compensación</th>
+                        <th class="text-center">Fecha de Pago</th>
+                        <th class="text-center">Importe</th>
+                        <th class="text-center">Proveedor RFC</th>
+                        <th class="text-center">Proveedor Razón Social</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr id="mensaje-tr-id-">
+                        <td class="text-center">Devolución</td>
+                        <td class="text-center vert-align">5821</td>
+                        <td class="text-center">01/01/2017</td>
+                        <td class="text-center">1.000</td>
+                        <td class="text-center">XXXxxx</td>
+                        <td class="text-center">XXXxxx</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"><span id="mensaje-titulo"></span></h4>
+            </div>
+            <div class="modal-body">
+                <p id="mensaje-contenido"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        var usuarioMensajes = "@ViewBag.mensajesUsuario";
+
+        $(document).ready(function () {
+            $(document).on("click", ".ver-mensaje", function () {
+                Visualizar($(this).data('id'));
+                var titulo = $(this).data('titulo');
+                var contenido = $(this).data('contenido');
+                $('.modal-title').text(titulo);
+                $(".modal-body #mensaje-contenido").text(contenido);
+            });
+
+            $(document).on("click", ".descargar-mensaje", function () {
+                Visualizar($(this).data('id'));
+            });
+
+            $('#mensajes').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+            });
+        });
+
+
+        function Visualizar(mensajeId) {
+            $.ajax({
+                url: '@Url.Action("Visualizar", "MensajesInstitucionales")',
+                data: { id: mensajeId },
+                type: 'POST',
+                success: function (data) {
+                    $("#mensaje-tr-id-" + mensajeId + " .leido-flag").text("SI");
+                    //alert(data);
+                }
+            });
+        }
+    </script>
+}
+
+

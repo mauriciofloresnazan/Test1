@@ -5,8 +5,9 @@
 }
 
 <div>
-    <h2>Editar Cuenta de Proveedor</h2>
+    <h2>Editar Cuenta de Proveedor <a class="btn btn-default" href="@Url.Action("Index", "AdministrarProveedores")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a></h2>
     <p class="page-description-title"><i class="fa fa-info" aria-hidden="true"></i> <i>Información de la cuenta</i>
+        
     </p>
 
     <div class="col-sm-6">
@@ -167,26 +168,7 @@
                 <h4 class="modal-title" id="myModalLabel"><span id="mensaje-titulo"></span></h4>
             </div>
             <div class="modal-body">
-                <div style="height: 400px; overflow: auto;">
-                    <label>Numero</label>
-                    <p id="modalBuscarNumero"></p>
-                    <label>Nombre</label>
-                    <p id="modalBuscarNombre"></p>
-                    <label>Ciudad</label>
-                    <p id="modalBuscarCiudad"></p>
-                    <label>Distrito</label>
-                    <p id="modalBuscarDistrito"></p>
-                    <label>Vendedor Nombre</label>
-                    <p id="modalBuscarVendedorNombre"></p>
-                    <label>Vendero Teléfono</label>
-                    <p id="modalBuscarVendedorTelefono"></p>
-                    <label>Comprador Impulse Nombre</label>
-                    <p id="modalBuscarCompradorImpulsNombre"></p>
-                    <label>Comprador Impulse Telefono</label>
-                    <p id="modalBuscarCompradorImpulseTelefono"></p>
-                    <label>Comprador Impuls Email</label>
-                    <p id="modalBuscarCompradorImpulseEmail"></p>
-                </div>
+
 
             </div>
             <div class="modal-footer">
@@ -250,20 +232,7 @@
         function buscarNumeroProveedor(numeroProveedor) {
 
 
-          /*  $("#modalBuscarNumero").text("");
-            $("#modalBuscarNombre").text("");
-            $("#modalBuscarCiudad").text("");
-            $("#modalBuscarDistrito").text("");
-            $("#modalBuscarVendedorNombre").text("");
-            $("#modalBuscarVendedorTelefono").text("");
-            $("#modalBuscarCompradorImpulsNombre").text("");
-            $("#modalBuscarCompradorImpulseTelefono").text("");
-            $("#modalBuscarCompradorImpulseEmail").text("");
-
-
-
-            */
-
+ 
             var data = {
                 numeroProveedor: numeroProveedor
             };
@@ -288,19 +257,8 @@
 
                     $("#buscarModal .modal-body").append("<label>" + key + "</label>");
                     $("#buscarModal .modal-body").append("<p>" + result[key] + "</p>");
-                    //console.log('key: ' + key + '\n' + 'value: ' + result[key]);
                 }
 
-                /*$("#modalBuscarNumero").text(result.NumeroProveedor);
-                $("#modalBuscarNombre").text(result.Nombre);
-                $("#modalBuscarCiudad").text(result.Ciudad);
-                $("#modalBuscarDistrito").text(result.Distrito);
-                $("#modalBuscarVendedorNombre").text(result.VendedorNombre);
-                $("#modalBuscarVendedorTelefono").text(result.VendedorTelefono);
-                $("#modalBuscarCompradorImpulsNombre").text(result.CompradorImpulsNombre);
-                $("#modalBuscarCompradorImpulseTelefono").text(result.CompradorImpulsTelefono);
-                $("#modalBuscarCompradorImpulseEmail").text(result.CompradorImpulsEmail);
-                */
 
                 $("#asociar-proveedor").attr("href", urlAsociarProveedor + "/" + cuentaId + "?numeroProveedor=" + numeroProveedor);
                 
