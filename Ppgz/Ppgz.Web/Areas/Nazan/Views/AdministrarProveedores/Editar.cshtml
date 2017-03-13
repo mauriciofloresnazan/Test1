@@ -5,7 +5,7 @@
 }
 
 <div>
-    <h2>Editar cuenta de Proveedor</h2>
+    <h2>Editar Cuenta de Proveedor</h2>
     <p class="page-description-title"><i class="fa fa-info" aria-hidden="true"></i> <i>Información de la cuenta</i>
     </p>
 
@@ -37,7 +37,7 @@
 
 
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-6" style="display: none">
         <div class="row">
             <div class="col-sm-3"><strong>Estatus</strong>
             </div>
@@ -95,7 +95,7 @@
                             <input type="text" name="numero-proveedor" id="numero-proveedor" class="form-control" />
                         </div>
                         <div class="col-sm-7">
-                            <a id="buscar" class="btn btn-primary"><i class="fa fa-plus" aria-hidden="true"></i> Incluir Nuevo</a>
+                            <a id="buscar" class="btn btn-primary" href="#"><i class="fa fa-search" aria-hidden="true"></i> Buscar</a>
                         </div>
                     </th>
                 </tr>
@@ -250,7 +250,7 @@
         function buscarNumeroProveedor(numeroProveedor) {
 
 
-            $("#modalBuscarNumero").text("");
+          /*  $("#modalBuscarNumero").text("");
             $("#modalBuscarNombre").text("");
             $("#modalBuscarCiudad").text("");
             $("#modalBuscarDistrito").text("");
@@ -262,7 +262,7 @@
 
 
 
-
+            */
 
             var data = {
                 numeroProveedor: numeroProveedor
@@ -281,8 +281,17 @@
                     $('#buscarModalError').modal('show');
                     return;
                 }
+                $("#buscarModal .modal-body").html("");
 
-                $("#modalBuscarNumero").text(result.NumeroProveedor);
+
+                for (var key in result) {
+
+                    $("#buscarModal .modal-body").append("<label>" + key + "</label>");
+                    $("#buscarModal .modal-body").append("<p>" + result[key] + "</p>");
+                    //console.log('key: ' + key + '\n' + 'value: ' + result[key]);
+                }
+
+                /*$("#modalBuscarNumero").text(result.NumeroProveedor);
                 $("#modalBuscarNombre").text(result.Nombre);
                 $("#modalBuscarCiudad").text(result.Ciudad);
                 $("#modalBuscarDistrito").text(result.Distrito);
@@ -291,7 +300,7 @@
                 $("#modalBuscarCompradorImpulsNombre").text(result.CompradorImpulsNombre);
                 $("#modalBuscarCompradorImpulseTelefono").text(result.CompradorImpulsTelefono);
                 $("#modalBuscarCompradorImpulseEmail").text(result.CompradorImpulsEmail);
-
+                */
 
                 $("#asociar-proveedor").attr("href", urlAsociarProveedor + "/" + cuentaId + "?numeroProveedor=" + numeroProveedor);
                 

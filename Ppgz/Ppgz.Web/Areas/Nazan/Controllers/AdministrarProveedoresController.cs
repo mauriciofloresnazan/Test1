@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Data.Entity;
+using System.Linq;
 using System.Web.Mvc;
 using Ppgz.Repository;
 using Ppgz.Web.Areas.Nazan.Models;
@@ -13,9 +15,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 	public class AdministrarProveedoresController : Controller
 	{
 		readonly CuentaManager _cuentaManager = new CuentaManager();
-		//
-		// GET: /Nazan/AdministrarProveedores/
-		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        readonly ProveedorManager _proveedorManager = new ProveedorManager();
+        //
+        // GET: /Nazan/AdministrarProveedores/
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Index()
 		{
 			var cuentas = _cuentaManager.FinAll();
@@ -113,50 +116,83 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public JsonResult BuscarProveedor(string numeroProveedor)
 		{
-			var sapManager = new SapManager();
+
+
+            //return Json("test");
+
+            try
+            {
+                var proveedor = _proveedorManager.FindByCodigoProveedor(numeroProveedor);
+
+
+
+
+                var table = new Hashtable();
+                table["Codigo"] = proveedor.CodigoProveedor;
+                table["RFC"] = proveedor.Rfc;
+                table["Nombre"] = proveedor.NombreProveedor;
+                table["Cidudad"] = proveedor.Ciudad;
+                table["Estado"] = proveedor.Estado;
+                table["Email"] = proveedor.email;
+                table["Direccion 1"] = proveedor.direccion1;
+                table["Dirección 2"] = proveedor.direccion2;
+                table["Dirección 3"] = proveedor.direccion3;
+                return Json(table);
+            }
+            catch (Exception exception)
+            {
+                return Json(new { error = exception.Message });
+            }
+
+            /*var sapManager = new SapManager();
 
 			try
 			{
-				var proveedor = sapManager.GetProveedor(numeroProveedor);
+				 proveedor = sapManager.GetProveedor(numeroProveedor);
 				return Json(proveedor); ;
 
 			}
 			catch (Exception exception)
 			{
 				return Json(new { error = exception.Message}) ;
-			}
-
-		}
+			}*/
 
 
-		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        }
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult AsociarProveedor(int id, string numeroProveedor)
 		{
-			var sapManager = new SapManager();
 
-			try
-			{
-				var proveedor = sapManager.GetProveedor(numeroProveedor);
 
-				var cuenta = _cuentaManager.Find(id);
-				
-				proveedor.CuentaId = cuenta.Id;
+            try
+            {
 
-				var entities = new Entities();
-				entities.cuentaproveedores.Add(proveedor);
-				entities.SaveChanges();
+                var entities = new Entities();
 
-				TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
-				return RedirectToAction("Editar", new { id = id });
-			}
-			catch (Exception exception)
-			{
-				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("Editar", new { id = id }); 
-			}
+                var proveedor = entities.proveedores.SingleOrDefault(a => a.CodigoProveedor == numeroProveedor); ;
 
-		}
-		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+                var cuenta = _cuentaManager.Find(id);
+
+                proveedor.CuentaId = cuenta.Id;
+
+
+
+                entities.proveedores.Add(proveedor);
+                entities.SaveChanges();
+
+                TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
+                return RedirectToAction("Editar", new { id = id });
+            }
+            catch (Exception exception)
+            {
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("Editar", new { id = id });
+            }
+
+        }
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Eliminar(int id)
 		{
 

@@ -258,6 +258,7 @@
     <Compile Include="Infrastructure\CommonManager.cs" />
     <Compile Include="Infrastructure\CuentaManager.cs" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
+    <Compile Include="Infrastructure\ProveedorManager.cs" />
     <Compile Include="Infrastructure\Proveedor\PerfilProveedorManager.cs" />
     <Compile Include="Infrastructure\Proveedor\UsuarioProveedorManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioNazanManager.cs" />
