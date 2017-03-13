@@ -258,6 +258,7 @@
     <Compile Include="Infrastructure\BusinessException.cs" />
     <Compile Include="Infrastructure\CommonManager.cs" />
     <Compile Include="Infrastructure\CuentaManager.cs" />
+    <Compile Include="Infrastructure\CuentasPorPagarManager.cs" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
     <Compile Include="Infrastructure\OrdenCompraManager.cs" />
     <Compile Include="Infrastructure\ProveedorManager.cs" />
