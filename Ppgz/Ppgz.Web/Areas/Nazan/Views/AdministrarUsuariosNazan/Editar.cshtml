@@ -3,12 +3,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Crear Usuario Nazan</h2>
+<h2>Editar Usuario Nazan</h2>
 <p class="page-description-title">
-    <i class="fa fa-info" aria-hidden="true"></i> <i>Nuevo usuario</i>
+    <i class="fa fa-info" aria-hidden="true"></i> <i>Editar usuario Nazan</i>
 </p>
 <div class="panel panel-default">
-    <div class="panel-heading">Formulario de registro</div>
+    <div class="panel-heading">Formulario de Edición</div>
     <div class="panel-body">
 
         @using (Html.BeginForm("Editar", "AdministrarUsuariosNazan", new {ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -66,7 +66,7 @@
 
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-7">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-user-plus" aria-hidden="true"></i> Registrar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-user-plus" aria-hidden="true"></i> Guardar</button>
                     <a class="btn btn-default" href="@Url.Action("Index", "AdministrarUsuariosNazan")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
                 </div>
             </div>
