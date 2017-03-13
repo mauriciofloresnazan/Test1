@@ -216,6 +216,14 @@ namespace Ppgz.Web
                         "MENSAJESINSTITUCIONALES|Descartados|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia"
                     };
                     break;
+                case "CuentasPagar":
+                    menu = new List<string>
+                    {
+                        "CUENTASPAGAR|Pagos|Pagos|CuentasPagar|fa fa-calculator|Mercaderia",
+                        "CUENTASPAGAR|Pagos Pendientes|PagosPendientes|CuentasPagar|fa fa-calculator|Mercaderia",
+                        "CUENTASPAGAR|Devoluciones|Devoluciones|CuentasPagar|fa fa-calculator|Mercaderia"
+                    };
+                    break;
                 default:
                     menu = new List<string> { "MENSAJESINSTITUCIONALES|" + nombreControllerActual + "|Index|" + nombreControllerActual + "|fa fa-envelope-open|Mercaderia" };
                     break;
