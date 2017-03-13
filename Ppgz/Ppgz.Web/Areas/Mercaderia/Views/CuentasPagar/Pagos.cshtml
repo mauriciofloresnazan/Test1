@@ -14,7 +14,6 @@
             <table id="mensajes" class="table table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center">Estado</th>
                         <th class="text-center">N° de Compensación</th>
                         <th class="text-center">Fecha de Pago</th>
                         <th class="text-center">Importe</th>
@@ -23,29 +22,26 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr id="mensaje-tr-id-">
-                        <td class="text-center">PAGADO</td>
-                        <td class="text-center vert-align">5821</td>
-                        <td class="text-center">01/01/2017</td>
-                        <td class="text-center">1.000</td>
-                        <td class="text-center">XXXxxx</td>
-                        <td class="text-center">XXXxxx</td>
-                    </tr>
-                    <tr id="mensaje-tr-id-">
-                        <td class="text-center">PAGADO</td>
-                        <td class="text-center vert-align">5821</td>
-                        <td class="text-center">01/01/2017</td>
-                        <td class="text-center">1.000</td>
-                        <td class="text-center">XXXxxx</td>
-                        <td class="text-center">XXXxxx</td>
-                    </tr>
+                    @foreach (var pago in (ViewBag.pagos))
+                    {
+                        <tr>
+                            <td class="text-center"><a href="javascript:verDetalle('@pago.NumeroCompensacion')">@pago.NumeroCompensacion</a></td>
+                            <td class="text-center vert-align">@pago.FechaDePago</td>
+                            <td class="text-center vert-align">@pago.Importe</td>
+                            <td class="text-center vert-align">@ViewBag.proveedor.Rfc</td>
+                            <td class="text-center vert-align">@ViewBag.proveedor.NombreProveedor</td>
+                           
+                        </tr>
+
+                    }
+
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="buscarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -53,7 +49,19 @@
                 <h4 class="modal-title" id="myModalLabel"><span id="mensaje-titulo"></span></h4>
             </div>
             <div class="modal-body">
-                <p id="mensaje-contenido"></p>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Referencia  </th>
+                        <th>Importe</th>
+                        <th>Tipo</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+
+
+                </table>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
@@ -65,40 +73,72 @@
 
 @section Scripts {
     <script type="text/javascript">
-        var usuarioMensajes = "@ViewBag.mensajesUsuario";
 
-        $(document).ready(function () {
-            $(document).on("click", ".ver-mensaje", function () {
-                Visualizar($(this).data('id'));
-                var titulo = $(this).data('titulo');
-                var contenido = $(this).data('contenido');
-                $('.modal-title').text(titulo);
-                $(".modal-body #mensaje-contenido").text(contenido);
-            });
-
-            $(document).on("click", ".descargar-mensaje", function () {
-                Visualizar($(this).data('id'));
-            });
-
-            $('#mensajes').DataTable({
-                "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
-                },
-                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
-            });
-        });
+        var pagoDetalleUrl = "@Url.Action("PagoDetalle", "CuentasPagar")";
 
 
-        function Visualizar(mensajeId) {
+        function verDetalle(numeroCompensacion) {
+
+
+            var data = {
+                numeroCompensacion: numeroCompensacion
+            };
+
             $.ajax({
-                url: '@Url.Action("Visualizar", "MensajesInstitucionales")',
-                data: { id: mensajeId },
-                type: 'POST',
-                success: function (data) {
-                    $("#mensaje-tr-id-" + mensajeId + " .leido-flag").text("SI");
-                    //alert(data);
+                type: "POST",
+                url: pagoDetalleUrl,
+                data: data,
+                cache: false
+            }).done(function(result) {
+
+                console.log(result);
+
+
+                $('#buscarModal .table tbody').empty();
+                
+                for (i = 0; i < result.data.length; i++) {
+
+                    $('#buscarModal .table tbody').append("<tr>"
+                        + "<td>" + result.data[i].Referencia + "</td>"
+                        + "<td>" + result.data[i].Importe + "</td>"
+                        + "<td>" + result.data[i].TipoMovimiento + "</td>"
+                        + "</tr>");
                 }
+                
+                $('#buscarModal').modal('show');
+                /*             for (var j = 0; j < result.length; j++) {
+                    console.log(result[j].x);
+                }*/
+
+
+                return;
+
+                if (result.error) {
+                    //TODO MEJORAR
+                    console.log(result.error);
+                    return;
+                }
+                $("#buscarModal .modal-body").html("");
+
+
+                for (var key in result) {
+
+                    $("#buscarModal .modal-body").append("<label>" + key + "</label>");
+                    $("#buscarModal .modal-body").append("<p>" + result[key] + "</p>");
+                }
+
+
+                $("#asociar-proveedor").attr("href", urlAsociarProveedor + "/" + cuentaId + "?numeroProveedor=" + numeroProveedor);
+
+
+                $('#buscarModal').modal('show');
+
+
+            }).fail(function(response) {
+                $('#buscarModal').modal('show');
+
             });
+
         }
     </script>
 }

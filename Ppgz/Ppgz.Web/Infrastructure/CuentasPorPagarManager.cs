@@ -13,14 +13,14 @@ namespace Ppgz.Web.Infrastructure
         public List<cuentasxpagar> FindPagosByProveedorId(int id)
         {
             return _db.cuentasxpagars.Where(c => c.ProveedoresId == id && c.Referencia == null).ToList();
-        }
+         }
 
         public List<cuentasxpagar> FindPagoDetalleByProveedorId(int id)
         {
             return _db.cuentasxpagars.Where(c => c.ProveedoresId == id && c.Referencia == null).ToList();
         }
 
-        public List<cuentasxpagar> FindSegundaPantallaByNumeroCompensacion(string numeroCompensacion)
+        public List<cuentasxpagar> FindPagoDetalleByNumeroCompensacion(string numeroCompensacion)
         {
 
             return _db.cuentasxpagars.Where(c => c.Referencia == numeroCompensacion).ToList();
