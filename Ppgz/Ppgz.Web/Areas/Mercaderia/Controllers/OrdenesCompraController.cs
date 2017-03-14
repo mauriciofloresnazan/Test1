@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Microsoft.AspNet.Identity;
 using MySql.Data.MySqlClient;
 using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Nazan;
-using Ppgz.Web.Infrastructure.Proveedor;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -22,7 +16,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     public class OrdenesCompraController : Controller
     {
         private readonly OrdenCompraManager  _ordenCompraManager = new OrdenCompraManager();
-
 
         //
         // GET: /Mercaderia/OrdenesCompra/
@@ -66,7 +59,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             db.Entry(orden).State = EntityState.Modified;
             db.SaveChanges();
 
+            ///TODO 
+            var sql = @"
+            UPDATE ordencompras
+            SET    FechaVisualizado = now()
+            WHERE  Id = {0};";
 
+            db.Database.ExecuteSqlCommand(sql, id);
+            db.SaveChanges();
 
             var commonManager = new CommonManager();
 
@@ -76,7 +76,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 };
 
 
-            const string sql = @"
+             sql = @"
             SELECT * 
             FROM   detalleordencompra
             WHERE  OrdenComprasId = @id;";
