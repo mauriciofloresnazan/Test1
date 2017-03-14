@@ -1,15 +1,87 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
+using Ppgz.Repository;
+using Ppgz.Services;
 using SAP.Middleware.Connector;
 
 namespace Test
 {
     class Program
     {
+
+        static void TestCuentaManager()
+        {
+            var cuentaManager = new CuentaManager();
+            try
+            {
+                cuentaManager.Crear(
+                    CuentaManager.Tipo.Mercaderia,
+                    "Nombre del Proveedor",
+                    "test_x1", "Nombre del Responsable", "Apellido del Responsable",
+                    "Responsable Cargo", "juan.godoy@test.com", "04145555555",
+                    "123456");
+
+            }
+            catch (Exception ex)
+            {
+                
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        static void Test()
+        {
+            var entities  = new Entities();
+
+            var query = (from g in entities.ordencompras
+            join u in entities.proveedores on g.ProveedoresId equals u.Id
+            select new { g, u, }).Take(2);
+
+
+            var json = JsonConvert.SerializeObject(query);
+            Console.Write(json);
+            Console.ReadLine();
+
+        }
+
+        static void TestDao(string id)
+        {
+            var i = 10000;
+            while (i > 0)
+            {
+                var table = Db.GetDataTable("SELECT * FROM cuentasxpagar WHERE Id = @id", new List<MySqlParameter>()
+                {
+                    new MySqlParameter("id", id)
+                });
+
+                if (table.Rows.Count > 0)
+                {
+                    Console.WriteLine("IMPORTE: " + table.Rows[0]["importe"] );
+                }
+                else
+                {
+                    Console.WriteLine("ID INCORRECTO");
+                }
+
+                i--;
+            }
+        }
+
         static void Main(string[] args)
         {
 
-        
+           TestCuentaManager();
+
+
+        }
+
+        void TestSap()
+        {
+
             ConectorSAP conectaSAP = new ConectorSAP();
 
             conectaSAP.Conectar();
@@ -22,7 +94,7 @@ namespace Test
 
             function = rfcRep.CreateFunction("ZEXTRAE_PROV");
 
-       
+
 
             function.Invoke(rfcDest);
 
@@ -31,15 +103,11 @@ namespace Test
 
 
             var result = function.GetTable("T_PROV");
-            
+
             var datatable = result.ToDataTable("test");
-
-          
-
-
-
         }
     }
+
 
     class ConectorSAP
 

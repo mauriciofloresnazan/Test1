@@ -64,10 +64,10 @@
           <Property Name="Cargo" Type="varchar" MaxLength="200" />
           <Property Name="PerfilId" Type="int" Nullable="false" />
           <Property Name="TerminosCondicionesFecha" Type="datetime" Precision="0" />
-          <Property Name="Borrado" Type="tinyint" Nullable="false" />
-          <Property Name="FechaTx" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="Borrado" Type="tinyint" />
+          <Property Name="FechaTx" Type="timestamp" Precision="0" />
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
-          <Property Name="OperacionTx" Type="enum" Nullable="false" />
+          <Property Name="OperacionTx" Type="enum" />
         </EntityType>
         <EntityType Name="citas">
           <Key>
@@ -82,7 +82,7 @@
           <Property Name="Estatus" Type="varchar" MaxLength="5" />
           <Property Name="DataEntrega" Type="varchar" MaxLength="5" />
           <Property Name="ProveedorId" Type="int" Nullable="false" />
-          <Property Name="Borrado" Type="tinyint" Nullable="false" />
+          <Property Name="Borrado" Type="bool" Nullable="false" />
           <Property Name="FechaTx" Type="datetime" Precision="0" />
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="OperacionTx" Type="enum" Nullable="false" />
@@ -121,8 +121,8 @@
           <Property Name="NombreProveedor" Type="varchar" MaxLength="50" />
           <Property Name="FechaRegistro" Type="datetime" Precision="0" />
           <Property Name="Tipo" Type="enum" />
-          <Property Name="Activo" Type="bool" />
-          <Property Name="Borrado" Type="tinyint" Nullable="false" />
+          <Property Name="Activo" Type="bool" Nullable="false" />
+          <Property Name="Borrado" Type="bool" Nullable="false" />
           <Property Name="FechaTx" Type="datetime" Precision="0" />
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
           <Property Name="OperacionTx" Type="enum" />
@@ -240,7 +240,7 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
           <Property Name="FechaPublicacion" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="FechaCaducidad" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="EnviadoA" Type="enum" />
-          <Property Name="Borrado" Type="tinyint" Nullable="false" />
+          <Property Name="Borrado" Type="bool" Nullable="false" />
           <Property Name="FechaTx" Type="datetime" Precision="0" />
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
           <Property Name="OperacionTx" Type="enum" />
@@ -313,7 +313,7 @@ warning 6002: The table/view 'def.impuls_portal.pagos' does not have a primary k
           <Property Name="CodigoProveedor" Type="varchar" MaxLength="20" />
           <Property Name="FechaRegistro" Type="date" />
           <Property Name="CuentaId" Type="int" />
-          <Property Name="Borrado" Type="tinyint" Nullable="false" />
+          <Property Name="Borrado" Type="bool" Nullable="false" />
           <Property Name="FechaTx" Type="datetime" Precision="0" />
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
           <Property Name="OperacionTx" Type="enum" Nullable="false" />
@@ -620,24 +620,6 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="add_user" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="impuls_portal">
-          <Parameter Name="Email" Type="varchar" Mode="In" />
-          <Parameter Name="PasswordHash" Type="longtext" Mode="In" />
-          <Parameter Name="PhoneNumber" Type="longtext" Mode="In" />
-          <Parameter Name="pUserName" Type="varchar" Mode="In" />
-          <Parameter Name="Tipo" Type="varchar" Mode="In" />
-          <Parameter Name="Nombre" Type="varchar" Mode="In" />
-          <Parameter Name="Apellido" Type="varchar" Mode="In" />
-          <Parameter Name="Cargo" Type="varchar" Mode="In" />
-          <Parameter Name="PerfilId" Type="int" Mode="In" />
-          <Parameter Name="TerminosCondicionesFecha" Type="datetime" Mode="In" />
-          <Parameter Name="UsuarioIdTx" Type="int" Mode="In" />
-          <Parameter Name="CuentaId" Type="int" Mode="In" />
-          <Parameter Name="userId" Type="varchar" Mode="Out" />
-          <Parameter Name="messageError" Type="varchar" Mode="Out" />
-        </Function>
-        <Function Name="populate_pagos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="impuls_portal" />
-        <Function Name="relation_oc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="impuls_portal" />
         <EntityContainer Name="impuls_portalModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="impuls_portal" store:Type="Tables" />
@@ -841,10 +823,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Cargo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="PerfilId" Type="Int32" Nullable="false" />
           <Property Name="TerminosCondicionesFecha" Type="DateTime" />
-          <Property Name="Borrado" Type="SByte" Nullable="false" />
-          <Property Name="FechaTx" Type="DateTime" Nullable="false" />
+          <Property Name="Borrado" Type="SByte" />
+          <Property Name="FechaTx" Type="DateTime" />
           <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
-          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="AspNetUserClaims" Relationship="Self.ApplicationUser_Claims" FromRole="AspNetUsers" ToRole="AspNetUserClaims" />
           <NavigationProperty Name="AspNetUserLogins" Relationship="Self.ApplicationUser_Logins" FromRole="AspNetUsers" ToRole="AspNetUserLogins" />
           <NavigationProperty Name="perfile" Relationship="Self.fk_aspnetusers_perfil" FromRole="AspNetUsers" ToRole="perfiles" />
@@ -871,7 +853,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Estatus" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="DataEntrega" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="ProveedorId" Type="Int32" Nullable="false" />
-          <Property Name="Borrado" Type="SByte" Nullable="false" />
+          <Property Name="Borrado" Type="Boolean" Nullable="false" />
           <Property Name="FechaTx" Type="DateTime" />
           <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
@@ -912,8 +894,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="NombreProveedor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="FechaRegistro" Type="DateTime" />
           <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
-          <Property Name="Activo" Type="Boolean" />
-          <Property Name="Borrado" Type="SByte" Nullable="false" />
+          <Property Name="Activo" Type="Boolean" Nullable="false" />
+          <Property Name="Borrado" Type="Boolean" Nullable="false" />
           <Property Name="FechaTx" Type="DateTime" />
           <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
@@ -1015,7 +997,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="FechaPublicacion" Type="DateTime" Nullable="false" />
           <Property Name="FechaCaducidad" Type="DateTime" Nullable="false" />
           <Property Name="EnviadoA" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
-          <Property Name="Borrado" Type="SByte" Nullable="false" />
+          <Property Name="Borrado" Type="Boolean" Nullable="false" />
           <Property Name="FechaTx" Type="DateTime" />
           <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
@@ -1060,7 +1042,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="CodigoProveedor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="FechaRegistro" Type="DateTime" />
           <Property Name="CuentaId" Type="Int32" />
-          <Property Name="Borrado" Type="SByte" Nullable="false" />
+          <Property Name="Borrado" Type="Boolean" Nullable="false" />
           <Property Name="FechaTx" Type="DateTime" />
           <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
@@ -1441,24 +1423,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="perfiles" EntitySet="perfiles" />
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
           </AssociationSet>
-          <FunctionImport Name="add_user">
-            <Parameter Name="Email" Mode="In" Type="String" />
-            <Parameter Name="PasswordHash" Mode="In" Type="String" />
-            <Parameter Name="PhoneNumber" Mode="In" Type="String" />
-            <Parameter Name="pUserName" Mode="In" Type="String" />
-            <Parameter Name="Tipo" Mode="In" Type="String" />
-            <Parameter Name="Nombre" Mode="In" Type="String" />
-            <Parameter Name="Apellido" Mode="In" Type="String" />
-            <Parameter Name="Cargo" Mode="In" Type="String" />
-            <Parameter Name="PerfilId" Mode="In" Type="Int32" />
-            <Parameter Name="TerminosCondicionesFecha" Mode="In" Type="DateTime" />
-            <Parameter Name="UsuarioIdTx" Mode="In" Type="Int32" />
-            <Parameter Name="CuentaId" Mode="In" Type="Int32" />
-            <Parameter Name="userId" Mode="Out" Type="String" />
-            <Parameter Name="messageError" Mode="Out" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="populate_pagos" />
-          <FunctionImport Name="relation_oc" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -1819,9 +1783,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
           </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="add_user" FunctionName="impuls_portalModel.Store.add_user" />
-          <FunctionImportMapping FunctionImportName="populate_pagos" FunctionName="impuls_portalModel.Store.populate_pagos" />
-          <FunctionImportMapping FunctionImportName="relation_oc" FunctionName="impuls_portalModel.Store.relation_oc" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -33,6 +33,25 @@ namespace Ppgz.Web.Infrastructure
             return commonManager.QueryToTable(sql, parametes);
 
 
+        }
+
+        public DataTable FindActivaByCuentaId(int id)
+        {
+            var commonManager = new CommonManager();
+
+            MySqlParameter[] parametes = {
+                    new MySqlParameter("id", id)
+                };
+
+            const string sql = @"
+            SELECT oc.*, p.Rfc, p.NombreProveedor 
+            FROM   ordencompras oc
+                   JOIN proveedores p ON p.Id = oc.Proveedoresid
+            WHERE  p.CuentaId = @id;";
+
+            return commonManager.QueryToTable(sql, parametes);
+
+
         } 
     }
 }

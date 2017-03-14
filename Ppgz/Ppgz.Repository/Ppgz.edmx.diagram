@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="c9ec938771d24b24ac8060e7a17edc5a" Name="Diagram1">
+      <Diagram DiagramId="8e1025c3d2ab4131bd6d3faded497984" Name="Diagram1">
         <EntityTypeShape EntityType="impuls_portalModel.AspNetRole" Width="1.5" PointX="3" PointY="15.625" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.AspNetUserClaim" Width="1.5" PointX="7.5" PointY="7.375" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.AspNetUserLogin" Width="1.5" PointX="7.5" PointY="10.125" IsExpanded="true" />

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
+using MySql.Data.MySqlClient;
 
 namespace Ppgz.Repository
 {
-    public static class DbService
+    public static class Db
     {
         //TODO MOVER A LA CONFIGURACION
     
@@ -15,7 +15,7 @@ namespace Ppgz.Repository
         private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         #region Insert Handlers
-        public static void Insert(string sql, List<SqlParameter> parameters = null)
+        public static void Insert(string sql, List<MySqlParameter> parameters = null)
         {
             using (var connection = Factory.CreateConnection())
             {
@@ -29,7 +29,7 @@ namespace Ppgz.Repository
                     // Si los parametros nos son null los recorremos
                     if (parameters != null)
                     {
-                        foreach (SqlParameter param in parameters)
+                        foreach (MySqlParameter param in parameters)
                         {
                             command.Parameters.Add(param);
                         }
@@ -43,7 +43,7 @@ namespace Ppgz.Repository
 
         }
 
-        public static void StoreProcedure(IList<SqlParameter> parameters, string storeProcedure)
+        public static void StoreProcedure(IList<MySqlParameter> parameters, string storeProcedure)
         {
             using (var connection = Factory.CreateConnection())
             {
@@ -57,7 +57,7 @@ namespace Ppgz.Repository
 
                     if (parameters != null)
                     {
-                        foreach (SqlParameter parameter in parameters)
+                        foreach (MySqlParameter parameter in parameters)
                         {
                             command.Parameters.Add(parameter);
                         }
@@ -69,10 +69,10 @@ namespace Ppgz.Repository
                 }
             }
         }
-        
-        public static Dictionary<string, string> ExecuteProcedureOut(IList<SqlParameter> parameters, string storeProcedure)
+
+        public static Dictionary<string, string> ExecuteProcedureOut(IList<MySqlParameter> parameters, string storeProcedure)
         {
-            SqlParameter identity = new SqlParameter();
+            MySqlParameter identity = new MySqlParameter();
             Dictionary<string, string> retornables = new Dictionary<string, string>();
 
 
@@ -89,7 +89,7 @@ namespace Ppgz.Repository
                     if (parameters != null)
                     {
 
-                        foreach (SqlParameter parameter in parameters)
+                        foreach (MySqlParameter parameter in parameters)
                         {
                             if (parameter.Direction == ParameterDirection.InputOutput)
                             {
@@ -114,7 +114,7 @@ namespace Ppgz.Repository
                 }
             }
 
-            foreach (SqlParameter parameter in parameters)
+            foreach (MySqlParameter parameter in parameters)
             {
                 if (parameter.Direction == ParameterDirection.InputOutput)
                 {
@@ -193,7 +193,7 @@ namespace Ppgz.Repository
             }
         }
 
-        public static DataSet GetDataSet(IList<SqlParameter> parameters, string storeProcedure)
+        public static DataSet GetDataSet(IList<MySqlParameter> parameters, string storeProcedure)
         {
             using (DbConnection connection = Factory.CreateConnection())
             {
@@ -207,7 +207,7 @@ namespace Ppgz.Repository
                     command.CommandText = storeProcedure;
                     if (parameters != null)
                     {
-                        foreach (SqlParameter parameter in parameters)
+                        foreach (MySqlParameter parameter in parameters)
                         {
                             command.Parameters.Add(parameter);
                         }
@@ -230,7 +230,7 @@ namespace Ppgz.Repository
             }
         }
 
-        public static DataSet GetDataSet(string sql, List<SqlParameter> parameters = null)
+        public static DataSet GetDataSet(string sql, List<MySqlParameter> parameters = null)
         {
             using (DbConnection connection = Factory.CreateConnection())
             {
@@ -244,7 +244,7 @@ namespace Ppgz.Repository
                     // Si los parametros nos son null los recorremos
                     if (parameters != null)
                     {
-                        foreach (SqlParameter param in parameters)
+                        foreach (MySqlParameter param in parameters)
                         {
                             command.Parameters.Add(param);
                         }
@@ -268,12 +268,12 @@ namespace Ppgz.Repository
             return GetDataSet(sql).Tables[0];
         }
 
-        public static DataTable GetDataTable(string sql, List<SqlParameter> parameters = null)
+        public static DataTable GetDataTable(string sql, List<MySqlParameter> parameters = null)
         {
             return GetDataSet(sql, parameters).Tables[0];
         }
 
-        public static DataTable GetDataTable(IList<SqlParameter> parameters, string storeProcedure)
+        public static DataTable GetDataTable(IList<MySqlParameter> parameters, string storeProcedure)
         {
             return GetDataSet(parameters, storeProcedure).Tables[0];
         }

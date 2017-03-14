@@ -47,8 +47,8 @@ namespace Ppgz.Repository
         public string Cargo { get; set; }
         public int PerfilId { get; set; }
         public Nullable<System.DateTime> TerminosCondicionesFecha { get; set; }
-        public sbyte Borrado { get; set; }
-        public System.DateTime FechaTx { get; set; }
+        public Nullable<sbyte> Borrado { get; set; }
+        public Nullable<System.DateTime> FechaTx { get; set; }
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }
     

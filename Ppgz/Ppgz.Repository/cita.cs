@@ -23,7 +23,7 @@ namespace Ppgz.Repository
         public string Estatus { get; set; }
         public string DataEntrega { get; set; }
         public int ProveedorId { get; set; }
-        public sbyte Borrado { get; set; }
+        public bool Borrado { get; set; }
         public Nullable<System.DateTime> FechaTx { get; set; }
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }

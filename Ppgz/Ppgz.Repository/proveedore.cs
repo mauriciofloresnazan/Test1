@@ -18,7 +18,7 @@ namespace Ppgz.Repository
         public string CodigoProveedor { get; set; }
         public Nullable<System.DateTime> FechaRegistro { get; set; }
         public Nullable<int> CuentaId { get; set; }
-        public sbyte Borrado { get; set; }
+        public bool Borrado { get; set; }
         public Nullable<System.DateTime> FechaTx { get; set; }
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }

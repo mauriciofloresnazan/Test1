@@ -49,6 +49,7 @@
       <HintPath>..\packages\MySql.Data.Entity.6.9.9\lib\net45\MySql.Data.Entity.EF6.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL" />
     <Reference Include="SAPConnectionManager">
       <HintPath>..\SAP Connection Manager\SAPConnectionManager.dll</HintPath>
     </Reference>
@@ -74,6 +75,16 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ppgz.Repository\Ppgz.Repository.csproj">
+      <Project>{805197a6-6948-483e-a738-7ae7745ac953}</Project>
+      <Name>Ppgz.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ppgz.Services\Ppgz.Services.csproj">
+      <Project>{7a06d69c-0ba5-4fc8-9140-69d0d2c76408}</Project>
+      <Name>Ppgz.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

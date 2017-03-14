@@ -12,8 +12,6 @@ namespace Ppgz.Repository
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    using System.Data.Entity.Core.Objects;
-    using System.Linq;
     
     public partial class Entities : DbContext
     {
@@ -48,68 +46,5 @@ namespace Ppgz.Repository
         public virtual DbSet<devolucione> devoluciones { get; set; }
         public virtual DbSet<pago> pagos { get; set; }
         public virtual DbSet<vwmensaje> vwmensajes { get; set; }
-    
-        public virtual int add_user(string email, string passwordHash, string phoneNumber, string pUserName, string tipo, string nombre, string apellido, string cargo, Nullable<int> perfilId, Nullable<System.DateTime> terminosCondicionesFecha, Nullable<int> usuarioIdTx, Nullable<int> cuentaId, ObjectParameter userId, ObjectParameter messageError)
-        {
-            var emailParameter = email != null ?
-                new ObjectParameter("Email", email) :
-                new ObjectParameter("Email", typeof(string));
-    
-            var passwordHashParameter = passwordHash != null ?
-                new ObjectParameter("PasswordHash", passwordHash) :
-                new ObjectParameter("PasswordHash", typeof(string));
-    
-            var phoneNumberParameter = phoneNumber != null ?
-                new ObjectParameter("PhoneNumber", phoneNumber) :
-                new ObjectParameter("PhoneNumber", typeof(string));
-    
-            var pUserNameParameter = pUserName != null ?
-                new ObjectParameter("pUserName", pUserName) :
-                new ObjectParameter("pUserName", typeof(string));
-    
-            var tipoParameter = tipo != null ?
-                new ObjectParameter("Tipo", tipo) :
-                new ObjectParameter("Tipo", typeof(string));
-    
-            var nombreParameter = nombre != null ?
-                new ObjectParameter("Nombre", nombre) :
-                new ObjectParameter("Nombre", typeof(string));
-    
-            var apellidoParameter = apellido != null ?
-                new ObjectParameter("Apellido", apellido) :
-                new ObjectParameter("Apellido", typeof(string));
-    
-            var cargoParameter = cargo != null ?
-                new ObjectParameter("Cargo", cargo) :
-                new ObjectParameter("Cargo", typeof(string));
-    
-            var perfilIdParameter = perfilId.HasValue ?
-                new ObjectParameter("PerfilId", perfilId) :
-                new ObjectParameter("PerfilId", typeof(int));
-    
-            var terminosCondicionesFechaParameter = terminosCondicionesFecha.HasValue ?
-                new ObjectParameter("TerminosCondicionesFecha", terminosCondicionesFecha) :
-                new ObjectParameter("TerminosCondicionesFecha", typeof(System.DateTime));
-    
-            var usuarioIdTxParameter = usuarioIdTx.HasValue ?
-                new ObjectParameter("UsuarioIdTx", usuarioIdTx) :
-                new ObjectParameter("UsuarioIdTx", typeof(int));
-    
-            var cuentaIdParameter = cuentaId.HasValue ?
-                new ObjectParameter("CuentaId", cuentaId) :
-                new ObjectParameter("CuentaId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("add_user", emailParameter, passwordHashParameter, phoneNumberParameter, pUserNameParameter, tipoParameter, nombreParameter, apellidoParameter, cargoParameter, perfilIdParameter, terminosCondicionesFechaParameter, usuarioIdTxParameter, cuentaIdParameter, userId, messageError);
-        }
-    
-        public virtual int populate_pagos()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("populate_pagos");
-        }
-    
-        public virtual int relation_oc()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("relation_oc");
-        }
     }
 }
