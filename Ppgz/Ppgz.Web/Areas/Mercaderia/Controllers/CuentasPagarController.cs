@@ -1,5 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Data;
+using System.IO;
+using System.Linq;
 using System.Web.Mvc;
+using System.Web.UI;
+using System.Web.UI.WebControls;
 using MySql.Data.MySqlClient;
 using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
@@ -141,6 +146,87 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             ViewBag.devoluciones = commonManager.QueryToTable(sql, parametes);
             return View();
         }
-        
+
+        public void Descargar(int id)
+        {       
+
+            var commonManager = new CommonManager();
+
+            MySqlParameter[] parametes = {
+                    new MySqlParameter("id", id)
+                };
+
+
+            const string sql = @"
+            SELECT * 
+            FROM   cuentasxpagar 
+            WHERE TipoMovimiento in(10,21,4) AND ProveedoresId = @id;";
+
+            var dt = commonManager.QueryToTable(sql, parametes);
+
+            ExportExcel(dt, id.ToString());
+
+
+        }
+
+        public void ExportExcel(DataTable dt, string nombreXls)
+        {
+
+            var grid = new GridView();
+            grid.DataSource = dt;
+            grid.DataBind();
+
+            Response.ClearContent();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", "attachment; filename=" + nombreXls + ".xls");
+            Response.ContentType = "application/ms-excel";
+
+            Response.Charset = "";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+
+            grid.RenderControl(htw);
+
+            Response.Output.Write(sw.ToString());
+            Response.Flush();
+            Response.End();
+
+            return;
+
+            StreamWriter wr = new StreamWriter(@"c:\\temp\" + nombreXls + ".xls");
+            try
+            {
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    wr.Write(dt.Columns[i].ToString().ToUpper() + "\t");
+                }
+                wr.WriteLine();
+
+                //write rows to excel file
+                for (int i = 0; i < (dt.Rows.Count); i++)
+                {
+                    for (int j = 0; j < dt.Columns.Count; j++)
+                    {
+                        if (dt.Rows[i][j] != null)
+                        {
+                            wr.Write(Convert.ToString(dt.Rows[i][j]) + "\t");
+                        }
+                        else
+                        {
+                            wr.Write("\t");
+                        }
+                    }
+                    //go to next line
+                    wr.WriteLine();
+                }
+                //close file
+                wr.Close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
     }
 }

@@ -8,12 +8,15 @@
 <p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i> <i>En esta sección podrá gestionar los pagos que tiene con el Grupo Nazan.</i></p>
 
 <div class="panel panel-default">
-    <b>RFC</b>: @ViewBag.proveedor.Rfc<br />
-    <b>Nombre</b>: @ViewBag.proveedor.NombreProveedor<br />
-    <b>Población</b>: @ViewBag.proveedor.Ciudad<br/><br/>
-    <div class="clearfix">
-        <a href="#" class="btn btn-primary pull-right"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
-    </div>
+        <div class="col-sm-6">
+        <b>RFC</b>: @ViewBag.proveedor.Rfc<br />
+        <b>Nombre</b>: @ViewBag.proveedor.NombreProveedor<br />
+        <b>Población</b>: @ViewBag.proveedor.Ciudad<br/><br/>
+        </div>
+        <div class="col-sm-6">
+            <a href="@Url.Action("Descargar", "CuentasPagar", new {@id = ViewBag.proveedor.Id})" class="btn btn-primary pull-right"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
+        </div>
+        <div class="clearfix"></div>
         <div class="panel-heading">Detalle de Pagos</div>
         <div class="panel-body">
             <div class="col-md-12">
@@ -48,7 +51,7 @@
                 <b>Total Pagado: </b> 110.000 MXN
             </div>
         </div>
-</div>
+    </div>
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
@@ -73,6 +76,7 @@
         var usuarioMensajes = "@ViewBag.mensajesUsuario";
 
         $(document).ready(function () {
+
             $(document).on("click", ".ver-mensaje", function () {
                 Visualizar($(this).data('id'));
                 var titulo = $(this).data('titulo');
