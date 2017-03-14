@@ -56,13 +56,24 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/assets/vendor/chosen_v1.6.2/chosen.jquery.min.js")
     <script>
-        $(function () {
+        $(function() {
             $('.chosen-select').chosen({
-                no_results_text: "No se econtraron resultados",
+                no_results_text: "No se encontraron resultados",
                 placeholder_text_single: "Seleccione un valor",
                 placeholder_text_multiple: "Seleccione los valores"
             });
+
+            $('.chosen-select').change(function () {
+
+                if (this.value == "MAESTRO-NAZAN") {
+                    $(".chosen-select").chosen({ allow_single_deselect: false, search_contains: false });
+                } else {
+                    $(".chosen-select").chosen({ allow_single_deselect: true, search_contains: true });
+                }
+            });
         });
     </script>
+
+
 
 }

@@ -28,7 +28,14 @@
                     {
 
                         <tr>
-                            <td class="text-center"></td>
+                            @if (registro["FechaVisualizado"] != null)
+                            {
+                            <td class="text-center"><i class="fa fa-lightbulb-o" aria-hidden="true" style="font-size: 24px; color: red;"></i></td>
+                            }
+                            else
+                            {
+                                <td class="text-center"><i class="fa fa-lightbulb-o" aria-hidden="true" style="font-size: 24px; color: green;"></i></td>
+                            }
                             <td class="text-center vert-align">@registro["NumeroOrden"]</td>
                             <td class="text-center vert-align">@registro["Fecha"]</td>
                             <td class="text-center vert-align">@registro["Rfc"]</td>
@@ -36,7 +43,7 @@
 
                             <td class="text-center vert-align">
 
-                                <a href="@Url.Action("Descargar", "OrdenesCompra", new {@id = @registro["Id"]})"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Exportar</a>
+                                <a href="@Url.Action("Descargar", "OrdenesCompra", new {@id = @registro["Id"]})" class="descargar-visualizar"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar</a>
                             </td>
                         </tr>
                     }
@@ -67,9 +74,24 @@
 
 @section Scripts {
     <script type="text/javascript">
+
+
+
+
+
         var usuarioMensajes = "@ViewBag.mensajesUsuario";
 
         $(document).ready(function () {
+
+
+            $(document).on("click", ".descargar-visualizar", function () {
+
+                $(this).parent().parent().find(".fa-lightbulb-o").css("color", "green");
+
+            });
+
+
+
             $(document).on("click", ".ver-mensaje", function () {
                 Visualizar($(this).data('id'));
                 var titulo = $(this).data('titulo');

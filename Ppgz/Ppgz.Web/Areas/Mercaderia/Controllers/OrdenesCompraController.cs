@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -9,6 +10,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Microsoft.AspNet.Identity;
 using MySql.Data.MySqlClient;
+using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Infrastructure.Proveedor;
@@ -56,7 +58,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         //
         // GET: /Servicio/OrdenesCompra/
         public void Descargar(int id)
-        {
+        {            //todo pasar a un manejador
+
+            Entities db = new Entities();
+            var orden = db.ordencompras.Find(id);
+            orden.FechaVisualizado = DateTime.Today;
+            db.Entry(orden).State = EntityState.Modified;
+            db.SaveChanges();
+
 
 
             var commonManager = new CommonManager();
@@ -84,6 +93,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [HttpPost]
         public ActionResult Visualizar(int id)
         {
+
+
+
+
             //var mensajes = _mensajesInstitucionalesManager.FindUsuarioMensajes(User.Identity.GetUserId());
 
             //if (mensajes.Any(i => i.MensajeId == id))

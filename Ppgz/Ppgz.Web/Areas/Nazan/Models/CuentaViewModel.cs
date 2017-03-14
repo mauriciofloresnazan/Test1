@@ -55,8 +55,9 @@ namespace Ppgz.Web.Areas.Nazan.Models
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
         [Phone(ErrorMessage = "Debe ingresar un número de teléfono valido.")]
-        [DataType(DataType.PhoneNumber, ErrorMessage = "Debe ingresar un númerop de teléfono valido.")]
+        [DataType(DataType.PhoneNumber, ErrorMessage = "Debe ingresar un número de teléfono valido.")]
         [Display(Name = "Telefono")]
+        [StringLength(12, ErrorMessage = "Debe tener de 3 a 12 Carácteres.", MinimumLength = 3)]
         public string ResponsableTelefono { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
