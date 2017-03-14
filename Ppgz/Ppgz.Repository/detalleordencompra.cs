@@ -25,5 +25,6 @@ namespace Ppgz.Repository
         public string ItemEstilo { get; set; }
         public int ItemCantidad { get; set; }
         public int OrdenComprasId { get; set; }
+        public string NumeroOrden { get; set; }
     }
 }

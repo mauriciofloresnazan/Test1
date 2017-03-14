@@ -106,5 +106,10 @@ namespace Ppgz.Repository
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("populate_pagos");
         }
+    
+        public virtual int relation_oc()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("relation_oc");
+        }
     }
 }

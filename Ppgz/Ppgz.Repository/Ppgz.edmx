@@ -83,7 +83,7 @@
           <Property Name="DataEntrega" Type="varchar" MaxLength="5" />
           <Property Name="ProveedorId" Type="int" Nullable="false" />
           <Property Name="Borrado" Type="tinyint" Nullable="false" />
-          <Property Name="FechaTx" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="FechaTx" Type="datetime" Precision="0" />
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="OperacionTx" Type="enum" Nullable="false" />
         </EntityType>
@@ -123,7 +123,7 @@
           <Property Name="Tipo" Type="enum" />
           <Property Name="Activo" Type="bool" />
           <Property Name="Borrado" Type="tinyint" Nullable="false" />
-          <Property Name="FechaTx" Type="timestamp" Precision="0" />
+          <Property Name="FechaTx" Type="datetime" Precision="0" />
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
           <Property Name="OperacionTx" Type="enum" />
           <Property Name="ResponsableUsuarioId" Type="varchar" MaxLength="128" />
@@ -176,6 +176,7 @@
           <Property Name="ItemEstilo" Type="varchar" MaxLength="50" />
           <Property Name="ItemCantidad" Type="int" Nullable="false" />
           <Property Name="OrdenComprasId" Type="int" Nullable="false" />
+          <Property Name="NumeroOrden" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -240,16 +241,16 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
           <Property Name="FechaCaducidad" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="EnviadoA" Type="enum" />
           <Property Name="Borrado" Type="tinyint" Nullable="false" />
-          <Property Name="FechaTx" Type="timestamp" Precision="0" Nullable="false" />
-          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" Nullable="false" />
-          <Property Name="OperacionTx" Type="enum" Nullable="false" />
+          <Property Name="FechaTx" Type="datetime" Precision="0" />
+          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
+          <Property Name="OperacionTx" Type="enum" />
         </EntityType>
         <EntityType Name="ordencompras">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Fecha" Type="date" />
+          <Property Name="Fecha" Type="datetime" Precision="0" />
           <Property Name="NumeroOrden" Type="varchar" MaxLength="50" />
           <Property Name="PrecioOrden" Type="decimal" Precision="12" Scale="2" />
           <Property Name="Almacen" Type="varchar" MaxLength="20" />
@@ -313,7 +314,7 @@ warning 6002: The table/view 'def.impuls_portal.pagos' does not have a primary k
           <Property Name="FechaRegistro" Type="date" />
           <Property Name="CuentaId" Type="int" />
           <Property Name="Borrado" Type="tinyint" Nullable="false" />
-          <Property Name="FechaTx" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="FechaTx" Type="datetime" Precision="0" />
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
           <Property Name="OperacionTx" Type="enum" Nullable="false" />
           <Property Name="NombreProveedor" Type="varchar" MaxLength="100" />
@@ -524,7 +525,7 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_mensajes_usuario">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
           <End Role="mensajes" Type="Self.mensajes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetUsers">
@@ -636,6 +637,7 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           <Parameter Name="messageError" Type="varchar" Mode="Out" />
         </Function>
         <Function Name="populate_pagos" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="impuls_portal" />
+        <Function Name="relation_oc" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="impuls_portal" />
         <EntityContainer Name="impuls_portalModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="impuls_portal" store:Type="Tables" />
@@ -870,7 +872,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="DataEntrega" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="ProveedorId" Type="Int32" Nullable="false" />
           <Property Name="Borrado" Type="SByte" Nullable="false" />
-          <Property Name="FechaTx" Type="DateTime" Nullable="false" />
+          <Property Name="FechaTx" Type="DateTime" />
           <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_citas_usuario" FromRole="citas" ToRole="AspNetUsers" />
@@ -967,6 +969,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="ItemEstilo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ItemCantidad" Type="Int32" Nullable="false" />
           <Property Name="OrdenComprasId" Type="Int32" Nullable="false" />
+          <Property Name="NumeroOrden" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="fakedataproveedor">
           <Key>
@@ -1013,9 +1016,9 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="FechaCaducidad" Type="DateTime" Nullable="false" />
           <Property Name="EnviadoA" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
           <Property Name="Borrado" Type="SByte" Nullable="false" />
-          <Property Name="FechaTx" Type="DateTime" Nullable="false" />
-          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaTx" Type="DateTime" />
+          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_mensajes_usuario" FromRole="mensajes" ToRole="AspNetUsers" />
           <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_mensaje" FromRole="mensajes" ToRole="cuentasmensajes" />
         </EntityType>
@@ -1058,7 +1061,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="FechaRegistro" Type="DateTime" />
           <Property Name="CuentaId" Type="Int32" />
           <Property Name="Borrado" Type="SByte" Nullable="false" />
-          <Property Name="FechaTx" Type="DateTime" Nullable="false" />
+          <Property Name="FechaTx" Type="DateTime" />
           <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="NombreProveedor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
@@ -1225,7 +1228,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_mensajes_usuario">
-          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="0..1" />
           <End Role="mensajes" Type="Self.mensaje" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetUsers">
@@ -1455,6 +1458,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <Parameter Name="messageError" Mode="Out" Type="String" />
           </FunctionImport>
           <FunctionImport Name="populate_pagos" />
+          <FunctionImport Name="relation_oc" />
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -1623,6 +1627,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="ItemEstilo" ColumnName="ItemEstilo" />
                 <ScalarProperty Name="ItemCantidad" ColumnName="ItemCantidad" />
                 <ScalarProperty Name="OrdenComprasId" ColumnName="OrdenComprasId" />
+                <ScalarProperty Name="NumeroOrden" ColumnName="NumeroOrden" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1816,6 +1821,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           </AssociationSetMapping>
           <FunctionImportMapping FunctionImportName="add_user" FunctionName="impuls_portalModel.Store.add_user" />
           <FunctionImportMapping FunctionImportName="populate_pagos" FunctionName="impuls_portalModel.Store.populate_pagos" />
+          <FunctionImportMapping FunctionImportName="relation_oc" FunctionName="impuls_portalModel.Store.relation_oc" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
