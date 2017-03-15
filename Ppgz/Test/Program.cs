@@ -12,6 +12,17 @@ namespace Test
 {
     class Program
     {
+
+        
+        static void Main(string[] args)
+        {
+            CrearUsuarioNazan();
+            //TestOrdenCompra();
+            //TestCuentaManager();
+
+
+        }
+        
         static void TestOrdenCompra()
         {
             var ordenCompraManager= new OrdenCompraManager();
@@ -19,6 +30,28 @@ namespace Test
         
             Console.WriteLine( JsonConvert.SerializeObject(orden));
         }
+
+        static void CrearUsuarioNazan()
+        {
+            var usuarioManager = new UsuarioManager();
+            var usuarioNazan = usuarioManager.CrearNazan("unazan_x1", "JUAN", "GODOY",
+                "G.JUANCH14@GMAIL.COM", "04169113665", "GERENTE", true, PerfilManager.MaestroNazan.Id, "123456");
+
+            usuarioManager.Eliminar(usuarioNazan.Id);
+        }
+
+
+        static void CrearUsuarioProveedor()
+        {
+            var usuarioManager = new UsuarioManager();
+            var usuarioNazan = usuarioManager.Crear("NAZAN", "unazan_x1", "JUAN", "GODOY",
+                "G.JUANCH14@GMAIL.COM", "04169113665", "GERENTE", true, PerfilManager.MaestroNazan.Id, "123456");
+
+            usuarioManager.Eliminar(usuarioNazan.Id);
+        }
+
+    
+
 
 
         static void TestCuentaManager()
@@ -79,14 +112,6 @@ namespace Test
             }
         }
 
-        static void Main(string[] args)
-        {
-
-            TestOrdenCompra();
-            //TestCuentaManager();
-
-
-        }
 
         void TestSap()
         {

@@ -70,6 +70,15 @@ namespace Ppgz.Services
             _db.AspNetUsers.Add(usuario);
             _db.SaveChanges();
 
+            // ASIGNACION DE LOS ROLES DE ACUERDO AL PERFIL
+            var perfilManager = new PerfilManager();
+            var perfil = perfilManager.FindPerfilNazan(perfilId);
+
+            foreach (var role in perfil.AspNetRoles)
+            {
+                AgregarRoleEnUsuario(usuario.Id, role.Id);
+            }
+
             return usuario;
         }
 
@@ -79,6 +88,15 @@ namespace Ppgz.Services
         public AspNetUser CrearNazan(string userName, string nombre, string apellido, string email, string telefono,
             string cargo, bool activo, int perfilId, string password)
         {
+            var perfilManager = new PerfilManager();
+            
+            // Vlida que el perfil sea de tipo nazan
+            var perfil = perfilManager.FindPerfilNazan(perfilId);
+            if (perfil == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto);
+            }
+            
             var usuario = Crear(Tipo.Nazan, userName, nombre, apellido, email, telefono, cargo,
                 activo, perfilId, password);
 
@@ -88,11 +106,32 @@ namespace Ppgz.Services
         /// <summary>
         /// Crea el usuario de tipo Proveedor
         /// </summary>
-        public AspNetUser CrearProveedor(string userName, string nombre, string apellido,
-            string email, string telefono, string cargo, bool activo, int perfilId, string password)
+        public AspNetUser CrearProveedor(string userName, string nombre, string apellido, string email, 
+            string telefono, string cargo, bool activo, int perfilId, string password, int cuentaId)
         {
+            // Valida la cuenta del proveedor
+            var cuenta = _db.cuentas.Find(cuentaId);
+            if (cuenta == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+            }
+                        
+            // Valida el prefil que este relacionado con la cuenta o sea maestro
+            var perfil = _db.perfiles.Find(perfilId);
+            if (!cuenta.perfiles.Contains(perfil))
+            {
+                if (perfil.Nombre != "MAESTRO-" + cuenta.Tipo)
+                {
+                    throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+                }
+            }
+
             var usuario = Crear(Tipo.Proveedor, userName, nombre, apellido, email, telefono, cargo,
                 activo, perfilId, password);
+                
+            // Asiganmos el nuevo usuario a la cuenta
+            cuenta.AspNetUsers.Add(usuario);
+            _db.SaveChanges();
 
             return usuario;
         }
@@ -102,16 +141,27 @@ namespace Ppgz.Services
         /// Crea el usuario de tipo Maestro Proveedor
         /// </summary>
         public AspNetUser CrearMaestroProveedor(string userName, string nombre, string apellido,
-            string email, string telefono, string cargo, bool activo, int perfilId, string password)
+            string email, string telefono, string cargo, bool activo, string password, string cuentaId)
         {
+            // Valida la cuenta del proveedor
+            var cuenta = _db.cuentas.Find(cuentaId);
+            if (cuenta == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+            }
+
+            var perfil = cuenta.Tipo == CuentaManager.Tipo.Mercaderia
+                ? PerfilManager.MaestroMercaderia
+                : PerfilManager.MaestroServicio;
+
             var usuario = Crear(Tipo.MaestroProveedor, userName, nombre, apellido, email, telefono, cargo,
-                activo, perfilId, password);
+                activo, perfil.Id, password);
 
             return usuario;
         }
 
 
-        public void AgregarUsuarioEnRole(string usuarioId, string roleId)
+        public void AgregarRoleEnUsuario(string usuarioId, string roleId)
         {
             var usuario = _db.AspNetUsers.Find(usuarioId);
 
@@ -128,6 +178,31 @@ namespace Ppgz.Services
 
             usuario.AspNetRoles.Add(role);
             _db.Entry(usuario).State = EntityState.Modified;
+            _db.SaveChanges();
+        }
+
+        public void QuitarRolesDeUsuario(string usuarioId)
+        {
+            var usuario = _db.AspNetUsers.Find(usuarioId);
+            if (usuario == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Usuario_Id);
+            }
+
+            usuario.AspNetRoles.Clear();
+            _db.Entry(usuario).State = EntityState.Modified;
+            _db.SaveChanges();
+        }
+
+        public void Eliminar(string usuarioId)
+        {
+            var usuario = _db.AspNetUsers.Find(usuarioId);
+            if (usuario == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Usuario_Id);
+            }
+
+            _db.AspNetUsers.Remove(usuario);
             _db.SaveChanges();
         }
     }

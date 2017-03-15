@@ -10,12 +10,16 @@ namespace Ppgz.Services
         /// <summary>
         /// Tipos de perfil de acuerdo al modelo de datos
         /// </summary>
-        public static class Tipo
+        public static class TipoPerfil
         {
             public static string Nazan { get { return "NAZAN"; } }
             public static string Proveedor { get { return "PROVEEDOR"; } }
         }
 
+        /// <summary>
+        /// Estos perfiles se crean al incio del sistema y siempre estaran disponibles en la base de datos
+        /// </summary>
+        #region Prefilesmaestros 
         public static perfile MaestroMercaderia
         {
             get
@@ -32,21 +36,35 @@ namespace Ppgz.Services
                 return db.perfiles.Single(p => p.Nombre == "MAESTRO-SERVICIO");
             }
         }
+        // PREFIL CREADO POR EL SISTEMA AL INICIO
+        public static perfile MaestroNazan
+        {
+            get
+            {
+                var db = new Entities();
+                return db.perfiles.Single(p => p.Nombre == "MAESTRO-NAZAN");
+            }
+        }
+        #endregion
 
-        public perfile FindTipoProveedorByNombre(string nombre, int? cuentaId)
+        public perfile FindPerfilProveedor(string nombrePerfil, int? cuentaId)
         {
             return _db.perfiles
-                .FirstOrDefault(p => p.Nombre == nombre && p.Tipo == Tipo.Proveedor && p.CuentaId == cuentaId);
+                .FirstOrDefault(p => p.Nombre == nombrePerfil && p.Tipo == TipoPerfil.Proveedor && p.CuentaId == cuentaId);
         }
-
+        public perfile FindPerfilNazan(int id)
+        {
+            return _db.perfiles
+                .FirstOrDefault(p => p.Id == id && p.Tipo == TipoPerfil.Nazan);
+        }
 
 
         public perfile Crear(string tipo, string nombre, string[] rolesIds, int? cuentaId = null)
         {
             var tipos = new[]
             {
-                Tipo.Nazan,
-                Tipo.Proveedor
+                TipoPerfil.Nazan,
+                TipoPerfil.Proveedor
             };
 
             if (!tipos.Contains(tipo))
@@ -98,7 +116,7 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Perfil_NombreExistente);
             }
 
-           return Crear(Tipo.Proveedor, nombre,rolesIds, cuentaId);
+           return Crear(TipoPerfil.Proveedor, nombre,rolesIds, cuentaId);
         }
     }
 }
