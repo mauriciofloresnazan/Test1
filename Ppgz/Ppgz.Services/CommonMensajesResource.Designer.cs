@@ -88,6 +88,15 @@ namespace Ppgz.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to La cuenta ya tiene un usuario maestro..
+        /// </summary>
+        internal static string ERROR_Cuenta_YaTieneUsuarioMaestro {
+            get {
+                return ResourceManager.GetString("ERROR_Cuenta_YaTieneUsuarioMaestro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cuenta incorrecta.
         /// </summary>
         internal static string ERROR_CuentaManager_IdIncorrecto {
@@ -120,6 +129,15 @@ namespace Ppgz.Services {
         internal static string ERROR_Identity_UsuarioPassword {
             get {
                 return ResourceManager.GetString("ERROR_Identity_UsuarioPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nombre o apellido incorrecto.
+        /// </summary>
+        internal static string Error_NombreApellido {
+            get {
+                return ResourceManager.GetString("Error_NombreApellido", resourceCulture);
             }
         }
         
@@ -219,6 +237,15 @@ namespace Ppgz.Services {
         internal static string ERROR_Role_Id {
             get {
                 return ResourceManager.GetString("ERROR_Role_Id", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error en el número telefónico.
+        /// </summary>
+        internal static string Error_Telefono {
+            get {
+                return ResourceManager.GetString("Error_Telefono", resourceCulture);
             }
         }
         

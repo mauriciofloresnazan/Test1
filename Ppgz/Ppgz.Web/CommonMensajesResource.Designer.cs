@@ -160,6 +160,15 @@ namespace Ppgz.Web {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error en el numero telefónico.
+        /// </summary>
+        internal static string Error_Telefono {
+            get {
+                return ResourceManager.GetString("Error_Telefono", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No puede eliminar el Usuario Maestro.
         /// </summary>
         internal static string ERROR_UsuarioProveedor_EliminarMaestro {

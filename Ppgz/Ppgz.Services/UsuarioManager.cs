@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.AspNet.Identity;
 using Ppgz.Repository;
 
@@ -35,7 +36,11 @@ namespace Ppgz.Services
         {
             // Validaciones
             // TODO VALIDACIONES DE LA ESTRUCTURA DE LOS DATOS
-            
+            ValidarTelefono(telefono);
+            ValidarNombreApellido(nombre);
+            ValidarNombreApellido(apellido);
+            //TODO VALIDAR EMAIL
+
             if (_db.AspNetUsers.FirstOrDefault(u => u.UserName == userName) != null)
             {
                 throw new BusinessException(CommonMensajesResource.ERROR_NombreUsuarioExistente);
@@ -150,6 +155,13 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
             }
 
+            // La cuenta solo puede tener un usuario maetro
+            if (cuenta.AspNetUsers.SingleOrDefault(u => u.Tipo == Tipo.MaestroProveedor) != null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_YaTieneUsuarioMaestro);
+            }
+
+
             var perfil = cuenta.Tipo == CuentaManager.Tipo.Mercaderia
                 ? PerfilManager.MaestroMercaderia
                 : PerfilManager.MaestroServicio;
@@ -205,5 +217,28 @@ namespace Ppgz.Services
             _db.AspNetUsers.Remove(usuario);
             _db.SaveChanges();
         }
+
+        #region Validaciones
+        void ValidarNombreApellido(string valor)
+        {
+            // TODO HACER CONFIGURABLE EN EL FUTURO
+            var regex = new Regex(@"^[A-Z]([a-zA-Z]|\.| |-|')+$");
+            if(!regex.IsMatch(valor))
+            {
+                throw new BusinessException(CommonMensajesResource.Error_NombreApellido);
+            }
+        }
+        void ValidarTelefono(string valor)
+        {
+            // TODO HACER CONFIGURABLE EN EL FUTURO
+            var regex = new Regex(@"(\+?\d{1})?[-.]?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})");
+            if(!regex.IsMatch(valor))
+            {
+                throw new BusinessException(CommonMensajesResource.Error_Telefono);
+            }
+        }
+
+
+        #endregion
     }
 }

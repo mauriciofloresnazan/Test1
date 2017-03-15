@@ -150,6 +150,9 @@
   <data name="ERROR_PerfilProveedor_PefilIdIncorrecto" xml:space="preserve">
     <value>Pefil incorrecto</value>
   </data>
+  <data name="Error_Telefono" xml:space="preserve">
+    <value>Error en el numero telefónico</value>
+  </data>
   <data name="ERROR_UsuarioProveedor_EliminarMaestro" xml:space="preserve">
     <value>No puede eliminar el Usuario Maestro</value>
   </data>
