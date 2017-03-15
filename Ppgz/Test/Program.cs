@@ -12,6 +12,14 @@ namespace Test
 {
     class Program
     {
+        static void TestOrdenCompra()
+        {
+            var ordenCompraManager= new OrdenCompraManager();
+            var orden = ordenCompraManager.FindActivaByIdAndUsuarioId(346, "");
+        
+            Console.WriteLine( JsonConvert.SerializeObject(orden));
+        }
+
 
         static void TestCuentaManager()
         {
@@ -74,7 +82,8 @@ namespace Test
         static void Main(string[] args)
         {
 
-           TestCuentaManager();
+            TestOrdenCompra();
+            //TestCuentaManager();
 
 
         }
