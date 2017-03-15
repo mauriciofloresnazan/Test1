@@ -15,7 +15,7 @@ namespace Test
         static void TestOrdenCompra()
         {
             var ordenCompraManager= new OrdenCompraManager();
-            var orden = ordenCompraManager.FindActivaByIdAndUsuarioId(346, "");
+            var orden = ordenCompraManager.FindActivaByIdAndUsuarioId(5, "");
         
             Console.WriteLine( JsonConvert.SerializeObject(orden));
         }

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using Ppgz.Repository;
 
 namespace Ppgz.Services
@@ -7,10 +8,23 @@ namespace Ppgz.Services
     {
         private readonly Entities _db = new Entities();
 
-        public ordencompra FindActivaByIdAndUsuarioId(int id, string usuarioId)
+        public Hashtable FindActivaByIdAndUsuarioId(int id, string usuarioId)
         {
-            return _db.ordencompras.FirstOrDefault(
+
+            var  orden = _db.ordencompras.FirstOrDefault(
                 o => o.Id == id);
+
+            var ordenDetalle = _db.detalleordencompras.FirstOrDefault(
+                o => o.OrdenComprasId == id);
+
+            var result = new Hashtable
+            {
+                {"orden", orden}, 
+                {"ordenDetalle", ordenDetalle}
+            };
+
+            return result;
+
         }
     }
 }
