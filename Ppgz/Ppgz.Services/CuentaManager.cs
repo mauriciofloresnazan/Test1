@@ -71,7 +71,6 @@ namespace Ppgz.Services
             string reponsableNombre, string reponsableApellido, string responsableCargo,
             string responsableEmail, string responableTelefono, string responsablePassword)
         {
-
             ValidarTipo(tipo);
 
             nombreProveedor = nombreProveedor.Trim();
@@ -91,6 +90,19 @@ namespace Ppgz.Services
                 throw new BusinessException(MensajesResource.ERROR_CuentaManager_Crear_LoginExistente);
             }
             
+
+
+            cuenta = new cuenta
+            {
+                CodigoProveedor = Guid.NewGuid().ToString("D"),
+                NombreCuenta = nombreProveedor,
+                Activo = true,
+                Tipo = tipo,
+            };
+
+            _db.cuentas.Add(cuenta);
+            _db.SaveChanges();
+
             var usuarioMaestro = usuarioManager.CrearMaestroProveedor(
                 responsableLogin,
                 reponsableNombre,
@@ -99,21 +111,9 @@ namespace Ppgz.Services
                 responableTelefono,
                 responsableCargo,
                 true,
-                GetPerfilMaestroByTipo(tipo).Id,
-                responsablePassword
-                );
-
-            cuenta = new cuenta
-            {
-                CodigoProveedor = Guid.NewGuid().ToString("D"),
-                NombreCuenta = nombreProveedor,
-                Activo = true,
-                Tipo = tipo,
-                ResponsableUsuarioId = usuarioMaestro.Id
-            };
-
-            _db.cuentas.Add(cuenta);
-            _db.SaveChanges();
+                responsablePassword,
+                cuenta.Id
+            );
 
             AsociarUsuarioEnCuenta(usuarioMaestro.Id, cuenta.Id);
 

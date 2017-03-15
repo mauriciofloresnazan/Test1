@@ -146,7 +146,7 @@ namespace Ppgz.Services
         /// Crea el usuario de tipo Maestro Proveedor
         /// </summary>
         public AspNetUser CrearMaestroProveedor(string userName, string nombre, string apellido,
-            string email, string telefono, string cargo, bool activo, string password, string cuentaId)
+            string email, string telefono, string cargo, bool activo, string password, int cuentaId)
         {
             // Valida la cuenta del proveedor
             var cuenta = _db.cuentas.Find(cuentaId);
@@ -219,7 +219,8 @@ namespace Ppgz.Services
         }
 
         #region Validaciones
-        void ValidarNombreApellido(string valor)
+
+        static void ValidarNombreApellido(string valor)
         {
             // TODO HACER CONFIGURABLE EN EL FUTURO
             var regex = new Regex(@"^[A-Z]([a-zA-Z]|\.| |-|')+$");
@@ -228,7 +229,8 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.Error_NombreApellido);
             }
         }
-        void ValidarTelefono(string valor)
+
+        static void ValidarTelefono(string valor)
         {
             // TODO HACER CONFIGURABLE EN EL FUTURO
             var regex = new Regex(@"(\+?\d{1})?[-.]?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})");
