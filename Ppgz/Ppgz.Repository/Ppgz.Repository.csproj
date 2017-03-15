@@ -56,6 +56,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="acumuladore.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="almacene.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="andene.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="AspNetRole.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -93,16 +102,22 @@
     <Compile Include="devolucione.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="entregacita.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="estatuscita.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="fakedataproveedor.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="horario.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="mensaje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="ordencompra.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="pago.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="perfile.cs">
@@ -125,6 +140,9 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="proveedore.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="riele.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="tipocuenta.cs">

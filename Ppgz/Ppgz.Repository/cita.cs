@@ -14,20 +14,28 @@ namespace Ppgz.Repository
     
     public partial class cita
     {
+        public cita()
+        {
+            this.entregacitas = new HashSet<entregacita>();
+        }
+    
         public int Id { get; set; }
         public string Codigo { get; set; }
         public Nullable<System.DateTime> FechaCita { get; set; }
         public Nullable<System.DateTime> FechaCreacion { get; set; }
         public string Tienda { get; set; }
         public Nullable<int> CantidadAproximada { get; set; }
-        public string Estatus { get; set; }
-        public string DataEntrega { get; set; }
         public int ProveedorId { get; set; }
         public bool Borrado { get; set; }
         public Nullable<System.DateTime> FechaTx { get; set; }
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }
+        public sbyte RielesOcupados { get; set; }
+        public int EstatusCitaId { get; set; }
+        public bool Penalizado { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
+        public virtual estatuscita estatuscita { get; set; }
+        public virtual ICollection<entregacita> entregacitas { get; set; }
     }
 }

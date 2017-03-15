@@ -25,6 +25,9 @@ namespace Ppgz.Repository
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<acumuladore> acumuladores { get; set; }
+        public virtual DbSet<almacene> almacenes { get; set; }
+        public virtual DbSet<andene> andenes { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
@@ -36,15 +39,18 @@ namespace Ppgz.Repository
         public virtual DbSet<cuentasmensaje> cuentasmensajes { get; set; }
         public virtual DbSet<cuentasxpagar> cuentasxpagars { get; set; }
         public virtual DbSet<detalleordencompra> detalleordencompras { get; set; }
+        public virtual DbSet<entregacita> entregacitas { get; set; }
+        public virtual DbSet<estatuscita> estatuscitas { get; set; }
         public virtual DbSet<fakedataproveedor> fakedataproveedors { get; set; }
+        public virtual DbSet<horario> horarios { get; set; }
         public virtual DbSet<mensaje> mensajes { get; set; }
         public virtual DbSet<ordencompra> ordencompras { get; set; }
         public virtual DbSet<perfile> perfiles { get; set; }
         public virtual DbSet<proveedore> proveedores { get; set; }
+        public virtual DbSet<riele> rieles { get; set; }
         public virtual DbSet<tipocuenta> tipocuentas { get; set; }
         public virtual DbSet<tipousuario> tipousuarios { get; set; }
         public virtual DbSet<devolucione> devoluciones { get; set; }
-        public virtual DbSet<pago> pagos { get; set; }
         public virtual DbSet<vwmensaje> vwmensajes { get; set; }
     }
 }

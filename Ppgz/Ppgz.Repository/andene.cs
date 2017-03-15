@@ -12,17 +12,17 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class pago
+    public partial class andene
     {
-        public int id { get; set; }
-        public string RFC { get; set; }
-        public string RazonSocial { get; set; }
-        public string NumeroCompensacion { get; set; }
-        public string Referencia { get; set; }
-        public string FechaDePago { get; set; }
-        public string FechaBase { get; set; }
-        public string Importe { get; set; }
-        public string ML { get; set; }
-        public string TipoMovimiento { get; set; }
+        public andene()
+        {
+            this.rieles = new HashSet<riele>();
+        }
+    
+        public int Id { get; set; }
+        public string Codigo { get; set; }
+        public string Anden { get; set; }
+    
+        public virtual ICollection<riele> rieles { get; set; }
     }
 }

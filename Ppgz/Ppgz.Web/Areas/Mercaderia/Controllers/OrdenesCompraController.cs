@@ -55,7 +55,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             Entities db = new Entities();
             var orden = db.ordencompras.Find(id);
-            orden.FechaVisualizado = DateTime.Today;
+            //orden.FechaVisualizado = DateTime.Today;
             db.Entry(orden).State = EntityState.Modified;
             db.SaveChanges();
 

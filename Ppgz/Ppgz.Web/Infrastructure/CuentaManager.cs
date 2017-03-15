@@ -46,7 +46,7 @@ namespace Ppgz.Web.Infrastructure
 
         public cuenta FindByNombre(string nombreProveedor)
         {
-            return _db.cuentas.FirstOrDefault(c => c.NombreProveedor == nombreProveedor);
+            return _db.cuentas.FirstOrDefault(c => c.NombreCuenta == nombreProveedor);
         }
 
         public cuenta FindByResponsableUsuarioId(string id)
@@ -116,7 +116,7 @@ namespace Ppgz.Web.Infrastructure
             {
                 // TODO CAMBIAR 
                 CodigoProveedor = Guid.NewGuid().ToString("D"),
-                NombreProveedor = nombreProveedor,
+                NombreCuenta = nombreProveedor,
                 Activo = true,
                 Tipo = GetTipoString(tipo),
                 ResponsableUsuarioId = usuarioMaestro.Id

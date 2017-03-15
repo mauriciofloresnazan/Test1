@@ -25,7 +25,7 @@ namespace Ppgz.Repository
     
         public int Id { get; set; }
         public string CodigoProveedor { get; set; }
-        public string NombreProveedor { get; set; }
+        public string NombreCuenta { get; set; }
         public Nullable<System.DateTime> FechaRegistro { get; set; }
         public string Tipo { get; set; }
         public bool Activo { get; set; }
