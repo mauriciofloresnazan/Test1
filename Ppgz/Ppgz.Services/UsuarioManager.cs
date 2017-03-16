@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,7 +13,7 @@ namespace Ppgz.Services
     {
         private readonly Entities _db = new Entities();
         private readonly PasswordHasher _passwordHasher = new PasswordHasher();
-
+        
         /// <summary>
         /// Tipos de usuario de acuerdo al modelo de datos
         /// </summary>
@@ -88,7 +89,22 @@ namespace Ppgz.Services
                 Cargo = cargo,
                 Activo = activo,
                 PerfilId = perfilId,
-                PasswordHash = _passwordHasher.HashPassword(password)
+                PasswordHash = _passwordHasher.HashPassword(password),
+
+                //Campos requeridos por Identity
+                EmailConfirmed =  false,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                PhoneNumberConfirmed = false,
+                TwoFactorEnabled = false,
+                LockoutEnabled = true,
+                AccessFailedCount = 0,
+                Borrado = 0,
+                
+
+
+                
+                
+                
             };
 
             _db.AspNetUsers.Add(usuario);
@@ -200,7 +216,10 @@ namespace Ppgz.Services
         {
             // Validaciones
             // TODO VALIDACIONES DE LA ESTRUCTURA DE LOS DATOS
-            ValidarTelefono(telefono);
+            if (telefono != null)
+            {
+                ValidarTelefono(telefono);
+            }
             ValidarNombreApellido(nombre);
             ValidarNombreApellido(apellido);
             ValidarEmail(email);
@@ -241,7 +260,7 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Perfil_Id);
             }
 
-            var usuario = _db.AspNetUsers.Find(perfilId);
+            var usuario = _db.AspNetUsers.Find(usuarioId);
 
             // Validacion Nazan
             if (usuario.Tipo == Tipo.Nazan)
@@ -335,6 +354,11 @@ namespace Ppgz.Services
             if (usuario == null)
             {
                 throw new BusinessException(CommonMensajesResource.ERROR_Usuario_Id);
+            }
+
+            if (usuario.UserName.ToLower() == ConfigurationManager.AppSettings["SuperAdminUserName"].ToLower())
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_EliminarSuperAdmin);
             }
 
             _db.AspNetUsers.Remove(usuario);

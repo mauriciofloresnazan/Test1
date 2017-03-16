@@ -126,6 +126,12 @@
   <data name="ERROR_CuentaManager_GetTipoByString" xml:space="preserve">
     <value>Tipo de proveedor Incorrecto</value>
   </data>
+  <data name="ERROR_EliminarSuperAdmin" xml:space="preserve">
+    <value>No puede eliminar el SuperAdmin del sistema</value>
+  </data>
+  <data name="ERROR_EliminarSuperUsuario" xml:space="preserve">
+    <value>No puede eliminar el SuperUsuario.</value>
+  </data>
   <data name="ERROR_General" xml:space="preserve">
     <value>ERROR_General</value>
   </data>
@@ -167,9 +173,6 @@
   </data>
   <data name="ERROR_PerfilNazan_EliminarPropioUsuario" xml:space="preserve">
     <value>No puede eliminar su propio usuario.</value>
-  </data>
-  <data name="ERROR_PerfilNazan_EliminarSuperUsuario" xml:space="preserve">
-    <value>No puede eliminar el SuperUsuario.</value>
   </data>
   <data name="ERROR_PerfilNazan_NombreExistente" xml:space="preserve">
     <value>El nombre para el perfil ya fue utilizado</value>

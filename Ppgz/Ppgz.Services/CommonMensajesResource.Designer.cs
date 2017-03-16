@@ -106,6 +106,15 @@ namespace Ppgz.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No puede elminar el superadmin del sistema.
+        /// </summary>
+        internal static string ERROR_EliminarSuperAdmin {
+            get {
+                return ResourceManager.GetString("ERROR_EliminarSuperAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error al procesar el registro..
         /// </summary>
         internal static string ERROR_General {

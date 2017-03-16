@@ -88,6 +88,24 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No puede eliminar el SuperAdmin del sistema.
+        /// </summary>
+        internal static string ERROR_EliminarSuperAdmin {
+            get {
+                return ResourceManager.GetString("ERROR_EliminarSuperAdmin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No puede eliminar el SuperUsuario..
+        /// </summary>
+        internal static string ERROR_EliminarSuperUsuario {
+            get {
+                return ResourceManager.GetString("ERROR_EliminarSuperUsuario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ERROR_General.
         /// </summary>
         internal static string ERROR_General {
@@ -210,15 +228,6 @@ namespace Ppgz.Web.Areas.Nazan {
         internal static string ERROR_PerfilNazan_EliminarPropioUsuario {
             get {
                 return ResourceManager.GetString("ERROR_PerfilNazan_EliminarPropioUsuario", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to No puede eliminar el SuperUsuario..
-        /// </summary>
-        internal static string ERROR_PerfilNazan_EliminarSuperUsuario {
-            get {
-                return ResourceManager.GetString("ERROR_PerfilNazan_EliminarSuperUsuario", resourceCulture);
             }
         }
         

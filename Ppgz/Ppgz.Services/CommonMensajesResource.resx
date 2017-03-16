@@ -238,4 +238,7 @@
   <data name="ERROR_Perfil_EliminarConUsarios" xml:space="preserve">
     <value>No puede eliminar un perfil con usuarios</value>
   </data>
+  <data name="ERROR_EliminarSuperAdmin" xml:space="preserve">
+    <value>No puede elminar el superadmin del sistema</value>
+  </data>
 </root>
