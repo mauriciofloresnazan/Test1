@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
+﻿using System.Web.Mvc;
+using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Nazan;
-using Ppgz.Web.Infrastructure.Proveedor;
 
 namespace Ppgz.Web.Areas.Servicio.Controllers
 {
@@ -14,7 +8,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
     [TerminosCondiciones]
     public class OrdenesCompraController : Controller
     {
-        private readonly PerfilProveedorManager _perfilProveedorManager = new PerfilProveedorManager();
+        private readonly PerfilManager _perfilProveedorManager = new PerfilManager();
         private readonly CommonManager _commonManager = new CommonManager();
 
         //
@@ -25,7 +19,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         public ActionResult Index()
         {
             var perfiles = _perfilProveedorManager
-                .FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
+                .FindPerfilProveedorByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
 
             //perfiles.Add(_perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.MERCADERIA));
 

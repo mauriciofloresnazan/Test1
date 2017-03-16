@@ -4,9 +4,7 @@ using System.Web.Mvc;
 using Ppgz.Services;
 using Ppgz.Web.Areas.Mercaderia.Models;
 using Ppgz.Web.Infrastructure;
-using BusinessException = Ppgz.Web.Infrastructure.BusinessException;
-using CommonManager = Ppgz.Web.Infrastructure.CommonManager;
-using TipoMensaje = Ppgz.Web.Infrastructure.TipoMensaje;
+
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -112,11 +110,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             try
             {
-                _perfilManager.Actualizar(
+                _perfilManager.ActualizarProveedor(
                     id,
                     model.Nombre,
-                    model.RolesIds,
-                    perfil.CuentaId);
+                    model.RolesIds);
 
                 TempData["FlashSuccess"] = CommonMensajesResource.INFO_PerfilProveedor_ActualizadoCorrectamente;
                 return RedirectToAction("Index");

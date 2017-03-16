@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using MySql.Data.MySqlClient;
-using Ppgz.Repository;
+﻿using System.Web.Mvc;
 using Ppgz.Web.Infrastructure;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
@@ -27,11 +24,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
 
 
-        public ActionResult OrdenDeCompra(int proveedorId)
+       /* public ActionResult OrdenDeCompra(int proveedorId)
         {
             
             return View();
-        }
+        }*/
 
 
 	}

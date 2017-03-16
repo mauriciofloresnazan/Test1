@@ -44,8 +44,8 @@ namespace Test
         static void CrearUsuarioProveedor()
         {
             var usuarioManager = new UsuarioManager();
-            var usuarioNazan = usuarioManager.Crear("NAZAN", "unazan_x1", "JUAN", "GODOY",
-                "G.JUANCH14@GMAIL.COM", "04169113665", "GERENTE", true, PerfilManager.MaestroNazan.Id, "123456");
+            var usuarioNazan = usuarioManager.CrearProveedor("unazan_x1", "JUAN", "GODOY",
+                "G.JUANCH14@GMAIL.COM", "04169113665", "GERENTE", true, PerfilManager.MaestroNazan.Id, "123456", 2);
 
             usuarioManager.Eliminar(usuarioNazan.Id);
         }

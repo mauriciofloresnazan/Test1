@@ -1,7 +1,6 @@
 ﻿using System.Web.Mvc;
+using Ppgz.Services;
 using Ppgz.Web.Areas.Nazan.Models;
-using Ppgz.Web.Infrastructure.Nazan;
-using Ppgz.Web.Infrastructure.Proveedor;
 
 namespace Ppgz.Web.Areas.Servicio.Models
 {
@@ -9,9 +8,9 @@ namespace Ppgz.Web.Areas.Servicio.Models
     {
         public PefilProveedorViewModel()
         {
-            var perfilProveedorManager = new PerfilProveedorManager();
+            var perfilrManager = new PerfilManager();
 
-            var roles = perfilProveedorManager.GetRoles("SERVICIO"); ;
+            var roles = perfilrManager.GetRolesServicio();
 
             Roles = new MultiSelectList(roles, "Id", "Description");
         }

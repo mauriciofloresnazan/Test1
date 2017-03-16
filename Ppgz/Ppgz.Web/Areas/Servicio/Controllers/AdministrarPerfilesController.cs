@@ -4,10 +4,7 @@ using System.Web.Mvc;
 using Ppgz.Services;
 using Ppgz.Web.Areas.Servicio.Models;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Proveedor;
-using BusinessException = Ppgz.Web.Infrastructure.BusinessException;
-using CommonManager = Ppgz.Web.Infrastructure.CommonManager;
-using TipoMensaje = Ppgz.Web.Infrastructure.TipoMensaje;
+
 
 namespace Ppgz.Web.Areas.Servicio.Controllers
 {

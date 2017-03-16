@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -23,15 +24,25 @@ namespace Ppgz.Services
 
         }
 
+        public AspNetUser Find(string id)
+        {
+            return _db.AspNetUsers.Find(id);
+        }
+
         public AspNetUser FindByUsername(string userName)
         {
             return _db.AspNetUsers.FirstOrDefault(u => u.UserName == userName);
         }
 
+        public List<AspNetUser> FindByCuentaId(int id)
+        {
+            return _db.AspNetUsers.Where(u => u.cuentas.Any(c => c.Id == id)).ToList();
+        }
+
         /// <summary>
         /// Crea y retorna un usuario
         /// </summary>
-        public AspNetUser Crear(string tipo, string userName, string nombre, string apellido,
+        internal AspNetUser Crear(string tipo, string userName, string nombre, string apellido,
             string email, string telefono, string cargo, bool activo, int perfilId, string password)
         {
             // Validaciones

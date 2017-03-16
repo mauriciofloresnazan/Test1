@@ -32,7 +32,7 @@ namespace Ppgz.Web.Infrastructure
             if (!string.IsNullOrWhiteSpace(password))
             {
 
-            var commonManager =  new CommonManager();
+            var commonManager =  new ErrorManager();
                 usuario.PasswordHash = commonManager.HashPassword(password);
             }
 
@@ -80,7 +80,7 @@ namespace Ppgz.Web.Infrastructure
         {
             // TODO INCLUIR EN EL PRIMERO??
 
-            var commonManager =  new CommonManager();
+            var commonManager =  new ErrorManager();
 
             var usuario = _db.AspNetUsers.Single(u => u.Id == id);
 

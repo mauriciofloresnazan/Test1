@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using Ppgz.Repository;
+using Ppgz.Services;
 using Ppgz.Web.Areas.Nazan;
 
 namespace Ppgz.Web.Infrastructure.Nazan

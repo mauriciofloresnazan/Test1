@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Web.Mvc;
+using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Proveedor;
+
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -9,17 +10,17 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     [TerminosCondiciones]
     public class AdministrarUsuariosController : Controller
     {
-        private readonly UsuarioProveedorManager _usuarioProveedorManager = new UsuarioProveedorManager();
+        private readonly UsuarioManager _usuarioManager = new UsuarioManager();
         private readonly CommonManager _commonManager = new CommonManager();
 
         internal void CargarPerfiles()
         {
-            var perfilProveedorManager = new PerfilProveedorManager();
+            var perfilManager = new PerfilManager();
 
-            var perfiles = perfilProveedorManager
-                .FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
+            var perfiles = perfilManager
+                .FindPerfilProveedorByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
 
-            perfiles.Add(perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.Mercaderia));
+            perfiles.Add(PerfilManager.MaestroMercaderia);
 
             ViewBag.Perfiles = new SelectList(perfiles, "Id", "Nombre");
         }
@@ -27,7 +28,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARUSUARIOS-LISTAR,MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR")]
         public ActionResult Index()
         {
-            ViewBag.Usuarios = _usuarioProveedorManager
+            ViewBag.Usuarios = _usuarioManager
                 .FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
 
             return View();
@@ -49,10 +50,18 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             try
             {
-                _usuarioProveedorManager
-                    .Crear(model.UserName, model.Nombre, model.Apellido,
-                    model.Email, model.Password, model.Perfil, "PROVEEDOR",
-                    _commonManager.GetCuentaUsuarioAutenticado().Id);
+                _usuarioManager
+                    .CrearProveedor(
+                        model.UserName, 
+                        model.Nombre, 
+                        model.Apellido,
+                        model.Email,
+                        "", //TODO
+                        "", //TODO
+                        true,
+                        model.Perfil,
+                        model.Password, 
+                        _commonManager.GetCuentaUsuarioAutenticado().Id);
 
 
                 TempData["FlashSuccess"] = CommonMensajesResource.INFO_UsuarioProveedor_CreadoCorrectamente;
@@ -79,7 +88,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR")]
         public ActionResult Editar(string id)
         {
-            var usuario = _usuarioProveedorManager.Find(id);
+            var usuario = _usuarioManager.Find(id);
 
             if (usuario == null)
             {
@@ -106,7 +115,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Editar(string id, UsuarioProveedorViewModel model)
         {
-            var usuario = _usuarioProveedorManager.Find(id);
+            var usuario = _usuarioManager.Find(id);
 
             if (usuario == null)
             {
@@ -116,13 +125,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             try
             {
-                _usuarioProveedorManager.Update(
+                _usuarioManager.Actualizar(
                     id,
                     model.Nombre,
                     model.Apellido,
                     model.Email,
-                    model.Perfil,
+                    null,null,
                     model.Password);
+
+                _usuarioManager.ActualizarPerfil(id, model.Perfil);
 
                 TempData["FlashSuccess"] = CommonMensajesResource.INFO_UsuarioProveedor_ActualizadoCorrectamente;
                 return RedirectToAction("Index");
@@ -148,7 +159,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR")]
         public ActionResult Eliminar(string id)
         {
-            var usuario = _usuarioProveedorManager.Find(id);
+            var usuario = _usuarioManager.Find(id);
 
             if (usuario == null)
             {
@@ -158,7 +169,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             try
             {
-                _usuarioProveedorManager.Eliminar(id);
+                _usuarioManager.Eliminar(id);
              
                 TempData["FlashSuccess"] = CommonMensajesResource.INFO_UsuarioProveedor_EliminadoCorrectamente;
                 return RedirectToAction("Index");

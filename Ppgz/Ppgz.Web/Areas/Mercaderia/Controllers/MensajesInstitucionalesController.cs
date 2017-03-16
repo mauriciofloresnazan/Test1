@@ -10,7 +10,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     [TerminosCondiciones]
 	public class MensajesInstitucionalesController : Controller
 	{
-		private readonly CommonManager _commonManager = new CommonManager();
+        private readonly CommonManager _commonManager = new CommonManager();
 		private readonly MensajesInstitucionalesManager _mensajesInstitucionalesManager = new MensajesInstitucionalesManager();
         
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-MENSAJESINSTITUCIONALES")]

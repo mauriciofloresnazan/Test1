@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using Ppgz.Services;
 
 namespace Ppgz.Web
 {
@@ -74,10 +75,10 @@ namespace Ppgz.Web
 			routeData.Values["controller"] = "Error";
 			routeData.Values["action"] = action;
 			routeData.Values["exception"] = new HandleErrorInfo(ex, currentController, currentAction);
-			IController errormanagerController = new Controllers.ErrorController();
+			IController CommonManagerController = new Controllers.ErrorController();
 			HttpContextWrapper wrapper = new HttpContextWrapper(httpContext);
 			RequestContext rc = new RequestContext(wrapper, routeData);
-			errormanagerController.Execute(rc);
+			CommonManagerController.Execute(rc);
 		}
 	}
 }

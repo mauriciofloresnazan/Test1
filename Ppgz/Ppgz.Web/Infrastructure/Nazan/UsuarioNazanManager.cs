@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Ppgz.Repository;
+using Ppgz.Services;
 using Ppgz.Web.Areas.Nazan;
 using Ppgz.Web.Models;
 

@@ -255,7 +255,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\BusinessException.cs" />
     <Compile Include="Infrastructure\CommonManager.cs" />
     <None Include="Infrastructure\CuentaManager.cs.old" />
     <Compile Include="Infrastructure\CuentasPorPagarManager.cs" />
@@ -263,13 +262,13 @@
     <Compile Include="Infrastructure\OrdenCompraManager.cs" />
     <Compile Include="Infrastructure\ProveedorManager.cs" />
     <None Include="Infrastructure\Proveedor\PerfilProveedorManager.cs.old" />
-    <Compile Include="Infrastructure\Proveedor\UsuarioProveedorManager.cs" />
+    <None Include="Infrastructure\Proveedor\UsuarioProveedorManager.cs.old" />
     <Compile Include="Infrastructure\Nazan\UsuarioNazanManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilNazanManager.cs" />
     <Compile Include="Infrastructure\SapManager.cs" />
     <Compile Include="Infrastructure\TerminosCondiciones.cs" />
     <Compile Include="Infrastructure\TipoUsuario.cs" />
-    <Compile Include="Infrastructure\UsuarioManager.cs" />
+    <None Include="Infrastructure\UsuarioManager.cs.old" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Areas\Nazan\Models\CuentaViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
