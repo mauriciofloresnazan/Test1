@@ -169,6 +169,24 @@ namespace Ppgz.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No puede eliminar un perfil con usuarios.
+        /// </summary>
+        internal static string ERROR_Perfil_EliminarConUsarios {
+            get {
+                return ResourceManager.GetString("ERROR_Perfil_EliminarConUsarios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No puede eliminar un perfil maestro.
+        /// </summary>
+        internal static string ERROR_Perfil_EliminarMaestro {
+            get {
+                return ResourceManager.GetString("ERROR_Perfil_EliminarMaestro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Perfil incorrecto.
         /// </summary>
         internal static string ERROR_Perfil_Id {

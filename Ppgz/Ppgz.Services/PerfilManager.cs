@@ -80,7 +80,7 @@ namespace Ppgz.Services
 				.FirstOrDefault(p => p.Id == id && p.Tipo == TipoPerfil.Nazan);
 		}
 		
-		public perfile Crear(string tipo, string nombre, string[] rolesIds, int? cuentaId = null)
+		internal perfile Crear(string tipo, string nombre, string[] rolesIds, int? cuentaId = null)
 		{
 			var tipos = new[]
 			{
@@ -128,7 +128,7 @@ namespace Ppgz.Services
 
 			return perfil;
 		}
-		public void Actualizar(int id, string nombre, string[] rolesIds)
+		internal void Actualizar(int id, string nombre, string[] rolesIds)
 		{
 			var perfil = _db.perfiles.Find(id);
 
@@ -297,6 +297,32 @@ namespace Ppgz.Services
 			_db.SaveChanges();
 
 		}
+
+        public void Eliminar(int id)
+        {
+            var perfil = Find(id);
+
+            if (perfil == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Perfil_Id);
+            }
+
+            if (perfil.Id == MaestroNazan.Id 
+                || perfil.Id == MaestroServicio.Id 
+                || perfil.Id == MaestroNazan.Id)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Perfil_EliminarMaestro);
+            }
+
+            if (perfil.AspNetUsers.Any())
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_EliminarConUsuarios);
+            }
+
+            perfil.AspNetRoles.Clear();
+            _db.perfiles.Remove(perfil);
+            _db.SaveChanges();
+        }
 
 		#region Roles
 		public List<AspNetRole> GetRolesMercaderia()

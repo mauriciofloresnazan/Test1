@@ -232,4 +232,10 @@
   <data name="ERROR_Perfil_AccesosIncorrectos" xml:space="preserve">
     <value>Accesos incorrectos</value>
   </data>
+  <data name="ERROR_Perfil_EliminarMaestro" xml:space="preserve">
+    <value>No puede eliminar un perfil maestro</value>
+  </data>
+  <data name="ERROR_Perfil_EliminarConUsarios" xml:space="preserve">
+    <value>No puede eliminar un perfil con usuarios</value>
+  </data>
 </root>

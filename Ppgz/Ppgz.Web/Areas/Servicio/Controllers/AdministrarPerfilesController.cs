@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Ppgz.Services;
 using Ppgz.Web.Areas.Servicio.Models;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Proveedor;
+using BusinessException = Ppgz.Web.Infrastructure.BusinessException;
+using CommonManager = Ppgz.Web.Infrastructure.CommonManager;
+using TipoMensaje = Ppgz.Web.Infrastructure.TipoMensaje;
 
 namespace Ppgz.Web.Areas.Servicio.Controllers
 {
@@ -11,16 +15,16 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
     [TerminosCondiciones]
     public class AdministrarPerfilesController : Controller
     {
-        private readonly PerfilProveedorManager _perfilProveedorManager = new PerfilProveedorManager();
+        private readonly PerfilManager _perfilManager = new PerfilManager();
         private readonly CommonManager _commonManager = new CommonManager();
 
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-LISTAR,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
         public ActionResult Index()
         {
-            var perfiles = _perfilProveedorManager
-                .FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
+            var perfiles = _perfilManager
+                .FindPerfilProveedorByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
 
-            perfiles.Add(_perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.Servicio));
+            perfiles.Add(PerfilManager.MaestroServicio);
 
             ViewBag.Perfiles = perfiles;
             return View();
@@ -41,8 +45,8 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             try
             {
-                _perfilProveedorManager
-                    .Crear(
+                _perfilManager
+                    .CrearProveedor(
                         model.Nombre, model.RolesIds,
                         _commonManager.GetCuentaUsuarioAutenticado().Id);
 
@@ -71,7 +75,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
         public ActionResult Editar(int id)
         {
-            var perfil = _perfilProveedorManager.Find(id);
+            var perfil = _perfilManager.Find(id);
 
             if (perfil == null)
             {
@@ -96,7 +100,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         public ActionResult Editar(int id, PefilProveedorViewModel model)
         {
 
-            var perfil = _perfilProveedorManager.Find(id);
+            var perfil = _perfilManager.Find(id);
 
             if (perfil == null)
             {
@@ -106,11 +110,10 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             try
             {
-                _perfilProveedorManager.Actualizar(
+                _perfilManager.ActualizarProveedor(
                     id,
                     model.Nombre,
-                    model.RolesIds,
-                    perfil.CuentaId);
+                    model.RolesIds);
 
                 TempData["FlashSuccess"] = CommonMensajesResource.INFO_PerfilProveedor_ActualizadoCorrectamente;
                 return RedirectToAction("Index");
@@ -136,7 +139,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
         public ActionResult Eliminar(int id)
         {
-            var perfil = _perfilProveedorManager.Find(id);
+            var perfil = _perfilManager.Find(id);
 
             if (perfil == null)
             {
@@ -146,7 +149,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             try
             {
-                _perfilProveedorManager.Eliminar(id);
+                _perfilManager.Eliminar(id);
                 TempData["FlashSuccess"] = CommonMensajesResource.INFO_PerfilProveedor_EliminadoCorrectamente;
                 return RedirectToAction("Index");
             }
