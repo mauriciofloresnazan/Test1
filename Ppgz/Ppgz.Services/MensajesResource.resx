@@ -177,6 +177,9 @@
   <data name="ERROR_PerfilNazan_PefilIdIncorrecto" xml:space="preserve">
     <value>Pefil incorrecto</value>
   </data>
+  <data name="ERROR_Perfil_AccesosIncorrectos" xml:space="preserve">
+    <value>Accesos incorrectos</value>
+  </data>
   <data name="ERROR_UsuarioNazan_IdIncorrecto" xml:space="preserve">
     <value>Usuario Incorrecto</value>
   </data>

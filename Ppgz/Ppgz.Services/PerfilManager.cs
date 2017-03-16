@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Ppgz.Repository;
 
@@ -87,21 +86,21 @@ namespace Ppgz.Services
 
             if (!rolesIds.Any())
             {
-                throw new Exception(CommonMensajesResource.ERROR_Perfil_AccesosRequeridos);
+                throw new BusinessException(CommonMensajesResource.ERROR_Perfil_AccesosRequeridos);
             }
             var aspnetroles =
                 _db.AspNetRoles.Where(r => rolesIds.Contains(r.Name));
 
             if (!aspnetroles.Any())
             {
-                throw new Exception(CommonMensajesResource.ERROR_Perfil_AccesosRequeridos);
+                throw new BusinessException(CommonMensajesResource.ERROR_Perfil_AccesosRequeridos);
             }
 
             if (cuentaId != null)
             {            
-                if (_db.cuentas.Find((int)cuentaId)!= null)
+                if (_db.cuentas.Find((int)cuentaId) == null)
                 {
-                    throw new Exception(CommonMensajesResource.ERROR_Cuenta_Id);
+                    throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
                 }
             }
 
@@ -126,10 +125,31 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Perfil_NombreExistente);
             }
 
-           return Crear(TipoPerfil.Proveedor, nombre,rolesIds, cuentaId);
+            var cuenta = _db.cuentas.Find(cuentaId);
+            if (cuenta == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+            }
+            if (cuenta.Tipo == CuentaManager.Tipo.Mercaderia)
+            {
+                if (rolesIds.All(r => GetRolesMercaderia().Select(r2 => r2.Id).Contains(r)))
+                {
+                    throw new BusinessException(CommonMensajesResource.ERROR_Perfil_AccesosIncorrectos);
+                    
+                }
+            }
+            if (cuenta.Tipo == CuentaManager.Tipo.Servicio)
+            {
+                if (rolesIds.All(r => GetRolesServicio().Select(r2 => r2.Id).Contains(r)))
+                {
+                    throw new BusinessException(CommonMensajesResource.ERROR_Perfil_AccesosIncorrectos);
+                }
+            }
+
+            return Crear(TipoPerfil.Proveedor, nombre,rolesIds, cuentaId);
         }
-
-
+        
+        #region Roles
         public List<AspNetRole> GetRolesMercaderia()
         {
             return _db.AspNetRoles
@@ -145,5 +165,6 @@ namespace Ppgz.Services
             return _db.AspNetRoles
                 .Where(r => r.Tipo == TipoRole.Nazan).ToList();
         }
+        #endregion
     }
 }

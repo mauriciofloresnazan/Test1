@@ -229,4 +229,7 @@
   <data name="ERROR_UsarioMaestroProveedor_CambiarPerfil" xml:space="preserve">
     <value>No puede cambiar el prefier de usuario maestro proveedor</value>
   </data>
+  <data name="ERROR_Perfil_AccesosIncorrectos" xml:space="preserve">
+    <value>Accesos incorrectos</value>
+  </data>
 </root>

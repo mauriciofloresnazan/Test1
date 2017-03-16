@@ -151,6 +151,15 @@ namespace Ppgz.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Accesos incorrectos.
+        /// </summary>
+        internal static string ERROR_Perfil_AccesosIncorrectos {
+            get {
+                return ResourceManager.GetString("ERROR_Perfil_AccesosIncorrectos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Debe agregar por lo menos 1 acceso al perfil.
         /// </summary>
         internal static string ERROR_Perfil_AccesosRequeridos {
