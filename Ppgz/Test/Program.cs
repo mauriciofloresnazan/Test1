@@ -16,12 +16,7 @@ namespace Test
         
         static void Main(string[] args)
         {
-            CrearUsuarioNazan();
-            CrearUsuarioNazan();
-            CrearUsuarioNazan();
-            CrearUsuarioNazan();
-            CrearUsuarioNazan();
-            CrearUsuarioNazan();
+            CrearUsuarioProveedor();
             //TestOrdenCompra();
             //TestCuentaManager();
 
