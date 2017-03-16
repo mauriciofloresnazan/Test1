@@ -223,4 +223,10 @@
     <value>No se pudo guardar. Intente nuevamente si el problema persiste contacte los adminsitradores del sistema.</value>
     <comment>Error de registro general </comment>
   </data>
+  <data name="ERROR_Perfil_Id" xml:space="preserve">
+    <value>Perfil incorrecto</value>
+  </data>
+  <data name="ERROR_UsarioMaestroProveedor_CambiarPerfil" xml:space="preserve">
+    <value>No puede cambiar el prefier de usuario maestro proveedor</value>
+  </data>
 </root>

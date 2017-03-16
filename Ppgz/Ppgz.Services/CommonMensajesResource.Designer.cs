@@ -160,6 +160,15 @@ namespace Ppgz.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Perfil incorrecto.
+        /// </summary>
+        internal static string ERROR_Perfil_Id {
+            get {
+                return ResourceManager.GetString("ERROR_Perfil_Id", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to El nombre del perfil ya fue utilizado.
         /// </summary>
         internal static string ERROR_Perfil_NombreExistente {
@@ -246,6 +255,15 @@ namespace Ppgz.Services {
         internal static string Error_Telefono {
             get {
                 return ResourceManager.GetString("Error_Telefono", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No puede cambiar el prefier de usuario maestro proveedor.
+        /// </summary>
+        internal static string ERROR_UsarioMaestroProveedor_CambiarPerfil {
+            get {
+                return ResourceManager.GetString("ERROR_UsarioMaestroProveedor_CambiarPerfil", resourceCulture);
             }
         }
         

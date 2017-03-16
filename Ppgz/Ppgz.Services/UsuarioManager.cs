@@ -211,9 +211,73 @@ namespace Ppgz.Services
 
             return usuario;
         }
-         
 
-        public void AgregarRoleEnUsuario(string usuarioId, string roleId)
+
+        public void ActualizarPerfil(string usuarioId, int perfilId)
+        {
+            var perfil = _db.perfiles.Find(perfilId);
+
+            if (perfil == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Perfil_Id);
+            }
+
+            var usuario = _db.AspNetUsers.Find(perfilId);
+
+            // Validacion Nazan
+            if (usuario.Tipo == Tipo.Nazan)
+            {
+                if (perfil.Tipo != PerfilManager.TipoPerfil.Nazan)
+                {
+                    throw new BusinessException(CommonMensajesResource.ERROR_Perfil_Id);
+                }
+            }
+
+            // Validacion Maestro Proveedor
+            if (usuario.Tipo == Tipo.MaestroProveedor)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_UsarioMaestroProveedor_CambiarPerfil);
+            }
+
+            // Validacion proveedor
+            if (usuario.Tipo == Tipo.Proveedor)
+            {
+                var cuenta = _db.cuentas.FirstOrDefault(c => c.AspNetUsers.Any(u => u.Id == usuario.Id));
+                if (cuenta == null)
+                {
+                    //TODO MERJORAR
+                    //ERROR DE APLICACION 
+                    throw new Exception("ERRRO DE APLICACION USUARIO PROVEEDOR SIN CUENTA");
+                }
+                if (cuenta.Tipo == CuentaManager.Tipo.Mercaderia)
+                {
+                    if (perfil.Id != PerfilManager.MaestroMercaderia.Id && !cuenta.perfiles.Contains(perfil))
+                    {
+                        throw new BusinessException(CommonMensajesResource.ERROR_Perfil_Id);
+                    }
+                }
+                if (cuenta.Tipo == CuentaManager.Tipo.Servicio)
+                {
+                    if (perfil.Id != PerfilManager.MaestroServicio.Id && !cuenta.perfiles.Contains(perfil))
+                    {
+                        throw new BusinessException(CommonMensajesResource.ERROR_Perfil_Id);
+                    }
+                }
+            }
+
+            usuario.PerfilId = perfil.Id;
+            _db.Entry(usuario).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            QuitarRolesDeUsuario(usuario.Id);
+
+            foreach (var role in perfil.AspNetRoles)
+            {
+                AgregarRoleEnUsuario(role.Id, usuario.Id);
+            }
+        }
+
+        public void AgregarRoleEnUsuario(string roleId, string usuarioId)
         {
             var usuario = _db.AspNetUsers.Find(usuarioId);
 
