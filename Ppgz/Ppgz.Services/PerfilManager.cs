@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Ppgz.Repository;
 
@@ -14,6 +15,16 @@ namespace Ppgz.Services
         {
             public static string Nazan { get { return "NAZAN"; } }
             public static string Proveedor { get { return "PROVEEDOR"; } }
+        }
+
+        /// <summary>
+        /// Tipos de Roles de acuerdo al modelo de datos
+        /// </summary>
+        public static class TipoRole
+        {
+            public const string Nazan = "NAZAN";
+            public const string Mercaderia = "MERCADERIA";
+            public const string Servicio = "SERVICIO";
         }
 
         /// <summary>
@@ -57,8 +68,7 @@ namespace Ppgz.Services
             return _db.perfiles
                 .FirstOrDefault(p => p.Id == id && p.Tipo == TipoPerfil.Nazan);
         }
-
-
+        
         public perfile Crear(string tipo, string nombre, string[] rolesIds, int? cuentaId = null)
         {
             var tipos = new[]
@@ -117,6 +127,23 @@ namespace Ppgz.Services
             }
 
            return Crear(TipoPerfil.Proveedor, nombre,rolesIds, cuentaId);
+        }
+
+
+        public List<AspNetRole> GetRolesMercaderia()
+        {
+            return _db.AspNetRoles
+                .Where(r => r.Tipo == TipoRole.Mercaderia).ToList();
+        }
+        public List<AspNetRole> GetRolesServicio()
+        {
+            return _db.AspNetRoles
+                .Where(r => r.Tipo == TipoRole.Servicio).ToList();
+        }
+        public List<AspNetRole> GetRolesNazan()
+        {
+            return _db.AspNetRoles
+                .Where(r => r.Tipo == TipoRole.Nazan).ToList();
         }
     }
 }
