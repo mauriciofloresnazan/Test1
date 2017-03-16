@@ -16,7 +16,8 @@ namespace Test
         
         static void Main(string[] args)
         {
-            CrearUsuarioProveedor();
+            Test();
+            //CrearUsuarioProveedor();
             //TestOrdenCompra();
             //TestCuentaManager();
 
@@ -84,8 +85,24 @@ namespace Test
 
 
             var json = JsonConvert.SerializeObject(query);
+           // Console.Write(json);
+            //Console.ReadLine();
+
+
+            var quer2 = (from c in entities.cuentas
+                from u in c.AspNetUsers
+                where u.Tipo == UsuarioManager.Tipo.MaestroProveedor
+                select u);
+
+//            var sql = ((System.Data.Objects.ObjectQuery)query).ToTraceString();
+
+            Console.WriteLine(quer2.ToString());
+ 
+            json = JsonConvert.SerializeObject(quer2);
             Console.Write(json);
             Console.ReadLine();
+
+
 
         }
 

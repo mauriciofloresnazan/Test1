@@ -4,21 +4,20 @@ using System.Web.Mvc;
 using Ppgz.Services;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Nazan;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
     [Authorize]
     public class AdministrarPerfilesNazanController : Controller
     {
-        private readonly PerfilNazanManager _perfilNazanManager = new PerfilNazanManager();
+        private readonly PerfilManager _perfilManager = new PerfilManager();
 
         //
         // GET: /Nazan/AdministrarPerfilesNazan/
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
         public ActionResult Index()
         {
-            ViewBag.Perfiles = _perfilNazanManager.FindAll();
+            ViewBag.Perfiles = _perfilManager.FindPerfilesNazan();
 
             return View();
         }
@@ -37,7 +36,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             try
             {
-                _perfilNazanManager.Crear(model.Nombre, model.RolesIds);
+                _perfilManager.CrearNazan(model.Nombre, model.RolesIds);
 
                 TempData["FlashSuccess"] = MensajesResource.INFO_PerfilNazan_CreadoCorrectamente;
                 return RedirectToAction("Index");
@@ -65,7 +64,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR")]
         public ActionResult Editar(int id)
         {
-            var perfil = _perfilNazanManager.Find(id);
+            var perfil = _perfilManager.Find(id);
 
             if (perfil == null)
             {
@@ -93,7 +92,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             ActionResult actionResult;
             try
             {
-                _perfilNazanManager.Actualizar(
+                _perfilManager.ActualizarNazan(
                     id,
                     model.Nombre,
                     model.RolesIds);
@@ -129,7 +128,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         {
             try
             {
-                _perfilNazanManager.Eliminar(id);
+                _perfilManager.Eliminar(id);
 
                 TempData["FlashSuccess"] = MensajesResource.INFO_PerfilNazan_EliminadoCorrectamente;
                 return RedirectToAction("Index");

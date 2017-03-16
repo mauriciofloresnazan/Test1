@@ -263,8 +263,8 @@
     <Compile Include="Infrastructure\ProveedorManager.cs" />
     <None Include="Infrastructure\Proveedor\PerfilProveedorManager.cs.old" />
     <None Include="Infrastructure\Proveedor\UsuarioProveedorManager.cs.old" />
-    <Compile Include="Infrastructure\Nazan\UsuarioNazanManager.cs" />
-    <Compile Include="Infrastructure\Nazan\PerfilNazanManager.cs" />
+    <None Include="Infrastructure\Nazan\UsuarioNazanManager.cs.old" />
+    <None Include="Infrastructure\Nazan\PerfilNazanManager.cs.old" />
     <Compile Include="Infrastructure\SapManager.cs" />
     <Compile Include="Infrastructure\TerminosCondiciones.cs" />
     <Compile Include="Infrastructure\TipoUsuario.cs" />

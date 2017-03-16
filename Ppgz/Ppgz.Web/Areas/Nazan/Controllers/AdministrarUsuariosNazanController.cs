@@ -3,31 +3,30 @@ using System.Web.Mvc;
 using Ppgz.Services;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Nazan;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
 	[Authorize]
 	public class AdministrarUsuariosNazanController : Controller
 	{
-		private readonly UsuarioNazanManager _usuarioNazanManager = new UsuarioNazanManager();
+        private readonly UsuarioManager _usuarioManager = new UsuarioManager();
 
-		private readonly PerfilNazanManager _perfilNazanManager = new PerfilNazanManager();
+        private readonly PerfilManager _perfilManager = new PerfilManager();
 
 		//
 		// GET: /Nazan/
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
 		public ActionResult Index()
 		{
-			ViewBag.Usuarios = _usuarioNazanManager.FindAll();
+            ViewBag.Usuarios = _usuarioManager.FindAllNazan();
 			return View();
 		}
 
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
 		public ActionResult Crear()
 		{
-			ViewBag.Perfiles = 
-				new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre");
+			ViewBag.Perfiles =
+                new SelectList(_perfilManager.FindPerfilesNazan(), "Id", "Nombre");
 			return View();
 		}
 
@@ -37,15 +36,22 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		public ActionResult Crear(UsuarioNazanViewModel model)
 		{
 			ViewBag.Perfiles =
-				  new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre"); 
+				  new SelectList(_perfilManager.FindPerfilesNazan(), "Id", "Nombre"); 
 
 			if (!ModelState.IsValid) return View(model);
 
 			try
 			{
-				_usuarioNazanManager
-					.Crear(model.UserName,model.Nombre,model.Apellido,
-					model.Email,model.Password, model.Perfil);
+				_usuarioManager.CrearNazan(
+                    model.UserName,
+                    model.Nombre,
+                    model.Apellido,
+					model.Email,
+                    null,//TODO
+                    null,//TODO
+                    true,
+                    model.Perfil,
+                    model.Password);
 
 				TempData["FlashSuccess"] =MensajesResource.INFO_UsuarioNazan_CreadoCorrectamente;
 				return RedirectToAction("Index");
@@ -75,9 +81,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		public ActionResult Editar(string id)
 		{
 			ViewBag.Perfiles =
-				  new SelectList(_perfilNazanManager.FindAll(), "Id", "Nombre"); 
+                  new SelectList(_perfilManager.FindPerfilesNazan(), "Id", "Nombre"); 
 
-			var usuario = _usuarioNazanManager.Find(id);
+			var usuario = _usuarioManager.Find(id);
 
 			if (usuario == null)
 			{
@@ -102,7 +108,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Editar(string id, UsuarioNazanViewModel model)
 		{
-			var usuario = _usuarioNazanManager.Find(id);
+			var usuario = _usuarioManager.Find(id);
 
 			if (usuario == null)
 			{
@@ -112,13 +118,15 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 			try
 			{
-				_usuarioNazanManager.Actualizar(
+				_usuarioManager.Actualizar(
 					id,
 					model.Nombre,
 					model.Apellido,
 					model.Email,
-					model.Perfil,
+					null,null,
 					model.Password);
+
+                _usuarioManager.ActualizarPerfil(id, model.Perfil);
 
 				TempData["FlashSuccess"] = MensajesResource.INFO_UsuarioNazan_ActualizadoCorrectamente;
 				return RedirectToAction("Index");
@@ -146,7 +154,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR")]
 		public ActionResult Eliminar(string id)
 		{
-			var usuario = _usuarioNazanManager.Find(id);
+			var usuario = _usuarioManager.Find(id);
 
 			if (usuario == null)
 			{
@@ -156,7 +164,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 			try
 			{
-				_usuarioNazanManager.Eliminar(id);
+				_usuarioManager.Eliminar(id);
 				TempData["FlashSuccess"] = MensajesResource.INFO_UsuarioNazan_EliminadoCorrectamente;
 				return RedirectToAction("Index");
 			}

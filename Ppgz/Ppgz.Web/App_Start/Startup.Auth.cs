@@ -7,7 +7,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
 using Ppgz.Repository;
-using Ppgz.Web.Infrastructure.Nazan;
+using Ppgz.Services;
 using Ppgz.Web.Models;
 
 namespace Ppgz.Web
@@ -110,8 +110,8 @@ namespace Ppgz.Web
 
 
             // SuperUsuario
-            var usuarioNazanManager = new UsuarioNazanManager();
-            var perfilNazanManager = new PerfilNazanManager();
+            var usuarioManager = new UsuarioManager();
+  
 
             //Roles
             var db = new Entities();
@@ -178,13 +178,17 @@ namespace Ppgz.Web
             if (applicationUserManager.FindByName("superusuario") == null)
             {
 
-                usuarioNazanManager.Crear(
+                usuarioManager.CrearNazan(
+                   
                      "superusuario",
                      "superusuario",
                      "superusuario",
                      "superusuario",
-                     "123456",
-                     perfilNazanManager.GetMaestro().Id);
+                     null,
+                     null,
+                     true,
+                     PerfilManager.MaestroNazan.Id,
+                     "123456");
             }
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions

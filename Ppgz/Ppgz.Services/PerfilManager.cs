@@ -36,16 +36,42 @@ namespace Ppgz.Services
 		{
 			get
 			{
-				var db = new Entities();
-				return db.perfiles.Single(p => p.Nombre == "MAESTRO-MERCADERIA");
+                var db = new Entities();
+                var perfil = db.perfiles.FirstOrDefault(p => p.Nombre == "MAESTRO-MERCADERIA");
+                if (perfil != null) return perfil;
+
+                var role = db.AspNetRoles.Find("MAESTRO-MERCADERIA");
+
+                perfil = new perfile()
+                {
+                    Nombre = "MAESTRO-MERCADERIA",
+                    Tipo = TipoPerfil.Nazan
+                };
+                perfil.AspNetRoles.Add(role);
+                db.perfiles.Add(perfil);
+                db.SaveChanges();
+                return perfil;
 			}
 		}
 		public static perfile MaestroServicio
 		{
 			get
 			{
-				var db = new Entities();
-				return db.perfiles.Single(p => p.Nombre == "MAESTRO-SERVICIO");
+                var db = new Entities();
+                var perfil = db.perfiles.FirstOrDefault(p => p.Nombre == "MAESTRO-SERVICIO");
+			    if (perfil != null) return perfil;
+			    
+                var role = db.AspNetRoles.Find("MAESTRO-SERVICIO");
+
+			    perfil = new perfile()
+			    {
+                    Nombre = "MAESTRO-SERVICIO",
+			        Tipo = TipoPerfil.Nazan
+			    };
+			    perfil.AspNetRoles.Add(role);
+			    db.perfiles.Add(perfil);
+			    db.SaveChanges();
+			    return perfil;
 			}
 		}
 		// PREFIL CREADO POR EL SISTEMA AL INICIO
@@ -54,8 +80,21 @@ namespace Ppgz.Services
 			get
 			{
 				var db = new Entities();
-				return db.perfiles.Single(p => p.Nombre == "MAESTRO-NAZAN");
-			}
+                var perfil = db.perfiles.FirstOrDefault(p => p.Nombre == "MAESTRO-NAZAN");
+			   
+                if (perfil != null) return perfil;
+			    var role = db.AspNetRoles.Find("MAESTRO-NAZAN");
+
+			    perfil = new perfile()
+			    {
+			        Nombre = "MAESTRO-NAZAN",
+			        Tipo = TipoPerfil.Nazan
+			    };
+			    perfil.AspNetRoles.Add(role);
+			    db.perfiles.Add(perfil);
+			    db.SaveChanges();
+			    return perfil;
+            }
 		}
 		#endregion
 
@@ -67,8 +106,11 @@ namespace Ppgz.Services
 		public List<perfile> FindPerfilProveedorByCuentaId(int cuentaId)
 		{
 			return _db.perfiles.Where(p => p.CuentaId == cuentaId).ToList();
-		} 
-		
+		}
+        public List<perfile> FindPerfilesNazan()
+        {
+            return _db.perfiles.Where(p => p.Tipo == TipoPerfil.Nazan).ToList();
+        } 
 		public perfile FindPerfilProveedorByNombreAndCuentaId(string nombrePerfil, int? cuentaId)
 		{
 			return _db.perfiles

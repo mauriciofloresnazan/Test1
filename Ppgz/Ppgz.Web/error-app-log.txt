@@ -1455,3 +1455,53 @@ System.Data.Entity.Core.EntityException: The underlying provider failed on Open.
    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
    at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
    at Ppgz.Web.Controllers.AccountController.<Login>d__2.MoveNext() in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Controllers\AccountController.cs:line 55
+2017-03-16 04:47:38,360 
+Nombre del Controlador = AdministrarUsuariosNazan
+Nombre del método o acción solicitada = Crear
+Conjunto de parámetros enviados = Perfil = 59, UserName = unzan1, Nombre = unzan1, Apellido = unzan1, Email = unzan1@unzan1.com, Password = unzan1, ConfirmarPassword = unzan1
+Tipo de mensaje = Error.
+Traza detallada: 
+System.ArgumentNullException: Value cannot be null.
+Parameter name: input
+   at System.Text.RegularExpressions.Regex.IsMatch(String input)
+   at Ppgz.Services.UsuarioManager.ValidarTelefono(String valor) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\UsuarioManager.cs:line 357
+   at Ppgz.Services.UsuarioManager.Crear(String tipo, String userName, String nombre, String apellido, String email, String telefono, String cargo, Boolean activo, Int32 perfilId, String password) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\UsuarioManager.cs:line 55
+   at Ppgz.Services.UsuarioManager.CrearNazan(String userName, String nombre, String apellido, String email, String telefono, String cargo, Boolean activo, Int32 perfilId, String password) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\UsuarioManager.cs:line 121
+   at Ppgz.Web.Areas.Nazan.Controllers.AdministrarUsuariosNazanController.Crear(UsuarioNazanViewModel model) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs:line 45
+2017-03-16 04:48:04,155 
+Nombre del Controlador = AdministrarUsuariosNazan
+Nombre del método o acción solicitada = Crear
+Conjunto de parámetros enviados = Perfil = 59, UserName = unzan1, Nombre = unzan1, Apellido = unzan1, Email = unzan1@unzan1.com, Password = 123456, ConfirmarPassword = 123456
+Tipo de mensaje = Error.
+Traza detallada: 
+System.ArgumentNullException: Value cannot be null.
+Parameter name: input
+   at System.Text.RegularExpressions.Regex.IsMatch(String input)
+   at Ppgz.Services.UsuarioManager.ValidarTelefono(String valor) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\UsuarioManager.cs:line 357
+   at Ppgz.Services.UsuarioManager.Crear(String tipo, String userName, String nombre, String apellido, String email, String telefono, String cargo, Boolean activo, Int32 perfilId, String password) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\UsuarioManager.cs:line 55
+   at Ppgz.Services.UsuarioManager.CrearNazan(String userName, String nombre, String apellido, String email, String telefono, String cargo, Boolean activo, Int32 perfilId, String password) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\UsuarioManager.cs:line 121
+   at Ppgz.Web.Areas.Nazan.Controllers.AdministrarUsuariosNazanController.Crear(UsuarioNazanViewModel model) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs:line 45
+2017-03-16 05:10:43,291 
+Nombre del Controlador = AdministrarUsuariosNazan
+Nombre del método o acción solicitada = Editar
+Conjunto de parámetros enviados = Perfil = 59, Nombre = unazan1, Apellido = unazan1, Email = unazan1@unazan1.com, Password = 123456, ConfirmarPassword = 123456
+Tipo de mensaje = Error.
+Traza detallada: 
+System.ArgumentNullException: Value cannot be null.
+Parameter name: input
+   at System.Text.RegularExpressions.Regex.IsMatch(String input)
+   at Ppgz.Services.UsuarioManager.ValidarTelefono(String valor) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\UsuarioManager.cs:line 360
+   at Ppgz.Services.UsuarioManager.Actualizar(String id, String nombre, String apellido, String email, String telefono, String cargo, String password) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\UsuarioManager.cs:line 203
+   at Ppgz.Web.Areas.Nazan.Controllers.AdministrarUsuariosNazanController.Editar(String id, UsuarioNazanViewModel model) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs:line 121
+2017-03-16 05:11:09,271 
+Nombre del Controlador = AdministrarUsuariosNazan
+Nombre del método o acción solicitada = Editar
+Conjunto de parámetros enviados = Perfil = 59, Nombre = unazan1, Apellido = unazan1, Email = unazan1@unazan1.com, Password = 123456, ConfirmarPassword = 123456
+Tipo de mensaje = Error.
+Traza detallada: 
+System.ArgumentNullException: Value cannot be null.
+Parameter name: input
+   at System.Text.RegularExpressions.Regex.IsMatch(String input)
+   at Ppgz.Services.UsuarioManager.ValidarTelefono(String valor) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\UsuarioManager.cs:line 360
+   at Ppgz.Services.UsuarioManager.Actualizar(String id, String nombre, String apellido, String email, String telefono, String cargo, String password) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\UsuarioManager.cs:line 203
+   at Ppgz.Web.Areas.Nazan.Controllers.AdministrarUsuariosNazanController.Editar(String id, UsuarioNazanViewModel model) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs:line 121

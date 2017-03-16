@@ -39,15 +39,23 @@ namespace Ppgz.Services
             return _db.AspNetUsers.Where(u => u.cuentas.Any(c => c.Id == id)).ToList();
         }
 
+        public List<AspNetUser> FindAllNazan()
+        {
+            return _db.AspNetUsers.Where(u => u.Tipo == Tipo.Nazan).ToList();
+        }
+
         /// <summary>
         /// Crea y retorna un usuario
         /// </summary>
         internal AspNetUser Crear(string tipo, string userName, string nombre, string apellido,
-            string email, string telefono, string cargo, bool activo, int perfilId, string password)
+            string email, bool activo, int perfilId, string password, string telefono = null, string cargo = null)
         {
             // Validaciones
             // TODO VALIDACIONES DE LA ESTRUCTURA DE LOS DATOS
-            ValidarTelefono(telefono);
+            if (telefono != null)
+            {
+                ValidarTelefono(telefono);
+            }
             ValidarNombreApellido(nombre);
             ValidarNombreApellido(apellido);
             ValidarEmail(email);
@@ -70,7 +78,7 @@ namespace Ppgz.Services
 
             var usuario = new AspNetUser()
             {
-                Id= Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid().ToString(),
                 Tipo = tipo,
                 UserName = userName,
                 Nombre = nombre,
@@ -92,7 +100,7 @@ namespace Ppgz.Services
 
             foreach (var role in perfil.AspNetRoles)
             {
-                AgregarRoleEnUsuario(usuario.Id, role.Id);
+                AgregarRoleEnUsuario(role.Id, usuario.Id);
             }
 
             return usuario;
@@ -105,16 +113,16 @@ namespace Ppgz.Services
             string cargo, bool activo, int perfilId, string password)
         {
             var perfilManager = new PerfilManager();
-            
+
             // Vlida que el perfil sea de tipo nazan
             var perfil = perfilManager.FindPerfilNazan(perfilId);
             if (perfil == null)
             {
                 throw new BusinessException(CommonMensajesResource.ERROR_PerfilProveedor_PefilIdIncorrecto);
             }
-            
-            var usuario = Crear(Tipo.Nazan, userName, nombre, apellido, email, telefono, cargo,
-                activo, perfilId, password);
+
+            var usuario = Crear(Tipo.Nazan, userName, nombre, apellido, email,
+                activo, perfilId, password, telefono, cargo);
 
             return usuario;
         }
@@ -122,7 +130,7 @@ namespace Ppgz.Services
         /// <summary>
         /// Crea el usuario de tipo Proveedor
         /// </summary>
-        public AspNetUser CrearProveedor(string userName, string nombre, string apellido, string email, 
+        public AspNetUser CrearProveedor(string userName, string nombre, string apellido, string email,
             string telefono, string cargo, bool activo, int perfilId, string password, int cuentaId)
         {
             // Valida la cuenta del proveedor
@@ -131,7 +139,7 @@ namespace Ppgz.Services
             {
                 throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
             }
-                        
+
             // Valida el prefil que este relacionado con la cuenta o sea maestro
             var perfil = _db.perfiles.Find(perfilId);
             if (!cuenta.perfiles.Contains(perfil))
@@ -142,9 +150,9 @@ namespace Ppgz.Services
                 }
             }
 
-            var usuario = Crear(Tipo.Proveedor, userName, nombre, apellido, email, telefono, cargo,
-                activo, perfilId, password);
-                
+            var usuario = Crear(Tipo.Proveedor, userName, nombre, apellido, cargo,
+                activo, perfilId, password, email, telefono);
+
             // Asiganmos el nuevo usuario a la cuenta
             cuenta.AspNetUsers.Add(usuario);
             _db.SaveChanges();
@@ -177,18 +185,18 @@ namespace Ppgz.Services
                 ? PerfilManager.MaestroMercaderia
                 : PerfilManager.MaestroServicio;
 
-            var usuario = Crear(Tipo.MaestroProveedor, userName, nombre, apellido, email, telefono, cargo,
-                activo, perfil.Id, password);
+            var usuario = Crear(Tipo.MaestroProveedor, userName, nombre, apellido, email,
+                activo, perfil.Id, password, telefono, cargo);
 
             return usuario;
         }
-       
+
         /// <summary>
         /// Actualizacion de los campos básico y genericos del usuario
         /// es valido para todos los tipos Proveedor, MaestroProveedor y Nazan
         /// </summary>
-        public AspNetUser Actualizar(string id, string nombre = null, string apellido = null, string email = null, 
-            string telefono = null, string cargo = null,  string password = null)
+        public AspNetUser Actualizar(string id, string nombre = null, string apellido = null, string email = null,
+            string telefono = null, string cargo = null, string password = null)
         {
             // Validaciones
             // TODO VALIDACIONES DE LA ESTRUCTURA DE LOS DATOS
@@ -204,19 +212,19 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Usuario_Id);
             }
 
-            if(nombre != null) 
+            if (nombre != null)
                 usuario.Nombre = nombre;
-            if (apellido != null) 
+            if (apellido != null)
                 usuario.Apellido = apellido;
-            if (email != null) 
+            if (email != null)
                 usuario.Email = email;
             if (telefono != null)
                 usuario.PhoneNumber = telefono;
-            if (cargo != null) 
+            if (cargo != null)
                 usuario.Cargo = cargo;
-            if (password != null) 
+            if (password != null)
                 usuario.PasswordHash = _passwordHasher.HashPassword(password);
-        
+
             _db.Entry(usuario).State = EntityState.Modified;
             _db.SaveChanges();
 
@@ -339,9 +347,9 @@ namespace Ppgz.Services
         {
             // TODO HACER CONFIGURABLE EN EL FUTURO
             var regex = new Regex(@"^[A-Z]([a-zA-Z]|\.| |-|')+$");
-            if(!regex.IsMatch(valor))
+            if (!regex.IsMatch(valor))
             {
-                throw new BusinessException(CommonMensajesResource.Error_NombreApellido);
+               // throw new BusinessException(CommonMensajesResource.Error_NombreApellido);
             }
         }
 
@@ -349,9 +357,9 @@ namespace Ppgz.Services
         {
             // TODO HACER CONFIGURABLE EN EL FUTURO
             var regex = new Regex(@"(\+?\d{1})?[-.]?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})");
-            if(!regex.IsMatch(valor))
+            if (!regex.IsMatch(valor))
             {
-                throw new BusinessException(CommonMensajesResource.Error_Telefono);
+             //   throw new BusinessException(CommonMensajesResource.Error_Telefono);
             }
         }
         static void ValidarEmail(string valor)
@@ -360,7 +368,7 @@ namespace Ppgz.Services
             var regex = new Regex(@"[a-z0-9]+[_a-z0-9\.-]*[a-z0-9]+@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})");
             if (!regex.IsMatch(valor))
             {
-                throw new BusinessException(CommonMensajesResource.Error_Telefono);
+               // throw new BusinessException(CommonMensajesResource.Error_Telefono);
             }
         }
 

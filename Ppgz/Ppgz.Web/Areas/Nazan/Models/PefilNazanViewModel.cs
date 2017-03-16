@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Ppgz.Repository;
+using Ppgz.Services;
 using Ppgz.Web.Infrastructure.Nazan;
 
 namespace Ppgz.Web.Areas.Nazan.Models
@@ -22,9 +23,9 @@ namespace Ppgz.Web.Areas.Nazan.Models
 
         public PefilNazanViewModel()
         {
-            var perfilNazanManager = new PerfilNazanManager();
+            var perfilManager = new PerfilManager();
 
-            var roles = perfilNazanManager.GetRoles();
+            var roles = perfilManager.GetRolesNazan();
 
             Roles = new MultiSelectList(roles, "Id", "Description");
 
