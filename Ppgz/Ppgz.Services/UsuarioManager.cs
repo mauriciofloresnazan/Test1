@@ -39,7 +39,7 @@ namespace Ppgz.Services
             ValidarTelefono(telefono);
             ValidarNombreApellido(nombre);
             ValidarNombreApellido(apellido);
-            //TODO VALIDAR EMAIL
+            ValidarEmail(email);
 
             if (_db.AspNetUsers.FirstOrDefault(u => u.UserName == userName) != null)
             {
@@ -171,7 +171,47 @@ namespace Ppgz.Services
 
             return usuario;
         }
+       
+        /// <summary>
+        /// Actualizacion de los campos básico y genericos del usuario
+        /// es valido para todos los tipos Proveedor, MaestroProveedor y Nazan
+        /// </summary>
+        public AspNetUser Actualizar(string id, string nombre = null, string apellido = null, string email = null, 
+            string telefono = null, string cargo = null,  string password = null)
+        {
+            // Validaciones
+            // TODO VALIDACIONES DE LA ESTRUCTURA DE LOS DATOS
+            ValidarTelefono(telefono);
+            ValidarNombreApellido(nombre);
+            ValidarNombreApellido(apellido);
+            ValidarEmail(email);
 
+            var usuario = _db.AspNetUsers.Find(id);
+
+            if (usuario == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Usuario_Id);
+            }
+
+            if(nombre != null) 
+                usuario.Nombre = nombre;
+            if (apellido != null) 
+                usuario.Apellido = apellido;
+            if (email != null) 
+                usuario.Email = email;
+            if (telefono != null)
+                usuario.PhoneNumber = telefono;
+            if (cargo != null) 
+                usuario.Cargo = cargo;
+            if (password != null) 
+                usuario.PasswordHash = _passwordHasher.HashPassword(password);
+        
+            _db.Entry(usuario).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            return usuario;
+        }
+         
 
         public void AgregarRoleEnUsuario(string usuarioId, string roleId)
         {
@@ -239,7 +279,15 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.Error_Telefono);
             }
         }
-
+        static void ValidarEmail(string valor)
+        {
+            // TODO HACER CONFIGURABLE EN EL FUTURO
+            var regex = new Regex(@"[a-z0-9]+[_a-z0-9\.-]*[a-z0-9]+@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})");
+            if (!regex.IsMatch(valor))
+            {
+                throw new BusinessException(CommonMensajesResource.Error_Telefono);
+            }
+        }
 
         #endregion
     }

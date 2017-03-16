@@ -54,7 +54,8 @@ namespace Ppgz.Services
 
         public cuenta FindByResponsableUsuarioId(string id)
         {
-            return _db.cuentas.FirstOrDefault(c => c.ResponsableUsuarioId == id && c.Borrado == false);
+            return _db.cuentas
+                .FirstOrDefault(c => c.AspNetUsers.Any(u=>u.Id == id) && c.Borrado == false);
         }
 
         public List<cuenta> FinAll()

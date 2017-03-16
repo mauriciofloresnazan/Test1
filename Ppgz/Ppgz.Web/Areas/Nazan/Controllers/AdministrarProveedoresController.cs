@@ -4,9 +4,9 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
 using Ppgz.Repository;
+using Ppgz.Services;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Proveedor;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
@@ -43,8 +43,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				try
 				{
 					_cuentaManager.Crear(
-						model.ProveedorNombre,
-						CuentaManager.GetTipoByString(model.TipoProveedor),
+						model.TipoCuenta,
+						model.NombreCuenta,
 						model.UserName,
 						model.ResponsableNombre,
 						model.ResponsableApellido,
@@ -87,30 +87,6 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			ViewBag.Cuenta = cuenta;
 			return View();
 		}
-
-
-		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
-		public ActionResult ModificarUsuarioMaestro(int id, string usuarioId)
-		{
-			var entities = new Entities();
-			var cuenta = entities.cuentas.Find(id);
-			var usuario = entities.AspNetUsers.Find(usuarioId);
-			
-			var perfilProveedorManager = new PerfilProveedorManager();
-			var perfilMaestro = perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.GetTipoByString(cuenta.Tipo));
-			usuario.PerfilId = perfilMaestro.Id;
-
-			entities.Entry(usuario).State = EntityState.Modified;
-			entities.SaveChanges();
-
-			cuenta.ResponsableUsuarioId = usuario.Id;
-			entities.Entry(cuenta).State = EntityState.Modified;
-			entities.SaveChanges();
-
-			TempData["FlashSuccess"] = "Cuenta Actualizada con éxito.";
-			return RedirectToAction("Editar", new { id });
-		}
-
 
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public JsonResult BuscarProveedor(string numeroProveedor)

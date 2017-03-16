@@ -154,7 +154,6 @@
           <Property Name="FechaTx" Type="datetime" Precision="0" />
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
           <Property Name="OperacionTx" Type="enum" />
-          <Property Name="ResponsableUsuarioId" Type="varchar" MaxLength="128" />
         </EntityType>
         <EntityType Name="cuentasmensajes">
           <Key>
@@ -224,15 +223,6 @@ warning 6002: The table/view 'def.impuls_portalv101.devoluciones' does not have 
           <Property Name="Cantidad" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Importe" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="entregacitas">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="HorarioId" Type="int" Nullable="false" />
-          <Property Name="AlmacenRielId" Type="int" Nullable="false" />
-          <Property Name="CitaId" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="estatuscitas">
           <Key>
             <PropertyRef Name="Id" />
@@ -273,6 +263,16 @@ warning 6002: The table/view 'def.impuls_portalv101.devoluciones' does not have 
           <Property Name="Telefono2delCompradorImpuls" Type="varchar" MaxLength="45" />
           <Property Name="ExtiensiondelCompradorImpuls" Type="varchar" MaxLength="45" />
           <Property Name="EmaildelCompradorImpuls" Type="varchar" MaxLength="45" />
+        </EntityType>
+        <EntityType Name="horariorieles">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Fecha" Type="date" Nullable="false" />
+          <Property Name="Disponibilidad" Type="bool" Nullable="false" />
+          <Property Name="HorarioId" Type="int" Nullable="false" />
+          <Property Name="AlmacenRielId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="horarios">
           <Key>
@@ -584,42 +584,6 @@ warning 6002: The table/view 'def.impuls_portalv101.vwmensajes' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_entregacitas_almacenriel">
-          <End Role="rieles" Type="Self.rieles" Multiplicity="1" />
-          <End Role="entregacitas" Type="Self.entregacitas" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="rieles">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="entregacitas">
-              <PropertyRef Name="HorarioId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_entregacitas_cita">
-          <End Role="citas" Type="Self.citas" Multiplicity="1" />
-          <End Role="entregacitas" Type="Self.entregacitas" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="citas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="entregacitas">
-              <PropertyRef Name="CitaId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_entregacitas_horario">
-          <End Role="horarios" Type="Self.horarios" Multiplicity="1" />
-          <End Role="entregacitas" Type="Self.entregacitas" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="horarios">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="entregacitas">
-              <PropertyRef Name="HorarioId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_mensajes_usuario">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
           <End Role="mensajes" Type="Self.mensajes" Multiplicity="*" />
@@ -680,18 +644,6 @@ warning 6002: The table/view 'def.impuls_portalv101.vwmensajes' does not have a 
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_responsable">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
-          <End Role="cuentas" Type="Self.cuentas" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="cuentas">
-              <PropertyRef Name="ResponsableUsuarioId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_rieles_anden">
           <End Role="andenes" Type="Self.andenes" Multiplicity="1" />
           <End Role="rieles" Type="Self.rieles" Multiplicity="*" />
@@ -745,9 +697,9 @@ warning 6002: The table/view 'def.impuls_portalv101.vwmensajes' does not have a 
           <EntitySet Name="cuentasusuarios" EntityType="Self.cuentasusuarios" Schema="impuls_portalv101" store:Type="Tables" />
           <EntitySet Name="cuentasxpagar" EntityType="Self.cuentasxpagar" Schema="impuls_portalv101" store:Type="Tables" />
           <EntitySet Name="detalleordencompra" EntityType="Self.detalleordencompra" Schema="impuls_portalv101" store:Type="Tables" />
-          <EntitySet Name="entregacitas" EntityType="Self.entregacitas" Schema="impuls_portalv101" store:Type="Tables" />
           <EntitySet Name="estatuscitas" EntityType="Self.estatuscitas" Schema="impuls_portalv101" store:Type="Tables" />
           <EntitySet Name="fakedataproveedor" EntityType="Self.fakedataproveedor" Schema="impuls_portalv101" store:Type="Tables" />
+          <EntitySet Name="horariorieles" EntityType="Self.horariorieles" Schema="impuls_portalv101" store:Type="Tables" />
           <EntitySet Name="horarios" EntityType="Self.horarios" Schema="impuls_portalv101" store:Type="Tables" />
           <EntitySet Name="mensajes" EntityType="Self.mensajes" Schema="impuls_portalv101" store:Type="Tables" />
           <EntitySet Name="ordencompras" EntityType="Self.ordencompras" Schema="impuls_portalv101" store:Type="Tables" />
@@ -839,18 +791,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentaproveedores" EntitySet="cuentaproveedores" />
           </AssociationSet>
-          <AssociationSet Name="fk_entregacitas_almacenriel" Association="Self.fk_entregacitas_almacenriel">
-            <End Role="rieles" EntitySet="rieles" />
-            <End Role="entregacitas" EntitySet="entregacitas" />
-          </AssociationSet>
-          <AssociationSet Name="fk_entregacitas_cita" Association="Self.fk_entregacitas_cita">
-            <End Role="citas" EntitySet="citas" />
-            <End Role="entregacitas" EntitySet="entregacitas" />
-          </AssociationSet>
-          <AssociationSet Name="fk_entregacitas_horario" Association="Self.fk_entregacitas_horario">
-            <End Role="horarios" EntitySet="horarios" />
-            <End Role="entregacitas" EntitySet="entregacitas" />
-          </AssociationSet>
           <AssociationSet Name="fk_mensajes_usuario" Association="Self.fk_mensajes_usuario">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="mensajes" EntitySet="mensajes" />
@@ -870,10 +810,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="fk_proveedor_usuario" Association="Self.fk_proveedor_usuario">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="proveedores" EntitySet="proveedores" />
-          </AssociationSet>
-          <AssociationSet Name="fk_responsable" Association="Self.fk_responsable">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="cuentas" EntitySet="cuentas" />
           </AssociationSet>
           <AssociationSet Name="fk_rieles_anden" Association="Self.fk_rieles_anden">
             <End Role="andenes" EntitySet="andenes" />
@@ -991,9 +927,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <NavigationProperty Name="mensajes" Relationship="Self.fk_mensajes_usuario" FromRole="AspNetUsers" ToRole="mensajes" />
           <NavigationProperty Name="perfile1" Relationship="Self.fk_perfil2" FromRole="AspNetUsers" ToRole="perfiles" />
           <NavigationProperty Name="proveedores" Relationship="Self.fk_proveedor_usuario" FromRole="AspNetUsers" ToRole="proveedores" />
-          <NavigationProperty Name="cuentas1" Relationship="Self.fk_responsable" FromRole="AspNetUsers" ToRole="cuentas" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
-          <NavigationProperty Name="cuentas2" Relationship="Self.cuentasusuarios" FromRole="AspNetUsers" ToRole="cuentas" />
+          <NavigationProperty Name="cuentas1" Relationship="Self.cuentasusuarios" FromRole="AspNetUsers" ToRole="cuentas" />
         </EntityType>
         <EntityType Name="cita">
           <Key>
@@ -1015,7 +950,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Penalizado" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_citas_usuario" FromRole="citas" ToRole="AspNetUsers" />
           <NavigationProperty Name="estatuscita" Relationship="Self.fk_citas_estatus" FromRole="citas" ToRole="estatuscitas" />
-          <NavigationProperty Name="entregacitas" Relationship="Self.fk_entregacitas_cita" FromRole="citas" ToRole="entregacitas" />
         </EntityType>
         <EntityType Name="configuracione">
           <Key>
@@ -1057,9 +991,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="FechaTx" Type="DateTime" />
           <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
-          <Property Name="ResponsableUsuarioId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_cuentas_usuario" FromRole="cuentas" ToRole="AspNetUsers" />
-          <NavigationProperty Name="AspNetUser1" Relationship="Self.fk_responsable" FromRole="cuentas" ToRole="AspNetUsers" />
           <NavigationProperty Name="cuentaproveedores" Relationship="Self.fk_cuetnasprov" FromRole="cuentas" ToRole="cuentaproveedores" />
           <NavigationProperty Name="perfiles" Relationship="Self.fk_cuenta" FromRole="cuentas" ToRole="perfiles" />
           <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_cuenta" FromRole="cuentas" ToRole="cuentasmensajes" />
@@ -1111,18 +1043,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="OrdenComprasId" Type="Int32" Nullable="false" />
           <Property Name="NumeroOrden" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="entregacita">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="HorarioId" Type="Int32" Nullable="false" />
-          <Property Name="AlmacenRielId" Type="Int32" Nullable="false" />
-          <Property Name="CitaId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="cita" Relationship="Self.fk_entregacitas_cita" FromRole="entregacitas" ToRole="citas" />
-          <NavigationProperty Name="riele" Relationship="Self.fk_entregacitas_almacenriel" FromRole="entregacitas" ToRole="rieles" />
-          <NavigationProperty Name="horario" Relationship="Self.fk_entregacitas_horario" FromRole="entregacitas" ToRole="horarios" />
-        </EntityType>
         <EntityType Name="estatuscita">
           <Key>
             <PropertyRef Name="Id" />
@@ -1165,6 +1085,16 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="ExtiensiondelCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="EmaildelCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="horarioriele">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" />
+          <Property Name="Disponibilidad" Type="Boolean" Nullable="false" />
+          <Property Name="HorarioId" Type="Int32" Nullable="false" />
+          <Property Name="AlmacenRielId" Type="Int32" Nullable="false" />
+        </EntityType>
         <EntityType Name="horario">
           <Key>
             <PropertyRef Name="Id" />
@@ -1172,7 +1102,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="HoraDesde" Type="Int32" Nullable="false" />
           <Property Name="HoraHasta" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="entregacitas" Relationship="Self.fk_entregacitas_horario" FromRole="horarios" ToRole="entregacitas" />
         </EntityType>
         <EntityType Name="mensaje">
           <Key>
@@ -1255,7 +1184,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Riel" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="AndenId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="andene" Relationship="Self.fk_rieles_anden" FromRole="rieles" ToRole="andenes" />
-          <NavigationProperty Name="entregacitas" Relationship="Self.fk_entregacitas_almacenriel" FromRole="rieles" ToRole="entregacitas" />
         </EntityType>
         <EntityType Name="tipocuenta">
           <Key>
@@ -1444,18 +1372,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_responsable">
-          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="0..1" />
-          <End Role="cuentas" Type="Self.cuenta" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="cuentas">
-              <PropertyRef Name="ResponsableUsuarioId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_citas_estatus">
           <End Role="estatuscitas" Type="Self.estatuscita" Multiplicity="1" />
           <End Role="citas" Type="Self.cita" Multiplicity="*" />
@@ -1465,18 +1381,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Principal>
             <Dependent Role="citas">
               <PropertyRef Name="EstatusCitaId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_entregacitas_cita">
-          <End Role="citas" Type="Self.cita" Multiplicity="1" />
-          <End Role="entregacitas" Type="Self.entregacita" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="citas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="entregacitas">
-              <PropertyRef Name="CitaId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1540,30 +1444,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_entregacitas_almacenriel">
-          <End Role="rieles" Type="Self.riele" Multiplicity="1" />
-          <End Role="entregacitas" Type="Self.entregacita" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="rieles">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="entregacitas">
-              <PropertyRef Name="HorarioId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_entregacitas_horario">
-          <End Role="horarios" Type="Self.horario" Multiplicity="1" />
-          <End Role="entregacitas" Type="Self.entregacita" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="horarios">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="entregacitas">
-              <PropertyRef Name="HorarioId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="AspNetUserRoles">
           <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
@@ -1591,9 +1471,9 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensaje" />
           <EntitySet Name="cuentasxpagars" EntityType="Self.cuentasxpagar" />
           <EntitySet Name="detalleordencompras" EntityType="Self.detalleordencompra" />
-          <EntitySet Name="entregacitas" EntityType="Self.entregacita" />
           <EntitySet Name="estatuscitas" EntityType="Self.estatuscita" />
           <EntitySet Name="fakedataproveedors" EntityType="Self.fakedataproveedor" />
+          <EntitySet Name="horariorieles" EntityType="Self.horarioriele" />
           <EntitySet Name="horarios" EntityType="Self.horario" />
           <EntitySet Name="mensajes" EntityType="Self.mensaje" />
           <EntitySet Name="ordencompras" EntityType="Self.ordencompra" />
@@ -1648,17 +1528,9 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="proveedores" EntitySet="proveedores" />
           </AssociationSet>
-          <AssociationSet Name="fk_responsable" Association="Self.fk_responsable">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="cuentas" EntitySet="cuentas" />
-          </AssociationSet>
           <AssociationSet Name="fk_citas_estatus" Association="Self.fk_citas_estatus">
             <End Role="estatuscitas" EntitySet="estatuscitas" />
             <End Role="citas" EntitySet="citas" />
-          </AssociationSet>
-          <AssociationSet Name="fk_entregacitas_cita" Association="Self.fk_entregacitas_cita">
-            <End Role="citas" EntitySet="citas" />
-            <End Role="entregacitas" EntitySet="entregacitas" />
           </AssociationSet>
           <AssociationSet Name="fk_cuetnasprov" Association="Self.fk_cuetnasprov">
             <End Role="cuentas" EntitySet="cuentas" />
@@ -1679,14 +1551,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="fk_cuentasmensajes_mensaje" Association="Self.fk_cuentasmensajes_mensaje">
             <End Role="mensajes" EntitySet="mensajes" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
-          </AssociationSet>
-          <AssociationSet Name="fk_entregacitas_almacenriel" Association="Self.fk_entregacitas_almacenriel">
-            <End Role="rieles" EntitySet="rieles" />
-            <End Role="entregacitas" EntitySet="entregacitas" />
-          </AssociationSet>
-          <AssociationSet Name="fk_entregacitas_horario" Association="Self.fk_entregacitas_horario">
-            <End Role="horarios" EntitySet="horarios" />
-            <End Role="entregacitas" EntitySet="entregacitas" />
           </AssociationSet>
           <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
@@ -1854,7 +1718,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="FechaTx" ColumnName="FechaTx" />
                 <ScalarProperty Name="UsuarioIdTx" ColumnName="UsuarioIdTx" />
                 <ScalarProperty Name="OperacionTx" ColumnName="OperacionTx" />
-                <ScalarProperty Name="ResponsableUsuarioId" ColumnName="ResponsableUsuarioId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1903,16 +1766,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="entregacitas">
-            <EntityTypeMapping TypeName="impuls_portalv101Model.entregacita">
-              <MappingFragment StoreEntitySet="entregacitas">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="HorarioId" ColumnName="HorarioId" />
-                <ScalarProperty Name="AlmacenRielId" ColumnName="AlmacenRielId" />
-                <ScalarProperty Name="CitaId" ColumnName="CitaId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="estatuscitas">
             <EntityTypeMapping TypeName="impuls_portalv101Model.estatuscita">
               <MappingFragment StoreEntitySet="estatuscitas">
@@ -1953,6 +1806,17 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Telefono2delCompradorImpuls" ColumnName="Telefono2delCompradorImpuls" />
                 <ScalarProperty Name="ExtiensiondelCompradorImpuls" ColumnName="ExtiensiondelCompradorImpuls" />
                 <ScalarProperty Name="EmaildelCompradorImpuls" ColumnName="EmaildelCompradorImpuls" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="horariorieles">
+            <EntityTypeMapping TypeName="impuls_portalv101Model.horarioriele">
+              <MappingFragment StoreEntitySet="horariorieles">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Disponibilidad" ColumnName="Disponibilidad" />
+                <ScalarProperty Name="HorarioId" ColumnName="HorarioId" />
+                <ScalarProperty Name="AlmacenRielId" ColumnName="AlmacenRielId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

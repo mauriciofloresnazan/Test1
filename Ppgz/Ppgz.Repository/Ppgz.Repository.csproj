@@ -102,9 +102,6 @@
     <Compile Include="devolucione.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
-    <Compile Include="entregacita.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
     <Compile Include="estatuscita.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -112,6 +109,9 @@
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="horario.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="horarioriele.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="mensaje.cs">

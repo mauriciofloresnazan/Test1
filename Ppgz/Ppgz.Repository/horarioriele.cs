@@ -12,15 +12,12 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class entregacita
+    public partial class horarioriele
     {
         public int Id { get; set; }
+        public System.DateTime Fecha { get; set; }
+        public bool Disponibilidad { get; set; }
         public int HorarioId { get; set; }
         public int AlmacenRielId { get; set; }
-        public int CitaId { get; set; }
-    
-        public virtual cita cita { get; set; }
-        public virtual riele riele { get; set; }
-        public virtual horario horario { get; set; }
     }
 }

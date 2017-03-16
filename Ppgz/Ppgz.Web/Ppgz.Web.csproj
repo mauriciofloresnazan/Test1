@@ -257,12 +257,12 @@
     </Compile>
     <Compile Include="Infrastructure\BusinessException.cs" />
     <Compile Include="Infrastructure\CommonManager.cs" />
-    <Compile Include="Infrastructure\CuentaManager.cs" />
+    <None Include="Infrastructure\CuentaManager.cs.old" />
     <Compile Include="Infrastructure\CuentasPorPagarManager.cs" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
     <Compile Include="Infrastructure\OrdenCompraManager.cs" />
     <Compile Include="Infrastructure\ProveedorManager.cs" />
-    <Compile Include="Infrastructure\Proveedor\PerfilProveedorManager.cs" />
+    <None Include="Infrastructure\Proveedor\PerfilProveedorManager.cs.old" />
     <Compile Include="Infrastructure\Proveedor\UsuarioProveedorManager.cs" />
     <Compile Include="Infrastructure\Nazan\UsuarioNazanManager.cs" />
     <Compile Include="Infrastructure\Nazan\PerfilNazanManager.cs" />
@@ -1179,6 +1179,10 @@
     <ProjectReference Include="..\Ppgz.Repository\Ppgz.Repository.csproj">
       <Project>{805197a6-6948-483e-a738-7ae7745ac953}</Project>
       <Name>Ppgz.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ppgz.Services\Ppgz.Services.csproj">
+      <Project>{7A06D69C-0BA5-4FC8-9140-69D0D2C76408}</Project>
+      <Name>Ppgz.Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

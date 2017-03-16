@@ -14,17 +14,11 @@ namespace Ppgz.Repository
     
     public partial class riele
     {
-        public riele()
-        {
-            this.entregacitas = new HashSet<entregacita>();
-        }
-    
         public int Id { get; set; }
         public string Codigo { get; set; }
         public string Riel { get; set; }
         public int AndenId { get; set; }
     
         public virtual andene andene { get; set; }
-        public virtual ICollection<entregacita> entregacitas { get; set; }
     }
 }

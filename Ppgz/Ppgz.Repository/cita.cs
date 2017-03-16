@@ -14,11 +14,6 @@ namespace Ppgz.Repository
     
     public partial class cita
     {
-        public cita()
-        {
-            this.entregacitas = new HashSet<entregacita>();
-        }
-    
         public int Id { get; set; }
         public string Codigo { get; set; }
         public Nullable<System.DateTime> FechaCita { get; set; }
@@ -36,6 +31,5 @@ namespace Ppgz.Repository
     
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual estatuscita estatuscita { get; set; }
-        public virtual ICollection<entregacita> entregacitas { get; set; }
     }
 }

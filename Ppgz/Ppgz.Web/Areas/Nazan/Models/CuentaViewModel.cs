@@ -7,7 +7,7 @@ namespace Ppgz.Web.Areas.Nazan.Models
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
         [Display(Name = "Tipo de Proveedor")]
-        public string TipoProveedor { get; set; }
+        public string TipoCuenta { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
         [RegularExpression(
@@ -22,7 +22,7 @@ namespace Ppgz.Web.Areas.Nazan.Models
         [Required(ErrorMessage = "El campo es obligatorio.")]
         [StringLength(100, ErrorMessage = "Debe tener de 3 a 100 Carácteres,", MinimumLength =  3)]
         [Display(Name = "Nombre de Proveedor")]
-        public string ProveedorNombre { get; set; }
+        public string NombreCuenta { get; set; }
 
 
         [Required(ErrorMessage = "El campo es obligatorio.")]

@@ -33,10 +33,8 @@ namespace Ppgz.Repository
         public Nullable<System.DateTime> FechaTx { get; set; }
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }
-        public string ResponsableUsuarioId { get; set; }
     
         public virtual AspNetUser AspNetUser { get; set; }
-        public virtual AspNetUser AspNetUser1 { get; set; }
         public virtual ICollection<cuentaproveedore> cuentaproveedores { get; set; }
         public virtual ICollection<perfile> perfiles { get; set; }
         public virtual ICollection<cuentasmensaje> cuentasmensajes { get; set; }
