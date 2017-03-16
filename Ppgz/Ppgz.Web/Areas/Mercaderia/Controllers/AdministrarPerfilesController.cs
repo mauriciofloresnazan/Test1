@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Ppgz.Services;
 using Ppgz.Web.Areas.Mercaderia.Models;
@@ -22,8 +23,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         public ActionResult Index()
         {
             // Perfiles de la cuenta
-            var perfiles = _perfilManager
-                .FindPerfilProveedorByNombreAndCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
+            var perfiles = _perfilManager.FindPerfilProveedorByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
             
             // Perfil maestro
             perfiles.Add(PerfilManager.MaestroMercaderia);
@@ -78,7 +78,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
         public ActionResult Editar(int id)
         {
-            var perfil = _perfilManager.FindPerfilProveedorByNombreAndCuentaId(id);
+            var perfil = _perfilManager.Find(id);
 
             if (perfil == null)
             {
