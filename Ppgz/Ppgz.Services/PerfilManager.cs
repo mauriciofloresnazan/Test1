@@ -57,7 +57,17 @@ namespace Ppgz.Services
         }
         #endregion
 
-        public perfile FindPerfilProveedor(string nombrePerfil, int? cuentaId)
+        public perfile Find(int id)
+        {
+            return _db.perfiles.FirstOrDefault(p => p.Id == id);
+        } 
+        
+        public List<perfile> FindPerfilProveedorByCuentaId(int cuentaId)
+        {
+            return _db.perfiles.Where(p => p.CuentaId == cuentaId).ToList();
+        } 
+        
+        public perfile FindPerfilProveedorByNombreAndCuentaId(string nombrePerfil, int? cuentaId)
         {
             return _db.perfiles
                 .FirstOrDefault(p => p.Nombre == nombrePerfil && p.Tipo == TipoPerfil.Proveedor && p.CuentaId == cuentaId);
@@ -148,7 +158,22 @@ namespace Ppgz.Services
 
             return Crear(TipoPerfil.Proveedor, nombre,rolesIds, cuentaId);
         }
-        
+        public perfile CrearNazan(string nombre, string[] rolesIds)
+        {
+            var perfil = _db.perfiles.FirstOrDefault(p => p.Nombre == nombre && p.Tipo == TipoPerfil.Nazan);
+
+            if (perfil != null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Perfil_NombreExistente);
+            }
+
+            if (rolesIds.All(r => GetRolesNazan().Select(r2 => r2.Id).Contains(r)))
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Perfil_AccesosIncorrectos);
+            }      
+
+            return Crear(TipoPerfil.Nazan, nombre, rolesIds);
+        }
         #region Roles
         public List<AspNetRole> GetRolesMercaderia()
         {
