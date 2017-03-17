@@ -16,7 +16,10 @@ namespace Test
         
         static void Main(string[] args)
         {
-            Test();
+
+            var testRfc = new TestRfc();
+            testRfc.TestProveedores();
+            //Test();
             //CrearUsuarioProveedor();
             //TestOrdenCompra();
             //TestCuentaManager();
@@ -77,6 +80,11 @@ namespace Test
 
         static void Test()
         {
+            CuentaManager cuentaManager = new CuentaManager();
+            var result =  cuentaManager.FindAllWithUsuarioMaestro();
+            Console.WriteLine(JsonConvert.SerializeObject(result));
+
+            
             var entities  = new Entities();
 
             var query = (from g in entities.ordencompras
@@ -92,13 +100,13 @@ namespace Test
             var quer2 = (from c in entities.cuentas
                 from u in c.AspNetUsers
                 where u.Tipo == UsuarioManager.Tipo.MaestroProveedor
-                select u);
+                select  new {c, u}).ToList();
 
 //            var sql = ((System.Data.Objects.ObjectQuery)query).ToTraceString();
 
             Console.WriteLine(quer2.ToString());
  
-            json = JsonConvert.SerializeObject(quer2);
+            json = JsonConvert.SerializeObject(quer2.ToList());
             Console.Write(json);
             Console.ReadLine();
 

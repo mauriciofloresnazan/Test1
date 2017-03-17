@@ -20,7 +20,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Index()
 		{
-			var cuentas = _cuentaManager.FinAll();
+			var cuentas = _cuentaManager.FindAllWithUsuarioMaestro();
 
 			ViewBag.cuentas = cuentas;
 			return View();
@@ -75,16 +75,16 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Editar(int id)
 		{
-			var cuenta = _cuentaManager.Find(id);
+            var cuentaConUsuarioMaestro = _cuentaManager.FindWithUsuarioMaestro(id);
 
-			if (cuenta == null)
+			if (cuentaConUsuarioMaestro == null)
 			{
 				//TODO ACTUALIZAR MENSAJE AL RESOURCE
 				TempData["FlashError"] = "Proveedor incorrecto.";
 				return RedirectToAction("Index");
 			}
 
-			ViewBag.Cuenta = cuenta;
+            ViewBag.cuentaConUsuarioMaestro = cuentaConUsuarioMaestro;
 			return View();
 		}
 

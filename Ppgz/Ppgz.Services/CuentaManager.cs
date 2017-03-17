@@ -62,10 +62,30 @@ namespace Ppgz.Services
         {
             return _db.cuentas.Where(c=> c.Borrado == false).ToList();
         }
+
+        public List<CuentaConUsuarioMaestro> FindAllWithUsuarioMaestro()
+        {
+            var query = (from c in _db.cuentas
+                from u in c.AspNetUsers
+                where u.Tipo == UsuarioManager.Tipo.MaestroProveedor
+                select new CuentaConUsuarioMaestro{ Cuenta = c, UsuarioMaestro = u});
+
+            return  query.ToList();
+        } 
         public cuenta Find(int id)
         {
             return _db.cuentas.FirstOrDefault(c => c.Id ==id && c.Borrado == false );
         }
+        public CuentaConUsuarioMaestro FindWithUsuarioMaestro(int id)
+        {
+            var query = (from c in _db.cuentas
+                         from u in c.AspNetUsers
+                         where u.Tipo == UsuarioManager.Tipo.MaestroProveedor
+                         select new CuentaConUsuarioMaestro { Cuenta = c, UsuarioMaestro = u });
+
+            return query.FirstOrDefault();
+        } 
+
 
 
         public void Crear(string tipo, string nombreProveedor, string responsableLogin,

@@ -86,6 +86,7 @@
     <Compile Include="cuenta.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="CuentaConUsuarioMaestro.cs" />
     <Compile Include="cuentaproveedore.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>

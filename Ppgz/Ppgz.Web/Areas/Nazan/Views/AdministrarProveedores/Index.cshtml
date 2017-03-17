@@ -23,20 +23,20 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var cuenta in (ViewBag.cuentas))
+                @foreach (var cuentaConUsuarioMaestro in (ViewBag.cuentas))
                 {
                     <tr>
-                        <td class="text-center vert-align">@cuenta.CodigoProveedor</td>
-                        <td class="text-center vert-align">@cuenta.NombreCuenta</td>
+                        <td class="text-center vert-align">@cuentaConUsuarioMaestro.Cuenta.CodigoProveedor</td>
+                        <td class="text-center vert-align">@cuentaConUsuarioMaestro.Cuenta.NombreCuenta</td>
                         <td class="text-center vert-align">
-                            cuenta.AspNetUser1.Nombre
+                            @cuentaConUsuarioMaestro.UsuarioMaestro.Nombre
                         </td>
-                        <td class="text-center vert-align">@cuenta.Tipo
+                        <td class="text-center vert-align">@cuentaConUsuarioMaestro.Cuenta.Tipo
                         </td>
                         <td class="text-center vert-align">
-                            @if (@cuenta.Activo != null)
+                            @if (@cuentaConUsuarioMaestro.Cuenta.Activo != null)
                             {
-                                if (@cuenta.Activo)
+                                if (@cuentaConUsuarioMaestro.Cuenta.Activo)
                                 {
                                     <span>ACTIVO</span>
                                 }
@@ -45,18 +45,18 @@
                         </td>
                         <td class="text-center vert-align">
                             <div class="btn-group hidden-xs">
-                                <a class="btn btn-warning btn-xs" href="@Url.Action("Editar", "AdministrarProveedores", new { @id = @cuenta.Id })">
+                                <a class="btn btn-warning btn-xs" href="@Url.Action("Editar", "AdministrarProveedores", new { @id = @cuentaConUsuarioMaestro.Cuenta.Id })">
                                     <i class="fa fa-pencil" aria-hidden="true"></i> Editar
                                 </a>
-                                <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarProveedores", new { @id = @cuenta.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El usuario será eliminado.">
+                                <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarProveedores", new { @id = @cuentaConUsuarioMaestro.Cuenta.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El usuario será eliminado.">
                                     <i class="fa fa-times" aria-hidden="true"></i> Eliminar
                                 </a>
                             </div>
                             <div class="btn-group-vertical visible-xs">
-                                <a class="btn btn-warning btn-xs" href="@Url.Action("Editar", "AdministrarProveedores", new { @id = @cuenta.Id })">
+                                <a class="btn btn-warning btn-xs" href="@Url.Action("Editar", "AdministrarProveedores", new { @id = @cuentaConUsuarioMaestro.Cuenta.Id })">
                                     <i class="fa fa-pencil" aria-hidden="true"></i> Editar
                                 </a>
-                                <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarProveedores", new { @id = @cuenta.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El usuario será eliminado.">
+                                <a class="btn btn-danger btn-xs" href="@Url.Action("Eliminar", "AdministrarProveedores", new { @id = @cuentaConUsuarioMaestro.Cuenta.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El usuario será eliminado.">
                                     <i class="fa fa-times" aria-hidden="true"></i> Eliminar
                                 </a>
                             </div>

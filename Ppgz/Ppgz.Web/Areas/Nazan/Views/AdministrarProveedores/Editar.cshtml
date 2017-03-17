@@ -15,12 +15,12 @@
         <div class="row">
             <div class="col-sm-4"><strong>Codigo</strong>
             </div>
-            <div class=" col-sm-8" style=""><span style="color: #66aaaa;">@ViewBag.cuenta.CodigoProveedor</span></div>
+            <div class=" col-sm-8" style=""><span style="color: #66aaaa;">@ViewBag.cuentaConUsuarioMaestro.Cuenta.CodigoProveedor</span></div>
         </div>
         <div class="row">
             <div class="col-sm-4"><strong>Nombre</strong>
             </div>
-            <div class="col-sm-8">@ViewBag.cuenta.NombreProveedor</div>
+            <div class="col-sm-8">@ViewBag.cuentaConUsuarioMaestro.Cuenta.NombreCuenta</div>
         </div>
         <hr/>
         <div class="row">
@@ -28,10 +28,10 @@
             </div>
             <div class="col-sm-8">
                 <p>
-                    @(ViewBag.cuenta.AspNetUser1.Nombre + ' ' + ViewBag.cuenta.AspNetUser1.Apellido)<i>
+                    @(ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro.Nombre + ' ' + ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro.Apellido)<i>
                         
                     </i><br>
-                    @ViewBag.cuenta.AspNetUser1.Email
+                    @ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro.Email
                 </p>
             </div>
         </div>
@@ -44,7 +44,7 @@
             </div>
             <div class=" col-sm-9">
                 <p>
-                    @if (ViewBag.cuenta.AspNetUser1.Activo)
+                    @if (ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro.Activo)
                     {
                         <span>ACTIVO</span>
                     }
@@ -60,7 +60,7 @@
             <div class="col-md-6">
                 <select class="form-control" id="usuariosMaestrosSelect">
                     <option value="">Cambiar U. Maestro</option>
-                    @foreach (var usuario in ViewBag.cuenta.AspNetUsers)
+                    @foreach (var usuario in ViewBag.cuentaConUsuarioMaestro.Cuenta.AspNetUsers)
                     {
                         <option value="@usuario.Id">@(usuario.Nombre + ' ' + usuario.Apellido)</option>
 
@@ -119,7 +119,7 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach (var proveedor in ViewBag.cuenta.proveedores)
+            @foreach (var proveedor in ViewBag.cuentaConUsuarioMaestro.Cuenta.proveedores)
             {
                 <tr>
                     <td>@proveedor.CodigoProveedor</td>
@@ -193,7 +193,7 @@
 
     <script type="text/javascript">
         var urlModUsuarioMaestro = "@Url.Action("ModificarUsuarioMaestro", "AdministrarProveedores")";
-        var cuentaId = "@ViewBag.cuenta.Id";
+        var cuentaId = "@ViewBag.cuentaConUsuarioMaestro.Cuenta.Id";
 
         function modificarUsuarioMaestro(id, usuarioId ) {
             var link = urlModUsuarioMaestro + "/" +id + "?usuarioId=" + usuarioId;

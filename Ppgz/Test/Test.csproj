@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestRfc.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -88,6 +89,10 @@
     <ProjectReference Include="..\Ppgz.Web\Ppgz.Web.csproj">
       <Project>{B0DA3AE1-90D9-43E0-9886-74E7F0B032DB}</Project>
       <Name>Ppgz.Web</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SapWrapper\SapWrapper.csproj">
+      <Project>{FF45BCAC-FBF6-451B-B36D-39E22F4EA1E3}</Project>
+      <Name>SapWrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
