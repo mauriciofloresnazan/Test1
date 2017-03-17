@@ -56,7 +56,7 @@ namespace Ppgz.Web.Controllers
                 var usuario = await UserManager.FindByNameAsync(model.UserName);
                 if (usuario != null)
                 {
-                    UserManager.SetLockoutEnabled(usuario.Id, true);
+                    //UserManager.SetLockoutEnabled(usuario.Id, true);
 
                     if (await UserManager.IsLockedOutAsync(usuario.Id))
                     {
