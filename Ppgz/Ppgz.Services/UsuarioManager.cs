@@ -361,6 +361,8 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_EliminarSuperAdmin);
             }
 
+            QuitarRolesDeUsuario(usuarioId);
+
             _db.AspNetUsers.Remove(usuario);
             _db.SaveChanges();
         }

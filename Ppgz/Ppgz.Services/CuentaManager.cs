@@ -90,8 +90,6 @@ namespace Ppgz.Services
             {
                 throw new BusinessException(MensajesResource.ERROR_CuentaManager_Crear_LoginExistente);
             }
-            
-
 
             cuenta = new cuenta
             {
@@ -103,20 +101,37 @@ namespace Ppgz.Services
 
             _db.cuentas.Add(cuenta);
             _db.SaveChanges();
+            try
+            {
+                var usuarioMaestro = usuarioManager.CrearMaestroProveedor(
+                    responsableLogin,
+                    reponsableNombre,
+                    reponsableApellido,
+                    responsableEmail,
+                    responableTelefono,
+                    responsableCargo,
+                    true,
+                    responsablePassword,
+                    cuenta.Id
+                    );
 
-            var usuarioMaestro = usuarioManager.CrearMaestroProveedor(
-                responsableLogin,
-                reponsableNombre,
-                reponsableApellido,
-                responsableEmail,
-                responableTelefono,
-                responsableCargo,
-                true,
-                responsablePassword,
-                cuenta.Id
-            );
+                AsociarUsuarioEnCuenta(usuarioMaestro.Id, cuenta.Id);
 
-            AsociarUsuarioEnCuenta(usuarioMaestro.Id, cuenta.Id);
+            }
+            catch (Exception)
+            {
+                // TODO SIMULAR
+                Eliminar(cuenta.Id);
+
+                var usuario = usuarioManager.FindByUsername(responsableLogin);
+                if (usuario!= null)
+                {
+                    usuarioManager.Eliminar(usuario.Id);
+                }
+
+                throw;
+            }
+
 
         }
 
@@ -141,9 +156,14 @@ namespace Ppgz.Services
         }
 
         //TODO
-        public void Eliminar()
+        public void Eliminar(int id)
         {
-            throw new NotImplementedException();
+            var cuenta = _db.cuentas.Find(id);
+
+            if (cuenta == null) return;
+
+            _db.cuentas.Remove(cuenta);
+            _db.SaveChanges();
         }
 
     }

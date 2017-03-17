@@ -287,8 +287,11 @@ namespace Ppgz.Services
         }
 		internal void ValidarRolesNazan(string[] rolesIds)
 		{
-			if (rolesIds.All(r => GetRolesNazan().Select(r2 => r2.Id).Contains(r)))
-			{
+            
+            var rolesNazan = GetRolesNazan().Select(r2 => r2.Id).ToArray();
+
+            if (rolesIds.Intersect(rolesNazan).Count() != rolesIds.Length)
+            {
 				throw new BusinessException(CommonMensajesResource.ERROR_Perfil_AccesosIncorrectos);
 			}      
 		}
