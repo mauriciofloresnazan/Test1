@@ -62,7 +62,18 @@
                 placeholder_text_single: "Seleccione un valor",
                 placeholder_text_multiple: "Seleccione los valores"
             });
-
+            //SE VALIDA QUE SI SELECCIONA EL MAESTRO, NO DEJE SELECCIONAR OTRA OPCIÓN MÁS.
+            $('.chosen-select').on('change', function (evt, params) {
+                var seleccion = params.selected;
+                if (seleccion == "MAESTRO-NAZAN") {
+                    var selecciones = $("#RolesIds").val();
+                    if (selecciones.length > 0) {
+                        $("#RolesIds").val(["MAESTRO-NAZAN"]).trigger("chosen:updated");
+                    }
+                    $("#RolesIds").val(["MAESTRO-NAZAN"]).trigger("chosen:updated");
+                }
+            });
+            /*
             $('.chosen-select').change(function () {
 
                 if (this.value == "MAESTRO-NAZAN") {
@@ -70,7 +81,7 @@
                 } else {
                     $(".chosen-select").chosen({ allow_single_deselect: true, search_contains: true });
                 }
-            });
+            });*/
         });
     </script>
 

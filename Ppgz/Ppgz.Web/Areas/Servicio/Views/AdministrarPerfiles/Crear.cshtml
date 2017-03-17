@@ -56,11 +56,22 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/assets/vendor/chosen_v1.6.2/chosen.jquery.min.js")
     <script>
-        $(function () {
+        $(function() {
             $('.chosen-select').chosen({
                 no_results_text: "No se econtraron resultados",
                 placeholder_text_single: "Seleccione un valor",
                 placeholder_text_multiple: "Seleccione los valores"
+            });
+            //SE VALIDA QUE SI SELECCIONA EL MAESTRO, NO DEJE SELECCIONAR OTRA OPCIÓN MÁS.
+            $('.chosen-select').on('change', function(evt, params) {
+                var seleccion = params.selected;
+                if (seleccion == "MAESTRO-SERVICIO") {
+                    var selecciones = $("#RolesIds").val();
+                    if (selecciones.length > 0) {
+                        $("#RolesIds").val(["MAESTRO-SERVICIO"]).trigger("chosen:updated");
+                    }
+                    $("#RolesIds").val(["MAESTRO-SERVICIO"]).trigger("chosen:updated");
+                }
             });
         });
     </script>

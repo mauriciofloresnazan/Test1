@@ -62,6 +62,17 @@
                 placeholder_text_single: "Seleccione un valor",
                 placeholder_text_multiple: "Seleccione los valores"
             });
+            //SE VALIDA QUE SI SELECCIONA EL MAESTRO, NO DEJE SELECCIONAR OTRA OPCIÓN MÁS.
+            $('.chosen-select').on('change', function (evt, params) {
+                var seleccion = params.selected;
+                if (seleccion == "MAESTRO-MERCADERIA") {
+                    var selecciones = $("#RolesIds").val();
+                    if (selecciones.length > 0) {
+                        $("#RolesIds").val(["MAESTRO-MERCADERIA"]).trigger("chosen:updated");
+                    }
+                    $("#RolesIds").val(["MAESTRO-MERCADERIA"]).trigger("chosen:updated");
+                }
+            });
         });
     </script>
 }
