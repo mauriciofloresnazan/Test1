@@ -3,11 +3,11 @@ using SAP.Middleware.Connector;
 
 namespace SapWrapper
 {
-    public class SapProveedores
+    public class OrdenCompraManager
     {
         private readonly RfcConfigParameters _rfc = new RfcConfigParameters();
 
-        public SapProveedores()
+        public OrdenCompraManager()
         {
             // TODO MOVER A LA TABLA DE CONFIGURACIÓN EN LA BASE DE DATOS
             
