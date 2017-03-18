@@ -13,8 +13,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
     [Authorize]
     [TerminosCondiciones]
-    public class OrdenesCompraController : Controller
+    public class ComprobantesReciboController : Controller
     {
+        //faltan los managers
         private readonly OrdenCompraManager  _ordenCompraManager = new OrdenCompraManager();
         private readonly ProveedorManager _proveedorManager = new ProveedorManager();
         private readonly CommonManager _commonManager = new CommonManager();

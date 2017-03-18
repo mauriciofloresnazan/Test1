@@ -394,7 +394,7 @@ namespace Ppgz.Services
             var regex = new Regex(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$");
             if (!regex.IsMatch(valor))
             {
-                throw new BusinessException(CommonMensajesResource.Error_Email);
+                //throw new BusinessException(CommonMensajesResource.Error_Email);
             }
         }
 

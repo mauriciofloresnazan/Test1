@@ -9,11 +9,11 @@ using MySql.Data.MySqlClient;
 using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
 
-namespace Ppgz.Web.Areas.Mercaderia.Controllers
+namespace Ppgz.Web.Areas.Servicio.Controllers
 {
     [Authorize]
     [TerminosCondiciones]
-    public class OrdenesCompraController : Controller
+    public class ComprobantesReciboController : Controller
     {
         private readonly OrdenCompraManager  _ordenCompraManager = new OrdenCompraManager();
         private readonly ProveedorManager _proveedorManager = new ProveedorManager();

@@ -182,6 +182,7 @@
     <Compile Include="Areas\Mercaderia\Controllers\AdministrarUsuariosController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ControlCitasController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\MensajesInstitucionalesController.cs" />
+    <Compile Include="Areas\Mercaderia\Controllers\ComprobantesReciboController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\OrdenesCompraController.cs" />
     <Compile Include="Areas\Mercaderia\MensajesResource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -205,6 +206,7 @@
     <Compile Include="Areas\Nazan\NazanAreaRegistration.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarUsuariosController.cs" />
+    <Compile Include="Areas\Servicio\Controllers\ComprobantesReciboController.cs" />
     <Compile Include="Areas\Servicio\Controllers\MensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Servicio\Controllers\OrdenesCompraController.cs" />
     <Compile Include="Areas\Servicio\Mensajes.Designer.cs">
@@ -256,6 +258,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\CommonManager.cs" />
+    <Content Include="Areas\Mercaderia\Views\ComprobantesRecibo\Index.cshtml" />
+    <Content Include="Areas\Servicio\Views\ComprobantesRecibo\Index.cshtml" />
     <None Include="Infrastructure\CuentaManager.cs.old" />
     <Compile Include="Infrastructure\CuentasPorPagarManager.cs" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
