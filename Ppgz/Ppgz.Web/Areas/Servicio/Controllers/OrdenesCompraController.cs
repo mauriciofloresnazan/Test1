@@ -1,6 +1,13 @@
-﻿using System.Web.Mvc;
-using Ppgz.Services;
-using Ppgz.Web.Infrastructure;
+﻿using Ppgz.Web.Infrastructure;
+using System;
+using System.Data;
+using System.Data.Entity;
+using System.IO;
+using System.Web.Mvc;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using MySql.Data.MySqlClient;
+using Ppgz.Repository;
 
 namespace Ppgz.Web.Areas.Servicio.Controllers
 {
@@ -8,36 +15,158 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
     [TerminosCondiciones]
     public class OrdenesCompraController : Controller
     {
-        private readonly PerfilManager _perfilProveedorManager = new PerfilManager();
+        private readonly OrdenCompraManager _ordenCompraManager = new OrdenCompraManager();
         private readonly CommonManager _commonManager = new CommonManager();
-
-        //
-        // GET: /Mercaderia/OrdenesCompra/
-        [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ORDENESCOMPRA-LISTAR,SERVICIO-ORDENESCOMPRA-MODIFICAR")]
         //
         // GET: /Servicio/OrdenesCompra/
+        [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ORDENESCOMPRA-LISTAR,SERVICIO-ORDENESCOMPRA-MODIFICAR")]
         public ActionResult Index()
         {
-            var perfiles = _perfilProveedorManager
-                .FindPerfilProveedorByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-            //perfiles.Add(_perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.MERCADERIA));
+            ViewBag.data = _ordenCompraManager.FindByCuentaId(cuenta.Id);
 
-            ViewBag.Perfiles = perfiles;
             return View();
         }
-        [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ORDENESCOMPRA-LISTAR,SERVICIO-ORDENESCOMPRA-MODIFICAR")]
-        [HttpPost]
-        public ActionResult Visualizar(int id)
+        public void Descargar(int id)
         {
-            //var mensajes = _mensajesInstitucionalesManager.FindUsuarioMensajes(User.Identity.GetUserId());
+            //todo pasar a un manejador
+            Entities db = new Entities();
+            var orden = db.ordencompras.Find(id);
+            db.Entry(orden).State = EntityState.Modified;
+            db.SaveChanges();
 
-            //if (mensajes.Any(i => i.MensajeId == id))
-            //{
-            //    return Content("Actualizado"); ;
-            //}
-            //_mensajesInstitucionalesManager.Visualizar(User.Identity.GetUserId(), id);
-            return Content("Actualizado");
+            ///TODO 
+            var sql = @"
+            UPDATE ordencompras
+            SET    FechaVisualizado = now()
+            WHERE  Id = {0};";
+
+            db.Database.ExecuteSqlCommand(sql, id);
+            db.SaveChanges();
+
+            var commonManager = new CommonManager();
+
+
+            MySqlParameter[] parametes = {
+                    new MySqlParameter("id", id)
+                };
+
+
+            sql = @"
+            SELECT * 
+            FROM   detalleordencompra
+            WHERE  OrdenComprasId = @id;";
+
+            var dt = commonManager.QueryToTable(sql, parametes);
+
+            ExportExcel(dt, id.ToString());
+
+
         }
-	}
+        public DataTable crearDt()
+        {
+            DataTable dt = new DataTable();
+
+            //agrego las columnas
+            dt.Columns.Add("NUmeroLinea");
+            dt.Columns.Add("Almacen");
+            dt.Columns.Add("Item");
+            dt.Columns.Add("Descripcion");
+            dt.Columns.Add("CantidadTotal");
+            dt.Columns.Add("UnidadMedida");
+            dt.Columns.Add("Color");
+            dt.Columns.Add("Estilo");
+            dt.Columns.Add("USER_DEF6");
+            dt.Columns.Add("Fecha");
+            dt.Columns.Add("Categoria");
+            dt.Columns.Add("Categoria2");
+            dt.Columns.Add("OrdenCompra");
+            dt.Columns.Add("warehouse");
+            dt.Columns.Add("COMPANY");
+            dt.Columns.Add("FehchaOrden");
+
+            //agrego algo de data
+            DataRow dr = dt.NewRow();
+            dr["NUmeroLinea"] = "1";
+            dr["Almacen"] = "1";
+            dr["Item"] = "1";
+            dr["Descripcion"] = "1";
+            dr["CantidadTotal"] = "1";
+            dr["UnidadMedida"] = "1";
+            dr["Color"] = "1";
+            dr["Estilo"] = "1";
+            dr["USER_DEF6"] = "1";
+            dr["Fecha"] = "1";
+            dr["Categoria"] = "1";
+            dr["Categoria2"] = "1";
+            dr["OrdenCompra"] = "1";
+            dr["warehouse"] = "1";
+            dr["COMPANY"] = "1";
+            dr["FehchaOrden"] = "1";
+            dt.Rows.Add(dr);
+
+            return dt;
+        }
+
+
+        public void ExportExcel(DataTable dt, string nombreXls)
+        {
+
+            var grid = new GridView();
+            grid.DataSource = dt;
+            grid.DataBind();
+
+            Response.ClearContent();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", "attachment; filename=" + nombreXls + ".xls");
+            Response.ContentType = "application/ms-excel";
+
+            Response.Charset = "";
+            StringWriter sw = new StringWriter();
+            HtmlTextWriter htw = new HtmlTextWriter(sw);
+
+            grid.RenderControl(htw);
+
+            Response.Output.Write(sw.ToString());
+            Response.Flush();
+            Response.End();
+
+            return;
+
+            StreamWriter wr = new StreamWriter(@"c:\\temp\" + nombreXls + ".xls");
+            try
+            {
+                for (int i = 0; i < dt.Columns.Count; i++)
+                {
+                    wr.Write(dt.Columns[i].ToString().ToUpper() + "\t");
+                }
+                wr.WriteLine();
+
+                //write rows to excel file
+                for (int i = 0; i < (dt.Rows.Count); i++)
+                {
+                    for (int j = 0; j < dt.Columns.Count; j++)
+                    {
+                        if (dt.Rows[i][j] != null)
+                        {
+                            wr.Write(Convert.ToString(dt.Rows[i][j]) + "\t");
+                        }
+                        else
+                        {
+                            wr.Write("\t");
+                        }
+                    }
+                    //go to next line
+                    wr.WriteLine();
+                }
+                //close file
+                wr.Close();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+    }
 }

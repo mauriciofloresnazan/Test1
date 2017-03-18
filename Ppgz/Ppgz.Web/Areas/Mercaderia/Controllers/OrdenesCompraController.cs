@@ -16,46 +16,24 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     public class OrdenesCompraController : Controller
     {
         private readonly OrdenCompraManager  _ordenCompraManager = new OrdenCompraManager();
-
+        private readonly ProveedorManager _proveedorManager = new ProveedorManager();
+        private readonly CommonManager _commonManager = new CommonManager();
         //
         // GET: /Mercaderia/OrdenesCompra/
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA-LISTAR,MERCADERIA-ORDENESCOMPRA-MODIFICAR")]
-        //
-        // GET: /Servicio/OrdenesCompra/
         public ActionResult Index()
         {
-            CommonManager commonManager =  new CommonManager();
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+            //faltante de manager para obtener orden de compra por proveedorid
+            ViewBag.data= _ordenCompraManager.FindByCuentaId(cuenta.Id);
 
-            var cuenta = commonManager.GetCuentaUsuarioAutenticado();
-
-
-
-
-           ViewBag.data= _ordenCompraManager.FindByCuentaId(cuenta.Id);
-            //var perfiles = _perfilProveedorManager
-            //    .FindByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
-
-            //perfiles.Add(_perfilProveedorManager.GetMaestroByUsuarioTipo(CuentaManager.Tipo.MERCADERIA));
-
-            //ViewBag.Perfiles = perfiles;
-
-            
-            /*DataTable dt = crearDt();
-
-            exportExcel(dt, "T_PROV_001");*/
-            
             return View();
         }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA-LISTAR,MERCADERIA-ORDENESCOMPRA-MODIFICAR")]
-        //
-        // GET: /Servicio/OrdenesCompra/
         public void Descargar(int id)
-        {            //todo pasar a un manejador
-
+        {   
+            //todo pasar a un manejador
             Entities db = new Entities();
             var orden = db.ordencompras.Find(id);
-            //orden.FechaVisualizado = DateTime.Today;
             db.Entry(orden).State = EntityState.Modified;
             db.SaveChanges();
 
@@ -87,26 +65,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             
         }
-
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA-LISTAR,MERCADERIA-ORDENESCOMPRA-MODIFICAR")]
-        [HttpPost]
-        public ActionResult Visualizar(int id)
-        {
-
-
-
-
-            //var mensajes = _mensajesInstitucionalesManager.FindUsuarioMensajes(User.Identity.GetUserId());
-
-            //if (mensajes.Any(i => i.MensajeId == id))
-            //{
-            //    return Content("Actualizado"); ;
-            //}
-            //_mensajesInstitucionalesManager.Visualizar(User.Identity.GetUserId(), id);
-            return Content("Actualizado");
-        }
-
         public DataTable crearDt()
         {
             DataTable dt = new DataTable();
