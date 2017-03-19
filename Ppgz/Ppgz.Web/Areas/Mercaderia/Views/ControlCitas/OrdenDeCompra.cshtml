@@ -30,7 +30,7 @@
                 <div class="input-group">
                     <input type="text" id="txtNumOrden" name="txtNumOrden" class="form-control" />
                     <span class="input-group-btn">
-                        <button class="btn btn-info" type="button"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
+                        <button class="btn btn-info" type="button" onclick="BuscarNumeroDeOrden();"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
                     </span>
                 </div>
             </div>
@@ -173,12 +173,12 @@
 
             //var dataResultado = JSON.parse(objetoJSON);
             console.log(objetoJSON);
-  
+
 
             $('#tb-3 > tbody').html("");
 
 
-            for (i = 0; i <= (elementosJSON(objetoJSON)-1) ; i++) {
+            for (i = 0; i <= (elementosJSON(objetoJSON) - 1); i++) {
 
                 resHTML += '<tr id="tr-' + i + '">';
                 resHTML += '<td class="text-center">' + objetoJSON[i].Ebelp + '</td>';
@@ -194,94 +194,54 @@
             };
 
             $("#idProductosEnOrden").html(cantidadEnOrden);
-            
-           
+
+
             $('#tb-3 > tbody').html(resHTML);
 
+
+            
             $('#tb-3').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
                 },
                 "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
             });
+            
 
         }
 
-        $(document).ready(function() {
+
+        function TablaInicio() {
+
+            $('#tb-3 > tbody').html("");
+
+          
+        }
+
+
+        function BuscarNumeroDeOrden() {
+
+            if ($("#txtNumOrden").val().length <= 0) {
+
+                alert("Debe ingresar el numero de Orden");
+                //TablaInicio();
+                return;
+            }
 
 
             pruebaDeTabla();
 
 
+        }
+
+
+        $(document).ready(function() {
+
+            TablaInicio();
+          
+
+
         });
-
-
-
-
-        @*$(document).ready(function() {
-
-
-            var urlMethodo = "@Url.Action("OrdenDeCompraDetalle", "ControlCitas", new { Documento = "4500916565" })";
-
-
-            $.ajax({
-                type: "GET",
-                url: urlMethodo,
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                beforeSend: function() {
-                    //msgProcesando.show();
-                },
-                success: function(data) {
-                    var objetoJSON = data;
-                    var resHTML = "";
-
-                    //var dataResultado = JSON.parse(data);
-                    console.log(objetoJSON);
-                    //console.log("Elementos en Objeto Principal:" + elementosJSON(objetoJSON));
-                    //console.log("Elementos en Objeto OrdenDetalle: " + elementosJSON(objetoJSON.ordenDetalle));
-
-
-                    //$('#tb-3 > tbody').html("");
-
-                    //for (var key in objetoJSON['ordenDetalle']) {
-
-                    //    resHTML = '<tr id="tr-' + objetoJSON['ordenDetalle'].ItemCodigo + '">';
-                    //    resHTML += '<td class="vert-align text-center"><h4><strong>' + objetoJSON['ordenDetalle'].ItemCodigo + '</strong><h4></td>';
-                    //    resHTML += '<td><div class="text-center" style="background-color:#808e8e; color:#fff;">' + objetoJSON['ordenDetalle'].ItemDescripcion + '</div>';
-
-                    //    for (var keyDetalle in objetoJSON['ordenDetalle']) {
-
-
-                    //    };
-
-                    //    resHTML += '</td>';
-                    //    resHTML += '<td>';
-                    //    resHTML += '<ul id="modificado-"' + objetoJSON['ordenDetalle'].ItemCodigo + ' style="padding: 0; list-style-type:none">';
-                    //    resHTML += '</ul>';
-                    //    resHTML += '</td>';
-                    //    resHTML += '</tr>';
-
-
-                    //};
-
-                    //$('#tb-3 > tbody').html(resHTML);
-
-
-                },
-                failure: function(response) {
-                    console.log("Fallo por: " + response.responseText);
-                },
-                error: function(response) {
-                    console.log("Error por: " + response.responseText);
-                }
-
-            });
-
-
-            console.log("Termino!");
-
-        });*@
 
 
     </script>
