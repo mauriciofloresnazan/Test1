@@ -14,6 +14,11 @@ namespace Ppgz.Repository
     
     public partial class proveedore
     {
+        public proveedore()
+        {
+            this.ordencompras = new HashSet<ordencompra>();
+        }
+    
         public int Id { get; set; }
         public string NumeroProveedor { get; set; }
         public string ClavePais { get; set; }
@@ -24,6 +29,7 @@ namespace Ppgz.Repository
         public string Poblacion { get; set; }
         public string Distrito { get; set; }
         public string Apartado { get; set; }
+        public string CodigoApartado { get; set; }
         public string CodigoPostal { get; set; }
         public string Region { get; set; }
         public string Calle { get; set; }
@@ -42,7 +48,7 @@ namespace Ppgz.Repository
         public string TelefonoPrefijo { get; set; }
         public string TelefonoExtension { get; set; }
         public string Correo { get; set; }
-        public Nullable<int> CuentaId { get; set; }
+        public int CuentaId { get; set; }
         public System.DateTime FechaCargaPortal { get; set; }
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }
@@ -50,5 +56,6 @@ namespace Ppgz.Repository
         public bool Borrado { get; set; }
     
         public virtual cuenta cuenta { get; set; }
+        public virtual ICollection<ordencompra> ordencompras { get; set; }
     }
 }

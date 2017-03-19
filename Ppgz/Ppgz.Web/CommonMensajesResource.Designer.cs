@@ -61,15 +61,6 @@ namespace Ppgz.Web {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cuenta incorrecta.
-        /// </summary>
-        internal static string ERROR_CuentaManager_IdIncorrecto {
-            get {
-                return ResourceManager.GetString("ERROR_CuentaManager_IdIncorrecto", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Error al procesar el registro..
         /// </summary>
         internal static string ERROR_General {

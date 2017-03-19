@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections;
-using System.Data.Entity;
-using System.Linq;
 using System.Web.Mvc;
-using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure;
@@ -38,49 +34,50 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		
 		public ActionResult Registrar(CuentaViewModel model)
 		{
-			if (ModelState.IsValid)
-			{
-				try
-				{
-					_cuentaManager.Crear(
-						model.TipoCuenta,
-						model.NombreCuenta,
-						model.UserName,
-						model.ResponsableNombre,
-						model.ResponsableApellido,
-						model.ResponsableCargo,
-						model.ResponsableEmail,
-						model.ResponsableTelefono,
-						model.ResponsablePassword);
+            if (!ModelState.IsValid) return View(model);
+            try
+            {
+                _cuentaManager.Crear(
+                                    model.TipoCuenta,
+                                    model.NombreCuenta,
+                                    model.UserName,
+                                    model.ResponsableNombre,
+                                    model.ResponsableApellido,
+                                    model.ResponsableCargo,
+                                    model.ResponsableEmail,
+                                    model.ResponsableTelefono,
+                                    model.ResponsablePassword);
 
-					// TODO JUAN DELGADO
-					TempData["FlashSuccess"] = "Cuenta Creada con éxito.";
-					return RedirectToAction("Index");
-				}
-				catch (Exception exception)
-				{
+                TempData["FlashSuccess"] = MensajesResource.INFO_Cuenta_CreadaCorrectamente;
+                return RedirectToAction("Index");
+            }
+            catch (BusinessException businessEx)
+            {
+                ModelState.AddModelError(string.Empty, businessEx.Message);
 
-					ModelState.AddModelError(string.Empty, exception.Message);
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
 
-					return View(model);
-				}
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
 
-			}
-
-			return View(model);
-
+                return View(model);
+            }
 		}
-
 
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Editar(int id)
 		{
             var cuentaConUsuarioMaestro = _cuentaManager.FindWithUsuarioMaestro(id);
-
 			if (cuentaConUsuarioMaestro == null)
 			{
-				//TODO ACTUALIZAR MENSAJE AL RESOURCE
-				TempData["FlashError"] = "Proveedor incorrecto.";
+				TempData["FlashError"] = MensajesResource.ERROR_Cuenta_IdIncorrecto;
 				return RedirectToAction("Index");
 			}
 
@@ -91,26 +88,26 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public JsonResult BuscarProveedor(string numeroProveedor)
 		{
-			try
-			{
-				var proveedor = _proveedorManager.FindByCodigoProveedor(numeroProveedor);
+		    try
+		    {
+                var proveedor = _proveedorManager.FindProveedorEnSap(numeroProveedor);
+                return proveedor == null ? Json(new { error = MensajesResource.ERROR_Proveedor_IdIncorrecto }) : Json(proveedor);
+		    }
+            catch (BusinessException businessEx)
+            {
+                return Json(new { error = businessEx.Message });
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
 
-				var table = new Hashtable();
-				/*table["Codigo"] = proveedor.CodigoProveedor;
-				table["RFC"] = proveedor.Rfc;
-				table["Nombre"] = proveedor.NombreProveedor;
-				table["Cidudad"] = proveedor.Ciudad;
-				table["Estado"] = proveedor.Estado;
-				table["Email"] = proveedor.email;
-				table["Direccion 1"] = proveedor.direccion1;
-				table["Dirección 2"] = proveedor.direccion2;
-				table["Dirección 3"] = proveedor.direccion3;*/
-				return Json(table);
-			}
-			catch (Exception exception)
-			{
-				return Json(new { error = exception.Message });
-			}
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+                return Json(new { error = e.Message });
+            }
 		}
 
 
@@ -118,62 +115,82 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		public ActionResult AsociarProveedor(int id, string numeroProveedor)
 		{
 			try
-			{
-				/*var entities = new Entities();
-
-				var proveedor = entities.proveedores.SingleOrDefault(a => a.CodigoProveedor == numeroProveedor); ;
-
-				var cuenta = _cuentaManager.Find(id);
-
-				proveedor.CuentaId = cuenta.Id;
-
-				entities.Entry(proveedor).State  = EntityState.Modified;
-				entities.SaveChanges();*/
+            {
+                _cuentaManager.AsociarProveedorSapEnCuenta(id, numeroProveedor);
 
 				TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
-				return RedirectToAction("Editar", new { id = id });
+				return RedirectToAction("Editar", new {  id });
 			}
-			catch (Exception exception)
-			{
-				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("Editar", new { id = id });
-			}
+            catch (BusinessException businessEx)
+            {
+                TempData["FlashError"] = businessEx.Message;
+                return RedirectToAction("Editar", new { id });
+
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                TempData["FlashError"] = MensajesResource.ERROR_General;
+                return RedirectToAction("Editar", new { id });
+            }
 
 		}
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Eliminar(int id)
-		{
+        {
+            try
+            {
+                _proveedorManager.Eliminar(id);
 
-			//TODO ACTUALIZAR MENSAJE AL RESOURCE
-			TempData["FlashError"] = "En revision";
-			return RedirectToAction("Index");
+                TempData["FlashSuccess"] = MensajesResource.INFO_Proveedor_EliminadoCorrectamente;
+                return RedirectToAction("Index");
+            }
+            catch (BusinessException businessEx)
+            {
+                TempData["FlashError"] = businessEx.Message;
+                return RedirectToAction("Index");
+
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                TempData["FlashError"] = MensajesResource.ERROR_General;
+                return RedirectToAction("Index");
+            }
 			
 		}
 		
-		public ActionResult DesasociarProveedor(int id)
+		public ActionResult DesasociarProveedor(int cuentaId, int proveedorId)
 		{
 			// TODO MEJORAR
-
-
-			var entities = new Entities();
-			var proveedor = entities.proveedores.SingleOrDefault(a => a.Id == id);
-
-			var cuentaId = proveedor.CuentaId; 
 			try
 			{
-				proveedor.CuentaId = null;
-				
-				entities.Entry(proveedor).State = EntityState.Modified ;
-				entities.SaveChanges();
+                _cuentaManager.EliminarProveedorEnCuenta(cuentaId, proveedorId);
+
 
 				TempData["FlashSuccess"] = "Proveedor desvinculado con éxito.";
-				return RedirectToAction("Editar", new { id = cuentaId });
+                return RedirectToAction("Editar", new { id = cuentaId });
 			}
 			catch (Exception exception)
 			{
 				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("Editar", new { id = cuentaId });
+                return RedirectToAction("Editar", new { id = cuentaId });
 			}
+
 		}
 
 	}

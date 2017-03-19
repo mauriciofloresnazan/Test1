@@ -12,7 +12,7 @@ namespace Ppgz.Repository
     using System;
     using System.Collections.Generic;
     
-    public partial class sapordencompradetalle
+    public partial class ordencompradetalle
     {
         public int Id { get; set; }
         public string NumeroDocumento { get; set; }
@@ -36,6 +36,7 @@ namespace Ppgz.Repository
         public Nullable<int> SapOrdenCompraId { get; set; }
         public System.DateTime FechaCargaPortal { get; set; }
     
-        public virtual sapordencompra sapordencompra { get; set; }
+        public virtual ordencompra ordencompra { get; set; }
+        public virtual ordencompra ordencompra1 { get; set; }
     }
 }

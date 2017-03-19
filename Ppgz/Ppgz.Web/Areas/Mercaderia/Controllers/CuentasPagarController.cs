@@ -7,6 +7,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using MySql.Data.MySqlClient;
 using Ppgz.Repository;
+using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers

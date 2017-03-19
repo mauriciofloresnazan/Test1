@@ -7,12 +7,12 @@ namespace SapWrapper
     {
         private readonly CommonRfcConfigParam _rfc = new CommonRfcConfigParam();
 
-        public DataTable GetOrdenesDeCompraHeader(string codigoProveedor)
+        public DataTable GetOrdenesDeCompraHeader(string numeroProveedor)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
-            function.SetValue("IM_LIFNR", codigoProveedor);
+            function.SetValue("IM_LIFNR", numeroProveedor);
             function.Invoke(rfcDestinationManager);
 
             var result = function.GetTable("ET_HDR");

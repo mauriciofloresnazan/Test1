@@ -105,13 +105,15 @@
                 <tr>
                     <th class="text-center vert-align">Numero</th>
                     <th class="text-center vert-align">RFC</th>
-                    <th class="text-center vert-align">Nombre</th>
-                    <th class="text-center vert-align">Ciudad</th>
-                    <th class="text-center vert-align">Estado</th>
+                    <th class="text-center vert-align">Nombre1</th>
+                    <th class="text-center vert-align">Nombre2</th>
+                    <th class="text-center vert-align">Nombre3</th>
+                    <th class="text-center vert-align">Nombre4</th>
+                    <th class="text-center vert-align">Población</th>
+                    <th class="text-center vert-align">Distrito</th>
+                    <th class="text-center vert-align">Apartado</th>
                     <th class="text-center vert-align">Codigo Postal</th>
-                    <th class="text-center vert-align">Dirección 1</th>
-                    <th class="text-center vert-align">Dirección 2</th>
-                    <th class="text-center vert-align">Dirección 3</th>
+                    <th class="text-center vert-align">Dirección</th>
                     <th class="text-center vert-align">Email</th>
                     <th>
                     </th>
@@ -122,21 +124,23 @@
             @foreach (var proveedor in ViewBag.cuentaConUsuarioMaestro.Cuenta.proveedores)
             {
                 <tr>
-                    <td>@proveedor.CodigoProveedor</td>
-                    <td>@proveedor.Rfc</td>
-                    <td>@proveedor.NombreProveedor</td>
-                    <td>@proveedor.Ciudad</td>
-                    <td>@proveedor.Estado</td>
+                    <td>@proveedor.NumeroProveedor</td>
+                    <td>proveedor.Rfc</td>
+                    <td>@proveedor.Nombre1</td>
+                    <td>@proveedor.Nombre2</td>
+                    <td>@proveedor.Nombre3</td>
+                    <td>@proveedor.Nombre4/td>
+                    <td>@proveedor.Poblacion</td>
+                    <td>@proveedor.Distrito</td>
+                    <td>@proveedor.Apartado</td>
                     <td>@proveedor.CodigoPostal</td>
-                    <td>@proveedor.direccion1</td> 
-                    <td>@proveedor.direccion2</td>
-                    <td>@proveedor.direccion3</td>
-                    <td>@proveedor.email</td>
+                    <td>@proveedor.Direccion</td> 
+                    <td>@proveedor.Correo</td>
                     <td>
                         
                         <div class="">
                             
-                            <a class="btn btn-danger btn-xs" href="@Url.Action("DesAsociarProveedor", "AdministrarProveedores", new { @id = @proveedor.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="Cuidad el proveedor será desvinculado de la cuenta.">
+                            <a class="btn btn-danger btn-xs" href="@Url.Action("DesAsociarProveedor", "AdministrarProveedores", new { cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="Cuidad el proveedor será desvinculado de la cuenta.">
                                 <i class="fa fa-times" aria-hidden="true"></i> Eliminar
                             </a>
                         </div>
@@ -192,6 +196,7 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     <script type="text/javascript">
+        
         var urlModUsuarioMaestro = "@Url.Action("ModificarUsuarioMaestro", "AdministrarProveedores")";
         var cuentaId = "@ViewBag.cuentaConUsuarioMaestro.Cuenta.Id";
 
@@ -215,7 +220,7 @@
 
             if ($("#numero-proveedor").val() !== "") {
                 buscarNumeroProveedor($("#numero-proveedor").val());
-           }
+            }
 
         });
         
@@ -265,7 +270,6 @@
      
             });
         }
-
 
 
     </script>

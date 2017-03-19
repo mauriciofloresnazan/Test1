@@ -300,23 +300,58 @@ warning 6002: The table/view 'def.impuls_portal2.devoluciones' does not have a p
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
           <Property Name="OperacionTx" Type="enum" />
         </EntityType>
-        <EntityType Name="ordencompras">
+        <EntityType Name="ordencompra">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Fecha" Type="datetime" Precision="0" />
-          <Property Name="NumeroOrden" Type="varchar" MaxLength="50" />
-          <Property Name="PrecioOrden" Type="decimal" Precision="12" Scale="2" />
-          <Property Name="Almacen" Type="varchar" MaxLength="20" />
-          <Property Name="FechaEntrega" Type="date" />
-          <Property Name="CantidadItem" Type="int" />
-          <Property Name="TotalLinea" Type="int" />
-          <Property Name="ProveedoresId" Type="int" />
-          <Property Name="FacturasId" Type="int" />
-          <Property Name="CodigoProveedor" Type="varchar" MaxLength="20" />
-          <Property Name="FechaSAP" Type="varchar" MaxLength="100" />
-          <Property Name="VisualizadoFecha" Type="datetime" Precision="0" />
+          <Property Name="NumeroDocumento" Type="varchar" MaxLength="20" />
+          <Property Name="Sociedad" Type="varchar" MaxLength="10" />
+          <Property Name="TipoDocumento" Type="varchar" MaxLength="5" />
+          <Property Name="ClaseDocumento" Type="varchar" MaxLength="5" />
+          <Property Name="IndicadorControl" Type="varchar" MaxLength="20" />
+          <Property Name="IndicadorBorrado" Type="varchar" MaxLength="20" />
+          <Property Name="EstatusDocumento" Type="varchar" MaxLength="20" />
+          <Property Name="FechaCreacionSap" Type="varchar" MaxLength="10" />
+          <Property Name="IntervaloPosicion" Type="int" />
+          <Property Name="UltimoNumeroPos" Type="int" />
+          <Property Name="NumeroProveedor" Type="varchar" MaxLength="20" />
+          <Property Name="ClavePago" Type="varchar" MaxLength="10" />
+          <Property Name="OrganizacionCompra" Type="varchar" MaxLength="10" />
+          <Property Name="GrupoCompra" Type="varchar" MaxLength="10" />
+          <Property Name="Moneda" Type="varchar" MaxLength="5" />
+          <Property Name="TipoCambio" Type="int" />
+          <Property Name="IndTipoCambio" Type="varchar" MaxLength="20" />
+          <Property Name="FechaDocCompra" Type="varchar" MaxLength="10" />
+          <Property Name="FechaCargaPortal" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="ProveedorId" Type="int" />
+          <Property Name="FechaVisualizado" Type="datetime" Precision="0" />
+        </EntityType>
+        <EntityType Name="ordencompradetalle">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NumeroDocumento" Type="varchar" MaxLength="10" />
+          <Property Name="Ebelp" Type="varchar" MaxLength="5" />
+          <Property Name="DescripcionMaterial" Type="varchar" MaxLength="40" />
+          <Property Name="NumeroMaterial" Type="varchar" MaxLength="18" />
+          <Property Name="Centro" Type="varchar" MaxLength="12" />
+          <Property Name="Almacen" Type="varchar" MaxLength="4" />
+          <Property Name="GrupoArticulos" Type="varchar" MaxLength="9" />
+          <Property Name="CantidadPedido" Type="varchar" MaxLength="13" />
+          <Property Name="UnidadMedidaPedido" Type="varchar" MaxLength="4" />
+          <Property Name="UnidadMedidaPrecio" Type="varchar" MaxLength="5" />
+          <Property Name="ConversionUmpruMP" Type="int" />
+          <Property Name="ConversionUmUmBase" Type="int" />
+          <Property Name="DenominadorUmUmBase" Type="int" />
+          <Property Name="PrecioNeto" Type="decimal" Precision="11" Scale="2" />
+          <Property Name="CantidadBase" Type="int" />
+          <Property Name="ValorNeto" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="ValorBruto" Type="decimal" Precision="13" Scale="2" />
+          <Property Name="CantidadUnidadMedida" Type="decimal" Precision="13" Scale="3" />
+          <Property Name="SapOrdenCompraId" Type="int" />
+          <Property Name="FechaCargaPortal" Type="timestamp" Precision="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.impuls_portal2.pagos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -375,6 +410,7 @@ warning 6002: The table/view 'def.impuls_portal2.pagos' does not have a primary 
           <Property Name="Poblacion" Type="varchar" MaxLength="35" />
           <Property Name="Distrito" Type="varchar" MaxLength="35" />
           <Property Name="Apartado" Type="varchar" MaxLength="10" />
+          <Property Name="CodigoApartado" Type="varchar" MaxLength="10" />
           <Property Name="CodigoPostal" Type="varchar" MaxLength="10" />
           <Property Name="Region" Type="varchar" MaxLength="3" />
           <Property Name="Calle" Type="varchar" MaxLength="35" />
@@ -393,34 +429,12 @@ warning 6002: The table/view 'def.impuls_portal2.pagos' does not have a primary 
           <Property Name="TelefonoPrefijo" Type="varchar" MaxLength="30" />
           <Property Name="TelefonoExtension" Type="varchar" MaxLength="10" />
           <Property Name="Correo" Type="varchar" MaxLength="241" />
-          <Property Name="CuentaId" Type="int" />
+          <Property Name="CuentaId" Type="int" Nullable="false" />
           <Property Name="FechaCargaPortal" Type="timestamp" Precision="0" Nullable="false" />
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
           <Property Name="OperacionTx" Type="enum" Nullable="false" />
           <Property Name="Rfc" Type="varchar" MaxLength="100" />
           <Property Name="Borrado" Type="bool" Nullable="false" />
-        </EntityType>
-        <EntityType Name="proveedores_old">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CodigoProveedor" Type="varchar" MaxLength="20" />
-          <Property Name="FechaRegistro" Type="date" />
-          <Property Name="CuentaId" Type="int" />
-          <Property Name="Borrado" Type="bool" Nullable="false" />
-          <Property Name="FechaTx" Type="datetime" Precision="0" />
-          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
-          <Property Name="OperacionTx" Type="enum" Nullable="false" />
-          <Property Name="NombreProveedor" Type="varchar" MaxLength="100" />
-          <Property Name="Ciudad" Type="varchar" MaxLength="50" />
-          <Property Name="Estado" Type="varchar" MaxLength="50" />
-          <Property Name="CodigoPostal" Type="varchar" MaxLength="10" />
-          <Property Name="direccion1" Type="varchar" MaxLength="300" />
-          <Property Name="direccion2" Type="varchar" MaxLength="300" />
-          <Property Name="direccion3" Type="varchar" MaxLength="300" />
-          <Property Name="email" Type="varchar" MaxLength="100" />
-          <Property Name="Rfc" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="rieles">
           <Key>
@@ -430,58 +444,6 @@ warning 6002: The table/view 'def.impuls_portal2.pagos' does not have a primary 
           <Property Name="Codigo" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Riel" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="AndenId" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="sapordencompra">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NumeroDocumento" Type="varchar" MaxLength="20" />
-          <Property Name="Sociedad" Type="varchar" MaxLength="10" />
-          <Property Name="TipoDocumento" Type="varchar" MaxLength="5" />
-          <Property Name="ClaseDocumento" Type="varchar" MaxLength="5" />
-          <Property Name="IndicadorControl" Type="varchar" MaxLength="20" />
-          <Property Name="IndicadorBorrado" Type="varchar" MaxLength="20" />
-          <Property Name="EstatusDocumento" Type="varchar" MaxLength="20" />
-          <Property Name="FechaCreacionSap" Type="varchar" MaxLength="10" />
-          <Property Name="IntervaloPosicion" Type="int" />
-          <Property Name="UltimoNumeroPos" Type="int" />
-          <Property Name="NumeroProveedor" Type="varchar" MaxLength="20" />
-          <Property Name="ClavePago" Type="varchar" MaxLength="10" />
-          <Property Name="OrganizacionCompra" Type="varchar" MaxLength="10" />
-          <Property Name="GrupoCompra" Type="varchar" MaxLength="10" />
-          <Property Name="Moneda" Type="varchar" MaxLength="5" />
-          <Property Name="TipoCambio" Type="int" />
-          <Property Name="IndTipoCambio" Type="varchar" MaxLength="20" />
-          <Property Name="FechaDocCompra" Type="varchar" MaxLength="10" />
-          <Property Name="FechaCargaPortal" Type="timestamp" Precision="0" Nullable="false" />
-          <Property Name="ProveedorId" Type="int" />
-        </EntityType>
-        <EntityType Name="sapordencompradetalle">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NumeroDocumento" Type="varchar" MaxLength="10" />
-          <Property Name="Ebelp" Type="varchar" MaxLength="5" />
-          <Property Name="DescripcionMaterial" Type="varchar" MaxLength="40" />
-          <Property Name="NumeroMaterial" Type="varchar" MaxLength="18" />
-          <Property Name="Centro" Type="varchar" MaxLength="12" />
-          <Property Name="Almacen" Type="varchar" MaxLength="4" />
-          <Property Name="GrupoArticulos" Type="varchar" MaxLength="9" />
-          <Property Name="CantidadPedido" Type="varchar" MaxLength="13" />
-          <Property Name="UnidadMedidaPedido" Type="varchar" MaxLength="4" />
-          <Property Name="UnidadMedidaPrecio" Type="varchar" MaxLength="5" />
-          <Property Name="ConversionUmpruMP" Type="int" />
-          <Property Name="ConversionUmUmBase" Type="int" />
-          <Property Name="DenominadorUmUmBase" Type="int" />
-          <Property Name="PrecioNeto" Type="decimal" Precision="11" Scale="2" />
-          <Property Name="CantidadBase" Type="int" />
-          <Property Name="ValorNeto" Type="decimal" Precision="13" Scale="2" />
-          <Property Name="ValorBruto" Type="decimal" Precision="13" Scale="2" />
-          <Property Name="CantidadUnidadMedida" Type="decimal" Precision="13" Scale="3" />
-          <Property Name="SapOrdenCompraId" Type="int" />
-          <Property Name="FechaCargaPortal" Type="timestamp" Precision="0" Nullable="false" />
         </EntityType>
         <EntityType Name="tipocuentas">
           <Key>
@@ -728,6 +690,30 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_ordencompra_proveedor">
+          <End Role="proveedores" Type="Self.proveedores" Multiplicity="0..1" />
+          <End Role="ordencompra" Type="Self.ordencompra" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proveedores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ordencompra">
+              <PropertyRef Name="ProveedorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ordencompradetalle_parent">
+          <End Role="ordencompra" Type="Self.ordencompra" Multiplicity="0..1" />
+          <End Role="ordencompradetalle" Type="Self.ordencompradetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ordencompra">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ordencompradetalle">
+              <PropertyRef Name="SapOrdenCompraId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_perfil2">
           <End Role="perfiles" Type="Self.perfiles" Multiplicity="1" />
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
@@ -752,27 +738,15 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_proveedor_cuenta">
-          <End Role="cuentas" Type="Self.cuentas" Multiplicity="0..1" />
-          <End Role="proveedores_old" Type="Self.proveedores_old" Multiplicity="*" />
+        <Association Name="fk_proveedores_cuenta">
+          <End Role="cuentas" Type="Self.cuentas" Multiplicity="1" />
+          <End Role="proveedores" Type="Self.proveedores" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="cuentas">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="proveedores_old">
+            <Dependent Role="proveedores">
               <PropertyRef Name="CuentaId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_proveedor_usuario">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
-          <End Role="proveedores_old" Type="Self.proveedores_old" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="proveedores_old">
-              <PropertyRef Name="UsuarioIdTx" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -801,26 +775,14 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_sapordencompradetalle_parent">
-          <End Role="sapordencompra" Type="Self.sapordencompra" Multiplicity="0..1" />
-          <End Role="sapordencompradetalle" Type="Self.sapordencompradetalle" Multiplicity="*" />
+          <End Role="ordencompra" Type="Self.ordencompra" Multiplicity="0..1" />
+          <End Role="ordencompradetalle" Type="Self.ordencompradetalle" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="sapordencompra">
+            <Principal Role="ordencompra">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="sapordencompradetalle">
+            <Dependent Role="ordencompradetalle">
               <PropertyRef Name="SapOrdenCompraId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_sapproveedores_cuenta">
-          <End Role="cuentas" Type="Self.cuentas" Multiplicity="0..1" />
-          <End Role="proveedores" Type="Self.proveedores" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="cuentas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="proveedores">
-              <PropertyRef Name="CuentaId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -858,14 +820,12 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
           <EntitySet Name="horariorieles" EntityType="Self.horariorieles" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="horarios" EntityType="Self.horarios" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="mensajes" EntityType="Self.mensajes" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="ordencompras" EntityType="Self.ordencompras" Schema="impuls_portal2" store:Type="Tables" />
+          <EntitySet Name="ordencompra" EntityType="Self.ordencompra" Schema="impuls_portal2" store:Type="Tables" />
+          <EntitySet Name="ordencompradetalle" EntityType="Self.ordencompradetalle" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="perfiles" EntityType="Self.perfiles" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="perfilesroles" EntityType="Self.perfilesroles" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="proveedores_old" EntityType="Self.proveedores_old" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="rieles" EntityType="Self.rieles" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="sapordencompra" EntityType="Self.sapordencompra" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="sapordencompradetalle" EntityType="Self.sapordencompradetalle" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="tipocuentas" EntityType="Self.tipocuentas" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="tipousuario" EntityType="Self.tipousuario" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="devoluciones" EntityType="Self.devoluciones" store:Type="Tables" store:Schema="impuls_portal2">
@@ -972,6 +932,14 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="mensajes" EntitySet="mensajes" />
           </AssociationSet>
+          <AssociationSet Name="fk_ordencompra_proveedor" Association="Self.fk_ordencompra_proveedor">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="ordencompra" EntitySet="ordencompra" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ordencompradetalle_parent" Association="Self.fk_ordencompradetalle_parent">
+            <End Role="ordencompra" EntitySet="ordencompra" />
+            <End Role="ordencompradetalle" EntitySet="ordencompradetalle" />
+          </AssociationSet>
           <AssociationSet Name="fk_perfil2" Association="Self.fk_perfil2">
             <End Role="perfiles" EntitySet="perfiles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -980,13 +948,9 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="perfiles" EntitySet="perfiles" />
             <End Role="perfilesroles" EntitySet="perfilesroles" />
           </AssociationSet>
-          <AssociationSet Name="fk_proveedor_cuenta" Association="Self.fk_proveedor_cuenta">
+          <AssociationSet Name="fk_proveedores_cuenta" Association="Self.fk_proveedores_cuenta">
             <End Role="cuentas" EntitySet="cuentas" />
-            <End Role="proveedores_old" EntitySet="proveedores_old" />
-          </AssociationSet>
-          <AssociationSet Name="fk_proveedor_usuario" Association="Self.fk_proveedor_usuario">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="proveedores_old" EntitySet="proveedores_old" />
+            <End Role="proveedores" EntitySet="proveedores" />
           </AssociationSet>
           <AssociationSet Name="fk_rieles_anden" Association="Self.fk_rieles_anden">
             <End Role="andenes" EntitySet="andenes" />
@@ -997,12 +961,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="perfilesroles" EntitySet="perfilesroles" />
           </AssociationSet>
           <AssociationSet Name="fk_sapordencompradetalle_parent" Association="Self.fk_sapordencompradetalle_parent">
-            <End Role="sapordencompra" EntitySet="sapordencompra" />
-            <End Role="sapordencompradetalle" EntitySet="sapordencompradetalle" />
-          </AssociationSet>
-          <AssociationSet Name="fk_sapproveedores_cuenta" Association="Self.fk_sapproveedores_cuenta">
-            <End Role="cuentas" EntitySet="cuentas" />
-            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="ordencompra" EntitySet="ordencompra" />
+            <End Role="ordencompradetalle" EntitySet="ordencompradetalle" />
           </AssociationSet>
           <AssociationSet Name="fk_usuarios" Association="Self.fk_usuarios">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -1110,7 +1070,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_usuario" FromRole="AspNetUsers" ToRole="cuentasmensajes" />
           <NavigationProperty Name="mensajes" Relationship="Self.fk_mensajes_usuario" FromRole="AspNetUsers" ToRole="mensajes" />
           <NavigationProperty Name="perfile" Relationship="Self.fk_perfil2" FromRole="AspNetUsers" ToRole="perfiles" />
-          <NavigationProperty Name="proveedores_old" Relationship="Self.fk_proveedor_usuario" FromRole="AspNetUsers" ToRole="proveedores_old" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
           <NavigationProperty Name="cuentas1" Relationship="Self.cuentasusuarios" FromRole="AspNetUsers" ToRole="cuentas" />
         </EntityType>
@@ -1180,8 +1139,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <NavigationProperty Name="cuentaproveedores" Relationship="Self.fk_cuetnasprov" FromRole="cuentas" ToRole="cuentaproveedores" />
           <NavigationProperty Name="perfiles" Relationship="Self.fk_cuenta" FromRole="cuentas" ToRole="perfiles" />
           <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_cuenta" FromRole="cuentas" ToRole="cuentasmensajes" />
-          <NavigationProperty Name="proveedores_old" Relationship="Self.fk_proveedor_cuenta" FromRole="cuentas" ToRole="proveedores_old" />
-          <NavigationProperty Name="proveedores" Relationship="Self.fk_sapproveedores_cuenta" FromRole="cuentas" ToRole="proveedores" />
+          <NavigationProperty Name="proveedores" Relationship="Self.fk_proveedores_cuenta" FromRole="cuentas" ToRole="proveedores" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.cuentasusuarios" FromRole="cuentas" ToRole="AspNetUsers" />
         </EntityType>
         <EntityType Name="cuentasmensaje">
@@ -1316,18 +1274,58 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Fecha" Type="DateTime" />
-          <Property Name="NumeroOrden" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PrecioOrden" Type="Decimal" />
-          <Property Name="Almacen" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FechaEntrega" Type="DateTime" />
-          <Property Name="CantidadItem" Type="Int32" />
-          <Property Name="TotalLinea" Type="Int32" />
-          <Property Name="ProveedoresId" Type="Int32" />
-          <Property Name="FacturasId" Type="Int32" />
-          <Property Name="CodigoProveedor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FechaSAP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="VisualizadoFecha" Type="DateTime" />
+          <Property Name="NumeroDocumento" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Sociedad" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TipoDocumento" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="ClaseDocumento" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="IndicadorControl" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IndicadorBorrado" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusDocumento" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FechaCreacionSap" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="IntervaloPosicion" Type="Int32" />
+          <Property Name="UltimoNumeroPos" Type="Int32" />
+          <Property Name="NumeroProveedor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ClavePago" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="OrganizacionCompra" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="GrupoCompra" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Moneda" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="TipoCambio" Type="Int32" />
+          <Property Name="IndTipoCambio" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FechaDocCompra" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="FechaCargaPortal" Type="DateTime" Nullable="false" />
+          <Property Name="ProveedorId" Type="Int32" />
+          <Property Name="FechaVisualizado" Type="DateTime" />
+          <NavigationProperty Name="proveedore" Relationship="Self.fk_ordencompra_proveedor" FromRole="ordencompra" ToRole="proveedores" />
+          <NavigationProperty Name="ordencompradetalles" Relationship="Self.fk_ordencompradetalle_parent" FromRole="ordencompra" ToRole="ordencompradetalle" />
+          <NavigationProperty Name="ordencompradetalles1" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="ordencompra" ToRole="ordencompradetalle" />
+        </EntityType>
+        <EntityType Name="ordencompradetalle">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NumeroDocumento" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Ebelp" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="DescripcionMaterial" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="NumeroMaterial" Type="String" MaxLength="18" FixedLength="false" Unicode="false" />
+          <Property Name="Centro" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="Almacen" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="GrupoArticulos" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
+          <Property Name="CantidadPedido" Type="String" MaxLength="13" FixedLength="false" Unicode="false" />
+          <Property Name="UnidadMedidaPedido" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="UnidadMedidaPrecio" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="ConversionUmpruMP" Type="Int32" />
+          <Property Name="ConversionUmUmBase" Type="Int32" />
+          <Property Name="DenominadorUmUmBase" Type="Int32" />
+          <Property Name="PrecioNeto" Type="Decimal" />
+          <Property Name="CantidadBase" Type="Int32" />
+          <Property Name="ValorNeto" Type="Decimal" />
+          <Property Name="ValorBruto" Type="Decimal" />
+          <Property Name="CantidadUnidadMedida" Type="Decimal" />
+          <Property Name="SapOrdenCompraId" Type="Int32" />
+          <Property Name="FechaCargaPortal" Type="DateTime" Nullable="false" />
+          <NavigationProperty Name="ordencompra" Relationship="Self.fk_ordencompradetalle_parent" FromRole="ordencompradetalle" ToRole="ordencompra" />
+          <NavigationProperty Name="ordencompra1" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="ordencompradetalle" ToRole="ordencompra" />
         </EntityType>
         <EntityType Name="perfile">
           <Key>
@@ -1355,6 +1353,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Poblacion" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
           <Property Name="Distrito" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
           <Property Name="Apartado" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoApartado" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="CodigoPostal" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Region" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="Calle" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
@@ -1373,37 +1372,14 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="TelefonoPrefijo" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="TelefonoExtension" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Correo" Type="String" MaxLength="241" FixedLength="false" Unicode="false" />
-          <Property Name="CuentaId" Type="Int32" />
+          <Property Name="CuentaId" Type="Int32" Nullable="false" />
           <Property Name="FechaCargaPortal" Type="DateTime" Nullable="false" />
           <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Rfc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Borrado" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="cuenta" Relationship="Self.fk_sapproveedores_cuenta" FromRole="proveedores" ToRole="cuentas" />
-        </EntityType>
-        <EntityType Name="proveedores_old">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CodigoProveedor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FechaRegistro" Type="DateTime" />
-          <Property Name="CuentaId" Type="Int32" />
-          <Property Name="Borrado" Type="Boolean" Nullable="false" />
-          <Property Name="FechaTx" Type="DateTime" />
-          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
-          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="NombreProveedor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Ciudad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CodigoPostal" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="direccion1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="direccion2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="direccion3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Rfc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="AspNetUser" Relationship="Self.fk_proveedor_usuario" FromRole="proveedores_old" ToRole="AspNetUsers" />
-          <NavigationProperty Name="cuenta" Relationship="Self.fk_proveedor_cuenta" FromRole="proveedores_old" ToRole="cuentas" />
+          <NavigationProperty Name="cuenta" Relationship="Self.fk_proveedores_cuenta" FromRole="proveedores" ToRole="cuentas" />
+          <NavigationProperty Name="ordencompras" Relationship="Self.fk_ordencompra_proveedor" FromRole="proveedores" ToRole="ordencompra" />
         </EntityType>
         <EntityType Name="riele">
           <Key>
@@ -1415,60 +1391,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="AndenId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="andene" Relationship="Self.fk_rieles_anden" FromRole="rieles" ToRole="andenes" />
           <NavigationProperty Name="horariorieles" Relationship="Self.fk_horariorieles_rieles" FromRole="rieles" ToRole="horariorieles" />
-        </EntityType>
-        <EntityType Name="sapordencompra">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NumeroDocumento" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Sociedad" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="TipoDocumento" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="ClaseDocumento" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="IndicadorControl" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="IndicadorBorrado" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="EstatusDocumento" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FechaCreacionSap" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="IntervaloPosicion" Type="Int32" />
-          <Property Name="UltimoNumeroPos" Type="Int32" />
-          <Property Name="NumeroProveedor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ClavePago" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="OrganizacionCompra" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="GrupoCompra" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Moneda" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="TipoCambio" Type="Int32" />
-          <Property Name="IndTipoCambio" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FechaDocCompra" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="FechaCargaPortal" Type="DateTime" Nullable="false" />
-          <Property Name="ProveedorId" Type="Int32" />
-          <NavigationProperty Name="sapordencompradetalles" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="sapordencompra" ToRole="sapordencompradetalle" />
-        </EntityType>
-        <EntityType Name="sapordencompradetalle">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NumeroDocumento" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Ebelp" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="DescripcionMaterial" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
-          <Property Name="NumeroMaterial" Type="String" MaxLength="18" FixedLength="false" Unicode="false" />
-          <Property Name="Centro" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
-          <Property Name="Almacen" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
-          <Property Name="GrupoArticulos" Type="String" MaxLength="9" FixedLength="false" Unicode="false" />
-          <Property Name="CantidadPedido" Type="String" MaxLength="13" FixedLength="false" Unicode="false" />
-          <Property Name="UnidadMedidaPedido" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
-          <Property Name="UnidadMedidaPrecio" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="ConversionUmpruMP" Type="Int32" />
-          <Property Name="ConversionUmUmBase" Type="Int32" />
-          <Property Name="DenominadorUmUmBase" Type="Int32" />
-          <Property Name="PrecioNeto" Type="Decimal" />
-          <Property Name="CantidadBase" Type="Int32" />
-          <Property Name="ValorNeto" Type="Decimal" />
-          <Property Name="ValorBruto" Type="Decimal" />
-          <Property Name="CantidadUnidadMedida" Type="Decimal" />
-          <Property Name="SapOrdenCompraId" Type="Int32" />
-          <Property Name="FechaCargaPortal" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="sapordencompra" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="sapordencompradetalle" ToRole="sapordencompra" />
         </EntityType>
         <EntityType Name="tipocuenta">
           <Key>
@@ -1657,18 +1579,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_proveedor_usuario">
-          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="0..1" />
-          <End Role="proveedores_old" Type="Self.proveedores_old" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="proveedores_old">
-              <PropertyRef Name="UsuarioIdTx" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_citas_estatus">
           <End Role="estatuscitas" Type="Self.estatuscita" Multiplicity="1" />
           <End Role="citas" Type="Self.cita" Multiplicity="*" />
@@ -1717,20 +1627,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_proveedor_cuenta">
-          <End Role="cuentas" Type="Self.cuenta" Multiplicity="0..1" />
-          <End Role="proveedores_old" Type="Self.proveedores_old" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="cuentas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="proveedores_old">
-              <PropertyRef Name="CuentaId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_sapproveedores_cuenta">
-          <End Role="cuentas" Type="Self.cuenta" Multiplicity="0..1" />
+        <Association Name="fk_proveedores_cuenta">
+          <End Role="cuentas" Type="Self.cuenta" Multiplicity="1" />
           <End Role="proveedores" Type="Self.proveedore" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="cuentas">
@@ -1777,14 +1675,38 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_sapordencompradetalle_parent">
-          <End Role="sapordencompra" Type="Self.sapordencompra" Multiplicity="0..1" />
-          <End Role="sapordencompradetalle" Type="Self.sapordencompradetalle" Multiplicity="*" />
+        <Association Name="fk_ordencompra_proveedor">
+          <End Role="proveedores" Type="Self.proveedore" Multiplicity="0..1" />
+          <End Role="ordencompra" Type="Self.ordencompra" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="sapordencompra">
+            <Principal Role="proveedores">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="sapordencompradetalle">
+            <Dependent Role="ordencompra">
+              <PropertyRef Name="ProveedorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ordencompradetalle_parent">
+          <End Role="ordencompra" Type="Self.ordencompra" Multiplicity="0..1" />
+          <End Role="ordencompradetalle" Type="Self.ordencompradetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ordencompra">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ordencompradetalle">
+              <PropertyRef Name="SapOrdenCompraId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_sapordencompradetalle_parent">
+          <End Role="ordencompra" Type="Self.ordencompra" Multiplicity="0..1" />
+          <End Role="ordencompradetalle" Type="Self.ordencompradetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ordencompra">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ordencompradetalle">
               <PropertyRef Name="SapOrdenCompraId" />
             </Dependent>
           </ReferentialConstraint>
@@ -1822,12 +1744,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="horarios" EntityType="Self.horario" />
           <EntitySet Name="mensajes" EntityType="Self.mensaje" />
           <EntitySet Name="ordencompras" EntityType="Self.ordencompra" />
+          <EntitySet Name="ordencompradetalles" EntityType="Self.ordencompradetalle" />
           <EntitySet Name="perfiles" EntityType="Self.perfile" />
           <EntitySet Name="proveedores" EntityType="Self.proveedore" />
-          <EntitySet Name="proveedores_old" EntityType="Self.proveedores_old" />
           <EntitySet Name="rieles" EntityType="Self.riele" />
-          <EntitySet Name="sapordencompras" EntityType="Self.sapordencompra" />
-          <EntitySet Name="sapordencompradetalles" EntityType="Self.sapordencompradetalle" />
           <EntitySet Name="tipocuentas" EntityType="Self.tipocuenta" />
           <EntitySet Name="tipousuarios" EntityType="Self.tipousuario" />
           <EntitySet Name="devoluciones" EntityType="Self.devolucione" />
@@ -1869,10 +1789,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="perfiles" EntitySet="perfiles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <AssociationSet Name="fk_proveedor_usuario" Association="Self.fk_proveedor_usuario">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="proveedores_old" EntitySet="proveedores_old" />
-          </AssociationSet>
           <AssociationSet Name="fk_citas_estatus" Association="Self.fk_citas_estatus">
             <End Role="estatuscitas" EntitySet="estatuscitas" />
             <End Role="citas" EntitySet="citas" />
@@ -1889,11 +1805,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
           </AssociationSet>
-          <AssociationSet Name="fk_proveedor_cuenta" Association="Self.fk_proveedor_cuenta">
-            <End Role="cuentas" EntitySet="cuentas" />
-            <End Role="proveedores_old" EntitySet="proveedores_old" />
-          </AssociationSet>
-          <AssociationSet Name="fk_sapproveedores_cuenta" Association="Self.fk_sapproveedores_cuenta">
+          <AssociationSet Name="fk_proveedores_cuenta" Association="Self.fk_proveedores_cuenta">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="proveedores" EntitySet="proveedores" />
           </AssociationSet>
@@ -1909,9 +1821,17 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="rieles" EntitySet="rieles" />
             <End Role="horariorieles" EntitySet="horariorieles" />
           </AssociationSet>
+          <AssociationSet Name="fk_ordencompra_proveedor" Association="Self.fk_ordencompra_proveedor">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="ordencompra" EntitySet="ordencompras" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ordencompradetalle_parent" Association="Self.fk_ordencompradetalle_parent">
+            <End Role="ordencompra" EntitySet="ordencompras" />
+            <End Role="ordencompradetalle" EntitySet="ordencompradetalles" />
+          </AssociationSet>
           <AssociationSet Name="fk_sapordencompradetalle_parent" Association="Self.fk_sapordencompradetalle_parent">
-            <End Role="sapordencompra" EntitySet="sapordencompras" />
-            <End Role="sapordencompradetalle" EntitySet="sapordencompradetalles" />
+            <End Role="ordencompra" EntitySet="ordencompras" />
+            <End Role="ordencompradetalle" EntitySet="ordencompradetalles" />
           </AssociationSet>
           <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
@@ -2211,20 +2131,56 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           </EntitySetMapping>
           <EntitySetMapping Name="ordencompras">
             <EntityTypeMapping TypeName="impuls_portal2Model.ordencompra">
-              <MappingFragment StoreEntitySet="ordencompras">
+              <MappingFragment StoreEntitySet="ordencompra">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-                <ScalarProperty Name="NumeroOrden" ColumnName="NumeroOrden" />
-                <ScalarProperty Name="PrecioOrden" ColumnName="PrecioOrden" />
+                <ScalarProperty Name="NumeroDocumento" ColumnName="NumeroDocumento" />
+                <ScalarProperty Name="Sociedad" ColumnName="Sociedad" />
+                <ScalarProperty Name="TipoDocumento" ColumnName="TipoDocumento" />
+                <ScalarProperty Name="ClaseDocumento" ColumnName="ClaseDocumento" />
+                <ScalarProperty Name="IndicadorControl" ColumnName="IndicadorControl" />
+                <ScalarProperty Name="IndicadorBorrado" ColumnName="IndicadorBorrado" />
+                <ScalarProperty Name="EstatusDocumento" ColumnName="EstatusDocumento" />
+                <ScalarProperty Name="FechaCreacionSap" ColumnName="FechaCreacionSap" />
+                <ScalarProperty Name="IntervaloPosicion" ColumnName="IntervaloPosicion" />
+                <ScalarProperty Name="UltimoNumeroPos" ColumnName="UltimoNumeroPos" />
+                <ScalarProperty Name="NumeroProveedor" ColumnName="NumeroProveedor" />
+                <ScalarProperty Name="ClavePago" ColumnName="ClavePago" />
+                <ScalarProperty Name="OrganizacionCompra" ColumnName="OrganizacionCompra" />
+                <ScalarProperty Name="GrupoCompra" ColumnName="GrupoCompra" />
+                <ScalarProperty Name="Moneda" ColumnName="Moneda" />
+                <ScalarProperty Name="TipoCambio" ColumnName="TipoCambio" />
+                <ScalarProperty Name="IndTipoCambio" ColumnName="IndTipoCambio" />
+                <ScalarProperty Name="FechaDocCompra" ColumnName="FechaDocCompra" />
+                <ScalarProperty Name="FechaCargaPortal" ColumnName="FechaCargaPortal" />
+                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
+                <ScalarProperty Name="FechaVisualizado" ColumnName="FechaVisualizado" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ordencompradetalles">
+            <EntityTypeMapping TypeName="impuls_portal2Model.ordencompradetalle">
+              <MappingFragment StoreEntitySet="ordencompradetalle">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NumeroDocumento" ColumnName="NumeroDocumento" />
+                <ScalarProperty Name="Ebelp" ColumnName="Ebelp" />
+                <ScalarProperty Name="DescripcionMaterial" ColumnName="DescripcionMaterial" />
+                <ScalarProperty Name="NumeroMaterial" ColumnName="NumeroMaterial" />
+                <ScalarProperty Name="Centro" ColumnName="Centro" />
                 <ScalarProperty Name="Almacen" ColumnName="Almacen" />
-                <ScalarProperty Name="FechaEntrega" ColumnName="FechaEntrega" />
-                <ScalarProperty Name="CantidadItem" ColumnName="CantidadItem" />
-                <ScalarProperty Name="TotalLinea" ColumnName="TotalLinea" />
-                <ScalarProperty Name="ProveedoresId" ColumnName="ProveedoresId" />
-                <ScalarProperty Name="FacturasId" ColumnName="FacturasId" />
-                <ScalarProperty Name="CodigoProveedor" ColumnName="CodigoProveedor" />
-                <ScalarProperty Name="FechaSAP" ColumnName="FechaSAP" />
-                <ScalarProperty Name="VisualizadoFecha" ColumnName="VisualizadoFecha" />
+                <ScalarProperty Name="GrupoArticulos" ColumnName="GrupoArticulos" />
+                <ScalarProperty Name="CantidadPedido" ColumnName="CantidadPedido" />
+                <ScalarProperty Name="UnidadMedidaPedido" ColumnName="UnidadMedidaPedido" />
+                <ScalarProperty Name="UnidadMedidaPrecio" ColumnName="UnidadMedidaPrecio" />
+                <ScalarProperty Name="ConversionUmpruMP" ColumnName="ConversionUmpruMP" />
+                <ScalarProperty Name="ConversionUmUmBase" ColumnName="ConversionUmUmBase" />
+                <ScalarProperty Name="DenominadorUmUmBase" ColumnName="DenominadorUmUmBase" />
+                <ScalarProperty Name="PrecioNeto" ColumnName="PrecioNeto" />
+                <ScalarProperty Name="CantidadBase" ColumnName="CantidadBase" />
+                <ScalarProperty Name="ValorNeto" ColumnName="ValorNeto" />
+                <ScalarProperty Name="ValorBruto" ColumnName="ValorBruto" />
+                <ScalarProperty Name="CantidadUnidadMedida" ColumnName="CantidadUnidadMedida" />
+                <ScalarProperty Name="SapOrdenCompraId" ColumnName="SapOrdenCompraId" />
+                <ScalarProperty Name="FechaCargaPortal" ColumnName="FechaCargaPortal" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2251,6 +2207,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Poblacion" ColumnName="Poblacion" />
                 <ScalarProperty Name="Distrito" ColumnName="Distrito" />
                 <ScalarProperty Name="Apartado" ColumnName="Apartado" />
+                <ScalarProperty Name="CodigoApartado" ColumnName="CodigoApartado" />
                 <ScalarProperty Name="CodigoPostal" ColumnName="CodigoPostal" />
                 <ScalarProperty Name="Region" ColumnName="Region" />
                 <ScalarProperty Name="Calle" ColumnName="Calle" />
@@ -2278,29 +2235,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="proveedores_old">
-            <EntityTypeMapping TypeName="impuls_portal2Model.proveedores_old">
-              <MappingFragment StoreEntitySet="proveedores_old">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="CodigoProveedor" ColumnName="CodigoProveedor" />
-                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
-                <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
-                <ScalarProperty Name="Borrado" ColumnName="Borrado" />
-                <ScalarProperty Name="FechaTx" ColumnName="FechaTx" />
-                <ScalarProperty Name="UsuarioIdTx" ColumnName="UsuarioIdTx" />
-                <ScalarProperty Name="OperacionTx" ColumnName="OperacionTx" />
-                <ScalarProperty Name="NombreProveedor" ColumnName="NombreProveedor" />
-                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
-                <ScalarProperty Name="Estado" ColumnName="Estado" />
-                <ScalarProperty Name="CodigoPostal" ColumnName="CodigoPostal" />
-                <ScalarProperty Name="direccion1" ColumnName="direccion1" />
-                <ScalarProperty Name="direccion2" ColumnName="direccion2" />
-                <ScalarProperty Name="direccion3" ColumnName="direccion3" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="Rfc" ColumnName="Rfc" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="rieles">
             <EntityTypeMapping TypeName="impuls_portal2Model.riele">
               <MappingFragment StoreEntitySet="rieles">
@@ -2308,60 +2242,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
                 <ScalarProperty Name="Riel" ColumnName="Riel" />
                 <ScalarProperty Name="AndenId" ColumnName="AndenId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sapordencompras">
-            <EntityTypeMapping TypeName="impuls_portal2Model.sapordencompra">
-              <MappingFragment StoreEntitySet="sapordencompra">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="NumeroDocumento" ColumnName="NumeroDocumento" />
-                <ScalarProperty Name="Sociedad" ColumnName="Sociedad" />
-                <ScalarProperty Name="TipoDocumento" ColumnName="TipoDocumento" />
-                <ScalarProperty Name="ClaseDocumento" ColumnName="ClaseDocumento" />
-                <ScalarProperty Name="IndicadorControl" ColumnName="IndicadorControl" />
-                <ScalarProperty Name="IndicadorBorrado" ColumnName="IndicadorBorrado" />
-                <ScalarProperty Name="EstatusDocumento" ColumnName="EstatusDocumento" />
-                <ScalarProperty Name="FechaCreacionSap" ColumnName="FechaCreacionSap" />
-                <ScalarProperty Name="IntervaloPosicion" ColumnName="IntervaloPosicion" />
-                <ScalarProperty Name="UltimoNumeroPos" ColumnName="UltimoNumeroPos" />
-                <ScalarProperty Name="NumeroProveedor" ColumnName="NumeroProveedor" />
-                <ScalarProperty Name="ClavePago" ColumnName="ClavePago" />
-                <ScalarProperty Name="OrganizacionCompra" ColumnName="OrganizacionCompra" />
-                <ScalarProperty Name="GrupoCompra" ColumnName="GrupoCompra" />
-                <ScalarProperty Name="Moneda" ColumnName="Moneda" />
-                <ScalarProperty Name="TipoCambio" ColumnName="TipoCambio" />
-                <ScalarProperty Name="IndTipoCambio" ColumnName="IndTipoCambio" />
-                <ScalarProperty Name="FechaDocCompra" ColumnName="FechaDocCompra" />
-                <ScalarProperty Name="FechaCargaPortal" ColumnName="FechaCargaPortal" />
-                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="sapordencompradetalles">
-            <EntityTypeMapping TypeName="impuls_portal2Model.sapordencompradetalle">
-              <MappingFragment StoreEntitySet="sapordencompradetalle">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="NumeroDocumento" ColumnName="NumeroDocumento" />
-                <ScalarProperty Name="Ebelp" ColumnName="Ebelp" />
-                <ScalarProperty Name="DescripcionMaterial" ColumnName="DescripcionMaterial" />
-                <ScalarProperty Name="NumeroMaterial" ColumnName="NumeroMaterial" />
-                <ScalarProperty Name="Centro" ColumnName="Centro" />
-                <ScalarProperty Name="Almacen" ColumnName="Almacen" />
-                <ScalarProperty Name="GrupoArticulos" ColumnName="GrupoArticulos" />
-                <ScalarProperty Name="CantidadPedido" ColumnName="CantidadPedido" />
-                <ScalarProperty Name="UnidadMedidaPedido" ColumnName="UnidadMedidaPedido" />
-                <ScalarProperty Name="UnidadMedidaPrecio" ColumnName="UnidadMedidaPrecio" />
-                <ScalarProperty Name="ConversionUmpruMP" ColumnName="ConversionUmpruMP" />
-                <ScalarProperty Name="ConversionUmUmBase" ColumnName="ConversionUmUmBase" />
-                <ScalarProperty Name="DenominadorUmUmBase" ColumnName="DenominadorUmUmBase" />
-                <ScalarProperty Name="PrecioNeto" ColumnName="PrecioNeto" />
-                <ScalarProperty Name="CantidadBase" ColumnName="CantidadBase" />
-                <ScalarProperty Name="ValorNeto" ColumnName="ValorNeto" />
-                <ScalarProperty Name="ValorBruto" ColumnName="ValorBruto" />
-                <ScalarProperty Name="CantidadUnidadMedida" ColumnName="CantidadUnidadMedida" />
-                <ScalarProperty Name="SapOrdenCompraId" ColumnName="SapOrdenCompraId" />
-                <ScalarProperty Name="FechaCargaPortal" ColumnName="FechaCargaPortal" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

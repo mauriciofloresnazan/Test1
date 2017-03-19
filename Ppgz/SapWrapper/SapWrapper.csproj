@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="CommonRfcConfigParam.cs" />
     <Compile Include="SapOrdenCompraManager.cs" />
+    <Compile Include="SapPartidaManager.cs" />
     <Compile Include="SapProveedorManager.cs" />
     <Compile Include="IRfcTableExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

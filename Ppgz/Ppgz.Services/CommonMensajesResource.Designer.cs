@@ -61,6 +61,15 @@ namespace Ppgz.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Codigo de proveedor incorrecto.
+        /// </summary>
+        internal static string ERRO_Sap_ProveedorCodigo {
+            get {
+                return ResourceManager.GetString("ERRO_Sap_ProveedorCodigo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cuenta incorrecta.
         /// </summary>
         internal static string ERROR_Cuenta_Id {
@@ -277,6 +286,24 @@ namespace Ppgz.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Proveedor Incorrecto.
+        /// </summary>
+        internal static string ERROR_Proveedor_Id {
+            get {
+                return ResourceManager.GetString("ERROR_Proveedor_Id", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to El provedor ya esta asociado a una cuenta.
+        /// </summary>
+        internal static string ERROR_ProveedorSapYaAsociado {
+            get {
+                return ResourceManager.GetString("ERROR_ProveedorSapYaAsociado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Permiso incorrecto.
         /// </summary>
         internal static string ERROR_Role_Id {
@@ -390,6 +417,33 @@ namespace Ppgz.Services {
         internal static string INFO_PerfilProveedor_EliminadoCorrectamente {
             get {
                 return ResourceManager.GetString("INFO_PerfilProveedor_EliminadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proveedor actualizado correctamente.
+        /// </summary>
+        internal static string INFO_Proveedor_ActualizadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_Proveedor_ActualizadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proveedor creado correctamente.
+        /// </summary>
+        internal static string INFO_Proveedor_CreadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_Proveedor_CreadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proveedor eliminado correctamente.
+        /// </summary>
+        internal static string INFO_Proveedor_EliminadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_Proveedor_EliminadoCorrectamente", resourceCulture);
             }
         }
         

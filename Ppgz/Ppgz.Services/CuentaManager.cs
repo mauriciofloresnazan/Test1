@@ -186,20 +186,38 @@ namespace Ppgz.Services
         }
 
 
-        public void AsociarProveedorSapEnCuenta(string codigoProveedor)
+        public void AsociarProveedorSapEnCuenta(int cuentaId, string numeroProveedor)
         {
-
-            // TODO BUSCAR EN MI BASE DE DATOS PRIMERO
-
-            var sapProveedorManager = new SapProveedorManager();
-            var result = sapProveedorManager.GetProveedor(codigoProveedor);
-            if (result != null)
+            var proveedorManager = new ProveedorManager();
+            if (proveedorManager.FindByNumeroProveedor(numeroProveedor) != null) 
             {
-                
+                throw new BusinessException(CommonMensajesResource.ERROR_ProveedorSapYaAsociado);
             }
-           
+            if (_db.cuentas.Find(cuentaId) == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+            }
+            
+            var proveedor =  proveedorManager.FindProveedorEnSap(numeroProveedor);
+            proveedor.CuentaId = cuentaId;
+            
+            _db.proveedores.Add(proveedor);
+            _db.SaveChanges();
 
+        }
 
+        public void EliminarProveedorEnCuenta(int cuentaId, int proveedorId)
+        {
+            var proveedorManager = new ProveedorManager();
+            if (_db.proveedores.Find(proveedorId) == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
+            if (_db.cuentas.Find(cuentaId) == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+            }
+            proveedorManager.Eliminar(proveedorId);
         }
     }
 }
