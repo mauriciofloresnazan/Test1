@@ -45,11 +45,10 @@ namespace Ppgz.Repository
         public virtual DbSet<horario> horarios { get; set; }
         public virtual DbSet<mensaje> mensajes { get; set; }
         public virtual DbSet<ordencompra> ordencompras { get; set; }
+        public virtual DbSet<ordencompradetalle> ordencompradetalles { get; set; }
         public virtual DbSet<perfile> perfiles { get; set; }
         public virtual DbSet<proveedore> proveedores { get; set; }
         public virtual DbSet<riele> rieles { get; set; }
-        public virtual DbSet<sapordencompra> sapordencompras { get; set; }
-        public virtual DbSet<sapordencompradetalle> sapordencompradetalles { get; set; }
         public virtual DbSet<tipocuenta> tipocuentas { get; set; }
         public virtual DbSet<tipousuario> tipousuarios { get; set; }
         public virtual DbSet<devolucione> devoluciones { get; set; }

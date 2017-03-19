@@ -12,6 +12,59 @@ namespace Ppgz.Services
     {
         private readonly Entities _db = new Entities();
 
+        public List<ordencompra> FindOrdenesDecompraActivas(int proveedorId)
+        {
+            var proveedor = _db.proveedores.FirstOrDefault(p => p.Id == proveedorId);
+            if (proveedor == null)
+            {
+                throw new Exception(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
+
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(proveedor.NumeroProveedor);
+            var detalle = new List<ordencompra>();
+
+            if (result.Rows.Count <= 0) return detalle;
+
+            foreach (DataRow dr in result.Rows)
+            {
+                var numeroDocumento = dr["EBELN"].ToString();
+                var ordenCompra = _db.ordencompras.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+
+                DateTime? fechaVisualizado = null;
+                if (ordenCompra != null)
+                {
+                    fechaVisualizado = ordenCompra.FechaVisualizado;
+                }
+                 
+                detalle.Add(new ordencompra
+                {
+                    NumeroDocumento = dr["EBELN"].ToString(),
+                    Sociedad = dr["BUKRS"].ToString(),
+                    TipoDocumento = dr["BSTYP"].ToString(),
+                    ClaseDocumento = dr["BSART"].ToString(),
+                    IndicadorControl = dr["BSAKZ"].ToString(),
+                    IndicadorBorrado = dr["LOEKZ"].ToString(),
+                    EstatusDocumento = dr["STATU"].ToString(),
+                    FechaCreacionSap = dr["AEDAT"].ToString(),
+                    IntervaloPosicion = dr["PINCR"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["PINCR"]),
+                    UltimoNumeroPos = dr["LPONR"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["LPONR"]),
+                    NumeroProveedor = dr["LIFNR"].ToString(),
+                    ClavePago = dr["ZTERM"].ToString(),
+                    OrganizacionCompra = dr["EKORG"].ToString(),
+                    GrupoCompra = dr["EKGRP"].ToString(),
+                    Moneda = dr["WAERS"].ToString(),
+                    TipoCambio = dr["WKURS"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["ERFMG"]),
+                    IndTipoCambio = dr["KUFIX"].ToString(),
+                    FechaDocCompra = dr["BEDAT"].ToString(),
+                    ProveedorId = proveedor.Id,
+                    FechaVisualizado = fechaVisualizado,
+                  
+                });
+            }
+            return detalle;
+        } 
+
         public Hashtable FindActivaByIdAndUsuarioId(int id, string usuarioId)
         {
 
@@ -31,17 +84,17 @@ namespace Ppgz.Services
 
         }
 
-        public List<sapordencompradetalle> FindDetalleByDocumento(string documento)
+        public List<ordencompradetalle> FindDetalleByDocumento(string documento)
         {
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
             var result = sapOrdenCompraManager.GetOrdenDeCompraDetalle(documento);
-            var detalle = new List<sapordencompradetalle>();
+            var detalle = new List<ordencompradetalle>();
 
             if (result.Rows.Count > 0)
             {
                 detalle.AddRange(from DataRow dr in result.Rows
-                    select new sapordencompradetalle
+                                 select new ordencompradetalle
                     {
                         NumeroDocumento = dr["EBELN"].ToString(),
                         Ebelp = dr["Ebelp"].ToString(),

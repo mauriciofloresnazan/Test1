@@ -16,7 +16,7 @@ namespace Ppgz.Repository
     {
         public proveedore()
         {
-            this.sapordencompras = new HashSet<sapordencompra>();
+            this.ordencompras = new HashSet<ordencompra>();
         }
     
         public int Id { get; set; }
@@ -48,10 +48,14 @@ namespace Ppgz.Repository
         public string TelefonoPrefijo { get; set; }
         public string TelefonoExtension { get; set; }
         public string Correo { get; set; }
-        public Nullable<int> CuentaId { get; set; }
+        public int CuentaId { get; set; }
         public System.DateTime FechaCargaPortal { get; set; }
+        public string UsuarioIdTx { get; set; }
+        public string OperacionTx { get; set; }
+        public string Rfc { get; set; }
+        public bool Borrado { get; set; }
     
         public virtual cuenta cuenta { get; set; }
-        public virtual ICollection<sapordencompra> sapordencompras { get; set; }
+        public virtual ICollection<ordencompra> ordencompras { get; set; }
     }
 }

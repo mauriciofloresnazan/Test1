@@ -101,7 +101,7 @@ namespace Test
             var entities  = new Entities();
 
             var query = (from g in entities.ordencompras
-            join u in entities.proveedores on g.ProveedoresId equals u.Id
+            join u in entities.proveedores on g.ProveedorId equals u.Id
             select new { g, u, }).Take(2);
 
 

@@ -121,6 +121,9 @@
     <Compile Include="ordencompra.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="ordencompradetalle.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="pago.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -147,12 +150,6 @@
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="riele.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sapordencompra.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="sapordencompradetalle.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="tipocuenta.cs">

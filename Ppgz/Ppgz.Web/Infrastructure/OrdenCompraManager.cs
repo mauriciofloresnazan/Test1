@@ -11,7 +11,7 @@ namespace Ppgz.Web.Infrastructure
         private readonly Entities _db = new Entities();
         public List<ordencompra> FindByProveedorId(int id )
         {
-            return _db.ordencompras.Where(o => o.ProveedoresId == id).ToList();
+            return _db.ordencompras.Where(o => o.ProveedorId == id).ToList();
 
         }
         public DataTable FindByCuentaId(int id)
