@@ -241,4 +241,22 @@
   <data name="ERROR_EliminarSuperAdmin" xml:space="preserve">
     <value>No puede elminar el superadmin del sistema</value>
   </data>
+  <data name="ERRO_Sap_ProveedorCodigo" xml:space="preserve">
+    <value>Codigo de proveedor incorrecto</value>
+  </data>
+  <data name="ERROR_ProveedorSapYaAsociado" xml:space="preserve">
+    <value>El provedor ya esta asociado a una cuenta</value>
+  </data>
+  <data name="ERROR_Proveedor_Id" xml:space="preserve">
+    <value>Proveedor Incorrecto</value>
+  </data>
+  <data name="INFO_Proveedor_ActualizadoCorrectamente" xml:space="preserve">
+    <value>Proveedor actualizado correctamente</value>
+  </data>
+  <data name="INFO_Proveedor_CreadoCorrectamente" xml:space="preserve">
+    <value>Proveedor creado correctamente</value>
+  </data>
+  <data name="INFO_Proveedor_EliminadoCorrectamente" xml:space="preserve">
+    <value>Proveedor eliminado correctamente</value>
+  </data>
 </root>

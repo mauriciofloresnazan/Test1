@@ -146,9 +146,6 @@
     <Compile Include="proveedore.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
-    <Compile Include="proveedores_old.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
     <Compile Include="riele.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>

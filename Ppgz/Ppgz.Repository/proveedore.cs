@@ -14,6 +14,11 @@ namespace Ppgz.Repository
     
     public partial class proveedore
     {
+        public proveedore()
+        {
+            this.sapordencompras = new HashSet<sapordencompra>();
+        }
+    
         public int Id { get; set; }
         public string NumeroProveedor { get; set; }
         public string ClavePais { get; set; }
@@ -24,6 +29,7 @@ namespace Ppgz.Repository
         public string Poblacion { get; set; }
         public string Distrito { get; set; }
         public string Apartado { get; set; }
+        public string CodigoApartado { get; set; }
         public string CodigoPostal { get; set; }
         public string Region { get; set; }
         public string Calle { get; set; }
@@ -44,11 +50,8 @@ namespace Ppgz.Repository
         public string Correo { get; set; }
         public Nullable<int> CuentaId { get; set; }
         public System.DateTime FechaCargaPortal { get; set; }
-        public string UsuarioIdTx { get; set; }
-        public string OperacionTx { get; set; }
-        public string Rfc { get; set; }
-        public bool Borrado { get; set; }
     
         public virtual cuenta cuenta { get; set; }
+        public virtual ICollection<sapordencompra> sapordencompras { get; set; }
     }
 }

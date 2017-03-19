@@ -47,7 +47,6 @@ namespace Ppgz.Repository
         public virtual DbSet<ordencompra> ordencompras { get; set; }
         public virtual DbSet<perfile> perfiles { get; set; }
         public virtual DbSet<proveedore> proveedores { get; set; }
-        public virtual DbSet<proveedores_old> proveedores_old { get; set; }
         public virtual DbSet<riele> rieles { get; set; }
         public virtual DbSet<sapordencompra> sapordencompras { get; set; }
         public virtual DbSet<sapordencompradetalle> sapordencompradetalles { get; set; }

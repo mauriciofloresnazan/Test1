@@ -37,5 +37,6 @@ namespace Ppgz.Repository
         public System.DateTime FechaCargaPortal { get; set; }
     
         public virtual sapordencompra sapordencompra { get; set; }
+        public virtual sapordencompra sapordencompra1 { get; set; }
     }
 }

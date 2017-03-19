@@ -17,6 +17,7 @@ namespace Ppgz.Repository
         public sapordencompra()
         {
             this.sapordencompradetalles = new HashSet<sapordencompradetalle>();
+            this.sapordencompradetalles1 = new HashSet<sapordencompradetalle>();
         }
     
         public int Id { get; set; }
@@ -41,6 +42,8 @@ namespace Ppgz.Repository
         public System.DateTime FechaCargaPortal { get; set; }
         public Nullable<int> ProveedorId { get; set; }
     
+        public virtual proveedore proveedore { get; set; }
         public virtual ICollection<sapordencompradetalle> sapordencompradetalles { get; set; }
+        public virtual ICollection<sapordencompradetalle> sapordencompradetalles1 { get; set; }
     }
 }

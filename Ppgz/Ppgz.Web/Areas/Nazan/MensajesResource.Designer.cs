@@ -61,6 +61,15 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cuenta incorrecta.
+        /// </summary>
+        internal static string ERROR_Cuenta_IdIncorrecto {
+            get {
+                return ResourceManager.GetString("ERROR_Cuenta_IdIncorrecto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ya exíste un usuario con ese login.
         /// </summary>
         internal static string ERROR_CuentaManager_Crear_LoginExistente {
@@ -250,6 +259,15 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Proveedor incorrecto.
+        /// </summary>
+        internal static string ERROR_Proveedor_IdIncorrecto {
+            get {
+                return ResourceManager.GetString("ERROR_Proveedor_IdIncorrecto", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Usuario Incorrecto.
         /// </summary>
         internal static string ERROR_UsuarioNazan_IdIncorrecto {
@@ -264,6 +282,15 @@ namespace Ppgz.Web.Areas.Nazan {
         internal static string ERROR_UsuarioNazan_LoginExistente {
             get {
                 return ResourceManager.GetString("ERROR_UsuarioNazan_LoginExistente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cuenta creada correctamente.
+        /// </summary>
+        internal static string INFO_Cuenta_CreadaCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_Cuenta_CreadaCorrectamente", resourceCulture);
             }
         }
         
@@ -318,6 +345,33 @@ namespace Ppgz.Web.Areas.Nazan {
         internal static string INFO_PerfilNazan_EliminadoCorrectamente {
             get {
                 return ResourceManager.GetString("INFO_PerfilNazan_EliminadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proveedor asociado correctamente.
+        /// </summary>
+        internal static string INFO_Proveedor_AsociadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_Proveedor_AsociadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proveedor desasociado correctamente.
+        /// </summary>
+        internal static string INFO_Proveedor_DesAsocaidoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_Proveedor_DesAsocaidoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proveedor eliminado correctamente.
+        /// </summary>
+        internal static string INFO_Proveedor_EliminadoCorrectamente {
+            get {
+                return ResourceManager.GetString("INFO_Proveedor_EliminadoCorrectamente", resourceCulture);
             }
         }
         

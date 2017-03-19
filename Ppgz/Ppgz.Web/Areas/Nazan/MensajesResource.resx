@@ -126,6 +126,9 @@
   <data name="ERROR_CuentaManager_GetTipoByString" xml:space="preserve">
     <value>Tipo de proveedor Incorrecto</value>
   </data>
+  <data name="ERROR_Cuenta_IdIncorrecto" xml:space="preserve">
+    <value>Cuenta incorrecta</value>
+  </data>
   <data name="ERROR_EliminarSuperAdmin" xml:space="preserve">
     <value>No puede eliminar el SuperAdmin del sistema</value>
   </data>
@@ -180,11 +183,17 @@
   <data name="ERROR_PerfilNazan_PefilIdIncorrecto" xml:space="preserve">
     <value>Pefil incorrecto</value>
   </data>
+  <data name="ERROR_Proveedor_IdIncorrecto" xml:space="preserve">
+    <value>Proveedor incorrecto</value>
+  </data>
   <data name="ERROR_UsuarioNazan_IdIncorrecto" xml:space="preserve">
     <value>Usuario Incorrecto</value>
   </data>
   <data name="ERROR_UsuarioNazan_LoginExistente" xml:space="preserve">
     <value>Ya existe un usuario registrado con este login</value>
+  </data>
+  <data name="INFO_Cuenta_CreadaCorrectamente" xml:space="preserve">
+    <value>Cuenta creada correctamente</value>
   </data>
   <data name="INFO_MensajesInstitucionales_ActualizadoCorrectamente" xml:space="preserve">
     <value>Mensaje actualizado correctamente</value>
@@ -203,6 +212,15 @@
   </data>
   <data name="INFO_PerfilNazan_EliminadoCorrectamente" xml:space="preserve">
     <value>Perfil eliminado correctamente</value>
+  </data>
+  <data name="INFO_Proveedor_AsociadoCorrectamente" xml:space="preserve">
+    <value>Proveedor asociado correctamente</value>
+  </data>
+  <data name="INFO_Proveedor_DesAsocaidoCorrectamente" xml:space="preserve">
+    <value>Proveedor desasociado correctamente</value>
+  </data>
+  <data name="INFO_Proveedor_EliminadoCorrectamente" xml:space="preserve">
+    <value>Proveedor eliminado correctamente</value>
   </data>
   <data name="INFO_UsuarioNazan_ActualizadoCorrectamente" xml:space="preserve">
     <value>Usuario actualizad correctamente, el usuarios deben reiniciar la sesión</value>

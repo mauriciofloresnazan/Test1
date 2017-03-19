@@ -16,22 +16,19 @@ namespace Test
         
         static void Main(string[] args)
         {
+            var testRfc = new TestRfc();
+            testRfc.TestPartidas("0000001727");
+            //testRfc.TestOrdenesDeCompraHeader("0000001727");
 
-            Entities db = new Entities();
+          /*  Entities db = new Entities();
             var usuario = db.AspNetUsers.FirstOrDefault(u => u.UserName == "superusuario");
             Console.WriteLine(usuario.Id);
             Console.ReadLine();
 
             return;
-
-            var ordenCompraManager = new OrdenCompraManager();
-            var detalle = ordenCompraManager.FindDetalleByDocumento("4500916565");
-
-
-            Console.WriteLine(JsonConvert.SerializeObject(detalle));
-            Console.ReadLine();
-
-            var testRfc = new TestRfc();
+            */
+            //var ordenCompraManager = new OrdenCompraManager();
+            
             //testRfc.TestProveedores();
             //testRfc.TestConsultarDetalleDeOrdenCompra("4500916565");
             //testRfc.BuscarCodigosProveedores();

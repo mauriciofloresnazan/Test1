@@ -375,6 +375,7 @@ warning 6002: The table/view 'def.impuls_portal2.pagos' does not have a primary 
           <Property Name="Poblacion" Type="varchar" MaxLength="35" />
           <Property Name="Distrito" Type="varchar" MaxLength="35" />
           <Property Name="Apartado" Type="varchar" MaxLength="10" />
+          <Property Name="CodigoApartado" Type="varchar" MaxLength="10" />
           <Property Name="CodigoPostal" Type="varchar" MaxLength="10" />
           <Property Name="Region" Type="varchar" MaxLength="3" />
           <Property Name="Calle" Type="varchar" MaxLength="35" />
@@ -395,32 +396,6 @@ warning 6002: The table/view 'def.impuls_portal2.pagos' does not have a primary 
           <Property Name="Correo" Type="varchar" MaxLength="241" />
           <Property Name="CuentaId" Type="int" />
           <Property Name="FechaCargaPortal" Type="timestamp" Precision="0" Nullable="false" />
-          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
-          <Property Name="OperacionTx" Type="enum" Nullable="false" />
-          <Property Name="Rfc" Type="varchar" MaxLength="100" />
-          <Property Name="Borrado" Type="bool" Nullable="false" />
-        </EntityType>
-        <EntityType Name="proveedores_old">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CodigoProveedor" Type="varchar" MaxLength="20" />
-          <Property Name="FechaRegistro" Type="date" />
-          <Property Name="CuentaId" Type="int" />
-          <Property Name="Borrado" Type="bool" Nullable="false" />
-          <Property Name="FechaTx" Type="datetime" Precision="0" />
-          <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
-          <Property Name="OperacionTx" Type="enum" Nullable="false" />
-          <Property Name="NombreProveedor" Type="varchar" MaxLength="100" />
-          <Property Name="Ciudad" Type="varchar" MaxLength="50" />
-          <Property Name="Estado" Type="varchar" MaxLength="50" />
-          <Property Name="CodigoPostal" Type="varchar" MaxLength="10" />
-          <Property Name="direccion1" Type="varchar" MaxLength="300" />
-          <Property Name="direccion2" Type="varchar" MaxLength="300" />
-          <Property Name="direccion3" Type="varchar" MaxLength="300" />
-          <Property Name="email" Type="varchar" MaxLength="100" />
-          <Property Name="Rfc" Type="varchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="rieles">
           <Key>
@@ -728,6 +703,30 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_ordencompra_proveedor">
+          <End Role="proveedores" Type="Self.proveedores" Multiplicity="0..1" />
+          <End Role="sapordencompra" Type="Self.sapordencompra" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proveedores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="sapordencompra">
+              <PropertyRef Name="ProveedorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ordencompradetalle_parent">
+          <End Role="sapordencompra" Type="Self.sapordencompra" Multiplicity="0..1" />
+          <End Role="sapordencompradetalle" Type="Self.sapordencompradetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sapordencompra">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="sapordencompradetalle">
+              <PropertyRef Name="SapOrdenCompraId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_perfil2">
           <End Role="perfiles" Type="Self.perfiles" Multiplicity="1" />
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
@@ -752,27 +751,15 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_proveedor_cuenta">
+        <Association Name="fk_proveedores_cuenta">
           <End Role="cuentas" Type="Self.cuentas" Multiplicity="0..1" />
-          <End Role="proveedores_old" Type="Self.proveedores_old" Multiplicity="*" />
+          <End Role="proveedores" Type="Self.proveedores" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="cuentas">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="proveedores_old">
+            <Dependent Role="proveedores">
               <PropertyRef Name="CuentaId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_proveedor_usuario">
-          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="0..1" />
-          <End Role="proveedores_old" Type="Self.proveedores_old" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="proveedores_old">
-              <PropertyRef Name="UsuarioIdTx" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -809,18 +796,6 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
             </Principal>
             <Dependent Role="sapordencompradetalle">
               <PropertyRef Name="SapOrdenCompraId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_sapproveedores_cuenta">
-          <End Role="cuentas" Type="Self.cuentas" Multiplicity="0..1" />
-          <End Role="proveedores" Type="Self.proveedores" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="cuentas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="proveedores">
-              <PropertyRef Name="CuentaId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -862,7 +837,6 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
           <EntitySet Name="perfiles" EntityType="Self.perfiles" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="perfilesroles" EntityType="Self.perfilesroles" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="proveedores_old" EntityType="Self.proveedores_old" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="rieles" EntityType="Self.rieles" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="sapordencompra" EntityType="Self.sapordencompra" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="sapordencompradetalle" EntityType="Self.sapordencompradetalle" Schema="impuls_portal2" store:Type="Tables" />
@@ -972,6 +946,14 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="mensajes" EntitySet="mensajes" />
           </AssociationSet>
+          <AssociationSet Name="fk_ordencompra_proveedor" Association="Self.fk_ordencompra_proveedor">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="sapordencompra" EntitySet="sapordencompra" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ordencompradetalle_parent" Association="Self.fk_ordencompradetalle_parent">
+            <End Role="sapordencompra" EntitySet="sapordencompra" />
+            <End Role="sapordencompradetalle" EntitySet="sapordencompradetalle" />
+          </AssociationSet>
           <AssociationSet Name="fk_perfil2" Association="Self.fk_perfil2">
             <End Role="perfiles" EntitySet="perfiles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -980,13 +962,9 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="perfiles" EntitySet="perfiles" />
             <End Role="perfilesroles" EntitySet="perfilesroles" />
           </AssociationSet>
-          <AssociationSet Name="fk_proveedor_cuenta" Association="Self.fk_proveedor_cuenta">
+          <AssociationSet Name="fk_proveedores_cuenta" Association="Self.fk_proveedores_cuenta">
             <End Role="cuentas" EntitySet="cuentas" />
-            <End Role="proveedores_old" EntitySet="proveedores_old" />
-          </AssociationSet>
-          <AssociationSet Name="fk_proveedor_usuario" Association="Self.fk_proveedor_usuario">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="proveedores_old" EntitySet="proveedores_old" />
+            <End Role="proveedores" EntitySet="proveedores" />
           </AssociationSet>
           <AssociationSet Name="fk_rieles_anden" Association="Self.fk_rieles_anden">
             <End Role="andenes" EntitySet="andenes" />
@@ -999,10 +977,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="fk_sapordencompradetalle_parent" Association="Self.fk_sapordencompradetalle_parent">
             <End Role="sapordencompra" EntitySet="sapordencompra" />
             <End Role="sapordencompradetalle" EntitySet="sapordencompradetalle" />
-          </AssociationSet>
-          <AssociationSet Name="fk_sapproveedores_cuenta" Association="Self.fk_sapproveedores_cuenta">
-            <End Role="cuentas" EntitySet="cuentas" />
-            <End Role="proveedores" EntitySet="proveedores" />
           </AssociationSet>
           <AssociationSet Name="fk_usuarios" Association="Self.fk_usuarios">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -1110,7 +1084,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_usuario" FromRole="AspNetUsers" ToRole="cuentasmensajes" />
           <NavigationProperty Name="mensajes" Relationship="Self.fk_mensajes_usuario" FromRole="AspNetUsers" ToRole="mensajes" />
           <NavigationProperty Name="perfile" Relationship="Self.fk_perfil2" FromRole="AspNetUsers" ToRole="perfiles" />
-          <NavigationProperty Name="proveedores_old" Relationship="Self.fk_proveedor_usuario" FromRole="AspNetUsers" ToRole="proveedores_old" />
           <NavigationProperty Name="AspNetRoles" Relationship="Self.AspNetUserRoles" FromRole="AspNetUsers" ToRole="AspNetRoles" />
           <NavigationProperty Name="cuentas1" Relationship="Self.cuentasusuarios" FromRole="AspNetUsers" ToRole="cuentas" />
         </EntityType>
@@ -1180,8 +1153,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <NavigationProperty Name="cuentaproveedores" Relationship="Self.fk_cuetnasprov" FromRole="cuentas" ToRole="cuentaproveedores" />
           <NavigationProperty Name="perfiles" Relationship="Self.fk_cuenta" FromRole="cuentas" ToRole="perfiles" />
           <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_cuenta" FromRole="cuentas" ToRole="cuentasmensajes" />
-          <NavigationProperty Name="proveedores_old" Relationship="Self.fk_proveedor_cuenta" FromRole="cuentas" ToRole="proveedores_old" />
-          <NavigationProperty Name="proveedores" Relationship="Self.fk_sapproveedores_cuenta" FromRole="cuentas" ToRole="proveedores" />
+          <NavigationProperty Name="proveedores" Relationship="Self.fk_proveedores_cuenta" FromRole="cuentas" ToRole="proveedores" />
           <NavigationProperty Name="AspNetUsers" Relationship="Self.cuentasusuarios" FromRole="cuentas" ToRole="AspNetUsers" />
         </EntityType>
         <EntityType Name="cuentasmensaje">
@@ -1355,6 +1327,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Poblacion" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
           <Property Name="Distrito" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
           <Property Name="Apartado" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoApartado" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="CodigoPostal" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Region" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="Calle" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
@@ -1375,35 +1348,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Correo" Type="String" MaxLength="241" FixedLength="false" Unicode="false" />
           <Property Name="CuentaId" Type="Int32" />
           <Property Name="FechaCargaPortal" Type="DateTime" Nullable="false" />
-          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
-          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Rfc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Borrado" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="cuenta" Relationship="Self.fk_sapproveedores_cuenta" FromRole="proveedores" ToRole="cuentas" />
-        </EntityType>
-        <EntityType Name="proveedores_old">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CodigoProveedor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="FechaRegistro" Type="DateTime" />
-          <Property Name="CuentaId" Type="Int32" />
-          <Property Name="Borrado" Type="Boolean" Nullable="false" />
-          <Property Name="FechaTx" Type="DateTime" />
-          <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
-          <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="NombreProveedor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Ciudad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CodigoPostal" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="direccion1" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="direccion2" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="direccion3" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Rfc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="AspNetUser" Relationship="Self.fk_proveedor_usuario" FromRole="proveedores_old" ToRole="AspNetUsers" />
-          <NavigationProperty Name="cuenta" Relationship="Self.fk_proveedor_cuenta" FromRole="proveedores_old" ToRole="cuentas" />
+          <NavigationProperty Name="cuenta" Relationship="Self.fk_proveedores_cuenta" FromRole="proveedores" ToRole="cuentas" />
+          <NavigationProperty Name="sapordencompras" Relationship="Self.fk_ordencompra_proveedor" FromRole="proveedores" ToRole="sapordencompra" />
         </EntityType>
         <EntityType Name="riele">
           <Key>
@@ -1441,7 +1387,9 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="FechaDocCompra" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="FechaCargaPortal" Type="DateTime" Nullable="false" />
           <Property Name="ProveedorId" Type="Int32" />
-          <NavigationProperty Name="sapordencompradetalles" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="sapordencompra" ToRole="sapordencompradetalle" />
+          <NavigationProperty Name="proveedore" Relationship="Self.fk_ordencompra_proveedor" FromRole="sapordencompra" ToRole="proveedores" />
+          <NavigationProperty Name="sapordencompradetalles" Relationship="Self.fk_ordencompradetalle_parent" FromRole="sapordencompra" ToRole="sapordencompradetalle" />
+          <NavigationProperty Name="sapordencompradetalles1" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="sapordencompra" ToRole="sapordencompradetalle" />
         </EntityType>
         <EntityType Name="sapordencompradetalle">
           <Key>
@@ -1468,7 +1416,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="CantidadUnidadMedida" Type="Decimal" />
           <Property Name="SapOrdenCompraId" Type="Int32" />
           <Property Name="FechaCargaPortal" Type="DateTime" Nullable="false" />
-          <NavigationProperty Name="sapordencompra" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="sapordencompradetalle" ToRole="sapordencompra" />
+          <NavigationProperty Name="sapordencompra" Relationship="Self.fk_ordencompradetalle_parent" FromRole="sapordencompradetalle" ToRole="sapordencompra" />
+          <NavigationProperty Name="sapordencompra1" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="sapordencompradetalle" ToRole="sapordencompra" />
         </EntityType>
         <EntityType Name="tipocuenta">
           <Key>
@@ -1657,18 +1606,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_proveedor_usuario">
-          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="0..1" />
-          <End Role="proveedores_old" Type="Self.proveedores_old" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AspNetUsers">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="proveedores_old">
-              <PropertyRef Name="UsuarioIdTx" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_citas_estatus">
           <End Role="estatuscitas" Type="Self.estatuscita" Multiplicity="1" />
           <End Role="citas" Type="Self.cita" Multiplicity="*" />
@@ -1717,19 +1654,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_proveedor_cuenta">
-          <End Role="cuentas" Type="Self.cuenta" Multiplicity="0..1" />
-          <End Role="proveedores_old" Type="Self.proveedores_old" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="cuentas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="proveedores_old">
-              <PropertyRef Name="CuentaId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_sapproveedores_cuenta">
+        <Association Name="fk_proveedores_cuenta">
           <End Role="cuentas" Type="Self.cuenta" Multiplicity="0..1" />
           <End Role="proveedores" Type="Self.proveedore" Multiplicity="*" />
           <ReferentialConstraint>
@@ -1774,6 +1699,30 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Principal>
             <Dependent Role="horariorieles">
               <PropertyRef Name="AlmacenRielId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ordencompra_proveedor">
+          <End Role="proveedores" Type="Self.proveedore" Multiplicity="0..1" />
+          <End Role="sapordencompra" Type="Self.sapordencompra" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proveedores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="sapordencompra">
+              <PropertyRef Name="ProveedorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_ordencompradetalle_parent">
+          <End Role="sapordencompra" Type="Self.sapordencompra" Multiplicity="0..1" />
+          <End Role="sapordencompradetalle" Type="Self.sapordencompradetalle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="sapordencompra">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="sapordencompradetalle">
+              <PropertyRef Name="SapOrdenCompraId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1824,7 +1773,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="ordencompras" EntityType="Self.ordencompra" />
           <EntitySet Name="perfiles" EntityType="Self.perfile" />
           <EntitySet Name="proveedores" EntityType="Self.proveedore" />
-          <EntitySet Name="proveedores_old" EntityType="Self.proveedores_old" />
           <EntitySet Name="rieles" EntityType="Self.riele" />
           <EntitySet Name="sapordencompras" EntityType="Self.sapordencompra" />
           <EntitySet Name="sapordencompradetalles" EntityType="Self.sapordencompradetalle" />
@@ -1869,10 +1817,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="perfiles" EntitySet="perfiles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
-          <AssociationSet Name="fk_proveedor_usuario" Association="Self.fk_proveedor_usuario">
-            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
-            <End Role="proveedores_old" EntitySet="proveedores_old" />
-          </AssociationSet>
           <AssociationSet Name="fk_citas_estatus" Association="Self.fk_citas_estatus">
             <End Role="estatuscitas" EntitySet="estatuscitas" />
             <End Role="citas" EntitySet="citas" />
@@ -1889,11 +1833,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
           </AssociationSet>
-          <AssociationSet Name="fk_proveedor_cuenta" Association="Self.fk_proveedor_cuenta">
-            <End Role="cuentas" EntitySet="cuentas" />
-            <End Role="proveedores_old" EntitySet="proveedores_old" />
-          </AssociationSet>
-          <AssociationSet Name="fk_sapproveedores_cuenta" Association="Self.fk_sapproveedores_cuenta">
+          <AssociationSet Name="fk_proveedores_cuenta" Association="Self.fk_proveedores_cuenta">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="proveedores" EntitySet="proveedores" />
           </AssociationSet>
@@ -1908,6 +1848,14 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="fk_horariorieles_rieles" Association="Self.fk_horariorieles_rieles">
             <End Role="rieles" EntitySet="rieles" />
             <End Role="horariorieles" EntitySet="horariorieles" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ordencompra_proveedor" Association="Self.fk_ordencompra_proveedor">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="sapordencompra" EntitySet="sapordencompras" />
+          </AssociationSet>
+          <AssociationSet Name="fk_ordencompradetalle_parent" Association="Self.fk_ordencompradetalle_parent">
+            <End Role="sapordencompra" EntitySet="sapordencompras" />
+            <End Role="sapordencompradetalle" EntitySet="sapordencompradetalles" />
           </AssociationSet>
           <AssociationSet Name="fk_sapordencompradetalle_parent" Association="Self.fk_sapordencompradetalle_parent">
             <End Role="sapordencompra" EntitySet="sapordencompras" />
@@ -2251,6 +2199,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Poblacion" ColumnName="Poblacion" />
                 <ScalarProperty Name="Distrito" ColumnName="Distrito" />
                 <ScalarProperty Name="Apartado" ColumnName="Apartado" />
+                <ScalarProperty Name="CodigoApartado" ColumnName="CodigoApartado" />
                 <ScalarProperty Name="CodigoPostal" ColumnName="CodigoPostal" />
                 <ScalarProperty Name="Region" ColumnName="Region" />
                 <ScalarProperty Name="Calle" ColumnName="Calle" />
@@ -2271,33 +2220,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Correo" ColumnName="Correo" />
                 <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
                 <ScalarProperty Name="FechaCargaPortal" ColumnName="FechaCargaPortal" />
-                <ScalarProperty Name="UsuarioIdTx" ColumnName="UsuarioIdTx" />
-                <ScalarProperty Name="OperacionTx" ColumnName="OperacionTx" />
-                <ScalarProperty Name="Rfc" ColumnName="Rfc" />
-                <ScalarProperty Name="Borrado" ColumnName="Borrado" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="proveedores_old">
-            <EntityTypeMapping TypeName="impuls_portal2Model.proveedores_old">
-              <MappingFragment StoreEntitySet="proveedores_old">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="CodigoProveedor" ColumnName="CodigoProveedor" />
-                <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
-                <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
-                <ScalarProperty Name="Borrado" ColumnName="Borrado" />
-                <ScalarProperty Name="FechaTx" ColumnName="FechaTx" />
-                <ScalarProperty Name="UsuarioIdTx" ColumnName="UsuarioIdTx" />
-                <ScalarProperty Name="OperacionTx" ColumnName="OperacionTx" />
-                <ScalarProperty Name="NombreProveedor" ColumnName="NombreProveedor" />
-                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
-                <ScalarProperty Name="Estado" ColumnName="Estado" />
-                <ScalarProperty Name="CodigoPostal" ColumnName="CodigoPostal" />
-                <ScalarProperty Name="direccion1" ColumnName="direccion1" />
-                <ScalarProperty Name="direccion2" ColumnName="direccion2" />
-                <ScalarProperty Name="direccion3" ColumnName="direccion3" />
-                <ScalarProperty Name="email" ColumnName="email" />
-                <ScalarProperty Name="Rfc" ColumnName="Rfc" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
