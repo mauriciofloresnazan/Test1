@@ -372,29 +372,29 @@ namespace Ppgz.Services
         static void ValidarNombreApellido(string valor)
         {
             // TODO HACER CONFIGURABLE EN EL FUTURO
-            var regex = new Regex(@"^[A-Z]([a-zA-Z]|\.| |-|')+$");
+            var regex = new Regex(@"^[A - Za - z'\-\p{L}\p{Zs}\p{Lu}\p{Ll}\']+$");
             if (!regex.IsMatch(valor))
             {
-               // throw new BusinessException(CommonMensajesResource.Error_NombreApellido);
+                throw new BusinessException(CommonMensajesResource.Error_NombreApellido);
             }
         }
 
         static void ValidarTelefono(string valor)
         {
             // TODO HACER CONFIGURABLE EN EL FUTURO
-            var regex = new Regex(@"(\+?\d{1})?[-.]?\(?(\d{3})\)?[-.]?(\d{3})[-.]?(\d{4})");
+            var regex = new Regex(@"^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$");
             if (!regex.IsMatch(valor))
             {
-             //   throw new BusinessException(CommonMensajesResource.Error_Telefono);
+                throw new BusinessException(CommonMensajesResource.Error_Telefono);
             }
         }
         static void ValidarEmail(string valor)
         {
             // TODO HACER CONFIGURABLE EN EL FUTURO
-            var regex = new Regex(@"[a-z0-9]+[_a-z0-9\.-]*[a-z0-9]+@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})");
+            var regex = new Regex(@"^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$");
             if (!regex.IsMatch(valor))
             {
-               // throw new BusinessException(CommonMensajesResource.Error_Telefono);
+                //throw new BusinessException(CommonMensajesResource.Error_Email);
             }
         }
 

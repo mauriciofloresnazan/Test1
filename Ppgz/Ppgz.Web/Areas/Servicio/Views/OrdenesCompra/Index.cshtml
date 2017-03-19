@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@using System.Data
 @{
     ViewBag.Title = "Ordenes de Compra";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -23,87 +24,46 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr id="mensaje-tr-id-">
-                        <th class="text-center"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></th>
-                        <th class="text-center">001</th>
-                        <td class="text-center vert-align">dd/MM/yyyy</td>
-                        <td class="text-center vert-align"><i>XXXxxx</i></td>
-                        <td class="leido-flag text-center"></td>
-                        <th class="text-center">
-                            <a href="" target="_blank" data-id="" class="descargar-mensaje"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
-                        </th>
-                    </tr>
-                    <tr id="mensaje-tr-id-">
-                        <th class="text-center"><i class="fa fa-lightbulb-o" aria-hidden="true"></i></th>
-                        <th class="text-center">002</th>
-                        <td class="text-center vert-align">dd/MM/yyyy</td>
-                        <td class="text-center vert-align"><i>XXXxxx</i></td>
-                        <td class="leido-flag text-center"></td>
-                        <th class="text-center">
-                            <a href="#" class="ver-mensaje" data-toggle="modal" data-target="#myModal" data-titulo="titulo" data-id="id" data-contenido="contenido"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Ver</a>
-                        </th>
-                    </tr>
+                    @foreach (DataRow registro in ((DataTable)ViewBag.data).Rows)
+                    {
+                        <tr>
+                            @if (registro["FechaVisualizado"] == DBNull.Value)
+                            {
+                                <td class="text-center"><i class="fa fa-lightbulb-o" aria-hidden="true" style="font-size: 24px; color: red;"></i></td>
+                            }
+                            else
+                            {
+                                <td class="text-center"><i class="fa fa-lightbulb-o" aria-hidden="true" style="font-size: 24px; color: green;"></i></td>
+                            }
+                            <td class="text-center vert-align">@registro["NumeroOrden"]</td>
+                            <td class="text-center vert-align">@registro["Fecha"]</td>
+                            <td class="text-center vert-align">@registro["Rfc"]</td>
+                            <td class="text-center vert-align">@registro["NombreProveedor"]</td>
+
+                            <td class="text-center vert-align">
+                                <a href="@Url.Action("Descargar", "OrdenesCompra", new {@id = @registro["Id"]})" class="descargar-visualizar"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar</a>
+                            </td>
+                        </tr>
+                    }
+
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"><span id="mensaje-titulo"></span></h4>
-            </div>
-            <div class="modal-body">
-                <p id="mensaje-contenido"></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 @section Scripts {
     <script type="text/javascript">
-        var usuarioMensajes = "@ViewBag.mensajesUsuario";
-
         $(document).ready(function () {
-            $(document).on("click", ".ver-mensaje", function () {
-                Visualizar($(this).data('id'));
-                var titulo = $(this).data('titulo');
-                var contenido = $(this).data('contenido');
-                $('.modal-title').text(titulo);
-                $(".modal-body #mensaje-contenido").text(contenido);
+
+
+            $(document).on("click", ".descargar-visualizar", function () {
+
+                $(this).parent().parent().find(".fa-lightbulb-o").css("color", "green");
+
             });
 
-            $(document).on("click", ".descargar-mensaje", function () {
-                Visualizar($(this).data('id'));
-            });
 
-            $('#mensajes').DataTable({
-                "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
-                },
-                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
-            });
         });
-
-
-        function Visualizar(mensajeId) {
-            $.ajax({
-                url: '@Url.Action("Visualizar", "MensajesInstitucionales")',
-                data: { id: mensajeId },
-                type: 'POST',
-                success: function (data) {
-                    $("#mensaje-tr-id-" + mensajeId + " .leido-flag").text("SI");
-                    //alert(data);
-                }
-            });
-        }
     </script>
 }
 

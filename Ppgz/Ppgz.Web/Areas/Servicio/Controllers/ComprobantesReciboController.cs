@@ -1,5 +1,4 @@
-﻿using Ppgz.Web.Infrastructure;
-using System;
+﻿using System;
 using System.Data;
 using System.Data.Entity;
 using System.IO;
@@ -8,28 +7,30 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using MySql.Data.MySqlClient;
 using Ppgz.Repository;
+using Ppgz.Web.Infrastructure;
 
 namespace Ppgz.Web.Areas.Servicio.Controllers
 {
     [Authorize]
     [TerminosCondiciones]
-    public class OrdenesCompraController : Controller
+    public class ComprobantesReciboController : Controller
     {
-        private readonly OrdenCompraManager _ordenCompraManager = new OrdenCompraManager();
+        private readonly OrdenCompraManager  _ordenCompraManager = new OrdenCompraManager();
+        private readonly ProveedorManager _proveedorManager = new ProveedorManager();
         private readonly CommonManager _commonManager = new CommonManager();
         //
-        // GET: /Servicio/OrdenesCompra/
-        [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ORDENESCOMPRA-LISTAR,SERVICIO-ORDENESCOMPRA-MODIFICAR")]
+        // GET: /Mercaderia/ComprobantesRecibo/
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA-LISTAR,MERCADERIA-ORDENESCOMPRA-MODIFICAR")]
         public ActionResult Index()
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-
-            ViewBag.data = _ordenCompraManager.FindByCuentaId(cuenta.Id);
+            //faltante de manager para obtener orden de compra por proveedorid
+            ViewBag.data= _ordenCompraManager.FindByCuentaId(cuenta.Id);
 
             return View();
         }
         public void Descargar(int id)
-        {
+        {   
             //todo pasar a un manejador
             Entities db = new Entities();
             var orden = db.ordencompras.Find(id);
@@ -53,7 +54,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 };
 
 
-            sql = @"
+             sql = @"
             SELECT * 
             FROM   detalleordencompra
             WHERE  OrdenComprasId = @id;";
@@ -62,7 +63,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             ExportExcel(dt, id.ToString());
 
-
+            
         }
         public DataTable crearDt()
         {
