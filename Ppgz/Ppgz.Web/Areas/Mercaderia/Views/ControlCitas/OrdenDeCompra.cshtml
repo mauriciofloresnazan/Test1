@@ -1,0 +1,248 @@
+﻿@using Microsoft.AspNet.Identity
+@{
+    ViewBag.Title = "Administracion de Citas";
+    ViewBag.Descripcion = "Seleccione la Orden de Compra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de la Orden de Compra</div>
+    <div class="panel-body">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Fecha</label>
+                <div class='input-group date' id="datetimepicker1">
+                    <input type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Orden de Compra</label>
+                <div class="input-group">
+                    <input type="text" id="txtNumOrden" name="txtNumOrden" class="form-control" />
+                    <span class="input-group-btn">
+                        <button class="btn btn-info" type="button" onclick="BuscarNumeroDeOrden();"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Resultado de la Busqueda</div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Productos en la Orden</label>
+            <div class="col-sm-3">
+                <div style="margin-top: 0px; font-size: 1.5em; color: #22aaaa;"><span id="idProductosEnOrden">0</span></div>
+            </div>
+            <label class="col-sm-3 control-label">Productos en el ASN</label>
+            <div class="col-sm-3">
+                <div style="margin-top: 0px; font-size: 1.5em; color: green;"> 3600</div>
+            </div>
+        </div>
+        <div class="clearfix">
+            <a type="submit" class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModalExcel"><i class="fa fa-arrow-up" aria-hidden="true"></i> Cargar desde Excel</a>
+        </div>
+        <p class="form-legend" style="">
+            <i>Productos</i>
+        </p>
+        <table class="table table-striped table-condensed" id="tb-3">
+            <thead>
+                <tr>
+                    <th class="text-center">Material</th>
+                    <th class="text-center">Centro</th>
+                    <th class="text-center">Almacen</th>
+                    <th class="text-center">Descripcion</th>
+                    <th class="text-center">Cantidad a Entregar</th>
+                    <th class="text-center">Modificacion</th>
+
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+
+@Scripts.Render("~/Scripts/jquery-1.10.2.js");
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+
+        var data = [
+            {
+                "Id": 0,
+                "NumeroDocumento": "4500916565",
+                "Ebelp": "00010",
+                "DescripcionMaterial": "CHAMACO 740 SINTETICO NEGRO 18/21., 19.0",
+                "NumeroMaterial": "000000000013551903",
+                "Centro": "CD06",
+                "Almacen": "A002",
+                "GrupoArticulos": "D00105274",
+                "CantidadPedido": "2.000",
+                "UnidadMedidaPedido": "ST",
+                "UnidadMedidaPrecio": " 1",
+                "ConversionUmpruMP": 1,
+                "ConversionUmUmBase": null,
+                "DenominadorUmUmBase": 1,
+                "PrecioNeto": 83,
+                "CantidadBase": 1,
+                "ValorNeto": 166,
+                "ValorBruto": null,
+                "CantidadUnidadMedida": 2,
+                "SapOrdenCompraId": null,
+                "FechaCargaPortal": "0001-01-01T00:00:00",
+                "sapordencompra": null
+            },
+            {
+                "Id": 0,
+                "NumeroDocumento": "4500916565",
+                "Ebelp": "00020",
+                "DescripcionMaterial": "CHAMACO 740 SINTETICO NEGRO 18/21., 19.5",
+                "NumeroMaterial": "000000000013551904",
+                "Centro": "CD06",
+                "Almacen": "A002",
+                "GrupoArticulos": "D00105274",
+                "CantidadPedido": "2.000",
+                "UnidadMedidaPedido": "ST",
+                "UnidadMedidaPrecio": " 1",
+                "ConversionUmpruMP": 1,
+                "ConversionUmUmBase": null,
+                "DenominadorUmUmBase": 1,
+                "PrecioNeto": 83,
+                "CantidadBase": 1,
+                "ValorNeto": 166,
+                "ValorBruto": null,
+                "CantidadUnidadMedida": 2,
+                "SapOrdenCompraId": null,
+                "FechaCargaPortal": "0001-01-01T00:00:00",
+                "sapordencompra": null
+            },
+            {
+                "Id": 0,
+                "NumeroDocumento": "4500916565",
+                "Ebelp": "00030",
+                "DescripcionMaterial": "CHAMACO 740 SINTETICO NEGRO 18/21., 20.0",
+                "NumeroMaterial": "000000000013551905",
+                "Centro": "CD06",
+                "Almacen": "A002",
+                "GrupoArticulos": "D00105274",
+                "CantidadPedido": "2.000",
+                "UnidadMedidaPedido": "ST",
+                "UnidadMedidaPrecio": " 1",
+                "ConversionUmpruMP": 1,
+                "ConversionUmUmBase": null,
+                "DenominadorUmUmBase": 1,
+                "PrecioNeto": 83,
+                "CantidadBase": 1,
+                "ValorNeto": 166,
+                "ValorBruto": null,
+                "CantidadUnidadMedida": 2,
+                "SapOrdenCompraId": null,
+                "FechaCargaPortal": "0001-01-01T00:00:00",
+                "sapordencompra": null
+            }
+        ];
+
+        function elementosJSON(obj) {
+            return Object.keys(obj).length;
+        }
+
+        function pruebaDeTabla() {
+
+
+            var objetoJSON = data;
+            var resHTML = "";
+            var cantidadEnOrden = 0;
+
+            //var dataResultado = JSON.parse(objetoJSON);
+            console.log(objetoJSON);
+
+
+            $('#tb-3 > tbody').html("");
+
+
+            for (i = 0; i <= (elementosJSON(objetoJSON) - 1); i++) {
+
+                resHTML += '<tr id="tr-' + i + '">';
+                resHTML += '<td class="text-center">' + objetoJSON[i].Ebelp + '</td>';
+                resHTML += '<td class="text-center">' + objetoJSON[i].Centro + '</td>';
+                resHTML += '<td class="text-center">' + objetoJSON[i].Almacen + '</td>';
+                resHTML += '<td class="text-center">' + objetoJSON[i].DescripcionMaterial + '</td>';
+                resHTML += '<td class="text-center">' + objetoJSON[i].CantidadPedido + '</td>';
+                resHTML += '<td class="text-center">NO</td>';
+                resHTML += '</tr>';
+
+                cantidadEnOrden += parseInt(objetoJSON[i].CantidadPedido);
+
+            };
+
+            $("#idProductosEnOrden").html(cantidadEnOrden);
+
+
+            $('#tb-3 > tbody').html(resHTML);
+
+
+            
+            $('#tb-3').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+            });
+            
+
+        }
+
+
+        function TablaInicio() {
+
+            $('#tb-3 > tbody').html("");
+
+          
+        }
+
+
+        function BuscarNumeroDeOrden() {
+
+            if ($("#txtNumOrden").val().length <= 0) {
+
+                alert("Debe ingresar el numero de Orden");
+                //TablaInicio();
+                return;
+            }
+
+
+            pruebaDeTabla();
+
+
+        }
+
+
+        $(document).ready(function() {
+
+            TablaInicio();
+          
+
+
+        });
+
+
+    </script>
+}
