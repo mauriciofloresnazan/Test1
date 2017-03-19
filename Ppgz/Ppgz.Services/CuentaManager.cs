@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ppgz.Repository;
+using SapWrapper;
 
 namespace Ppgz.Services
 {
@@ -85,9 +86,7 @@ namespace Ppgz.Services
 
             return query.FirstOrDefault();
         } 
-
-
-
+        
         public void Crear(string tipo, string nombreProveedor, string responsableLogin,
             string reponsableNombre, string reponsableApellido, string responsableCargo,
             string responsableEmail, string responableTelefono, string responsablePassword)
@@ -186,5 +185,21 @@ namespace Ppgz.Services
             _db.SaveChanges();
         }
 
+
+        public void AsociarProveedorSapEnCuenta(string codigoProveedor)
+        {
+
+            // TODO BUSCAR EN MI BASE DE DATOS PRIMERO
+
+            var sapProveedorManager = new SapProveedorManager();
+            var result = sapProveedorManager.GetProveedor(codigoProveedor);
+            if (result != null)
+            {
+                
+            }
+           
+
+
+        }
     }
 }

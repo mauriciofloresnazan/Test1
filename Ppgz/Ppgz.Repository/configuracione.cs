@@ -17,6 +17,7 @@ namespace Ppgz.Repository
         public int Id { get; set; }
         public string Clave { get; set; }
         public string Valor { get; set; }
-        public Nullable<int> Habilitado { get; set; }
+        public bool Habilitado { get; set; }
+        public string Descripcion { get; set; }
     }
 }

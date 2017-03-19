@@ -48,8 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SapProveedores.cs" />
-    <Compile Include="ConectorSAP.cs" />
+    <Compile Include="CommonRfcConfigParam.cs" />
+    <Compile Include="SapOrdenCompraManager.cs" />
+    <Compile Include="SapProveedorManager.cs" />
     <Compile Include="IRfcTableExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

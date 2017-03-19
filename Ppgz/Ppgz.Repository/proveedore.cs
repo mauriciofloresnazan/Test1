@@ -15,24 +15,40 @@ namespace Ppgz.Repository
     public partial class proveedore
     {
         public int Id { get; set; }
-        public string CodigoProveedor { get; set; }
-        public Nullable<System.DateTime> FechaRegistro { get; set; }
+        public string NumeroProveedor { get; set; }
+        public string ClavePais { get; set; }
+        public string Nombre1 { get; set; }
+        public string Nombre2 { get; set; }
+        public string Nombre3 { get; set; }
+        public string Nombre4 { get; set; }
+        public string Poblacion { get; set; }
+        public string Distrito { get; set; }
+        public string Apartado { get; set; }
+        public string CodigoPostal { get; set; }
+        public string Region { get; set; }
+        public string Calle { get; set; }
+        public string Direccion { get; set; }
+        public string Sociedad { get; set; }
+        public string OrganizacionCompra { get; set; }
+        public string ClaveMoned { get; set; }
+        public string VendedorResponsable { get; set; }
+        public string NumeroTelefono { get; set; }
+        public string CondicionPago { get; set; }
+        public string IncoTerminos1 { get; set; }
+        public string IncoTerminos2 { get; set; }
+        public string GrupoCompras { get; set; }
+        public string DenominacionGrupo { get; set; }
+        public string TelefonoGrupoCompra { get; set; }
+        public string TelefonoPrefijo { get; set; }
+        public string TelefonoExtension { get; set; }
+        public string Correo { get; set; }
         public Nullable<int> CuentaId { get; set; }
-        public bool Borrado { get; set; }
-        public Nullable<System.DateTime> FechaTx { get; set; }
+        public System.DateTime FechaCargaPortal { get; set; }
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }
-        public string NombreProveedor { get; set; }
-        public string Ciudad { get; set; }
-        public string Estado { get; set; }
-        public string CodigoPostal { get; set; }
-        public string direccion1 { get; set; }
-        public string direccion2 { get; set; }
-        public string direccion3 { get; set; }
-        public string email { get; set; }
         public string Rfc { get; set; }
+        public bool Borrado { get; set; }
     
-        public virtual AspNetUser AspNetUser { get; set; }
         public virtual cuenta cuenta { get; set; }
     }
 }

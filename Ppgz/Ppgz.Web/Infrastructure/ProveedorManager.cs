@@ -24,7 +24,8 @@ namespace Ppgz.Web.Infrastructure
 
         public proveedore FindByCodigoProveedor(string codigoProveedor)
         {
-            return _db.proveedores.SingleOrDefault(a => a.CodigoProveedor == codigoProveedor);
+             throw new NotImplementedException();
+//            return _db.proveedores.SingleOrDefault(a => a.CodigoProveedor == codigoProveedor);
         }
 
     }

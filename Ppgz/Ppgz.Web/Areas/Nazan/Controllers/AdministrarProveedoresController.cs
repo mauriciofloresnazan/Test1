@@ -96,7 +96,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				var proveedor = _proveedorManager.FindByCodigoProveedor(numeroProveedor);
 
 				var table = new Hashtable();
-				table["Codigo"] = proveedor.CodigoProveedor;
+				/*table["Codigo"] = proveedor.CodigoProveedor;
 				table["RFC"] = proveedor.Rfc;
 				table["Nombre"] = proveedor.NombreProveedor;
 				table["Cidudad"] = proveedor.Ciudad;
@@ -104,7 +104,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				table["Email"] = proveedor.email;
 				table["Direccion 1"] = proveedor.direccion1;
 				table["Dirección 2"] = proveedor.direccion2;
-				table["Dirección 3"] = proveedor.direccion3;
+				table["Dirección 3"] = proveedor.direccion3;*/
 				return Json(table);
 			}
 			catch (Exception exception)
@@ -119,7 +119,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		{
 			try
 			{
-				var entities = new Entities();
+				/*var entities = new Entities();
 
 				var proveedor = entities.proveedores.SingleOrDefault(a => a.CodigoProveedor == numeroProveedor); ;
 
@@ -128,7 +128,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				proveedor.CuentaId = cuenta.Id;
 
 				entities.Entry(proveedor).State  = EntityState.Modified;
-				entities.SaveChanges();
+				entities.SaveChanges();*/
 
 				TempData["FlashSuccess"] = "Proveedor asociado con éxito.";
 				return RedirectToAction("Editar", new { id = id });

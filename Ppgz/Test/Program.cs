@@ -17,8 +17,24 @@ namespace Test
         static void Main(string[] args)
         {
 
+            Entities db = new Entities();
+            var usuario = db.AspNetUsers.FirstOrDefault(u => u.UserName == "superusuario");
+            Console.WriteLine(usuario.Id);
+            Console.ReadLine();
+
+            return;
+
+            var ordenCompraManager = new OrdenCompraManager();
+            var detalle = ordenCompraManager.FindDetalleByDocumento("4500916565");
+
+
+            Console.WriteLine(JsonConvert.SerializeObject(detalle));
+            Console.ReadLine();
+
             var testRfc = new TestRfc();
-            testRfc.TestProveedores();
+            //testRfc.TestProveedores();
+            //testRfc.TestConsultarDetalleDeOrdenCompra("4500916565");
+            //testRfc.BuscarCodigosProveedores();
             //Test();
             //CrearUsuarioProveedor();
             //TestOrdenCompra();

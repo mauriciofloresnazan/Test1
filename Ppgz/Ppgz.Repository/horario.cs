@@ -14,8 +14,15 @@ namespace Ppgz.Repository
     
     public partial class horario
     {
+        public horario()
+        {
+            this.horariorieles = new HashSet<horarioriele>();
+        }
+    
         public int Id { get; set; }
         public int HoraDesde { get; set; }
         public int HoraHasta { get; set; }
+    
+        public virtual ICollection<horarioriele> horariorieles { get; set; }
     }
 }

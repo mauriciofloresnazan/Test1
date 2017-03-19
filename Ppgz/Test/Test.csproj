@@ -86,10 +86,6 @@
       <Project>{7a06d69c-0ba5-4fc8-9140-69d0d2c76408}</Project>
       <Name>Ppgz.Services</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Ppgz.Web\Ppgz.Web.csproj">
-      <Project>{B0DA3AE1-90D9-43E0-9886-74E7F0B032DB}</Project>
-      <Name>Ppgz.Web</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SapWrapper\SapWrapper.csproj">
       <Project>{FF45BCAC-FBF6-451B-B36D-39E22F4EA1E3}</Project>
       <Name>SapWrapper</Name>

@@ -26,5 +26,6 @@ namespace Ppgz.Repository
         public Nullable<int> FacturasId { get; set; }
         public string CodigoProveedor { get; set; }
         public string FechaSAP { get; set; }
+        public Nullable<System.DateTime> VisualizadoFecha { get; set; }
     }
 }
