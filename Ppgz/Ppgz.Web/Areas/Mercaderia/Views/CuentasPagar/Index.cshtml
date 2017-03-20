@@ -37,22 +37,17 @@
 </div>
 @section Scripts {
     <script type="text/javascript">
-    var usuarioMensajes = "@(Convert.ToInt32(HttpContext.Current.Session["proveedorId"]))";
 
     var proveedorId = "@ViewBag.proveedorId";
-
-    console.log(proveedorId);
 
     $(document).ready(function () {
 
         if (proveedorId === "") {
             $("#navbar > ul:nth-child(1) > li:nth-child(2)").css("display","none");
         }
-        //Para conservar en sesión el Proveedor seleccionado.
         $(document).on("click", "#btnProveedor", function () {
             fnProveedorSeleccionado($(this).data('idproveedor'));
         });
-
         $('#cuentasXpagar').DataTable({
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
@@ -60,9 +55,6 @@
             "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
         });
     });
-
-
-
 
     function fnProveedorSeleccionado(proveedorId) {
         $.ajax({

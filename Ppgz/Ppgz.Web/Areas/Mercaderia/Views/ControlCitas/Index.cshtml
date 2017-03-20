@@ -18,24 +18,24 @@
             <table id="mensajes" class="table table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center">RFC</th>
+                        <th class="text-center">Numero de Proveedor</th>
                         <th class="text-center">Razón Social</th>
                         <th class="text-center"></th>
                     </tr>
                 </thead>
                 <tbody>
 
-                    @*@foreach (var proveedor in (ViewBag.proveedores))
+                    @foreach (var proveedor in (ViewBag.proveedores))
                     {
                         <tr>
-                            <td class="text-center">@proveedor.Rfc</td>
-                            <td class="text-center vert-align">@proveedor.NombreProveedor</td>
+                            <td class="text-center">@proveedor.NumeroProveedor</td>
+                            <td class="text-center vert-align">@proveedor.Nombre1</td>
                             <td class="text-center">
                                 <a class="button btn-info btn-sm" href="@Url.Action("OrdenDeCompra","ControlCitas", new { @proveedorId = @proveedor.Id })"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Siguiente</a>
                             </td>
                         </tr>
 
-                    }*@
+                    }
 
                     <tr>
                         <td class="text-center">0000001</td>
