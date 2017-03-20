@@ -124,8 +124,8 @@ namespace Ppgz.Web
             {
                 //"|Gestión de Proveedor|||fa fa-address-book-o|Mercaderia",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-address-book|Mercaderia",
-                //"|Control de Citas|||fa fa-calendar|Mercaderia",
-                //"|Comprobante de Recibo|||fa fa-file-pdf-o|Mercaderia",
+                "CONTROLCITAS|Control de Citas|Index|ControlCitas|fa fa-calendar|Mercaderia",
+                "COMPROBANTERECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-pdf-o|Mercaderia",
                 //"|Impresión de Etiquetas|||fa fa-file-pdf-o|Mercaderia",
                 //"|Cuentas por Pagar|||fa fa-calculator|Mercaderia",
                 //"|Administración de Facturas|||fa fa-calculator|Mercaderia",

@@ -3,8 +3,12 @@
     ViewBag.Title = "Gestión de Pagos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    Random generator = new Random();
+    decimal total = 0;
 
+
+}@foreach (var registro in (ViewBag.pagos))
+{
+    total = total + decimal.Parse(registro.Importe.ToString());
 }
 
 <h2 class="form-signin-heading">Gestión de Pagos</h2>
@@ -13,8 +17,8 @@
 <div class="panel panel-default">
     <div class="col-sm-6">
         <b>RFC</b>: @ViewBag.proveedor.Rfc<br />
-        <b>Nombre</b>: @ViewBag.proveedor.Nombre1<br />
-        <b>Población</b>: @ViewBag.proveedor.Poblacion<br /><br />
+        <b>Nombre</b>: @ViewBag.proveedor.NombreProveedor<br />
+        <b>Población</b>: @ViewBag.proveedor.Ciudad<br /><br />
     </div>
     <div class="col-sm-6">
         <a href="@Url.Action("Descargar", "CuentasPagar", new {@id = ViewBag.proveedor.Id})" class="btn btn-primary pull-right"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
@@ -23,7 +27,7 @@
     <div class="panel-heading">Detalle de Pagos</div>
     <div class="panel-body">
         <div class="col-md-12">
-            <table id="detallePago" class="table table-striped table-condensed table-bordered">
+            <table id="pagoDetalle" class="table table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
                         <th class="text-center">Referencia</th>
@@ -35,11 +39,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var registro in (ViewBag.data))
+                    @foreach (var registro in (ViewBag.pagos))
                     {
                         <tr>
+                            <td class="text-center">@registro.Referencia</td>
                             <td class="text-center"></td>
-                            <td class="text-center">Material @generator.Next(0, 1000000).ToString("D6")</td>
                             <td class="text-center">@registro.Importe</td>
                             <td class="text-center">@registro.Ml</td>
                             <td class="text-center">@registro.FechaBase</td>
@@ -48,22 +52,48 @@
                     }
                 </tbody>
             </table>
-            <b>Total Pagado: </b> @ViewBag.importeTotal
+            <b>Total Pagado: </b> @total.ToString("n3")
         </div>
     </div>
 </div>
-
 @section Scripts {
     <script type="text/javascript">
+        var usuarioMensajes = "@ViewBag.mensajesUsuario";
+
         $(document).ready(function () {
 
-            $('#detallePago').DataTable({
+            $(document).on("click", ".ver-mensaje", function () {
+                Visualizar($(this).data('id'));
+                var titulo = $(this).data('titulo');
+                var contenido = $(this).data('contenido');
+                $('.modal-title').text(titulo);
+                $(".modal-body #mensaje-contenido").text(contenido);
+            });
+
+            $(document).on("click", ".descargar-mensaje", function () {
+                Visualizar($(this).data('id'));
+            });
+
+            $('#pagoDetalle').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
                 },
                 "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
             });
         });
+
+
+        function Visualizar(mensajeId) {
+            $.ajax({
+                url: '@Url.Action("Visualizar", "MensajesInstitucionales")',
+                data: { id: mensajeId },
+                type: 'POST',
+                success: function (data) {
+                    $("#mensaje-tr-id-" + mensajeId + " .leido-flag").text("SI");
+                    //alert(data);
+                }
+            });
+        }
     </script>
 }
 

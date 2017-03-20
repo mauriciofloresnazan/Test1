@@ -259,4 +259,7 @@
   <data name="INFO_Proveedor_EliminadoCorrectamente" xml:space="preserve">
     <value>Proveedor eliminado correctamente</value>
   </data>
+  <data name="ERROR_OrdenCompraActiva_NumeroDocumento" xml:space="preserve">
+    <value>No se encuentra una orden de compra activa con ese numero de documento para el proveedor</value>
+  </data>
 </root>

@@ -54,13 +54,36 @@ namespace Ppgz.Services
                     OrganizacionCompra = dr["EKORG"].ToString(),
                     GrupoCompra = dr["EKGRP"].ToString(),
                     Moneda = dr["WAERS"].ToString(),
-                    TipoCambio = dr["WKURS"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["ERFMG"]),
+                    TipoCambio = dr["WKURS"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["WKURS"]),
                     IndTipoCambio = dr["KUFIX"].ToString(),
                     FechaDocCompra = dr["BEDAT"].ToString(),
                     ProveedorId = proveedor.Id,
                     FechaVisualizado = fechaVisualizado,
+                    proveedore = proveedor
                   
                 });
+            }
+            return detalle;
+        }
+
+
+        public List<ordencompra> FindOrdenesDecompraActivasByCuenta(int cuentaId)
+        {
+            var cuenta = _db.cuentas.Find(cuentaId);
+            if (cuenta == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+            }
+
+            var detalle = new List<ordencompra>();
+            
+            foreach (var provedor in cuenta.proveedores)
+            {
+                var proveedorOrdenes = FindOrdenesDecompraActivas(provedor.Id);
+                if (proveedorOrdenes.Any())
+                {
+                    detalle.AddRange(proveedorOrdenes);
+                }
             }
             return detalle;
         } 
@@ -84,11 +107,11 @@ namespace Ppgz.Services
 
         }
 
-        public List<ordencompradetalle> FindDetalleByDocumento(string documento)
+        public List<ordencompradetalle> FindDetalleByDocumento(string numeroDocumento)
         {
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenDeCompraDetalle(documento);
+            var result = sapOrdenCompraManager.GetOrdenDeCompraDetalle(numeroDocumento);
             var detalle = new List<ordencompradetalle>();
 
             if (result.Rows.Count > 0)
@@ -119,6 +142,28 @@ namespace Ppgz.Services
                     });
             } 
             return detalle;
+        }
+
+
+        public List<ordencompradetalle> FindDetalleByProveedorIdAndNumeroDocumento(int proveedorId, string numeroDocumento)
+        {
+            var proveedor = _db.proveedores.Find(proveedorId);
+            if (proveedor == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
+
+            var ordenesCompraActivas = FindOrdenesDecompraActivas(proveedorId);
+
+            var ordenCompraActiva = ordenesCompraActivas.FirstOrDefault(
+                o => o.NumeroDocumento == numeroDocumento && o.NumeroProveedor == proveedor.NumeroProveedor);
+            if (ordenCompraActiva == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_OrdenCompraActiva_NumeroDocumento);
+            }
+
+            return FindDetalleByDocumento(ordenCompraActiva.NumeroDocumento);
+
         }
 
     }

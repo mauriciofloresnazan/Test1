@@ -169,6 +169,15 @@ namespace Ppgz.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No se encuentra una orden de compra activa con ese numero de documento para el proveedor.
+        /// </summary>
+        internal static string ERROR_OrdenCompraActiva_NumeroDocumento {
+            get {
+                return ResourceManager.GetString("ERROR_OrdenCompraActiva_NumeroDocumento", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Accesos incorrectos.
         /// </summary>
         internal static string ERROR_Perfil_AccesosIncorrectos {
