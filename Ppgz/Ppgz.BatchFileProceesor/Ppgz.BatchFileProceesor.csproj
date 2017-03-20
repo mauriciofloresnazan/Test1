@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>2be45f01-3496-4933-b807-0d68fddd6de6</ProjectGuid>
+    <ProjectGuid>{A4A7C408-65EC-4E4C-A1C4-DF16355CA67E}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ppgz.BatchFileProceesor</RootNamespace>
