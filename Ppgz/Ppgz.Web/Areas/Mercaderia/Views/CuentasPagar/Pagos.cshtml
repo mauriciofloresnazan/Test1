@@ -30,47 +30,13 @@
                             <td class="text-center vert-align">@pago.Importe</td>
                             <td class="text-center vert-align">@ViewBag.proveedor.Rfc</td>
                             <td class="text-center vert-align">@ViewBag.proveedor.NombreProveedor</td>
-                           
                         </tr>
-
                     }
-
                 </tbody>
             </table>
         </div>
     </div>
 </div>
-<!-- Modal -->
-<div class="modal fade" id="buscarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"><span id="mensaje-titulo"></span></h4>
-            </div>
-            <div class="modal-body">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Referencia </th>
-                        <th>Importe</th>
-                        <th>Tipo</th>
-                    </tr>
-                    </thead>
-                    <tbody></tbody>
-
-
-                </table>
-
-            </div>
-            <div class="modal-footer">
-                <a href="#" class="btn btn-primary pull-left"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 @section Scripts {
 
@@ -83,73 +49,30 @@
                 ]
             });
         });
-
     </script>
-
-
-
     <script type="text/javascript">
-
         var pagoDetalleUrl = "@Url.Action("PagoDetalle", "CuentasPagar")";
-
-
         function verDetalle(numeroCompensacion) {
-
-
             var data = {
                 numeroCompensacion: numeroCompensacion
             };
-
             $.ajax({
                 type: "POST",
                 url: pagoDetalleUrl,
                 data: data,
                 cache: false
             }).done(function(result) {
-
                 console.log(result);
-
-
                 $('#buscarModal .table tbody').empty();
-                
                 for (i = 0; i < result.data.length; i++) {
-
                     $('#buscarModal .table tbody').append("<tr>"
                         + "<td>" + result.data[i].Referencia + "</td>"
                         + "<td>" + result.data[i].Importe + "</td>"
                         + "<td>" + result.data[i].TipoMovimiento + "</td>"
                         + "</tr>");
                 }
-                
                 $('#buscarModal').modal('show');
-                /*             for (var j = 0; j < result.length; j++) {
-                    console.log(result[j].x);
-                }*/
-
-
                 return;
-
-                if (result.error) {
-                    //TODO MEJORAR
-                    console.log(result.error);
-                    return;
-                }
-                $("#buscarModal .modal-body").html("");
-
-
-                for (var key in result) {
-
-                    $("#buscarModal .modal-body").append("<label>" + key + "</label>");
-                    $("#buscarModal .modal-body").append("<p>" + result[key] + "</p>");
-                }
-
-
-                $("#asociar-proveedor").attr("href", urlAsociarProveedor + "/" + cuentaId + "?numeroProveedor=" + numeroProveedor);
-
-
-                $('#buscarModal').modal('show');
-
-
             }).fail(function(response) {
                 $('#buscarModal').modal('show');
 
