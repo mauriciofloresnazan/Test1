@@ -29,19 +29,8 @@
     </div>
 </div>
 @section Scripts {
-    <script type="text/javascript">
-        var usuarioMensajes = "@ViewBag.mensajesUsuario";
+    <script type="text/javascript">      
         $(document).ready(function () {
-            $(document).on("click", ".ver-mensaje", function () {
-                Visualizar($(this).data('id'));
-                var titulo = $(this).data('titulo');
-                var contenido = $(this).data('contenido');
-                $('.modal-title').text(titulo);
-                $(".modal-body #mensaje-contenido").text(contenido);
-            });
-            $(document).on("click", ".descargar-mensaje", function () {
-                Visualizar($(this).data('id'));
-            });
             $('#devoluciones').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
@@ -49,18 +38,6 @@
                 "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
             });
         });
-        
-        function Visualizar(mensajeId) {
-            $.ajax({
-                url: '@Url.Action("Visualizar", "MensajesInstitucionales")',
-                data: { id: mensajeId },
-                type: 'POST',
-                success: function (data) {
-                    $("#mensaje-tr-id-" + mensajeId + " .leido-flag").text("SI");
-                    //alert(data);
-                }
-            });
-        }
     </script>
 }
 
