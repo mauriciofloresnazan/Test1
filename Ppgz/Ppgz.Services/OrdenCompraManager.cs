@@ -54,7 +54,7 @@ namespace Ppgz.Services
                     OrganizacionCompra = dr["EKORG"].ToString(),
                     GrupoCompra = dr["EKGRP"].ToString(),
                     Moneda = dr["WAERS"].ToString(),
-                    TipoCambio = dr["WKURS"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["ERFMG"]),
+                    TipoCambio = dr["WKURS"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["WKURS"]),
                     IndTipoCambio = dr["KUFIX"].ToString(),
                     FechaDocCompra = dr["BEDAT"].ToString(),
                     ProveedorId = proveedor.Id,
