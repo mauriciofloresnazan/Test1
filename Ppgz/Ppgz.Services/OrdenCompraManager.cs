@@ -59,6 +59,7 @@ namespace Ppgz.Services
                     FechaDocCompra = dr["BEDAT"].ToString(),
                     ProveedorId = proveedor.Id,
                     FechaVisualizado = fechaVisualizado,
+                    proveedore = proveedor
                   
                 });
             }
