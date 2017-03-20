@@ -70,6 +70,15 @@ namespace Ppgz.Services {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cr incorrecto.
+        /// </summary>
+        internal static string ERROR_Cr_Id {
+            get {
+                return ResourceManager.GetString("ERROR_Cr_Id", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cuenta incorrecta.
         /// </summary>
         internal static string ERROR_Cuenta_Id {
