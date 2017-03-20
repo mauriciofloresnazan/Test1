@@ -16,9 +16,13 @@ namespace Test
         
         static void Main(string[] args)
         {
+            var ordenCompraManager = new OrdenCompraManager();
+
+            var result = ordenCompraManager.FindOrdenesDecompraActivas(3);
+
             var testRfc = new TestRfc();
-            testRfc.TestPartidas("0000001727");
-            //testRfc.TestOrdenesDeCompraHeader("0000001727");
+            //testRfc.TestPartidas("0000001727");
+            testRfc.TestOrdenesDeCompraHeader("0000001725");
 
           /*  Entities db = new Entities();
             var usuario = db.AspNetUsers.FirstOrDefault(u => u.UserName == "superusuario");
@@ -27,8 +31,7 @@ namespace Test
 
             return;
             */
-            //var ordenCompraManager = new OrdenCompraManager();
-            
+            //
             //testRfc.TestProveedores();
             //testRfc.TestConsultarDetalleDeOrdenCompra("4500916565");
             //testRfc.BuscarCodigosProveedores();

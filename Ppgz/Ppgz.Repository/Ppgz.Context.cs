@@ -34,6 +34,7 @@ namespace Ppgz.Repository
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<cita> citas { get; set; }
         public virtual DbSet<configuracione> configuraciones { get; set; }
+        public virtual DbSet<cr> crs { get; set; }
         public virtual DbSet<cuentaproveedore> cuentaproveedores { get; set; }
         public virtual DbSet<cuenta> cuentas { get; set; }
         public virtual DbSet<cuentasmensaje> cuentasmensajes { get; set; }
