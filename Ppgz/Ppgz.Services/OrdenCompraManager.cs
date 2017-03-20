@@ -63,6 +63,28 @@ namespace Ppgz.Services
                 });
             }
             return detalle;
+        }
+
+
+        public List<ordencompra> FindOrdenesDecompraActivasByCuenta(int cuentaId)
+        {
+            var cuenta = _db.cuentas.Find(cuentaId);
+            if (cuenta == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+            }
+
+            var detalle = new List<ordencompra>();
+            
+            foreach (var provedor in cuenta.proveedores)
+            {
+                var proveedorOrdenes = FindOrdenesDecompraActivas(provedor.Id);
+                if (proveedorOrdenes.Any())
+                {
+                    detalle.AddRange(proveedorOrdenes);
+                }
+            }
+            return detalle;
         } 
 
         public Hashtable FindActivaByIdAndUsuarioId(int id, string usuarioId)
