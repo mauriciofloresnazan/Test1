@@ -200,6 +200,7 @@ namespace Ppgz.Services
             
             var proveedor =  proveedorManager.FindProveedorEnSap(numeroProveedor);
             proveedor.CuentaId = cuentaId;
+            proveedor.OperacionTx = "CREATE";
             
             _db.proveedores.Add(proveedor);
             _db.SaveChanges();
