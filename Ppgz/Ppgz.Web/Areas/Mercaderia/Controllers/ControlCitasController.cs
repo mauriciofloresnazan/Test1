@@ -229,15 +229,18 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             //return "~/Uploads/" + fileName;
 
-            var rows = wb.Worksheet(1).Rows().ToArray();
+         /*   var rows = wb.Worksheet(1);
+             var rngNumbers = ws.Range("F4:F6");
 
-
-            foreach (var row in rows)
-            {
-
+              foreach (var cell in rngNumbers.Cells())
+                {
+                    string formattedString = cell.GetFormattedString();
+                    cell.DataType = XLCellValues.Text;
+                    cell.Value = formattedString + " Dollars";
+                }
             }
             
-            TempData["FlashSuccess"] = "Archivo cargado exitosamente";
+            TempData["FlashSuccess"] = "Archivo cargado exitosamente";*/
             return RedirectToAction("Asn",new { fecha = System.Web.HttpContext.Current.Session["fecha"] });
         }
 
