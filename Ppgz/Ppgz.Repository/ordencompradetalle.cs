@@ -35,6 +35,7 @@ namespace Ppgz.Repository
         public Nullable<decimal> CantidadUnidadMedida { get; set; }
         public Nullable<int> SapOrdenCompraId { get; set; }
         public System.DateTime FechaCargaPortal { get; set; }
+        public decimal CantidadComprometida { get; set; }
     
         public virtual ordencompra ordencompra { get; set; }
         public virtual ordencompra ordencompra1 { get; set; }

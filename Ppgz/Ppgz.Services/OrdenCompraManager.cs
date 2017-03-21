@@ -185,6 +185,9 @@ namespace Ppgz.Services
                         DenominadorUmUmBase = dr["UMREZ"] == DBNull.Value ? (int?) null : Convert.ToInt32(dr["UMREZ"]),
                         PrecioNeto = dr["NETPR"] == DBNull.Value ? (decimal?) null : Convert.ToDecimal(dr["NETPR"]),
                         CantidadBase = dr["PEINH"] == DBNull.Value ? (int?) null : Convert.ToInt32(dr["PEINH"]),
+
+                        CantidadComprometida = Convert.ToDecimal(dr["NETPR"]),
+
                         ValorNeto =
                             dr["NETWR"] == DBNull.Value ? (int?) null : Convert.ToInt32(dr["NETWR"]),
                         CantidadUnidadMedida =

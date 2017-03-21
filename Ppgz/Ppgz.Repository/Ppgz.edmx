@@ -363,6 +363,7 @@ warning 6002: The table/view 'def.impuls_portal2.devoluciones' does not have a p
           <Property Name="CantidadUnidadMedida" Type="decimal" Precision="13" Scale="3" />
           <Property Name="SapOrdenCompraId" Type="int" />
           <Property Name="FechaCargaPortal" Type="timestamp" Precision="0" Nullable="false" />
+          <Property Name="CantidadComprometida" Type="decimal" Precision="18" Scale="3" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.impuls_portal2.pagos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1347,6 +1348,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="CantidadUnidadMedida" Type="Decimal" />
           <Property Name="SapOrdenCompraId" Type="Int32" />
           <Property Name="FechaCargaPortal" Type="DateTime" Nullable="false" />
+          <Property Name="CantidadComprometida" Type="Decimal" Nullable="false" />
           <NavigationProperty Name="ordencompra" Relationship="Self.fk_ordencompradetalle_parent" FromRole="ordencompradetalle" ToRole="ordencompra" />
           <NavigationProperty Name="ordencompra1" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="ordencompradetalle" ToRole="ordencompra" />
         </EntityType>
@@ -2217,6 +2219,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="CantidadUnidadMedida" ColumnName="CantidadUnidadMedida" />
                 <ScalarProperty Name="SapOrdenCompraId" ColumnName="SapOrdenCompraId" />
                 <ScalarProperty Name="FechaCargaPortal" ColumnName="FechaCargaPortal" />
+                <ScalarProperty Name="CantidadComprometida" ColumnName="CantidadComprometida" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
