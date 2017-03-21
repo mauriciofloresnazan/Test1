@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Data;
+using System.Web.Mvc;
 using MySql.Data.MySqlClient;
 using Ppgz.Repository;
 using Ppgz.Services;
@@ -26,6 +27,30 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
         public void Descargar(string NumeroDocumento)
         {
+            var detalles = _ordenCompraManager.FindDetalleByDocumento(NumeroDocumento);
+
+            var dt = new DataTable();
+            dt.Columns.Add("Orde de Compra");
+            dt.Columns.Add("Material");
+            dt.Columns.Add("Descripcion");
+            dt.Columns.Add("Centro");
+            dt.Columns.Add("Almacen");
+            dt.Columns.Add("Cantidad");
+            
+
+            foreach (var detalle in detalles)
+            {
+                dt.Rows.Add(
+                    detalle.NumeroDocumento,
+                    detalle.NumeroMaterial,
+                    detalle.DescripcionMaterial,
+                    detalle.Centro,
+                    detalle.Almacen, 
+                    detalle.CantidadPedido);
+
+            }
+
+/*
            // var detalle = _ordenCompraManager.FindDetalleByDocumento();
             //todo pasar a un manejador
             var commonManager = new CommonManager();
@@ -38,7 +63,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             FROM   ordencompradetalle
             WHERE  NumeroDocumento = @NumeroDocumento;";
 
-            var dt = commonManager.QueryToTable(sql, parametes);
+            var dt = commonManager.QueryToTable(sql, parametes);*/
             
             FileManager.ExportExcel(dt, NumeroDocumento, HttpContext);
         }
