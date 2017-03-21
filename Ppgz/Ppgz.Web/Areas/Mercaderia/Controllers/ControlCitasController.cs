@@ -100,7 +100,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return View();
         }
 
-
         public ActionResult Asn()
         {
             if (Session["orden"] == null)
@@ -108,7 +107,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Dates = ((Hashtable)Session["orden"]);
+            ViewBag.Orden = ((Hashtable)Session["orden"]);
 
             return View();
         }
