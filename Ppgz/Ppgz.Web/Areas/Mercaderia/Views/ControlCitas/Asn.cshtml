@@ -9,8 +9,31 @@
 
     ViewBag.OrdenCompra = (ordencompra)((Hashtable)HttpContext.Current.Session["orden"])["orden"];
     ViewBag.Fecha = ((DateTime)HttpContext.Current.Session["fecha"]).ToString("dd/MM/yyyy");
+    var detalles = ((List<ordencompradetalle>) ((Hashtable) HttpContext.Current.Session["orden"])["detalle"]);
+    ViewBag.TotalPedido = detalles.AsEnumerable().Sum(x => float.Parse(x.CantidadPedido));
 }
+<style>
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
 
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
+        }
+</style>
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
     <i class="fa fa-calculator" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
@@ -58,15 +81,23 @@
         <div class="form-group">
             <label class="col-sm-3 control-label">Productos en la Orden</label>
             <div class="col-sm-3">
-                <div style="margin-top: 0px; font-size: 1.5em; color: #22aaaa;"><span id="idProductosEnOrden">0</span></div>
+                <div style="margin-top: 0px; font-size: 1.5em; color: #22aaaa;"><span id="idProductosEnOrden">@ViewBag.TotalPedido</span></div>
             </div>
             <label class="col-sm-3 control-label">Productos en el ASN</label>
             <div class="col-sm-3">
-                <div id="total-entregar"style="margin-top: 0px; font-size: 1.5em; color: green;"> 0</div>
+                <div id="total-entregar"style="margin-top: 0px; font-size: 1.5em; color: green;">0</div>
             </div>
         </div>
         <div class="clearfix">
-            <a type="submit" class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModalExcel"><i class="fa fa-arrow-up" aria-hidden="true"></i> Cargar desde Excel</a>
+            <form method="POST" action="@Url.Action("CargarDesdePlantilla", "ControlCitas")" enctype="multipart/form-data">
+                <label class="btn btn-success btn-file pull-right">
+                    <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                    Cargar <input type="file" name="cargar-planilla" hidden>
+
+                </label>
+            </form>
+            <a class="btn btn-primary pull-right" href="@Url.Action("DescargarPlantilla", "ControlCitas")"><i class="fa fa-arrow-down" aria-hidden="true"></i> Descargar Planilla</a>
+
         </div>
         <p class="form-legend" style="">
             <i>Productos</i>
@@ -157,6 +188,7 @@
 
     <script type="text/javascript">
 
+        $("input[name='cargar-planilla']").change(function () { this.form.submit(); });
 
         var editingCell;
         var editingTd;

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using ClosedXML.Excel;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
@@ -118,7 +121,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return View();
         }
                 
-        [HttpPost]
+   
         public ActionResult Asn(string fecha = null)
         {
             if (System.Web.HttpContext.Current.Session["fecha"] == null)
@@ -156,5 +159,87 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             return View();
         }
+
+        public void DescargarPlantilla()
+        {
+            if (System.Web.HttpContext.Current.Session["orden"] == null)
+            {
+                return;
+            }
+
+            var detalles =((List<ordencompradetalle>)((Hashtable)System.Web.HttpContext.Current.Session["orden"])["detalle"]);
+
+            var dt = new DataTable();
+            dt.Columns.Add("NumeroMaterial");
+            dt.Columns.Add("Descripcion");
+            dt.Columns.Add("Cantidad");
+
+
+            foreach (var detalle in detalles)
+            {
+                dt.Rows.Add(detalle.NumeroMaterial, detalle.DescripcionMaterial, detalle.CantidadPedido);
+
+            }
+            
+            var orden =((ordencompra)((Hashtable)System.Web.HttpContext.Current.Session["orden"])["orden"]);
+            // var detalle = _ordenCompraManager.FindDetalleByDocumento();
+
+
+            FileManager.ExportExcel(dt, orden.NumeroDocumento + "_plantilla", HttpContext);
+        }
+
+               
+        [HttpPost]
+        public ActionResult CargarDesdePlantilla(FormCollection collection)
+        {
+            if (System.Web.HttpContext.Current.Session["orden"] == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var file = Request.Files[0];
+
+            if (file != null && file.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            {
+                TempData["FlashError"] = "Archivo incorrecto";
+                return RedirectToAction("Asn");
+            }
+
+            if (file == null)
+            {
+                TempData["FlashError"] = "Archivo incorrecto";
+                return RedirectToAction("Asn");
+            }
+
+            var fileName = Path.GetFileName(file.FileName);
+            
+
+
+            if (fileName == null)
+            {
+                TempData["FlashError"] = "Archivo incorrecto";
+                return RedirectToAction("Asn");
+            }
+
+            var wb = new XLWorkbook(file.InputStream);
+
+            //var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+
+            //file.SaveAs(path);
+
+            //return "~/Uploads/" + fileName;
+
+            var rows = wb.Worksheet(1).Rows().ToArray();
+
+
+            foreach (var row in rows)
+            {
+
+            }
+            
+            TempData["FlashSuccess"] = "Archivo cargado exitosamente";
+            return RedirectToAction("Asn",new { fecha = System.Web.HttpContext.Current.Session["fecha"] });
+        }
+
 	}
 }
