@@ -177,7 +177,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             foreach (var detalle in detalles)
             {
-                dt.Rows.Add(detalle.NumeroMaterial, detalle.DescripcionMaterial, detalle.CantidadPedido);
+                dt.Rows.Add(detalle.NumeroMaterial, detalle.DescripcionMaterial, detalle.CantidadBase);
 
             }
             
@@ -221,8 +221,39 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 return RedirectToAction("Asn");
             }
 
+            
+            var detalles =((List<ordencompradetalle>)((Hashtable)System.Web.HttpContext.Current.Session["orden"])["detalle"]);
+
+
             var wb = new XLWorkbook(file.InputStream);
 
+
+            var ws = wb.Worksheet(1);
+
+            try
+            {
+                for (var i = 2; i < detalles.Count + 2; i++)
+                {
+                    var numeroMaterial = ws.Row(i).Cell(1).Value.ToString();
+                    var cantidad = float.Parse(ws.Row(i).Cell(3).Value.ToString());
+
+                    var detalle = detalles.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial);
+                    if (detalle != null)
+                    {
+                        detalle.CantidadPedido = cantidad.ToString("n3");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                TempData["FlashError"] = "Archivo incorrecto";
+                return RedirectToAction("Asn");
+            }
+
+
+
+            var test = wb.Worksheet(1).Row(1).Cell(1).Value;
             //var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
 
             //file.SaveAs(path);
