@@ -1,18 +1,149 @@
-﻿@model dynamic
-
+﻿@using System.Collections
+@using Microsoft.AspNet.Identity
+@using System.Data;
+@using Ppgz.Repository
 @{
-    Layout = null;
+    ViewBag.Title = "Administracion de Citas";
+    ViewBag.Descripcion = "Seleccione la Orden de Compra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewBag.OrdenCompra = (ordencompra)((Hashtable)HttpContext.Current.Session["orden"])["orden"];
+    ViewBag.Fecha = ((DateTime)HttpContext.Current.Session["fecha"]).ToString("dd/MM/yyyy");
 }
 
-<!DOCTYPE html>
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de la Orden de Compra</div>
+    <div class="panel-body">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Orden de Compra</label>
+                <h4 style="margin-top: 5px">@ViewBag.OrdenCompra.NumeroDocumento</h4>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Fecha</label>
+                <h4 style="margin-top: 5px">@ViewBag.Fecha</h4>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="panel-footer">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pull-left">
+                    <button class="btn btn-info" type="button" onclick=" javascript: history.go(-1); "><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;Regresar</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="pull-right">
+                    <button class="btn btn-info" type="button" onclick=""><i class="fa fa-chevron-right" aria-hidden="true"></i>&nbsp;Siguiente</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
-</body>
-</html>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Resultado de la Busqueda</div>
+    <div class="panel-body">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">Productos en la Orden</label>
+            <div class="col-sm-3">
+                <div style="margin-top: 0px; font-size: 1.5em; color: #22aaaa;"><span id="idProductosEnOrden">0</span></div>
+            </div>
+            <label class="col-sm-3 control-label">Productos en el ASN</label>
+            <div class="col-sm-3">
+                <div id="total-entregar"style="margin-top: 0px; font-size: 1.5em; color: green;"> 0</div>
+            </div>
+        </div>
+        <div class="clearfix">
+            <a type="submit" class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModalExcel"><i class="fa fa-arrow-up" aria-hidden="true"></i> Cargar desde Excel</a>
+        </div>
+        <p class="form-legend" style="">
+            <i>Productos</i>
+        </p>
+        <table class="table table-striped table-condensed" id="asn">
+            <thead>
+                <tr>
+     
+                    <th class="text-center">Material</th>
+                    <th class="text-center">Centro</th>
+                    <th class="text-center">Almacen</th>
+                    <th class="text-center">Descripcion</th>
+                    <th class="text-center">Cantidad a Entregar</th>
+                    <th class="text-center">Modificacion</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var orden in ((List<ordencompradetalle>)((Hashtable)HttpContext.Current.Session["orden"])["detalle"]))
+                {
+                    <tr>
+
+                        <td class="text-center"> @orden.NumeroMaterial</td>
+                        <td class="text-center"> @orden.Centro</td>
+                        <td class="text-center"> @orden.Almacen</td>
+                        <td class="text-center"> @orden.DescripcionMaterial</td>
+                        <td class="text-center"style="font-weight: bold; cursor: pointer"> @orden.CantidadPedido</td>
+                        <td class="text-center"> NO</td>
+                    </tr>
+
+
+
+                }
+
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+
+
+
+@Scripts.Render("~/Scripts/jquery-1.10.2.js");
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function() {
+
+            var asn = $('#asn').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+            });
+
+
+            $('#asn tbody').on('click', 'td', function () {
+                alert(asn.cell(this).data());
+            });
+
+            calcularTotalEntregar();
+
+
+        });
+
+        function calcularTotalEntregar() {
+            var totalEntregar = 0;
+            $($(asn).DataTable().column(4).data()).each(function () {
+                totalEntregar = totalEntregar + parseFloat(this);
+            });
+            $("#total-entregar").text(totalEntregar);
+
+        }
+
+    </script>
+}

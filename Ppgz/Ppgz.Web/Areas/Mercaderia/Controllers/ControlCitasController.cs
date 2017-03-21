@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Ppgz.Repository;
@@ -118,8 +119,19 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
                 
         [HttpPost]
-        public ActionResult Asn()
+        public ActionResult Asn(string fecha = null)
         {
+            if (System.Web.HttpContext.Current.Session["fecha"] == null)
+            {
+
+                if (string.IsNullOrWhiteSpace(fecha))
+                {
+                    return RedirectToAction("Index");
+                }
+
+                System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+
             if (System.Web.HttpContext.Current.Session["orden"] == null)
             {
                 return RedirectToAction("Index");
