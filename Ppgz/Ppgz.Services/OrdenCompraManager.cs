@@ -125,13 +125,13 @@ namespace Ppgz.Services
                 {
                     "Dates", new[]
                     {
-                        DateTime.Today.AddDays(2).ToString("dd/MM/yyyy"),
-                        DateTime.Today.AddDays(3).ToString("dd/MM/yyyy"),
-                        DateTime.Today.AddDays(4).ToString("dd/MM/yyyy"),
-                        DateTime.Today.AddDays(5).ToString("dd/MM/yyyy"),
-                        DateTime.Today.AddDays(6).ToString("dd/MM/yyyy"),
-                        DateTime.Today.AddDays(7).ToString("dd/MM/yyyy"),
-                        DateTime.Today.AddDays(8).ToString("dd/MM/yyyy"),
+                        DateTime.Today.AddDays(2).ToString("yyyy-MM-dd"),
+                        DateTime.Today.AddDays(3).ToString("yyyy-MM-dd"),
+                        DateTime.Today.AddDays(4).ToString("yyyy-MM-dd"),
+                        DateTime.Today.AddDays(5).ToString("yyyy-MM-dd"),
+                        DateTime.Today.AddDays(6).ToString("yyyy-MM-dd"),
+                        DateTime.Today.AddDays(7).ToString("yyyy-MM-dd"),
+                        DateTime.Today.AddDays(8).ToString("yyyy-MM-dd"),
                     }
                 },
                 {"detalle", FindDetalleByDocumento(numeroDocumento)}

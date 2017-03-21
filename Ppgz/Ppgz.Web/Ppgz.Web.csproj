@@ -273,7 +273,7 @@
     <Content Include="Areas\Mercaderia\Views\ControlCitas\OrdenDeCompra.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitas\BuscarOrden.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitas\Asn.cshtml" />
-    <Content Include="Areas\Mercaderia\Views\ControlCitas\FechaAsn.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitas\FechaCita.cshtml" />
     <None Include="Infrastructure\CuentaManager.cs.old" />
     <Compile Include="Infrastructure\CuentasPorPagarManager.cs" />
     <Compile Include="Infrastructure\FileManager.cs" />

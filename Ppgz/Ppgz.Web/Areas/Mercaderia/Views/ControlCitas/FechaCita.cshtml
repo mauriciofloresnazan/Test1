@@ -1,5 +1,4 @@
-﻿@model Ppgz.Web.Areas.Mercaderia.Models.PefilProveedorViewModel
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @Styles.Render("~/assets/vendor/bootstrap-chosen/bootstrap-chosen.css")
@@ -20,10 +19,9 @@
 
 
             <div class="form-group">
-                <label class="col-sm-3 control-label"> Numero de Documento</label>
+                <label class="col-sm-3 control-label"> Fecha de la Cita</label>
                 <div class="col-sm-7">
-                    <input type="hidden" name="proveedorId" value="@ViewBag.proveedorId" />
-                    <input type="text" class="form-control" name="numeroDocumento" placeholder="Numero de Documento" />
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
                 </div>
             </div>
 
@@ -31,8 +29,8 @@
 
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-7">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
-                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-next" aria-hidden="true"></i> Siguiente</button>
+                    <a class="btn btn-default" href="@Url.Action("Asn", "ControlCitas")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
                 </div>
             </div>
 
@@ -45,6 +43,11 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/assets/vendor/chosen_v1.6.2/chosen.jquery.min.js")
     <script>
+        $('#fecha').datetimepicker({
+            locale: 'es',
+            format: 'DD/MM/YYYY',
+            enabledDates:@Html.Raw(Json.Encode(@ViewBag.Dates))
 
+            });
     </script>
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Web.Mvc;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
@@ -42,12 +43,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA")]
         public JsonResult OrdenDeCompraDetalle(string Documento = "4500916565")
         {
-
             var ordenCompraManager = new OrdenCompraManager();
             var orden = ordenCompraManager.FindDetalleByDocumento(Documento);
 
             return Json(orden,JsonRequestBehavior.AllowGet);
-
         }
 
 
@@ -66,10 +65,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             try
             {
                 var ordenCompraManager = new OrdenCompraManager();
-                var orden = ordenCompraManager.FindDetalleByProveedorIdAndNumeroDocumento(proveedorId, numeroDocumento);
+                var orden = ordenCompraManager.FindOrdenCompraWithAvailableDates(numeroDocumento, proveedorId);
 
                 Session["orden"] = orden;
-                return RedirectToAction("FechaAsn");
+                return RedirectToAction("FechaCita");
 
             }
             catch (BusinessException businessEx)
@@ -90,14 +89,27 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
         }
 
-        public ActionResult FechaAsn()
+        public ActionResult FechaCita()
         {
+            if (Session["orden"] == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Dates = ((Hashtable) Session["orden"])["Dates"];
             return View();
         }
 
 
         public ActionResult Asn()
         {
+            if (Session["orden"] == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Dates = ((Hashtable)Session["orden"]);
+
             return View();
         }
 	}
