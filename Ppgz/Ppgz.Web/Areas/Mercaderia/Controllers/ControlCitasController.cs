@@ -235,12 +235,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 for (var i = 2; i < detalles.Count + 2; i++)
                 {
                     var numeroMaterial = ws.Row(i).Cell(1).Value.ToString();
-                    var cantidad = float.Parse(ws.Row(i).Cell(3).Value.ToString());
+                    var cantidad = decimal.Parse(ws.Row(i).Cell(3).Value.ToString());
 
                     var detalle = detalles.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial);
                     if (detalle != null)
                     {
-                        detalle.CantidadPedido = cantidad.ToString("n3");
+                        detalle.CantidadComprometida = cantidad;
                     }
                 }
             }

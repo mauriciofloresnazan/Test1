@@ -11,6 +11,7 @@
     ViewBag.Fecha = ((DateTime)HttpContext.Current.Session["fecha"]).ToString("dd/MM/yyyy");
     var detalles = ((List<ordencompradetalle>) ((Hashtable) HttpContext.Current.Session["orden"])["detalle"]);
     ViewBag.TotalPedido = detalles.AsEnumerable().Sum(x => float.Parse(x.CantidadPedido));
+    ViewBag.TotalComprometido = detalles.AsEnumerable().Sum(x => x.CantidadComprometida);
 }
 <style>
     .btn-file {
@@ -110,8 +111,8 @@
                     <th class="text-center">Centro</th>
                     <th class="text-center">Almacen</th>
                     <th class="text-center">Descripcion</th>
-                    <th class="text-center">Cantidad a Entregar</th>
-                    <th class="text-center">Modificacion</th>
+                    <th class="text-center">Cant. Entregar</th>
+                    <th class="text-center">Cant. Pedido</th>
 
                 </tr>
             </thead>
@@ -124,8 +125,9 @@
                         <td class="text-center"> @orden.Centro</td>
                         <td class="text-center"> @orden.Almacen</td>
                         <td class="text-center"> @orden.DescripcionMaterial</td>
+                        <td class="text-center" style="font-weight: bold; cursor: pointer"> @orden.CantidadComprometida</td>
                         <td class="text-center"style="font-weight: bold; cursor: pointer"> @orden.CantidadPedido</td>
-                        <td class="text-center"> NO</td>
+
                     </tr>
 
 
@@ -203,7 +205,7 @@
             });
 
 
-            $('#asn tbody').on('click', 'td', function () {
+            $('#asn tbody').on('click', 'td:nth-child(5)', function () {
                 $("#editar-material").text($($(this.parentNode).find('td')[0]).text());
                 $("#editar-descripcion").text($($(this.parentNode).find('td')[3]).text());
                 $("#editar-cantidad").val($($(this.parentNode).find('td')[4]).text());
@@ -215,9 +217,9 @@
 
             $('#modalEditarCantidad').on('hidden.bs.modal', function(e) {
 
-                var cantidadOrg = parseFloat(editingCell.data()).toFixed(3);
+                var cantidadOrg = parseFloat($($(editingTd).parent().find('td')[5]).text());
 
-                var cantidadNueva = parseFloat($("#editar-cantidad").val()).toFixed(3);
+                var cantidadNueva = parseFloat($("#editar-cantidad").val());
 
                 if (isNaN(cantidadNueva)) {
                     //todo mejorar
@@ -231,10 +233,10 @@
                 }
 
                 if (cantidadNueva < cantidadOrg) {
-                    editingCell.data(cantidadNueva).draw();
+                    editingCell.data(cantidadNueva.toFixed(3)).draw();
                     $(editingTd).css("color", "red");
-                    $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
-                    $($(editingTd.parentNode).find('td')[5]).css("color", "#fe7000");
+                   // $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
+                   // $($(editingTd.parentNode).find('td')[5]).css("color", "#fe7000");
                     calcularTotalEntregar();
 
 
