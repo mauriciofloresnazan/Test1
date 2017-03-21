@@ -65,8 +65,7 @@ namespace Ppgz.Services
             }
             return detalle;
         }
-
-
+        
         public List<ordencompra> FindOrdenesDecompraActivasByCuenta(int cuentaId)
         {
             var cuenta = _db.cuentas.Find(cuentaId);
@@ -86,7 +85,60 @@ namespace Ppgz.Services
                 }
             }
             return detalle;
-        } 
+        }
+
+
+        // TODO CAMBIAR EL PARAMETRO DE LA ORDEN AL NUMEROD E DOCUMENTO
+        public void NotificarOrdenCompra(ordencompra ordencompra)
+        {
+            if(_db.ordencompras.FirstOrDefault(
+                oc=> oc.NumeroDocumento == ordencompra.NumeroDocumento)== null)
+            {
+                _db.ordencompras.Add(ordencompra);
+                _db.SaveChanges();
+            }
+        }
+
+        public ordencompra FindOrdenCompra(string numeroDocumento, int proveedorId)
+        {
+            var proveedor = _db.proveedores.FirstOrDefault(p => p.Id == proveedorId);
+            if (proveedor == null)
+            {
+                throw new Exception(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
+            
+            var orden = FindOrdenesDecompraActivas(proveedorId).FirstOrDefault(oc=> oc.NumeroDocumento == numeroDocumento);
+
+            if (orden == null) return null;
+
+            NotificarOrdenCompra(orden);
+
+            return orden;
+        }
+
+        // TODO CAMBIAR
+        public Hashtable FindOrdenCompraWithAvailableDates(string numeroDocumento, int proveedorId)
+        {
+            var hashTable = new Hashtable
+            {
+                {"orden", FindOrdenCompra(numeroDocumento, proveedorId)},
+                {
+                    "Dates", new[]
+                    {
+                        DateTime.Today.AddDays(2).ToString("dd/MM/yyyy"),
+                        DateTime.Today.AddDays(3).ToString("dd/MM/yyyy"),
+                        DateTime.Today.AddDays(4).ToString("dd/MM/yyyy"),
+                        DateTime.Today.AddDays(5).ToString("dd/MM/yyyy"),
+                        DateTime.Today.AddDays(6).ToString("dd/MM/yyyy"),
+                        DateTime.Today.AddDays(7).ToString("dd/MM/yyyy"),
+                        DateTime.Today.AddDays(8).ToString("dd/MM/yyyy"),
+                    }
+                },
+                {"detalle", FindDetalleByDocumento(numeroDocumento)}
+            };
+
+            return hashTable;
+        }
 
         public Hashtable FindActivaByIdAndUsuarioId(int id, string usuarioId)
         {
@@ -143,8 +195,7 @@ namespace Ppgz.Services
             } 
             return detalle;
         }
-
-
+        
         public List<ordencompradetalle> FindDetalleByProveedorIdAndNumeroDocumento(int proveedorId, string numeroDocumento)
         {
             var proveedor = _db.proveedores.Find(proveedorId);

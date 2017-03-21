@@ -16,8 +16,17 @@ namespace Test
         
         static void Main(string[] args)
         {
+
+            
             var ordenCompraManager = new OrdenCompraManager();
 
+            ordenCompraManager.FindOrdenCompraWithAvailableDates("4500916565", 3);
+
+
+
+
+            return;
+            
             var result = ordenCompraManager.FindOrdenesDecompraActivas(3);
 
             var testRfc = new TestRfc();
