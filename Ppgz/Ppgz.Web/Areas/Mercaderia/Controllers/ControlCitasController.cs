@@ -75,6 +75,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 var ordenCompraManager = new OrdenCompraManager();
                 var orden = ordenCompraManager.FindOrdenCompraWithAvailableDates(numeroDocumento, proveedorId);
 
+                if (orden["orden"] == null)
+                {
+                    TempData["FlashError"] = "Numero de documento incorrecto";
+                    return RedirectToAction("BuscarOrden", new { proveedorId });
+                }
+
                 Session["orden"] = orden;
                 return RedirectToAction("FechaCita");
 
