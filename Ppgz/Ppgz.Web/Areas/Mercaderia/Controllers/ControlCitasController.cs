@@ -53,6 +53,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA")]
         public ActionResult BuscarOrden(int proveedorId)
         {
+            var proveedor = _proveedorManager.Find(proveedorId);
+
+            if (proveedor == null)
+            {
+                // TODO
+                TempData["FlashError"] = "Proveedor incorrecto";
+            }
+
             ViewBag.proveedorId = proveedorId;
             return View();
         }

@@ -31,19 +31,11 @@
                             <td class="text-center">@proveedor.NumeroProveedor</td>
                             <td class="text-center vert-align">@proveedor.Nombre1</td>
                             <td class="text-center">
-                                <a class="button btn-info btn-sm" href="@Url.Action("OrdenDeCompra","ControlCitas", new { @proveedorId = @proveedor.Id })"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Siguiente</a>
+                                <a class="button btn-info btn-sm" href="@Url.Action("BuscarOrden","ControlCitas", new { @proveedorId = @proveedor.Id })"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Siguiente</a>
                             </td>
                         </tr>
 
                     }
-
-                    <tr>
-                        <td class="text-center">0000001</td>
-                        <td class="text-center vert-align">Prueba</td>
-                        <td class="text-center">
-                            <a class="button btn-info btn-sm" href="@Url.Action("OrdenDeCompra","ControlCitas", new { @proveedorId = "1"})"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Siguiente</a>
-                        </td>
-                    </tr>
 
                 </tbody>
             </table>
@@ -101,7 +93,7 @@
                 type: 'POST',
                 success: function (data) {
                     $("#mensaje-tr-id-" + mensajeId + " .leido-flag").text("SI");
-                    //alert(data);
+    
                 }
             });
         }
