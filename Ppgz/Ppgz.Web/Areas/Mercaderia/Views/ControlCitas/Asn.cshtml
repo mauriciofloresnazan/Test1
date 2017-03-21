@@ -106,6 +106,47 @@
 
     </div>
 </div>
+<div class="modal fade" id="modalEditarCantidad" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modificar Cantidad <span class="codigo"></span></h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-xs-4 control-label">Material</label>
+                            <div class="col-xs-8">
+                                <label class="control-label" id="editar-material"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-4 control-label">Descripcion</label>
+                            <div class="col-xs-8">
+                                <label class="control-label" id="editar-descripcion"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-4 control-label">Cantidad</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control" id="editar-cantidad" placeholder="Cantidad">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-sm-8">
+                                <button type="submit" onclick="agregarModificado()" class="btn btn-primary" data-dismiss="modal">Actualizar</button>
+                                <button type="submit" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -116,6 +157,9 @@
 
     <script type="text/javascript">
 
+
+        var editingCell;
+        var editingTd;
 
         $(document).ready(function() {
 
@@ -128,10 +172,43 @@
 
 
             $('#asn tbody').on('click', 'td', function () {
-                alert(asn.cell(this).data());
+                $("#editar-material").text($($(this.parentNode).find('td')[0]).text());
+                $("#editar-descripcion").text($($(this.parentNode).find('td')[3]).text());
+                $("#editar-cantidad").val($($(this.parentNode).find('td')[4]).text());
+                $("#modalEditarCantidad").modal('show');
+                editingCell = asn.cell(this);
+                editingTd = this;
+            });
+
+
+            $('#modalEditarCantidad').on('hidden.bs.modal', function(e) {
+
+                var cantidadOrg = parseFloat(editingCell.data()).toFixed(3);
+
+                var cantidadNueva = parseFloat($("#editar-cantidad").val()).toFixed(3);
+
+                if (isNaN(cantidadNueva)) {
+                    //todo mejorar
+                    alert("cantidad incorrecta");
+                    return;
+                }
+                if (cantidadNueva > cantidadOrg) {
+                    //todo mejorar
+                    alert("cantidad incorrecta");
+                    return;
+                }
+
+                if (cantidadNueva < cantidadOrg) {
+                    editingCell.data(cantidadNueva).draw();
+                    $(editingTd).css("color", "red");
+                    calcularTotalEntregar();
+                }
+
             });
 
             calcularTotalEntregar();
+
+
 
 
         });
