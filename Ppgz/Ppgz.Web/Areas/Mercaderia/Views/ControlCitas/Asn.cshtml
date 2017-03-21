@@ -201,7 +201,11 @@
                 if (cantidadNueva < cantidadOrg) {
                     editingCell.data(cantidadNueva).draw();
                     $(editingTd).css("color", "red");
+                    $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
+                    $($(editingTd.parentNode).find('td')[5]).css("color", "#fe7000");
                     calcularTotalEntregar();
+
+
                 }
 
             });
