@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
+using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 using OrdenCompraManager = Ppgz.Services.OrdenCompraManager;
@@ -59,6 +62,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             {
                 // TODO
                 TempData["FlashError"] = "Proveedor incorrecto";
+                return RedirectToAction("Index");
             }
 
             ViewBag.proveedorId = proveedorId;
@@ -80,8 +84,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     TempData["FlashError"] = "Numero de documento incorrecto";
                     return RedirectToAction("BuscarOrden", new { proveedorId });
                 }
-
-                Session["orden"] = orden;
+                 System.Web.HttpContext.Current.Session["orden"]  = orden;
                 return RedirectToAction("FechaCita");
 
             }
@@ -105,23 +108,39 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
         public ActionResult FechaCita()
         {
-            if (Session["orden"] == null)
+            if (System.Web.HttpContext.Current.Session["orden"] == null)
             {
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Dates = ((Hashtable) Session["orden"])["Dates"];
+            ViewBag.Dates = ((Hashtable)System.Web.HttpContext.Current.Session["orden"])["Dates"];
             return View();
         }
-
+                
+        [HttpPost]
         public ActionResult Asn()
         {
-            if (Session["orden"] == null)
+            if (System.Web.HttpContext.Current.Session["orden"] == null)
             {
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Orden = ((Hashtable)Session["orden"]);
+            ViewBag.Orden = ((Hashtable)System.Web.HttpContext.Current.Session["orden"]);
+
+            ViewBag.Detalles =
+                ((List<ordencompradetalle>) ((Hashtable) System.Web.HttpContext.Current.Session["orden"])["detalle"])
+                    .Select(
+                        d =>
+                            new
+                            {
+                                d.NumeroMaterial,
+                                d.Centro,
+                                d.Almacen,
+                                d.DescripcionMaterial,
+                                d.CantidadPedido,
+                                d.Id,
+                                d.ordencompra
+                            });
 
             return View();
         }

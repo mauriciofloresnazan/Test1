@@ -10,7 +10,7 @@
     <div class="panel-heading">Formulario de registro</div>
     <div class="panel-body">
 
-        @using (Html.BeginForm("BuscarOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("Asn", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
 
