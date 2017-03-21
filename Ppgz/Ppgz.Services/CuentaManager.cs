@@ -82,6 +82,7 @@ namespace Ppgz.Services
             var query = (from c in _db.cuentas
                          from u in c.AspNetUsers
                          where u.Tipo == UsuarioManager.Tipo.MaestroProveedor
+                         && c.Id == id
                          select new CuentaConUsuarioMaestro { Cuenta = c, UsuarioMaestro = u });
 
             return query.FirstOrDefault();
