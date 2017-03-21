@@ -1,7 +1,8 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web.Mvc;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Services;
+using OrdenCompraManager = Ppgz.Services.OrdenCompraManager;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -28,6 +29,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return View();
         }
 
+
+
         [Authorize(Roles = "MAESTRO-MERCADERIA")]
         public ActionResult OrdenDeCompra(int proveedorId)
         {
@@ -40,12 +43,62 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         public JsonResult OrdenDeCompraDetalle(string Documento = "4500916565")
         {
 
-            var ordenCompraManager = new Ppgz.Services.OrdenCompraManager();
+            var ordenCompraManager = new OrdenCompraManager();
             var orden = ordenCompraManager.FindDetalleByDocumento(Documento);
 
             return Json(orden,JsonRequestBehavior.AllowGet);
 
         }
 
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA")]
+        public ActionResult BuscarOrden(int proveedorId)
+        {
+            ViewBag.proveedorId = proveedorId;
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult BuscarOrden(int proveedorId, string numeroDocumento)
+        {
+            try
+            {
+                var ordenCompraManager = new OrdenCompraManager();
+                var orden = ordenCompraManager.FindDetalleByProveedorIdAndNumeroDocumento(proveedorId, numeroDocumento);
+
+                Session["orden"] = orden;
+                return RedirectToAction("FechaAsn");
+
+            }
+            catch (BusinessException businessEx)
+            {
+                TempData["FlashError"] =  businessEx.Message;
+                return View();
+            }
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+                return View();
+            }
+        }
+
+        public ActionResult FechaAsn()
+        {
+            return View();
+        }
+
+
+        public ActionResult Asn()
+        {
+            return View();
+        }
 	}
 }

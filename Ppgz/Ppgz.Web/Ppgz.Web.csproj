@@ -271,6 +271,9 @@
     <Content Include="Areas\Mercaderia\Views\CuentasPagar\DevolucionesDetalle.cshtml" />
     <Content Include="Areas\Mercaderia\Views\CuentasPagar\PagosDetalle.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitas\OrdenDeCompra.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitas\BuscarOrden.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitas\Asn.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitas\FechaAsn.cshtml" />
     <None Include="Infrastructure\CuentaManager.cs.old" />
     <Compile Include="Infrastructure\CuentasPorPagarManager.cs" />
     <Compile Include="Infrastructure\FileManager.cs" />

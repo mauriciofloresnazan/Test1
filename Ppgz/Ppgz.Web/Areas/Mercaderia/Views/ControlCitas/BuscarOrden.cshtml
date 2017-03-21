@@ -1,0 +1,50 @@
+﻿@model Ppgz.Web.Areas.Mercaderia.Models.PefilProveedorViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Styles.Render("~/assets/vendor/bootstrap-chosen/bootstrap-chosen.css")
+<h2>Crear Pefil</h2>
+<p class="page-description-title">
+    <i class="fa fa-info" aria-hidden="true"></i> <i>Nuevo perfil</i>
+</p>
+<div class="panel panel-default">
+    <div class="panel-heading">Formulario de registro</div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("BuscarOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true)
+
+
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label"> Numero de Documento</label>
+                <div class="col-sm-7">
+                    <input type="hidden" name="proveedorId" value="@ViewBag.proveedorId" />
+                    <input type="text" class="form-control" name="numeroDocumento" placeholder="Numero de Documento"/>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
+                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/assets/vendor/chosen_v1.6.2/chosen.jquery.min.js")
+    <script>
+
+    </script>
+}
