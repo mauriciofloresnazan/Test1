@@ -20,7 +20,7 @@ namespace Test
         public void TestOrdenesDeCompraHeader(string nuemroProveedor)
         {
             var ordenCompraManager = new SapOrdenCompraManager();
-            var resultDt = ordenCompraManager.GetOrdenesDeCompraHeader("0000001725");
+            var resultDt = ordenCompraManager.GetOrdenesDeCompraHeader(nuemroProveedor);
             Console.WriteLine(JsonConvert.SerializeObject(resultDt));
             Console.ReadLine();
         }

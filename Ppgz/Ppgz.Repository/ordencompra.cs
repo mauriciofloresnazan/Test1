@@ -42,6 +42,7 @@ namespace Ppgz.Repository
         public System.DateTime FechaCargaPortal { get; set; }
         public Nullable<int> ProveedorId { get; set; }
         public Nullable<System.DateTime> FechaVisualizado { get; set; }
+        public Nullable<int> CitaId { get; set; }
     
         public virtual proveedore proveedore { get; set; }
         public virtual ICollection<ordencompradetalle> ordencompradetalles { get; set; }

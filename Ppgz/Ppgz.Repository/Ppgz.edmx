@@ -125,6 +125,16 @@
           <Property Name="Habilitado" Type="bool" Nullable="false" />
           <Property Name="Descripcion" Type="varchar" MaxLength="1000" />
         </EntityType>
+        <EntityType Name="crs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Codigo" Type="varchar" MaxLength="20" />
+          <Property Name="ArchivoCR" Type="varchar" MaxLength="1000" />
+          <Property Name="Fecha" Type="datetime" Precision="0" />
+          <Property Name="CitaId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="cuentaproveedores">
           <Key>
             <PropertyRef Name="NumeroProveedor" />
@@ -326,6 +336,7 @@ warning 6002: The table/view 'def.impuls_portal2.devoluciones' does not have a p
           <Property Name="FechaCargaPortal" Type="timestamp" Precision="0" Nullable="false" />
           <Property Name="ProveedorId" Type="int" />
           <Property Name="FechaVisualizado" Type="datetime" Precision="0" />
+          <Property Name="CitaId" Type="int" />
         </EntityType>
         <EntityType Name="ordencompradetalle">
           <Key>
@@ -809,6 +820,7 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="citas" EntityType="Self.citas" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="configuraciones" EntityType="Self.configuraciones" Schema="impuls_portal2" store:Type="Tables" />
+          <EntitySet Name="crs" EntityType="Self.crs" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedores" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="cuentas" EntityType="Self.cuentas" Schema="impuls_portal2" store:Type="Tables" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensajes" Schema="impuls_portal2" store:Type="Tables" />
@@ -1104,6 +1116,16 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Habilitado" Type="Boolean" Nullable="false" />
           <Property Name="Descripcion" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="cr">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Codigo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ArchivoCR" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" />
+          <Property Name="CitaId" Type="Int32" Nullable="false" />
+        </EntityType>
         <EntityType Name="cuentaproveedore">
           <Key>
             <PropertyRef Name="NumeroProveedor" />
@@ -1295,6 +1317,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="FechaCargaPortal" Type="DateTime" Nullable="false" />
           <Property Name="ProveedorId" Type="Int32" />
           <Property Name="FechaVisualizado" Type="DateTime" />
+          <Property Name="CitaId" Type="Int32" />
           <NavigationProperty Name="proveedore" Relationship="Self.fk_ordencompra_proveedor" FromRole="ordencompra" ToRole="proveedores" />
           <NavigationProperty Name="ordencompradetalles" Relationship="Self.fk_ordencompradetalle_parent" FromRole="ordencompra" ToRole="ordencompradetalle" />
           <NavigationProperty Name="ordencompradetalles1" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="ordencompra" ToRole="ordencompradetalle" />
@@ -1733,6 +1756,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
           <EntitySet Name="citas" EntityType="Self.cita" />
           <EntitySet Name="configuraciones" EntityType="Self.configuracione" />
+          <EntitySet Name="crs" EntityType="Self.cr" />
           <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedore" />
           <EntitySet Name="cuentas" EntityType="Self.cuenta" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensaje" />
@@ -1971,6 +1995,17 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="crs">
+            <EntityTypeMapping TypeName="impuls_portal2Model.cr">
+              <MappingFragment StoreEntitySet="crs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
+                <ScalarProperty Name="ArchivoCR" ColumnName="ArchivoCR" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="CitaId" ColumnName="CitaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="cuentaproveedores">
             <EntityTypeMapping TypeName="impuls_portal2Model.cuentaproveedore">
               <MappingFragment StoreEntitySet="cuentaproveedores">
@@ -2154,6 +2189,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="FechaCargaPortal" ColumnName="FechaCargaPortal" />
                 <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
                 <ScalarProperty Name="FechaVisualizado" ColumnName="FechaVisualizado" />
+                <ScalarProperty Name="CitaId" ColumnName="CitaId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
