@@ -177,7 +177,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             foreach (var detalle in detalles)
             {
-                dt.Rows.Add(detalle.NumeroMaterial, detalle.DescripcionMaterial, detalle.CantidadBase);
+                dt.Rows.Add(detalle.NumeroMaterial, detalle.DescripcionMaterial, detalle.CantidadPedido);
 
             }
             
