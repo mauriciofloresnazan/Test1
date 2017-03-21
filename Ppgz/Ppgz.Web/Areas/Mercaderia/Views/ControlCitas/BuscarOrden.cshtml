@@ -3,12 +3,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @Styles.Render("~/assets/vendor/bootstrap-chosen/bootstrap-chosen.css")
-<h2>Crear Pefil</h2>
+<h2>Registrar Cita</h2>
 <p class="page-description-title">
-    <i class="fa fa-info" aria-hidden="true"></i> <i>Nuevo perfil</i>
+    <i class="fa fa-info" aria-hidden="true"></i> <i>Aquí podra Registrar la Cita buscando por número de orden</i>
 </p>
 <div class="panel panel-default">
-    <div class="panel-heading">Formulario de registro</div>
+    <div class="panel-heading">Buscar Orden de compra</div>
     <div class="panel-body">
 
         @using (Html.BeginForm("BuscarOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -22,7 +22,8 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"> Numero de Documento</label>
                 <div class="col-sm-7">
-                    <input type="hidden" name="proveedorId" value="@ViewBag.proveedorId" />
+                 <!--   <input type="hidden" name="proveedorId" value="@ViewBag.proveedorId" />-->
+                    <input type="hidden" name="proveedorId" value="3" />
                     <input type="text" class="form-control" name="numeroDocumento" placeholder="Numero de Documento"/>
                 </div>
             </div>

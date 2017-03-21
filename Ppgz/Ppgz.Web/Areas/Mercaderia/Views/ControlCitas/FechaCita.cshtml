@@ -2,12 +2,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @Styles.Render("~/assets/vendor/bootstrap-chosen/bootstrap-chosen.css")
-<h2>Crear Pefil</h2>
+<h2>Registrar Cita</h2>
 <p class="page-description-title">
-    <i class="fa fa-info" aria-hidden="true"></i> <i>Nuevo perfil</i>
+    <i class="fa fa-info" aria-hidden="true"></i> <i>Por favor coloque la fecha de la cita</i>
 </p>
 <div class="panel panel-default">
-    <div class="panel-heading">Formulario de registro</div>
+    <div class="panel-heading">Fecha de la cita</div>
     <div class="panel-body">
 
         @using (Html.BeginForm("Asn", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
