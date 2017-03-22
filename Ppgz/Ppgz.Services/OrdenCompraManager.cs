@@ -106,12 +106,70 @@ namespace Ppgz.Services
             {
                 throw new Exception(CommonMensajesResource.ERROR_Proveedor_Id);
             }
-            
-            var orden = FindOrdenesDecompraActivas(proveedorId).FirstOrDefault(oc=> oc.NumeroDocumento == numeroDocumento);
+
+            var orden = FindOrdenCompraActiva(numeroDocumento, proveedorId);
 
             if (orden == null) return null;
 
             NotificarOrdenCompra(orden);
+
+            return orden;
+        }
+
+        public ordencompra FindOrdenCompraActiva(string numeroDocumento, int proveedorId)
+        {
+
+            var proveedor = _db.proveedores.FirstOrDefault(p => p.Id == proveedorId);
+            if (proveedor == null)
+            {
+                throw new Exception(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
+
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeaderByNumeroDocumento(numeroDocumento);
+
+
+            if (result.Rows.Count > 1)
+                throw new BusinessException("Multiples ordenes de compra con el miso numero de documento");
+
+            if (result.Rows.Count <= 0) return null;
+            
+            var dr = result.Rows[0];
+
+
+            var ordenCompra = _db.ordencompras.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+
+            DateTime? fechaVisualizado = null;
+            if (ordenCompra != null)
+            {
+                fechaVisualizado = ordenCompra.FechaVisualizado;
+            }
+
+            var orden = new  ordencompra
+                {
+                    NumeroDocumento = dr["EBELN"].ToString(),
+                    Sociedad = dr["BUKRS"].ToString(),
+                    TipoDocumento = dr["BSTYP"].ToString(),
+                    ClaseDocumento = dr["BSART"].ToString(),
+                    IndicadorControl = dr["BSAKZ"].ToString(),
+                    IndicadorBorrado = dr["LOEKZ"].ToString(),
+                    EstatusDocumento = dr["STATU"].ToString(),
+                    FechaCreacionSap = dr["AEDAT"].ToString(),
+                    IntervaloPosicion = dr["PINCR"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["PINCR"]),
+                    UltimoNumeroPos = dr["LPONR"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["LPONR"]),
+                    NumeroProveedor = dr["LIFNR"].ToString(),
+                    ClavePago = dr["ZTERM"].ToString(),
+                    OrganizacionCompra = dr["EKORG"].ToString(),
+                    GrupoCompra = dr["EKGRP"].ToString(),
+                    Moneda = dr["WAERS"].ToString(),
+                    TipoCambio = dr["WKURS"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["WKURS"]),
+                    IndTipoCambio = dr["KUFIX"].ToString(),
+                    FechaDocCompra = dr["BEDAT"].ToString(),
+                    ProveedorId = proveedor.Id,
+                    FechaVisualizado = fechaVisualizado,
+                    proveedore = proveedor
+
+                };
 
             return orden;
         }
