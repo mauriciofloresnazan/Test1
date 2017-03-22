@@ -18,12 +18,13 @@ namespace SapWrapper
             var result = function.GetTable("ET_HDR");
             return result.ToDataTable("ET_HDR");
         }
-        public DataTable GetOrdenesDeCompraHeaderByNumeroDocumento(string numeroDocumento)
+        public DataTable GetOrdenesDeCompraHeader(string numeroDocumento, string numeroProveedor)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
             function.SetValue("IM_EBELN", numeroDocumento);
+            function.SetValue("IM_LIFNR", numeroProveedor);
             function.Invoke(rfcDestinationManager);
 
             var result = function.GetTable("ET_HDR");

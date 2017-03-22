@@ -126,7 +126,7 @@ namespace Ppgz.Services
             }
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeaderByNumeroDocumento(numeroDocumento);
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(numeroDocumento, proveedor.NumeroProveedor);
 
 
             if (result.Rows.Count > 1)
