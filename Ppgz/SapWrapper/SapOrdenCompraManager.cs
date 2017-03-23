@@ -13,6 +13,8 @@ namespace SapWrapper
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
             function.SetValue("IM_LIFNR", numeroProveedor);
+            // TODO CONFIGURAR CUANDO SEA DE SERVICIO
+            function.SetValue("IM_EKORG", "OC01"); 
             function.Invoke(rfcDestinationManager);
 
             var result = function.GetTable("ET_HDR");
