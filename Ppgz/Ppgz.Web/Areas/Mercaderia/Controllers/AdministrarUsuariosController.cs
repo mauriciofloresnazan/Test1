@@ -47,7 +47,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         public ActionResult Crear(UsuarioProveedorViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-
+            CargarPerfiles();
             try
             {
                 _usuarioManager
@@ -56,8 +56,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         model.Nombre, 
                         model.Apellido,
                         model.Email,
-                        "", //TODO
-                        "", //TODO
+                        null,//TODO
+                        null,//TODO
                         true,
                         model.Perfil,
                         model.Password, 

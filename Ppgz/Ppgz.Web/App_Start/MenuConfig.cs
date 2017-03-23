@@ -130,7 +130,7 @@ namespace Ppgz.Web
                 //"|Cuentas por Pagar|||fa fa-calculator|Mercaderia",
                 //"|Administración de Facturas|||fa fa-calculator|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
-                //"|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
+                "|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
 
                 "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Mercaderia",
