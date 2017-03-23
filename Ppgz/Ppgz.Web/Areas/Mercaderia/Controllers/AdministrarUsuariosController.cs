@@ -169,7 +169,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             try
             {
-                _usuarioManager.Eliminar(id);
+                _usuarioManager.Eliminar(id, _commonManager.GetCuentaUsuarioAutenticado().Id);
              
                 TempData["FlashSuccess"] = CommonMensajesResource.INFO_UsuarioProveedor_EliminadoCorrectamente;
                 return RedirectToAction("Index");

@@ -155,6 +155,12 @@ namespace Ppgz.Services
             {
                 throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
             }
+			
+			if(_db.AspNetUsers.Where(u => u.cuentas1.Any(c => c.Id == cuentaId)).Count() > 4)
+			{
+				// TODO PASAR A RESOURCE
+                throw new BusinessException("No puede crear mas de 5 usuarios en la cuenta");
+			}
 
             // Valida el prefil que este relacionado con la cuenta o sea maestro
             var perfil = _db.perfiles.Find(perfilId);
@@ -366,7 +372,37 @@ namespace Ppgz.Services
             _db.AspNetUsers.Remove(usuario);
             _db.SaveChanges();
         }
+		
+		public void Eliminar(string usuarioId, int cuentaId)
+        {
+            var usuario = _db.AspNetUsers.Find(usuarioId);
+            if (usuario == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Usuario_Id);
+            }
 
+            if (usuario.UserName.ToLower() == ConfigurationManager.AppSettings["SuperAdminUserName"].ToLower())
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_EliminarSuperAdmin);
+            }
+            var cuenta = _db.cuentas.Find(cuentaId);
+            if (cuenta == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+            }
+			
+			if(usuario.Tipo == Tipo.MaestroProveedor)
+			{
+				// TODO PASAR A UN RESOURCE
+                throw new BusinessException("No puede eliminar el usuario Maestro de la cuenta");				
+			}
+			cuenta.AspNetUsers.Remove(usuario);
+            _db.SaveChanges();
+            QuitarRolesDeUsuario(usuarioId);
+
+            _db.AspNetUsers.Remove(usuario);
+            _db.SaveChanges();
+        }
         #region Validaciones
 
         static void ValidarNombreApellido(string valor)
