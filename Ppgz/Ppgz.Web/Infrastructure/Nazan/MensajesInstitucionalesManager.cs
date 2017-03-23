@@ -63,6 +63,17 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .FirstOrDefault(m => m.Id == id);
         }
 
+        public List<mensaje> FindPublicadosSinLeerByCuentaId(int cuentaId)
+        {
+            var cuentaManager = new CuentaManager();
+
+            var cuenta = cuentaManager.Find(cuentaId);
+            return _db.mensajes
+                .Where(m=> m.cuentasmensajes.All(cm => cm.MensajeId != m.Id)
+                &&(m.FechaPublicacion < DateTime.Now && (m.EnviadoA == "TODOS" || m.EnviadoA == cuenta.Tipo))).ToList();
+  
+        }
+
         public List<vwmensaje> FindPublicadosByCuentaId(int cuentaId)
         {
             var cuentaManager = new CuentaManager();
