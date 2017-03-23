@@ -45,7 +45,7 @@ namespace Ppgz.Services
                 perfil = new perfile()
                 {
                     Nombre = "MAESTRO-MERCADERIA",
-                    Tipo = TipoPerfil.Nazan
+                    Tipo = TipoPerfil.Proveedor
                 };
                 perfil.AspNetRoles.Add(role);
                 db.perfiles.Add(perfil);
@@ -66,7 +66,7 @@ namespace Ppgz.Services
                 perfil = new perfile()
                 {
                     Nombre = "MAESTRO-SERVICIO",
-                    Tipo = TipoPerfil.Nazan
+                    Tipo = TipoPerfil.Proveedor
                 };
                 perfil.AspNetRoles.Add(role);
                 db.perfiles.Add(perfil);
