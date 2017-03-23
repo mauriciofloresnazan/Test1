@@ -1,0 +1,60 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Gestión de Comprobantes de Recibo</h2>
+<p class="page-description-title"><i class="fa fa-address-book" aria-hidden="true"></i> <i>En esta sección se podrá gestionar los Comprobantes de Recibo que tiene asociadas en su cuenta.</i></p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Comprobantes de Recibo</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <table id="crs" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Código</th>
+                        <th class="text-center">Fecha</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cr in ViewBag.Crs)
+                    {
+                        <tr>
+                            <td class="text-center">@cr.Codigo</td>
+                            <td class="text-center">@cr.Fecha</td>
+                            <td class="text-center vert-align">
+                                <a href="@Url.Action("Descargar", "ComprobantesRecibo", new {@id = @cr.Id})">
+                                    <i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar
+                                </a>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+
+            $('#crs').DataTable({
+                "language": {
+                    "url": "@Url.Content("~/assets/vendor/dataTables-1.10.13/Spanish.json")"
+                },
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+            });
+            
+
+
+        });
+
+    </script>
+}
+
+
