@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Ppgz.Repository;
-using SapWrapper;
 
 namespace Ppgz.Services
 {
