@@ -37,7 +37,7 @@ namespace Ppgz.Services
 
         public List<AspNetUser> FindByCuentaId(int id)
         {
-            return _db.AspNetUsers.Where(u => u.cuentas.Any(c => c.Id == id)).ToList();
+            return _db.AspNetUsers.Where(u => u.cuentas1.Any(c => c.Id == id)).ToList();
         }
 
         public List<AspNetUser> FindAllNazan()
@@ -89,7 +89,7 @@ namespace Ppgz.Services
                 Cargo = cargo,
                 Activo = activo,
                 PerfilId = perfilId,
-                PasswordHash = _passwordHasher.HashPassword(password),
+                PasswordHash = _passwordHasher.HashPassword(password), 
 
                 //Campos requeridos por Identity
                 EmailConfirmed =  false,
@@ -112,7 +112,7 @@ namespace Ppgz.Services
 
             // ASIGNACION DE LOS ROLES DE ACUERDO AL PERFIL
             var perfilManager = new PerfilManager();
-            var perfil = perfilManager.FindPerfilNazan(perfilId);
+            var perfil = _db.perfiles.Find(perfilId);
 
             foreach (var role in perfil.AspNetRoles)
             {
@@ -166,8 +166,8 @@ namespace Ppgz.Services
                 }
             }
 
-            var usuario = Crear(Tipo.Proveedor, userName, nombre, apellido, cargo,
-                activo, perfilId, password, email, telefono);
+            var usuario = Crear(Tipo.Proveedor, userName, nombre, apellido, email,
+                activo, perfilId, password, telefono, cargo);
 
             // Asiganmos el nuevo usuario a la cuenta
             cuenta.AspNetUsers.Add(usuario);
