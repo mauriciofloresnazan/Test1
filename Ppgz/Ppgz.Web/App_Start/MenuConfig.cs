@@ -123,6 +123,7 @@ namespace Ppgz.Web
             string[] menuLista =
             {
                 //"|Gestión de Proveedor|||fa fa-address-book-o|Mercaderia",
+                "GESTIONPROVEEDORES|Gestión de Proveedores|Index|GestionProveedores|fa fa-file-pdf-o|Mercaderia",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-address-book|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Index|ControlCitas|fa fa-calendar|Mercaderia",
                 "COMPROBANTERECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-pdf-o|Mercaderia",
