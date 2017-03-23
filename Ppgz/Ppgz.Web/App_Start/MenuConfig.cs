@@ -194,8 +194,8 @@ namespace Ppgz.Web
                     menu = new List<string>
                     {
                         "MENSAJESINSTITUCIONALES|Insitucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio",
-                        "MENSAJESINSTITUCIONALES|Rechazados|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio",
-                        "MENSAJESINSTITUCIONALES|Descartados|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio"
+                        //"MENSAJESINSTITUCIONALES|Rechazados|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio",
+                        //"MENSAJESINSTITUCIONALES|Descartados|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio"
                     };
                     break;
                 default:
@@ -213,8 +213,8 @@ namespace Ppgz.Web
                     menu = new List<string>
                     {
                         "MENSAJESINSTITUCIONALES|Recibidos|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
-                        "MENSAJESINSTITUCIONALES|Rechazados|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
-                        "MENSAJESINSTITUCIONALES|Descartados|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia"
+                        //"MENSAJESINSTITUCIONALES|Rechazados|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
+                        //"MENSAJESINSTITUCIONALES|Descartados|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia"
                     };
                     break;
                 case "CuentasPagar":
