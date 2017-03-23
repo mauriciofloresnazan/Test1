@@ -31,7 +31,9 @@
 
     <div class="well well2 text-center">
         <i class="fa fa-envelope fa-lg" aria-hidden="true"></i> Tiene @ViewBag.mensajes.Count nuevos mensajes
+        @if(ViewBag.mensajes.Count > 0){
         <a href="#" class="btn btn-link btn-lg"> Ver Mensajes</a>
+        }
     </div>
 </div>
 <div class="panel panel-default">
