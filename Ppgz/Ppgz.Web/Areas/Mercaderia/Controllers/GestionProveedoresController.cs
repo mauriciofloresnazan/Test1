@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
 using System.Web.Mvc;
-using DocumentFormat.OpenXml.Drawing.Charts;
 using Ppgz.Services;
-using Ppgz.Web.Areas.Mercaderia.Models;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 
@@ -24,14 +21,13 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         public ActionResult Index()
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-
             var proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
-            var mensajes = _mensajesInstitucionalesManager.FindPublicadosByCuentaId(cuenta.Id);
-            //var datosCuenta = _cuentaManager.Find(cuenta.Id);
+            var mensajes = _mensajesInstitucionalesManager.FindPublicadosSinLeerByCuentaId(cuenta.Id);
+            var cuentaConUsuarioMaestro = _cuentaManager.FindWithUsuarioMaestro(cuenta.Id);
 
             ViewBag.Proveedores = proveedores;
             ViewBag.Mensajes = mensajes;
-            ViewBag.DatosCuenta = cuenta;
+            ViewBag.CuentaConUsuarioMaestro = cuentaConUsuarioMaestro;
 
             return View();
         }
@@ -52,9 +48,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     Nombre = proveedor.Nombre1,
                     Direccion = proveedor.Region,
                     Contacto = proveedor.Nombre1,
-                    NumeroProveedor = proveedor.NumeroProveedor,
-                    NumeroTelefono = proveedor.NumeroTelefono,
-                    Correo = proveedor.Correo
+                    proveedor.NumeroProveedor,
+                    proveedor.NumeroTelefono, proveedor.Correo
                 });
             }
             catch (BusinessException businessEx)

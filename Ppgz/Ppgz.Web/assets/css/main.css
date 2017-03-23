@@ -102,6 +102,7 @@ h1{
 
  .well2 {
     background-color: #fff;
+    background-image: none;
  }
 
  .filters .form-control {
