@@ -91,8 +91,8 @@
         <table class="table table-striped table-condensed table-bordered" style="font-size: .8em;">
             <thead>
                 <tr>
-                    <th colspan="12">
-                        <div class="col-sm-12"><label>Asociar proveedor desde SAP</label></div>
+                    <th colspan="13">
+                        <div class="col-sm-13"><label>Asociar proveedor desde SAP</label></div>
                         <div class="col-sm-3">
 
                             <input type="text" name="numero-proveedor" id="numero-proveedor" placeholder="Número de Proveedor" class="form-control"/>
@@ -158,20 +158,21 @@
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade" id="buscarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+<div class="modal fade bd-example-modal-lg" id="buscarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header"><strong>Datos del Proveedor</strong>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel"><span id="mensaje-titulo"></span></h4>
+                
             </div>
+            <div class="pull-right"><a id="asociar-proveedor" class="btn btn-primary btn-lg">Asociar</a></div>
+            
             <div class="modal-body">
-
-
+                
             </div>
+            
             <div class="modal-footer">
-                <a id="asociar-proveedor" class="btn btn-primary btn-lg">Asociar</a>
-
             </div>
         </div>
     </div>
@@ -181,7 +182,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <strong>Error de busquueda del Proveedor</strong>
+                <strong>Error de busqueda del Proveedor</strong>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title" id="myModalLabel"><span id="mensaje-titulo"></span></h4>
             </div>
@@ -251,16 +252,15 @@
                 }
                 $("#buscarModal .modal-body").html("");
 
-
+                
                 for (var key in result) {
-
+                    
+                    
                     $("#buscarModal .modal-body").append("<label>" + key + "</label>");
-                    $("#buscarModal .modal-body").append("<p>" + result[key] + "</p>");
+                    $("#buscarModal .modal-body").append("<div style='display: inline-block; margin: 25px;'>" + result[key] + "</p>");
                 }
 
-
                 $("#asociar-proveedor").attr("href", urlAsociarProveedor + "/" + cuentaId + "?numeroProveedor=" + numeroProveedor);
-                
 
                 $('#buscarModal').modal('show');
 
