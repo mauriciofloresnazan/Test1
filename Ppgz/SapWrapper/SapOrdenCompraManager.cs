@@ -14,7 +14,8 @@ namespace SapWrapper
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
             function.SetValue("IM_LIFNR", numeroProveedor);
             // TODO CONFIGURAR CUANDO SEA DE SERVICIO
-            function.SetValue("IM_EKORG", "OC01"); 
+            function.SetValue("IM_EKORG", "OC01");
+            function.SetValue("IM_GET_DET", " ");
             function.Invoke(rfcDestinationManager);
 
             var result = function.GetTable("ET_HDR");
@@ -25,6 +26,8 @@ namespace SapWrapper
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
+            function.SetValue("IM_EKORG", "OC01");
+            function.SetValue("IM_GET_DET", " ");
             function.SetValue("IM_EBELN", numeroDocumento);
             function.SetValue("IM_LIFNR", numeroProveedor);
             function.Invoke(rfcDestinationManager);
@@ -37,6 +40,7 @@ namespace SapWrapper
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
+            function.SetValue("IM_EKORG", "OC01"); 
             function.SetValue("IM_EBELN", documento);
             function.Invoke(rfcDestinationManager);
 
