@@ -1,8 +1,5 @@
 ﻿using System.Data;
 using System.Web.Mvc;
-using MySql.Data.MySqlClient;
-using Ppgz.Repository;
-using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 using OrdenCompraManager = Ppgz.Services.OrdenCompraManager;
 
@@ -25,9 +22,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             return View();
         }
-        public void Descargar(string NumeroDocumento)
+        public void Descargar(string numeroDocumento, int proveedorId)
         {
-            var detalles = _ordenCompraManager.FindDetalleByDocumento(NumeroDocumento);
+            var detalles = _ordenCompraManager.FindDetalle(numeroDocumento, proveedorId);
 
             var dt = new DataTable();
             dt.Columns.Add("Orde de Compra");
@@ -49,23 +46,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     detalle.CantidadPedido);
 
             }
-
-/*
-           // var detalle = _ordenCompraManager.FindDetalleByDocumento();
-            //todo pasar a un manejador
-            var commonManager = new CommonManager();
-            MySqlParameter[] parametes = {
-                    new MySqlParameter("NumeroDocumento", NumeroDocumento)
-                };
-
-            const string sql = @"
-            SELECT * 
-            FROM   ordencompradetalle
-            WHERE  NumeroDocumento = @NumeroDocumento;";
-
-            var dt = commonManager.QueryToTable(sql, parametes);*/
             
-            FileManager.ExportExcel(dt, NumeroDocumento, HttpContext);
+            FileManager.ExportExcel(dt, numeroDocumento, HttpContext);
         }
     }
 }

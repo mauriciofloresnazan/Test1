@@ -12,6 +12,41 @@ namespace Ppgz.Services
     {
         private readonly Entities _db = new Entities();
 
+        internal ordencompra MapearOrden(DataRow dr)
+        {
+            try
+            {
+                return new ordencompra
+                {
+                    NumeroDocumento = dr["EBELN"].ToString(),
+                    Sociedad = dr["BUKRS"].ToString(),
+                    TipoDocumento = dr["BSTYP"].ToString(),
+                    ClaseDocumento = dr["BSART"].ToString(),
+                    IndicadorControl = dr["BSAKZ"].ToString(),
+                    IndicadorBorrado = dr["LOEKZ"].ToString(),
+                    EstatusDocumento = dr["STATU"].ToString(),
+                    FechaCreacionSap = dr["AEDAT"].ToString(),
+                    IntervaloPosicion = dr["PINCR"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["PINCR"]),
+                    UltimoNumeroPos = dr["LPONR"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["LPONR"]),
+                    NumeroProveedor = dr["LIFNR"].ToString(),
+                    ClavePago = dr["ZTERM"].ToString(),
+                    OrganizacionCompra = dr["EKORG"].ToString(),
+                    GrupoCompra = dr["EKGRP"].ToString(),
+                    Moneda = dr["WAERS"].ToString(),
+                    TipoCambio = dr["WKURS"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["WKURS"]),
+                    IndTipoCambio = dr["KUFIX"].ToString(),
+                    FechaDocCompra = dr["BEDAT"].ToString()
+
+                };
+            }
+            catch (Exception)
+            {
+                // TODO ESCRIBIR EN EL LOG
+                throw new BusinessException("Error al relacionar los datos de sap con la Orden");
+            }
+
+        }
+
         public List<ordencompra> FindOrdenesDecompraActivas(int proveedorId)
         {
             var proveedor = _db.proveedores.FirstOrDefault(p => p.Id == proveedorId);
@@ -37,37 +72,16 @@ namespace Ppgz.Services
                 var numeroDocumento = dr["EBELN"].ToString();
                 var ordenCompra = ordenesVistas.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
 
-                DateTime? fechaVisualizado = null;
+                var orden = MapearOrden(dr);
                 if (ordenCompra != null)
                 {
-                    fechaVisualizado = ordenCompra.FechaVisualizado;
+                    orden.FechaVisualizado = ordenCompra.FechaVisualizado;
                 }
-                 
-                detalle.Add(new ordencompra
-                {
-                    NumeroDocumento = dr["EBELN"].ToString(),
-                    Sociedad = dr["BUKRS"].ToString(),
-                    TipoDocumento = dr["BSTYP"].ToString(),
-                    ClaseDocumento = dr["BSART"].ToString(),
-                    IndicadorControl = dr["BSAKZ"].ToString(),
-                    IndicadorBorrado = dr["LOEKZ"].ToString(),
-                    EstatusDocumento = dr["STATU"].ToString(),
-                    FechaCreacionSap = dr["AEDAT"].ToString(),
-                    IntervaloPosicion = dr["PINCR"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["PINCR"]),
-                    UltimoNumeroPos = dr["LPONR"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["LPONR"]),
-                    NumeroProveedor = dr["LIFNR"].ToString(),
-                    ClavePago = dr["ZTERM"].ToString(),
-                    OrganizacionCompra = dr["EKORG"].ToString(),
-                    GrupoCompra = dr["EKGRP"].ToString(),
-                    Moneda = dr["WAERS"].ToString(),
-                    TipoCambio = dr["WKURS"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["WKURS"]),
-                    IndTipoCambio = dr["KUFIX"].ToString(),
-                    FechaDocCompra = dr["BEDAT"].ToString(),
-                    ProveedorId = proveedor.Id,
-                    FechaVisualizado = fechaVisualizado,
-                    proveedore = proveedor
-                  
-                });
+                
+                orden.proveedore = proveedor;
+                orden.ProveedorId = proveedor.Id;
+                
+                detalle.Add(orden);
             }
             return detalle;
         }
@@ -95,14 +109,36 @@ namespace Ppgz.Services
 
 
         // TODO CAMBIAR EL PARAMETRO DE LA ORDEN AL NUMEROD E DOCUMENTO
-        public void NotificarOrdenCompra(ordencompra ordencompra)
+        public void NotificarOrdenCompra(string numeroDocumento, int proveedorId)
         {
-            if(_db.ordencompras.FirstOrDefault(
-                oc=> oc.NumeroDocumento == ordencompra.NumeroDocumento)== null)
+            if (_db.ordencompras.FirstOrDefault(
+             oc => oc.NumeroDocumento == numeroDocumento) != null) return;
+
+            var proveedor = _db.proveedores.Find(proveedorId);
+            if (proveedor == null)
             {
-                _db.ordencompras.Add(ordencompra);
-                _db.SaveChanges();
+                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
             }
+
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(numeroDocumento, proveedor.NumeroProveedor);
+            if (result.Rows.Count > 1)
+            {
+                //TODO PASAR A UN RECURSO
+                throw new BusinessException("Multiples ordenes de compra con el miso numero de documento");
+            }
+
+            if (result.Rows.Count <= 0) return;
+            
+            var dr = result.Rows[0];
+
+            var orden = MapearOrden(dr);
+            //orden.proveedore = proveedor;
+            orden.FechaVisualizado = DateTime.Today;
+            orden.ProveedorId = proveedor.Id;
+
+            _db.ordencompras.Add(orden);
+            _db.SaveChanges();
         }
 
         public ordencompra FindOrdenCompra(string numeroDocumento, int proveedorId)
@@ -117,7 +153,7 @@ namespace Ppgz.Services
 
             if (orden == null) return null;
 
-            NotificarOrdenCompra(orden);
+            NotificarOrdenCompra(numeroDocumento,proveedorId);
 
             return orden;
         }
@@ -142,41 +178,16 @@ namespace Ppgz.Services
             
             var dr = result.Rows[0];
 
-
             var ordenCompra = _db.ordencompras.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+            
+            var orden = MapearOrden(dr);
+            orden.proveedore = proveedor;
+            orden.ProveedorId = proveedor.Id;
 
-            DateTime? fechaVisualizado = null;
-            if (ordenCompra != null)
-            {
-                fechaVisualizado = ordenCompra.FechaVisualizado;
-            }
-
-            var orden = new  ordencompra
-                {
-                    NumeroDocumento = dr["EBELN"].ToString(),
-                    Sociedad = dr["BUKRS"].ToString(),
-                    TipoDocumento = dr["BSTYP"].ToString(),
-                    ClaseDocumento = dr["BSART"].ToString(),
-                    IndicadorControl = dr["BSAKZ"].ToString(),
-                    IndicadorBorrado = dr["LOEKZ"].ToString(),
-                    EstatusDocumento = dr["STATU"].ToString(),
-                    FechaCreacionSap = dr["AEDAT"].ToString(),
-                    IntervaloPosicion = dr["PINCR"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["PINCR"]),
-                    UltimoNumeroPos = dr["LPONR"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["LPONR"]),
-                    NumeroProveedor = dr["LIFNR"].ToString(),
-                    ClavePago = dr["ZTERM"].ToString(),
-                    OrganizacionCompra = dr["EKORG"].ToString(),
-                    GrupoCompra = dr["EKGRP"].ToString(),
-                    Moneda = dr["WAERS"].ToString(),
-                    TipoCambio = dr["WKURS"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["WKURS"]),
-                    IndTipoCambio = dr["KUFIX"].ToString(),
-                    FechaDocCompra = dr["BEDAT"].ToString(),
-                    ProveedorId = proveedor.Id,
-                    FechaVisualizado = fechaVisualizado,
-                    proveedore = proveedor
-
-                };
-
+            if (ordenCompra == null) return orden;
+            
+            orden.FechaVisualizado = ordenCompra.FechaVisualizado;
+ 
             return orden;
         }
 
@@ -198,7 +209,7 @@ namespace Ppgz.Services
                         DateTime.Today.AddDays(8).ToString("yyyy-MM-dd"),
                     }
                 },
-                {"detalle", FindDetalleByDocumento(numeroDocumento)}
+                {"detalle", FindDetalle( numeroDocumento, proveedorId)}
             };
 
             return hashTable;
@@ -263,7 +274,7 @@ namespace Ppgz.Services
             return detalle;
         }
         
-        public List<ordencompradetalle> FindDetalleByProveedorIdAndNumeroDocumento(int proveedorId, string numeroDocumento)
+        public List<ordencompradetalle> FindDetalle(string numeroDocumento, int proveedorId)
         {
             var proveedor = _db.proveedores.Find(proveedorId);
             if (proveedor == null)
@@ -271,15 +282,14 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
             }
 
-            var ordenesCompraActivas = FindOrdenesDecompraActivas(proveedorId);
-
-            var ordenCompraActiva = ordenesCompraActivas.FirstOrDefault(
-                o => o.NumeroDocumento == numeroDocumento && o.NumeroProveedor == proveedor.NumeroProveedor);
+            var ordenCompraActiva = FindOrdenCompraActiva(numeroDocumento,proveedorId);
             if (ordenCompraActiva == null)
             {
                 throw new BusinessException(CommonMensajesResource.ERROR_OrdenCompraActiva_NumeroDocumento);
             }
-
+            
+            NotificarOrdenCompra(numeroDocumento, proveedorId);
+            
             return FindDetalleByDocumento(ordenCompraActiva.NumeroDocumento);
 
         }
