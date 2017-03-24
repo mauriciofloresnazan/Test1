@@ -14,17 +14,20 @@
                     <tr>
                         <th class="text-center">Código</th>
                         <th class="text-center">Fecha</th>
-                        <th class="text-center"></th>
+                        <th class="text-center">Descargar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var cr in ViewBag.Crs)
+                    @foreach (Ppgz.Repository.cr cr in ViewBag.Crs)
                     {
                         <tr>
-                            <td class="text-center">@cr.Codigo</td>
-                            <td class="text-center">@cr.Fecha</td>
+                            <td class="text-center vert-align">@cr.Codigo</td>
+                            @{
+                                var fecha = (DateTime) cr.Fecha;
+                            }
+                            <td class="text-center vert-align">@fecha.ToString("dd/MM/yyyy")</td>
                             <td class="text-center vert-align">
-                                <a href="@Url.Action("Descargar", "ComprobantesRecibo", new {@id = @cr.Id})">
+                                <a href="@Url.Action("Descargar", "ComprobantesRecibo", new {@id = @cr.Id})" class="btn btn-primary">
                                     <i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar
                                 </a>
                             </td>
