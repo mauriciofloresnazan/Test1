@@ -53,7 +53,7 @@
                         {
                             <tr>
                                 <td class="text-center vert-align">@(proveedor.Rfc)</td>
-                                <td class="text-center vert-align">@(proveedor.Nombre1)</td>
+                                <td class="text-center vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
                                 <td class="text-center vert-align">
                                     <div class="btn-group hidden-xs">
                                         <a href="javascript:buscarNumeroProveedor(@proveedor.Id)" class="ver-mensaje"> Ver Detalle</a>
@@ -139,14 +139,21 @@
                     $('#buscarModalError').modal('show');
                     return;
                 }
-                $("#buscarModal .modal-body").html("");
 
+                var body = $("#buscarModal .modal-body");
+
+                $(body).html("");
+
+                var dl = $("<dl class='dl-horizontal'></dl>").appendTo(body);
 
                 for (var key in result) {
-
-                    $("#buscarModal .modal-body").append("<label>" + key + "</label>");
-                    $("#buscarModal .modal-body").append("<p>" + result[key] + "</p>");
+                    if (result.hasOwnProperty(key)) {
+                        $(dl).append("<dt>" + key + "</dt>");
+                        $(dl).append("<dd>" + result[key] + "</dd>");
+                    }
                 }
+
+
 
                 $('#buscarModal').modal('show');
 

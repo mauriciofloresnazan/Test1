@@ -40,16 +40,24 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 var proveedor = _proveedorManager.Find(id);
                 // TODO PASAR MENSAJE AL RESOURCE
 
-
-
                 return proveedor == null ? Json(new { error = "Prvoeedor incorrecto" }) : Json(new
                 {
-                    RFC = proveedor.Rfc,
-                    Nombre = proveedor.Nombre1,
-                    Direccion = proveedor.Region,
-                    Contacto = proveedor.Nombre1,
-                    proveedor.NumeroProveedor,
-                    proveedor.NumeroTelefono, proveedor.Correo
+                    proveedor.Rfc,
+                    Nombre = string.Format
+                        ("{0} {1} {2} {3}",
+                            proveedor.Nombre1,
+                            proveedor.Nombre2,
+                            proveedor.Nombre3,
+                            proveedor.Nombre4),
+                    Teléfono = proveedor.NumeroTelefono,
+                    Email = proveedor.Correo,
+                    Vendedor = proveedor.VendedorResponsable,
+                    proveedor.Region,
+                    proveedor.Poblacion,
+                    proveedor.Apartado,
+                    proveedor.Distrito,
+                    proveedor.CodigoPostal,
+                    proveedor.Direccion,
                 });
             }
             catch (BusinessException businessEx)
