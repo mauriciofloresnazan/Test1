@@ -126,7 +126,7 @@ namespace Ppgz.Web
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-address-book|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Index|ControlCitas|fa fa-calendar|Mercaderia",
                 "COMPROBANTERECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-pdf-o|Mercaderia",
-                "IMPRESIONETIQUETAS|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-file-pdf-o|Mercaderia",
+                //"IMPRESIONETIQUETAS|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-file-pdf-o|Mercaderia",
                 //"|Administración de Facturas|||fa fa-calculator|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
                 "|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
