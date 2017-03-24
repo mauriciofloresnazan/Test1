@@ -112,9 +112,9 @@ namespace Ppgz.Web
                 "ADMINISTRAMENSAJESINSTITUCIONALES|Administrar Mensajes Institucionales|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan",
                 //"|Control de Citas|||fa fa-calendar|Nazan",
                 //"|Reportes|||fa fa-file-pdf-o|Nazan",
-                "ADMINISTRARUSUARIOSNAZAN|Administración de Usuarios Nazan|Index|AdministrarUsuariosNazan|fa fa fa-users|Nazan",
-                "ADMINISTRARPERFILESNAZAN|Administración de Perfiles Nazan|Index|AdministrarPerfilesNazan|fa fa fa-road|Nazan",
-                "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores Nazan|Index|AdministrarProveedores|fa fa-address-book-o|Nazan"
+                "ADMINISTRARUSUARIOSNAZAN|Administración de Usuarios|Index|AdministrarUsuariosNazan|fa fa fa-users|Nazan",
+                "ADMINISTRARPERFILESNAZAN|Administración de Perfiles|Index|AdministrarPerfilesNazan|fa fa fa-road|Nazan",
+                "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores|Index|AdministrarProveedores|fa fa-address-book-o|Nazan"
             };
             return menuLista;
         }
@@ -122,20 +122,17 @@ namespace Ppgz.Web
         {
             string[] menuLista =
             {
-                //"|Gestión de Proveedor|||fa fa-address-book-o|Mercaderia",
                 "GESTIONPROVEEDORES|Gestión de Proveedores|Index|GestionProveedores|fa fa-file-pdf-o|Mercaderia",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-address-book|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Index|ControlCitas|fa fa-calendar|Mercaderia",
                 "COMPROBANTERECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-pdf-o|Mercaderia",
-                //"|Impresión de Etiquetas|||fa fa-file-pdf-o|Mercaderia",
-                //"|Cuentas por Pagar|||fa fa-calculator|Mercaderia",
+                "IMPRESIONETIQUETAS|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-file-pdf-o|Mercaderia",
                 //"|Administración de Facturas|||fa fa-calculator|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
                 "|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
-
                 "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Mercaderia",
-                //"|Autenticación de Usuarios Proveedor|||fa fa-address-book-o|Mercaderia"
+                //"|Autenticación de Usuarios Proveedor|||fa fa-address-book-o|Mercaderia" 
                 //"|Reportes|||fa fa-file-pdf-o|Mercaderia"
             };
             return menuLista;
@@ -151,7 +148,8 @@ namespace Ppgz.Web
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio",
                 //"|Administración de Usuarios Proveedor|||fa fa-address-card|Servicio",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-users|Servicio",
-                "ADMINISTRARUSUARIOS|Autenticación de Usuarios|Index|AdministrarUsuarios|fa fa fa-road|Servicio"
+                "ADMINISTRARUSUARIOS|Autenticación de Usuarios|Index|AdministrarUsuarios|fa fa fa-road|Servicio",
+                "COMPROBANTESRECIBO|Comprobantes de Recibo|Index|ComprobantesRecibo|fa fa fa-road|Servicio"
                 //"|Reportes|||fa fa-file-pdf-o|Servicio"
             };
             return menuLista;
