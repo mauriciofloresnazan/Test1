@@ -1,4 +1,6 @@
 ﻿@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
 @{
     ViewBag.Title = "Ordenes de Compra";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -23,10 +25,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var OrdenCompra in ViewBag.data)
+                    @foreach (ordencompra ordenCompra in ViewBag.data)
                     {
                         <tr>
-                            @if (OrdenCompra.FechaVisualizado == null)
+                            @if (ordenCompra.FechaVisualizado == null)
                             {
                                 <td class="text-center"><i class="fa fa-lightbulb-o" aria-hidden="true" style="font-size: 24px; color: red;"></i></td>
                             }
@@ -34,13 +36,13 @@
                             {
                                 <td class="text-center"><i class="fa fa-lightbulb-o" aria-hidden="true" style="font-size: 24px; color: green;"></i></td>
                             }
-                            <td class="text-center vert-align">@OrdenCompra.NumeroDocumento</td>
-                            <td class="text-center vert-align">@OrdenCompra.FechaDocCompra</td>
-                            <td class="text-center vert-align">@OrdenCompra.proveedore.NumeroProveedor</td>
-                            <td class="text-center vert-align">@OrdenCompra.proveedore.Nombre1</td>
+                            <td class="text-center vert-align">@ordenCompra.NumeroDocumento</td>
+                            <td class="text-center vert-align">@DateTime.ParseExact(ordenCompra.FechaDocCompra,"yyyyMMdd", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy")</td>
+                            <td class="text-center vert-align">@ordenCompra.proveedore.NumeroProveedor</td>
+                            <td class="text-center vert-align">@ordenCompra.proveedore.Nombre1</td>
 
                             <td class="text-center vert-align">
-                                <a href="@Url.Action("Descargar", "OrdenesCompra", new { @NumeroDocumento = @OrdenCompra.NumeroDocumento })" class="descargar-visualizar"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar</a>
+                                <a href="@Url.Action("Descargar", "OrdenesCompra", new { @NumeroDocumento = ordenCompra.NumeroDocumento })" class="descargar-visualizar"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar</a>
                             </td>
                         </tr>
                     }
