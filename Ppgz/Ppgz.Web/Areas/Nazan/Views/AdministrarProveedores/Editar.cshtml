@@ -1,178 +1,130 @@
-﻿@using System.Data.Entity.Core.Mapping
+﻿@using Ppgz.Repository
 @{
 
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var cuenta = (cuenta)@ViewBag.cuentaConUsuarioMaestro.Cuenta;
+    var usuarioMaestro = (AspNetUser)@ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro;
 }
 
 <div>
     <h2>Editar Cuenta de Proveedor <a class="btn btn-default" href="@Url.Action("Index", "AdministrarProveedores")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a></h2>
-    <p class="page-description-title"><i class="fa fa-info" aria-hidden="true"></i> <i>Información de la cuenta</i>
-        
+    <p class="page-description-title">
+        <i class="fa fa-info" aria-hidden="true"></i> <i>Información de la cuenta</i>
     </p>
 
     <div class="col-sm-6">
-
         <div class="row">
-            <div class="col-sm-4"><strong>Codigo</strong>
+            <div class="col-sm-4">
+                <strong>Id</strong>
             </div>
-            <div class=" col-sm-8" style=""><span style="color: #66aaaa;">@ViewBag.cuentaConUsuarioMaestro.Cuenta.CodigoProveedor</span></div>
+            <div class=" col-sm-8" style=""><span style="color: #66aaaa;">@cuenta.Id</span></div>
         </div>
         <div class="row">
-            <div class="col-sm-4"><strong>Nombre</strong>
+            <div class="col-sm-4">
+                <strong>Nombre</strong>
             </div>
-            <div class="col-sm-8">@ViewBag.cuentaConUsuarioMaestro.Cuenta.NombreCuenta</div>
+            <div class="col-sm-8">@cuenta.NombreCuenta</div>
         </div>
-        <hr/>
+        <hr />
         <div class="row">
-            <div class="col-sm-4"><strong>Resp.</strong>
+            <div class="col-sm-4">
+                <strong>Responsable</strong>
             </div>
             <div class="col-sm-8">
                 <p>
-                    @(ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro.Nombre + ' ' + ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro.Apellido)<i>
-                        
+                    @(usuarioMaestro.Nombre + ' ' + usuarioMaestro.Apellido)<i>
                     </i><br>
-                    @ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro.Email
+                    @usuarioMaestro.Email
                 </p>
             </div>
         </div>
-
-
-    </div>
-    <div class="col-sm-6" style="display: none">
-        <div class="row">
-            <div class="col-sm-3"><strong>Estatus</strong>
-            </div>
-            <div class=" col-sm-9">
-                <p>
-                    @if (ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro.Activo)
-                    {
-                        <span>ACTIVO</span>
-                    }
-                    else
-                    {
-                        <span>SUSPENDIDO</span>
-                    }
-                </p>
-            </div>
-        </div>
-       <hr/>
-        <div>
-            <div class="col-md-6">
-                <select class="form-control" id="usuariosMaestrosSelect">
-                    <option value="">Cambiar U. Maestro</option>
-                    @foreach (var usuario in ViewBag.cuentaConUsuarioMaestro.Cuenta.AspNetUsers)
-                    {
-                        <option value="@usuario.Id">@(usuario.Nombre + ' ' + usuario.Apellido)</option>
-
-                    }
-
-                </select>
-            </div>
-            <div class="col-md-6"><a id="cambiarMaestro" class="btn btn-danger center-block">
-    <i class="fa fa-pencil" aria-hidden="true"></i>
-    Modificar
-</a>
-            </div>
-
-        </div>
-        <p>
-            
-
-            
-        </p>
     </div>
 </div>
 <div class="clearfix"></div>
-
 <div class="panel panel-default">
-    <div class="panel-heading">Numeros de Proveedor SAP asociados a la cuenta</div>
+    <div class="panel-heading">Proveedores SAP asociados a la cuenta</div>
     <div class="panel-body">
-
-        <table class="table table-striped table-condensed table-bordered" style="font-size: .8em;">
-            <thead>
+        <div class="table-responsive">
+            <table class="table table-striped table-condensed table-bordered" style="font-size: .8em;">
+                <thead>
                 <tr>
                     <th colspan="13">
-                        <div class="col-sm-13"><label>Asociar proveedor desde SAP</label></div>
-                        <div class="col-sm-3">
-
-                            <input type="text" name="numero-proveedor" id="numero-proveedor" placeholder="Número de Proveedor" class="form-control"/>
+                        <div class="col-sm-12">
+                            <label>Asociar proveedor desde SAP</label>
                         </div>
-                        <div class="col-sm-7">
-                            <a id="buscar" class="btn btn-primary" href="#"><i class="fa fa-search" aria-hidden="true"></i> Buscar</a>
-                        </div>
+                        <form id="buscar-form" method="POST">
+                            <div class="col-sm-3">
+                                <input type="text" name="numero-proveedor" id="numero-proveedor" placeholder="Número de Proveedor" class="form-control"/>
+                            </div>
+                            <div class="col-sm-7">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-search" aria-hidden="true"></i> Buscar
+                                </button>
+                            </div>
+                        </form>
                     </th>
                 </tr>
                 <tr>
                     <th class="text-center vert-align">Numero</th>
                     <th class="text-center vert-align">RFC</th>
-                    <th class="text-center vert-align">Nombre1</th>
-                    <th class="text-center vert-align">Nombre2</th>
-                    <th class="text-center vert-align">Nombre3</th>
-                    <th class="text-center vert-align">Nombre4</th>
+                    <th class="text-center vert-align">Nombre</th>
+                    <th class="text-center vert-align">Teléfono</th>
+                    <th class="text-center vert-align">Email</th>
+                    <th class="text-center vert-align">Vendedor</th>
+                    <th class="text-center vert-align">Región</th>
                     <th class="text-center vert-align">Población</th>
-                    <th class="text-center vert-align">Distrito</th>
                     <th class="text-center vert-align">Apartado</th>
+                    <th class="text-center vert-align">Distrito</th>
                     <th class="text-center vert-align">Codigo Postal</th>
                     <th class="text-center vert-align">Dirección</th>
-                    <th class="text-center vert-align">Email</th>
                     <th>
                     </th>
 
                 </tr>
-            </thead>
-            <tbody>
-            @foreach (var proveedor in ViewBag.cuentaConUsuarioMaestro.Cuenta.proveedores)
-            {
-                <tr>
-                    <td>@proveedor.NumeroProveedor</td>
-                    <td>proveedor.Rfc</td>
-                    <td>@proveedor.Nombre1</td>
-                    <td>@proveedor.Nombre2</td>
-                    <td>@proveedor.Nombre3</td>
-                    <td>@proveedor.Nombre4/td>
-                    <td>@proveedor.Poblacion</td>
-                    <td>@proveedor.Distrito</td>
-                    <td>@proveedor.Apartado</td>
-                    <td>@proveedor.CodigoPostal</td>
-                    <td>@proveedor.Direccion</td> 
-                    <td>@proveedor.Correo</td>
-                    <td>
-                        
-                        <div class="">
-                            
-                            <a class="btn btn-danger btn-xs" href="@Url.Action("DesAsociarProveedor", "AdministrarProveedores", new { cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id })" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="Cuidad el proveedor será desvinculado de la cuenta.">
-                                <i class="fa fa-times" aria-hidden="true"></i> Eliminar
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                
-            }
-
-
-            </tbody>
-        </table>
-
-
-
+                </thead>
+                <tbody>
+                @foreach (proveedore proveedor in ViewBag.cuentaConUsuarioMaestro.Cuenta.proveedores)
+                {
+                    <tr>
+                        <td>@proveedor.NumeroProveedor</td>
+                        <td>@proveedor.Rfc</td>
+                        <td>@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
+                        <td>@proveedor.NumeroTelefono</td>
+                        <td>@proveedor.Correo</td>
+                        <td>@proveedor.VendedorResponsable</td>
+                        <td>@proveedor.Region</td>
+                        <td>@proveedor.Poblacion</td>
+                        <td>@proveedor.Apartado</td>
+                        <td>@proveedor.Distrito</td>
+                        <td>@proveedor.CodigoPostal</td>
+                        <td>@proveedor.Direccion</td>
+                        <td>
+                            <div class="">
+                                <a class="btn btn-danger btn-xs" href="@Url.Action("DesAsociarProveedor", "AdministrarProveedores", new {cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="Cuidad el proveedor será desvinculado de la cuenta.">
+                                    <i class="fa fa-times" aria-hidden="true"></i> Eliminar
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <!-- Modal -->
 <div class="modal fade bd-example-modal-lg" id="buscarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header"><strong>Datos del Proveedor</strong>
+            <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"><span id="mensaje-titulo"></span></h4>
-                
+                <h4 class="modal-title"></h4>
+
             </div>
-            <div class="pull-right"><a id="asociar-proveedor" class="btn btn-primary btn-lg">Asociar</a></div>
-            
             <div class="modal-body">
-                
             </div>
-            
             <div class="modal-footer">
+
             </div>
         </div>
     </div>
@@ -197,44 +149,24 @@
     @Scripts.Render("~/bundles/jqueryval")
 
     <script type="text/javascript">
-        
-        var urlModUsuarioMaestro = "@Url.Action("ModificarUsuarioMaestro", "AdministrarProveedores")";
+
         var cuentaId = "@ViewBag.cuentaConUsuarioMaestro.Cuenta.Id";
 
-        function modificarUsuarioMaestro(id, usuarioId ) {
-            var link = urlModUsuarioMaestro + "/" +id + "?usuarioId=" + usuarioId;
-
-            location.href = link;
-
-        }
-
-
-        $("#cambiarMaestro").click(function () {
-            var usuariosMaestrosSelect = $("#usuariosMaestrosSelect");
-
-            if (usuariosMaestrosSelect.val() !== "") {
-                modificarUsuarioMaestro(cuentaId, usuariosMaestrosSelect.val());
-            }
+        $(function () {
+            $("#buscar-form").submit(function (e) {
+                buscarProveedor();
+                e.preventDefault();
+            });
         });
 
-        $("#buscar").click(function () {
-
-            if ($("#numero-proveedor").val() !== "") {
-                buscarNumeroProveedor($("#numero-proveedor").val());
-            }
-
-        });
-        
         var urlBuscarProveedor = "@Url.Action("BuscarProveedor", "AdministrarProveedores")";
 
-        var urlAsociarProveedor =  "@Url.Action("AsociarProveedor", "AdministrarProveedores")";
+        var urlAsociarProveedor = "@Url.Action("AsociarProveedor", "AdministrarProveedores")";
 
-        function buscarNumeroProveedor(numeroProveedor) {
+        function buscarProveedor() {
 
-
- 
             var data = {
-                numeroProveedor: numeroProveedor
+                numeroProveedor: $("#numero-proveedor").val()
             };
 
             $.ajax({
@@ -245,29 +177,37 @@
             }).done(function (result) {
 
                 if (result.error) {
-                   
+
                     $("#buscarModalError-content").text(result.error);
                     $('#buscarModalError').modal('show');
                     return;
                 }
-                $("#buscarModal .modal-body").html("");
 
-                
+                var title = $("#buscarModal .modal-title");
+                var body = $("#buscarModal .modal-body");
+                var footer = $("#buscarModal .modal-footer");
+
+                $(body).html("");
+                $(footer).html("");
+                $(title).text("Datos del Proveedor #" + data.numeroProveedor);
+                var dl = $("<dl class='dl-horizontal'></dl>").appendTo(body);
+              
                 for (var key in result) {
-                    
-                    
-                    $("#buscarModal .modal-body").append("<label>" + key + "</label>");
-                    $("#buscarModal .modal-body").append("<div style='display: inline-block; margin: 25px;'>" + result[key] + "</p>");
+                    if (result.hasOwnProperty(key)) {
+                        $(dl).append("<dt>" + key + "</dt>");
+                        $(dl).append("<dd>" + result[key] + "</dd>");
+                    }
                 }
+                var asociarLink = $("<a class='btn btn-primary btn-lg'><i class='fa fa-link' aria-hidden='true'></i> Asociar</a>").appendTo(footer);
 
-                $("#asociar-proveedor").attr("href", urlAsociarProveedor + "/" + cuentaId + "?numeroProveedor=" + numeroProveedor);
+                $(asociarLink).attr("href", urlAsociarProveedor + "/" + cuentaId + "?numeroProveedor=" + data.numeroProveedor);
 
                 $('#buscarModal').modal('show');
 
 
             }).fail(function (response) {
                 $('#buscarModal').modal('show');
-     
+
             });
         }
 

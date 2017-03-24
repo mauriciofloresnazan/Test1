@@ -91,7 +91,27 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		    try
 		    {
                 var proveedor = _proveedorManager.FindProveedorEnSap(numeroProveedor);
-                return proveedor == null ? Json(new { error = MensajesResource.ERROR_Proveedor_IdIncorrecto }) : Json(proveedor);
+		        return proveedor == null
+		            ? Json(new {error = MensajesResource.ERROR_Proveedor_IdIncorrecto})
+		            : Json(new
+		            {
+		                proveedor.Rfc,
+		                Nombre = string.Format
+		                    ("{0} {1} {2} {3}",
+		                        proveedor.Nombre1,
+		                        proveedor.Nombre2,
+		                        proveedor.Nombre3,
+		                        proveedor.Nombre4),
+                        Teléfono = proveedor.NumeroTelefono,
+                        Email = proveedor.Correo,
+                        Vendedor = proveedor.VendedorResponsable,
+                        proveedor.Region,
+                        proveedor.Poblacion,
+                        proveedor.Apartado,
+                        proveedor.Distrito,
+                        proveedor.CodigoPostal,
+                        proveedor.Direccion,
+		            });
 		    }
             catch (BusinessException businessEx)
             {
@@ -106,7 +126,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     e.ToString(), Request);
 
                 CommonManager.WriteAppLog(log, TipoMensaje.Error);
-                return Json(new { error = e.Message });
+                // TODO PASAR A UN RESOURCE
+                return Json(e.Message == "NO_DATA_BUKRS" ? new { error = "Número de proveedor incorrecto" } : new { error = e.Message });
             }
 		}
 
