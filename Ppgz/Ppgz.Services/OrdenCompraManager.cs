@@ -26,10 +26,16 @@ namespace Ppgz.Services
 
             if (result.Rows.Count <= 0) return detalle;
 
+            var numerosDocumento = result.AsEnumerable().Select(r => r["EBELN"].ToString()).ToList();
+
+            var ordenesVistas = _db.ordencompras
+                .Where(o => numerosDocumento.Contains(o.NumeroDocumento))
+                .Where(o => o.ProveedorId == proveedor.Id).ToList();
+
             foreach (DataRow dr in result.Rows)
             {
                 var numeroDocumento = dr["EBELN"].ToString();
-                var ordenCompra = _db.ordencompras.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+                var ordenCompra = ordenesVistas.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
 
                 DateTime? fechaVisualizado = null;
                 if (ordenCompra != null)
