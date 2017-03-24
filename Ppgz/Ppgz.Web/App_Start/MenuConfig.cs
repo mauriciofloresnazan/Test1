@@ -189,16 +189,8 @@ namespace Ppgz.Web
             List<string> menu;
             switch (nombreControllerActual)
             {
-                case "MensajesInstitucionales":
-                    menu = new List<string>
-                    {
-                        "MENSAJESINSTITUCIONALES|Insitucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio",
-                        //"MENSAJESINSTITUCIONALES|Rechazados|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio",
-                        //"MENSAJESINSTITUCIONALES|Descartados|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio"
-                    };
-                    break;
                 default:
-                    menu = new List<string> { "MENSAJESINSTITUCIONALES|" + nombreControllerActual + "|Index|" + nombreControllerActual + "|fa fa-envelope-open|Servicio" };
+                    menu = new List<string> { "|" + nombreControllerActual + "|Index|" + nombreControllerActual + "|fa fa-envelope-open|Servicio" };
                     break;
             }
             return menu;
@@ -208,14 +200,6 @@ namespace Ppgz.Web
             List<string> menu;
             switch (nombreControllerActual)
             {
-                case "MensajesInstitucionales":
-                    menu = new List<string>
-                    {
-                        "MENSAJESINSTITUCIONALES|Recibidos|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
-                        //"MENSAJESINSTITUCIONALES|Rechazados|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
-                        //"MENSAJESINSTITUCIONALES|Descartados|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia"
-                    };
-                    break;
                 case "CuentasPagar":
                     menu = new List<string>
                     {
@@ -225,7 +209,7 @@ namespace Ppgz.Web
                     };
                     break;
                 default:
-                    menu = new List<string> { "MENSAJESINSTITUCIONALES|" + nombreControllerActual + "|Index|" + nombreControllerActual + "|fa fa-envelope-open|Mercaderia" };
+                    menu = new List<string> { "|" + nombreControllerActual + "|Index|" + nombreControllerActual + "|fa fa-envelope-open|Mercaderia" };
                     break;
             }
             return menu;
@@ -235,16 +219,8 @@ namespace Ppgz.Web
             List<string> menu;
             switch (nombreControllerActual)
             {
-                case "CuentasPagar":
-                    menu = new List<string>
-                    {
-                        "CUENTASPAGAR|Pagos|Pagos|CuentasPagar|fa fa-calculator|Mercaderia",
-                        "CUENTASPAGAR|Pagos Pendientes|PagosPendientes|CuentasPagar|fa fa-calculator|Mercaderia",
-                        "CUENTASPAGAR|Devoluciones|Devoluciones|CuentasPagar|fa fa-calculator|Mercaderia"
-                    };
-                    break;
-                default:
-                    menu = new List<string> { "MENSAJESINSTITUCIONALES|" + nombreControllerActual + "|Index|" + nombreControllerActual + "|fa fa-envelope-open|Nazan" };
+                 default:
+                    menu = new List<string> { "|" + nombreControllerActual + "|Index|" + nombreControllerActual + "|fa fa-envelope-open|Nazan" };
                     break;
             }
             return menu;
