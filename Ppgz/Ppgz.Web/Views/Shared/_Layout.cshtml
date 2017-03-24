@@ -80,7 +80,7 @@
                                 {
                                     <li class="dropdown active">
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() <span class="caret"></span></a>
-                                    </li>                                                                
+                                    </li>
                                 }
                                 else
                                 {
@@ -132,17 +132,18 @@
         @RenderBody()
 
         <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - Grupo Nazan</p>
-        </footer>
+
     </div>
+    <footer class="footer">
+        <p>&copy; @DateTime.Now.Year - Grupo Nazan</p>
+    </footer>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/assets/vendor/bootstrap-3.3.6/js/bootstrap.min.js")
     @Scripts.Render("~/assets/vendor/dataTables-1.10.13/media/js/jquery.dataTables.min.js")
     @Scripts.Render("~/assets/vendor/dataTables-1.10.13/media/js/dataTables.bootstrap.min.js")
     @Scripts.Render("~/assets/vendor/bootstrap-confirmation.min.js")
     @Scripts.Render("~/assets/vendor/moment/moment-with-locales.min.js")
-        @Scripts.Render("~/assets/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js")
+    @Scripts.Render("~/assets/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js")
     @Scripts.Render("~/assets/vendor/jquery.blockUI.js")
     <script type="text/javascript">
         $('[data-toggle=confirmation]').confirmation({
