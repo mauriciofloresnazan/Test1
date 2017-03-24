@@ -78,14 +78,21 @@
                                     HttpContext.Current.Request.Params);
                                 if (menuI.Count == 1)
                                 {
-                                    <li class="dropdown active">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() <span class="caret"></span></a>
-                                    </li>
+                                    foreach (var item in menuI)
+                                     {
+                                         <li class="dropdown active">
+                                             <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() <span class="caret"></span></a>-->
+                                             <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" href="@Url.Action(item.Split('|')[2].ToString(), item.Split('|')[3].ToString(), new {area = item.Split('|')[5].ToString()})"><i class="@item.Split('|')[4].ToString()" aria-hidden="true"></i> @item.Split('|')[1].ToString() </a>
+                                         </li>
+                                     }
                                 }
                                 else
                                 {
                                     <li class="dropdown active">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString() <span class="caret"></span></a>
+                                        @{
+                                            string nombreMenuInterno = MenuConfig.NombreXController(HttpContext.Current.Request.RequestContext.RouteData.Values["controller"].ToString(), HttpContext.Current.Request.RequestContext.RouteData.DataTokens["area"].ToString().ToUpper());
+                                        }
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="@nombreMenuInterno.Split('|')[4].ToString()" aria-hidden="true"></i> @nombreMenuInterno.Split('|')[1].ToString() <span class="caret"></span></a>
                                         <ul class="dropdown-menu">
                                             @foreach (var item in menuI)
                                             {

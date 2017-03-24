@@ -190,7 +190,12 @@ namespace Ppgz.Web
             switch (nombreControllerActual)
             {
                 default:
-                    menu = new List<string> { "|" + nombreControllerActual + "|Index|" + nombreControllerActual + "|fa fa-envelope-open|Servicio" };
+                    string menuDefault = "";
+                    menuDefault = NombreXController(nombreControllerActual, "SERVICIO");
+                    menu = new List<string>
+                    {
+                        menuDefault
+                    };
                     break;
             }
             return menu;
@@ -209,10 +214,56 @@ namespace Ppgz.Web
                     };
                     break;
                 default:
-                    menu = new List<string> { "|" + nombreControllerActual + "|Index|" + nombreControllerActual + "|fa fa-envelope-open|Mercaderia" };
+                    string menuDefault = "";
+                    menuDefault = NombreXController(nombreControllerActual, "MERCADERIA");
+                    menu = new List<string>
+                    {
+                        menuDefault
+                    };
                     break;
+
             }
             return menu;
+        }
+
+        public static string NombreXController(string nombreControllerActual, string areaActual)
+        {
+            string itemMenuPrincipal = "";
+            string[] menuPrincipal;
+            switch (areaActual)
+            {
+                case "NAZAN":
+                    menuPrincipal = MenuNazan();
+                    foreach (var item in menuPrincipal)
+                    {
+                        if (item.ToString().Split('|')[3] == nombreControllerActual)
+                        {
+                            itemMenuPrincipal = item.ToString();
+                        }
+                    }
+                    break;
+                case "MERCADERIA":
+                    menuPrincipal = MenuMercaderia();
+                    foreach (var item in menuPrincipal)
+                    {
+                        if (item.ToString().Split('|')[3] == nombreControllerActual)
+                        {
+                            itemMenuPrincipal = item.ToString();
+                        }
+                    }
+                    break;
+                case "SERVICIO":
+                    menuPrincipal = MenuServicio();
+                    foreach (var item in menuPrincipal)
+                    {
+                        if (item.ToString().Split('|')[3] == nombreControllerActual)
+                        {
+                            itemMenuPrincipal = item.ToString();
+                        }
+                    }
+                    break;
+            }
+            return itemMenuPrincipal;
         }
         private static List<string> MenuInternoNazan(string nombreControllerActual)
         {
@@ -220,7 +271,12 @@ namespace Ppgz.Web
             switch (nombreControllerActual)
             {
                  default:
-                    menu = new List<string> { "|" + nombreControllerActual + "|Index|" + nombreControllerActual + "|fa fa-envelope-open|Nazan" };
+                    string menuDefault = "";
+                    menuDefault = NombreXController(nombreControllerActual, "NAZAN");
+                    menu = new List<string>
+                    {
+                        menuDefault
+                    };
                     break;
             }
             return menu;
