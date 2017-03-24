@@ -86,22 +86,25 @@
                 @foreach (proveedore proveedor in ViewBag.cuentaConUsuarioMaestro.Cuenta.proveedores)
                 {
                     <tr>
-                        <td>@proveedor.NumeroProveedor</td>
-                        <td>@proveedor.Rfc</td>
-                        <td>@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
-                        <td>@proveedor.NumeroTelefono</td>
-                        <td>@proveedor.Correo</td>
-                        <td>@proveedor.VendedorResponsable</td>
-                        <td>@proveedor.Region</td>
-                        <td>@proveedor.Poblacion</td>
-                        <td>@proveedor.Apartado</td>
-                        <td>@proveedor.Distrito</td>
-                        <td>@proveedor.CodigoPostal</td>
-                        <td>@proveedor.Direccion</td>
+                        <td class="vert-align">@proveedor.NumeroProveedor</td>
+                        <td class="vert-align">@proveedor.Rfc</td>
+                        <td class="vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
+                        <td class="vert-align">@proveedor.NumeroTelefono</td>
+                        <td class="vert-align">@proveedor.Correo</td>
+                        <td class="vert-align">@proveedor.VendedorResponsable</td>
+                        <td class="vert-align">@proveedor.Region</td>
+                        <td class="vert-align">@proveedor.Poblacion</td>
+                        <td class="vert-align">@proveedor.Apartado</td>
+                        <td class="vert-align">@proveedor.Distrito</td>
+                        <td class="vert-align">@proveedor.CodigoPostal</td>
+                        <td class ="vert-align">@proveedor.Direccion</td>
                         <td>
-                            <div class="">
+                            <div class="btn-group-vertical">
                                 <a class="btn btn-danger btn-xs" href="@Url.Action("DesAsociarProveedor", "AdministrarProveedores", new {cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="Cuidad el proveedor será desvinculado de la cuenta.">
                                     <i class="fa fa-times" aria-hidden="true"></i> Eliminar
+                                </a>
+                                <a class="btn btn-warning btn-xs" href="@Url.Action("RefrescarProveedor", "AdministrarProveedores", new { cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id })">
+                                    <i class="fa fa-refresh" aria-hidden="true"></i> Actualizar
                                 </a>
                             </div>
                         </td>

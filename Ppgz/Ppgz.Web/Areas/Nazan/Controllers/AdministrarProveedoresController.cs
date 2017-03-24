@@ -214,5 +214,19 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 		}
 
+	    public ActionResult RefrescarProveedor(int cuentaId, int proveedorId)
+	    {
+            try { 
+	            _cuentaManager.RefrescarProveedorSapEnCuenta(cuentaId, proveedorId);
+                TempData["FlashSuccess"] = "Proveedor actualizado con éxito.";
+                return RedirectToAction("Editar", new { id = cuentaId });
+            }
+            catch (Exception exception)
+            {
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("Editar", new { id = cuentaId });
+            }
+	    }
+
 	}
 }

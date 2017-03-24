@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using Ppgz.Repository;
 
@@ -219,6 +220,68 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
             }
             proveedorManager.Eliminar(proveedorId);
+        }
+
+        public void RefrescarProveedorSapEnCuenta(int cuentaId, int proveedorId)
+        {
+            var proveedor = _db.proveedores.Find(proveedorId);
+            if (proveedor == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
+
+            if (proveedor.CuentaId != cuentaId)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+            }
+            
+            var proveedorManager = new ProveedorManager();
+            var proveedorSap =  proveedorManager.FindProveedorEnSap(proveedor.NumeroProveedor);
+
+            if (proveedorSap == null)
+            {
+                throw new BusinessException("Error en la consulta del proveedor en SAP");
+            }
+
+            proveedor.ClavePais= proveedorSap.ClavePais;
+            proveedor.Nombre1 = proveedorSap.Nombre1;
+            proveedor.Nombre2 = proveedorSap.Nombre2;
+            proveedor.Nombre3 = proveedorSap.Nombre3;
+            proveedor.Nombre4 = proveedorSap.Nombre4;
+
+            proveedor.Poblacion = proveedorSap.Poblacion;
+            proveedor.Distrito = proveedorSap.Distrito;
+            proveedor.Apartado = proveedorSap.Apartado;
+            proveedor.CodigoApartado = proveedorSap.CodigoApartado;
+            
+            proveedor.CodigoPostal = proveedorSap.CodigoPostal;
+            proveedor.Region = proveedorSap.Region;
+            proveedor.Calle = proveedorSap.Calle;
+            proveedor.Direccion = proveedorSap.Direccion;
+            
+            proveedor.Sociedad = proveedorSap.Sociedad;
+            proveedor.OrganizacionCompra = proveedorSap.OrganizacionCompra;
+            proveedor.ClaveMoned = proveedorSap.ClaveMoned;
+            proveedor.VendedorResponsable = proveedorSap.VendedorResponsable;
+            
+            proveedor.NumeroTelefono = proveedorSap.NumeroTelefono;
+            proveedor.CondicionPago = proveedorSap.CondicionPago;
+            proveedor.IncoTerminos1 = proveedorSap.IncoTerminos1;
+            proveedor.IncoTerminos2 = proveedorSap.IncoTerminos2;
+            
+            proveedor.GrupoCompras = proveedorSap.GrupoCompras;
+            proveedor.DenominacionGrupo = proveedorSap.DenominacionGrupo;
+            proveedor.TelefonoGrupoCompra = proveedorSap.TelefonoGrupoCompra;
+            proveedor.TelefonoPrefijo = proveedorSap.TelefonoPrefijo;
+            
+            proveedor.TelefonoExtension = proveedorSap.TelefonoExtension;
+            proveedor.Correo = proveedorSap.Correo;
+            proveedor.Rfc = proveedorSap.Rfc;
+
+            _db.Entry(proveedor).State = EntityState.Modified;
+            _db.SaveChanges();
+
+
         }
     }
 }
