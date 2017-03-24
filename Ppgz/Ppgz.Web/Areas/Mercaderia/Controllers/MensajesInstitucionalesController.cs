@@ -19,7 +19,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			//CUENTAS
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-			var mensajes = _mensajesInstitucionalesManager.FindPublicadosByCuentaId(cuenta.Id);
+            var mensajes = _mensajesInstitucionalesManager.FindMensajesVigentesByCuentaId(cuenta.Id);
 
 			var mensajesUsuario = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
 

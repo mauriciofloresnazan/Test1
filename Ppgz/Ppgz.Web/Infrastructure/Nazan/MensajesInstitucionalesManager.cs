@@ -84,16 +84,18 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .Where(m => m.FechaPublicacion < DateTime.Now && (m.EnviadoA == "TODOS" || m.EnviadoA == cuenta.Tipo))
                 .ToList();
         }
-        /*public List<mensaje> FindPublicadosByCuentaId(int cuentaId)
+
+        public List<vwmensaje> FindMensajesVigentesByCuentaId(int cuentaId)
         {
             var cuentaManager = new CuentaManager();
 
             var cuenta = cuentaManager.Find(cuentaId);
 
-            return _db.mensajes
+            return _db.vwmensajes
                 .Where(m => m.FechaPublicacion < DateTime.Now && (m.EnviadoA == "TODOS" || m.EnviadoA == cuenta.Tipo))
+                .Where(m => m.FechaCaducidad >= DateTime.Today)
                 .ToList();
-        }*/
+        } 
 
         public List<cuentasmensaje> FindCuentaMensajes(int cuentaId)
         {
