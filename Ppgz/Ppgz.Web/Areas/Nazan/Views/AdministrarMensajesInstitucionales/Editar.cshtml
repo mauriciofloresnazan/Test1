@@ -11,7 +11,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">Formulario de edición</div>
     <div class="panel-body">
-        @using (Html.BeginForm("Editar", "AdministrarMensajesInstitucionales", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form", enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("Editar", "AdministrarMensajesInstitucionales", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form", enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
 
@@ -66,32 +66,50 @@
                 <label class="col-sm-3 control-label">Mensaje</label>
                 <div class="col-sm-7">
                     <div>
+                        @if(string.IsNullOrWhiteSpace(Model.Pdf))
+                        {
+                            @Html.TextAreaFor(m => m.Contenido, new { @class = "form-control", @rows = "5", @placeholder = "Contenido del mensaje" })
+                            @Html.ValidationMessageFor(m => m.Contenido)
+                            <p><i>El tipo mensaje será distribuido como <span class="label label-info">TEXTO</span></i></p>
+                        }
+                        else
+                        {
+                            <p>
+                                <a href="@Url.Content(@Model.Pdf)" target="_blank">Archivo Orignal</a>
+                            </p>
+                            <p>
+                                <input type="file" name="Pdf" id="Pdf">
+                            </p>
+                            @Html.ValidationMessageFor(m => m.Pdf)
+                            <p><i>El tipo mensaje será distribuido como <span class="label label-info">PDF</span></i>
+                            </p>
+                        }
 
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist" id="text-pdf">
-                            <li role="presentation" id="texto-mensaje" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Mensaje Escrito</a></li>
-                            <li role="presentation" id="pdf-mensaje"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Subir Archivo PDF</a></li>
+                        @*<ul class="nav nav-tabs" role="tablist" id="text-pdf">
+                            <li role="presentation" id="texto-mensaje" class="active"><a href="#contenido-panel" aria-controls="contenido-panel" role="tab" data-toggle="tab">Mensaje Escrito</a></li>
+                            <li role="presentation" id="pdf-mensaje"><a href="#pdf-panel" aria-controls="pdf-panel" role="tab" data-toggle="tab">Subir Archivo PDF</a></li>
                         </ul>
 
-                        <!-- Tab panes -->
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="home">
-                                @Html.TextAreaFor(m => m.Contenido, new { @class = "form-control", @rows = "5", placeholder = "Contenido del mensaje" })
-
+                            <div role="tabpanel" class="tab-pane active" id="contenido-panel">
+                                @Html.TextAreaFor(m => m.Contenido, new { @class = "form-control", @rows = "5", @placeholder = "Contenido del mensaje" })
+                                @Html.ValidationMessageFor(m => m.Contenido)
+                                <p><i>El tipo mensaje será distribuido como <span class="label label-info">TEXTO</span></i></p>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="profile">
-
-                                <input type="file" class="form-control" name="pdf">
-
+                            <div role="tabpanel" class="tab-pane" id="pdf-panel">
+                                <p style="padding-left: 20px; padding-top: 20px; padding-bottom: 0; margin: 0; ">
+                                    <a href="@Url.Content(@Model.Pdf)" target="_blank">Archivo Orignal</a>
+                                </p>
+                                    <input type="file" style="padding: 20px;" name="Pdf" id="Pdf">
+                                @Html.ValidationMessageFor(m => m.Pdf)
+                                <p><i>El tipo mensaje será distribuido como <span class="label label-info">PDF</span></i>
+                                </p>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="messages">...</div>
-                            <div role="tabpanel" class="tab-pane" id="settings">...</div>
-                        </div>
+                        </div>*@
+
                     </div>
                 </div>
             </div>
-
-
 
 
             <div class="form-group">
@@ -105,34 +123,69 @@
 </div>
 
 @section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
     <script type="text/javascript">
+        
+        // Mensaje Escrito
+        function agregarValidacionMensajeEscrito() {
+            $("#Contenido").rules("add", {
+                required: true,
+                minlength: 10,
+                messages: {
+                    required: "El campo es obligatorio.",
+                    minlength: jQuery.validator.format("Debe tener al menos {0} Carácteres")
+                }
+            });
+        }
 
+        // !Fin Mensaje Escrito
 
-        $('.fecha-hora').datetimepicker({
-            locale: 'es',
+        // Pdf
+        function agregarValidacionMensajePdf() {
+            $("#Pdf").rules("add", {
+                required: true,
+                messages: {
+                    required: "El campo es obligatorio."
+                }
+            });
+        }
 
-            format: 'DD/MM/YYYY',
-            showClose: true,
-            sideBySide: true
+        // !Fin Pdf
 
+        $(document).ready(function () {
 
-        });
+            $('.fecha-hora').datetimepicker({
+                locale: 'es',
 
+                format: 'DD/MM/YYYY',
+                showClose: true,
+                sideBySide: true
+            });
+ 
 
-        $("#form").submit(function (eventObj) {
-            if ($("ul#text-pdf li.active").attr("id") === "pdf-mensaje") {
-                $('<input />').attr('type', 'hidden')
-                    .attr('name', "pdf-mensaje")
-                    .attr('value', "pdf-mensaje")
-                    .appendTo('#form');
-
+            @if(string.IsNullOrWhiteSpace(Model.Pdf))
+            {
+                <text>
+                    agregarValidacionMensajeEscrito();                
+                </text>
             }
-            return true;
+            else
+            {
+                <text>
+                    $('<input />').attr('type', 'hidden')
+                                  .attr('name', "pdf-mensaje")
+                                  .attr('value', "pdf-mensaje")
+                                  .appendTo('#form');
+
+                    agregarValidacionMensajePdf();                                
+                </text>
+            }
         });
+
 
     </script>
 
-    @Scripts.Render("~/bundles/jqueryval")
 
 
 }

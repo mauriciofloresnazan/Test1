@@ -129,7 +129,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 FechaCaducidad = mensaje.FechaCaducidad.ToString("dd/MM/yyyy"),
                 FechaPublicacion = mensaje.FechaPublicacion.ToString("dd/MM/yyyy"),
                 TipoProveedor = mensaje.EnviadoA,
-                Titulo = mensaje.Titulo
+                Titulo = mensaje.Titulo,
+                Pdf = mensaje.Archivo
             };
 
             return View(mensajeModel);

@@ -256,6 +256,8 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             var mensaje = Find(id);
 
+            mensaje.cuentasmensajes.Clear();
+            
             _db.mensajes.Remove(mensaje);
             _db.SaveChanges();
         }
