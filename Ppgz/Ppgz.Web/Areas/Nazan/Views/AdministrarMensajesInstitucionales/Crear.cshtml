@@ -11,7 +11,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">Formulario del nuevo mensaje</div>
     <div class="panel-body">
-        @using (Html.BeginForm("Crear", "AdministrarMensajesInstitucionales", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form", enctype = "multipart/form-data" }))
+        @using (Html.BeginForm("Crear", "AdministrarMensajesInstitucionales", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form", enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
 
@@ -28,7 +28,7 @@
                     </div>
                     <div class="radio">
                         <label>
-                             @Html.RadioButtonFor(m => m.TipoProveedor, "SERVICIO") Servicio
+                            @Html.RadioButtonFor(m => m.TipoProveedor, "SERVICIO") Servicio
                         </label>
                     </div>
                     <div class="radio">
@@ -68,24 +68,22 @@
                 <div class="col-sm-7">
                     <div>
 
-                        <!-- Nav tabs -->
                         <ul class="nav nav-tabs" role="tablist" id="text-pdf">
-                            <li role="presentation" id="texto-mensaje" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Mensaje Escrito</a></li>
-                            <li role="presentation" id="pdf-mensaje"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Subir Archivo PDF</a></li>
+                            <li role="presentation" id="texto-mensaje" class="active"><a href="#contenido-panel" aria-controls="contenido-panel" role="tab" data-toggle="tab">Mensaje Escrito</a></li>
+                            <li role="presentation" id="pdf-mensaje"><a href="#pdf-panel" aria-controls="pdf-panel" role="tab" data-toggle="tab">Subir Archivo PDF</a></li>
                         </ul>
 
-                        <!-- Tab panes -->
                         <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="home">
-                                <textarea class="form-control" rows="5" name="Contenido" placeholder="Contenido del mensaje"></textarea>
+                            <div role="tabpanel" class="tab-pane active" id="contenido-panel">
+                                @Html.TextAreaFor(m => m.Contenido, new { @class = "form-control", @rows = "5", @placeholder = "Contenido del mensaje" })
+                                @Html.ValidationMessageFor(m => m.Contenido)
+                                <p><i>El tipo mensaje será distribuido como <span class="label label-info">TEXTO</span></i></p>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="profile">
-
-                                <input type="file" class="form-control" name="pdf">
-
+                            <div role="tabpanel" class="tab-pane" id="pdf-panel">
+                                <input type="file" style="padding: 20px;" name="Pdf" id="Pdf">
+                                @Html.ValidationMessageFor(m => m.Pdf)
+                                <p><i>El tipo mensaje será distribuido como <span class="label label-info">PDF</span></i></p>
                             </div>
-                            <div role="tabpanel" class="tab-pane" id="messages">...</div>
-                            <div role="tabpanel" class="tab-pane" id="settings">...</div>
                         </div>
                     </div>
                 </div>
@@ -105,34 +103,88 @@
 </div>
 
 @section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
     <script type="text/javascript">
 
+        function removerValidaciones() {
+            removerValidacionMensajeEscrito();
+            removerValidacionMensajePdf();
+        }
 
-        $('.fecha-hora').datetimepicker({
-            locale: 'es',
+        // Mensaje Escrito
+        function agregarValidacionMensajeEscrito() {
+            $("#Contenido").rules("add", {
+                required: true,
+                minlength: 10,
+                messages: {
+                    required: "El campo es obligatorio.",
+                    minlength: jQuery.validator.format("Debe tener al menos {0} Carácteres")
+                }
+            });
+        }
+        function removerValidacionMensajeEscrito() {
+            $("#Contenido").rules("remove", "required");
+            $("#contenido-panel .field-validation-error").html("");
+        }
+        // !Fin Mensaje Escrito
 
-            format: 'DD/MM/YYYY',
-            showClose: true,
-            sideBySide: true
+        // Pdf
+        function agregarValidacionMensajePdf() {
+            $("#Pdf").rules("add", {
+                required: true,
+                messages: {
+                    required: "El campo es obligatorio."
+                }
+            });
+        }
+        function removerValidacionMensajePdf() {
+            $("#Pdf").rules("remove", "required");
+            $("#pdf-panel .field-validation-error").html("");
+        }
+        // !Fin Pdf
 
+        $(document).ready(function () {
 
+            $('.fecha-hora').datetimepicker({
+                locale: 'es',
+
+                format: 'DD/MM/YYYY',
+                showClose: true,
+                sideBySide: true
+            });
+
+            $("#form").submit(function (eventObj) {
+                if ($("ul#text-pdf li.active").attr("id") === "pdf-mensaje") {
+                    $('<input />').attr('type', 'hidden')
+                        .attr('name', "pdf-mensaje")
+                        .attr('value', "pdf-mensaje")
+                        .appendTo('#form');
+                }
+                return true;
+            });
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+                // Quitamos las valiaciones de Mensaje escrito y Pfd
+                removerValidaciones();
+
+                var target = $(e.target).attr("href");
+
+                if (target === "#contenido-panel") {
+                    agregarValidacionMensajeEscrito();
+                }
+
+                if (target === "#pdf-panel") {
+                    agregarValidacionMensajePdf();
+                }
+            });
+
+            // Incluimos la validacion por ser el tab que viene selecionado por defecto
+            agregarValidacionMensajeEscrito();
         });
 
-
-        $("#form").submit(function (eventObj) {
-            if ($("ul#text-pdf li.active").attr("id") === "pdf-mensaje") {
-                $('<input />').attr('type', 'hidden')
-                    .attr('name', "pdf-mensaje")
-                    .attr('value', "pdf-mensaje")
-                    .appendTo('#form');
-
-            }
-            return true;
-        });
 
     </script>
-
-    @Scripts.Render("~/bundles/jqueryval")
 
 
 }
