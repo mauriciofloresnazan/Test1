@@ -35,18 +35,19 @@ namespace SapWrapper
             var result = function.GetTable("ET_HDR");
             return result.ToDataTable("ET_HDR");
         }
-        public DataTable GetOrdenDeCompraDetalle(string documento)
+        public DataTable GetOrdenDeCompraDetalle(string documento, string numeroProveedor)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
-            function.SetValue("IM_EKORG", "OC01"); 
+            function.SetValue("IM_LIFNR", numeroProveedor);
+            function.SetValue("IM_EKORG", "OC01");
             function.SetValue("IM_EBELN", documento);
-            function.Invoke(rfcDestinationManager);
+            function.SetValue("IM_GET_DET", "X");
 
-            //var result = function.GetTable("ET_HDR");
+            function.Invoke(rfcDestinationManager);
             var result = function.GetTable("ET_DET");
-            return result.ToDataTable("ET_HDR");
+            return result.ToDataTable("ET_DET");
         }
     }
 }

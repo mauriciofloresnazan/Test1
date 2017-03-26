@@ -51,7 +51,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         public JsonResult OrdenDeCompraDetalle(string Documento = "4500916565")
         {
             var ordenCompraManager = new OrdenCompraManager();
-            var orden = ordenCompraManager.FindDetalleByDocumento(Documento);
+            var orden = ordenCompraManager.FindDetalleByDocumento(Documento,"");
 
             return Json(orden,JsonRequestBehavior.AllowGet);
         }

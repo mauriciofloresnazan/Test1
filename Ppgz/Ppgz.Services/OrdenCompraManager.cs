@@ -234,11 +234,11 @@ namespace Ppgz.Services
 
         }
 
-        public List<ordencompradetalle> FindDetalleByDocumento(string numeroDocumento)
+        public List<ordencompradetalle> FindDetalleByDocumento(string numeroDocumento, string numeroProveedor)
         {
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenDeCompraDetalle(numeroDocumento);
+            var result = sapOrdenCompraManager.GetOrdenDeCompraDetalle(numeroDocumento, numeroProveedor);
             var detalle = new List<ordencompradetalle>();
 
             if (result.Rows.Count > 0)
@@ -290,7 +290,7 @@ namespace Ppgz.Services
             
             NotificarOrdenCompra(numeroDocumento, proveedorId);
             
-            return FindDetalleByDocumento(ordenCompraActiva.NumeroDocumento);
+            return FindDetalleByDocumento(ordenCompraActiva.NumeroDocumento, proveedor.NumeroProveedor);
 
         }
 
