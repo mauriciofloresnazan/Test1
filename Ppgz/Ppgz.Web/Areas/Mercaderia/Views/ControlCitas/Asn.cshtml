@@ -218,7 +218,7 @@
 </div>
 
 
-@Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitas", new { @proveedorId = ViewBag.OrdenCompra.NumeroProveedor }));
+@Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitas", new { @proveedorId = ViewBag.ProveedorId }));
 @Html.Hidden("RedirectTo2", Url.Action("ListaDeOrdenes", "ControlCitas"));
 
 @Scripts.Render("~/Scripts/jquery-1.10.2.js");

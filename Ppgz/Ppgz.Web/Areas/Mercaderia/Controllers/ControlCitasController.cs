@@ -60,6 +60,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA")]
         public ActionResult BuscarOrden(int proveedorId)
         {
+
             var proveedor = _proveedorManager.Find(proveedorId);
 
             if (proveedor == null)
@@ -69,6 +70,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 return RedirectToAction("Index");
             }
 
+            checkoutCitas.ListaDeOrdenes.IdProveedor(proveedorId.ToString(), "set");
             ViewBag.proveedorId = proveedorId;
             return View();
         }
@@ -153,6 +155,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     return RedirectToAction("Index");
                 }
 
+                ViewBag.ProveedorId = checkoutCitas.ListaDeOrdenes.IdProveedor("", "get");
 
                 ViewBag.origen = "1";
 
@@ -181,6 +184,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
             else
             {
+                ViewBag.ProveedorId = checkoutCitas.ListaDeOrdenes.IdProveedor("", "get");
                 ViewBag.origen = "2";
                 ViewBag.NumeroDocumento = orden;
                 ViewBag.Detalles =

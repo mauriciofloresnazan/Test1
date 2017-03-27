@@ -87,8 +87,8 @@ namespace Ppgz.Web.Areas.Mercaderia
         public static class ListaDeOrdenes
         {
             static List<KeyVal2<string, List<ordencompradetalle>>> _list;
-            private static string numOrdenTemp = ""; 
-
+            private static string numOrdenTemp = "";
+            private static string proveedorId = "";
 
             static ListaDeOrdenes()
             {
@@ -96,6 +96,25 @@ namespace Ppgz.Web.Areas.Mercaderia
                 _list = new List<KeyVal2<string, List<ordencompradetalle>>>();
             }
 
+            public static string IdProveedor(string valor, string opc)
+            {
+
+                string res = "";
+
+                if (opc == "set")
+                {
+                    proveedorId = valor;
+                    
+                }
+
+                if (opc == "get")
+                {
+
+                    res = proveedorId;
+                }
+
+                return res;
+            }
             public static string getsetOrdenTemp(string orden,int opcion = 0)
             {
 
