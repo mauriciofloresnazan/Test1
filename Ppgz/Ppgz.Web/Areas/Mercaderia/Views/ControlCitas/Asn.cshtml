@@ -131,8 +131,9 @@
                     {
 
                         ViewBag.ordenTmp = orden.NumeroDocumento;
-                       
-                        
+
+                        var cantComp = Decimal.ToInt32(orden.CantidadComprometida);
+                        var cantPed = Convert.ToInt32(decimal.Parse(orden.CantidadPedido.ToString()));
                     
                         
                     <tr>
@@ -141,8 +142,8 @@
                             <td class="text-center"> @orden.Centro</td>
                             <td class="text-center"> @orden.Almacen</td>
                             <td class="text-center"> @orden.DescripcionMaterial</td>
-                            <td class="text-center" style="font-weight: bold; cursor: pointer"> @orden.CantidadComprometida</td>
-                            <td class="text-center"style="font-weight: bold; cursor: pointer"> @orden.CantidadPedido</td>
+                            <td class="text-center" style="font-weight: bold; cursor: pointer"> @cantComp</td>
+                            <td class="text-center"style="font-weight: bold; cursor: pointer"> @cantPed</td>
 
                         </tr>
 
@@ -154,6 +155,9 @@
                    foreach (var orden in resultado)
                    {
                        ViewBag.ordenTmp = orden.NumeroDocumento;
+
+                       var cantComp = Decimal.ToInt32(orden.CantidadComprometida);
+                       var cantPed = Convert.ToInt32(orden.CantidadPedido);
                        
                         <tr>
 
@@ -161,7 +165,7 @@
                             <td class="text-center"> @orden.Centro</td>
                             <td class="text-center"> @orden.Almacen</td>
                             <td class="text-center"> @orden.DescripcionMaterial</td>
-                            <td class="text-center" style="font-weight: bold; cursor: pointer"> @orden.CantidadComprometida</td>
+                            <td class="text-center" style="font-weight: bold; cursor: pointer">@cantComp</td>
                             <td class="text-center"style="font-weight: bold; cursor: pointer"> @orden.CantidadPedido </td>
 
                         </tr>
@@ -206,7 +210,7 @@
                         <div class="form-group">
                             <div class="col-sm-offset-4 col-sm-8">
                                 <button type="submit" onclick="agregarModificado()" class="btn btn-primary" data-dismiss="modal">Actualizar</button>
-                                <button type="submit" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                                
                             </div>
                         </div>
 
@@ -286,7 +290,7 @@
                 }
 
                 if (cantidadNueva < cantidadOrg) {
-                    editingCell.data(cantidadNueva.toFixed(3)).draw();
+                    editingCell.data(cantidadNueva).draw();
                     $(editingTd).css("color", "red");
                     // $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
                     // $($(editingTd.parentNode).find('td')[5]).css("color", "#fe7000");
@@ -309,7 +313,7 @@
                             alert('Error: ' + xhr.statusText);
                         },
                         success: function (result) {
-                            alert(result);
+                            console.log(result);
                         },
                         async: true,
                         processData: false
