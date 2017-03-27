@@ -12,6 +12,8 @@
     var detalles = ((List<ordencompradetalle>) ((Hashtable) HttpContext.Current.Session["orden"])["detalle"]);
     ViewBag.TotalPedido = detalles.AsEnumerable().Sum(x => float.Parse(x.CantidadPedido));
     ViewBag.TotalComprometido = detalles.AsEnumerable().Sum(x => x.CantidadComprometida);
+
+    ViewBag.ordenTmp = "";
 }
 <style>
     .btn-file {
@@ -46,7 +48,12 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label>Orden de Compra</label>
-                <h4 style="margin-top: 5px">@ViewBag.OrdenCompra.NumeroDocumento</h4>
+                <h4 style="margin-top: 5px">
+                   
+                    @ViewBag.OrdenCompra.NumeroDocumento
+                    
+
+                </h4>
             </div>
         </div>
         <div class="col-md-6">
@@ -117,22 +124,50 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var orden in ((List<ordencompradetalle>)((Hashtable)HttpContext.Current.Session["orden"])["detalle"]))
-                {
+
+                @if (ViewBag.origen == "1") {
+
+                    foreach (var orden in ((List<ordencompradetalle>) ((Hashtable) HttpContext.Current.Session["orden"])["detalle"]))
+                    {
+
+                        ViewBag.ordenTmp = orden.NumeroDocumento;
+                        
+                    
+                        
                     <tr>
 
-                        <td class="text-center"> @orden.NumeroMaterial</td>
-                        <td class="text-center"> @orden.Centro</td>
-                        <td class="text-center"> @orden.Almacen</td>
-                        <td class="text-center"> @orden.DescripcionMaterial</td>
-                        <td class="text-center" style="font-weight: bold; cursor: pointer"> @orden.CantidadComprometida</td>
-                        <td class="text-center"style="font-weight: bold; cursor: pointer"> @orden.CantidadPedido</td>
+                            <td class="text-center"> @orden.NumeroMaterial</td>
+                            <td class="text-center"> @orden.Centro</td>
+                            <td class="text-center"> @orden.Almacen</td>
+                            <td class="text-center"> @orden.DescripcionMaterial</td>
+                            <td class="text-center" style="font-weight: bold; cursor: pointer"> @orden.CantidadComprometida</td>
+                            <td class="text-center"style="font-weight: bold; cursor: pointer"> @orden.CantidadPedido</td>
 
-                    </tr>
+                        </tr>
 
-
-
+                    }
                 }
+                else if (ViewBag.origen == "2")
+                {
+                    List<ordencompradetalle> resultado = new List<ordencompradetalle>((List<ordencompradetalle>)ViewBag.Detalles);
+                   foreach (var orden in resultado)
+                   {
+                       ViewBag.ordenTmp = orden.NumeroDocumento;
+                       
+                        <tr>
+
+                            <td class="text-center"> @orden.NumeroMaterial</td>
+                            <td class="text-center"> @orden.Centro</td>
+                            <td class="text-center"> @orden.Almacen</td>
+                            <td class="text-center"> @orden.DescripcionMaterial</td>
+                            <td class="text-center" style="font-weight: bold; cursor: pointer"> @orden.CantidadComprometida</td>
+                            <td class="text-center"style="font-weight: bold; cursor: pointer"> @orden.CantidadPedido </td>
+
+                        </tr>
+
+                    }
+                    
+                };
 
             </tbody>
         </table>
@@ -190,12 +225,23 @@
 
     <script type="text/javascript">
 
-        $("input[name='cargar-planilla']").change(function () { this.form.submit(); });
+        $("input[name='cargar-planilla']").change(function() { this.form.submit(); });
 
         var editingCell;
         var editingTd;
 
         $(document).ready(function() {
+
+            var valOrdenesCargadas = '@Request.RequestContext.HttpContext.Session["ordenesCargadas"]';
+
+            for (i = 0; i <= valOrdenesCargadas; i++) {
+
+                var nombre = "ordenTemp" + i;
+                console.log("Valor de Session: ordenTemp [" + i + "]: ");
+
+            }
+
+
 
             var asn = $('#asn').DataTable({
                 "language": {
@@ -205,7 +251,7 @@
             });
 
 
-            $('#asn tbody').on('click', 'td:nth-child(5)', function () {
+            $('#asn tbody').on('click', 'td:nth-child(5)', function() {
                 $("#editar-material").text($($(this.parentNode).find('td')[0]).text());
                 $("#editar-descripcion").text($($(this.parentNode).find('td')[3]).text());
                 $("#editar-cantidad").val($($(this.parentNode).find('td')[4]).text());
@@ -220,25 +266,52 @@
                 var cantidadOrg = parseFloat($($(editingTd).parent().find('td')[5]).text());
 
                 var cantidadNueva = parseFloat($("#editar-cantidad").val());
+                var vlItem = $($(this.parentNode).find('td')[0]).text();
+                var vlNumOrden = "@ViewBag.ordenTmp";
 
                 if (isNaN(cantidadNueva)) {
                     //todo mejorar
-                    alert("cantidad incorrecta");
+                    //alert("cantidad incorrecta");
+                    msgError("cantidad incorrecta");
                     return;
                 }
                 if (cantidadNueva > cantidadOrg) {
                     //todo mejorar
-                    alert("cantidad incorrecta");
+                    //alert("cantidad incorrecta");
+                    msgError("cantidad incorrecta");
+
                     return;
                 }
 
                 if (cantidadNueva < cantidadOrg) {
                     editingCell.data(cantidadNueva.toFixed(3)).draw();
                     $(editingTd).css("color", "red");
-                   // $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
-                   // $($(editingTd.parentNode).find('td')[5]).css("color", "#fe7000");
+                    // $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
+                    // $($(editingTd.parentNode).find('td')[5]).css("color", "#fe7000");
                     calcularTotalEntregar();
 
+                    var requestData = {
+                        Orden: vlNumOrden.trim(),
+                        Item: vlItem.trim(),
+                        OldValue: cantidadOrg ,
+                        NewValue: cantidadNueva
+                    };
+
+                    $.ajax({
+                        url: '/ControlCitas/updItemOrden',
+                        type: 'POST',
+                        data: JSON.stringify(requestData),
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        error: function (xhr) {
+                            alert('Error: ' + xhr.statusText);
+                        },
+                        success: function (result) {
+                            alert(result);
+                        },
+                        async: true,
+                        processData: false
+                    });
 
                 }
 
@@ -247,13 +320,11 @@
             calcularTotalEntregar();
 
 
-
-
         });
 
         function calcularTotalEntregar() {
             var totalEntregar = 0;
-            $($(asn).DataTable().column(4).data()).each(function () {
+            $($(asn).DataTable().column(4).data()).each(function() {
                 totalEntregar = totalEntregar + parseFloat(this);
             });
             $("#total-entregar").text(totalEntregar);

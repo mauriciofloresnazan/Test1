@@ -88,7 +88,16 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     TempData["FlashError"] = "Numero de documento incorrecto";
                     return RedirectToAction("BuscarOrden", new { proveedorId });
                 }
-                 System.Web.HttpContext.Current.Session["orden"]  = orden;
+
+                if (checkoutCitas.ListaDeOrdenes.getsetOrdenTemp(numeroDocumento) == "1")
+                {
+                    TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
+                    return RedirectToAction("BuscarOrden", new { proveedorId });
+
+                }
+                
+                System.Web.HttpContext.Current.Session["orden"]  = orden;
+                
                 return RedirectToAction("FechaCita");
 
             }
@@ -122,41 +131,98 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
                 
    
-        public ActionResult Asn(string fecha = null)
+        public ActionResult Asn(string fecha = null,string orden = "0")
         {
-            if (System.Web.HttpContext.Current.Session["fecha"] == null)
+            if (orden == "0")
             {
 
-                if (string.IsNullOrWhiteSpace(fecha))
+                if (System.Web.HttpContext.Current.Session["fecha"] == null)
+                {
+
+                    if (string.IsNullOrWhiteSpace(fecha))
+                    {
+                        return RedirectToAction("Index");
+                    }
+
+                    System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(fecha, "dd/MM/yyyy",
+                        CultureInfo.InvariantCulture);
+                }
+
+                if (System.Web.HttpContext.Current.Session["orden"] == null)
                 {
                     return RedirectToAction("Index");
                 }
 
-                System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            }
 
-            if (System.Web.HttpContext.Current.Session["orden"] == null)
+                ViewBag.origen = "1";
+
+                ViewBag.Orden = ((Hashtable) System.Web.HttpContext.Current.Session["orden"]);
+
+                ViewBag.Detalles =
+                    ((List<ordencompradetalle>) ((Hashtable) System.Web.HttpContext.Current.Session["orden"])["detalle"])
+                        .Select(
+                            d =>
+                                new
+                                {
+                                    d.NumeroMaterial,
+                                    d.Centro,
+                                    d.Almacen,
+                                    d.DescripcionMaterial,
+                                    d.CantidadPedido,
+                                    d.Id,
+                                    d.ordencompra,
+
+                                });
+
+                checkoutCitas.ListaDeOrdenes.Agregar(checkoutCitas.ListaDeOrdenes.getsetOrdenTemp("", 1),
+                    checkoutCitas.ListaDeOrdenes.convertirHashTable(
+                        (Hashtable) System.Web.HttpContext.Current.Session["orden"]));
+
+            }
+            else
             {
-                return RedirectToAction("Index");
+                ViewBag.origen = "2";
+                ViewBag.NumeroDocumento = orden;
+                ViewBag.Detalles =
+                    checkoutCitas.ListaDeOrdenes.getListaDeItems(orden);
+
+
             }
+            ;
 
-            ViewBag.Orden = ((Hashtable)System.Web.HttpContext.Current.Session["orden"]);
+            //checkoutCitas.ListaDeOrdenes.convertirHashTable((Hashtable) System.Web.HttpContext.Current.Session["orden"]);
 
-            ViewBag.Detalles =
-                ((List<ordencompradetalle>) ((Hashtable) System.Web.HttpContext.Current.Session["orden"])["detalle"])
-                    .Select(
-                        d =>
-                            new
-                            {
-                                d.NumeroMaterial,
-                                d.Centro,
-                                d.Almacen,
-                                d.DescripcionMaterial,
-                                d.CantidadPedido,
-                                d.Id,
-                                d.ordencompra
-                            });
+            
+            
+            //checkoutCitas.ListaDeOrdenes.getListaDeItems(checkoutCitas.ListaDeOrdenes.getsetOrdenTemp("", 1));
 
+            //checkoutCitas.ListaDeOrdenes.updElementoEnLista("4501140098", "000000000013327801", "12", "10");
+
+            //checkoutCitas.ListaDeOrdenes.getListaDeOrdenes();
+
+            return View();
+        }
+
+
+        [HttpPost]
+        [AcceptVerbs(HttpVerbs.Post)]
+        public  ActionResult updItemOrden(string Orden, string Item, string OldValue, string NewValue)
+        {
+
+            int Res = checkoutCitas.ListaDeOrdenes.updElementoEnLista(Orden, Item, OldValue, NewValue);
+
+
+            return Json(Res, JsonRequestBehavior.DenyGet);
+
+        }
+
+        public ActionResult ListaDeOrdenes(string orden = "0")
+        {
+
+
+            ViewBag.ListaDeOrdenes = checkoutCitas.ListaDeOrdenes.getListaDeOrdenes();
+
+            
             return View();
         }
 

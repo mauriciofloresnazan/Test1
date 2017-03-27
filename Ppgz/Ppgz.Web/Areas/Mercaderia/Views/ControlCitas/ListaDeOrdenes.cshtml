@@ -1,0 +1,88 @@
+﻿@using System.Collections
+@using System.Security.Policy
+@using Ppgz.Repository
+
+@{
+    ViewBag.Title = "Lista de Ordenes de Compra";
+    ViewBag.Descripcion = "Seleccione la Orden de Compra";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de la Orden de Compra</div>
+    <div class="panel-body">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Fecha</label>
+                <h4 style="margin-top: 5px">@System.Web.HttpContext.Current.Session["fecha"]</h4>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="panel-footer">
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="pull-left">
+                    <button class="btn btn-info" type="button" onclick=" javascript: history.go(-1); "><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;Regresar</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="pull-right">
+                    <button class="btn btn-info" type="button" onclick=""><i class="fa fa-chevron-right" aria-hidden="true"></i>&nbsp;Siguiente</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Resultado de la Busqueda</div>
+    <div class="panel-body">
+
+        <p class="form-legend" style="">
+            <i>Lista de Ordenes</i>
+        </p>
+        <table class="table table-striped table-condensed" id="asn">
+            <thead>
+                <tr>
+
+                    <th class="text-center">Numero de Orden</th>
+                    <th class="text-center">Opcion</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DictionaryEntry orden in (Hashtable)ViewBag.ListaDeOrdenes)
+                {
+                    <tr>
+
+                        <td class="text-center"> @orden.Value</td>
+                        <td class="text-center" style="font-weight: bold; cursor: pointer">
+
+                            @Html.ActionLink("Editar Orden", "Asn", "ControlCitas", new { @fecha = "", @orden = @orden.Value }, null)
+                        </td>
+
+                    </tr>
+
+
+
+                }
+
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+
+
+
+
