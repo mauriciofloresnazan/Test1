@@ -199,6 +199,7 @@
       <DependentUpon>MensajesResource.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
+    <Compile Include="Areas\Mercaderia\Models\checkoutCitas.cs" />
     <Compile Include="Areas\Mercaderia\Models\PefilProveedorViewModel.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarMensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
@@ -253,6 +254,10 @@
     <Content Include="Areas\Mercaderia\Views\MensajesInstitucionales\index.cshtml" />
     <Content Include="Areas\Servicio\Views\MensajesInstitucionales\index.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarProveedores\Editar.cshtml" />
+    <Content Include="assets\css\msgcolores.css" />
+    <Content Include="assets\js\bootbox.js" />
+    <Content Include="assets\js\bootbox.min.js" />
+    <Content Include="assets\js\mensajes.js" />
     <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen-variables.less" />
     <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen-variables.scss" />
     <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen.less" />
@@ -276,6 +281,7 @@
     <Content Include="Areas\Mercaderia\Views\ControlCitas\Asn.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitas\FechaCita.cshtml" />
     <Content Include="Areas\Mercaderia\Views\GestionProveedores\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitas\ListaDeOrdenes.cshtml" />
     <None Include="Infrastructure\CuentaManager.cs.old" />
     <Compile Include="Infrastructure\CuentasPorPagarManager.cs" />
     <Compile Include="Infrastructure\FileManager.cs" />
@@ -1161,7 +1167,6 @@
     <Folder Include="Areas\Mercaderia\Views\Shared\" />
     <Folder Include="Areas\Nazan\Views\Shared\" />
     <Folder Include="Areas\Servicio\Views\Shared\" />
-    <Folder Include="assets\js\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

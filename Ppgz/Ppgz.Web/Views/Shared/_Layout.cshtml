@@ -23,6 +23,8 @@
 
     @Styles.Render("~/assets/vendor/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css")
 
+    @Styles.Render("~/assets/css/msgcolores.css")
+
     @Styles.Render("~/assets/css/main.css")
 
 
@@ -152,7 +154,12 @@
     @Scripts.Render("~/assets/vendor/moment/moment-with-locales.min.js")
     @Scripts.Render("~/assets/vendor/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js")
     @Scripts.Render("~/assets/vendor/jquery.blockUI.js")
-    <script type="text/javascript">
+
+    @Scripts.Render("~/assets/js/bootbox.js")
+    @Scripts.Render("~/assets/js/mensajes.js")
+
+
+<script type="text/javascript">
         $('[data-toggle=confirmation]').confirmation({
             rootSelector: '[data-toggle=confirmation]',
             container: 'body'
