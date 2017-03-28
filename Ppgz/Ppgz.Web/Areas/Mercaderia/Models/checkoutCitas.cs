@@ -89,6 +89,7 @@ namespace Ppgz.Web.Areas.Mercaderia
             static List<KeyVal2<string, List<ordencompradetalle>>> _list;
             private static string numOrdenTemp = "";
             private static string proveedorId = "";
+            private static string Fecha = "";
 
             static ListaDeOrdenes()
             {
@@ -115,6 +116,30 @@ namespace Ppgz.Web.Areas.Mercaderia
 
                 return res;
             }
+
+
+            public static string FechaOrden(string valor, string opc)
+            {
+
+                string res = "";
+
+                if (opc == "set")
+                {
+                    Fecha = valor;
+
+                }
+
+                if (opc == "get")
+                {
+
+                    res = Fecha;
+                }
+
+                return res;
+
+
+            }
+
             public static string getsetOrdenTemp(string orden,int opcion = 0)
             {
 

@@ -157,7 +157,7 @@
                        ViewBag.ordenTmp = orden.NumeroDocumento;
 
                        var cantComp = Decimal.ToInt32(orden.CantidadComprometida);
-                       var cantPed = Convert.ToInt32(orden.CantidadPedido);
+                       var cantPed = Convert.ToInt32(decimal.Parse(orden.CantidadPedido.ToString()));
                        
                         <tr>
 
@@ -166,13 +166,13 @@
                             <td class="text-center"> @orden.Almacen</td>
                             <td class="text-center"> @orden.DescripcionMaterial</td>
                             <td class="text-center" style="font-weight: bold; cursor: pointer">@cantComp</td>
-                            <td class="text-center"style="font-weight: bold; cursor: pointer"> @orden.CantidadPedido </td>
+                            <td class="text-center"style="font-weight: bold; cursor: pointer"> @cantPed </td>
 
                         </tr>
 
                     }
                     
-                };
+                }
 
             </tbody>
         </table>
@@ -204,13 +204,14 @@
                         <div class="form-group">
                             <label class="col-xs-4 control-label">Cantidad</label>
                             <div class="col-xs-8">
-                                <input type="text" class="form-control" id="editar-cantidad" placeholder="Cantidad">
+                                <input type="text" class="form-control numeric" id="editar-cantidad" placeholder="Cantidad">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-4 col-sm-8">
-                                <button type="submit" onclick="agregarModificado()" class="btn btn-primary" data-dismiss="modal">Actualizar</button>
+                                <button type="submit" class="btn btn-primary" data-dismiss="modal">Actualizar</button>
                                 
+
                             </div>
                         </div>
 
@@ -222,19 +223,23 @@
 </div>
 
 
-@Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitas", new { @proveedorId = ViewBag.ProveedorId }));
-@Html.Hidden("RedirectTo2", Url.Action("ListaDeOrdenes", "ControlCitas"));
+
+@Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitas", new { @proveedorId = ViewBag.ProveedorId }))
+@Html.Hidden("RedirectTo2", Url.Action("ListaDeOrdenes", "ControlCitas"))
 
 @Scripts.Render("~/Scripts/jquery-1.10.2.js");
 
 @section Scripts {
 
     <script type="text/javascript">
+        
+        $(".numeric").numeric();
 
         $("input[name='cargar-planilla']").change(function() { this.form.submit(); });
 
         var editingCell;
         var editingTd;
+
 
         $(document).ready(function() {
 
@@ -267,12 +272,12 @@
             });
 
 
-            $('#modalEditarCantidad').on('hidden.bs.modal', function(e) {
+            $('#modalEditarCantidad').on('hidden.bs.modal', function (e) {
 
                 var cantidadOrg = parseFloat($($(editingTd).parent().find('td')[5]).text());
 
                 var cantidadNueva = parseFloat($("#editar-cantidad").val());
-                var vlItem = $($(this.parentNode).find('td')[0]).text();
+                var vlItem = $($(editingTd).parent().find('td')[0]).text();
                 var vlNumOrden = "@ViewBag.ordenTmp";
 
                 if (isNaN(cantidadNueva)) {
@@ -289,7 +294,7 @@
                     return;
                 }
 
-                if (cantidadNueva < cantidadOrg) {
+                if (cantidadNueva <= cantidadOrg) {
                     editingCell.data(cantidadNueva).draw();
                     $(editingTd).css("color", "red");
                     // $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
@@ -299,7 +304,7 @@
                     var requestData = {
                         Orden: vlNumOrden.trim(),
                         Item: vlItem.trim(),
-                        OldValue: cantidadOrg ,
+                        OldValue: cantidadOrg,
                         NewValue: cantidadNueva
                     };
 
@@ -375,6 +380,76 @@
             box.show();
 
         }
+
+
+        @*function actualizarAgregado() {
+            
+
+            var cantidadOrg = parseFloat($($(editingTd).parent().find('td')[5]).text());
+
+            var cantidadNueva = parseFloat($("#editar-cantidad").val());
+            var vlItem = $($(editingTd).parent().find('td')[0]).text();
+            var vlNumOrden = "@ViewBag.ordenTmp";
+
+            if (isNaN(cantidadNueva)) {
+                //todo mejorar
+                //alert("cantidad incorrecta");
+                msgError("cantidad incorrecta");
+                return;
+            }
+            if (cantidadNueva > cantidadOrg) {
+                //todo mejorar
+                //alert("cantidad incorrecta");
+                msgError("cantidad incorrecta");
+
+                return;
+            }
+
+            if (cantidadNueva <= cantidadOrg) {
+                editingCell.data(cantidadNueva).draw();
+                $(editingTd).css("color", "red");
+                // $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
+                // $($(editingTd.parentNode).find('td')[5]).css("color", "#fe7000");
+                calcularTotalEntregar();
+
+                var requestData = {
+                    Orden: vlNumOrden.trim(),
+                    Item: vlItem.trim(),
+                    OldValue: cantidadOrg,
+                    NewValue: cantidadNueva
+                };
+
+                $.ajax({
+                    url: '/ControlCitas/updItemOrden',
+                    type: 'POST',
+                    data: JSON.stringify(requestData),
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    error: function (xhr) {
+                        //alert('Error: ' + xhr.statusText);
+                        msgError('Error: ' + xhr.statusText);
+                        cancelar();
+                    },
+                    success: function (result) {
+                        console.log(result);
+                        cancelar();
+                        calcularTotalEntregar();
+                    },
+                    async: true,
+                    processData: false
+                });
+
+            }
+
+
+        }*@
+
+        function cancelar() {
+
+            $("#modalEditarCantidad").modal('hidden.bs.modal');
+
+        }
+
 
     </script>
 }

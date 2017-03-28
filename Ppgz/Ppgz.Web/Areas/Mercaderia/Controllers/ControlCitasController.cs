@@ -71,8 +71,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 
 			checkoutCitas.ListaDeOrdenes.IdProveedor(proveedorId.ToString(), "set");
-			ViewBag.proveedorId = proveedorId;
-			return View();
+			
+            ViewBag.proveedorId = proveedorId;
+			
+            return View();
 		}
 
 		[Authorize(Roles = "MAESTRO-MERCADERIA")]
@@ -80,32 +82,60 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		[HttpPost]
 		public ActionResult BuscarOrden(int proveedorId, string numeroDocumento)
 		{
-			try
+
+            int tmpProveedorId = 0;
+
+            try
 			{
+		
+			    if (proveedorId == 0)
+			    {
+			        tmpProveedorId = Int32.Parse(checkoutCitas.ListaDeOrdenes.IdProveedor("", "get").ToString());
+
+			    }
+			    else
+			    {
+			        tmpProveedorId = proveedorId;
+
+			    }
+
+               // checkoutCitas.ListaDeOrdenes.IdProveedor("", "get");
+
 				var ordenCompraManager = new OrdenCompraManager();
-				var orden = ordenCompraManager.FindOrdenCompraWithAvailableDates(numeroDocumento, proveedorId);
+                var orden = ordenCompraManager.FindOrdenCompraWithAvailableDates(numeroDocumento, tmpProveedorId);
 
 				if (orden["orden"] == null)
 				{
 					TempData["FlashError"] = "Numero de documento incorrecto";
-					return RedirectToAction("BuscarOrden", new { proveedorId });
+                    return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
 				}
 
 				if (checkoutCitas.ListaDeOrdenes.getsetOrdenTemp(numeroDocumento) == "1")
 				{
 					TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
-					return RedirectToAction("BuscarOrden", new { proveedorId });
+                    return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
 
 				}
 				
 				System.Web.HttpContext.Current.Session["orden"]  = orden;
-				
-				return RedirectToAction("FechaCita");
+
+                Int64 countElementos = checkoutCitas.ListaDeOrdenes.countElementosEnLista();
+
+			    if (countElementos == 0)
+			    {
+			        return RedirectToAction("FechaCita");
+			    }
+			    else
+			    {
+                    return RedirectToAction("Asn");
+
+			    }
 
 			}
 			catch (BusinessException businessEx)
 			{
 				TempData["FlashError"] =  businessEx.Message;
+                return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
 				return View();
 			}
 			catch (Exception e)
@@ -135,20 +165,35 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
    
 		public ActionResult Asn(string fecha = null,string orden = "0")
 		{
-			if (orden == "0")
+
+            Int64 countElementos = checkoutCitas.ListaDeOrdenes.countElementosEnLista();
+
+			if (orden == "0")//Esto indica que es una nueva Orden, no existente en la Lista
 			{
 
-				if (System.Web.HttpContext.Current.Session["fecha"] == null)
-				{
+			    if (countElementos == 0)
+			    {
 
-					if (string.IsNullOrWhiteSpace(fecha))
-					{
-						return RedirectToAction("Index");
-					}
+			        if (System.Web.HttpContext.Current.Session["fecha"] == null)
+			        {
 
-					System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(fecha, "dd/MM/yyyy",
-						CultureInfo.InvariantCulture);
-				}
+			            if (string.IsNullOrWhiteSpace(fecha))
+			            {
+			                return RedirectToAction("Index");
+			            }
+
+			            checkoutCitas.ListaDeOrdenes.FechaOrden(fecha, "set");
+
+			            System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy",
+			                CultureInfo.InvariantCulture);
+			        }
+			    }
+			    else
+			    {
+                    System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy",CultureInfo.InvariantCulture);
+			        
+			    }
+
 
 				if (System.Web.HttpContext.Current.Session["orden"] == null)
 				{
@@ -184,6 +229,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 			else
 			{
+
+                System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
 				ViewBag.ProveedorId = checkoutCitas.ListaDeOrdenes.IdProveedor("", "get");
 				ViewBag.origen = "2";
 				ViewBag.NumeroDocumento = orden;
