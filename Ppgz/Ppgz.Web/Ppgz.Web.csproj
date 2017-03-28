@@ -257,6 +257,7 @@
     <Content Include="assets\css\msgcolores.css" />
     <Content Include="assets\js\bootbox.js" />
     <Content Include="assets\js\bootbox.min.js" />
+    <Content Include="assets\js\jquery.numeric.js" />
     <Content Include="assets\js\mensajes.js" />
     <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen-variables.less" />
     <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen-variables.scss" />

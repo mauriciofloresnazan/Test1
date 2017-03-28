@@ -72,9 +72,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			checkoutCitas.ListaDeOrdenes.IdProveedor(proveedorId.ToString(), "set");
 			
-            ViewBag.proveedorId = proveedorId;
+			ViewBag.proveedorId = proveedorId;
 			
-            return View();
+			return View();
 		}
 
 		[Authorize(Roles = "MAESTRO-MERCADERIA")]
@@ -83,59 +83,59 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		public ActionResult BuscarOrden(int proveedorId, string numeroDocumento)
 		{
 
-            int tmpProveedorId = 0;
+			int tmpProveedorId = 0;
 
-            try
+			try
 			{
 		
-			    if (proveedorId == 0)
-			    {
-			        tmpProveedorId = Int32.Parse(checkoutCitas.ListaDeOrdenes.IdProveedor("", "get").ToString());
+				if (proveedorId == 0)
+				{
+					tmpProveedorId = Int32.Parse(checkoutCitas.ListaDeOrdenes.IdProveedor("", "get").ToString());
 
-			    }
-			    else
-			    {
-			        tmpProveedorId = proveedorId;
+				}
+				else
+				{
+					tmpProveedorId = proveedorId;
 
-			    }
+				}
 
-               // checkoutCitas.ListaDeOrdenes.IdProveedor("", "get");
+			   // checkoutCitas.ListaDeOrdenes.IdProveedor("", "get");
 
 				var ordenCompraManager = new OrdenCompraManager();
-                var orden = ordenCompraManager.FindOrdenCompraWithAvailableDates(numeroDocumento, tmpProveedorId);
+				var orden = ordenCompraManager.FindOrdenCompraWithAvailableDates(numeroDocumento, tmpProveedorId);
 
 				if (orden["orden"] == null)
 				{
 					TempData["FlashError"] = "Numero de documento incorrecto";
-                    return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
+					return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
 				}
 
 				if (checkoutCitas.ListaDeOrdenes.getsetOrdenTemp(numeroDocumento) == "1")
 				{
 					TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
-                    return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
+					return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
 
 				}
 				
 				System.Web.HttpContext.Current.Session["orden"]  = orden;
 
-                Int64 countElementos = checkoutCitas.ListaDeOrdenes.countElementosEnLista();
+				Int64 countElementos = checkoutCitas.ListaDeOrdenes.countElementosEnLista();
 
-			    if (countElementos == 0)
-			    {
-			        return RedirectToAction("FechaCita");
-			    }
-			    else
-			    {
-                    return RedirectToAction("Asn");
+				if (countElementos == 0)
+				{
+					return RedirectToAction("FechaCita");
+				}
+				else
+				{
+					return RedirectToAction("Asn");
 
-			    }
+				}
 
 			}
 			catch (BusinessException businessEx)
 			{
 				TempData["FlashError"] =  businessEx.Message;
-                return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
+				return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
 				return View();
 			}
 			catch (Exception e)
@@ -166,33 +166,33 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		public ActionResult Asn(string fecha = null,string orden = "0")
 		{
 
-            Int64 countElementos = checkoutCitas.ListaDeOrdenes.countElementosEnLista();
+			Int64 countElementos = checkoutCitas.ListaDeOrdenes.countElementosEnLista();
 
 			if (orden == "0")//Esto indica que es una nueva Orden, no existente en la Lista
 			{
 
-			    if (countElementos == 0)
-			    {
+				if (countElementos == 0)
+				{
 
-			        if (System.Web.HttpContext.Current.Session["fecha"] == null)
-			        {
+					if (System.Web.HttpContext.Current.Session["fecha"] == null)
+					{
 
-			            if (string.IsNullOrWhiteSpace(fecha))
-			            {
-			                return RedirectToAction("Index");
-			            }
+						if (string.IsNullOrWhiteSpace(fecha))
+						{
+							return RedirectToAction("Index");
+						}
 
-			            checkoutCitas.ListaDeOrdenes.FechaOrden(fecha, "set");
+						checkoutCitas.ListaDeOrdenes.FechaOrden(fecha, "set");
 
-			            System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy",
-			                CultureInfo.InvariantCulture);
-			        }
-			    }
-			    else
-			    {
-                    System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy",CultureInfo.InvariantCulture);
-			        
-			    }
+						System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy",
+							CultureInfo.InvariantCulture);
+					}
+				}
+				else
+				{
+					System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy",CultureInfo.InvariantCulture);
+					
+				}
 
 
 				if (System.Web.HttpContext.Current.Session["orden"] == null)
@@ -230,7 +230,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			else
 			{
 
-                System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+				System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
 				ViewBag.ProveedorId = checkoutCitas.ListaDeOrdenes.IdProveedor("", "get");
 				ViewBag.origen = "2";
 				ViewBag.NumeroDocumento = orden;

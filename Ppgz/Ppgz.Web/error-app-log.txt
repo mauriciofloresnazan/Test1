@@ -2008,3 +2008,38 @@ COUNTER     2
    at SapWrapper.SapProveedorManager.GetProveedor(String codigoProveedor) in c:\temp\Implus\Software\Source\impuls\Ppgz\SapWrapper\SapProveedorManager.cs:line 14
    at Ppgz.Services.ProveedorManager.FindProveedorEnSap(String numeroProveedor) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\ProveedorManager.cs:line 31
    at Ppgz.Web.Areas.Nazan.Controllers.AdministrarProveedoresController.BuscarProveedor(String numeroProveedor) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Nazan\Controllers\AdministrarProveedoresController.cs:line 93
+2017-03-28 10:27:53,563 
+Nombre del Controlador = ControlCitas
+Nombre del método o acción solicitada = BuscarOrden
+Conjunto de parámetros enviados = proveedorId = 11, numeroDocumento = 4501140097
+Tipo de mensaje = Error.
+Traza detallada: 
+SAP.Middleware.Connector.RfcCommunicationException: 
+LOCATION    CPIC (TCP/IP) on local host with Unicode
+ERROR       partner '172.18.3.21:3322' not reached
+TIME        Tue Mar 28 10:27:52 2017
+RELEASE     720
+COMPONENT   NI (network interface)
+VERSION     40
+RC          -10
+MODULE      nixxi.cpp
+LINE        3286
+DETAIL      NiPConnect2: 172.18.3.21:3322
+SYSTEM CALL connect
+ERRNO       10060
+ERRNO TEXT  WSAETIMEDOUT: Connection timed out
+COUNTER     2
+
+   at SAP.Middleware.Connector.CpicConnection.ConnectAsClient(Dictionary`2 options)
+   at SAP.Middleware.Connector.RfcConnection.ConnectAsClient(RfcConfigParameters options)
+   at SAP.Middleware.Connector.RfcConnectionPool..ctor(RfcDestination destination, Boolean forRepositoryCalls)
+   at SAP.Middleware.Connector.RfcConnectionPool.GetPool(RfcDestination destination, Boolean forRepository, Boolean create)
+   at SAP.Middleware.Connector.RfcDestination.GetClient(Boolean forRepository)
+   at SAP.Middleware.Connector.RfcDestination.SetAttributeValues(RfcSystemAttributes attribs)
+   at SAP.Middleware.Connector.RfcDestination.get_SystemAttributes()
+   at SAP.Middleware.Connector.RfcDestination.get_Repository()
+   at SapWrapper.SapOrdenCompraManager.GetOrdenesDeCompraHeader(String numeroDocumento, String numeroProveedor) in c:\temp\Implus\Software\Source\impuls\Ppgz\SapWrapper\SapOrdenCompraManager.cs:line 27
+   at Ppgz.Services.OrdenCompraManager.FindOrdenCompraActiva(String numeroDocumento, Int32 proveedorId) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\OrdenCompraManager.cs:line 171
+   at Ppgz.Services.OrdenCompraManager.FindOrdenCompra(String numeroDocumento, Int32 proveedorId) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\OrdenCompraManager.cs:line 152
+   at Ppgz.Services.OrdenCompraManager.FindOrdenCompraWithAvailableDates(String numeroDocumento, Int32 proveedorId) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\OrdenCompraManager.cs:line 197
+   at Ppgz.Web.Areas.Mercaderia.Controllers.ControlCitasController.BuscarOrden(Int32 proveedorId, String numeroDocumento) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Mercaderia\Controllers\ControlCitasController.cs:line 105

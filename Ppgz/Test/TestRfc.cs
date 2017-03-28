@@ -26,12 +26,12 @@ namespace Test
         }
 
         public void TestConsultarDetalleDeOrdenCompra(string documento)
-        {
+        {/*
             var ordenCompraManager = new SapOrdenCompraManager();
             var resultDt = ordenCompraManager.GetOrdenDeCompraDetalle(documento);
             Console.WriteLine(JsonConvert.SerializeObject(resultDt));
             Console.ReadLine();
-
+            */
 
         }
         public void TestProveedores()
@@ -51,12 +51,12 @@ namespace Test
 
         }
         public void TestOrdenesDeCompra()
-        {
+        {/*
             var ordenCompraManager = new SapOrdenCompraManager();
             var resultDt = ordenCompraManager.GetOrdenDeCompraDetalle("0000001725");
             Console.WriteLine(JsonConvert.SerializeObject(resultDt));
             Console.ReadLine();
-
+            */
         }
 
         public void BuscarCodigosProveedores()
