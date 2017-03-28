@@ -200,7 +200,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			// TODO MEJORAR
 			try
 			{
+                // todo mejorar 
+
                 _cuentaManager.EliminarProveedorEnCuenta(cuentaId, proveedorId);
+
 
 
 				TempData["FlashSuccess"] = "Proveedor desvinculado con éxito.";
