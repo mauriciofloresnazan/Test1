@@ -182,6 +182,27 @@ namespace Ppgz.Services
 
             if (cuenta == null) return;
 
+
+            foreach ( var proveedor in cuenta.proveedores)
+            {
+                EliminarProveedorEnCuenta(id, proveedor.Id);
+            }
+
+            cuenta.proveedores.Clear();
+
+            cuenta.cuentasmensajes.Clear();
+
+            // TODO CUENTAS USUARIOS INFORMAR SI SE DEBEN ELIMINAR LOS USUARIOS
+            cuenta.AspNetUsers.Clear();
+
+            var perfilManager = new PerfilManager();
+            
+            foreach (var perfil in cuenta.perfiles)
+            {
+                perfilManager.Eliminar(perfil.Id);
+                
+            }
+            cuenta.perfiles.Clear();
             _db.cuentas.Remove(cuenta);
             _db.SaveChanges();
         }

@@ -168,7 +168,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         {
             try
             {
-                _proveedorManager.Eliminar(id);
+                _cuentaManager.Eliminar(id);
+                //_proveedorManager.Eliminar(id);
 
                 TempData["FlashSuccess"] = MensajesResource.INFO_Proveedor_EliminadoCorrectamente;
                 return RedirectToAction("Index");

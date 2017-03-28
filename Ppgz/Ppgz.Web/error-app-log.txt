@@ -2043,3 +2043,18 @@ COUNTER     2
    at Ppgz.Services.OrdenCompraManager.FindOrdenCompra(String numeroDocumento, Int32 proveedorId) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\OrdenCompraManager.cs:line 152
    at Ppgz.Services.OrdenCompraManager.FindOrdenCompraWithAvailableDates(String numeroDocumento, Int32 proveedorId) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\OrdenCompraManager.cs:line 197
    at Ppgz.Web.Areas.Mercaderia.Controllers.ControlCitasController.BuscarOrden(Int32 proveedorId, String numeroDocumento) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Mercaderia\Controllers\ControlCitasController.cs:line 105
+2017-03-28 16:54:58,619 
+Nombre del Controlador = AdministrarProveedores
+Nombre del método o acción solicitada = Eliminar
+Conjunto de parámetros enviados = 
+Tipo de mensaje = Error.
+Traza detallada: 
+System.InvalidOperationException: The operation failed: The relationship could not be changed because one or more of the foreign-key properties is non-nullable. When a change is made to a relationship, the related foreign-key property is set to a null value. If the foreign-key does not support null values, a new relationship must be defined, the foreign-key property must be assigned another non-null value, or the unrelated object must be deleted.
+   at System.Data.Entity.Core.Objects.ObjectContext.PrepareToSaveChanges(SaveOptions options)
+   at System.Data.Entity.Core.Objects.ObjectContext.SaveChangesInternal(SaveOptions options, Boolean executeInExistingTransaction)
+   at System.Data.Entity.Core.Objects.ObjectContext.SaveChanges(SaveOptions options)
+   at System.Data.Entity.Internal.InternalContext.SaveChanges()
+   at System.Data.Entity.Internal.LazyInternalContext.SaveChanges()
+   at System.Data.Entity.DbContext.SaveChanges()
+   at Ppgz.Services.CuentaManager.Eliminar(Int32 id) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\CuentaManager.cs:line 194
+   at Ppgz.Web.Areas.Nazan.Controllers.AdministrarProveedoresController.Eliminar(Int32 id) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Nazan\Controllers\AdministrarProveedoresController.cs:line 171
