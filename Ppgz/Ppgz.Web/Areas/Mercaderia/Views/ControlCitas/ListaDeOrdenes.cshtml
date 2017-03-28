@@ -6,6 +6,7 @@
     ViewBag.Title = "Lista de Ordenes de Compra";
     ViewBag.Descripcion = "Seleccione la Orden de Compra";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var fecha = DateTime.Parse(HttpContext.Current.Session["fecha"].ToString());
 }
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
@@ -18,7 +19,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label>Fecha</label>
-                <h4 style="margin-top: 5px">@System.Web.HttpContext.Current.Session["fecha"]</h4>
+                <h4 style="margin-top: 5px">@fecha.ToString("dd/MM/yyyy")</h4>
 
             </div>
         </div>

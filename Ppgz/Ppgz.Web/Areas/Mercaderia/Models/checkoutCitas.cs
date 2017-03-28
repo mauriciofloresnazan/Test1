@@ -97,6 +97,12 @@ namespace Ppgz.Web.Areas.Mercaderia
                 _list = new List<KeyVal2<string, List<ordencompradetalle>>>();
             }
 
+            public static void Clear()
+            {
+                _list = new List<KeyVal2<string, List<ordencompradetalle>>>();
+                
+            }
+
             public static string IdProveedor(string valor, string opc)
             {
 

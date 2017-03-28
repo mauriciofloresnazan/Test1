@@ -1,4 +1,5 @@
-﻿@model Ppgz.Web.Areas.Mercaderia.Models.PefilProveedorViewModel
+﻿@using Ppgz.Web.Areas.Mercaderia
+@model Ppgz.Web.Areas.Mercaderia.Models.PefilProveedorViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -33,7 +34,12 @@
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-7">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
-                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                    @if (checkoutCitas.ListaDeOrdenes.countElementosEnLista() > 0)
+                    {
+                           <a class="btn btn-default" href="@Url.Action("ListaDeOrdenes", "ControlCitas")"><i class="fa fa-list" aria-hidden="true"></i> Lista de Ordenes</a>
+ 
+                    }
+                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")"><i class="fa fa-undo" aria-hidden="true"></i> Cambiar Proveedor</a>
                 </div>
             </div>
 

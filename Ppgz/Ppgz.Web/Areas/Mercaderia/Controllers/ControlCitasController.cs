@@ -29,7 +29,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		[Authorize(Roles = "MAESTRO-MERCADERIA")]
 		public ActionResult Index()
 		{
-
+            checkoutCitas.ListaDeOrdenes.Clear();
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
 			ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
