@@ -33,6 +33,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             dt.Columns.Add("Centro");
             dt.Columns.Add("Almacen");
             dt.Columns.Add("Cantidad");
+            dt.Columns.Add("Precio");
             
 
             foreach (var detalle in detalles)
@@ -43,7 +44,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     detalle.DescripcionMaterial,
                     detalle.Centro,
                     detalle.Almacen, 
-                    detalle.CantidadPedido);
+                    detalle.CantidadPedido,
+                    detalle.PrecioNeto);
 
             }
             
