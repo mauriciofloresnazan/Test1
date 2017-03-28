@@ -136,7 +136,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			{
 				TempData["FlashError"] =  businessEx.Message;
 				return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
-				return View();
 			}
 			catch (Exception e)
 			{
@@ -294,7 +293,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			foreach (var detalle in detalles)
 			{
-				dt.Rows.Add(detalle.NumeroMaterial, detalle.DescripcionMaterial, detalle.CantidadPedido);
+				dt.Rows.Add(detalle.NumeroMaterial, detalle.DescripcionMaterial, Decimal.ToInt32(decimal.Parse(detalle.CantidadPedido)));
 
 			}
 			
@@ -347,23 +346,31 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			var ws = wb.Worksheet(1);
 
-			try
-			{
-				for (var i = 2; i < detalles.Count + 2; i++)
-				{
-					var numeroMaterial = ws.Row(i).Cell(1).Value.ToString();
-					var cantidad = decimal.Parse(ws.Row(i).Cell(3).Value.ToString());
+		    try
+		    {
+		        for (var i = 2; i < detalles.Count + 2; i++)
+		        {
+		            var numeroMaterial = ws.Row(i).Cell(1).Value.ToString();
+		            var cantidad = decimal.Parse(ws.Row(i).Cell(3).Value.ToString());
 
-					var detalle = detalles.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial);
-					if (detalle != null)
-					{
-						detalle.CantidadComprometida = cantidad;
-					}
-				}
-			}
+		            var detalle = detalles.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial);
+		            if (detalle != null)
+		            {
+		                if (cantidad > decimal.Parse(detalle.CantidadPedido))
+		                {
+		                    throw new BusinessException(string.Format("Error en la cantidad del Material {0}", detalle.NumeroMaterial));
+		                }
+		                detalle.CantidadComprometida = cantidad;
+		            }
+		        }
+		    }
+		    catch (BusinessException businessException)
+		    {
+				TempData["FlashError"] = businessException.Message;
+				return RedirectToAction("Asn");
+		    }
 			catch (Exception)
 			{
-
 				TempData["FlashError"] = "Archivo incorrecto";
 				return RedirectToAction("Asn");
 			}
