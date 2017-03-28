@@ -1,8 +1,7 @@
-﻿using Ppgz.Services;
-using System;
+﻿using System;
 using System.Web.Mvc;
+using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
-using UsuarioManager = Ppgz.Services.UsuarioManager;
 
 
 namespace Ppgz.Web.Areas.Servicio.Controllers
@@ -13,6 +12,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
     {
         private readonly UsuarioManager _usuarioManager = new UsuarioManager();
         private readonly CommonManager _commonManager = new CommonManager();
+
         internal void CargarPerfiles()
         {
             var perfilManager = new PerfilManager();
@@ -47,20 +47,22 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         public ActionResult Crear(UsuarioProveedorViewModel model)
         {
             if (!ModelState.IsValid) return View(model);
-
+            CargarPerfiles();
             try
             {
-                _usuarioManager.CrearProveedor(
-                    model.UserName,
-                    model.Nombre, 
-                    model.Apellido,
-                    model.Email, 
-                    "",  //TODO INCLUIR EN EL MODELO
-                    "", //TODO INCLUIR EN EL MODELO
-                    true,
-                    model.Perfil,
-                    model.Password, 
-                    _commonManager.GetCuentaUsuarioAutenticado().Id);
+                _usuarioManager
+                    .CrearProveedor(
+                        model.UserName,
+                        model.Nombre,
+                        model.Apellido,
+                        model.Email,
+                        null,//TODO
+                        null,//TODO
+                        true,
+                        model.Perfil,
+                        model.Password,
+                        _commonManager.GetCuentaUsuarioAutenticado().Id);
+
 
                 TempData["FlashSuccess"] = CommonMensajesResource.INFO_UsuarioProveedor_CreadoCorrectamente;
                 return RedirectToAction("Index");
@@ -81,7 +83,6 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 CommonManager.WriteAppLog(log, TipoMensaje.Error);
                 return View(model);
             }
-
         }
 
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR")]
@@ -168,7 +169,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             try
             {
-                _usuarioManager.Eliminar(id);
+                _usuarioManager.Eliminar(id, _commonManager.GetCuentaUsuarioAutenticado().Id);
 
                 TempData["FlashSuccess"] = CommonMensajesResource.INFO_UsuarioProveedor_EliminadoCorrectamente;
                 return RedirectToAction("Index");
@@ -191,6 +192,8 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 TempData["FlashError"] = CommonMensajesResource.ERROR_General;
                 return RedirectToAction("Index");
             }
+
+
         }
     }
 }

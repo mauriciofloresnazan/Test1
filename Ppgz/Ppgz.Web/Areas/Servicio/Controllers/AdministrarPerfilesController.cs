@@ -15,12 +15,15 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         private readonly PerfilManager _perfilManager = new PerfilManager();
         private readonly CommonManager _commonManager = new CommonManager();
 
+        //
+        // GET: /Mercaderia/AdministrarPerfiles/
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ADMINISTRARPERFILES-LISTAR,SERVICIO-ADMINISTRARPERFILES-MODIFICAR")]
         public ActionResult Index()
         {
-            var perfiles = _perfilManager
-                .FindPerfilProveedorByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
+            // Perfiles de la cuenta
+            var perfiles = _perfilManager.FindPerfilProveedorByCuentaId(_commonManager.GetCuentaUsuarioAutenticado().Id);
 
+            // Perfil maestro
             perfiles.Add(PerfilManager.MaestroServicio);
 
             ViewBag.Perfiles = perfiles;
@@ -44,7 +47,8 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             {
                 _perfilManager
                     .CrearProveedor(
-                        model.Nombre, model.RolesIds,
+                        model.Nombre,
+                        model.RolesIds,
                         _commonManager.GetCuentaUsuarioAutenticado().Id);
 
                 TempData["FlashSuccess"] = CommonMensajesResource.INFO_PerfilProveedor_CreadoCorrectamente;
@@ -96,7 +100,6 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Editar(int id, PefilProveedorViewModel model)
         {
-
             var perfil = _perfilManager.Find(id);
 
             if (perfil == null)
