@@ -84,7 +84,9 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
             }
 
-            //TODO VALIDR LAS CITAS
+            //TODO VALIDAR LAS CITAS
+
+            proveedor.ordencompras.Clear();
 
 
             _db.proveedores.Remove(proveedor);

@@ -350,6 +350,7 @@ namespace Ppgz.Services
 
         }
 
+        // TODO CREARE UN ELIMINAR PERFIL CON LA CUENTA
         public void Eliminar(int id)
         {
             var perfil = Find(id);
