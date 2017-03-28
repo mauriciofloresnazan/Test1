@@ -134,7 +134,12 @@
 
                         var cantComp = Decimal.ToInt32(orden.CantidadComprometida);
                         var cantPed = Convert.ToInt32(decimal.Parse(orden.CantidadPedido.ToString()));
-                    
+                        var color = "#000";
+                        if (cantComp < cantPed)
+                        {
+                            color = "red";
+                        }
+                            
                         
                     <tr>
 
@@ -142,7 +147,7 @@
                             <td class="text-center"> @orden.Centro</td>
                             <td class="text-center"> @orden.Almacen</td>
                             <td class="text-center"> @orden.DescripcionMaterial</td>
-                            <td class="text-center" style="font-weight: bold; cursor: pointer"> @cantComp</td>
+                            <td class="text-center" style="font-weight: bold; cursor: pointer; color: @color;"> @cantComp</td>
                             <td class="text-center"style="font-weight: bold; cursor: pointer"> @cantPed</td>
 
                         </tr>
@@ -158,6 +163,12 @@
 
                        var cantComp = Decimal.ToInt32(orden.CantidadComprometida);
                        var cantPed = Convert.ToInt32(decimal.Parse(orden.CantidadPedido.ToString()));
+                       var color = "#000";
+                       if (cantComp > cantPed)
+                       {
+                           color = "red";
+                       }
+                               
                        
                         <tr>
 
@@ -165,7 +176,7 @@
                             <td class="text-center"> @orden.Centro</td>
                             <td class="text-center"> @orden.Almacen</td>
                             <td class="text-center"> @orden.DescripcionMaterial</td>
-                            <td class="text-center" style="font-weight: bold; cursor: pointer">@cantComp</td>
+                            <td class="text-center" style="font-weight: bold; cursor: pointer; color: @color;">@cantComp</td>
                             <td class="text-center"style="font-weight: bold; cursor: pointer"> @cantPed </td>
 
                         </tr>
