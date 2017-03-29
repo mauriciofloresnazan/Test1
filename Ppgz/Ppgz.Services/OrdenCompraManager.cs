@@ -293,6 +293,31 @@ namespace Ppgz.Services
             return FindDetalleByDocumento(ordenCompraActiva.NumeroDocumento, proveedor.NumeroProveedor);
 
         }
+        
+        public List<string> GetAvailableDatesByOrdenCompra(string numeroDocumento, int proveedorId)
+        {
+            // TODO HACER
+
+            return new List<string>
+            {
+                DateTime.Today.AddDays(2).ToString("yyyy-MM-dd"),
+                DateTime.Today.AddDays(3).ToString("yyyy-MM-dd"),
+                DateTime.Today.AddDays(4).ToString("yyyy-MM-dd"),
+                DateTime.Today.AddDays(5).ToString("yyyy-MM-dd"),
+                DateTime.Today.AddDays(6).ToString("yyyy-MM-dd"),
+                DateTime.Today.AddDays(7).ToString("yyyy-MM-dd"),
+                DateTime.Today.AddDays(8).ToString("yyyy-MM-dd"),
+
+            };
+        }
+
+        public ordencompra FindOrdenCompraActiva(string numeroDocumento, int proveedorId, string fecha)
+        {
+            // TODO HACER
+            return FindOrdenCompraActiva(numeroDocumento, proveedorId);
+        }
+
+
 
     }
 }
