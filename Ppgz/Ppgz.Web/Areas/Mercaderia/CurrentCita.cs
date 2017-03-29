@@ -121,6 +121,58 @@ namespace Ppgz.Web.Areas.Mercaderia
 
         }
 
+        public int VerificarOrden(string numeroDocumento)
+        {
+            var resultado = 0;
+
+            if (Ordenes != null)
+            {
+                if (Ordenes.Count > 0)
+                {
+                    var orden = Ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+                    if (orden != null)
+                    {
+                        return resultado;
+                    }
+                }
+                else
+                {
+                    return resultado;
+                }
+            }
+            else
+            {
+                return resultado;
+            } resultado = 1; 
+
+            return resultado;
+        }
+
+        public Int64 CountElementosEnLista()
+        {
+            var resultado = 0;
+
+            if (Ordenes != null)
+            {
+                resultado = Ordenes.Count;
+            } 
+            
+            return resultado;
+        }
+
+        public List<ordencompradetalle> FindByNumeroOrden(string numeroDocumento)
+        {
+
+            var result = new List<ordencompradetalle>();
+
+            var orden = Ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+            if (orden != null)
+            {
+                result = orden.ordencompradetalles.ToList();
+            }
+
+            return result;
+        }
 
     }
 }
