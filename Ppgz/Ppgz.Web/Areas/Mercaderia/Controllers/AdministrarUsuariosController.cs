@@ -122,7 +122,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 TempData["FlashError"] = CommonMensajesResource.ERROR_UsuarioProveedor_IdIncorrecto;
                 return RedirectToAction("Index");
             }
-
+            CargarPerfiles();
             try
             {
                 _usuarioManager.Actualizar(

@@ -466,7 +466,7 @@ namespace Ppgz.Services {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usuario actualizad correctamente, el usuarios deben reiniciar la sesión.
+        ///   Looks up a localized string similar to Usuario actualizado correctamente, el usuarios deben reiniciar la sesión.
         /// </summary>
         internal static string INFO_UsuarioProveedor_ActualizadoCorrectamente {
             get {

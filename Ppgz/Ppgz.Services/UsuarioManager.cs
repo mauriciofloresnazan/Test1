@@ -280,7 +280,9 @@ namespace Ppgz.Services
             // Validacion Maestro Proveedor
             if (usuario.Tipo == Tipo.MaestroProveedor)
             {
-                throw new BusinessException(CommonMensajesResource.ERROR_UsarioMaestroProveedor_CambiarPerfil);
+				// TODO NO CAMBIAR EL PERFIL SI ES MAESTRO
+				return;
+                //throw new BusinessException(CommonMensajesResource.ERROR_UsarioMaestroProveedor_CambiarPerfil);
             }
 
             // Validacion proveedor

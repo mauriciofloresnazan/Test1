@@ -211,7 +211,7 @@
     <value>Perfil eliminado correctamente</value>
   </data>
   <data name="INFO_UsuarioProveedor_ActualizadoCorrectamente" xml:space="preserve">
-    <value>Usuario actualizad correctamente, el usuarios deben reiniciar la sesión</value>
+    <value>Usuario actualizado correctamente, el usuarios deben reiniciar la sesión</value>
   </data>
   <data name="INFO_UsuarioProveedor_CreadoCorrectamente" xml:space="preserve">
     <value>Usuario creado correctamente</value>
