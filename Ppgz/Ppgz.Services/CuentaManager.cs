@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using MySql.Data.MySqlClient;
 using Ppgz.Repository;
 
 namespace Ppgz.Services
@@ -178,6 +180,44 @@ namespace Ppgz.Services
         //TODO
         public void Eliminar(int id)
         {
+
+            
+            var messageError = new MySqlParameter
+            {
+                ParameterName = "messageError",
+                Direction = ParameterDirection.Output,
+                MySqlDbType = MySqlDbType.VarChar
+            };
+
+            var parameters = new List<MySqlParameter>()
+            {
+                new MySqlParameter
+                {
+                    ParameterName = "messageError",
+                    Direction = ParameterDirection.Output,
+                    MySqlDbType = MySqlDbType.VarChar
+                },
+                new MySqlParameter("p_cuentaId", id)
+            };
+
+            Db.ExecuteProcedureOut(parameters, "delete_account");
+           
+            if (messageError.Value != null)
+            {
+                throw new BusinessException(messageError.Value.ToString());
+            }
+  
+            return;
+            _db.Database.ExecuteSqlCommand("call delete_account(@p_cuentaId, @messageError);" +
+                                           "SELECT @messageError;",
+                new MySqlParameter("p_cuentaId", id),
+                messageError);
+
+            Console.WriteLine(messageError.Value);
+
+
+            return;
+            ;
             var cuenta = _db.cuentas.Find(id);
 
             if (cuenta == null) return;
