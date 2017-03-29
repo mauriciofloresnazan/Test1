@@ -33,6 +33,7 @@ namespace Ppgz.Web.Areas.Mercaderia
                 throw new BusinessException("Error en la cuenta del proveedor");
             }
             _proveedor = proveedor;
+            Ordenes = new List<ordencompra>();
 
         }
 
