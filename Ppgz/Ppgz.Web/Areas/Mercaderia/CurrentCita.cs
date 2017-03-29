@@ -38,7 +38,7 @@ namespace Ppgz.Web.Areas.Mercaderia
 
         public void AddOrden(ordencompra orden)
         {
-            if (Ordenes.Any(o => o.Id == orden.Id))
+            if (Ordenes.Any(o => o.NumeroDocumento == orden.NumeroDocumento))
             {
                 throw new BusinessException("La orden ya se encuentra incluida");
             }
