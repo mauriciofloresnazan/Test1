@@ -19,6 +19,11 @@ namespace Ppgz.Services
             return _db.proveedores.Find(id);
         }
 
+        public proveedore Find(int id, int cuentaId)
+        {
+            return _db.proveedores.FirstOrDefault(p=> p.Id == id && p.CuentaId == cuentaId);
+        }
+
         public proveedore FindByNumeroProveedor(string numeroProveedor)
         {
             return _db.proveedores.FirstOrDefault(p => p.NumeroProveedor == numeroProveedor);
