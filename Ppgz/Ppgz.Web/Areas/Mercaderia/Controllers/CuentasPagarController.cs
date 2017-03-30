@@ -120,7 +120,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 return RedirectToAction("Index");
             Entities db = new Entities();
             string[] tiposMovimientos = new string[] { "10", "21", "4" };
-            var result = db.cuentasxpagars
+            /*var result = db.cuentasxpagars
                 .Where(
                     c =>
                         tiposMovimientos.Contains(c.TipoMovimiento) && c.Referencia == null &&
@@ -131,7 +131,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             {
                 total = total + decimal.Parse(data.Importe);
             }
-            ViewBag.importeTotal = total.ToString("f2");
+            ViewBag.importeTotal = total.ToString("f2");*/
             ViewBag.proveedor = _proveedorManager.Find(id);
             return View();
         }
@@ -143,7 +143,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             string[] tiposMovimientos = new string[] { "10", "21", "4" };
 
-
+            /*
             var result = db.cuentasxpagars
                 .Where(
                     c =>
@@ -154,7 +154,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             ViewBag.data = result;
             var total = result.Aggregate<cuentasxpagar, decimal>(0, (current, data) => current + decimal.Parse(data.Importe));
-            ViewBag.importeTotal = total.ToString("f2");
+            ViewBag.importeTotal = total.ToString("f2");*/
 
             ViewBag.proveedor = _proveedorManager.Find(proveedorId);
             return View();

@@ -10,15 +10,15 @@ namespace Ppgz.Web.Infrastructure
     {
     
         private readonly Entities _db = new Entities();
-        public List<cuentasxpagar> FindPagosByProveedorId(int id)
+        public List<dynamic> FindPagosByProveedorId(int id)
         {
-            return _db.cuentasxpagars.Where(c => c.ProveedoresId == id && c.Referencia == null).ToList();
+            return null;
         }
 
-        public List<cuentasxpagar> FindPagoDetalleByNumeroCompensacion(string numeroCompensacion)
+        public List<dynamic> FindPagoDetalleByNumeroCompensacion(string numeroCompensacion)
         {
 
-            return _db.cuentasxpagars.Where(c => c.Referencia == numeroCompensacion).ToList();
+            return null;
 
             //return _db.cuentasxpagars.Where(c => c.Referencia == numeroCompensacion).ToList();
         }
