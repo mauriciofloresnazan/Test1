@@ -150,16 +150,26 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			
 			//TODO
 			if (CurrentCita != null)
-			{
-				/*if (CurrentCita.HasOrden(numeroDocumento))
-				{
-					// TODO
-					TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
-					return RedirectToAction("BuscarOrden", new { proveedorId });
-				}-*/
+            {
+                var ordencompradetalles = _ordenCompraManager.FindDetalle(numeroDocumento, proveedorId);
+                //todo normalizar en una sola busqueda
+                ordenCompra.ordencompradetalles = ordencompradetalles;
+                try
+                {
+                    CurrentCita.AddOrden(ordenCompra);
+                    return RedirectToAction("Asn", new { numeroDocumento = ordenCompra.NumeroDocumento });
 
-                RedirectToAction("AgregarOrden", new  { proveedorId, numeroDocumento, fecha = string.Empty });
-			    
+                }
+                catch (CurrentCita.OrdenDuplicadaException)
+                {
+                    TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
+                    return RedirectToAction("BuscarOrden", new {proveedorId});
+                }
+                catch (CurrentCita.OrdenSinDetalleException)
+                {
+                    TempData["FlashError"] = "Numero de documento incorrecto";
+                    return RedirectToAction("BuscarOrden", new { proveedorId });
+                }
 			}
 
 			TempData["orden"] = ordenCompra;
@@ -198,7 +208,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			return View();
 		}
-
 
 		[ValidateAntiForgeryToken]
 		[HttpPost]
@@ -270,10 +279,23 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		[AcceptVerbs(HttpVerbs.Post)]
 		public  ActionResult updItemOrden(string Orden, string Item, string OldValue, string NewValue)
 		{
+            var ordenCompra = CurrentCita.GetOrden(Orden);
+            var detalles = ordenCompra.ordencompradetalles;
+            var detalle = detalles.FirstOrDefault(d => d.NumeroMaterial == Item);
+		    var cantidad = int.Parse(NewValue);
+            if (detalle != null)
+            {
+                if (cantidad > decimal.Parse(detalle.CantidadPedido))
+                {
+                    throw new BusinessException(string.Format("Error en la cantidad del Material {0}", detalle.NumeroMaterial));
+                }
+                detalle.CantidadComprometida = cantidad;
+            }
+
 
 			//int Res = checkoutCitas.ListaDeOrdenes.updElementoEnLista(Orden, Item, OldValue, NewValue);
 
-			int Res = ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).UpdateElementoEnLista(Orden,Item,Int32.Parse(OldValue),Int32.Parse(NewValue));
+			int Res = 1;
 
 			return Json(Res, JsonRequestBehavior.DenyGet);
 

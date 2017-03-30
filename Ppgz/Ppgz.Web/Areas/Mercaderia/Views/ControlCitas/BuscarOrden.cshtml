@@ -8,24 +8,72 @@
     
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
 
-    var  tieneOrdenes = false;
-    
-    if (currentCita != null)
-    {
-        if (currentCita.HasOrdenes())
-        {
-            tieneOrdenes = true;
-        }
-    }
 
+    ViewBag.Title = "Registrar Cita";
+    ViewBag.Descripcion = "Paso 2 - Busque una orden de compra";
     
     
 }
 @Styles.Render("~/assets/vendor/bootstrap-chosen/bootstrap-chosen.css")
 <h2>Registrar Cita</h2>
 <p class="page-description-title">
-    <i class="fa fa-info" aria-hidden="true"></i> <i>Aquí podra Registrar la Cita buscando por número de Orden de Compra</i>
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
 </p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de la cita</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-3 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-3 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+        </div>
+        @if (currentCita != null)
+        {
+        <div class="row">
+            <label class="col-sm-3 control-label">Fecha de la cita</label>
+            <div class="col-sm-3">
+                <div>@currentCita.Fecha.ToString("dd/MM/yyyy")</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                    <a class="btn btn-primary" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                    </a>
+                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+                <div class="visible-sm visible-xs">
+                    <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                    </a>
+                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-default btn-block" href="@Url.Action("Index", "ControlCitas")">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+            </div>
+        </div>
+        }
+
+
+
+
+
+    </div>
+</div>
+
 <div class="panel panel-default">
     <div class="panel-heading">Buscar Orden de Compra</div>
     <div class="panel-body">
@@ -36,12 +84,6 @@
 
             @Html.ValidationSummary(true)
 
-            <div class="form-group">
-                <label class="col-sm-3 control-label"> Datos del Proveedor</label>
-                <div class="col-sm-7">
-                    <span class="form-control">@(String.Format("{0} - {1}", proveedor.NumeroProveedor, proveedor.Nombre1))</span>
-                </div>
-            </div>
 
 
             <div class="form-group">
@@ -57,13 +99,7 @@
 
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-7">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
-                    @if (tieneOrdenes)
-                    {
-                           <a class="btn btn-default" href="@Url.Action("ListaDeOrdenes", "ControlCitas")"><i class="fa fa-list" aria-hidden="true"></i> Lista de Ordenes</a>
- 
-                    }
-                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")"><i class="fa fa-undo" aria-hidden="true"></i> Cambiar Proveedor</a>
+                    <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
                 </div>
             </div>
 

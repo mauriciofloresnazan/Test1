@@ -1,13 +1,12 @@
 ﻿@using Ppgz.Repository
 @using Ppgz.Web.Areas.Mercaderia
 @{
-    ViewBag.Title = "Administracion de Citas";
-    ViewBag.Descripcion = "Seleccione la Orden de Compra";
+    ViewBag.Title = "Registrar Cita";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var ordenCompra = (ordencompra)ViewBag.OrdenCompra;
 
-    var currentCita = (CurrentCita) ViewBag.CurrentCita;
+    var currentCita = (CurrentCita)ViewBag.CurrentCita;
     ViewBag.TotalPedido = ordenCompra.ordencompradetalles.AsEnumerable().Sum(x => float.Parse(x.CantidadPedido));
     ViewBag.TotalComprometido = ordenCompra.ordencompradetalles.AsEnumerable().Sum(x => x.CantidadComprometida);
 
@@ -37,101 +36,110 @@
 </style>
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
-    <i class="fa fa-calculator" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>Paso 3 - Notificación anticipada de entrega</i>
 </p>
 
 <div class="panel panel-default">
-    <div class="panel-heading">Datos de la Orden de Compra</div>
+    <div class="panel-heading">Datos de la cita</div>
     <div class="panel-body">
-
         <div class="row">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="col-sm-3 control-label"> Datos del Proveedor</label>
-                    <div class="col-sm-7">
-                        @(String.Format("{0} - {1}", currentCita.Proveedor.NumeroProveedor, currentCita.Proveedor.Nombre1))
-                    </div>
-                </div>
+            <label class="col-sm-3 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@currentCita.Proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-3 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@currentCita.Proveedor.Nombre1</div>
             </div>
         </div>
         <div class="row">
-            &nbsp;
-        </div>
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Orden de Compra</label>
-                    <h4 style="margin-top: 5px">
-
-                        @ordenCompra.NumeroDocumento
-
-
-                    </h4>
-                </div>
+            <label class="col-sm-3 control-label">Fecha de la cita</label>
+            <div class="col-sm-3">
+                <div>@currentCita.Fecha.ToString("dd/MM/yyyy")</div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label>Fecha</label>
-                    <h4 style="margin-top: 5px">@currentCita.Fecha.ToString("dd/MM/yyyy")</h4>
-
+            <div class="col-sm-6">
+                <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                    <a class="btn btn-primary" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                    </a>
+                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
                 </div>
-            </div>
-        </div>    
-
-        </div>
-    <div class="panel-footer">
-
-        <div class="row">
-            <div class="col-md-6">
-                <div class="pull-left">
-                    <button class="btn btn-info" type="button" onclick=" javascript: history.go(-1); "><i class="fa fa-chevron-left" aria-hidden="true"></i>&nbsp;Regresar</button>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="pull-right">
-                    <button class="btn btn-info" type="button" onclick="validarSiguiente();"><i class="fa fa-chevron-right" aria-hidden="true"></i>&nbsp;Siguiente</button>
+                <div class="visible-sm visible-xs">
+                    <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                    </a>
+                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-default btn-block" href="@Url.Action("Index", "ControlCitas")">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
                 </div>
             </div>
         </div>
+
+
+
 
     </div>
 </div>
 
 <div class="panel panel-default">
-    <div class="panel-heading">Resultado de la Busqueda</div>
+    <div class="panel-heading">Datos del Asn</div>
     <div class="panel-body">
-        <div class="form-group">
-            <label class="col-sm-3 control-label">Productos en la Orden</label>
-            <div class="col-sm-3">
-                <div style="margin-top: 0px; font-size: 1.5em; color: #22aaaa;"><span id="idProductosEnOrden">@ViewBag.TotalPedido</span></div>
+        <div class="row">
+            <div style="line-height: 2em;" class="col-sm-4">
+                <strong>Orden #</strong>
+                
+                <span>@ordenCompra.NumeroDocumento</span>
+                
             </div>
-            <label class="col-sm-3 control-label">Productos en el ASN</label>
-            <div class="col-sm-3">
-                <div id="total-entregar"style="margin-top: 0px; font-size: 1.5em; color: green;">0</div>
+            <div style="line-height: 2em;" class="col-sm-4">
+                <strong>Total. Pedido</strong>
+                <span id="idProductosEnOrden" style="font-size: 1.5em; color: #22aaaa;">@ViewBag.TotalPedido</span>
+                
+            </div>
+            <div style="line-height: 2em;" class="col-sm-4">
+                <strong>Total a Entregar</strong>
+                <span id="total-entregar" style="font-size: 1.5em; color: green;">0</span>
+                
             </div>
         </div>
-        <div class="clearfix">
-            <form method="POST" action="@Url.Action("CargarDesdePlantilla", "ControlCitas")" enctype="multipart/form-data">
-                <label class="btn btn-success btn-file pull-right">
-                    <i class="fa fa-arrow-up" aria-hidden="true"></i>
-                    Cargar <input type="file" name="cargar-planilla" hidden>
+        <hr style="margin-top: 5px; margin-bottom: 5px;" />
+        <div class="row">
+            <div class="col-sm-offset-3 col-sm-6">
+                <div class="input-group" style="padding: 0; margin-bottom: 5px; background: aliceblue;">
+                    <div style="padding: 6px; font-weight: bold; font-size: 1.2em;" class="text-right">
+                        Planilla Excel <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="input-group-btn">
+                        <a class="btn btn-link" href="@Url.Action("DescargarPlantilla", "ControlCitas", new {@numeroDocumento = ordenCompra.NumeroDocumento})">
+                            <i class="fa fa-arrow-down" aria-hidden="true"></i> Descargar
+                        </a>
+                    </div>
 
-                </label>
-                @Html.Hidden("numeroDocumento", ordenCompra.NumeroDocumento)
-            </form>
-            <a class="btn btn-primary pull-right" href="@Url.Action("DescargarPlantilla", "ControlCitas", new {@numeroDocumento = ordenCompra.NumeroDocumento })">
-                <i class="fa fa-arrow-down" aria-hidden="true"></i> Descargar Planilla
-            </a>
+                    <div class="input-group-btn">
+                        <form method="POST" action="@Url.Action("CargarDesdePlantilla", "ControlCitas")" enctype="multipart/form-data">
+                            <label class="btn btn-link btn-file pull-right">
+                                <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                Cargar <input type="file" name="cargar-planilla" hidden>
+                            </label>
+                            @Html.Hidden("numeroDocumento", ordenCompra.NumeroDocumento)
+                        </form>
 
+                    </div>
+                </div>
+            </div>
         </div>
-        <p class="form-legend" style="">
-            <i>Productos</i>
-        </p>
         <table class="table table-striped table-condensed" id="asn">
             <thead>
                 <tr>
-     
+
                     <th class="text-center">Material</th>
                     <th class="text-center">Centro</th>
                     <th class="text-center">Almacen</th>
@@ -154,7 +162,7 @@
                     {
                         color = "red";
                     }
-                    
+
                     <tr>
 
                         <td class="text-center"> @detalle.NumeroMaterial</td>
@@ -219,7 +227,7 @@
 </div>
 
 
-<input type="hidden" id="hidCancelarActualizar" value="0"/>
+<input type="hidden" id="hidCancelarActualizar" value="0" />
 @Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitas", new { @proveedorId = ViewBag.ProveedorId }))
 @Html.Hidden("RedirectTo2", Url.Action("ListaDeOrdenes", "ControlCitas"))
 
@@ -231,13 +239,13 @@
 
         $(".numeric").numeric();
 
-        $("input[name='cargar-planilla']").change(function() { this.form.submit(); });
+        $("input[name='cargar-planilla']").change(function () { this.form.submit(); });
 
         var editingCell;
         var editingTd;
 
 
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             var valOrdenesCargadas = '@Request.RequestContext.HttpContext.Session["ordenesCargadas"]';
 
@@ -257,7 +265,7 @@
             });
 
 
-            $('#asn tbody').on('click', 'td:nth-child(5)', function() {
+            $('#asn tbody').on('click', 'td:nth-child(5)', function () {
                 $("#editar-material").text($($(this.parentNode).find('td')[0]).text());
                 $("#editar-descripcion").text($($(this.parentNode).find('td')[3]).text());
                 $("#editar-cantidad").val($($(this.parentNode).find('td')[4]).text());
@@ -268,7 +276,7 @@
             });
 
 
-            $('#modalEditarCantidad').on('hidden.bs.modal', function(e) {
+            $('#modalEditarCantidad').on('hidden.bs.modal', function (e) {
 
                 if ($("#hidCancelarActualizar").val() == "0") {
 
@@ -276,7 +284,7 @@
 
                     var cantidadNueva = parseInt($("#editar-cantidad").val());
                     var vlItem = $($(editingTd).parent().find('td')[0]).text();
-                    var vlNumOrden = "@ViewBag.NumeroDocumento";
+                    var vlNumOrden = "@ordenCompra.NumeroDocumento";
 
                     if (isNaN(cantidadNueva)) {
                         //todo mejorar
@@ -312,10 +320,10 @@
                             data: JSON.stringify(requestData),
                             dataType: 'json',
                             contentType: 'application/json; charset=utf-8',
-                            error: function(xhr) {
+                            error: function (xhr) {
                                 alert('Error: ' + xhr.statusText);
                             },
-                            success: function(result) {
+                            success: function (result) {
                                 console.log(result);
                             },
                             async: true,
@@ -333,7 +341,7 @@
 
         function calcularTotalEntregar() {
             var totalEntregar = 0;
-            $($(asn).DataTable().column(4).data()).each(function() {
+            $($(asn).DataTable().column(4).data()).each(function () {
                 totalEntregar = totalEntregar + parseFloat(this);
             });
             $("#total-entregar").text(totalEntregar);
@@ -357,7 +365,7 @@
                         success: {
                             label: "Si",
                             className: "msgbtn-info",
-                            callback: function() {
+                            callback: function () {
 
 
                                 var url = $("#RedirectTo1").val();
@@ -369,7 +377,7 @@
                         main: {
                             label: "No",
                             className: "msgbtn-info active",
-                            callback: function() {
+                            callback: function () {
 
 
                                 var url = $("#RedirectTo2").val();
@@ -385,7 +393,7 @@
                 box.find('.modal-content').addClass("msgDanger"); // Aqui Cambio el Color del formulario
                 box.show();
 
-            } else if  (origen == "2"){
+            } else if (origen == "2") {
 
                 var url = $("#RedirectTo2").val();
                 location.href = url;

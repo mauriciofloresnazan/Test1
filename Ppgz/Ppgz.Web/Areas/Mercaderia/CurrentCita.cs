@@ -8,6 +8,16 @@ namespace Ppgz.Web.Areas.Mercaderia
 {
     public class CurrentCita
     {
+
+        public class OrdenDuplicadaException : Exception
+        {
+            
+        }
+        public class OrdenSinDetalleException: Exception
+        {
+            
+        }
+
         private readonly proveedore _proveedor;
         public proveedore Proveedor
         {
@@ -49,8 +59,18 @@ namespace Ppgz.Web.Areas.Mercaderia
         {
             if (_ordenes.Any(o => o.NumeroDocumento == orden.NumeroDocumento))
             {
-                throw new BusinessException("La orden ya se encuentra incluida");
+                throw new OrdenDuplicadaException();
             }
+
+            if (orden.ordencompradetalles == null)
+            {
+                throw new OrdenSinDetalleException();
+            }
+            if (!orden.ordencompradetalles.Any())
+            {
+                throw new OrdenSinDetalleException();
+            }
+
             _ordenes.Add(orden);
         }
 
