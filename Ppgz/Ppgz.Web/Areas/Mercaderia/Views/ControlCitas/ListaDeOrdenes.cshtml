@@ -1,13 +1,11 @@
-﻿@using System.Collections
-@using System.Security.Policy
-@using Ppgz.Repository
-
+﻿@using Ppgz.Web.Areas.Mercaderia
 @{
     ViewBag.Title = "Lista de Ordenes de Compra";
     ViewBag.Descripcion = "Seleccione la Orden de Compra";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var fecha = DateTime.Parse(HttpContext.Current.Session["fecha"].ToString());
-}
+    
+    var currenCita = (CurrentCita)ViewBag.CurrentCita;
+}    
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
     <i class="fa fa-calculator" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
@@ -19,7 +17,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label>Fecha</label>
-                <h4 style="margin-top: 5px">@fecha.ToString("dd/MM/yyyy")</h4>
+                <h4 style="margin-top: 5px">@currenCita.Fecha.ToString("dd/MM/yyyy")</h4>
 
             </div>
         </div>
@@ -36,7 +34,7 @@
 
             <div class="col-md-4">
                 <div style="align-content: center">
-                    <a class="btn btn-default" href="@Url.Action("BuscarOrden", "ControlCitas", new { @proveedorId = ViewBag.proveedorId })"><i class="fa fa-list" aria-hidden="true"></i> Agregar Orden</a>
+                    <a class="btn btn-default" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currenCita.Proveedor.Id })"><i class="fa fa-list" aria-hidden="true"></i> Agregar Orden</a>
                 </div>
             </div>
 
@@ -68,14 +66,14 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (DictionaryEntry orden in (Hashtable)ViewBag.ListaDeOrdenes)
+                @foreach (var orden in currenCita.GetOrdenes())
                 {
                     <tr>
 
-                        <td class="text-center"> @orden.Value</td>
+                        <td class="text-center"> @orden.NumeroDocumento</td>
                         <td class="text-center" style="font-weight: bold; cursor: pointer">
 
-                            @Html.ActionLink("Editar Orden", "Asn", "ControlCitas", new { @fecha = "", @orden = @orden.Value }, null)
+                            @Html.ActionLink("Editar Orden", "Asn", "ControlCitas", new { @numeroDocumento = @orden.NumeroDocumento }, null)
                         </td>
 
                     </tr>

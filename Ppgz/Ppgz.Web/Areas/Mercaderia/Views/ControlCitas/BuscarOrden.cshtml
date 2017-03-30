@@ -1,7 +1,25 @@
-﻿@using Ppgz.Web.Areas.Mercaderia
+﻿@using Ppgz.Repository
+@using Ppgz.Web.Areas.Mercaderia
 @model Ppgz.Web.Areas.Mercaderia.Models.PefilProveedorViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    var proveedor = (proveedore)ViewBag.proveedor;
+    
+    var currentCita = (CurrentCita)ViewBag.CurrentCita;
+
+    var  tieneOrdenes = false;
+    
+    if (currentCita != null)
+    {
+        if (currentCita.HasOrdenes())
+        {
+            tieneOrdenes = true;
+        }
+    }
+
+    
+    
 }
 @Styles.Render("~/assets/vendor/bootstrap-chosen/bootstrap-chosen.css")
 <h2>Registrar Cita</h2>
@@ -20,8 +38,8 @@
 
             <div class="form-group">
                 <label class="col-sm-3 control-label"> Datos del Proveedor</label>
-                <div class="col-sm-7" style="vert-align: middle">
-                    @(String.Format("{0} - {1}", ViewBag.numeroProveedor, ViewBag.nombreProveedor))
+                <div class="col-sm-7">
+                    <span class="form-control">@(String.Format("{0} - {1}", proveedor.NumeroProveedor, proveedor.Nombre1))</span>
                 </div>
             </div>
 
@@ -29,7 +47,7 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"> Numero de Documento</label>
                 <div class="col-sm-7">
-                    <input type="hidden" name="proveedorId" value="@ViewBag.proveedorId" />
+                    <input type="hidden" name="proveedorId" value="@proveedor.Id" />
                     
                     <input type="text" class="form-control" name="numeroDocumento" placeholder="Numero de Orden de Compra"/>
                 </div>
@@ -40,7 +58,7 @@
             <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-7">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
-                    @if (((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).CountElementosEnLista() > 0)
+                    @if (tieneOrdenes)
                     {
                            <a class="btn btn-default" href="@Url.Action("ListaDeOrdenes", "ControlCitas")"><i class="fa fa-list" aria-hidden="true"></i> Lista de Ordenes</a>
  

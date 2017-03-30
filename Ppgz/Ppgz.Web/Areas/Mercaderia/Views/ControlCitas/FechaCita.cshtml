@@ -1,7 +1,12 @@
-﻿@{
+﻿@using Ppgz.Repository
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var fechas = (List<DateTime>)ViewBag.Fechas;
+    
+    var proveedor = (proveedore)ViewBag.proveedor;
+
+    var ordenCompra = (ordencompra) ViewBag.ordenCompra;
 }
-@Styles.Render("~/assets/vendor/bootstrap-chosen/bootstrap-chosen.css")
 <h2>Registrar Cita</h2>
 <p class="page-description-title">
     <i class="fa fa-info" aria-hidden="true"></i> <i>Por favor coloque la fecha de la cita</i>
@@ -10,16 +15,17 @@
     <div class="panel-heading">Fecha de la cita</div>
     <div class="panel-body">
 
-        @using (Html.BeginForm("Asn", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("AgregarOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
 
             @Html.ValidationSummary(true)
-
+            @Html.Hidden("proveedorId",@proveedor.Id)
+            @Html.Hidden("numeroDocumento", @ordenCompra.NumeroDocumento)
             <div class="form-group">
                 <label class="col-sm-3 control-label"> Datos del Proveedor</label>
-                <div class="col-sm-7" style="vert-align: middle">
-                    @(String.Format("{0} - {1}", ViewBag.numeroProveedor, ViewBag.nombreProveedor))
+                <div class="col-sm-7">
+                    <span class="form-control">@(String.Format("{0} - {1}", proveedor.NumeroProveedor, proveedor.Nombre1))</span>
                 </div>
             </div>
 
@@ -51,8 +57,16 @@
         $('#fecha').datetimepicker({
             locale: 'es',
             format: 'DD/MM/YYYY',
-            enabledDates:@Html.Raw(Json.Encode(@ViewBag.Dates))
+            enabledDates: [
+                @foreach (var fecha in fechas)
+                {
+                    <text>
+                    "@fecha.ToString("yyyy-MM-dd")",
+                    </text>
+                }
+        ]
+  
 
-            });
+    });
     </script>
 }

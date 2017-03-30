@@ -1,17 +1,15 @@
-﻿@using System.Collections
-@using Microsoft.AspNet.Identity
-@using System.Data;
-@using Ppgz.Repository
+﻿@using Ppgz.Repository
+@using Ppgz.Web.Areas.Mercaderia
 @{
     ViewBag.Title = "Administracion de Citas";
     ViewBag.Descripcion = "Seleccione la Orden de Compra";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    ViewBag.OrdenCompra = (ordencompra)((Hashtable)HttpContext.Current.Session["orden"])["orden"];
-    ViewBag.Fecha = ((DateTime)HttpContext.Current.Session["fecha"]).ToString("dd/MM/yyyy");
-    var detalles = ((List<ordencompradetalle>) ((Hashtable) HttpContext.Current.Session["orden"])["detalle"]);
-    ViewBag.TotalPedido = detalles.AsEnumerable().Sum(x => float.Parse(x.CantidadPedido));
-    ViewBag.TotalComprometido = detalles.AsEnumerable().Sum(x => x.CantidadComprometida);
+    var ordenCompra = (ordencompra)ViewBag.OrdenCompra;
+
+    var currentCita = (CurrentCita) ViewBag.CurrentCita;
+    ViewBag.TotalPedido = ordenCompra.ordencompradetalles.AsEnumerable().Sum(x => float.Parse(x.CantidadPedido));
+    ViewBag.TotalComprometido = ordenCompra.ordencompradetalles.AsEnumerable().Sum(x => x.CantidadComprometida);
 
     ViewBag.ordenTmp = "";
 }
@@ -50,8 +48,8 @@
             <div class="col-sm-12">
                 <div class="form-group">
                     <label class="col-sm-3 control-label"> Datos del Proveedor</label>
-                    <div class="col-sm-7" style="vert-align: middle">
-                        @(String.Format("{0} - {1}", ViewBag.numeroProveedor, ViewBag.nombreProveedor))
+                    <div class="col-sm-7">
+                        @(String.Format("{0} - {1}", currentCita.Proveedor.NumeroProveedor, currentCita.Proveedor.Nombre1))
                     </div>
                 </div>
             </div>
@@ -66,7 +64,7 @@
                     <label>Orden de Compra</label>
                     <h4 style="margin-top: 5px">
 
-                        @ViewBag.NumeroDocumento
+                        @ordenCompra.NumeroDocumento
 
 
                     </h4>
@@ -75,7 +73,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label>Fecha</label>
-                    <h4 style="margin-top: 5px">@ViewBag.Fecha</h4>
+                    <h4 style="margin-top: 5px">@currentCita.Fecha.ToString("dd/MM/yyyy")</h4>
 
                 </div>
             </div>
@@ -120,8 +118,11 @@
                     Cargar <input type="file" name="cargar-planilla" hidden>
 
                 </label>
+                @Html.Hidden("numeroDocumento", ordenCompra.NumeroDocumento)
             </form>
-            <a class="btn btn-primary pull-right" href="@Url.Action("DescargarPlantilla", "ControlCitas",new {@prmOrden = ViewBag.NumeroDocumento})"><i class="fa fa-arrow-down" aria-hidden="true"></i> Descargar Planilla</a>
+            <a class="btn btn-primary pull-right" href="@Url.Action("DescargarPlantilla", "ControlCitas", new {@numeroDocumento = ordenCompra.NumeroDocumento })">
+                <i class="fa fa-arrow-down" aria-hidden="true"></i> Descargar Planilla
+            </a>
 
         </div>
         <p class="form-legend" style="">
@@ -142,65 +143,32 @@
             </thead>
             <tbody>
 
-                @if (ViewBag.origen == "1") {
 
-                    foreach (var orden in ((List<ordencompradetalle>) ((Hashtable) HttpContext.Current.Session["orden"])["detalle"]))
-                    {
-
-                        //ViewBag.ordenTmp = orden.NumeroDocumento;
-
-                        var cantComp = Decimal.ToInt32(orden.CantidadComprometida);
-                        var cantPed = Convert.ToInt32(decimal.Parse(orden.CantidadPedido.ToString()));
-                        var color = "#000";
-                        if (cantComp < cantPed)
-                        {
-                            color = "red";
-                        }
-                            
-                        
-                    <tr>
-
-                            <td class="text-center"> @orden.NumeroMaterial</td>
-                            <td class="text-center"> @orden.Centro</td>
-                            <td class="text-center"> @orden.Almacen</td>
-                            <td class="text-center"> @orden.DescripcionMaterial</td>
-                            <td class="text-center" style="font-weight: bold; cursor: pointer; color: @color;"> @cantComp</td>
-                            <td class="text-center"style="font-weight: bold; cursor: pointer"> @cantPed</td>
-
-                        </tr>
-
-                    }
-                }
-                else if (ViewBag.origen == "2")
+                @foreach (var detalle in ordenCompra.ordencompradetalles)
                 {
-                    List<ordencompradetalle> resultado = new List<ordencompradetalle>((List<ordencompradetalle>)ViewBag.Detalles);
-                   foreach (var orden in resultado)
-                   {
-                       //ViewBag.ordenTmp = orden.NumeroDocumento;
 
-                       var cantComp = Decimal.ToInt32(orden.CantidadComprometida);
-                       var cantPed = Convert.ToInt32(decimal.Parse(orden.CantidadPedido.ToString()));
-                       var color = "#000";
-                       if (cantComp < cantPed)
-                       {
-                           color = "red";
-                       }
-                               
-                       
-                        <tr>
-
-                            <td class="text-center"> @orden.NumeroMaterial</td>
-                            <td class="text-center"> @orden.Centro</td>
-                            <td class="text-center"> @orden.Almacen</td>
-                            <td class="text-center"> @orden.DescripcionMaterial</td>
-                            <td class="text-center" style="font-weight: bold; cursor: pointer; color: @color;">@cantComp</td>
-                            <td class="text-center"style="font-weight: bold; cursor: pointer"> @cantPed </td>
-
-                        </tr>
-
+                    var cantComp = Decimal.ToInt32(detalle.CantidadComprometida);
+                    var cantPed = Convert.ToInt32(decimal.Parse(detalle.CantidadPedido.ToString()));
+                    var color = "#000";
+                    if (cantComp < cantPed)
+                    {
+                        color = "red";
                     }
                     
+                    <tr>
+
+                        <td class="text-center"> @detalle.NumeroMaterial</td>
+                        <td class="text-center"> @detalle.Centro</td>
+                        <td class="text-center"> @detalle.Almacen</td>
+                        <td class="text-center"> @detalle.DescripcionMaterial</td>
+                        <td class="text-center" style="font-weight: bold; cursor: pointer; color: @color;">@cantComp</td>
+                        <td class="text-center" style="font-weight: bold; cursor: pointer"> @cantPed </td>
+
+                    </tr>
+
                 }
+
+
 
             </tbody>
         </table>

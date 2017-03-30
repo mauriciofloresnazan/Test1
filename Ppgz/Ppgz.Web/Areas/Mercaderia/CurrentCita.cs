@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Ppgz.Repository;
@@ -12,18 +11,17 @@ namespace Ppgz.Web.Areas.Mercaderia
         private readonly proveedore _proveedor;
         public proveedore Proveedor
         {
-            get
-            {
-                return _proveedor;
-                
-            }
+            get { return _proveedor; }
         }
 
-        public DateTime? Fecha;
-
-        public List<ordencompra> Ordenes;
-
-        public CurrentCita(int cuentaId, int proveedorId)
+        private readonly List<ordencompra> _ordenes;
+        public DateTime Fecha
+        {
+            get { return _fecha; }
+        }
+        private readonly DateTime _fecha;
+        
+        public CurrentCita(int cuentaId, int proveedorId, DateTime fecha)
         {
             var proveedorManager = new ProveedorManager();
 
@@ -33,30 +31,59 @@ namespace Ppgz.Web.Areas.Mercaderia
             {
                 throw new BusinessException("Error en la cuenta del proveedor");
             }
+
             _proveedor = proveedor;
-            Ordenes = new List<ordencompra>();
+
+            if (fecha.Date < DateTime.Today.Date)
+            {
+                throw new BusinessException("Fecha incorrecta");
+            }
+
+            _fecha = fecha;
+
+            _ordenes = new List<ordencompra>();
 
         }
 
         public void AddOrden(ordencompra orden)
         {
-            if (Ordenes.Any(o => o.NumeroDocumento == orden.NumeroDocumento))
+            if (_ordenes.Any(o => o.NumeroDocumento == orden.NumeroDocumento))
             {
                 throw new BusinessException("La orden ya se encuentra incluida");
             }
-            Ordenes.Add(orden);
+            _ordenes.Add(orden);
         }
 
         public void RemoveOrden(string numeroDocumento)
         {
-            var orden = Ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+            var orden = _ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
             if (orden != null)
             {
-                Ordenes.Remove(orden);
+                _ordenes.Remove(orden);
             }
         }
 
 
+        public bool HasOrdenes()
+        {
+            return _ordenes.Any();
+        }
+
+        public bool HasOrden(string numeroDocumento)
+        {
+            return _ordenes.Any(o=> o.NumeroDocumento == numeroDocumento);
+        }
+
+        public ordencompra GetOrden(string numeroDocumento)
+        {
+            return _ordenes.Single(o => o.NumeroDocumento == numeroDocumento);
+        }
+
+
+        public List<ordencompra> GetOrdenes()
+        {
+            return _ordenes;
+        }
         public int UpdateElementoEnLista(string numeroDocumento, string numeroMaterial, 
             int oldValue, int newValue)
         {
@@ -69,7 +96,7 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             var resultado = 0;
 
-            var orden = Ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+            var orden = _ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
 
             if (orden == null)
             {
@@ -94,81 +121,6 @@ namespace Ppgz.Web.Areas.Mercaderia
             return resultado;
 
         }
-
-        public int VerificarOrden(string numeroDocumento)
-        {
-            int resultado = 0;
-
-            if (Ordenes != null)
-            {
-                if (Ordenes.Count > 0)
-                {
-                    var orden = Ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
-                    if (orden != null)
-                    {
-                        resultado = 1;
-                        return resultado;
-                    }
-                }
-                else
-                {
-                    return resultado;
-                }
-            }
-            else
-            {
-                return resultado;
-            }
-
-            return resultado;
-        }
-
-        public Int64 CountElementosEnLista()
-        {
-            var resultado = 0;
-
-            if (Ordenes != null)
-            {
-                resultado = Ordenes.Count;
-            } 
-            
-            return resultado;
-        }
-
-        public List<ordencompradetalle> FindByNumeroOrden(string numeroDocumento)
-        {
-
-            var result = new List<ordencompradetalle>();
-
-            var orden = Ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
-            if (orden != null)
-            {
-                result = orden.ordencompradetalles.ToList();
-            }
-
-            return result;
-        }
-
-        public Hashtable getListaDeOrdenes()
-        {
-
-            Hashtable hashtable = new Hashtable();
-
-            Int16 contador = 0;
-
-            if (Ordenes.Count > 0)
-            {
-                foreach (var ordenesTemp in Ordenes)
-                {
-                    hashtable[contador] = ordenesTemp.NumeroDocumento;
-                    contador += 1;
-                }
-            };
-
-            return hashtable;
-
-
-        }
-
+        
     }
 }

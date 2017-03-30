@@ -221,8 +221,8 @@ namespace Ppgz.Services
             var  orden = _db.ordencompras.FirstOrDefault(
                 o => o.Id == id);
 
-            var ordenDetalle = _db.detalleordencompras.FirstOrDefault(
-                o => o.OrdenComprasId == id);
+            var ordenDetalle = _db.ordencompradetalles.FirstOrDefault(
+                o => o.SapOrdenCompraId == id);
 
             var result = new Hashtable
             {
@@ -294,19 +294,19 @@ namespace Ppgz.Services
 
         }
         
-        public List<string> GetAvailableDatesByOrdenCompra(string numeroDocumento, int proveedorId)
+        public List<DateTime> GetAvailableDatesByOrdenCompra(string numeroDocumento, int proveedorId)
         {
             // TODO HACER
 
-            return new List<string>
+            return new List<DateTime>
             {
-                DateTime.Today.AddDays(2).ToString("yyyy-MM-dd"),
-                DateTime.Today.AddDays(3).ToString("yyyy-MM-dd"),
-                DateTime.Today.AddDays(4).ToString("yyyy-MM-dd"),
-                DateTime.Today.AddDays(5).ToString("yyyy-MM-dd"),
-                DateTime.Today.AddDays(6).ToString("yyyy-MM-dd"),
-                DateTime.Today.AddDays(7).ToString("yyyy-MM-dd"),
-                DateTime.Today.AddDays(8).ToString("yyyy-MM-dd"),
+                DateTime.Today.AddDays(2),
+                DateTime.Today.AddDays(3),
+                DateTime.Today.AddDays(4),
+                DateTime.Today.AddDays(5),
+                DateTime.Today.AddDays(6),
+                DateTime.Today.AddDays(7),
+                DateTime.Today.AddDays(8),
 
             };
         }
