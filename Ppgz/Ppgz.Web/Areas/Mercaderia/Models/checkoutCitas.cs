@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using System.Collections;
 using System.Security.Cryptography.X509Certificates;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Newtonsoft.Json;
 using Ppgz.Repository;
 
@@ -13,6 +14,28 @@ namespace Ppgz.Web.Areas.Mercaderia
 {
     public class checkoutCitas
     {
+
+
+        public class datosProveedor
+        {
+
+            public string idProveedor { get; set; }
+            public string fecha { get; set; }
+
+            public datosProveedor()
+            {
+            }
+
+            public datosProveedor(string prmidProveedor, string prmFecha)
+            {
+                idProveedor = prmidProveedor; 
+                fecha = prmFecha;
+
+            }
+
+        }
+
+
 
 
         // This will be serialized into a JSON Address object
@@ -86,7 +109,7 @@ namespace Ppgz.Web.Areas.Mercaderia
         //Clase para Mantener la Lista de Ordenes
         public static class ListaDeOrdenes
         {
-            static List<KeyVal2<string, List<ordencompradetalle>>> _list;
+            private static List<KeyVal2<string, List<ordencompradetalle>>> _list;
             private static string numOrdenTemp = "";
             private static string proveedorId = "";
             private static string Fecha = "";

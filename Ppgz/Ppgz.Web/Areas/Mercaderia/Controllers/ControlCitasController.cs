@@ -5,6 +5,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Web.Mvc;
 using ClosedXML.Excel;
 using Ppgz.Repository;
@@ -23,13 +24,21 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		readonly ProveedorManager _proveedorManager = new ProveedorManager();
 		readonly CommonManager _commonManager = new CommonManager();
 		readonly CuentasPorPagarManager _cuentasPorPagarManager = new CuentasPorPagarManager();
-
 		//
 		// GET: /Mercaderia/ControlCitas/
 		[Authorize(Roles = "MAESTRO-MERCADERIA")]
 		public ActionResult Index()
 		{
+
             checkoutCitas.ListaDeOrdenes.Clear();
+		    if (System.Web.HttpContext.Current.Session["controlCita"] != null)
+		    {
+                System.Web.HttpContext.Current.Session.Remove("controlCita");    
+
+		    }
+            
+
+            
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
 			ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
@@ -39,22 +48,24 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 
 
-		[Authorize(Roles = "MAESTRO-MERCADERIA")]
-		public ActionResult OrdenDeCompra(int proveedorId)
-		{
-			ViewBag.IdProveedor = proveedorId;
+        //[Authorize(Roles = "MAESTRO-MERCADERIA")]
+        //public ActionResult OrdenDeCompra(int proveedorId)
+        //{
+        //    ViewBag.IdProveedor = proveedorId;
+            
+        //   var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-			return View();
-		}
+        //    return View();
+        //}
 
-		[Authorize(Roles = "MAESTRO-MERCADERIA")]
-		public JsonResult OrdenDeCompraDetalle(string Documento = "4500916565")
-		{
-			var ordenCompraManager = new OrdenCompraManager();
-			var orden = ordenCompraManager.FindDetalleByDocumento(Documento,"");
+        //[Authorize(Roles = "MAESTRO-MERCADERIA")]
+        //public JsonResult OrdenDeCompraDetalle(string Documento = "4500916565")
+        //{
+        //    var ordenCompraManager = new OrdenCompraManager();
+        //    var orden = ordenCompraManager.FindDetalleByDocumento(Documento,"");
 
-			return Json(orden,JsonRequestBehavior.AllowGet);
-		}
+        //    return Json(orden,JsonRequestBehavior.AllowGet);
+        //}
 
 
 		[Authorize(Roles = "MAESTRO-MERCADERIA")]
@@ -70,9 +81,34 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				return RedirectToAction("Index");
 			}
 
-			checkoutCitas.ListaDeOrdenes.IdProveedor(proveedorId.ToString(), "set");
-			
-			ViewBag.proveedorId = proveedorId;
+			//checkoutCitas.ListaDeOrdenes.IdProveedor(proveedorId.ToString(), "set");
+
+
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+
+            if (System.Web.HttpContext.Current.Session["controlCita"] == null)
+		    {
+                System.Web.HttpContext.Current.Session["controlCita"] = new CurrentCita(cuenta.Id, proveedorId);
+
+		    } else if (System.Web.HttpContext.Current.Session["controlCita"] != null)
+		    {
+
+		        int proveedorIdtmp = ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.Id;
+
+                if (proveedorId != proveedorIdtmp)
+		        {
+                    System.Web.HttpContext.Current.Session["controlCita"] = new CurrentCita(cuenta.Id, proveedorId);
+
+		        }
+
+		    }
+
+		    ViewBag.numeroProveedor = ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.NumeroProveedor;
+
+		    ViewBag.nombreProveedor = ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.Nombre1;
+
+		    ViewBag.proveedorId = proveedorId;
 			
 			return View();
 		}
@@ -90,7 +126,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		
 				if (proveedorId == 0)
 				{
-					tmpProveedorId = Int32.Parse(checkoutCitas.ListaDeOrdenes.IdProveedor("", "get").ToString());
+				    tmpProveedorId = ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.Id;
+				        //Int32.Parse(checkoutCitas.ListaDeOrdenes.IdProveedor("", "get").ToString());
 
 				}
 				else
@@ -103,6 +140,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 				var ordenCompraManager = new OrdenCompraManager();
 				var orden = ordenCompraManager.FindOrdenCompraWithAvailableDates(numeroDocumento, tmpProveedorId);
+			    var ordenTmp = ordenCompraManager.FindOrdenCompraActiva(numeroDocumento, tmpProveedorId);
 
 				if (orden["orden"] == null)
 				{
@@ -110,7 +148,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
 				}
 
-				if (checkoutCitas.ListaDeOrdenes.getsetOrdenTemp(numeroDocumento) == "1")
+                if (ordenTmp == null)
+                {
+                    TempData["FlashError"] = "Numero de documento incorrecto";
+                    return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
+                }
+
+                //if (checkoutCitas.ListaDeOrdenes.getsetOrdenTemp(numeroDocumento) == "1")
+                if (((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).VerificarOrden(numeroDocumento) == 1)
 				{
 					TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
 					return RedirectToAction("BuscarOrden", new { @proveedorId = tmpProveedorId });
@@ -118,8 +163,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				}
 				
 				System.Web.HttpContext.Current.Session["orden"]  = orden;
+                System.Web.HttpContext.Current.Session["ordenTmp"]  = ordenTmp;
 
-				Int64 countElementos = checkoutCitas.ListaDeOrdenes.countElementosEnLista();
+                Int64 countElementos = ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).CountElementosEnLista(); //checkoutCitas.ListaDeOrdenes.countElementosEnLista();
 
 				if (countElementos == 0)
 				{
@@ -157,6 +203,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				return RedirectToAction("Index");
 			}
 
+            ViewBag.numeroProveedor = ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.NumeroProveedor;
+
+            ViewBag.nombreProveedor = ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.Nombre1;
+            
 			ViewBag.Dates = ((Hashtable)System.Web.HttpContext.Current.Session["orden"])["Dates"];
 			return View();
 		}
@@ -165,7 +215,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		public ActionResult Asn(string fecha = null,string orden = "0")
 		{
 
-			Int64 countElementos = checkoutCitas.ListaDeOrdenes.countElementosEnLista();
+            Int64 countElementos = ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).CountElementosEnLista();//checkoutCitas.ListaDeOrdenes.countElementosEnLista();
 
 			if (orden == "0")//Esto indica que es una nueva Orden, no existente en la Lista
 			{
@@ -181,16 +231,21 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 							return RedirectToAction("Index");
 						}
 
-						checkoutCitas.ListaDeOrdenes.FechaOrden(fecha, "set");
+						//checkoutCitas.ListaDeOrdenes.FechaOrden(fecha, "set");
 
-						System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy",
-							CultureInfo.InvariantCulture);
+                        ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).Fecha = DateTime.ParseExact(fecha, "dd/MM/yyyy",CultureInfo.InvariantCulture);
+
+					    System.Web.HttpContext.Current.Session["fecha"] =
+					        ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).Fecha;
+					        //DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy",CultureInfo.InvariantCulture);
 					}
 				}
 				else
 				{
-					System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy",CultureInfo.InvariantCulture);
-					
+				    System.Web.HttpContext.Current.Session["fecha"] =
+				        ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).Fecha;
+				        //DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy",CultureInfo.InvariantCulture);
+
 				}
 
 
@@ -199,11 +254,27 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					return RedirectToAction("Index");
 				}
 
-				ViewBag.ProveedorId = checkoutCitas.ListaDeOrdenes.IdProveedor("", "get");
+                //Cargo la Orden de Compra Activa
+
+
+			    var ordenTemp = (ordencompra) System.Web.HttpContext.Current.Session["ordenTmp"];
+			    ordenTemp.ordencompradetalles =
+			        ((List<ordencompradetalle>) ((Hashtable) System.Web.HttpContext.Current.Session["orden"])["detalle"]);
+
+
+                ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).AddOrden(ordenTemp);
+
+                ViewBag.numeroProveedor = ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.NumeroProveedor;
+
+                ViewBag.nombreProveedor = ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.Nombre1;
+ 
+			    ViewBag.ProveedorId = ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.Id; //checkoutCitas.ListaDeOrdenes.IdProveedor("", "get");
 
 				ViewBag.origen = "1";
 
 				ViewBag.Orden = ((Hashtable) System.Web.HttpContext.Current.Session["orden"]);
+
+                ViewBag.NumeroDocumento = ordenTemp.NumeroDocumento;
 
 				ViewBag.Detalles =
 					((List<ordencompradetalle>) ((Hashtable) System.Web.HttpContext.Current.Session["orden"])["detalle"])
@@ -221,34 +292,21 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 								});
 
-				checkoutCitas.ListaDeOrdenes.Agregar(checkoutCitas.ListaDeOrdenes.getsetOrdenTemp("", 1),
-					checkoutCitas.ListaDeOrdenes.convertirHashTable(
-						(Hashtable) System.Web.HttpContext.Current.Session["orden"]));
-
 			}
-			else
+			else 
 			{
 
-				System.Web.HttpContext.Current.Session["fecha"] = DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
-				ViewBag.ProveedorId = checkoutCitas.ListaDeOrdenes.IdProveedor("", "get");
+                System.Web.HttpContext.Current.Session["fecha"] = ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).Fecha;//DateTime.ParseExact(checkoutCitas.ListaDeOrdenes.FechaOrden("", "get"), "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                ViewBag.ProveedorId = ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.Id; //checkoutCitas.ListaDeOrdenes.IdProveedor("", "get");
 				ViewBag.origen = "2";
 				ViewBag.NumeroDocumento = orden;
-				ViewBag.Detalles =
-					checkoutCitas.ListaDeOrdenes.getListaDeItems(orden);
-
+			    ViewBag.Detalles = ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).FindByNumeroOrden(orden);
+                ViewBag.numeroProveedor = ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.NumeroProveedor;
+                ViewBag.nombreProveedor = ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.Nombre1;
+ 
 
 			}
 			;
-
-			//checkoutCitas.ListaDeOrdenes.convertirHashTable((Hashtable) System.Web.HttpContext.Current.Session["orden"]);
-
-			
-			
-			//checkoutCitas.ListaDeOrdenes.getListaDeItems(checkoutCitas.ListaDeOrdenes.getsetOrdenTemp("", 1));
-
-			//checkoutCitas.ListaDeOrdenes.updElementoEnLista("4501140098", "000000000013327801", "12", "10");
-
-			//checkoutCitas.ListaDeOrdenes.getListaDeOrdenes();
 
 			return View();
 		}
@@ -259,8 +317,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		public  ActionResult updItemOrden(string Orden, string Item, string OldValue, string NewValue)
 		{
 
-			int Res = checkoutCitas.ListaDeOrdenes.updElementoEnLista(Orden, Item, OldValue, NewValue);
+			//int Res = checkoutCitas.ListaDeOrdenes.updElementoEnLista(Orden, Item, OldValue, NewValue);
 
+            int Res = ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).UpdateElementoEnLista(Orden,Item,Int32.Parse(OldValue),Int32.Parse(NewValue));
 
 			return Json(Res, JsonRequestBehavior.DenyGet);
 
@@ -270,38 +329,44 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		{
 
 
-			ViewBag.ListaDeOrdenes = checkoutCitas.ListaDeOrdenes.getListaDeOrdenes();
-
+		    ViewBag.ListaDeOrdenes = ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).getListaDeOrdenes(); //checkoutCitas.ListaDeOrdenes.getListaDeOrdenes();
+		    ViewBag.proveedorId = ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.Id;
 			
 			return View();
 		}
 
-		public void DescargarPlantilla()
+		public void DescargarPlantilla(string prmOrden = "0")
 		{
-			if (System.Web.HttpContext.Current.Session["orden"] == null)
-			{
-				return;
-			}
 
-			var detalles =((List<ordencompradetalle>)((Hashtable)System.Web.HttpContext.Current.Session["orden"])["detalle"]);
+            //****************************************************
+            // ESTO ES LO NUEVO, CON LA NUEVA VARIABLE DE SESSION
+            //****************************************************
+            if (System.Web.HttpContext.Current.Session["controlCita"] == null)
+            {
+                return;
+            }
 
-			var dt = new DataTable();
-			dt.Columns.Add("NumeroMaterial");
-			dt.Columns.Add("Descripcion");
-			dt.Columns.Add("Cantidad");
-
-
-			foreach (var detalle in detalles)
-			{
-				dt.Rows.Add(detalle.NumeroMaterial, detalle.DescripcionMaterial, Decimal.ToInt32(decimal.Parse(detalle.CantidadPedido)));
-
-			}
-			
-			var orden =((ordencompra)((Hashtable)System.Web.HttpContext.Current.Session["orden"])["orden"]);
-			// var detalle = _ordenCompraManager.FindDetalleByDocumento();
+ 
+            var detalles = ((CurrentCita)System.Web.HttpContext.Current.Session["controlCita"]).FindByNumeroOrden(prmOrden);
+           
+            var dt = new DataTable();
+            dt.Columns.Add("NumeroMaterial");
+            dt.Columns.Add("Descripcion");
+            dt.Columns.Add("Cantidad");
 
 
-			FileManager.ExportExcel(dt, orden.NumeroDocumento + "_plantilla", HttpContext);
+            foreach (var detalle in detalles)
+            {
+                dt.Rows.Add(detalle.NumeroMaterial, detalle.DescripcionMaterial, Decimal.ToInt32(decimal.Parse(detalle.CantidadPedido)));
+
+            }
+
+            // var detalle = _ordenCompraManager.FindDetalleByDocumento();
+
+
+            FileManager.ExportExcel(dt, prmOrden + "_plantilla", HttpContext);
+
+
 		}
 
 			   

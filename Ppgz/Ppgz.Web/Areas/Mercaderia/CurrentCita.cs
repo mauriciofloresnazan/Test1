@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Ppgz.Repository;
@@ -90,41 +91,13 @@ namespace Ppgz.Web.Areas.Mercaderia
             detalle.CantidadComprometida = newValue;
             resultado = 1;
 
-
-            /**************************************
-            AQUI SE RECORRE LA LISTA CON LAS ORDENES
-            ***************************************/
-            /*foreach (var ordenes in _list)
-            {
-                if (ordenes.Id == Orden)//ORDEN A BUSCAR
-                {
-
-                    //List<ordencompradetalle> ItemsEnOrden = new List<ordencompradetalle>();
-                    List<ordencompradetalle> resultado = new List<ordencompradetalle>((List<ordencompradetalle>)ordenes.Valores);
-                    //ItemsOrdenes.AddRange(resultado);
-
-                    foreach (var item in resultado)
-                    {
-                        if (item.NumeroMaterial == Item)
-                        {
-                            item.CantidadComprometida = Convert.ToDecimal(NewValue);
-                            Resultado = 1;
-                            break;
-                        }
-
-                    }
-
-
-                }
-            }
-            */
             return resultado;
 
         }
 
         public int VerificarOrden(string numeroDocumento)
         {
-            var resultado = 0;
+            int resultado = 0;
 
             if (Ordenes != null)
             {
@@ -133,6 +106,7 @@ namespace Ppgz.Web.Areas.Mercaderia
                     var orden = Ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
                     if (orden != null)
                     {
+                        resultado = 1;
                         return resultado;
                     }
                 }
@@ -144,7 +118,7 @@ namespace Ppgz.Web.Areas.Mercaderia
             else
             {
                 return resultado;
-            } resultado = 1; 
+            }
 
             return resultado;
         }
@@ -173,6 +147,27 @@ namespace Ppgz.Web.Areas.Mercaderia
             }
 
             return result;
+        }
+
+        public Hashtable getListaDeOrdenes()
+        {
+
+            Hashtable hashtable = new Hashtable();
+
+            Int16 contador = 0;
+
+            if (Ordenes.Count > 0)
+            {
+                foreach (var ordenesTemp in Ordenes)
+                {
+                    hashtable[contador] = ordenesTemp.NumeroDocumento;
+                    contador += 1;
+                }
+            };
+
+            return hashtable;
+
+
         }
 
     }

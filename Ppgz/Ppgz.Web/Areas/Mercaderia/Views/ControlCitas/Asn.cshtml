@@ -45,26 +45,43 @@
 <div class="panel panel-default">
     <div class="panel-heading">Datos de la Orden de Compra</div>
     <div class="panel-body">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label>Orden de Compra</label>
-                <h4 style="margin-top: 5px">
-                   
-                    @ViewBag.OrdenCompra.NumeroDocumento
-                    
 
-                </h4>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label"> Datos del Proveedor</label>
+                    <div class="col-sm-7" style="vert-align: middle">
+                        @(String.Format("{0} - {1}", ViewBag.numeroProveedor, ViewBag.nombreProveedor))
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label>Fecha</label>
-                <h4 style="margin-top: 5px">@ViewBag.Fecha</h4>
-
-            </div>
+        <div class="row">
+            &nbsp;
         </div>
 
-    </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Orden de Compra</label>
+                    <h4 style="margin-top: 5px">
+
+                        @ViewBag.NumeroDocumento
+
+
+                    </h4>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>Fecha</label>
+                    <h4 style="margin-top: 5px">@ViewBag.Fecha</h4>
+
+                </div>
+            </div>
+        </div>    
+
+        </div>
     <div class="panel-footer">
 
         <div class="row">
@@ -104,7 +121,7 @@
 
                 </label>
             </form>
-            <a class="btn btn-primary pull-right" href="@Url.Action("DescargarPlantilla", "ControlCitas")"><i class="fa fa-arrow-down" aria-hidden="true"></i> Descargar Planilla</a>
+            <a class="btn btn-primary pull-right" href="@Url.Action("DescargarPlantilla", "ControlCitas",new {@prmOrden = ViewBag.NumeroDocumento})"><i class="fa fa-arrow-down" aria-hidden="true"></i> Descargar Planilla</a>
 
         </div>
         <p class="form-legend" style="">
@@ -130,7 +147,7 @@
                     foreach (var orden in ((List<ordencompradetalle>) ((Hashtable) HttpContext.Current.Session["orden"])["detalle"]))
                     {
 
-                        ViewBag.ordenTmp = orden.NumeroDocumento;
+                        //ViewBag.ordenTmp = orden.NumeroDocumento;
 
                         var cantComp = Decimal.ToInt32(orden.CantidadComprometida);
                         var cantPed = Convert.ToInt32(decimal.Parse(orden.CantidadPedido.ToString()));
@@ -159,12 +176,12 @@
                     List<ordencompradetalle> resultado = new List<ordencompradetalle>((List<ordencompradetalle>)ViewBag.Detalles);
                    foreach (var orden in resultado)
                    {
-                       ViewBag.ordenTmp = orden.NumeroDocumento;
+                       //ViewBag.ordenTmp = orden.NumeroDocumento;
 
                        var cantComp = Decimal.ToInt32(orden.CantidadComprometida);
                        var cantPed = Convert.ToInt32(decimal.Parse(orden.CantidadPedido.ToString()));
                        var color = "#000";
-                       if (cantComp > cantPed)
+                       if (cantComp < cantPed)
                        {
                            color = "red";
                        }
@@ -221,7 +238,7 @@
                         <div class="form-group">
                             <div class="col-sm-offset-4 col-sm-8">
                                 <button type="submit" class="btn btn-primary" data-dismiss="modal">Actualizar</button>
-                                
+                                <button type="button" onclick="cancelar();" class="btn btn-primary" data-dismiss="modal">Cancelarr</button>
 
                             </div>
                         </div>
@@ -234,7 +251,7 @@
 </div>
 
 
-
+<input type="hidden" id="hidCancelarActualizar" value="0"/>
 @Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitas", new { @proveedorId = ViewBag.ProveedorId }))
 @Html.Hidden("RedirectTo2", Url.Action("ListaDeOrdenes", "ControlCitas"))
 
@@ -243,7 +260,7 @@
 @section Scripts {
 
     <script type="text/javascript">
-        
+
         $(".numeric").numeric();
 
         $("input[name='cargar-planilla']").change(function() { this.form.submit(); });
@@ -264,7 +281,6 @@
             }
 
 
-
             var asn = $('#asn').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
@@ -280,63 +296,66 @@
                 $("#modalEditarCantidad").modal('show');
                 editingCell = asn.cell(this);
                 editingTd = this;
+                $("#hidCancelarActualizar").val("0");
             });
 
 
-            $('#modalEditarCantidad').on('hidden.bs.modal', function (e) {
+            $('#modalEditarCantidad').on('hidden.bs.modal', function(e) {
 
-                var cantidadOrg = parseFloat($($(editingTd).parent().find('td')[5]).text());
+                if ($("#hidCancelarActualizar").val() == "0") {
 
-                var cantidadNueva = parseInt($("#editar-cantidad").val());
-                var vlItem = $($(editingTd).parent().find('td')[0]).text();
-                var vlNumOrden = "@ViewBag.ordenTmp";
+                    var cantidadOrg = parseFloat($($(editingTd).parent().find('td')[5]).text());
 
-                if (isNaN(cantidadNueva)) {
-                    //todo mejorar
-                    //alert("cantidad incorrecta");
-                    msgError("cantidad incorrecta");
-                    return;
+                    var cantidadNueva = parseInt($("#editar-cantidad").val());
+                    var vlItem = $($(editingTd).parent().find('td')[0]).text();
+                    var vlNumOrden = "@ViewBag.NumeroDocumento";
+
+                    if (isNaN(cantidadNueva)) {
+                        //todo mejorar
+                        //alert("cantidad incorrecta");
+                        msgError("cantidad incorrecta");
+                        return;
+                    }
+                    if (cantidadNueva > cantidadOrg) {
+                        //todo mejorar
+                        //alert("cantidad incorrecta");
+                        msgError("cantidad incorrecta");
+
+                        return;
+                    }
+
+                    if (cantidadNueva <= cantidadOrg) {
+                        editingCell.data(cantidadNueva).draw();
+                        $(editingTd).css("color", "red");
+                        // $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
+                        // $($(editingTd.parentNode).find('td')[5]).css("color", "#fe7000");
+                        calcularTotalEntregar();
+
+                        var requestData = {
+                            Orden: vlNumOrden.trim(),
+                            Item: vlItem.trim(),
+                            OldValue: cantidadOrg,
+                            NewValue: cantidadNueva
+                        };
+
+                        $.ajax({
+                            url: '/ControlCitas/updItemOrden',
+                            type: 'POST',
+                            data: JSON.stringify(requestData),
+                            dataType: 'json',
+                            contentType: 'application/json; charset=utf-8',
+                            error: function(xhr) {
+                                alert('Error: ' + xhr.statusText);
+                            },
+                            success: function(result) {
+                                console.log(result);
+                            },
+                            async: true,
+                            processData: false
+                        });
+
+                    }
                 }
-                if (cantidadNueva > cantidadOrg) {
-                    //todo mejorar
-                    //alert("cantidad incorrecta");
-                    msgError("cantidad incorrecta");
-
-                    return;
-                }
-
-                if (cantidadNueva <= cantidadOrg) {
-                    editingCell.data(cantidadNueva).draw();
-                    $(editingTd).css("color", "red");
-                    // $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
-                    // $($(editingTd.parentNode).find('td')[5]).css("color", "#fe7000");
-                    calcularTotalEntregar();
-
-                    var requestData = {
-                        Orden: vlNumOrden.trim(),
-                        Item: vlItem.trim(),
-                        OldValue: cantidadOrg,
-                        NewValue: cantidadNueva
-                    };
-
-                    $.ajax({
-                        url: '/ControlCitas/updItemOrden',
-                        type: 'POST',
-                        data: JSON.stringify(requestData),
-                        dataType: 'json',
-                        contentType: 'application/json; charset=utf-8',
-                        error: function (xhr) {
-                            alert('Error: ' + xhr.statusText);
-                        },
-                        success: function (result) {
-                            console.log(result);
-                        },
-                        async: true,
-                        processData: false
-                    });
-
-                }
-
             });
 
             calcularTotalEntregar();
@@ -355,108 +374,63 @@
 
         function validarSiguiente() {
 
-            var box = bootbox.dialog({
-                title: "<i class=" + String.fromCharCode(34) + "fa fa-times-circle fa-2x" + String.fromCharCode(34) + "></i>&nbsp;Grupo Nazan - Mensajes",
-                message: "Desea agregar otra Orden a la Lista ?",
-                buttons: {
-                    success: {
-                        label: "Si",
-                        className: "msgbtn-info",
-                        callback: function () {
+            var origen = "@ViewBag.origen";
+            //**************************************************************************
+            // Si origen vale 1 = La Orden se esta cargando en la Lista por primera vez
+            // Si origen vale 2 = Venimos de la Pantalla Lista de Ordenes (Posible Edicion)
+            //**************************************************************************
+
+            if (origen == "1") {
+
+                var box = bootbox.dialog({
+                    title: "<i class=" + String.fromCharCode(34) + "fa fa-times-circle fa-2x" + String.fromCharCode(34) + "></i>&nbsp;Grupo Nazan - Mensajes",
+                    message: "Desea agregar otra Orden a la Lista ?",
+                    buttons: {
+                        success: {
+                            label: "Si",
+                            className: "msgbtn-info",
+                            callback: function() {
 
 
-                            var url = $("#RedirectTo1").val();
-                            location.href = url;
+                                var url = $("#RedirectTo1").val();
+                                location.href = url;
 
 
-                        }
-                    },
-                    main: {
-                        label: "No",
-                        className: "msgbtn-info active",
-                        callback: function () {
+                            }
+                        },
+                        main: {
+                            label: "No",
+                            className: "msgbtn-info active",
+                            callback: function() {
 
 
-                            var url = $("#RedirectTo2").val();
-                            location.href = url;
+                                var url = $("#RedirectTo2").val();
+                                location.href = url;
 
+                            }
                         }
                     }
-                }
-            });
+                });
 
 
-            box.find('.modal-header').addClass("msgInfo-title"); // Aqui cambio el color del Header
-            box.find('.modal-content').addClass("msgDanger"); // Aqui Cambio el Color del formulario
-            box.show();
+                box.find('.modal-header').addClass("msgInfo-title"); // Aqui cambio el color del Header
+                box.find('.modal-content').addClass("msgDanger"); // Aqui Cambio el Color del formulario
+                box.show();
+
+            } else if  (origen == "2"){
+
+                var url = $("#RedirectTo2").val();
+                location.href = url;
+
+            }
+
 
         }
 
 
-        @*function actualizarAgregado() {
-            
-
-            var cantidadOrg = parseFloat($($(editingTd).parent().find('td')[5]).text());
-
-            var cantidadNueva = parseFloat($("#editar-cantidad").val());
-            var vlItem = $($(editingTd).parent().find('td')[0]).text();
-            var vlNumOrden = "@ViewBag.ordenTmp";
-
-            if (isNaN(cantidadNueva)) {
-                //todo mejorar
-                //alert("cantidad incorrecta");
-                msgError("cantidad incorrecta");
-                return;
-            }
-            if (cantidadNueva > cantidadOrg) {
-                //todo mejorar
-                //alert("cantidad incorrecta");
-                msgError("cantidad incorrecta");
-
-                return;
-            }
-
-            if (cantidadNueva <= cantidadOrg) {
-                editingCell.data(cantidadNueva).draw();
-                $(editingTd).css("color", "red");
-                // $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
-                // $($(editingTd.parentNode).find('td')[5]).css("color", "#fe7000");
-                calcularTotalEntregar();
-
-                var requestData = {
-                    Orden: vlNumOrden.trim(),
-                    Item: vlItem.trim(),
-                    OldValue: cantidadOrg,
-                    NewValue: cantidadNueva
-                };
-
-                $.ajax({
-                    url: '/ControlCitas/updItemOrden',
-                    type: 'POST',
-                    data: JSON.stringify(requestData),
-                    dataType: 'json',
-                    contentType: 'application/json; charset=utf-8',
-                    error: function (xhr) {
-                        //alert('Error: ' + xhr.statusText);
-                        msgError('Error: ' + xhr.statusText);
-                        cancelar();
-                    },
-                    success: function (result) {
-                        console.log(result);
-                        cancelar();
-                        calcularTotalEntregar();
-                    },
-                    async: true,
-                    processData: false
-                });
-
-            }
-
-
-        }*@
-
         function cancelar() {
 
+            $("#hidCancelarActualizar").val("1");
             $("#modalEditarCantidad").modal('hidden.bs.modal');
 
         }
