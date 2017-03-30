@@ -17,7 +17,6 @@ namespace Ppgz.Repository
         public ordencompra()
         {
             this.ordencompradetalles = new HashSet<ordencompradetalle>();
-            this.ordencompradetalles1 = new HashSet<ordencompradetalle>();
         }
     
         public int Id { get; set; }
@@ -46,6 +45,5 @@ namespace Ppgz.Repository
     
         public virtual proveedore proveedore { get; set; }
         public virtual ICollection<ordencompradetalle> ordencompradetalles { get; set; }
-        public virtual ICollection<ordencompradetalle> ordencompradetalles1 { get; set; }
     }
 }

@@ -38,6 +38,5 @@ namespace Ppgz.Repository
         public decimal CantidadComprometida { get; set; }
     
         public virtual ordencompra ordencompra { get; set; }
-        public virtual ordencompra ordencompra1 { get; set; }
     }
 }

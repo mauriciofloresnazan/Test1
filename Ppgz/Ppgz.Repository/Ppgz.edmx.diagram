@@ -4,60 +4,58 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="12465eebecb149b9a327e43efecaa4df" Name="Diagram1">
-        <EntityTypeShape EntityType="impuls_portal2Model.acumuladore" Width="1.5" PointX="8" PointY="4.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.almacene" Width="1.5" PointX="5.75" PointY="5" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.andene" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.AspNetRole" Width="1.5" PointX="5.25" PointY="15.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.AspNetUserClaim" Width="1.5" PointX="9.75" PointY="10.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.AspNetUserLogin" Width="1.5" PointX="9.75" PointY="13.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.AspNetUser" Width="1.5" PointX="7.5" PointY="11.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.cita" Width="1.5" PointX="9.75" PointY="15.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.configuracione" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.cr" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.cuentaproveedore" Width="1.5" PointX="3" PointY="11.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.cuenta" Width="1.5" PointX="0.75" PointY="16.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.cuentasmensaje" Width="1.5" PointX="12" PointY="18.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.cuentasxpagar" Width="1.5" PointX="10.75" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.detalleordencompra" Width="1.5" PointX="11.75" PointY="7.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.estatuscita" Width="1.5" PointX="7.5" PointY="8" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.fakedataproveedor" Width="1.5" PointX="13.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.horarioriele" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.horario" Width="1.5" PointX="3" PointY="5.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.mensaje" Width="1.5" PointX="9.75" PointY="24" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.ordencompra" Width="1.5" PointX="5.25" PointY="19.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.ordencompradetalle" Width="1.5" PointX="7.5" PointY="19.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.perfile" Width="1.5" PointX="3" PointY="15.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.proveedore" Width="1.5" PointX="3" PointY="18.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.riele" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.tipocuenta" Width="1.5" PointX="11.75" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.tipousuario" Width="1.5" PointX="13.75" PointY="8.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.devolucione" Width="1.5" PointX="13.75" PointY="11.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.pago" Width="1.5" PointX="14.75" PointY="14.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portal2Model.vwmensaje" Width="1.5" PointX="15.75" PointY="0.75" IsExpanded="true" />
-        <AssociationConnector Association="impuls_portal2Model.fk_acumulador_almacen" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_rieles_anden" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.ApplicationUser_Claims" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.ApplicationUser_Logins" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_citas_usuario" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_cuentas_usuario" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_cuentasmensajes_usuario" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_mensajes_usuario" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_perfil2" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_citas_estatus" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_cuetnasprov" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_cuenta" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_cuentasmensajes_cuenta" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_proveedores_cuenta" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_cuentasmensajes_mensaje" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_horariorieles_horarios" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_horariorieles_rieles" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_ordencompra_proveedor" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_ordencompradetalle_parent" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.fk_sapordencompradetalle_parent" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.AspNetUserRoles" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.cuentasusuarios" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portal2Model.perfilesroles" ManuallyRouted="false" />
+      <Diagram DiagramId="c2fe90c118944845a0d486aca4b9b9b0" Name="Diagram1">
+        <EntityTypeShape EntityType="impuls_portalModel.acumuladore" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.almacene" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.andene" Width="1.5" PointX="7.5" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.AspNetRole" Width="1.5" PointX="5.25" PointY="15.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.AspNetUserClaim" Width="1.5" PointX="9.75" PointY="10.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.AspNetUserLogin" Width="1.5" PointX="9.75" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.AspNetUser" Width="1.5" PointX="7.5" PointY="11.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.cita" Width="1.5" PointX="9.75" PointY="15.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.configuracione" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.cr" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.cuentaproveedore" Width="1.5" PointX="3" PointY="11.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.cuenta" Width="1.5" PointX="0.75" PointY="16.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.cuentasmensaje" Width="1.5" PointX="12" PointY="18.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.estatuscita" Width="1.5" PointX="7.5" PointY="8.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.horarioriele" Width="1.5" PointX="12" PointY="14.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.horario" Width="1.5" PointX="9.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.impuls_logs" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.mensaje" Width="1.5" PointX="9.75" PointY="24.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.ordencompra" Width="1.5" PointX="5.25" PointY="19.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.ordencompradetalle" Width="1.5" PointX="7.5" PointY="19.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.perfile" Width="1.5" PointX="3" PointY="15.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.proveedore" Width="1.5" PointX="3" PointY="18.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.riele" Width="1.5" PointX="9.75" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.tipocuenta" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.tipousuario" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.devolucione" Width="1.5" PointX="0.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.pago" Width="1.5" PointX="11.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.vwmensaje" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
+        <AssociationConnector Association="impuls_portalModel.fk_acumulador_almacen" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_rieles_anden" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.ApplicationUser_Claims" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.ApplicationUser_Logins" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_citas_usuario" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_cuentas_usuario" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_cuentasmensajes_usuario" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_mensajes_usuario" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_perfil2" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_citas_estatus" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_horariorieles_citas" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_cuetnasprov" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_cuenta" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_cuentasmensajes_cuenta" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_proveedores_cuenta" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_cuentasmensajes_mensaje" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_horariorieles_horarios" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_horariorieles_rieles" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_ordencompra_proveedor" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_ordencompradetalle_parent" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.AspNetUserRoles" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.cuentasusuarios" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.perfilesroles" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

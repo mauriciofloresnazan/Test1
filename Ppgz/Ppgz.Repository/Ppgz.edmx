@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="impuls_portal2Model.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="impuls_portalModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="acumuladores">
           <Key>
             <PropertyRef Name="Id" />
@@ -184,40 +184,8 @@
           <Property Name="UsuarioId" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="CuentaId" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="cuentasxpagar">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NumeroCompensacion" Type="varchar" MaxLength="100" />
-          <Property Name="Referencia" Type="varchar" MaxLength="100" />
-          <Property Name="FechaDePago" Type="datetime" Precision="0" />
-          <Property Name="FechaBase" Type="datetime" Precision="0" />
-          <Property Name="Importe" Type="varchar" MaxLength="100" />
-          <Property Name="Ml" Type="varchar" MaxLength="10" />
-          <Property Name="TipoMovimiento" Type="varchar" MaxLength="5" />
-          <Property Name="ProveedoresId" Type="int" Nullable="false" />
-          <Property Name="FacturaId" Type="int" />
-        </EntityType>
-        <EntityType Name="detalleordencompra">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Almacen" Type="varchar" MaxLength="20" />
-          <Property Name="NumeroLineaOrden" Type="tinyint" />
-          <Property Name="ItemCodigo" Type="varchar" MaxLength="50" />
-          <Property Name="ItemDescripcion" Type="varchar" MaxLength="200" />
-          <Property Name="ItemPrecio" Type="decimal" Precision="12" Scale="2" />
-          <Property Name="ItemSize" Type="varchar" MaxLength="10" />
-          <Property Name="ItemColor" Type="varchar" MaxLength="50" />
-          <Property Name="ItemEstilo" Type="varchar" MaxLength="50" />
-          <Property Name="ItemCantidad" Type="int" Nullable="false" />
-          <Property Name="OrdenComprasId" Type="int" Nullable="false" />
-          <Property Name="NumeroOrden" Type="varchar" MaxLength="50" />
-        </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'def.impuls_portal2.devoluciones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="devoluciones">
           <Key>
             <PropertyRef Name="id" />
@@ -242,39 +210,6 @@ warning 6002: The table/view 'def.impuls_portal2.devoluciones' does not have a p
           <Property Name="Codigo" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
-        <EntityType Name="fakedataproveedor">
-          <Key>
-            <PropertyRef Name="NumeroDeProveedor" />
-          </Key>
-          <Property Name="NumeroDeProveedor" Type="varchar" MaxLength="45" Nullable="false" />
-          <Property Name="ClavePais" Type="varchar" MaxLength="45" />
-          <Property Name="Nombre1" Type="varchar" MaxLength="45" />
-          <Property Name="Nombre2" Type="varchar" MaxLength="45" />
-          <Property Name="Nombre3" Type="varchar" MaxLength="45" />
-          <Property Name="Nombre4" Type="varchar" MaxLength="45" />
-          <Property Name="Ciudad" Type="varchar" MaxLength="45" />
-          <Property Name="Distrito" Type="varchar" MaxLength="45" />
-          <Property Name="POBox" Type="varchar" MaxLength="45" />
-          <Property Name="CodigoPostalDePOBox" Type="varchar" MaxLength="45" />
-          <Property Name="CodigoPostal" Type="varchar" MaxLength="45" />
-          <Property Name="Region" Type="varchar" MaxLength="45" />
-          <Property Name="Direccion" Type="varchar" MaxLength="45" />
-          <Property Name="Direccioncomplementaria" Type="varchar" MaxLength="45" />
-          <Property Name="Compania" Type="varchar" MaxLength="45" />
-          <Property Name="OrganizaciondeCompras" Type="varchar" MaxLength="45" />
-          <Property Name="MonedadelaOrdendeCompra" Type="varchar" MaxLength="45" />
-          <Property Name="Vendedor" Type="varchar" MaxLength="45" />
-          <Property Name="TelefonodelVendedor" Type="varchar" MaxLength="45" />
-          <Property Name="TerminosdePago" Type="varchar" MaxLength="45" />
-          <Property Name="ClavedeIncoterm" Type="varchar" MaxLength="45" />
-          <Property Name="DescripcinIncoterm" Type="varchar" MaxLength="45" />
-          <Property Name="GrupodeCompras" Type="varchar" MaxLength="45" />
-          <Property Name="NombredelCompradorImpuls" Type="varchar" MaxLength="45" />
-          <Property Name="TelefonodelCompradorImpuls" Type="varchar" MaxLength="45" />
-          <Property Name="Telefono2delCompradorImpuls" Type="varchar" MaxLength="45" />
-          <Property Name="ExtiensiondelCompradorImpuls" Type="varchar" MaxLength="45" />
-          <Property Name="EmaildelCompradorImpuls" Type="varchar" MaxLength="45" />
-        </EntityType>
         <EntityType Name="horariorieles">
           <Key>
             <PropertyRef Name="Id" />
@@ -293,6 +228,14 @@ warning 6002: The table/view 'def.impuls_portal2.devoluciones' does not have a p
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="HoraDesde" Type="int" Nullable="false" />
           <Property Name="HoraHasta" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="impuls_logs">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="log" Type="varchar" MaxLength="255" />
+          <Property Name="fecha" Type="timestamp" Precision="0" Nullable="false" />
         </EntityType>
         <EntityType Name="mensajes">
           <Key>
@@ -366,7 +309,7 @@ warning 6002: The table/view 'def.impuls_portal2.devoluciones' does not have a p
           <Property Name="CantidadComprometida" Type="decimal" Precision="18" Scale="3" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'def.impuls_portal2.pagos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'def.impuls_portal.pagos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="pagos">
           <Key>
             <PropertyRef Name="id" />
@@ -476,7 +419,7 @@ warning 6002: The table/view 'def.impuls_portal2.pagos' does not have a primary 
           <Property Name="Descripcion" Type="varchar" MaxLength="200" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vwmensajes">
           <Key>
             <PropertyRef Name="Id" />
@@ -666,6 +609,18 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_horariorieles_citas">
+          <End Role="citas" Type="Self.citas" Multiplicity="0..1" />
+          <End Role="horariorieles" Type="Self.horariorieles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="citas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="horariorieles">
+              <PropertyRef Name="CitaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_horariorieles_horarios">
           <End Role="horarios" Type="Self.horarios" Multiplicity="1" />
           <End Role="horariorieles" Type="Self.horariorieles" Multiplicity="*" />
@@ -786,18 +741,6 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_sapordencompradetalle_parent">
-          <End Role="ordencompra" Type="Self.ordencompra" Multiplicity="0..1" />
-          <End Role="ordencompradetalle" Type="Self.ordencompradetalle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ordencompra">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ordencompradetalle">
-              <PropertyRef Name="SapOrdenCompraId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_usuarios">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
           <End Role="cuentasusuarios" Type="Self.cuentasusuarios" Multiplicity="*" />
@@ -810,38 +753,36 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="impuls_portal2ModelStoreContainer">
-          <EntitySet Name="acumuladores" EntityType="Self.acumuladores" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="almacenes" EntityType="Self.almacenes" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="andenes" EntityType="Self.andenes" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="citas" EntityType="Self.citas" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="configuraciones" EntityType="Self.configuraciones" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="crs" EntityType="Self.crs" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedores" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="cuentas" EntityType="Self.cuentas" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensajes" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="cuentasusuarios" EntityType="Self.cuentasusuarios" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="cuentasxpagar" EntityType="Self.cuentasxpagar" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="detalleordencompra" EntityType="Self.detalleordencompra" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="estatuscitas" EntityType="Self.estatuscitas" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="fakedataproveedor" EntityType="Self.fakedataproveedor" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="horariorieles" EntityType="Self.horariorieles" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="horarios" EntityType="Self.horarios" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="mensajes" EntityType="Self.mensajes" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="ordencompra" EntityType="Self.ordencompra" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="ordencompradetalle" EntityType="Self.ordencompradetalle" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="perfiles" EntityType="Self.perfiles" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="perfilesroles" EntityType="Self.perfilesroles" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="rieles" EntityType="Self.rieles" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="tipocuentas" EntityType="Self.tipocuentas" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="tipousuario" EntityType="Self.tipousuario" Schema="impuls_portal2" store:Type="Tables" />
-          <EntitySet Name="devoluciones" EntityType="Self.devoluciones" store:Type="Tables" store:Schema="impuls_portal2">
+        <EntityContainer Name="impuls_portalModelStoreContainer">
+          <EntitySet Name="acumuladores" EntityType="Self.acumuladores" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="almacenes" EntityType="Self.almacenes" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="andenes" EntityType="Self.andenes" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogins" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="AspNetUserRoles" EntityType="Self.AspNetUserRoles" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="citas" EntityType="Self.citas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="configuraciones" EntityType="Self.configuraciones" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="crs" EntityType="Self.crs" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedores" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="cuentas" EntityType="Self.cuentas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensajes" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="cuentasusuarios" EntityType="Self.cuentasusuarios" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="estatuscitas" EntityType="Self.estatuscitas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="horariorieles" EntityType="Self.horariorieles" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="horarios" EntityType="Self.horarios" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="impuls_logs" EntityType="Self.impuls_logs" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="mensajes" EntityType="Self.mensajes" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="ordencompra" EntityType="Self.ordencompra" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="ordencompradetalle" EntityType="Self.ordencompradetalle" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="perfiles" EntityType="Self.perfiles" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="perfilesroles" EntityType="Self.perfilesroles" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="rieles" EntityType="Self.rieles" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="tipocuentas" EntityType="Self.tipocuentas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="tipousuario" EntityType="Self.tipousuario" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="devoluciones" EntityType="Self.devoluciones" store:Type="Tables" store:Schema="impuls_portal">
             <DefiningQuery>SELECT
 `devoluciones`.`id`, 
 `devoluciones`.`Referencia`, 
@@ -851,7 +792,7 @@ warning 6002: The table/view 'def.impuls_portal2.vwmensajes' does not have a pri
 `devoluciones`.`Importe`
 FROM `devoluciones` AS `devoluciones`</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="pagos" EntityType="Self.pagos" store:Type="Tables" store:Schema="impuls_portal2">
+          <EntitySet Name="pagos" EntityType="Self.pagos" store:Type="Tables" store:Schema="impuls_portal">
             <DefiningQuery>SELECT
 `pagos`.`id`, 
 `pagos`.`RFC`, 
@@ -865,7 +806,7 @@ FROM `devoluciones` AS `devoluciones`</DefiningQuery>
 `pagos`.`TipoMovimiento`
 FROM `pagos` AS `pagos`</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="vwmensajes" EntityType="Self.vwmensajes" store:Type="Views" store:Schema="impuls_portal2">
+          <EntitySet Name="vwmensajes" EntityType="Self.vwmensajes" store:Type="Views" store:Schema="impuls_portal">
             <DefiningQuery>SELECT
 `vwmensajes`.`Id`, 
 `vwmensajes`.`Titulo`, 
@@ -933,6 +874,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentaproveedores" EntitySet="cuentaproveedores" />
           </AssociationSet>
+          <AssociationSet Name="fk_horariorieles_citas" Association="Self.fk_horariorieles_citas">
+            <End Role="citas" EntitySet="citas" />
+            <End Role="horariorieles" EntitySet="horariorieles" />
+          </AssociationSet>
           <AssociationSet Name="fk_horariorieles_horarios" Association="Self.fk_horariorieles_horarios">
             <End Role="horarios" EntitySet="horarios" />
             <End Role="horariorieles" EntitySet="horariorieles" />
@@ -973,10 +918,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="perfilesroles" EntitySet="perfilesroles" />
           </AssociationSet>
-          <AssociationSet Name="fk_sapordencompradetalle_parent" Association="Self.fk_sapordencompradetalle_parent">
-            <End Role="ordencompra" EntitySet="ordencompra" />
-            <End Role="ordencompradetalle" EntitySet="ordencompradetalle" />
-          </AssociationSet>
           <AssociationSet Name="fk_usuarios" Association="Self.fk_usuarios">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="cuentasusuarios" EntitySet="cuentasusuarios" />
@@ -986,7 +927,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="impuls_portal2Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="impuls_portalModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="acumuladore">
           <Key>
             <PropertyRef Name="Id" />
@@ -1106,6 +1047,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Penalizado" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_citas_usuario" FromRole="citas" ToRole="AspNetUsers" />
           <NavigationProperty Name="estatuscita" Relationship="Self.fk_citas_estatus" FromRole="citas" ToRole="estatuscitas" />
+          <NavigationProperty Name="horariorieles" Relationship="Self.fk_horariorieles_citas" FromRole="citas" ToRole="horariorieles" />
         </EntityType>
         <EntityType Name="configuracione">
           <Key>
@@ -1178,38 +1120,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <NavigationProperty Name="cuenta" Relationship="Self.fk_cuentasmensajes_cuenta" FromRole="cuentasmensajes" ToRole="cuentas" />
           <NavigationProperty Name="mensaje" Relationship="Self.fk_cuentasmensajes_mensaje" FromRole="cuentasmensajes" ToRole="mensajes" />
         </EntityType>
-        <EntityType Name="cuentasxpagar">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NumeroCompensacion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Referencia" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="FechaDePago" Type="DateTime" />
-          <Property Name="FechaBase" Type="DateTime" />
-          <Property Name="Importe" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Ml" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="TipoMovimiento" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="ProveedoresId" Type="Int32" Nullable="false" />
-          <Property Name="FacturaId" Type="Int32" />
-        </EntityType>
-        <EntityType Name="detalleordencompra">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Almacen" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="NumeroLineaOrden" Type="SByte" />
-          <Property Name="ItemCodigo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ItemDescripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ItemPrecio" Type="Decimal" />
-          <Property Name="ItemSize" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="ItemColor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ItemEstilo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ItemCantidad" Type="Int32" Nullable="false" />
-          <Property Name="OrdenComprasId" Type="Int32" Nullable="false" />
-          <Property Name="NumeroOrden" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="estatuscita">
           <Key>
             <PropertyRef Name="Id" />
@@ -1218,39 +1128,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Codigo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Nombre" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="citas" Relationship="Self.fk_citas_estatus" FromRole="estatuscitas" ToRole="citas" />
-        </EntityType>
-        <EntityType Name="fakedataproveedor">
-          <Key>
-            <PropertyRef Name="NumeroDeProveedor" />
-          </Key>
-          <Property Name="NumeroDeProveedor" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ClavePais" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Nombre1" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Nombre2" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Nombre3" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Nombre4" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Ciudad" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Distrito" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="POBox" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="CodigoPostalDePOBox" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="CodigoPostal" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Region" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Direccion" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Direccioncomplementaria" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Compania" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="OrganizaciondeCompras" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="MonedadelaOrdendeCompra" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Vendedor" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="TelefonodelVendedor" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="TerminosdePago" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="ClavedeIncoterm" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="DescripcinIncoterm" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="GrupodeCompras" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="NombredelCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="TelefonodelCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="Telefono2delCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="ExtiensiondelCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="EmaildelCompradorImpuls" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="horarioriele">
           <Key>
@@ -1262,6 +1139,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="HorarioId" Type="Int32" Nullable="false" />
           <Property Name="AlmacenRielId" Type="Int32" Nullable="false" />
           <Property Name="CitaId" Type="Int32" />
+          <NavigationProperty Name="cita" Relationship="Self.fk_horariorieles_citas" FromRole="horariorieles" ToRole="citas" />
           <NavigationProperty Name="horario" Relationship="Self.fk_horariorieles_horarios" FromRole="horariorieles" ToRole="horarios" />
           <NavigationProperty Name="riele" Relationship="Self.fk_horariorieles_rieles" FromRole="horariorieles" ToRole="rieles" />
         </EntityType>
@@ -1273,6 +1151,14 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="HoraDesde" Type="Int32" Nullable="false" />
           <Property Name="HoraHasta" Type="Int32" Nullable="false" />
           <NavigationProperty Name="horariorieles" Relationship="Self.fk_horariorieles_horarios" FromRole="horarios" ToRole="horariorieles" />
+        </EntityType>
+        <EntityType Name="impuls_logs">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="log" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="fecha" Type="DateTime" Nullable="false" />
         </EntityType>
         <EntityType Name="mensaje">
           <Key>
@@ -1321,7 +1207,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="CitaId" Type="Int32" />
           <NavigationProperty Name="proveedore" Relationship="Self.fk_ordencompra_proveedor" FromRole="ordencompra" ToRole="proveedores" />
           <NavigationProperty Name="ordencompradetalles" Relationship="Self.fk_ordencompradetalle_parent" FromRole="ordencompra" ToRole="ordencompradetalle" />
-          <NavigationProperty Name="ordencompradetalles1" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="ordencompra" ToRole="ordencompradetalle" />
         </EntityType>
         <EntityType Name="ordencompradetalle">
           <Key>
@@ -1350,7 +1235,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="FechaCargaPortal" Type="DateTime" Nullable="false" />
           <Property Name="CantidadComprometida" Type="Decimal" Nullable="false" />
           <NavigationProperty Name="ordencompra" Relationship="Self.fk_ordencompradetalle_parent" FromRole="ordencompradetalle" ToRole="ordencompra" />
-          <NavigationProperty Name="ordencompra1" Relationship="Self.fk_sapordencompradetalle_parent" FromRole="ordencompradetalle" ToRole="ordencompra" />
         </EntityType>
         <EntityType Name="perfile">
           <Key>
@@ -1616,6 +1500,18 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_horariorieles_citas">
+          <End Role="citas" Type="Self.cita" Multiplicity="0..1" />
+          <End Role="horariorieles" Type="Self.horarioriele" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="citas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="horariorieles">
+              <PropertyRef Name="CitaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_cuetnasprov">
           <End Role="cuentas" Type="Self.cuenta" Multiplicity="1" />
           <End Role="cuentaproveedores" Type="Self.cuentaproveedore" Multiplicity="*" />
@@ -1724,18 +1620,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_sapordencompradetalle_parent">
-          <End Role="ordencompra" Type="Self.ordencompra" Multiplicity="0..1" />
-          <End Role="ordencompradetalle" Type="Self.ordencompradetalle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ordencompra">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="ordencompradetalle">
-              <PropertyRef Name="SapOrdenCompraId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="AspNetUserRoles">
           <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
           <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="*" />
@@ -1762,12 +1646,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedore" />
           <EntitySet Name="cuentas" EntityType="Self.cuenta" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensaje" />
-          <EntitySet Name="cuentasxpagars" EntityType="Self.cuentasxpagar" />
-          <EntitySet Name="detalleordencompras" EntityType="Self.detalleordencompra" />
           <EntitySet Name="estatuscitas" EntityType="Self.estatuscita" />
-          <EntitySet Name="fakedataproveedors" EntityType="Self.fakedataproveedor" />
           <EntitySet Name="horariorieles" EntityType="Self.horarioriele" />
           <EntitySet Name="horarios" EntityType="Self.horario" />
+          <EntitySet Name="impuls_logs" EntityType="Self.impuls_logs" />
           <EntitySet Name="mensajes" EntityType="Self.mensaje" />
           <EntitySet Name="ordencompras" EntityType="Self.ordencompra" />
           <EntitySet Name="ordencompradetalles" EntityType="Self.ordencompradetalle" />
@@ -1819,6 +1701,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="estatuscitas" EntitySet="estatuscitas" />
             <End Role="citas" EntitySet="citas" />
           </AssociationSet>
+          <AssociationSet Name="fk_horariorieles_citas" Association="Self.fk_horariorieles_citas">
+            <End Role="citas" EntitySet="citas" />
+            <End Role="horariorieles" EntitySet="horariorieles" />
+          </AssociationSet>
           <AssociationSet Name="fk_cuetnasprov" Association="Self.fk_cuetnasprov">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentaproveedores" EntitySet="cuentaproveedores" />
@@ -1855,10 +1741,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="ordencompra" EntitySet="ordencompras" />
             <End Role="ordencompradetalle" EntitySet="ordencompradetalles" />
           </AssociationSet>
-          <AssociationSet Name="fk_sapordencompradetalle_parent" Association="Self.fk_sapordencompradetalle_parent">
-            <End Role="ordencompra" EntitySet="ordencompras" />
-            <End Role="ordencompradetalle" EntitySet="ordencompradetalles" />
-          </AssociationSet>
           <AssociationSet Name="AspNetUserRoles" Association="Self.AspNetUserRoles">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
@@ -1877,9 +1759,9 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="impuls_portal2ModelStoreContainer" CdmEntityContainer="Entities">
+        <EntityContainerMapping StorageEntityContainer="impuls_portalModelStoreContainer" CdmEntityContainer="Entities">
           <EntitySetMapping Name="acumuladores">
-            <EntityTypeMapping TypeName="impuls_portal2Model.acumuladore">
+            <EntityTypeMapping TypeName="impuls_portalModel.acumuladore">
               <MappingFragment StoreEntitySet="acumuladores">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />
@@ -1890,7 +1772,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="almacenes">
-            <EntityTypeMapping TypeName="impuls_portal2Model.almacene">
+            <EntityTypeMapping TypeName="impuls_portalModel.almacene">
               <MappingFragment StoreEntitySet="almacenes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="NombreAlmacen" ColumnName="NombreAlmacen" />
@@ -1900,7 +1782,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="andenes">
-            <EntityTypeMapping TypeName="impuls_portal2Model.andene">
+            <EntityTypeMapping TypeName="impuls_portalModel.andene">
               <MappingFragment StoreEntitySet="andenes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
@@ -1909,7 +1791,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AspNetRoles">
-            <EntityTypeMapping TypeName="impuls_portal2Model.AspNetRole">
+            <EntityTypeMapping TypeName="impuls_portalModel.AspNetRole">
               <MappingFragment StoreEntitySet="AspNetRoles">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
@@ -1919,7 +1801,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AspNetUserClaims">
-            <EntityTypeMapping TypeName="impuls_portal2Model.AspNetUserClaim">
+            <EntityTypeMapping TypeName="impuls_portalModel.AspNetUserClaim">
               <MappingFragment StoreEntitySet="AspNetUserClaims">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
@@ -1929,7 +1811,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AspNetUserLogins">
-            <EntityTypeMapping TypeName="impuls_portal2Model.AspNetUserLogin">
+            <EntityTypeMapping TypeName="impuls_portalModel.AspNetUserLogin">
               <MappingFragment StoreEntitySet="AspNetUserLogins">
                 <ScalarProperty Name="LoginProvider" ColumnName="LoginProvider" />
                 <ScalarProperty Name="ProviderKey" ColumnName="ProviderKey" />
@@ -1938,7 +1820,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="AspNetUsers">
-            <EntityTypeMapping TypeName="impuls_portal2Model.AspNetUser">
+            <EntityTypeMapping TypeName="impuls_portalModel.AspNetUser">
               <MappingFragment StoreEntitySet="AspNetUsers">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -1967,7 +1849,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="citas">
-            <EntityTypeMapping TypeName="impuls_portal2Model.cita">
+            <EntityTypeMapping TypeName="impuls_portalModel.cita">
               <MappingFragment StoreEntitySet="citas">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
@@ -1987,7 +1869,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="configuraciones">
-            <EntityTypeMapping TypeName="impuls_portal2Model.configuracione">
+            <EntityTypeMapping TypeName="impuls_portalModel.configuracione">
               <MappingFragment StoreEntitySet="configuraciones">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Clave" ColumnName="Clave" />
@@ -1998,7 +1880,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="crs">
-            <EntityTypeMapping TypeName="impuls_portal2Model.cr">
+            <EntityTypeMapping TypeName="impuls_portalModel.cr">
               <MappingFragment StoreEntitySet="crs">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
@@ -2009,7 +1891,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="cuentaproveedores">
-            <EntityTypeMapping TypeName="impuls_portal2Model.cuentaproveedore">
+            <EntityTypeMapping TypeName="impuls_portalModel.cuentaproveedore">
               <MappingFragment StoreEntitySet="cuentaproveedores">
                 <ScalarProperty Name="NumeroProveedor" ColumnName="NumeroProveedor" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
@@ -2025,7 +1907,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="cuentas">
-            <EntityTypeMapping TypeName="impuls_portal2Model.cuenta">
+            <EntityTypeMapping TypeName="impuls_portalModel.cuenta">
               <MappingFragment StoreEntitySet="cuentas">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CodigoProveedor" ColumnName="CodigoProveedor" />
@@ -2041,7 +1923,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="cuentasmensajes">
-            <EntityTypeMapping TypeName="impuls_portal2Model.cuentasmensaje">
+            <EntityTypeMapping TypeName="impuls_portalModel.cuentasmensaje">
               <MappingFragment StoreEntitySet="cuentasmensajes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="FechaVisualizacion" ColumnName="FechaVisualizacion" />
@@ -2051,42 +1933,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="cuentasxpagars">
-            <EntityTypeMapping TypeName="impuls_portal2Model.cuentasxpagar">
-              <MappingFragment StoreEntitySet="cuentasxpagar">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="NumeroCompensacion" ColumnName="NumeroCompensacion" />
-                <ScalarProperty Name="Referencia" ColumnName="Referencia" />
-                <ScalarProperty Name="FechaDePago" ColumnName="FechaDePago" />
-                <ScalarProperty Name="FechaBase" ColumnName="FechaBase" />
-                <ScalarProperty Name="Importe" ColumnName="Importe" />
-                <ScalarProperty Name="Ml" ColumnName="Ml" />
-                <ScalarProperty Name="TipoMovimiento" ColumnName="TipoMovimiento" />
-                <ScalarProperty Name="ProveedoresId" ColumnName="ProveedoresId" />
-                <ScalarProperty Name="FacturaId" ColumnName="FacturaId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="detalleordencompras">
-            <EntityTypeMapping TypeName="impuls_portal2Model.detalleordencompra">
-              <MappingFragment StoreEntitySet="detalleordencompra">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Almacen" ColumnName="Almacen" />
-                <ScalarProperty Name="NumeroLineaOrden" ColumnName="NumeroLineaOrden" />
-                <ScalarProperty Name="ItemCodigo" ColumnName="ItemCodigo" />
-                <ScalarProperty Name="ItemDescripcion" ColumnName="ItemDescripcion" />
-                <ScalarProperty Name="ItemPrecio" ColumnName="ItemPrecio" />
-                <ScalarProperty Name="ItemSize" ColumnName="ItemSize" />
-                <ScalarProperty Name="ItemColor" ColumnName="ItemColor" />
-                <ScalarProperty Name="ItemEstilo" ColumnName="ItemEstilo" />
-                <ScalarProperty Name="ItemCantidad" ColumnName="ItemCantidad" />
-                <ScalarProperty Name="OrdenComprasId" ColumnName="OrdenComprasId" />
-                <ScalarProperty Name="NumeroOrden" ColumnName="NumeroOrden" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="estatuscitas">
-            <EntityTypeMapping TypeName="impuls_portal2Model.estatuscita">
+            <EntityTypeMapping TypeName="impuls_portalModel.estatuscita">
               <MappingFragment StoreEntitySet="estatuscitas">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
@@ -2094,42 +1942,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="fakedataproveedors">
-            <EntityTypeMapping TypeName="impuls_portal2Model.fakedataproveedor">
-              <MappingFragment StoreEntitySet="fakedataproveedor">
-                <ScalarProperty Name="NumeroDeProveedor" ColumnName="NumeroDeProveedor" />
-                <ScalarProperty Name="ClavePais" ColumnName="ClavePais" />
-                <ScalarProperty Name="Nombre1" ColumnName="Nombre1" />
-                <ScalarProperty Name="Nombre2" ColumnName="Nombre2" />
-                <ScalarProperty Name="Nombre3" ColumnName="Nombre3" />
-                <ScalarProperty Name="Nombre4" ColumnName="Nombre4" />
-                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
-                <ScalarProperty Name="Distrito" ColumnName="Distrito" />
-                <ScalarProperty Name="POBox" ColumnName="POBox" />
-                <ScalarProperty Name="CodigoPostalDePOBox" ColumnName="CodigoPostalDePOBox" />
-                <ScalarProperty Name="CodigoPostal" ColumnName="CodigoPostal" />
-                <ScalarProperty Name="Region" ColumnName="Region" />
-                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
-                <ScalarProperty Name="Direccioncomplementaria" ColumnName="Direccioncomplementaria" />
-                <ScalarProperty Name="Compania" ColumnName="Compania" />
-                <ScalarProperty Name="OrganizaciondeCompras" ColumnName="OrganizaciondeCompras" />
-                <ScalarProperty Name="MonedadelaOrdendeCompra" ColumnName="MonedadelaOrdendeCompra" />
-                <ScalarProperty Name="Vendedor" ColumnName="Vendedor" />
-                <ScalarProperty Name="TelefonodelVendedor" ColumnName="TelefonodelVendedor" />
-                <ScalarProperty Name="TerminosdePago" ColumnName="TerminosdePago" />
-                <ScalarProperty Name="ClavedeIncoterm" ColumnName="ClavedeIncoterm" />
-                <ScalarProperty Name="DescripcinIncoterm" ColumnName="DescripcinIncoterm" />
-                <ScalarProperty Name="GrupodeCompras" ColumnName="GrupodeCompras" />
-                <ScalarProperty Name="NombredelCompradorImpuls" ColumnName="NombredelCompradorImpuls" />
-                <ScalarProperty Name="TelefonodelCompradorImpuls" ColumnName="TelefonodelCompradorImpuls" />
-                <ScalarProperty Name="Telefono2delCompradorImpuls" ColumnName="Telefono2delCompradorImpuls" />
-                <ScalarProperty Name="ExtiensiondelCompradorImpuls" ColumnName="ExtiensiondelCompradorImpuls" />
-                <ScalarProperty Name="EmaildelCompradorImpuls" ColumnName="EmaildelCompradorImpuls" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="horariorieles">
-            <EntityTypeMapping TypeName="impuls_portal2Model.horarioriele">
+            <EntityTypeMapping TypeName="impuls_portalModel.horarioriele">
               <MappingFragment StoreEntitySet="horariorieles">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />
@@ -2141,7 +1955,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="horarios">
-            <EntityTypeMapping TypeName="impuls_portal2Model.horario">
+            <EntityTypeMapping TypeName="impuls_portalModel.horario">
               <MappingFragment StoreEntitySet="horarios">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="HoraDesde" ColumnName="HoraDesde" />
@@ -2149,8 +1963,17 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="impuls_logs">
+            <EntityTypeMapping TypeName="impuls_portalModel.impuls_logs">
+              <MappingFragment StoreEntitySet="impuls_logs">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="log" ColumnName="log" />
+                <ScalarProperty Name="fecha" ColumnName="fecha" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="mensajes">
-            <EntityTypeMapping TypeName="impuls_portal2Model.mensaje">
+            <EntityTypeMapping TypeName="impuls_portalModel.mensaje">
               <MappingFragment StoreEntitySet="mensajes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Titulo" ColumnName="Titulo" />
@@ -2167,7 +1990,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ordencompras">
-            <EntityTypeMapping TypeName="impuls_portal2Model.ordencompra">
+            <EntityTypeMapping TypeName="impuls_portalModel.ordencompra">
               <MappingFragment StoreEntitySet="ordencompra">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="NumeroDocumento" ColumnName="NumeroDocumento" />
@@ -2196,7 +2019,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ordencompradetalles">
-            <EntityTypeMapping TypeName="impuls_portal2Model.ordencompradetalle">
+            <EntityTypeMapping TypeName="impuls_portalModel.ordencompradetalle">
               <MappingFragment StoreEntitySet="ordencompradetalle">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="NumeroDocumento" ColumnName="NumeroDocumento" />
@@ -2224,7 +2047,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="perfiles">
-            <EntityTypeMapping TypeName="impuls_portal2Model.perfile">
+            <EntityTypeMapping TypeName="impuls_portalModel.perfile">
               <MappingFragment StoreEntitySet="perfiles">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
@@ -2234,7 +2057,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="proveedores">
-            <EntityTypeMapping TypeName="impuls_portal2Model.proveedore">
+            <EntityTypeMapping TypeName="impuls_portalModel.proveedore">
               <MappingFragment StoreEntitySet="proveedores">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="NumeroProveedor" ColumnName="NumeroProveedor" />
@@ -2275,7 +2098,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="rieles">
-            <EntityTypeMapping TypeName="impuls_portal2Model.riele">
+            <EntityTypeMapping TypeName="impuls_portalModel.riele">
               <MappingFragment StoreEntitySet="rieles">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
@@ -2285,7 +2108,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="tipocuentas">
-            <EntityTypeMapping TypeName="impuls_portal2Model.tipocuenta">
+            <EntityTypeMapping TypeName="impuls_portalModel.tipocuenta">
               <MappingFragment StoreEntitySet="tipocuentas">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
@@ -2295,7 +2118,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="tipousuarios">
-            <EntityTypeMapping TypeName="impuls_portal2Model.tipousuario">
+            <EntityTypeMapping TypeName="impuls_portalModel.tipousuario">
               <MappingFragment StoreEntitySet="tipousuario">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
@@ -2305,7 +2128,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="devoluciones">
-            <EntityTypeMapping TypeName="impuls_portal2Model.devolucione">
+            <EntityTypeMapping TypeName="impuls_portalModel.devolucione">
               <MappingFragment StoreEntitySet="devoluciones">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="Referencia" ColumnName="Referencia" />
@@ -2317,7 +2140,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="pagos">
-            <EntityTypeMapping TypeName="impuls_portal2Model.pago">
+            <EntityTypeMapping TypeName="impuls_portalModel.pago">
               <MappingFragment StoreEntitySet="pagos">
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="RFC" ColumnName="RFC" />
@@ -2333,7 +2156,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="vwmensajes">
-            <EntityTypeMapping TypeName="impuls_portal2Model.vwmensaje">
+            <EntityTypeMapping TypeName="impuls_portalModel.vwmensaje">
               <MappingFragment StoreEntitySet="vwmensajes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Titulo" ColumnName="Titulo" />
@@ -2346,7 +2169,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <AssociationSetMapping Name="AspNetUserRoles" TypeName="impuls_portal2Model.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
+          <AssociationSetMapping Name="AspNetUserRoles" TypeName="impuls_portalModel.AspNetUserRoles" StoreEntitySet="AspNetUserRoles">
             <EndProperty Name="AspNetRoles">
               <ScalarProperty Name="Id" ColumnName="RoleId" />
             </EndProperty>
@@ -2354,7 +2177,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               <ScalarProperty Name="Id" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="cuentasusuarios" TypeName="impuls_portal2Model.cuentasusuarios" StoreEntitySet="cuentasusuarios">
+          <AssociationSetMapping Name="cuentasusuarios" TypeName="impuls_portalModel.cuentasusuarios" StoreEntitySet="cuentasusuarios">
             <EndProperty Name="cuentas">
               <ScalarProperty Name="Id" ColumnName="CuentaId" />
             </EndProperty>
@@ -2362,7 +2185,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               <ScalarProperty Name="Id" ColumnName="UsuarioId" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="perfilesroles" TypeName="impuls_portal2Model.perfilesroles" StoreEntitySet="perfilesroles">
+          <AssociationSetMapping Name="perfilesroles" TypeName="impuls_portalModel.perfilesroles" StoreEntitySet="perfilesroles">
             <EndProperty Name="perfiles">
               <ScalarProperty Name="Id" ColumnName="PerfilId" />
             </EndProperty>

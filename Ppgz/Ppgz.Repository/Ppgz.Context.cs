@@ -38,12 +38,10 @@ namespace Ppgz.Repository
         public virtual DbSet<cuentaproveedore> cuentaproveedores { get; set; }
         public virtual DbSet<cuenta> cuentas { get; set; }
         public virtual DbSet<cuentasmensaje> cuentasmensajes { get; set; }
-        public virtual DbSet<cuentasxpagar> cuentasxpagars { get; set; }
-        public virtual DbSet<detalleordencompra> detalleordencompras { get; set; }
         public virtual DbSet<estatuscita> estatuscitas { get; set; }
-        public virtual DbSet<fakedataproveedor> fakedataproveedors { get; set; }
         public virtual DbSet<horarioriele> horariorieles { get; set; }
         public virtual DbSet<horario> horarios { get; set; }
+        public virtual DbSet<impuls_logs> impuls_logs { get; set; }
         public virtual DbSet<mensaje> mensajes { get; set; }
         public virtual DbSet<ordencompra> ordencompras { get; set; }
         public virtual DbSet<ordencompradetalle> ordencompradetalles { get; set; }
