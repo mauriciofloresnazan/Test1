@@ -6,50 +6,47 @@ using Ppgz.Web.Infrastructure.Nazan;
 
 namespace Ppgz.Web.Areas.Servicio.Controllers
 {
-	[Authorize]
-	[TerminosCondiciones]
-	public class MensajesInstitucionalesController : Controller
-	{
-		private readonly CommonManager _commonManager = new CommonManager();
-		private readonly MensajesInstitucionalesManager _mensajesInstitucionalesManager = new MensajesInstitucionalesManager();
+    [Authorize]
+    [TerminosCondiciones]
+    public class MensajesInstitucionalesController : Controller
+    {
+        private readonly CommonManager _commonManager = new CommonManager();
+        private readonly MensajesInstitucionalesManager _mensajesInstitucionalesManager = new MensajesInstitucionalesManager();
 
+        [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-MENSAJESINSTITUCIONALES")]
+        public ActionResult Index()
+        {
+            //CUENTAS
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-		[Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-MENSAJESINSTITUCIONALES")]
-		public ActionResult Index()
-		{
+            var mensajes = _mensajesInstitucionalesManager.FindMensajesVigentesByCuentaId(cuenta.Id);
 
-			//CUENTAS
-			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+            var mensajesUsuario = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
 
-			var mensajes = _mensajesInstitucionalesManager.FindPublicadosByCuentaId(cuenta.Id);
+            ViewBag.mensajes = mensajes;
 
-			var mensajesUsuario = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
+            ViewBag.mensajesUsuario = Json(mensajesUsuario);
 
-			ViewBag.mensajes = mensajes;
+            return View();
+        }
 
-			ViewBag.mensajesUsuario = Json(mensajesUsuario);
+        [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-MENSAJESINSTITUCIONALES")]
+        [HttpPost]
+        public ActionResult Visualizar(int id)
+        {
+            //CUENTAS
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-			return View();
-		}
+            var mensajes = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
 
-		[Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-MENSAJESINSTITUCIONALES")]
-		[HttpPost]
-		public ActionResult Visualizar(int id)
-		{
-			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+            if (mensajes.Any(i => i.MensajeId == id))
+            {
+                return Content("Actualizado");
+            }
 
-			var mensajes = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
+            _mensajesInstitucionalesManager.Visualizar(cuenta.Id, id, User.Identity.GetUserId());
 
-			if (mensajes.Any(i => i.MensajeId == id))
-			{
-				return Content("Actualizado"); 
-			}
-
-			_mensajesInstitucionalesManager.Visualizar(cuenta.Id,id, User.Identity.GetUserId());
-
-			return Content("Actualizado");
-		}
-
-		
-	}
+            return Content("Actualizado");
+        }
+    }
 }
