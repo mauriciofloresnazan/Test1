@@ -15,7 +15,7 @@
                 <thead>
                     <tr>
                         <th class="text-center">Fecha</th>
-                        <th class="text-center">Detalle</th>
+                        <th class="text-center">Título</th>
                         <th class="text-center">Leído</th>
                         <th></th>
 
@@ -31,8 +31,6 @@
                             <td class="text-center vert-align"><i>@mensaje.Titulo</i></td>
                             <td class="leido-flag text-center">
                                 @mensaje.Visualizado
-
-
                             </td>
                             <td class="text-center">
 
@@ -91,7 +89,7 @@
                 var titulo = $(this).data('titulo');
                 var contenido = $(this).data('contenido');
                 $('.modal-title').text(titulo);
-        
+
                 $(".modal-body #mensaje-contenido").text(contenido);
 
             });
@@ -126,5 +124,3 @@
 
     </script>
 }
-
-
