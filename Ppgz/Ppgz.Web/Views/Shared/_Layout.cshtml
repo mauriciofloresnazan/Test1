@@ -118,7 +118,7 @@
                 </ul>
                 
                 @Html.Partial("_LoginPartial")
-                <ul class="nav navbar-nav navbar-right"><li><a class="btn btn-link"><i class="fa fa-envelope" aria-hidden="true"></i> <span id="mensajes-badge" class="badge"></span></a></li></ul>
+
             </div><!--/.nav-collapse -->
         </div>
     </nav>
@@ -162,38 +162,50 @@
 
 
 <script type="text/javascript">
-        $('[data-toggle=confirmation]').confirmation({
-            rootSelector: '[data-toggle=confirmation]',
-            container: 'body'
-        });
+    $('[data-toggle=confirmation]').confirmation({
+        rootSelector: '[data-toggle=confirmation]',
+        container: 'body'
+    });
 
-        $(document).ready(function () {
-            $(document).ajaxStart(function () {
-                $.blockUI({
-                    message: 'Por favor espere...'
-                });
+    $(document).ready(function () {
+        $(document).ajaxStart(function () {
+            $.blockUI({
+                message: 'Por favor espere...'
+            });
 
-            }).ajaxStop($.unblockUI);
-        });
+        }).ajaxStop($.unblockUI);
+    });
 
-    </script>
+</script>
     @RenderSection("scripts", required: false)
 
     @if (Request.IsAuthenticated)
     {
         <script type="text/javascript">
 
-        var Url = "@Url.Action("MensajesSinLeer", "MensajesInstitucionales", new { area = "Mercaderia" })";
+            $("#mensajes-notificador").hide();
+
+            var Url = "@Url.Action("MensajesSinLeer", "MensajesInstitucionales", new { area = "Mercaderia" })";
             (function () {
+
                 $.ajax({
                     type: "POST",
                     url: Url,
                     cache: false
                 }).done(function (result) {
-                    $("#mensajes-badge").text(result.length);
+                    var mensajesSinLeer = parseInt(result.length);
+
+                    if ((mensajesSinLeer) > 0) {
+                        $("#mensajes-notificador .badge").text(result.length);
+                        $("#mensajes-notificador").show();
+                    } else {
+                        $("#mensajes-notificador").hide();
+                        
+                    }
+
                 });
                 //cada 5 minutos refrescar
-                setTimeout(arguments.callee, 300000);
+                setTimeout(arguments.callee, 500000);
             })();
         </script>
     }

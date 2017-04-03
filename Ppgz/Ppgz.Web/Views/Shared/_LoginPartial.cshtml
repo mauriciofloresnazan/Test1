@@ -7,8 +7,12 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("Bienvenido " + User.Identity.GetUserName() + "!", "Index", "Home", routeValues: null, htmlAttributes: new { title = "Manage" })
+            @Html.ActionLink("Bienvenido " + User.Identity.GetUserName() + "!", "Index", "Home", routeValues: null, htmlAttributes: new {title = "Manage"})
         </li>
+        <li id="mensajes-notificador">
+            <a class="btn btn-link" href="@Url.Action("Index", "MensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> <span class="badge"></span></a>
+        </li>
+
         <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión</a></li>
     </ul>
     }
