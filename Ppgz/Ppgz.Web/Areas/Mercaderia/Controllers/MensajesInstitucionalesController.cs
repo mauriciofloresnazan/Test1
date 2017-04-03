@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Ppgz.Web.Infrastructure;
@@ -48,5 +49,17 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			return Content("Actualizado");
 		}
-	}
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-MENSAJESINSTITUCIONALES")]
+        [HttpPost]
+        public JsonResult MensajesSinLeer()
+        {
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+            var mensajes = _mensajesInstitucionalesManager.FindPublicadosSinLeerByCuentaId(cuenta.Id);
+
+            return Json(mensajes);
+
+        }
+    }
 }
