@@ -210,6 +210,16 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
           <Property Name="Codigo" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
+        <EntityType Name="etiquetas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Archivo" Type="varchar" MaxLength="1000" />
+          <Property Name="Fecha" Type="datetime" Precision="0" />
+          <Property Name="OrdenCompraId" Type="int" />
+          <Property Name="OrdenCompraNumeroDoc" Type="varchar" MaxLength="20" />
+        </EntityType>
         <EntityType Name="horariorieles">
           <Key>
             <PropertyRef Name="Id" />
@@ -417,6 +427,34 @@ warning 6002: The table/view 'def.impuls_portal.pagos' does not have a primary k
           <Property Name="Codigo" Type="varchar" MaxLength="5" />
           <Property Name="Nombre" Type="varchar" MaxLength="30" />
           <Property Name="Descripcion" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'def.impuls_portal.vwdashboard' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="vwdashboard">
+          <Key>
+            <PropertyRef Name="horarioRielId" />
+            <PropertyRef Name="Fecha" />
+            <PropertyRef Name="Disponibilidad" />
+            <PropertyRef Name="HorarioId" />
+            <PropertyRef Name="AlmacenRielId" />
+            <PropertyRef Name="Riel" />
+            <PropertyRef Name="AndenId" />
+            <PropertyRef Name="Anden" />
+            <PropertyRef Name="Desde" />
+            <PropertyRef Name="Hasta" />
+          </Key>
+          <Property Name="horarioRielId" Type="int" Nullable="false" />
+          <Property Name="Fecha" Type="date" Nullable="false" />
+          <Property Name="Disponibilidad" Type="bool" Nullable="false" />
+          <Property Name="HorarioId" Type="int" Nullable="false" />
+          <Property Name="AlmacenRielId" Type="int" Nullable="false" />
+          <Property Name="CitaId" Type="int" />
+          <Property Name="Riel" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="AndenId" Type="int" Nullable="false" />
+          <Property Name="Anden" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Desde" Type="varchar" MaxLength="11" Nullable="false" />
+          <Property Name="Hasta" Type="varchar" MaxLength="11" Nullable="false" />
+          <Property Name="ProveedorId" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -770,6 +808,7 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensajes" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="cuentasusuarios" EntityType="Self.cuentasusuarios" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="estatuscitas" EntityType="Self.estatuscitas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="etiquetas" EntityType="Self.etiquetas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="horariorieles" EntityType="Self.horariorieles" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="horarios" EntityType="Self.horarios" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="impuls_logs" EntityType="Self.impuls_logs" Schema="impuls_portal" store:Type="Tables" />
@@ -805,6 +844,22 @@ FROM `devoluciones` AS `devoluciones`</DefiningQuery>
 `pagos`.`ML`, 
 `pagos`.`TipoMovimiento`
 FROM `pagos` AS `pagos`</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="vwdashboard" EntityType="Self.vwdashboard" store:Type="Views" store:Schema="impuls_portal">
+            <DefiningQuery>SELECT
+`vwdashboard`.`horarioRielId`, 
+`vwdashboard`.`Fecha`, 
+`vwdashboard`.`Disponibilidad`, 
+`vwdashboard`.`HorarioId`, 
+`vwdashboard`.`AlmacenRielId`, 
+`vwdashboard`.`CitaId`, 
+`vwdashboard`.`Riel`, 
+`vwdashboard`.`AndenId`, 
+`vwdashboard`.`Anden`, 
+`vwdashboard`.`Desde`, 
+`vwdashboard`.`Hasta`, 
+`vwdashboard`.`ProveedorId`
+FROM `vwdashboard` AS `vwdashboard`</DefiningQuery>
           </EntitySet>
           <EntitySet Name="vwmensajes" EntityType="Self.vwmensajes" store:Type="Views" store:Schema="impuls_portal">
             <DefiningQuery>SELECT
@@ -1129,6 +1184,16 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Nombre" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="citas" Relationship="Self.fk_citas_estatus" FromRole="estatuscitas" ToRole="citas" />
         </EntityType>
+        <EntityType Name="etiqueta">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Archivo" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" />
+          <Property Name="OrdenCompraId" Type="Int32" />
+          <Property Name="OrdenCompraNumeroDoc" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
         <EntityType Name="horarioriele">
           <Key>
             <PropertyRef Name="Id" />
@@ -1358,6 +1423,32 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Importe" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="ML" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="TipoMovimiento" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="vwdashboard">
+          <Key>
+            <PropertyRef Name="horarioRielId" />
+            <PropertyRef Name="Fecha" />
+            <PropertyRef Name="Disponibilidad" />
+            <PropertyRef Name="HorarioId" />
+            <PropertyRef Name="AlmacenRielId" />
+            <PropertyRef Name="Riel" />
+            <PropertyRef Name="AndenId" />
+            <PropertyRef Name="Anden" />
+            <PropertyRef Name="Desde" />
+            <PropertyRef Name="Hasta" />
+          </Key>
+          <Property Name="horarioRielId" Type="Int32" Nullable="false" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" />
+          <Property Name="Disponibilidad" Type="Boolean" Nullable="false" />
+          <Property Name="HorarioId" Type="Int32" Nullable="false" />
+          <Property Name="AlmacenRielId" Type="Int32" Nullable="false" />
+          <Property Name="CitaId" Type="Int32" />
+          <Property Name="Riel" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="AndenId" Type="Int32" Nullable="false" />
+          <Property Name="Anden" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Desde" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Hasta" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProveedorId" Type="Int32" />
         </EntityType>
         <EntityType Name="vwmensaje">
           <Key>
@@ -1647,6 +1738,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="cuentas" EntityType="Self.cuenta" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensaje" />
           <EntitySet Name="estatuscitas" EntityType="Self.estatuscita" />
+          <EntitySet Name="etiquetas" EntityType="Self.etiqueta" />
           <EntitySet Name="horariorieles" EntityType="Self.horarioriele" />
           <EntitySet Name="horarios" EntityType="Self.horario" />
           <EntitySet Name="impuls_logs" EntityType="Self.impuls_logs" />
@@ -1660,6 +1752,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="tipousuarios" EntityType="Self.tipousuario" />
           <EntitySet Name="devoluciones" EntityType="Self.devolucione" />
           <EntitySet Name="pagos" EntityType="Self.pago" />
+          <EntitySet Name="vwdashboards" EntityType="Self.vwdashboard" />
           <EntitySet Name="vwmensajes" EntityType="Self.vwmensaje" />
           <AssociationSet Name="fk_acumulador_almacen" Association="Self.fk_acumulador_almacen">
             <End Role="almacenes" EntitySet="almacenes" />
@@ -1942,6 +2035,17 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="etiquetas">
+            <EntityTypeMapping TypeName="impuls_portalModel.etiqueta">
+              <MappingFragment StoreEntitySet="etiquetas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Archivo" ColumnName="Archivo" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="OrdenCompraId" ColumnName="OrdenCompraId" />
+                <ScalarProperty Name="OrdenCompraNumeroDoc" ColumnName="OrdenCompraNumeroDoc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="horariorieles">
             <EntityTypeMapping TypeName="impuls_portalModel.horarioriele">
               <MappingFragment StoreEntitySet="horariorieles">
@@ -2152,6 +2256,24 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Importe" ColumnName="Importe" />
                 <ScalarProperty Name="ML" ColumnName="ML" />
                 <ScalarProperty Name="TipoMovimiento" ColumnName="TipoMovimiento" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="vwdashboards">
+            <EntityTypeMapping TypeName="impuls_portalModel.vwdashboard">
+              <MappingFragment StoreEntitySet="vwdashboard">
+                <ScalarProperty Name="horarioRielId" ColumnName="horarioRielId" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Disponibilidad" ColumnName="Disponibilidad" />
+                <ScalarProperty Name="HorarioId" ColumnName="HorarioId" />
+                <ScalarProperty Name="AlmacenRielId" ColumnName="AlmacenRielId" />
+                <ScalarProperty Name="CitaId" ColumnName="CitaId" />
+                <ScalarProperty Name="Riel" ColumnName="Riel" />
+                <ScalarProperty Name="AndenId" ColumnName="AndenId" />
+                <ScalarProperty Name="Anden" ColumnName="Anden" />
+                <ScalarProperty Name="Desde" ColumnName="Desde" />
+                <ScalarProperty Name="Hasta" ColumnName="Hasta" />
+                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

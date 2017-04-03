@@ -103,6 +103,9 @@
     <Compile Include="estatuscita.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="etiqueta.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="horario.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -153,6 +156,9 @@
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="tipousuario.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="vwdashboard.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="vwmensaje.cs">
