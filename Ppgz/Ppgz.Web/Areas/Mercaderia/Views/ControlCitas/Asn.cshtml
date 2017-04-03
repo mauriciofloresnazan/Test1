@@ -36,11 +36,11 @@
 </style>
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
-    <i class="fa fa-calendar" aria-hidden="true"></i> <i>Paso 3 - Notificación anticipada de entrega</i>
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>Paso 3 - Notificación Anticipada de Entrega</i>
 </p>
 
 <div class="panel panel-default">
-    <div class="panel-heading">Datos de la cita</div>
+    <div class="panel-heading">Datos de la Cita</div>
     <div class="panel-body">
         <div class="row">
             <label class="col-sm-3 control-label">RFC</label>
@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="row">
-            <label class="col-sm-3 control-label">Fecha de la cita</label>
+            <label class="col-sm-3 control-label">Fecha de la Cita</label>
             <div class="col-sm-3">
                 <div>@currentCita.Fecha.ToString("dd/MM/yyyy")</div>
             </div>
@@ -65,7 +65,7 @@
                     <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
                     </a>
-                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")">
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
@@ -76,7 +76,7 @@
                     <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
                     </a>
-                    <a class="btn btn-default btn-block" href="@Url.Action("Index", "ControlCitas")">
+                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
@@ -90,7 +90,7 @@
 </div>
 
 <div class="panel panel-default">
-    <div class="panel-heading">Datos del Asn</div>
+    <div class="panel-heading">Datos del ASN</div>
     <div class="panel-body">
         <div class="row">
             <div style="line-height: 2em;" class="col-sm-4">
@@ -200,7 +200,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-xs-4 control-label">Descripcion</label>
+                            <label class="col-xs-4 control-label">Descripción</label>
                             <div class="col-xs-8">
                                 <label class="control-label" id="editar-descripcion"></label>
                             </div>
@@ -214,7 +214,7 @@
                         <div class="form-group">
                             <div class="col-sm-offset-4 col-sm-8">
                                 <button type="submit" class="btn btn-primary" data-dismiss="modal">Actualizar</button>
-                                <button type="button" onclick="cancelar();" class="btn btn-primary" data-dismiss="modal">Cancelarr</button>
+                                <button type="button" onclick="cancelar();" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
 
                             </div>
                         </div>
@@ -289,13 +289,13 @@
                     if (isNaN(cantidadNueva)) {
                         //todo mejorar
                         //alert("cantidad incorrecta");
-                        msgError("cantidad incorrecta");
+                        msgError("Incorrecto, Por favor coloque una cantidad");
                         return;
                     }
                     if (cantidadNueva > cantidadOrg) {
                         //todo mejorar
                         //alert("cantidad incorrecta");
-                        msgError("cantidad incorrecta");
+                        msgError("No se puede colocar un número mayor de pares, que el definido en la ODC");
 
                         return;
                     }

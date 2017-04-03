@@ -8,7 +8,7 @@
     var ordenCompra = (ordencompra)ViewBag.ordenCompra;
 
     ViewBag.Title = "Registrar Cita";
-    ViewBag.Descripcion = "Paso 2.1 - Seleccione la fecha de la cita";
+    ViewBag.Descripcion = "Paso 2.1 - Seleccione la fecha de la Cita";
 }
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
@@ -16,7 +16,7 @@
 </p>
 
 <div class="panel panel-default">
-    <div class="panel-heading">Datos de la cita</div>
+    <div class="panel-heading">Datos de la Cita</div>
     <div class="panel-body">
         <div class="row">
             <label class="col-sm-3 control-label">RFC</label>
@@ -32,7 +32,7 @@
 </div>
 
 <div class="panel panel-default">
-    <div class="panel-heading">Fecha de la cita</div>
+    <div class="panel-heading">Fecha de la Cita</div>
     <div class="panel-body">
 
         @using (Html.BeginForm("AgregarOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))

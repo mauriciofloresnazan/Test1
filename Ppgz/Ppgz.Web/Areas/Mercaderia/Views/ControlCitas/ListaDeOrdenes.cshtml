@@ -1,7 +1,7 @@
 ﻿@using Ppgz.Web.Areas.Mercaderia
 @{
     ViewBag.Title = "Lista de Ordenes de Compra";
-    ViewBag.Descripcion = "Paso 4 cofirmación de la cita";
+    ViewBag.Descripcion = "Paso 4 Confirmación de la Cita";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
@@ -12,7 +12,7 @@
 </p>
 
 <div class="panel panel-default">
-    <div class="panel-heading">Datos de la cita</div>
+    <div class="panel-heading">Datos de la Cita</div>
     <div class="panel-body">
         <div class="row">
             <label class="col-sm-3 control-label">RFC</label>
@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="row">
-            <label class="col-sm-3 control-label">Fecha de la cita</label>
+            <label class="col-sm-3 control-label">Fecha de la Cita</label>
             <div class="col-sm-3">
                 <div>@currentCita.Fecha.ToString("dd/MM/yyyy")</div>
             </div>
@@ -37,7 +37,7 @@
                     <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
                     </a>
-                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")">
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
@@ -48,7 +48,7 @@
                     <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
                     </a>
-                    <a class="btn btn-default btn-block" href="@Url.Action("Index", "ControlCitas")">
+                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
@@ -64,7 +64,7 @@
 
 
 <div class="panel panel-default">
-    <div class="panel-heading">Asn Registrados</div>
+    <div class="panel-heading">ASN Registrados</div>
     <div class="panel-body">
 
         <p class="form-legend" style="">
