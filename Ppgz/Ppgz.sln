@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SapWrapper", "SapWrapper\Sa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScaleWrapper", "ScaleWrapper\ScaleWrapper.csproj", "{54171CF5-78C7-4B23-BC94-26BE97E34AA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ppgz.BatchFileProceesor", "Ppgz.BatchFileProceesor\Ppgz.BatchFileProceesor.csproj", "{A4A7C408-65EC-4E4C-A1C4-DF16355CA67E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ppgz.BatchFileProcessor", "Ppgz.BatchFileProcessor\Ppgz.BatchFileProcessor.csproj", "{A4A7C408-65EC-4E4C-A1C4-DF16355CA67E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

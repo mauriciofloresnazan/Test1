@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using Ppgz.Repository;
 
-namespace Ppgz.BatchFileProceesor
+namespace Ppgz.BatchFileProcessor
 {
     class Program
     {
@@ -13,6 +13,26 @@ namespace Ppgz.BatchFileProceesor
         private const string CrPath = @"C:\temp\Implus\FtpDev\Crs";
         private const string CrFilter = "cr_*.pdf";
 
+
+        private const string EtiquetasInboxPath = @"C:\temp\Implus\FtpDev\Etiquetas\Inbox";
+        private const string EtiquetasPath = @"C:\temp\Implus\FtpDev\Etiquetas";
+        private const string EtiquetasFilter = "etq_*.txt";
+
+        static internal void InitEtiquetas()
+        {
+            var fileSystemWatcher = new FileSystemWatcher
+            {
+                // TODO MOVER AL ARCHIVO DE CONFIGURACION DEL LA 
+                // APLCIACION WEB Y PASARLO COMO ARGUMENTO
+                Path = EtiquetasInboxPath,
+                Filter = EtiquetasFilter,
+                NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime
+                | NotifyFilters.Size | NotifyFilters.Security
+            };
+
+            fileSystemWatcher.Changed += etiquetasWatcher_Changed;
+            fileSystemWatcher.EnableRaisingEvents = true;
+        }
 
         static void Main()
         {
@@ -28,6 +48,9 @@ namespace Ppgz.BatchFileProceesor
 
             crWatcher.Changed += crWatcher_Changed;
             crWatcher.EnableRaisingEvents = true;
+            
+            InitEtiquetas();
+
             Console.ReadLine();
         }
 
@@ -53,6 +76,28 @@ namespace Ppgz.BatchFileProceesor
             }
 
         }
+
+
+        static void etiquetasWatcher_Changed(object sender, FileSystemEventArgs e)
+        {
+            try
+            {
+                  var numeroOrden = e.Name.Split('_')[1];
+                var fecha = DateTime.ParseExact(
+                    e.Name.Split('_')[2].ToLower().Replace(".txt", string.Empty),
+                    "ddMMyyyy",
+                    CultureInfo.InvariantCulture);
+
+                MoverEtiqueta(e.FullPath, fecha, numeroOrden);
+            }
+            catch (Exception)
+            {
+                MoverError(e.FullPath);
+
+            }
+
+        }
+
         static void MoverError(string path)
         {
             try
@@ -135,6 +180,58 @@ namespace Ppgz.BatchFileProceesor
                 Console.WriteLine("Error en el proceso: {0}", e);
             }
         }
+
+        static void MoverEtiqueta(string path, DateTime fecha, string numeroOrden)
+        {
+            try
+            {
+                if (!File.Exists(path)) return;
+
+                var fileName = Path.GetFileName(path);
+
+                if (fileName == null) return;
+
+                var etiquetaRottPath = new DirectoryInfo(EtiquetasPath);
+
+                var yearPath = etiquetaRottPath.GetDirectories(fecha.Year.ToString()).Length == 0 ?
+                    etiquetaRottPath.CreateSubdirectory(fecha.Year.ToString()) :
+                    etiquetaRottPath.GetDirectories(fecha.Year.ToString())[0];
+
+                var monthPath = yearPath.GetDirectories(fecha.Month.ToString()).Length == 0 ?
+                    yearPath.CreateSubdirectory(fecha.Month.ToString()) :
+                    yearPath.GetDirectories(fecha.Month.ToString())[0];
+                
+                var newPath = Path.Combine
+                    (monthPath.FullName, fileName);
+                
+                if (File.Exists(newPath))
+                {
+                    File.Delete(newPath);
+                    Thread.Sleep(100);
+                }
+                
+                WaitForFile(path);
+
+                File.Move(path, newPath);
+
+                var etiqueta = new etiqueta
+                {
+                    OrdenCompraNumeroDoc = numeroOrden,
+                    Fecha = fecha,
+                    Archivo = newPath
+                };
+
+
+                var db = new Entities();
+                db.etiquetas.Add(etiqueta);
+                db.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error en el proceso: {0}", e);
+            }
+        }
+      
         // TODO
         static void WaitForFile(string fullPath)
         {
