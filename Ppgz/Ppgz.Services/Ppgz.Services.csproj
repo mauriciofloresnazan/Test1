@@ -71,6 +71,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="ConfiguracionesManager.cs" />
     <Compile Include="CuentaManager.cs" />
     <Compile Include="MensajesResource.Designer.cs">
       <DependentUpon>MensajesResource.resx</DependentUpon>

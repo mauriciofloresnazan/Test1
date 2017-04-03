@@ -16,6 +16,8 @@ namespace Test
         
         static void Main(string[] args)
         {
+            new TestCitas();
+            return;
 
             
             var ordenCompraManager = new OrdenCompraManager();

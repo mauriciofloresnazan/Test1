@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Globalization;
@@ -6,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using ClosedXML.Excel;
+using MySql.Data.MySqlClient;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
@@ -425,5 +427,52 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return RedirectToAction("Asn", new { numeroDocumento });
 		}
 
+
+
+	    public ActionResult SeleccionarRieles()
+	    {
+	        var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+	        var proveedor = _proveedorManager.Find(33);
+            InitCurrentCita(cuenta.Id, proveedor.Id, DateTime.Today);
+
+            ViewBag.CurrentCita = CurrentCita;
+
+
+            const string sql = @"
+                SELECT * 
+                FROM   vwdashboard
+                WHERE  Fecha = @fecha";
+
+            var parametros = new List<MySqlParameter>
+            {
+                new MySqlParameter("@fecha", DateTime.Today.Date)
+            };
+
+            var result = Db.GetDataTable(sql, parametros);
+
+	        result.AsEnumerable().Select(dr =>
+	            new
+	            {
+                    a = dr[""],
+	            });
+    
+            var db = new Entities();
+
+	        var date = DateTime.Today.Date;
+	        if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday)
+	        {
+                date = date.AddDays(2);
+	        }
+            if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
+            {
+                date = date.AddDays(1);
+            }
+
+            var horarioRieles = db.horariorieles.Where(h => h.Fecha == date.Date).ToList();
+
+	        ViewBag.HorarioRieles = horarioRieles;
+            return View();
+	    }
 	}
 }

@@ -1,0 +1,204 @@
+﻿@using Ppgz.Repository
+@using Ppgz.Web.Areas.Mercaderia
+@{
+    ViewBag.Title = "Lista de Ordenes de Compra";
+    ViewBag.Descripcion = "Paso 4 cofirmación de la cita";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var currentCita = (CurrentCita)ViewBag.CurrentCita;
+
+    var horarioRieles = (List<horarioriele>)ViewBag.HorarioRieles;
+
+    var horarios = horarioRieles.Select(hr => new
+    {
+        hr.horario
+    }).Distinct().ToList().OrderBy(h => h.horario.HoraDesde);
+
+    var andenes = horarioRieles.Select(hr => new
+    {
+        hr.riele.andene
+    }).Distinct().ToList().OrderBy(a => a.andene.Codigo);
+
+}
+<link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
+<style>
+    #tb-3 .btn {
+        font-size: .9em;
+    }
+
+    #tb-3 .border-bottom {
+        border-bottom: solid 1px #f1f1f1;
+    }
+
+    .btn-primary.hover, .btn-primary:hover, .open > .dropdown-toggle.btn-primary {
+        background-color: #66aaaa;
+        border-color: #ccc;
+        background-image: none;
+    }
+
+    .btn-primary.active, .btn-primary.hover, .btn-primary:hover, .btn-primary:active, .open > .dropdown-toggle.btn-primary {
+        background-color: #66aaaa;
+        border-color: #ccc;
+        background-image: none;
+    }
+
+
+</style>
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de la cita</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-3 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@currentCita.Proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-3 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@currentCita.Proveedor.Nombre1</div>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-sm-3 control-label">Fecha de la cita</label>
+            <div class="col-sm-3">
+                <div>@currentCita.Fecha.ToString("dd/MM/yyyy")</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                    <a class="btn btn-primary" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                    </a>
+                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+                <div class="visible-sm visible-xs">
+                    <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                    </a>
+                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-default btn-block" href="@Url.Action("Index", "ControlCitas")">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Asn Registrados</div>
+    <div class="panel-body">
+
+        <p class="form-legend" style="">
+            <i>Lista de Ordenes</i>
+        </p>
+
+
+
+        <table class="" width="100%" id="tb-3" style="">
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        <h2>Horario</h2>
+                    </th>
+                    @foreach (var result in andenes)
+                    {
+                        var anden = result.andene;
+                        
+                        var borderRight = "";
+                        if (int.Parse(anden.Anden) < andenes.Count())
+                        {
+                            borderRight = "solid 1px #666";
+                        }
+                        <th class="text-center" colspan="2" style="border-right: @borderRight">
+                            <i class="fa fa-truck fa-5x" aria-hidden="true"></i>
+                            ANDEN @anden.Anden
+                            <div class="row">
+                                @foreach (var riel in anden.rieles)
+                                {
+                                    <div class="col-xs-6">Riel @riel.Riel</div>
+
+                                }
+                            </div>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var result in horarios)
+            {
+                <tr class="border-bottom">
+
+                    @{
+                        var horario = result.horario;
+                        var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+
+                        var rielPostition = 0;
+                    }
+
+                    <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
+                    
+                    @foreach (var riel in rieles)
+                    {
+                        rielPostition++;
+                        
+                        var borderRight = "";
+                        if (rielPostition < rieles.Count())
+                        {
+                            borderRight = "solid 1px #666";
+                        }
+
+                        var disabledChecked = "";
+                        if (!riel.Disponibilidad)
+                        {
+                            disabledChecked = "disabled checked";
+                        }
+                        
+                        <td class="text-center" style="border-right: @borderRight">
+                            <input id="@riel.Id" type="checkbox" @disabledChecked data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary">
+                            
+                        </td>
+                        
+                    }
+
+                    @*<td class="text-center" style="border-right: solid 1px #666">
+                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                    <td class="text-center" style="border-right: solid 1px #666">
+                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                    <td class="text-center" style="border-right: solid 1px #666">
+                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                    <td class="text-center" style="border-right: solid 1px #666">
+                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                    <td class="text-center" style="border-right: solid 1px #666">
+                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                    <td class="text-center">
+                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
+                </tr> 
+            }
+            </tbody>
+        </table>
+
+
+
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
+}
