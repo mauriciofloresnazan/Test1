@@ -5,7 +5,9 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.DataProtection;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Models;
@@ -32,6 +34,23 @@ namespace Ppgz.Web.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+
+            /*var provider = new DpapiDataProtectionProvider("Sample");
+
+            UserManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(
+                provider.Create("EmailConfirmation"));
+
+            var user = UserManager.FindByEmail("juandelgadofreelancer@gmail.com");
+            var code = UserManager.GeneratePasswordResetToken(user.Id);*/
+/*            var callbackUrl = Url.Action("ResetPassword", "Account",
+        new { UserId = user.Id, code = code }, protocol: Request.Url.Scheme);
+            UserManager.SendEmailAsync(user.Id.ToString(), "Reset Password",
+       "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");*/
+
+
+            // If we got this far, something failed, redisplay form
+            //return View(model);
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -378,6 +397,198 @@ namespace Ppgz.Web.Controllers
                 UserManager = null;
             }
             base.Dispose(disposing);
+        }
+
+        //
+        // GET: /Account/ForgotPassword
+        [AllowAnonymous]
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+
+        //
+        // POST: /Account/ForgotPassword
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                var usuario = await UserManager.FindByEmailAsync(model.Email);
+
+                if (usuario != null)
+                {
+                    await SendMail(usuario, "resetpass");
+
+                    return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                }
+
+
+                try
+                {
+                    await SendMail(usuario, "resetpass");
+
+                    return RedirectToAction("ForgotPasswordConfirmation", "Account");
+
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("", "Error enviando correo para restablecer su contraseña, por favor Intente mas tarde.");
+                    return View(model);
+                    throw;
+                }
+
+            }
+
+            // Si llegamos a este punto, es que se ha producido un error y volvemos a mostrar el formulario
+            return View(model);
+        }
+        //
+        // GET: /Account/ForgotPasswordConfirmation
+        [AllowAnonymous]
+        public ActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+        //
+        // POST: /Account/SendMail
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SendMail(ApplicationUser user, string type)
+        {
+
+            // Para obtener más información sobre cómo habilitar la confirmación de cuenta y el restablecimiento de contraseña, visite http://go.microsoft.com/fwlink/?LinkID=320771
+            // Enviar correo electrónico con este vínculo
+
+
+
+
+            var provider = new DpapiDataProtectionProvider("Sample");
+
+            UserManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(
+                provider.Create("EmailConfirmation"));
+
+
+            var code = UserManager.GeneratePasswordResetToken(user.Id);
+
+
+            if (type == "resetpass")
+            {
+                System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
+                    new System.Net.Mail.MailAddress(ConfigurationManager.AppSettings["Mail"].ToString(), "Restablecer contraseña Nazan"),
+                    new System.Net.Mail.MailAddress(user.Email));
+                m.Subject = "Restablecer contraseña Nazan";
+                m.Body = string.Format("Querido {0}<BR/>Por favor dar click al link para cambiar su contraseña: <a href=\"{1}\" title=\"Recuperar Contraseña\">{1}</a>", user.UserName, Url.Action("ResetPassword", "Account", new { token = user.Id, code = code, email = user.Email }, Request.Url.Scheme));
+                m.IsBodyHtml = true;
+                System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["Smtp"].ToString());
+                smtp.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["Mail"].ToString(), ConfigurationManager.AppSettings["MailPass"].ToString());
+                smtp.EnableSsl = true;
+                smtp.Port = 587;
+                smtp.Send(m);
+            }
+            if (type == "register")
+            {
+                System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
+                    new System.Net.Mail.MailAddress(ConfigurationManager.AppSettings["Mail"].ToString(), "Registro Nazan"),
+                    new System.Net.Mail.MailAddress(user.Email));
+                m.Subject = "Confirmar cuenta Nazan";
+                m.Body = string.Format("Querido {0}<BR/> Gracias por registrarse, Por favor dar click en el link para confirmar su correo electronico: <a href =\"{1}\"title =\"Confirmar correo\">{1}</a>", user.UserName, Url.Action("ConfirmEmail", "Account", new { token = user.Id, email = user.Email }, Request.Url.Scheme));
+                m.IsBodyHtml = true;
+                System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["Smtp"].ToString());
+                smtp.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["Mail"].ToString(), ConfigurationManager.AppSettings["MailPass"].ToString());
+                smtp.EnableSsl = true;
+                smtp.Port = 587;
+                smtp.Send(m);
+            }
+
+
+
+            return null;
+        }
+
+        //
+        // GET: /Account/ResetPassword
+        [AllowAnonymous]
+        public ActionResult ResetPassword(string code)
+        {
+            return code == null ? View("Error") : View();
+        }
+
+        //
+        // POST: /Account/ResetPassword
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user =  UserManager.FindByEmail(model.Email);
+            if (user == null)
+            {
+                // No revelar que el usuario no existe
+                return RedirectToAction("ResetPasswordConfirmation", "Account");
+            }
+            var provider = new DpapiDataProtectionProvider("Sample");
+
+            UserManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(
+                provider.Create("EmailConfirmation"));
+
+            var result =  UserManager.ResetPassword(user.Id, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("ResetPasswordConfirmation", "Account");
+            }
+            AddErrors(result);
+            return View();
+        }
+
+        //
+        // GET: /Account/ResetPasswordConfirmation
+        [AllowAnonymous]
+        public ActionResult ResetPasswordConfirmation()
+        {
+            return View();
+        }
+        //
+        // GET: /Account/ConfirmEmail
+        [AllowAnonymous]
+        public ActionResult Confirm(string email)
+        {
+            ViewBag.Email = email;
+            return View();
+
+        }
+        [AllowAnonymous]
+        public async Task<ActionResult> ConfirmEmail(string token, string email)
+        {
+            ApplicationUser user = this.UserManager.FindById(token);
+            if (user != null)
+            {
+                if (user.Email == email)
+                {
+                    user.EmailConfirmed = true;
+                    await UserManager.UpdateAsync(user);
+                    await SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home", new { ConfirmedEmail = user.Email });
+                }
+                else
+                {
+                    return RedirectToAction("Confirm", "Account", new { Email = user.Email });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Confirm", "Account", new { Email = "" });
+            }
+
         }
 
         #region Helpers
