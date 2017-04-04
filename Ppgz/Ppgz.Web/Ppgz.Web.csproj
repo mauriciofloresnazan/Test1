@@ -316,19 +316,13 @@
     <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetas\Index.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <None Include="Infrastructure\CuentaManager.cs.old" />
     <Compile Include="Infrastructure\CuentasPorPagarManager.cs" />
     <Compile Include="Infrastructure\FileManager.cs" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
     <Compile Include="Infrastructure\OrdenCompraManager.cs" />
-    <None Include="Infrastructure\Proveedor\PerfilProveedorManager.cs.old" />
-    <None Include="Infrastructure\Proveedor\UsuarioProveedorManager.cs.old" />
-    <None Include="Infrastructure\Nazan\UsuarioNazanManager.cs.old" />
-    <None Include="Infrastructure\Nazan\PerfilNazanManager.cs.old" />
     <Compile Include="Infrastructure\SapManager.cs" />
     <Compile Include="Infrastructure\TerminosCondiciones.cs" />
     <Compile Include="Infrastructure\TipoUsuario.cs" />
-    <None Include="Infrastructure\UsuarioManager.cs.old" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Areas\Nazan\Models\CuentaViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -1177,7 +1171,6 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Confirm.cshtml" />
-    <None Include="Views\Shared\_Layout.cshtml.OLD" />
     <None Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1207,6 +1200,7 @@
     <Folder Include="Areas\Mercaderia\Views\Shared\" />
     <Folder Include="Areas\Nazan\Views\Shared\" />
     <Folder Include="Areas\Servicio\Views\Shared\" />
+    <Folder Include="Infrastructure\Proveedor\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
