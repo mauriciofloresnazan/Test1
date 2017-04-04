@@ -25,11 +25,15 @@ namespace Ppgz.Web.Controllers
 		/// <param name="exception">Indica el tipo de error ocurrido (404)</param>
 		/// <returns>Vista de error</returns>
 		[Authorize]
-		public ViewResult NotFound(HandleErrorInfo exception)
+		public ActionResult NotFound(HandleErrorInfo exception)
 		{
-			ViewBag.Title = "Página no encontrada";
+			/*ViewBag.Title = "Página no encontrada";
 			ViewData["Content"] = "La página solicitada no existe";
 			return View("Error", exception);
+            */
+            TempData["FlashError"] = "La página solicitada no existe";
+                
+            return RedirectToAction("Index", "Home");
 		}
 
 		/// <summary> Pantalla de error, en este caso se indica al usuario que hay un error 500.</summary>
