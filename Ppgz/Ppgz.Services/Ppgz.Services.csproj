@@ -79,6 +79,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="OrdenCompraManager.cs" />
+    <Compile Include="PartidasManager.cs" />
     <Compile Include="PerfilManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProveedorManager.cs" />
