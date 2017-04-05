@@ -26,7 +26,9 @@
                             <td class="text-center">@proveedor.NumeroProveedor</td>
                             <td class="text-center vert-align">@proveedor.Nombre1</td>
                             <td class="text-center">
-                                <a class="button btn-primary btn-sm" id="btnProveedor" data-idproveedor="@proveedor.Id" href=""><i class="fa fa-check" aria-hidden="true"></i> Siguiente</a>
+                                <a class="button btn-primary btn-sm" href="@Url.Action("Reportes", "ReporteProveedores", new { proveedorId = proveedor.Id })">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Siguiente
+                                </a>
                             </td>
                         </tr>
                     }
@@ -55,18 +57,6 @@
                 "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
             });
         });
-
-        function fnProveedorSeleccionado(proveedorId) {
-            $.ajax({
-                url: '@Url.Action("PersitedProviderId", "ReporteProveedores")',
-                data: { proveedorId: proveedorId },
-                type: 'POST',
-                success: function (data) {
-                    console.log(data);
-                    location.href = '@Url.Action("Reportes", "ReporteProveedores")';
-                }
-            });
-        }
     </script>
 }
 

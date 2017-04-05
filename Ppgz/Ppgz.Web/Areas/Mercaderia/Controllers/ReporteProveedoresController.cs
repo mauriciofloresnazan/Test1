@@ -26,17 +26,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             return View();
         }
-
-        public string PersitedProviderId(string proveedorId)
-        {
-            int result = 0;
-            if (int.TryParse(proveedorId, out result))
-                System.Web.HttpContext.Current.Session["proveedorId"] = result;
-
-            System.Web.HttpContext.Current.Session["razonsocial"] = _proveedorManager.Find(result).Rfc;
-
-            return System.Web.HttpContext.Current.Session["proveedorId"].ToString();
-        }
+        
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-REPORTES")]
         public ActionResult Reportes(int proveedorId = 0)
@@ -47,18 +37,26 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 return RedirectToAction("Index");
 
             ViewBag.proveedor = _proveedorManager.Find(id);
+            try
+            {
+                ViewBag.reportes = _reporteProveedorManager.FindReporteProveedor(ViewBag.proveedor.NumeroProveedor);
 
-            ViewBag.reportes = _reporteProveedorManager.FindReporteProveedor(ViewBag.proveedor.NumeroProveedor);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message == "NOT_DATA_FOUND")
+                {
+                    TempData["FlashError"] = "No hay datos para este proveedor"; 
+                    return RedirectToAction("Index");
+                }
+
+
+                throw;
+            }
 
             return View();
         }
-
-        public ReporteProveedoresController()
-        {
-            if (!(Convert.ToInt32(System.Web.HttpContext.Current.Session["proveedorId"]) > 0))
-                System.Web.HttpContext.Current.Session["proveedorId"] = 0;
-        }
-
+        
         public void Descargar(string numeroProveedor)
         {
             var detalles = _reporteProveedorManager.FindReporteProveedor(numeroProveedor);
