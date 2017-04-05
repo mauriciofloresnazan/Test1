@@ -70,6 +70,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             dt.Columns.Add("Material");
             dt.Columns.Add("Nombre Material");
             dt.Columns.Add("Fecha Proceso");
+            dt.Columns.Add("Unidad de Medida");
             dt.Columns.Add("Ventas Actual - 2 meses");
             dt.Columns.Add("Ventas Actual - 1 meses");
             dt.Columns.Add("Ventas Actual");
@@ -90,6 +91,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     detalle.Material,
                     detalle.NombreMaterial,
                     detalle.FechaProceso,
+                    detalle.UnidadMedida,
                     detalle.CantidadVentas2,
                     detalle.CantidadVentas1,
                     detalle.CantidadVentas,
