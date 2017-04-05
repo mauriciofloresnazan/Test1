@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using Ppgz.Repository;
 using SapWrapper;
@@ -16,7 +17,7 @@ namespace Ppgz.Services
             public string NombreProveedor { get; set; }
             public string Material { get; set; }
             public string NombreMaterial { get; set; }
-            public string FechaProceso { get; set; }
+            public DateTime FechaProceso { get; set; }
             public string UnidadMedida { get; set; }
             public string CantidadVentas2 { get; set; }
             public string CantidadVentas1 { get; set; }
@@ -51,13 +52,13 @@ namespace Ppgz.Services
                         NombreProveedor = dr["VENDOR_TXT"].ToString(),
                         Material = dr["MATERIAL"].ToString(),
                         NombreMaterial = dr["MATERIAL_TXT"].ToString(),
-                        FechaProceso = dr["CALDAY"].ToString(),
+                        FechaProceso = DateTime.ParseExact(dr["CALDAY"].ToString(), "yyyyMMdd", CultureInfo.InvariantCulture),
                         UnidadMedida = dr["BASE_UOM"].ToString(),
                         CantidadVentas2 = dr["MESACT2"].ToString(),
                         CantidadVentas1 = dr["MESACT1"].ToString(),
                         CantidadVentas = dr["MESACT"].ToString(),
                         CantidadTotal = dr["TOTAL"].ToString(),
-                        CalculoTotal = dr["SELLTHRU"].ToString(),
+                        CalculoTotal = dr["SELLTHRU"].ToString() + " %",
                         InvTienda = dr["INVENTDA"].ToString(),
                         InvTransito = dr["TRANSITO"].ToString(),
                         InvCedis = dr["INVENCEDIS"].ToString(),

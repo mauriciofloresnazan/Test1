@@ -49,7 +49,7 @@
                             <td class="text-center">@reporte.NombreProveedor</td>
                             <td class="text-center">@reporte.Material</td>
                             <td class="text-center">@reporte.NombreMaterial</td>
-                            <td class="text-center">@DateTime.ParseExact(reporte.FechaProceso, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy")</td>
+                            <td class="text-center">@reporte.FechaProceso.ToString("dd/MM/yyyy")</td>
                             <td class="text-center">@reporte.UnidadMedida</td>
                             <td class="text-center">@reporte.CantidadVentas2</td>
                             <td class="text-center">@reporte.CantidadVentas1</td>

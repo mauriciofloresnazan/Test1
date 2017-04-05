@@ -90,7 +90,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     detalle.NombreProveedor,
                     detalle.Material,
                     detalle.NombreMaterial,
-                    detalle.FechaProceso,
+                    detalle.FechaProceso.ToString("dd/MM/yyyy"),
                     detalle.UnidadMedida,
                     detalle.CantidadVentas2,
                     detalle.CantidadVentas1,
