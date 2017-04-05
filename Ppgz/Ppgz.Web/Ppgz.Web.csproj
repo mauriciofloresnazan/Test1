@@ -198,6 +198,7 @@
     <Compile Include="Areas\Mercaderia\Controllers\ImpresionEtiquetasController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\MensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ComprobantesReciboController.cs" />
+    <Compile Include="Areas\Mercaderia\Controllers\ReporteProveedoresController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\OrdenesCompraController.cs" />
     <Compile Include="Areas\Mercaderia\CurrentCita.cs" />
     <Compile Include="Areas\Mercaderia\MensajesResource.Designer.cs">
@@ -1149,6 +1150,8 @@
     <Content Include="Areas\Mercaderia\Views\CuentasPagar\PagosPendientes.cshtml" />
     <Content Include="Areas\Mercaderia\Views\CuentasPagar\PagosPendientesDetalle.cshtml" />
     <None Include="Areas\Mercaderia\Views\CuentasPagar\Devoluciones.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ReporteProveedores\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ReporteProveedores\Reportes.cshtml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

@@ -48,9 +48,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BwRfcConfigParam.cs" />
     <Compile Include="CommonRfcConfigParam.cs" />
     <Compile Include="SapOrdenCompraManager.cs" />
     <Compile Include="SapPartidaManager.cs" />
+    <Compile Include="BwReporteProveedorManager.cs" />
     <Compile Include="SapProveedorManager.cs" />
     <Compile Include="IRfcTableExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

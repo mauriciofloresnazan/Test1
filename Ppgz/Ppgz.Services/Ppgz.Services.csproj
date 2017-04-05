@@ -83,6 +83,7 @@
     <Compile Include="PerfilManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ProveedorManager.cs" />
+    <Compile Include="ReporteProveedorManager.cs" />
     <Compile Include="UsuarioManager.cs" />
   </ItemGroup>
   <ItemGroup>
