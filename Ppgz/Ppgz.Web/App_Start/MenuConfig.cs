@@ -133,6 +133,7 @@ namespace Ppgz.Web
                 "|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
                 "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Mercaderia",
+                "REPORTES|Reportes Proveedores|Index|ReporteProveedores|fa fa-calculator|Mercaderia",
                 //"|Autenticación de Usuarios Proveedor|||fa fa-address-book-o|Mercaderia" 
                 //"|Reportes|||fa fa-file-pdf-o|Mercaderia"
             };
