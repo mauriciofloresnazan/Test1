@@ -30,7 +30,16 @@ namespace Ppgz.Web.Areas
         [StringLength(40, ErrorMessage = "Debe tener de 3 a 40 Carácteres.", MinimumLength = 3)]
         public string Apellido { get; set; }
 
-
+        [Required(ErrorMessage = "El campo es obligatorio.")]
+        [Phone(ErrorMessage = "Debe ingresar un número de teléfono valido.")]
+        [DataType(DataType.PhoneNumber, ErrorMessage = "Debe ingresar un número de teléfono valido.")]
+        [RegularExpression(
+            @"^\s*(?:\+?(\d{1,3}))?[-. (]*(\d{3})[-. )]*(\d{3})[-. ]*(\d{4})(?: *x(\d+))?\s*$",
+            ErrorMessage = "Debe colocar un número de teléfono valído. " +
+                           "Debe tener de 3 a 15 caracteres.")]
+        [Display(Name = "Telefono")]
+        [StringLength(12, ErrorMessage = "Debe tener de 3 a 12 Carácteres.", MinimumLength = 3)]
+        public string Telefono { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
         [EmailAddress(ErrorMessage = "Debe ingresar un email valído.")]

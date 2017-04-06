@@ -56,7 +56,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         model.Nombre, 
                         model.Apellido,
                         model.Email,
-                        null,//TODO
+                        model.Telefono,//TODO
                         null,//TODO
                         true,
                         model.Perfil,
@@ -104,6 +104,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 Nombre = usuario.Nombre,
                 Apellido = usuario.Apellido,
                 Email = usuario.Email,
+                Telefono = usuario.PhoneNumber,
                 Perfil = usuario.PerfilId
             };
 
@@ -130,7 +131,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     model.Nombre,
                     model.Apellido,
                     model.Email,
-                    null,null,
+                    model.Telefono,null,
                     model.Password);
 
                 _usuarioManager.ActualizarPerfil(id, model.Perfil);
