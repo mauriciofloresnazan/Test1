@@ -16,6 +16,7 @@ namespace Ppgz.Repository
     {
         public proveedore()
         {
+            this.NivelesServicios = new HashSet<NivelesServicio>();
             this.ordencompras = new HashSet<ordencompra>();
         }
     
@@ -56,6 +57,7 @@ namespace Ppgz.Repository
         public bool Borrado { get; set; }
     
         public virtual cuenta cuenta { get; set; }
+        public virtual ICollection<NivelesServicio> NivelesServicios { get; set; }
         public virtual ICollection<ordencompra> ordencompras { get; set; }
     }
 }

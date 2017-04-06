@@ -44,6 +44,7 @@ namespace Ppgz.Repository
         public virtual DbSet<horario> horarios { get; set; }
         public virtual DbSet<impuls_logs> impuls_logs { get; set; }
         public virtual DbSet<mensaje> mensajes { get; set; }
+        public virtual DbSet<NivelesServicio> NivelesServicios { get; set; }
         public virtual DbSet<ordencompra> ordencompras { get; set; }
         public virtual DbSet<ordencompradetalle> ordencompradetalles { get; set; }
         public virtual DbSet<perfile> perfiles { get; set; }
