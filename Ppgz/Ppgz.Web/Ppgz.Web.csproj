@@ -213,6 +213,7 @@
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\CuentasPagarController.cs" />
+    <Compile Include="Areas\Nazan\Controllers\RegistrarNivelServicioController .cs" />
     <Compile Include="Areas\Nazan\MensajesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1151,6 +1152,7 @@
     <None Include="Areas\Mercaderia\Views\CuentasPagar\Devoluciones.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ReporteProveedores\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ReporteProveedores\Reportes.cshtml" />
+    <Content Include="Areas\Nazan\Views\RegistrarNivelServicio\Index.cshtml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -1173,6 +1175,7 @@
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Confirm.cshtml" />
+    <Content Include="Uploads\formato_nivel_servicio.xlsx" />
     <None Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
