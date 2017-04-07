@@ -1,17 +1,43 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using System.Data
+@using Ppgz.Repository
 @{
     ViewBag.Title = "Gestión de Pagos";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var pagosPendientes = (DataTable)ViewBag.PagosPendientes;
+    var proveedor = (proveedore)ViewBag.Proveedor;
+    var importeTotal = pagosPendientes.Rows.Cast<DataRow>()
+        .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
 }
 
-<h2 class="form-signin-heading">Gestión de Pagos Pendientes</h2>
-<p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i> <i>En esta sección podrá gestionar los pagos que tiene con el Grupo Nazan.</i><strong>@HttpContext.Current.Session["razonsocial"] </strong>   <a href="@Url.Action("Index", "CuentasPagar")">Cambiar</a></p>
+<h2>Gestión de Pagos Pendientes</h2>
+<p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>En esta sección podrá gestionar los pagos pendientes</i>
+</p>
 
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "CuentasPagar")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
 <div class="panel panel-default">
     <div class="panel-heading">Pagos Pendientes</div>
     <div class="panel-body">
         <div class="col-md-12">
-            <table id="pagosPendiente" class="table table-striped table-condensed table-bordered">
+            <table id="" class="table table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
                         <th class="text-center">Fecha</th>
@@ -25,9 +51,9 @@
 
                     <tr>
                         <td class="text-center">@DateTime.Today.ToString("dd/MM/yyyy")</td>
-                        <td class="text-center">@ViewBag.proveedor.Rfc</td>
-                        <td class="text-center">@ViewBag.proveedor.Nombre1</td>
-                        <td class="text-center">@ViewBag.importeTotal</td>
+                        <td class="text-center">@proveedor.Rfc</td>
+                        <td class="text-center">@proveedor.Nombre1</td>
+                        <td class="text-center">@importeTotal</td>
                         <td class="text-center">
                             <a class="btn btn-success btn-xs" href="@Url.Action("PagosPendientesDetalle", "CuentasPagar", new { proveedorId = ViewBag.proveedor.Id })">Detalle</a>
                         </td>

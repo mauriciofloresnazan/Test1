@@ -1,52 +1,94 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using System.Data
+@using Ppgz.Repository
 @{
-    ViewBag.Title = "Gestión de Pagos";
+    ViewBag.Title = "Detalle de Devoluciones";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    Random generator = new Random();
-    var cantidad = int.Parse(ViewBag.devolucion["cantidad"].ToString());
+    var drDevolucion = (DataRow)ViewBag.Devolucion;
 
+
+    var drDevolucionDetalles = (DataRow[])ViewBag.DevolucionDetalles;
+
+    var proveedor = (proveedore)ViewBag.Proveedor;
+
+    var subTotal = drDevolucionDetalles.Aggregate<DataRow, decimal>(0, (current, dr) => current + decimal.Parse(dr["DMBTR"].ToString()));
+
+    decimal impuesto = ViewBag.Impuesto;
+
+    var total = decimal.Parse(@ViewBag.devolucion["DMBTR"].ToString()) * -1;
 }
 
-<h2 class="form-signin-heading">Gestión de Devoluciones</h2>
-<p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i> <i>En esta sección podrá gestionar los pagos que tiene con el Grupo Nazan.</i><strong>@HttpContext.Current.Session["razonsocial"] </strong> <a href="@Url.Action("Index", "CuentasPagar")">Cambiar</a></p>
+<h2>Gestión de Devoluciones</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>Detalles de la devolución</i>
+</p>
+<a class="btn btn-link" href="@Url.Action("Devoluciones", "CuentasPagar")"> <i class="fa fa-arrow-left" aria-hidden="true"></i> Ver otra devolución</a>
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "CuentasPagar")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i> Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <div class="panel panel-default">
-    <div class="col-sm-6">
-
-    </div>
-    <div class="col-sm-6">
-        <a href="@Url.Action("DevolucionesDetalleDescargar", "CuentasPagar", new { @id = @ViewBag.devolucion["Id"] })" class="btn btn-primary pull-right"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
-    </div>
-    <div class="clearfix"></div>
     <div class="panel-heading">Gestión de Devolución</div>
     <div class="panel-body">
         <div class="col-md-12">
-            <b>Folio de Referencia : </b> @ViewBag.devolucion["Referencia"]
+            <div class="col-sm-6">
+                <b>Folio de Referencia : </b> @drDevolucion["XBLNR"]
+                
+            </div>
+            <div class="col-sm-6 text-right">
+                <a href="@Url.Action("DevolucionesDetalleDescargar", "CuentasPagar", new { @numeroDocumento = @drDevolucion["BELNR"] })" class="btn btn-primary"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
+            </div>
+            <hr />
             <table id="devolucionesDetalle" class="table table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center">Articulo</th>
+                        <th class="text-center">Artículo</th>
                         <th class="text-center">Descripción</th>
                         <th class="text-center">Total</th>
                         <th class="text-center">Cantidad</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @while (cantidad > 0)
+                    @foreach (var detalle in drDevolucionDetalles)
                     {
                         <tr>
-                            <td class="text-center">@ViewBag.devolucion["Material"]</td>
-                            <td class="text-center">@ViewBag.devolucion["Descripcion"]</td>
-                            <td class="text-center">230.5</td>
-                            <td class="text-center">1</td>
-                        </tr>
 
-                        cantidad--;
+                            <td class="text-center">@detalle["MATNR"]</td>
+                            <td class="text-center">@detalle["MAKTX"]</td>
+                            <td class="text-center">@detalle["DMBTR"]</td>
+                            <td class="text-center">@detalle["MENGE"]</td>
+                        </tr>
                     }
                 </tbody>
             </table>
-            <b>Total : </b> @ViewBag.devolucion["Importe"]
+            <hr />
+            <div class="clearfix">
+                <dl class="dl-horizontal pull-right">
+                    <dt>Sub Total: </dt>
+                    <dd class="text-right">@subTotal</dd>
+                    <dt>IVA: </dt>
+                    <dd class="text-right">@impuesto</dd>
+                    <dt>Total: </dt>
+                    <dd class="text-right">@total</dd>
+                </dl>
+            </div>
         </div>
     </div>
 </div>
@@ -57,19 +99,9 @@
 
         $(document).ready(function () {
 
-            $(document).on("click", ".ver-mensaje", function () {
-                Visualizar($(this).data('id'));
-                var titulo = $(this).data('titulo');
-                var contenido = $(this).data('contenido');
-                $('.modal-title').text(titulo);
-                $(".modal-body #mensaje-contenido").text(contenido);
-            });
 
-            $(document).on("click", ".descargar-mensaje", function () {
-                Visualizar($(this).data('id'));
-            });
 
-            $('#devolucionesDetalle').DataTable({
+            $('#devolucionesDetallSe').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
                 },
@@ -78,17 +110,6 @@
         });
 
 
-        function Visualizar(mensajeId) {
-            $.ajax({
-                url: '@Url.Action("Visualizar", "MensajesInstitucionales")',
-                data: { id: mensajeId },
-                type: 'POST',
-                success: function (data) {
-                    $("#mensaje-tr-id-" + mensajeId + " .leido-flag").text("SI");
-                    //alert(data);
-                }
-            });
-        }
     </script>
 }
 

@@ -26,7 +26,12 @@
                             <td class="text-center">@proveedor.NumeroProveedor</td>
                             <td class="text-center vert-align">@proveedor.Nombre1</td>
                             <td class="text-center">
-                                <a id="btnProveedor" data-idproveedor="@proveedor.Id" href="#"><i class="fa fa-check" aria-hidden="true"></i> Ver Detalle</a>
+                                @*<a id="btnProveedor" data-idproveedor="@proveedor.Id" href="#"><i class="fa fa-check" aria-hidden="true"></i> Ver Detalle</a>*@
+
+                                <a class="button btn-primary btn-sm" href="@Url.Action("SeleccionarProveedor", "CuentasPagar", new { @proveedorId = @proveedor.Id })">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Siguiente
+                                </a>
+
                             </td>
                         </tr>
                     }
@@ -42,12 +47,13 @@
 
     $(document).ready(function () {
 
-        if (proveedorId === "") {
-            $("#navbar > ul:nth-child(1) > li:nth-child(2)").css("display","none");
-        }
-        $(document).on("click", "#btnProveedor", function () {
-            fnProveedorSeleccionado($(this).data('idproveedor'));
-        });
+        //if (proveedorId === "") {
+        //    $("#navbar > ul:nth-child(1) > li:nth-child(2)").css("display","none");
+        //}
+        //$(document).on("click", "#btnProveedor", function () {
+        //    fnProveedorSeleccionado($(this).data('idproveedor'));
+        //});
+
         $('#cuentasXpagar').DataTable({
             "language": {
                 "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
@@ -56,7 +62,7 @@
         });
     });
 
-    function fnProveedorSeleccionado(proveedorId) {
+    @*function fnProveedorSeleccionado(proveedorId) {
         $.ajax({
             url: '@Url.Action("PersitedProviderId", "CuentasPagar")',
             data: { proveedorId: proveedorId },
@@ -66,7 +72,7 @@
                 location.href = '@Url.Action("Pagos", "CuentasPagar")';
             }
         });
-    }
+    }*@
     </script>
 }
 
