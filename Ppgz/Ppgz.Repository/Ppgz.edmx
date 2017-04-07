@@ -263,7 +263,7 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" />
           <Property Name="OperacionTx" Type="enum" />
         </EntityType>
-        <EntityType Name="NivelesServicio">
+        <EntityType Name="niveleseervicio">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -711,12 +711,12 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
         </Association>
         <Association Name="fk_nivelservicio_proveedor">
           <End Role="proveedores" Type="Self.proveedores" Multiplicity="1" />
-          <End Role="NivelesServicio" Type="Self.NivelesServicio" Multiplicity="*" />
+          <End Role="niveleseervicio" Type="Self.niveleseervicio" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="proveedores">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="NivelesServicio">
+            <Dependent Role="niveleseervicio">
               <PropertyRef Name="ProveedorId" />
             </Dependent>
           </ReferentialConstraint>
@@ -839,7 +839,7 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           <EntitySet Name="horarios" EntityType="Self.horarios" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="impuls_logs" EntityType="Self.impuls_logs" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="mensajes" EntityType="Self.mensajes" Schema="impuls_portal" store:Type="Tables" />
-          <EntitySet Name="NivelesServicio" EntityType="Self.NivelesServicio" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="niveleseervicio" EntityType="Self.niveleseervicio" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="ordencompra" EntityType="Self.ordencompra" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="ordencompradetalle" EntityType="Self.ordencompradetalle" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="perfiles" EntityType="Self.perfiles" Schema="impuls_portal" store:Type="Tables" />
@@ -974,7 +974,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           </AssociationSet>
           <AssociationSet Name="fk_nivelservicio_proveedor" Association="Self.fk_nivelservicio_proveedor">
             <End Role="proveedores" EntitySet="proveedores" />
-            <End Role="NivelesServicio" EntitySet="NivelesServicio" />
+            <End Role="niveleseervicio" EntitySet="niveleseervicio" />
           </AssociationSet>
           <AssociationSet Name="fk_ordencompra_proveedor" Association="Self.fk_ordencompra_proveedor">
             <End Role="proveedores" EntitySet="proveedores" />
@@ -1274,7 +1274,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_mensajes_usuario" FromRole="mensajes" ToRole="AspNetUsers" />
           <NavigationProperty Name="cuentasmensajes" Relationship="Self.fk_cuentasmensajes_mensaje" FromRole="mensajes" ToRole="cuentasmensajes" />
         </EntityType>
-        <EntityType Name="NivelesServicio">
+        <EntityType Name="niveleseervicio">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
@@ -1287,7 +1287,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="PedidoAtrasado" Type="Decimal" Nullable="false" />
           <Property Name="PedidoEnTiempo" Type="Decimal" Nullable="false" />
           <Property Name="PedidoTotal" Type="Decimal" Nullable="false" />
-          <NavigationProperty Name="proveedore" Relationship="Self.fk_nivelservicio_proveedor" FromRole="NivelesServicio" ToRole="proveedores" />
+          <NavigationProperty Name="proveedore" Relationship="Self.fk_nivelservicio_proveedor" FromRole="niveleseervicio" ToRole="proveedores" />
         </EntityType>
         <EntityType Name="ordencompra">
           <Key>
@@ -1399,7 +1399,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Rfc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Borrado" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="cuenta" Relationship="Self.fk_proveedores_cuenta" FromRole="proveedores" ToRole="cuentas" />
-          <NavigationProperty Name="NivelesServicios" Relationship="Self.fk_nivelservicio_proveedor" FromRole="proveedores" ToRole="NivelesServicio" />
+          <NavigationProperty Name="niveleseervicios" Relationship="Self.fk_nivelservicio_proveedor" FromRole="proveedores" ToRole="niveleseervicio" />
           <NavigationProperty Name="ordencompras" Relationship="Self.fk_ordencompra_proveedor" FromRole="proveedores" ToRole="ordencompra" />
         </EntityType>
         <EntityType Name="riele">
@@ -1736,12 +1736,12 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
         </Association>
         <Association Name="fk_nivelservicio_proveedor">
           <End Role="proveedores" Type="Self.proveedore" Multiplicity="1" />
-          <End Role="NivelesServicio" Type="Self.NivelesServicio" Multiplicity="*" />
+          <End Role="niveleseervicio" Type="Self.niveleseervicio" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="proveedores">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="NivelesServicio">
+            <Dependent Role="niveleseervicio">
               <PropertyRef Name="ProveedorId" />
             </Dependent>
           </ReferentialConstraint>
@@ -1802,7 +1802,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="horarios" EntityType="Self.horario" />
           <EntitySet Name="impuls_logs" EntityType="Self.impuls_logs" />
           <EntitySet Name="mensajes" EntityType="Self.mensaje" />
-          <EntitySet Name="NivelesServicios" EntityType="Self.NivelesServicio" />
+          <EntitySet Name="niveleseervicios" EntityType="Self.niveleseervicio" />
           <EntitySet Name="ordencompras" EntityType="Self.ordencompra" />
           <EntitySet Name="ordencompradetalles" EntityType="Self.ordencompradetalle" />
           <EntitySet Name="perfiles" EntityType="Self.perfile" />
@@ -1888,7 +1888,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           </AssociationSet>
           <AssociationSet Name="fk_nivelservicio_proveedor" Association="Self.fk_nivelservicio_proveedor">
             <End Role="proveedores" EntitySet="proveedores" />
-            <End Role="NivelesServicio" EntitySet="NivelesServicios" />
+            <End Role="niveleseervicio" EntitySet="niveleseervicios" />
           </AssociationSet>
           <AssociationSet Name="fk_ordencompra_proveedor" Association="Self.fk_ordencompra_proveedor">
             <End Role="proveedores" EntitySet="proveedores" />
@@ -2157,9 +2157,9 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="NivelesServicios">
-            <EntityTypeMapping TypeName="impuls_portalModel.NivelesServicio">
-              <MappingFragment StoreEntitySet="NivelesServicio">
+          <EntitySetMapping Name="niveleseervicios">
+            <EntityTypeMapping TypeName="impuls_portalModel.niveleseervicio">
+              <MappingFragment StoreEntitySet="niveleseervicio">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />

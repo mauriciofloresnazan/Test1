@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="8b134da22f8d4a4782fbf77a0f289377" Name="Diagram1">
+      <Diagram DiagramId="8484dcbb6f0d4cd3a9480dd54f0c4f0a" Name="Diagram1">
         <EntityTypeShape EntityType="impuls_portalModel.acumuladore" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.almacene" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.andene" Width="1.5" PointX="7.5" PointY="6.875" IsExpanded="true" />
@@ -24,7 +24,7 @@
         <EntityTypeShape EntityType="impuls_portalModel.horario" Width="1.5" PointX="9.75" PointY="10.125" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.impuls_logs" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.mensaje" Width="1.5" PointX="9.75" PointY="26.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.NivelesServicio" Width="1.5" PointX="5.25" PointY="18.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.niveleseervicio" Width="1.5" PointX="5.25" PointY="18.375" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.ordencompra" Width="1.5" PointX="5.25" PointY="22.125" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.ordencompradetalle" Width="1.5" PointX="7.5" PointY="22.25" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.perfile" Width="1.5" PointX="3" PointY="15.25" IsExpanded="true" />

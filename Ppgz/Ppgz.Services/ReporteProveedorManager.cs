@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -11,6 +10,7 @@ namespace Ppgz.Services
 {
     public class ReporteProveedorManager
     {
+        private readonly Entities _db = new Entities();
         public class ReporteProveedor
         {
             public string NumeroProveedor { get; set; }
@@ -31,9 +31,6 @@ namespace Ppgz.Services
             public string EstadoMaterial { get; set; }
 
         }
-
-        private readonly Entities _db = new Entities();
-
 
         public List<ReporteProveedor> FindReporteProveedor(string codigoProveedor)
         {
@@ -58,7 +55,7 @@ namespace Ppgz.Services
                         CantidadVentas1 = dr["MESACT1"].ToString(),
                         CantidadVentas = dr["MESACT"].ToString(),
                         CantidadTotal = dr["TOTAL"].ToString(),
-                        CalculoTotal = dr["SELLTHRU"].ToString() + " %",
+                        CalculoTotal = dr["SELLTHRU"] + " %",
                         InvTienda = dr["INVENTDA"].ToString(),
                         InvTransito = dr["TRANSITO"].ToString(),
                         InvCedis = dr["INVENCEDIS"].ToString(),
@@ -67,6 +64,33 @@ namespace Ppgz.Services
                     });
             }
             return reporteProveedor;
+
+        }
+
+        public void CrearNivelServicio(string numeroProveedor, decimal ultimoMes, decimal temporadaActual,
+           decimal acumuladoAnual, decimal pedidoAtrasado, decimal pedidoEntiempo, decimal pedidoTotal)
+        {
+            var proveedorManager = new ProveedorManager();
+            var proveedor = proveedorManager.FindByNumeroProveedor(numeroProveedor);
+
+            if (proveedor == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
+
+            var nivelServicio = new niveleseervicio
+            {
+                ProveedorId = proveedor.Id,
+                UltimoMes = ultimoMes,
+                TemporadaActual = temporadaActual,
+                AcumuladoAnual = acumuladoAnual,
+                PedidoAtrasado = pedidoAtrasado,
+                PedidoEnTiempo = pedidoEntiempo,
+                PedidoTotal = pedidoTotal
+            };
+            _db.niveleseervicios.Add(nivelServicio);
+
+            _db.SaveChanges();
 
         }
 

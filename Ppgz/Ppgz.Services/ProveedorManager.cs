@@ -97,6 +97,6 @@ namespace Ppgz.Services
             _db.proveedores.Remove(proveedor);
             _db.SaveChanges();
         }
-
+        
     }
 }

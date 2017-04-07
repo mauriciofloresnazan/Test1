@@ -118,6 +118,9 @@
     <Compile Include="mensaje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="niveleseervicio.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="ordencompra.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
