@@ -12,7 +12,7 @@
 <h2>Gestión de Pagos</h2>
 <p class="page-description-title">
     <i class="fa fa-calculator" aria-hidden="true"></i> 
-    <i>En esta sección podrá gestionar ver los pagos que tiene del Grupo Nazan.</i>
+    <i>En esta sección podrá gestionar los pagos que tiene del Grupo Nazan.</i>
 </p>
 <div class="panel panel-default">
     <div class="panel-heading">Proveedor Seleccionado</div>
@@ -82,8 +82,13 @@
                 dom: 'Bfrtip',
                 buttons: [
                     'excel'
-                ]
+                ],
+                "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+            },
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
             });
+            
         });
     </script>
    
