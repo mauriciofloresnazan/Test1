@@ -237,11 +237,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 using System;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using System.Web.UI;
-using System.Web.UI.WebControls;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
@@ -262,7 +259,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             {
                 if (System.Web.HttpContext.Current.Session["proveedorcxp"] != null)
                 {
-                    return (proveedore) System.Web.HttpContext.Current.Session["proveedorcxp"];
+                    return (proveedore)System.Web.HttpContext.Current.Session["proveedorcxp"];
                 }
                 return null;
             }
@@ -271,7 +268,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 System.Web.HttpContext.Current.Session["proveedorcxp"] = value;
             }
         }
-        
+
         // GET: /Mercaderia/CuentasPagar/
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
         public ActionResult Index()
@@ -319,7 +316,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             ViewBag.Pagos = dsPagos.Tables["T_LISTA_PAGOS"];
 
             ViewBag.Proveedor = ProveedorCxp;
-            
+
             return View();
         }
 
@@ -372,68 +369,71 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             {
 
 
-                            var tipo = "";
-                            switch (dr["BLART_COMPEN"].ToString())
-                            {
-                                case "4":
-                                    tipo = "Ingreso a proveedor";
-                                    break;
-                                case "10":
-                                    tipo = "Ingreso a proveedor";
-                                    break;
-                                case "21":
-                                    tipo = "Ingreso a proveedor";
-                                    break;
-                                case "23":
-                                    tipo = "Nota de Cargo";
-                                    break;
-                                case "AB":
-                                    tipo = "Documento contable";
-                                    break;
-                                case "DA":
-                                    tipo = "Documento contable";
-                                    break;
-                                case "DG":
-                                    tipo = "Documento contable";
-                                    break;
-                                case "DZ":
-                                    tipo = "Pago de proveedor";
-                                    break;
-                                case "KA":
-                                    tipo = "Traslado de anticipos";
-                                    break;
-                                case "KG":
-                                    tipo = "Ingreso a proveedor";
-                                    break;
-                                case "KR":
-                                    tipo = "Devolución";
-                                    break;
-                                case "":
-                                    tipo = "Documento contable";
-                                    break;
-                                case "RE":
-                                    tipo = "";
-                                    break;
-
-                                case "RV":
-                                    tipo = "Documento contable";
-                                    break;
-                                case "SA":
-                                    tipo = "Documento contable";
-                                    break;
-                                case "ZN":
-                                    tipo = "Anulación de documento";
-                                    break;
-                                case "ZP":
-                                    tipo = "Pago ";
-                                    break;
 
 
-                            }
+                var tipo = "";
+                switch (dr["BLART_COMPEN"].ToString())
+                {
+                    case "4":
+                        tipo = "Cargo a proveedor";
+                        break;
+                    case "10":
+                        tipo = "Factura a proveedor";
+                        break;
+                    case "21":
+                        tipo = "Factura a proveedor";
+                        break;
+                    case "23":
+                        tipo = "Nota de Cargo";
+                        break;
+                    case "AB":
+                        tipo = "Cargo a proveedor";
+                        break;
+                    case "DA":
+                        tipo = "Cargo a proveedor";
+                        break;
+                    case "DG":
+                        tipo = "Cargo a proveedor";
+                        break;
+                    case "DZ":
+                        tipo = "Pago de proveedor";
+                        break;
+                    case "KA":
+                        tipo = "Cargo a proveedor";
+                        break;
+                    case "KG":
+                        tipo = "Cargo a proveedor";
+                        break;
+                    case "KR":
+                        tipo = "Devolución";
+                        break;
+                    case "":
+                        tipo = "Cargo a proveedor";
+                        break;
+                    case "RE":
+                        tipo = "Factura a proveedor";
+                        break;
+
+                    case "RV":
+                        tipo = "Cargo a proveedor";
+                        break;
+                    case "SA":
+                        tipo = "Cargo a proveedor";
+                        break;
+                    case "ZN":
+                        tipo = "Anulación de documento";
+                        break;
+                    case "ZP":
+                        tipo = "Pago";
+                        break;
+
+
+                }
+
 
                 dr["BLART_COMPEN"] = tipo;
             }
- 
+
             for (var i = dt.Columns.Count - 1; i >= 0; i--)
             {
                 if (!columnsNames.Contains(dt.Columns[i].ColumnName))
@@ -441,12 +441,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     dt.Columns.RemoveAt(i);
                 }
             }
-            
+
             dt.Columns["BELNR_COMPEN"].ColumnName = "Referencia";
             dt.Columns["DMBTR_COMPEN"].ColumnName = "Importe";
             dt.Columns["WAERS_COMPEN"].ColumnName = "Ml";
             dt.Columns["BLART_COMPEN"].ColumnName = "Tipo de Movimiento";
-            
+
             FileManager.ExportExcel(dt, numeroDocumento, HttpContext);
         }
 
@@ -513,7 +513,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         {
             if (ProveedorCxp == null)
             {
-                return ;
+                return;
             }
 
             var partidasManager = new PartidasManager();
@@ -544,8 +544,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 }
             }
 
- 
-                              
+
+
             dt.Columns["EBELN"].ColumnName = "Documento";
             dt.Columns["MATNR"].ColumnName = "Artículo";
             dt.Columns["MAKTX"].ColumnName = "Descripción";
@@ -554,13 +554,13 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             FileManager.ExportExcel(dt, numeroDocumento, HttpContext);
         }
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
         public ActionResult PagosPendientes()
         {
@@ -602,14 +602,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             return View();
         }
-        
+
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
         public void PagosPendientesDescargar()
         {
             if (ProveedorCxp == null)
             {
-                return ;
+                return;
             }
 
             var partidasManager = new PartidasManager();
@@ -626,61 +626,60 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             foreach (DataRow dr in dt.Rows)
             {
 
-
                 var tipo = "";
-                switch (dr["BLART"].ToString())
+                switch (dr["BLART_COMPEN"].ToString())
                 {
                     case "4":
-                        tipo = "Ingreso a proveedor";
+                        tipo = "Cargo a proveedor";
                         break;
                     case "10":
-                        tipo = "Ingreso a proveedor";
+                        tipo = "Factura a proveedor";
                         break;
                     case "21":
-                        tipo = "Ingreso a proveedor";
+                        tipo = "Factura a proveedor";
                         break;
                     case "23":
                         tipo = "Nota de Cargo";
                         break;
                     case "AB":
-                        tipo = "Documento contable";
+                        tipo = "Cargo a proveedor";
                         break;
                     case "DA":
-                        tipo = "Documento contable";
+                        tipo = "Cargo a proveedor";
                         break;
                     case "DG":
-                        tipo = "Documento contable";
+                        tipo = "Cargo a proveedor";
                         break;
                     case "DZ":
                         tipo = "Pago de proveedor";
                         break;
                     case "KA":
-                        tipo = "Traslado de anticipos";
+                        tipo = "Cargo a proveedor";
                         break;
                     case "KG":
-                        tipo = "Ingreso a proveedor";
+                        tipo = "Cargo a proveedor";
                         break;
                     case "KR":
                         tipo = "Devolución";
                         break;
                     case "":
-                        tipo = "Documento contable";
+                        tipo = "Cargo a proveedor";
                         break;
                     case "RE":
-                        tipo = "";
+                        tipo = "Factura a proveedor";
                         break;
 
                     case "RV":
-                        tipo = "Documento contable";
+                        tipo = "Cargo a proveedor";
                         break;
                     case "SA":
-                        tipo = "Documento contable";
+                        tipo = "Cargo a proveedor";
                         break;
                     case "ZN":
                         tipo = "Anulación de documento";
                         break;
                     case "ZP":
-                        tipo = "Pago ";
+                        tipo = "Pago";
                         break;
 
 
@@ -704,7 +703,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             FileManager.ExportExcel(dt, ProveedorCxp.NumeroProveedor, HttpContext);
         }
-      
+
 
     }
 }
