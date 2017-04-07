@@ -9,16 +9,19 @@
 <p class="page-description-title"><i class="fa fa-info" aria-hidden="true"></i> <i>En esta sección podrá gestionar los reportes que tiene con el Grupo Nazan. </i><strong>@HttpContext.Current.Session["razonsocial"] </strong>   <a href="@Url.Action("Index", "ReporteProveedores")">Cambiar</a></p>
 
 <div class="panel panel-default">
-    <div class="col-sm-4">
-        Ultimo Mes      : @ViewBag.nivelservicio.UltimoMes %<br/>
-        Temporada Actual: @ViewBag.nivelservicio.TemporadaActual %<br/>
-        Temporada Anual : @ViewBag.nivelservicio.AcumuladoAnual %<br/>
-    </div>
-    <div class="col-sm-5">
-        Pedido Atrasado : @ViewBag.nivelservicio.PedidoAtrasado %<br />
-        Pedido en Tiempo: @ViewBag.nivelservicio.PedidoEnTiempo %<br />
-        Pedido Total    : @ViewBag.nivelservicio.PedidoTotal %<br />
-    </div>
+    @if (ViewBag.nivelservicio != null) {
+        <div class="col-sm-4">
+            Ultimo Mes : @ViewBag.nivelservicio.UltimoMes %<br/>
+            Temporada Actual: @ViewBag.nivelservicio.TemporadaActual %<br/>
+            Temporada Anual : @ViewBag.nivelservicio.AcumuladoAnual %<br/>
+        </div>
+        <div class="col-sm-5">
+            Pedido Atrasado : @ViewBag.nivelservicio.PedidoAtrasado %<br />
+            Pedido en Tiempo: @ViewBag.nivelservicio.PedidoEnTiempo %<br />
+            Pedido Total : @ViewBag.nivelservicio.PedidoTotal %<br />
+        </div>
+    }
+    
     <div class="col-sm-12">
         <a href="@Url.Action("Descargar", "ReporteProveedores", new {@numeroProveedor = ViewBag.proveedor.NumeroProveedor})" class="btn btn-primary pull-right"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
     </div>
@@ -28,47 +31,47 @@
         <div class="table-responsive">
             <table id="reporteDetalle" class="table table-striped table-condensed table-bordered">
                 <thead>
-                    <tr>
-                        <th class="text-center">Id Proveedor</th>
-                        <th class="text-center">Nombre Proveedor</th>
-                        <th class="text-center">Material</th>
-                        <th class="text-center">Nombre Material</th>
-                        <th class="text-center">Fecha Proceso</th>
-                        <th class="text-center">Unidad de Medida</th>
-                        <th class="text-center">Ventas Actual - 2 meses</th>
-                        <th class="text-center">Ventas Actual - 1 meses</th>
-                        <th class="text-center">Ventas Actual</th>
-                        <th class="text-center">Total Ventas</th>
-                        <th class="text-center">Calculo Total</th>
-                        <th class="text-center">Inventario TDA</th>
-                        <th class="text-center">Inventario Tránsito</th>
-                        <th class="text-center">Inventario CEDIS</th>
-                        <th class="text-center">Pedidos Pendientes(TDA + CEDIS)</th>
-                        <th class="text-center">Estatus Material</th>
-                    </tr>
+                <tr>
+                    <th class="text-center">Id Proveedor</th>
+                    <th class="text-center">Nombre Proveedor</th>
+                    <th class="text-center">Material</th>
+                    <th class="text-center">Nombre Material</th>
+                    <th class="text-center">Fecha Proceso</th>
+                    <th class="text-center">Unidad de Medida</th>
+                    <th class="text-center">Ventas Actual - 2 meses</th>
+                    <th class="text-center">Ventas Actual - 1 meses</th>
+                    <th class="text-center">Ventas Actual</th>
+                    <th class="text-center">Total Ventas</th>
+                    <th class="text-center">Calculo Total</th>
+                    <th class="text-center">Inventario TDA</th>
+                    <th class="text-center">Inventario Tránsito</th>
+                    <th class="text-center">Inventario CEDIS</th>
+                    <th class="text-center">Pedidos Pendientes(TDA + CEDIS)</th>
+                    <th class="text-center">Estatus Material</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var reporte in (ViewBag.reportes))
-                    {
-                        <tr>
-                            <td class="text-center">@reporte.NumeroProveedor</td>
-                            <td class="text-center">@reporte.NombreProveedor</td>
-                            <td class="text-center">@reporte.Material</td>
-                            <td class="text-center">@reporte.NombreMaterial</td>
-                            <td class="text-center">@reporte.FechaProceso.ToString("dd/MM/yyyy")</td>
-                            <td class="text-center">@reporte.UnidadMedida</td>
-                            <td class="text-center">@reporte.CantidadVentas2</td>
-                            <td class="text-center">@reporte.CantidadVentas1</td>
-                            <td class="text-center">@reporte.CantidadVentas</td>
-                            <td class="text-center">@reporte.CantidadTotal</td>
-                            <td class="text-center">@reporte.CalculoTotal %</td>
-                            <td class="text-center">@reporte.InvTienda</td>
-                            <td class="text-center">@reporte.InvTransito</td>
-                            <td class="text-center">@reporte.InvCedis</td>
-                            <td class="text-center">@reporte.PedidosPendiente</td>
-                            <td class="text-center">@reporte.EstadoMaterial</td>
-                        </tr>
-                    }
+                @foreach (var reporte in (ViewBag.reportes))
+                {
+                    <tr>
+                        <td class="text-center">@reporte.NumeroProveedor</td>
+                        <td class="text-center">@reporte.NombreProveedor</td>
+                        <td class="text-center">@reporte.Material</td>
+                        <td class="text-center">@reporte.NombreMaterial</td>
+                        <td class="text-center">@reporte.FechaProceso.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">@reporte.UnidadMedida</td>
+                        <td class="text-center">@reporte.CantidadVentas2</td>
+                        <td class="text-center">@reporte.CantidadVentas1</td>
+                        <td class="text-center">@reporte.CantidadVentas</td>
+                        <td class="text-center">@reporte.CantidadTotal</td>
+                        <td class="text-center">@reporte.CalculoTotal %</td>
+                        <td class="text-center">@reporte.InvTienda</td>
+                        <td class="text-center">@reporte.InvTransito</td>
+                        <td class="text-center">@reporte.InvCedis</td>
+                        <td class="text-center">@reporte.PedidosPendiente</td>
+                        <td class="text-center">@reporte.EstadoMaterial</td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>
