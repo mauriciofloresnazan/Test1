@@ -1,5 +1,6 @@
 ﻿@using System.Text
 @using Microsoft.AspNet.Identity
+@using Ppgz.Web.Infrastructure
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -182,31 +183,41 @@
     @if (Request.IsAuthenticated)
     {
         <script type="text/javascript">
+            @{
+                var commonManager = new CommonManager();
+                
+                var cuenta = commonManager.GetCuentaUsuarioAutenticado();
+            }
+            
+            @if (cuenta != null)
+            {
+                <text>
+                $("#mensajes-notificador").hide();
 
-            $("#mensajes-notificador").hide();
+                var Url = "@Url.Action("MensajesSinLeer", "MensajesInstitucionales", new { area = cuenta.Tipo })";
+                (function () {
 
-            var Url = "@Url.Action("MensajesSinLeer", "MensajesInstitucionales", new { area = "Mercaderia" })";
-            (function () {
+                    $.ajax({
+                        type: "POST",
+                        url: Url,
+                        cache: false
+                    }).done(function (result) {
+                        var mensajesSinLeer = parseInt(result.length);
 
-                $.ajax({
-                    type: "POST",
-                    url: Url,
-                    cache: false
-                }).done(function (result) {
-                    var mensajesSinLeer = parseInt(result.length);
-
-                    if ((mensajesSinLeer) > 0) {
-                        $("#mensajes-notificador .badge").text(result.length);
-                        $("#mensajes-notificador").show();
-                    } else {
-                        $("#mensajes-notificador").hide();
+                        if ((mensajesSinLeer) > 0) {
+                            $("#mensajes-notificador .badge").text(result.length);
+                            $("#mensajes-notificador").show();
+                        } else {
+                            $("#mensajes-notificador").hide();
                         
-                    }
+                        }
 
-                });
-                //cada 5 minutos refrescar
-                setTimeout(arguments.callee, 500000);
-            })();
+                    });
+                    //cada 5 minutos refrescar
+                    setTimeout(arguments.callee, 500000);
+                })();            
+                </text>   
+            }
         </script>
     }
 

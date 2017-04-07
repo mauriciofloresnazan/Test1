@@ -48,5 +48,19 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             return Content("Actualizado");
         }
+
+
+
+        [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-MENSAJESINSTITUCIONALES")]
+        [HttpPost]
+        public JsonResult MensajesSinLeer()
+        {
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+            var mensajes = _mensajesInstitucionalesManager.FindPublicadosSinLeerByCuentaId(cuenta.Id);
+
+            return Json(mensajes);
+
+        }
     }
 }

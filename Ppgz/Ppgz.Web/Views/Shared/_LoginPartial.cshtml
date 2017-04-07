@@ -1,6 +1,13 @@
 ﻿@using Microsoft.AspNet.Identity
+@using Ppgz.Services
+@using Ppgz.Web.Infrastructure
 @if (Request.IsAuthenticated)
 {
+    var commonManager= new CommonManager();
+    var cuenta = commonManager.GetCuentaUsuarioAutenticado();
+    
+    
+    
     using (Html.BeginForm("LogOff", "Account",  new { area = "" },FormMethod.Post,  new { id = "logoutForm", @class = "navbar-right" }))
     {
     @Html.AntiForgeryToken()
@@ -9,10 +16,12 @@
         <li>
             @Html.ActionLink("Bienvenido " + User.Identity.GetUserName() + "!", "Index", "Home", routeValues: null, htmlAttributes: new {title = "Manage"})
         </li>
-        <li id="mensajes-notificador">
-            <a class="btn btn-link" href="@Url.Action("Index", "MensajesInstitucionales")"><i class="fa fa-envelope" aria-hidden="true"></i> <span class="badge"></span></a>
-        </li>
-
+        @if (cuenta != null)
+        {
+            <li id="mensajes-notificador">
+                <a class="btn btn-link" href="@Url.Action("Index", "MensajesInstitucionales", new {area = @cuenta.Tipo})"><i class="fa fa-envelope" aria-hidden="true"></i> <span class="badge"></span></a>
+            </li>
+        }
         <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión</a></li>
     </ul>
     }
