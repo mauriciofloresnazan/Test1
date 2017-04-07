@@ -19,7 +19,14 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         // GET: /Nazan/RegistrarNivelServicio/
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-REGISTRARNIVELSERVICIO")]
 		public ActionResult Index()
-		{
+        {
+
+            var lasNivelServicio = _reporteProveedorManager.LastNivleServicio();
+
+            ViewBag.UltimaActualizacion = lasNivelServicio == null ? 
+                "No hay registros cargados" : 
+                lasNivelServicio.Fecha.ToString("dd/MM/yyyy");
+
             return View();
         }
 
