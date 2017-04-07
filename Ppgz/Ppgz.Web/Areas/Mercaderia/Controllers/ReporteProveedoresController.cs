@@ -24,6 +24,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
 
+           
+
             return View();
         }
         
@@ -40,6 +42,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             try
             {
                 ViewBag.reportes = _reporteProveedorManager.FindReporteProveedor(ViewBag.proveedor.NumeroProveedor);
+
+                ViewBag.nivelservicio = _reporteProveedorManager.FindNivelSerNiveleseervicio(ViewBag.proveedor.NumeroProveedor);
 
             }
             catch (Exception ex)
@@ -107,5 +111,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             FileManager.ExportExcel(dt,proveedor.NumeroProveedor, HttpContext);
         }
+
     }
 }

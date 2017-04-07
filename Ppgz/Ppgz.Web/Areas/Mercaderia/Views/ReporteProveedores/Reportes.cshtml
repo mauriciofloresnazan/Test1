@@ -6,14 +6,20 @@
 }
  
 <h2 class="form-signin-heading">Reportes Proveedores - Grupo Nazan</h2>
-<p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i> <i>En esta sección podrá gestionar los reportes que tiene con el Grupo Nazan. </i><strong>@HttpContext.Current.Session["razonsocial"] </strong>   <a href="@Url.Action("Index", "ReporteProveedores")">Cambiar</a></p>
+<p class="page-description-title"><i class="fa fa-info" aria-hidden="true"></i> <i>En esta sección podrá gestionar los reportes que tiene con el Grupo Nazan. </i><strong>@HttpContext.Current.Session["razonsocial"] </strong>   <a href="@Url.Action("Index", "ReporteProveedores")">Cambiar</a></p>
 
 <div class="panel panel-default">
-    <div class="col-sm-6">
-        <b>RFC</b>: @ViewBag.proveedor.Rfc<br />
-        <b>Nombre</b>: @ViewBag.proveedor.Nombre1<br />
+    <div class="col-sm-4">
+        Ultimo Mes      : @ViewBag.nivelservicio.UltimoMes %<br/>
+        Temporada Actual: @ViewBag.nivelservicio.TemporadaActual %<br/>
+        Temporada Anual : @ViewBag.nivelservicio.AcumuladoAnual %<br/>
     </div>
-    <div class="col-sm-6">
+    <div class="col-sm-5">
+        Pedido Atrasado : @ViewBag.nivelservicio.PedidoAtrasado %<br />
+        Pedido en Tiempo: @ViewBag.nivelservicio.PedidoEnTiempo %<br />
+        Pedido Total    : @ViewBag.nivelservicio.PedidoTotal %<br />
+    </div>
+    <div class="col-sm-12">
         <a href="@Url.Action("Descargar", "ReporteProveedores", new {@numeroProveedor = ViewBag.proveedor.NumeroProveedor})" class="btn btn-primary pull-right"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
     </div>
     <div class="clearfix"></div>

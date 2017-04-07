@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using Ppgz.Repository;
@@ -78,20 +79,53 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
             }
 
-            var nivelServicio = new niveleseervicio
-            {
-                ProveedorId = proveedor.Id,
-                UltimoMes = ultimoMes,
-                TemporadaActual = temporadaActual,
-                AcumuladoAnual = acumuladoAnual,
-                PedidoAtrasado = pedidoAtrasado,
-                PedidoEnTiempo = pedidoEntiempo,
-                PedidoTotal = pedidoTotal
-            };
-            _db.niveleseervicios.Add(nivelServicio);
+            var nivelServicio = _db.niveleseervicios.FirstOrDefault(n => n.ProveedorId == proveedor.Id);
 
+            if (nivelServicio == null)
+            {
+                nivelServicio = new niveleseervicio
+                {
+                    ProveedorId = proveedor.Id,
+                    UltimoMes = ultimoMes,
+                    TemporadaActual = temporadaActual,
+                    AcumuladoAnual = acumuladoAnual,
+                    PedidoAtrasado = pedidoAtrasado,
+                    PedidoEnTiempo = pedidoEntiempo,
+                    PedidoTotal = pedidoTotal,
+                    Fecha = DateTime.Now
+
+                };
+
+                _db.niveleseervicios.Add(nivelServicio);
+            }
+            else
+            {
+                nivelServicio.ProveedorId = proveedor.Id;
+                nivelServicio.UltimoMes = ultimoMes;
+                nivelServicio.TemporadaActual = temporadaActual;
+                nivelServicio.AcumuladoAnual = acumuladoAnual;
+                nivelServicio.PedidoAtrasado = pedidoAtrasado;
+                nivelServicio.PedidoEnTiempo = pedidoEntiempo;
+                nivelServicio.PedidoTotal = pedidoTotal;
+                nivelServicio.Fecha = DateTime.Now;
+                _db.Entry(nivelServicio).State =  EntityState.Modified;
+            }
             _db.SaveChanges();
 
+        }
+
+        public niveleseervicio FindNivelSerNiveleseervicio(string numeroProveedor)
+        {
+            var proveedorManager = new ProveedorManager();
+            var proveedor = proveedorManager.FindByNumeroProveedor(numeroProveedor);
+
+            if (proveedor == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
+
+           return _db.niveleseervicios.FirstOrDefault(n => n.ProveedorId == proveedor.Id);
+            
         }
 
     }
