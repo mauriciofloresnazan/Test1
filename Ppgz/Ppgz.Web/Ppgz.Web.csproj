@@ -213,7 +213,7 @@
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\CuentasPagarController.cs" />
-    <Compile Include="Areas\Nazan\Controllers\RegistrarNivelServicioController .cs" />
+    <Compile Include="Areas\Nazan\Controllers\RegistrarNivelServicioController.cs" />
     <Compile Include="Areas\Nazan\MensajesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
