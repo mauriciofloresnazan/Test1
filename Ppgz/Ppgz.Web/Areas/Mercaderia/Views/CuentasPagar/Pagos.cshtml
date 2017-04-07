@@ -1,11 +1,38 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using System.Data
+@using Ppgz.Repository
 @{
     ViewBag.Title = "Gestión de Pagos";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var pagos = (DataTable)ViewBag.Pagos;
+    var proveedor = (proveedore)ViewBag.Proveedor;
 }
 
 <h2 class="form-signin-heading">Gestión de Pagos</h2>
-<p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i> <i>En esta sección podrá gestionar los pagos que tiene con el Grupo Nazan.</i></p>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i> 
+    <i>En esta sección podrá gestionar ver los pagos que tiene del Grupo Nazan.</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "CuentasPagar")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <div class="panel panel-default">
     <div class="panel-heading">Pagos</div>
@@ -17,19 +44,23 @@
                         <th class="text-center">N° de Compensación</th>
                         <th class="text-center">Fecha de Pago</th>
                         <th class="text-center">Importe</th>
-                        <th class="text-center">Proveedor RFC</th>
-                        <th class="text-center">Proveedor Razón Social</th>
+                        <th class="text-center"></th>
+  
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var pago in (ViewBag.pagos))
+                    @foreach (DataRow pago in pagos.Rows)
                     {
                         <tr>
-                            <td class="text-center"><a href="javascript:verDetalle('@pago.NumeroCompensacion')">@pago.NumeroCompensacion</a></td>
-                            <td class="text-center vert-align">@pago.FechaDePago</td>
-                            <td class="text-center vert-align">@pago.Importe</td>
-                            <td class="text-center vert-align">@ViewBag.proveedor.Rfc</td>
-                            <td class="text-center vert-align">@ViewBag.proveedor.NombreProveedor</td>
+                            <td class="text-center vert-align">@pago["BELNR"]</td>
+                            <td class="text-center vert-align">@pago["FECHA_PAGO"]</td>
+                            <td class="text-center vert-align">@pago["DMBTR"]</td>
+                            <td class="text-center vert-align">
+                                <a class="btn btn-primary btn-sm" href="@Url.Action("PagosDetalle", "CuentasPagar", new { @numeroDocumento = @pago["BELNR"] })">
+                                    Ver Detalle
+                                </a>
+                            </td>
+
                         </tr>
                     }
                 </tbody>
@@ -41,6 +72,7 @@
 @section Scripts {
 
     <script type="text/javascript">
+
         $(document).ready(function () {
             $('#pagos').DataTable({
                 dom: 'Bfrtip',
@@ -50,36 +82,7 @@
             });
         });
     </script>
-    <script type="text/javascript">
-        var pagoDetalleUrl = "@Url.Action("PagoDetalle", "CuentasPagar")";
-        function verDetalle(numeroCompensacion) {
-            var data = {
-                numeroCompensacion: numeroCompensacion
-            };
-            $.ajax({
-                type: "POST",
-                url: pagoDetalleUrl,
-                data: data,
-                cache: false
-            }).done(function(result) {
-                console.log(result);
-                $('#buscarModal .table tbody').empty();
-                for (i = 0; i < result.data.length; i++) {
-                    $('#buscarModal .table tbody').append("<tr>"
-                        + "<td>" + result.data[i].Referencia + "</td>"
-                        + "<td>" + result.data[i].Importe + "</td>"
-                        + "<td>" + result.data[i].TipoMovimiento + "</td>"
-                        + "</tr>");
-                }
-                $('#buscarModal').modal('show');
-                return;
-            }).fail(function(response) {
-                $('#buscarModal').modal('show');
-
-            });
-
-        }
-    </script>
+   
 }
 
 

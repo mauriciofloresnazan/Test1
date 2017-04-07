@@ -1,58 +1,145 @@
-﻿@using Microsoft.AspNet.Identity
+﻿@using System.Data
+@using Ppgz.Repository
 @{
     ViewBag.Title = "Gestión de Pagos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    decimal total = 0;
+    
+    var pago = (DataRow)ViewBag.Pago;
+    
+    var proveedor = (proveedore)ViewBag.Proveedor;
 
+    var pagoDetalles = (DataRow[])ViewBag.PagoDetalles;
 
-}@foreach (var registro in (ViewBag.pagos))
-{
-    total = total + decimal.Parse(registro.Importe.ToString());
 }
 
-<h2 class="form-signin-heading">Gestión de Pagos</h2>
-<p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i> <i>En esta sección podrá gestionar los pagos que tiene con el Grupo Nazan.</i><strong>@HttpContext.Current.Session["razonsocial"] </strong>   <a href="@Url.Action("Index", "CuentasPagar")">Cambiar</a></p>
+
+<h2>Gestión de Pagos</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>En esta sección podrá gestionar el detalle del pago</i>
+</p>
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "CuentasPagar")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <div class="panel panel-default">
-    <div class="col-sm-6">
-        <b>RFC</b>: @ViewBag.proveedor.Rfc<br />
-        <b>Nombre</b>: @ViewBag.proveedor.NombreProveedor<br />
-        <b>Población</b>: @ViewBag.proveedor.Ciudad<br /><br />
-    </div>
-    <div class="col-sm-6">
-        <a href="@Url.Action("Descargar", "CuentasPagar", new {@id = ViewBag.proveedor.Id})" class="btn btn-primary pull-right"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
-    </div>
-    <div class="clearfix"></div>
     <div class="panel-heading">Detalle de Pagos</div>
     <div class="panel-body">
         <div class="col-md-12">
+            <div class="col-sm-6">
+                <b>N° de Compensación : </b> @pago["BELNR"]
+            </div>
+            <div class="col-sm-6 text-right">
+                <a href="@Url.Action("PagoDetallesDescargar", "CuentasPagar", new { @numeroDocumento = @pago["BELNR"] })" class="btn btn-primary"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
+            </div>
+            <hr />
             <table id="pagoDetalle" class="table table-striped table-condensed table-bordered">
                 <thead>
-                    <tr>
-                        <th class="text-center">Referencia</th>
-                        <th class="text-center">Descripción</th>
-                        <th class="text-center">Importe</th>
-                        <th class="text-center">Ml</th>
-                        <th class="text-center">Fecha</th>
-                        <th class="text-center">Tipo de Movimiento</th>
-                    </tr>
+                <tr>
+                    <th class="text-center">Referencia</th>
+                    @*<th class="text-center">Descripción</th>*@
+                    <th class="text-center">Importe</th>
+                    <th class="text-center">Ml</th>
+                    @*<th class="text-center">Fecha</th>*@
+                    <th class="text-center">Tipo de Movimiento</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var registro in (ViewBag.pagos))
-                    {
-                        <tr>
-                            <td class="text-center">@registro.Referencia</td>
-                            <td class="text-center"></td>
-                            <td class="text-center">@registro.Importe</td>
-                            <td class="text-center">@registro.Ml</td>
-                            <td class="text-center">@registro.FechaBase</td>
-                            <td class="text-center">@registro.TipoMovimiento (Factura a Proveedor)</td>
-                        </tr>
-                    }
+                @foreach (var drPago in pagoDetalles)
+                {
+                    <tr>
+
+                        @{
+                            var tipo = "";
+                            switch (@drPago["BLART_COMPEN"].ToString())
+                            {
+                                case "4":
+                                    tipo = "Ingreso a proveedor";
+                                    break;
+                                case "10":
+                                    tipo = "Ingreso a proveedor";
+                                    break;
+                                case "21":
+                                    tipo = "Ingreso a proveedor";
+                                    break;
+                                case "23":
+                                    tipo = "Nota de Cargo";
+                                    break;
+                                case "AB":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "DA":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "DG":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "DZ":
+                                    tipo = "Pago de proveedor";
+                                    break;
+                                case "KA":
+                                    tipo = "Traslado de anticipos";
+                                    break;
+                                case "KG":
+                                    tipo = "Ingreso a proveedor";
+                                    break;
+                                case "KR":
+                                    tipo = "Devolución";
+                                    break;
+                                case "":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "RE":
+                                    tipo = "";
+                                    break;
+
+                                case "RV":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "SA":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "ZN":
+                                    tipo = "Anulación de documento";
+                                    break;
+                                case "ZP":
+                                    tipo = "Pago ";
+                                    break;
+
+
+                            }
+
+                        }
+                        <td class="text-center">@drPago["BELNR_COMPEN"]</td>
+                        @*<td class="text-center">@drPago["BLNRCOMPEN"]</td>*@
+                        <td class="text-center">@drPago["DMBTR_COMPEN"]</td>
+                        <td class="text-center">@drPago["WAERS_COMPEN"]</td>
+                        @*<td class="text-center">@drPago["WAERS_COMPEN"]</td>*@
+
+                        <td class="text-center">@tipo</td>
+
+                    </tr>
+                }
                 </tbody>
             </table>
-            <b>Total Pagado: </b> @total.ToString("n3")
+            <b>Total Pagado: </b> @pago["DMBTR"]
         </div>
     </div>
 </div>
@@ -62,17 +149,6 @@
 
         $(document).ready(function () {
 
-            $(document).on("click", ".ver-mensaje", function () {
-                Visualizar($(this).data('id'));
-                var titulo = $(this).data('titulo');
-                var contenido = $(this).data('contenido');
-                $('.modal-title').text(titulo);
-                $(".modal-body #mensaje-contenido").text(contenido);
-            });
-
-            $(document).on("click", ".descargar-mensaje", function () {
-                Visualizar($(this).data('id'));
-            });
 
             $('#pagoDetalle').DataTable({
                 "language": {
@@ -83,17 +159,7 @@
         });
 
 
-        function Visualizar(mensajeId) {
-            $.ajax({
-                url: '@Url.Action("Visualizar", "MensajesInstitucionales")',
-                data: { id: mensajeId },
-                type: 'POST',
-                success: function (data) {
-                    $("#mensaje-tr-id-" + mensajeId + " .leido-flag").text("SI");
-                    //alert(data);
-                }
-            });
-        }
+       
     </script>
 }
 

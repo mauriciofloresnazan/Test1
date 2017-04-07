@@ -1,12 +1,39 @@
 ﻿@using System.Data
-@using Microsoft.AspNet.Identity
+@using Ppgz.Repository
 @{
     ViewBag.Title = "Devoluciones";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var dtDevoluciones = (DataTable)ViewBag.Devoluciones;
+
+    var proveedor =  (proveedore)ViewBag.Proveedor;
 }
 
-<h2 class="form-signin-heading">Devoluciones</h2>
-<p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i> <i>En esta sección podrá gestionar los pagos que tiene con el Grupo Nazan.</i><strong>@HttpContext.Current.Session["razonsocial"] </strong>   <a href="@Url.Action("Index", "CuentasPagar")">Cambiar</a></p>
+<h2>Devoluciones</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i> 
+    <i>Devoluciones registradas</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "CuentasPagar")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
 
 <div class="panel panel-default">
     <div class="panel-heading">Devoluciones</div>
@@ -18,11 +45,24 @@
                     <th class="text-center">Folio de referencia</th>
                     <th class="text-center">Fecha</th>
                     <th class="text-center">Importe</th>
-                    <th class="text-center">Proveedor RFC</th>
-                    <th class="text-center">Proveedor Razón Social</th>
                     <th class="text-center"></th>
                 </tr>
                 </thead>
+                <tbody>
+                    @foreach (DataRow devolucion in dtDevoluciones.Rows)
+                    {
+                        <tr>
+                            <td class="text-center vert-align">@devolucion["XBLNR"]</td>
+                            <td class="text-center vert-align">@devolucion["BLDAT"]</td>
+                            <td class="text-center vert-align">@devolucion["DMBTR"]</td>XBLNR
+                            <td class="text-center vert-align">
+                                <a class="btn btn-primary btn-sm" href="@Url.Action("DevolucionesDetalle", "CuentasPagar", new { @numeroDocumento = @devolucion["BELNR"] })">
+                                    Ver Detalle
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
 
             </table>
         </div>

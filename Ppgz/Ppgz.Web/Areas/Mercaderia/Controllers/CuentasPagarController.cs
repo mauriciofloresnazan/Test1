@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -120,18 +120,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 return RedirectToAction("Index");
             Entities db = new Entities();
             string[] tiposMovimientos = new string[] { "10", "21", "4" };
-            /*var result = db.cuentasxpagars
-                .Where(
-                    c =>
-                        tiposMovimientos.Contains(c.TipoMovimiento) && c.Referencia == null &&
-                        c.ProveedoresId == id).ToList();
 
-            decimal total = 0;
-            foreach (var data in result)
-            {
-                total = total + decimal.Parse(data.Importe);
-            }
-            ViewBag.importeTotal = total.ToString("f2");*/
             ViewBag.proveedor = _proveedorManager.Find(id);
             return View();
         }
@@ -143,18 +132,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             string[] tiposMovimientos = new string[] { "10", "21", "4" };
 
-            /*
-            var result = db.cuentasxpagars
-                .Where(
-                    c =>
-                        tiposMovimientos.Contains(c.TipoMovimiento) && c.Referencia == null &&
-                        c.ProveedoresId == proveedorId).ToList();
 
-
-
-            ViewBag.data = result;
-            var total = result.Aggregate<cuentasxpagar, decimal>(0, (current, data) => current + decimal.Parse(data.Importe));
-            ViewBag.importeTotal = total.ToString("f2");*/
 
             ViewBag.proveedor = _proveedorManager.Find(proveedorId);
             return View();
@@ -253,6 +231,480 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             ExportExcel(dt, id.ToString());
 
         }
+
+    }
+}*/
+
+using System;
+using System.Data;
+using System.IO;
+using System.Linq;
+using System.Web.Mvc;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+using Ppgz.Repository;
+using Ppgz.Services;
+using Ppgz.Web.Infrastructure;
+
+namespace Ppgz.Web.Areas.Mercaderia.Controllers
+{
+    [Authorize]
+    [TerminosCondiciones]
+    public class CuentasPagarController : Controller
+    {
+
+        readonly CommonManager _commonManager = new CommonManager();
+        readonly ProveedorManager _proveedorManager = new ProveedorManager();
+
+        internal proveedore ProveedorCxp
+        {
+            get
+            {
+                if (System.Web.HttpContext.Current.Session["proveedorcxp"] != null)
+                {
+                    return (proveedore) System.Web.HttpContext.Current.Session["proveedorcxp"];
+                }
+                return null;
+            }
+            set
+            {
+                System.Web.HttpContext.Current.Session["proveedorcxp"] = value;
+            }
+        }
+        
+        // GET: /Mercaderia/CuentasPagar/
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+        public ActionResult Index()
+        {
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+            ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
+
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+        public ActionResult SeleccionarProveedor(int proveedorId)
+        {
+
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+            var proveedor = _proveedorManager.Find(proveedorId, cuenta.Id);
+
+            if (proveedor == null)
+            {
+                // TODO pasar a recurso
+                TempData["FlashError"] = "Proveedor incorrecto";
+                return RedirectToAction("Index");
+            }
+
+            ProveedorCxp = proveedor;
+            return RedirectToAction("Pagos");
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+        public ActionResult Pagos()
+        {
+            if (ProveedorCxp == null)
+            {
+                // TODO pasar a recurso
+                TempData["FlashError"] = "Proveedor incorrecto";
+                return RedirectToAction("Index");
+            }
+
+            var partidasManager = new PartidasManager();
+
+            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor);
+
+            ViewBag.Pagos = dsPagos.Tables["T_LISTA_PAGOS"];
+
+            ViewBag.Proveedor = ProveedorCxp;
+            
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+        public ActionResult PagosDetalle(string numeroDocumento)
+        {
+            if (ProveedorCxp == null)
+            {
+                // TODO pasar a recurso
+                TempData["FlashError"] = "Proveedor incorrecto";
+                return RedirectToAction("Index");
+            }
+
+            var partidasManager = new PartidasManager();
+
+            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor);
+
+            ViewBag.Pago = dsPagos.Tables["T_LISTA_PAGOS"]
+                .Select(string.Format("BELNR = '{0}'", numeroDocumento))[0];
+
+            ViewBag.PagoDetalles = dsPagos.Tables["T_PAGOS"]
+                .Select(string.Format("BELNR_PAGO = '{0}'", numeroDocumento));
+
+            ViewBag.Proveedor = ProveedorCxp;
+
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+        public void PagoDetallesDescargar(string numeroDocumento)
+        {
+            if (ProveedorCxp == null)
+            {
+                return;
+            }
+
+            var partidasManager = new PartidasManager();
+
+            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor);
+
+            var dt = dsPagos.Tables["T_PAGOS"]
+                .Select(string.Format("BELNR_PAGO = '{0}'", numeroDocumento)).CopyToDataTable();
+
+            var columnsNames = new[]
+            {        
+                "BELNR_COMPEN","DMBTR_COMPEN","WAERS_COMPEN",  "BLART_COMPEN"
+            };
+
+            foreach (DataRow dr in dt.Rows)
+            {
+
+
+                            var tipo = "";
+                            switch (dr["BLART_COMPEN"].ToString())
+                            {
+                                case "4":
+                                    tipo = "Ingreso a proveedor";
+                                    break;
+                                case "10":
+                                    tipo = "Ingreso a proveedor";
+                                    break;
+                                case "21":
+                                    tipo = "Ingreso a proveedor";
+                                    break;
+                                case "23":
+                                    tipo = "Nota de Cargo";
+                                    break;
+                                case "AB":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "DA":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "DG":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "DZ":
+                                    tipo = "Pago de proveedor";
+                                    break;
+                                case "KA":
+                                    tipo = "Traslado de anticipos";
+                                    break;
+                                case "KG":
+                                    tipo = "Ingreso a proveedor";
+                                    break;
+                                case "KR":
+                                    tipo = "Devolución";
+                                    break;
+                                case "":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "RE":
+                                    tipo = "";
+                                    break;
+
+                                case "RV":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "SA":
+                                    tipo = "Documento contable";
+                                    break;
+                                case "ZN":
+                                    tipo = "Anulación de documento";
+                                    break;
+                                case "ZP":
+                                    tipo = "Pago ";
+                                    break;
+
+
+                            }
+
+                dr["BLART_COMPEN"] = tipo;
+            }
+ 
+            for (var i = dt.Columns.Count - 1; i >= 0; i--)
+            {
+                if (!columnsNames.Contains(dt.Columns[i].ColumnName))
+                {
+                    dt.Columns.RemoveAt(i);
+                }
+            }
+            
+            dt.Columns["BELNR_COMPEN"].ColumnName = "Referencia";
+            dt.Columns["DMBTR_COMPEN"].ColumnName = "Importe";
+            dt.Columns["WAERS_COMPEN"].ColumnName = "Ml";
+            dt.Columns["BLART_COMPEN"].ColumnName = "Tipo de Movimiento";
+            
+            FileManager.ExportExcel(dt, numeroDocumento, HttpContext);
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+        public ActionResult Devoluciones()
+        {
+            if (ProveedorCxp == null)
+            {
+                // TODO pasar a recurso
+                TempData["FlashError"] = "Proveedor incorrecto";
+                return RedirectToAction("Index");
+            }
+
+            var partidasManager = new PartidasManager();
+
+            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor);
+
+            ViewBag.Devoluciones = dsDevoluciones.Tables["T_DEVOLUCIONES"];
+
+            ViewBag.Proveedor = ProveedorCxp;
+
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+        public ActionResult DevolucionesDetalle(string numeroDocumento)
+        {
+            if (ProveedorCxp == null)
+            {
+                // TODO pasar a recurso
+                TempData["FlashError"] = "Proveedor incorrecto";
+                return RedirectToAction("Index");
+            }
+
+            var partidasManager = new PartidasManager();
+
+            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor);
+
+            ViewBag.Devolucion = dsDevoluciones.Tables["T_DEVOLUCIONES"]
+                .Select(string.Format("BELNR = '{0}'", numeroDocumento))[0];
+
+            ViewBag.DevolucionDetalles = dsDevoluciones.Tables["T_MAT_DEV"]
+                .Select(string.Format("BELNR = '{0}' AND  BUZID = 'W'", numeroDocumento));
+
+            var drsImpuesto = dsDevoluciones.Tables["T_MAT_DEV"]
+                .Select(string.Format("BELNR = '{0}' AND  BUZID = 'T'", numeroDocumento));
+
+            Decimal impuesto = 0;
+            if (drsImpuesto.Any())
+            {
+                impuesto = drsImpuesto.Aggregate(
+                    impuesto, (current, dr) => current + decimal.Parse(dr["DMBTR"].ToString()));
+            }
+            ViewBag.Impuesto = impuesto;
+
+            ViewBag.Proveedor = ProveedorCxp;
+
+            return View();
+        }
+
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+        public void DevolucionesDetalleDescargar(string numeroDocumento)
+        {
+            if (ProveedorCxp == null)
+            {
+                return ;
+            }
+
+            var partidasManager = new PartidasManager();
+
+            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor);
+
+            var dt = dsDevoluciones.Tables["T_MAT_DEV"]
+                .Select(string.Format("BELNR = '{0}'", numeroDocumento)).CopyToDataTable();
+
+            var columnsNames = new[]
+            {        
+                "EBELN","MATNR","MAKTX","DMBTR","MENGE"
+            };
+
+            for (var i = dt.Rows.Count - 1; i >= 0; i--)
+            {
+                if (dt.Rows[i]["BUZID"].ToString() == "T")
+                {
+                    dt.Rows.RemoveAt(i);
+                }
+            }
+
+            for (var i = dt.Columns.Count - 1; i >= 0; i--)
+            {
+                if (!columnsNames.Contains(dt.Columns[i].ColumnName))
+                {
+                    dt.Columns.RemoveAt(i);
+                }
+            }
+
+ 
+                              
+            dt.Columns["EBELN"].ColumnName = "Documento";
+            dt.Columns["MATNR"].ColumnName = "Artículo";
+            dt.Columns["MAKTX"].ColumnName = "Descripción";
+            dt.Columns["DMBTR"].ColumnName = "Total";
+            dt.Columns["MENGE"].ColumnName = "Cantidad";
+
+            FileManager.ExportExcel(dt, numeroDocumento, HttpContext);
+        }
+        
+        
+        
+        
+        
+        
+        
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+        public ActionResult PagosPendientes()
+        {
+            if (ProveedorCxp == null)
+            {
+                // TODO pasar a recurso
+                TempData["FlashError"] = "Proveedor incorrecto";
+                return RedirectToAction("Index");
+            }
+
+            var partidasManager = new PartidasManager();
+
+            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor);
+
+            ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
+
+            ViewBag.Proveedor = ProveedorCxp;
+
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+        public ActionResult PagosPendientesDetalle(int proveedorId)
+        {
+            if (ProveedorCxp == null)
+            {
+                // TODO pasar a recurso
+                TempData["FlashError"] = "Proveedor incorrecto";
+                return RedirectToAction("Index");
+            }
+
+            var partidasManager = new PartidasManager();
+
+            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor);
+
+            ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
+
+            ViewBag.Proveedor = ProveedorCxp;
+
+            return View();
+        }
+        
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+        public void PagosPendientesDescargar()
+        {
+            if (ProveedorCxp == null)
+            {
+                return ;
+            }
+
+            var partidasManager = new PartidasManager();
+
+            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor);
+
+            var dt = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
+
+            var columnsNames = new[]
+            {        
+                "BELNR","DMBTR","WAERS","BLART","FECHA_PAGO"
+            };
+
+            foreach (DataRow dr in dt.Rows)
+            {
+
+
+                var tipo = "";
+                switch (dr["BLART"].ToString())
+                {
+                    case "4":
+                        tipo = "Ingreso a proveedor";
+                        break;
+                    case "10":
+                        tipo = "Ingreso a proveedor";
+                        break;
+                    case "21":
+                        tipo = "Ingreso a proveedor";
+                        break;
+                    case "23":
+                        tipo = "Nota de Cargo";
+                        break;
+                    case "AB":
+                        tipo = "Documento contable";
+                        break;
+                    case "DA":
+                        tipo = "Documento contable";
+                        break;
+                    case "DG":
+                        tipo = "Documento contable";
+                        break;
+                    case "DZ":
+                        tipo = "Pago de proveedor";
+                        break;
+                    case "KA":
+                        tipo = "Traslado de anticipos";
+                        break;
+                    case "KG":
+                        tipo = "Ingreso a proveedor";
+                        break;
+                    case "KR":
+                        tipo = "Devolución";
+                        break;
+                    case "":
+                        tipo = "Documento contable";
+                        break;
+                    case "RE":
+                        tipo = "";
+                        break;
+
+                    case "RV":
+                        tipo = "Documento contable";
+                        break;
+                    case "SA":
+                        tipo = "Documento contable";
+                        break;
+                    case "ZN":
+                        tipo = "Anulación de documento";
+                        break;
+                    case "ZP":
+                        tipo = "Pago ";
+                        break;
+
+
+                }
+
+                dr["BLART"] = tipo;
+            }
+
+            for (var i = dt.Columns.Count - 1; i >= 0; i--)
+            {
+                if (!columnsNames.Contains(dt.Columns[i].ColumnName))
+                {
+                    dt.Columns.RemoveAt(i);
+                }
+            }
+
+            dt.Columns["BELNR"].ColumnName = "Referencia";
+            dt.Columns["DMBTR"].ColumnName = "Importe";
+            dt.Columns["WAERS"].ColumnName = "Ml";
+            dt.Columns["BLART"].ColumnName = "Tipo de Movimiento";
+
+            FileManager.ExportExcel(dt, ProveedorCxp.NumeroProveedor, HttpContext);
+        }
+      
 
     }
 }
