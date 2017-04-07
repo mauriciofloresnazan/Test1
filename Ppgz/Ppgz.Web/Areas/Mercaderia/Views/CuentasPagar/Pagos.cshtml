@@ -1,4 +1,5 @@
 ﻿@using System.Data
+@using System.Globalization
 @using Ppgz.Repository
 @{
     ViewBag.Title = "Gestión de Pagos";
@@ -8,12 +9,11 @@
     var proveedor = (proveedore)ViewBag.Proveedor;
 }
 
-<h2 class="form-signin-heading">Gestión de Pagos</h2>
+<h2>Gestión de Pagos</h2>
 <p class="page-description-title">
     <i class="fa fa-calculator" aria-hidden="true"></i> 
     <i>En esta sección podrá gestionar ver los pagos que tiene del Grupo Nazan.</i>
 </p>
-
 <div class="panel panel-default">
     <div class="panel-heading">Proveedor Seleccionado</div>
     <div class="panel-body">
@@ -51,12 +51,16 @@
                 <tbody>
                     @foreach (DataRow pago in pagos.Rows)
                     {
+                        var fecha = DateTime.ParseExact(
+                            pago["FECHA_PAGO"].ToString(),
+                            "yyyyMMdd",
+                            CultureInfo.InvariantCulture);
                         <tr>
                             <td class="text-center vert-align">@pago["BELNR"]</td>
-                            <td class="text-center vert-align">@pago["FECHA_PAGO"]</td>
+                            <td class="text-center vert-align">@fecha.ToString("dd/MM/yyyy")</td>
                             <td class="text-center vert-align">@pago["DMBTR"]</td>
                             <td class="text-center vert-align">
-                                <a class="btn btn-primary btn-sm" href="@Url.Action("PagosDetalle", "CuentasPagar", new { @numeroDocumento = @pago["BELNR"] })">
+                                <a class="btn btn-primary btn-xs" href="@Url.Action("PagosDetalle", "CuentasPagar", new { @numeroDocumento = @pago["BELNR"] })">
                                     Ver Detalle
                                 </a>
                             </td>

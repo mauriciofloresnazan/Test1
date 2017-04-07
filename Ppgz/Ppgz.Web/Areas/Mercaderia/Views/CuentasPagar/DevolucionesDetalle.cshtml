@@ -23,6 +23,7 @@
     <i class="fa fa-calculator" aria-hidden="true"></i>
     <i>Detalles de la devolución</i>
 </p>
+<a class="btn btn-link" href="@Url.Action("Devoluciones", "CuentasPagar")"> <i class="fa fa-arrow-left" aria-hidden="true"></i> Ver otra devolución</a>
 <div class="panel panel-default">
     <div class="panel-heading">Proveedor Seleccionado</div>
     <div class="panel-body">
@@ -36,18 +37,20 @@
                 <div>@proveedor.Nombre1</div>
             </div>
             <div class="col-sm-2">
-                <a href="@Url.Action("Index", "CuentasPagar")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+                <a href="@Url.Action("Index", "CuentasPagar")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i> Cambiar</a>
             </div>
         </div>
 
     </div>
 </div>
+
 <div class="panel panel-default">
     <div class="panel-heading">Gestión de Devolución</div>
     <div class="panel-body">
         <div class="col-md-12">
             <div class="col-sm-6">
                 <b>Folio de Referencia : </b> @drDevolucion["XBLNR"]
+                
             </div>
             <div class="col-sm-6 text-right">
                 <a href="@Url.Action("DevolucionesDetalleDescargar", "CuentasPagar", new { @numeroDocumento = @drDevolucion["BELNR"] })" class="btn btn-primary"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>

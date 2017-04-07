@@ -1,4 +1,5 @@
 ﻿@using System.Data
+@using System.Globalization
 @using Microsoft.AspNet.Identity
 @using Ppgz.Repository
 @{
@@ -63,6 +64,10 @@
                 <tbody>
                 @foreach (DataRow drPago in pagosPendientes.Rows)
                 {
+                    var fecha = DateTime.ParseExact(
+                        drPago["BLDAT"].ToString(),
+                        "yyyyMMdd",
+                        CultureInfo.InvariantCulture);
                     <tr>
 
                         @{
@@ -130,7 +135,7 @@
                         @*<td class="text-center">@drPago["BLNRCOMPEN"]</td>*@
                         <td class="text-center">@drPago["DMBTR"]</td>
                         <td class="text-center">@drPago["WAERS"]</td>
-                        <td class="text-center">@drPago["FECHA_PAGO"]</td>
+                        <td class="text-center">@fecha.ToString("dd/MM/yyyyy")</td>
                         <td class="text-center">@tipo</td>
 
                     </tr>

@@ -1,4 +1,5 @@
 ﻿@using System.Data
+@using System.Globalization
 @using Ppgz.Repository
 @{
     ViewBag.Title = "Devoluciones";
@@ -51,12 +52,18 @@
                 <tbody>
                     @foreach (DataRow devolucion in dtDevoluciones.Rows)
                     {
+                        
+                        var fecha = DateTime.ParseExact(
+                            devolucion["BLDAT"].ToString(),
+                            "yyyyMMdd",
+                            CultureInfo.InvariantCulture);
+                       
                         <tr>
                             <td class="text-center vert-align">@devolucion["XBLNR"]</td>
-                            <td class="text-center vert-align">@devolucion["BLDAT"]</td>
-                            <td class="text-center vert-align">@devolucion["DMBTR"]</td>XBLNR
+                            <td class="text-center vert-align">@fecha.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center vert-align">@devolucion["DMBTR"]</td>
                             <td class="text-center vert-align">
-                                <a class="btn btn-primary btn-sm" href="@Url.Action("DevolucionesDetalle", "CuentasPagar", new { @numeroDocumento = @devolucion["BELNR"] })">
+                                <a class="btn btn-primary btn-xs" href="@Url.Action("DevolucionesDetalle", "CuentasPagar", new { @numeroDocumento = @devolucion["BELNR"] })">
                                     Ver Detalle
                                 </a>
                             </td>
