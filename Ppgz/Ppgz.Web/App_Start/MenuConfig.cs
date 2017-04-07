@@ -114,7 +114,8 @@ namespace Ppgz.Web
                 //"|Reportes|||fa fa-file-pdf-o|Nazan",
                 "ADMINISTRARUSUARIOSNAZAN|Administración de Usuarios|Index|AdministrarUsuariosNazan|fa fa fa-users|Nazan",
                 "ADMINISTRARPERFILESNAZAN|Administración de Perfiles|Index|AdministrarPerfilesNazan|fa fa fa-road|Nazan",
-                "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores|Index|AdministrarProveedores|fa fa-address-book-o|Nazan"
+                "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores|Index|AdministrarProveedores|fa fa-address-book-o|Nazan",
+                "ADMINISTRARNIVELSERVICIONAZAN|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan"
             };
             return menuLista;
         }

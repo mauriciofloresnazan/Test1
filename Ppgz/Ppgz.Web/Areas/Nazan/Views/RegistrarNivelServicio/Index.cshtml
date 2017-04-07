@@ -1,44 +1,43 @@
 ﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    
 }
 
-<h2 class="form-signin-heading">Registrar Nivel de Servicio</h2>
+<h2 class="form-signin-heading">Actualizar Nivel de Servicio</h2>
 <p class="page-description-title"><i class="fa fa-info" aria-hidden="true"></i> <i>Actualizar Nivel de Servicio</i></p>
 
 
+
 <div class="panel panel-default">
-    <div class="panel-heading">Cargar desde Excel</div>
+    <div class="panel-heading">Actualizar</div>
     <div class="panel-body">
-       
-        @using (Html.BeginForm("CargarExcel", "RegistrarNivelServicio", new {ViewBag.ReturnUrl}, FormMethod.Post, new {@class = "form-horizontal", @id = "form", role = "form", enctype = "multipart/form-data"}))
+
+        <h4><strong>Ultima Actualizacion: </strong>@ViewBag.UltimaActualizacion</h4>
+        <hr/>
+        @using (Html.BeginForm("CargarExcel", "RegistrarNivelServicio", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form", enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
 
             @Html.ValidationSummary(true)
-            <div class="form-group">
-                <p class="page-description-title"><i class="" aria-hidden="true"></i> <i>Información Actual</i>
-                </p>
-                <div class="form-group">
-                    <label class="col-xs-4 control-label">Ultima Actualización</label>
-                    <div class="col-xs-8">
-                        <input type="text" class="form-control" id="ultima-actualizacion" placeholder="Diciembre 2012">
-                    </div>
-                </div>
-            </div>
 
-            <div class="form-group">
-                <p class="page-description-title"><i class="" aria-hidden="true"></i> <i>Nuevo Registro</i>
-                </p>
-                <label class="col-xs-4 control-label">Cargar Excel</label>
-                <input type="file" style="padding: 20px;" name="cargarexcel" id="cargarexcel">
-            </div>
-            <div class="form-group">
-                <a class="btn btn-link" href="@Url.Action("Descargar", "RegistrarNivelServicio")">
-                    <i class="fa fa-arrow-down" aria-hidden="true"></i> Descargar Plantilla
-                </a>
-            </div>
-            <div class="form-group">
+
+
+
+    <div class="form-group">
+        <label class="control-label col-sm-3">Actualizar desde Excel</label>
+        <div class="col-sm-7">
+            <a class="btn btn-link" href="@Url.Action("Descargar", "RegistrarNivelServicio")">
+                <i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar Plantilla
+            </a>
+            <input type="file" name="cargarexcel" id="cargarexcel">
+        </div>
+
+    </div>
+                    <hr />
+
+                        <div class="form-group">
                 <div class="col-sm-offset-3 col-sm-7">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-upload" aria-hidden="true"></i> Cargar</button>
                     <a class="btn btn-default" href="@Url.Action("Index", "RegistrarNivelServicio")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
@@ -51,7 +50,7 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
         function removerValidaciones() {
             removerValidacionMensajePdf();
@@ -71,6 +70,5 @@
             $("#pdf-panel .field-validation-error").html("");
         }
 
-</script>
-
+    </script>
 }

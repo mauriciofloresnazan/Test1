@@ -128,5 +128,10 @@ namespace Ppgz.Services
             
         }
 
+        public niveleseervicio LastNivleServicio()
+        {
+            return _db.niveleseervicios.OrderBy(n=> n.Fecha).FirstOrDefault();
+        }
+
     }
 }
