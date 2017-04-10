@@ -34,23 +34,6 @@ namespace Ppgz.Web.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
-
-            /*var provider = new DpapiDataProtectionProvider("Sample");
-
-            UserManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(
-                provider.Create("EmailConfirmation"));
-
-            var user = UserManager.FindByEmail("juandelgadofreelancer@gmail.com");
-            var code = UserManager.GeneratePasswordResetToken(user.Id);*/
-/*            var callbackUrl = Url.Action("ResetPassword", "Account",
-        new { UserId = user.Id, code = code }, protocol: Request.Url.Scheme);
-            UserManager.SendEmailAsync(user.Id.ToString(), "Reset Password",
-       "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");*/
-
-
-            // If we got this far, something failed, redisplay form
-            //return View(model);
-
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -75,7 +58,6 @@ namespace Ppgz.Web.Controllers
                 var usuario = await UserManager.FindByNameAsync(model.UserName);
                 if (usuario != null)
                 {
-                    //UserManager.SetLockoutEnabled(usuario.Id, true);
 
                     if (await UserManager.IsLockedOutAsync(usuario.Id))
                     {
@@ -120,28 +102,15 @@ namespace Ppgz.Web.Controllers
                     ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
                     ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
                     e.ToString(), Request);
-
                 CommonManager.WriteAppLog(log, TipoMensaje.Error);
-
             }
-
-
-
 
             ModelState.AddModelError("", CommonMensajesResource.ERROR_Identity_UsuarioPassword);
 
             return View(model);
         }
         
-
-   
-
-
-
-
-
-
-        //
+       /* //
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -362,7 +331,7 @@ namespace Ppgz.Web.Controllers
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
-
+        */
         //
         // POST: /Account/LogOff
         [HttpPost]
@@ -372,7 +341,7 @@ namespace Ppgz.Web.Controllers
             AuthenticationManager.SignOut();
             return RedirectToAction("Index", "Home");
         }
-
+        /*
         //
         // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
@@ -388,7 +357,7 @@ namespace Ppgz.Web.Controllers
             ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
             return (ActionResult)PartialView("_RemoveAccountPartial", linkedAccounts);
         }
-
+        */
         protected override void Dispose(bool disposing)
         {
             if (disposing && UserManager != null)
@@ -462,12 +431,6 @@ namespace Ppgz.Web.Controllers
         public async Task<ActionResult> SendMail(ApplicationUser user, string type)
         {
 
-            // Para obtener más información sobre cómo habilitar la confirmación de cuenta y el restablecimiento de contraseña, visite http://go.microsoft.com/fwlink/?LinkID=320771
-            // Enviar correo electrónico con este vínculo
-
-
-
-
             var provider = new DpapiDataProtectionProvider("Sample");
 
             UserManager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(
@@ -479,30 +442,54 @@ namespace Ppgz.Web.Controllers
 
             if (type == "resetpass")
             {
-                System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
-                    new System.Net.Mail.MailAddress(ConfigurationManager.AppSettings["Mail"].ToString(), "Restablecer contraseña Nazan"),
-                    new System.Net.Mail.MailAddress(user.Email));
-                m.Subject = "Restablecer contraseña Nazan";
-                m.Body = string.Format("Querido {0}<BR/>Por favor dar click al link para cambiar su contraseña: <a href=\"{1}\" title=\"Recuperar Contraseña\">{1}</a>", user.UserName, Url.Action("ResetPassword", "Account", new { token = user.Id, code = code, email = user.Email }, Request.Url.Scheme));
-                m.IsBodyHtml = true;
-                System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["Smtp"].ToString());
-                smtp.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["Mail"].ToString(), ConfigurationManager.AppSettings["MailPass"].ToString());
-                smtp.EnableSsl = true;
-                smtp.Port = 587;
+                var m = new System.Net.Mail.MailMessage(
+                    new System.Net.Mail.MailAddress(ConfigurationManager.AppSettings["Mail"],
+                        "Restablecer contraseña Nazan"),
+                    new System.Net.Mail.MailAddress(user.Email))
+                {
+                    Subject = "Restablecer contraseña Nazan",
+                    Body =
+                        string.Format(
+                            "Querido {0}<BR/>Por favor dar click al link para cambiar su contraseña: <a href=\"{1}\" title=\"Recuperar Contraseña\">{1}</a>",
+                            user.UserName,
+                            Url.Action("ResetPassword", "Account",
+                                new {token = user.Id, code = code, email = user.Email}, Request.Url.Scheme)),
+                    IsBodyHtml = true
+                };
+                var smtp = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["Smtp"])
+                {
+                    Credentials =
+                        new System.Net.NetworkCredential(ConfigurationManager.AppSettings["Mail"],
+                            ConfigurationManager.AppSettings["MailPass"]),
+                    EnableSsl = true,
+                    Port = 587
+                };
                 smtp.Send(m);
             }
             if (type == "register")
             {
-                System.Net.Mail.MailMessage m = new System.Net.Mail.MailMessage(
-                    new System.Net.Mail.MailAddress(ConfigurationManager.AppSettings["Mail"].ToString(), "Registro Nazan"),
-                    new System.Net.Mail.MailAddress(user.Email));
-                m.Subject = "Confirmar cuenta Nazan";
-                m.Body = string.Format("Querido {0}<BR/> Gracias por registrarse, Por favor dar click en el link para confirmar su correo electronico: <a href =\"{1}\"title =\"Confirmar correo\">{1}</a>", user.UserName, Url.Action("ConfirmEmail", "Account", new { token = user.Id, email = user.Email }, Request.Url.Scheme));
-                m.IsBodyHtml = true;
-                System.Net.Mail.SmtpClient smtp = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["Smtp"].ToString());
-                smtp.Credentials = new System.Net.NetworkCredential(ConfigurationManager.AppSettings["Mail"].ToString(), ConfigurationManager.AppSettings["MailPass"].ToString());
-                smtp.EnableSsl = true;
-                smtp.Port = 587;
+                var m = new System.Net.Mail.MailMessage(
+                    new System.Net.Mail.MailAddress(ConfigurationManager.AppSettings["Mail"].ToString(),
+                        "Registro Nazan"),
+                    new System.Net.Mail.MailAddress(user.Email))
+                {
+                    Subject = "Confirmar cuenta Nazan",
+                    Body =
+                        string.Format(
+                            "Querido {0}<BR/> Gracias por registrarse, Por favor dar click en el link para confirmar su correo electronico: <a href =\"{1}\"title =\"Confirmar correo\">{1}</a>",
+                            user.UserName,
+                            Url.Action("ConfirmEmail", "Account", new {token = user.Id, email = user.Email},
+                                Request.Url.Scheme)),
+                    IsBodyHtml = true
+                };
+                var smtp = new System.Net.Mail.SmtpClient(ConfigurationManager.AppSettings["Smtp"].ToString())
+                {
+                    Credentials =
+                        new System.Net.NetworkCredential(ConfigurationManager.AppSettings["Mail"].ToString(),
+                            ConfigurationManager.AppSettings["MailPass"].ToString()),
+                    EnableSsl = true,
+                    Port = 587
+                };
                 smtp.Send(m);
             }
 
