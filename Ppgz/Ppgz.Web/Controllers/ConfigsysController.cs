@@ -13,7 +13,7 @@ namespace Ppgz.Web.Controllers
         //
         // GET: /Configsys/
         public ActionResult Index()
-        {
+        { 
             const string sql = @"SELECT id, Clave, Valor, Habilitado, Descripcion FROM configuraciones";
 
             var result = Db.GetDataTable(sql);
