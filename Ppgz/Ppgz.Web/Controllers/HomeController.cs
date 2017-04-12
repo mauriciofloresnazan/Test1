@@ -69,6 +69,12 @@ namespace Ppgz.Web.Controllers
             Response.Write("DEBE ACEPTAR");
         }
 
+        public void TestMail()
+        {
+            var commonManager = new CommonManager();
+            commonManager.SendHtmlMail(
+                "Prueba","hola<br>juan<br>godoy","g.juanch14@gmail.com");
+        }
 
     }
 }
