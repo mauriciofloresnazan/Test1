@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure;
@@ -32,7 +35,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[ValidateAntiForgeryToken]
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		
-		public ActionResult Registrar(CuentaViewModel model)
+		public async Task<ActionResult> Registrar(CuentaViewModel model)
 		{
             if (!ModelState.IsValid) return View(model);
             try
@@ -47,6 +50,24 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                                     model.ResponsableEmail,
                                     model.ResponsableTelefono,
                                     model.ResponsablePassword);
+          
+                var commonManager = new CommonManager();
+
+                //TODO pasar al manejador
+                var db = new Entities();
+                var confEnlace = db.configuraciones.Single(
+                    c=> c.Clave == "site.url");
+
+                 await commonManager.SendHtmlMail(
+                    "Registro de Nueva Cuenta - Portal de Proveedores del Grupo Nazan",
+                    "Se ha registrado una cuenta de proveedores en el portal.<br>" +
+                    "Puede ingresar en el portal con los siguientes Datos: <br> " +
+                    "<strong>Usuario:</strong> " + model.UserName + "<br> " +
+                    "<strong>Contraseña:</strong> " + model.ResponsablePassword + "<br> " +
+                    "<strong>Enlace:</strong> <a href='" + confEnlace.Valor + "'>" + confEnlace.Valor + "</a><br>" +
+                    "Al ingresar por primera vez debe cambiar su contraseña.",
+                    model.ResponsableEmail
+                    );
 
                 TempData["FlashSuccess"] = MensajesResource.INFO_Cuenta_CreadaCorrectamente;
                 return RedirectToAction("Index");
