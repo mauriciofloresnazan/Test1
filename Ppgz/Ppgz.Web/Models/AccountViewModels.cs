@@ -17,7 +17,7 @@ namespace Ppgz.Web.Models
         public string OldPassword { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]       
         [DataType(DataType.Password)]
         [Display(Name = "Nueva Contraseña")]
         public string NewPassword { get; set; }
@@ -51,11 +51,14 @@ namespace Ppgz.Web.Models
 
         [Required]
         [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
+        [RegularExpression(
+            "^[a-zA-Z0-9$&+,:;=?@#|'<>.^*()%!-]+$",
+           ErrorMessage = "No Debe contener espacios, solo letras, números o caracteres especiales, sin importar minusculas y mayusculas.")]
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
 
-        [DataType(DataType.Password)]
+        [DataType(DataType.Password)]      
         [Display(Name = "Confirmar Contraseña")]
         [Compare("Password", ErrorMessage = "Contraseña y confirmación no coinciden.")]
         public string ConfirmPassword { get; set; }
@@ -78,6 +81,9 @@ namespace Ppgz.Web.Models
 
         [Required]
         [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
+        [RegularExpression(
+            "^[a-zA-Z0-9$&+,:;=?@#|'<>.^*()%!-]+$",
+            ErrorMessage = "No Debe contener espacios, solo letras, números o caracteres especiales, sin importar minusculas y mayusculas.")]
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
