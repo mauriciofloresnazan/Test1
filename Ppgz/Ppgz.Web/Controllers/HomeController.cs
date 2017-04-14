@@ -10,6 +10,7 @@ using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 using Ppgz.Web.Models;
+using System.Threading.Tasks;
 
 namespace Ppgz.Web.Controllers
 {
@@ -69,11 +70,12 @@ namespace Ppgz.Web.Controllers
             Response.Write("DEBE ACEPTAR");
         }
 
-        public void TestMail()
+        public async Task<ActionResult> TestMail()
         {
             var commonManager = new CommonManager();
-            commonManager.SendHtmlMail(
-                "Prueba","hola<br>juan<br>godoy","g.juanch14@gmail.com");
+            await commonManager.SendHtmlMail(
+                "Prueba","hola<br>juan<br>godoy async","g.juanch14@gmail.com");
+            return  Content("Correo enviado correctamente");
         }
 
     }
