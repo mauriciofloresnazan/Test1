@@ -23,7 +23,7 @@ namespace Ppgz.Web.Controllers
             var result = Db.GetDataTable(sql);
 
             ViewBag.Resultado = result;
-
+             
             return View(); 
         }
 
