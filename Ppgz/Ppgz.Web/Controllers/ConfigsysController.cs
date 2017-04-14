@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,6 +11,9 @@ namespace Ppgz.Web.Controllers
 {
     public class ConfigsysController : Controller
     {
+
+        private readonly Entities _db = new Entities();
+
         //
         // GET: /Configsys/
         public ActionResult Index()
@@ -20,7 +24,7 @@ namespace Ppgz.Web.Controllers
 
             ViewBag.Resultado = result;
 
-            return View();
+            return View(); 
         }
 
         public class estConfig
@@ -38,10 +42,21 @@ namespace Ppgz.Web.Controllers
         public ActionResult editarConfig(estConfig Object)
         {
 
+            int Res = 0;
             
+            try{
 
+                const string sql = @"UPDATE configuraciones SET Clave = {0}, Valor = {1}, Descripcion = {2}, Habilitado = {3} WHERE  id = {4}";
+                _db.Database.ExecuteSqlCommand(sql, Object.Clave,Object.Valor,Object.Descripcion,Object.Habilitado, Object.id);
+                _db.SaveChanges();
 
-            int Res = 1;
+               Res = 1;
+
+            } catch (Exception) {
+            
+                Res = 0;
+
+            }
 
             return Json(Res, JsonRequestBehavior.DenyGet);
 

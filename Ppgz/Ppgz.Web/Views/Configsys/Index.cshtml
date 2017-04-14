@@ -109,12 +109,12 @@
                     @if ( Convert.ToInt32(vlHabilitado) == 1)
                     {
 
-                        <td class="text-center"><i class="fa fa-check-circle-o" aria-hidden="true"></i></td>
+                        <td class="text-center"><i class="fa fa-check-circle-o " style="font-size: 18px;" aria-hidden="true"></i></td>
                     }
                     else
                     {
 
-                        <td class="text-center"><i class="fa fa-circle-o" aria-hidden="true"></i></td>
+                        <td class="text-center"><i class="fa fa-circle-o " style="font-size: 18px;" aria-hidden="true"></i></td>
                     }
 
                     <td class="text-center"><a href="javascript:;" onclick="getValores('@dtConfig["id"]','@dtConfig["Clave"]','@dtConfig["Valor"]','@dtConfig["Descripcion"]','@Convert.ToInt32(vlHabilitado)')" class=" btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Editar</a></td>
@@ -190,7 +190,7 @@
                 dataType: "json",
                 beforeSend: function () {
                     //console.log("La Nombre del Registro: " + vlSuceso.NombreSuceso);
-                    msgProcesando.show();
+                    //msgProcesando.show();
                 },
                 success: function (response) {
                     var arr = response;
@@ -198,8 +198,9 @@
 
                     if (response == 1) {
                         msgProcesando.hide();
-                        msgExito();
+                        //msgExito();
                         Inicio();
+                        window.location = '/Configsys/Index';
                     } else {
                         
                         msgProcesando.hide();
