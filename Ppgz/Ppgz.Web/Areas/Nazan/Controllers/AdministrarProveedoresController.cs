@@ -34,13 +34,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
-		
-		public async Task<ActionResult> Registrar(CuentaViewModel model)
+
+        public async Task<ActionResult> Registrar(CuentaViewModel model)
 		{
             if (!ModelState.IsValid) return View(model);
             try
             {
-                _cuentaManager.Crear(
+                _cuentaManager.Crear(         
                                     model.TipoCuenta,
                                     model.NombreCuenta,
                                     model.UserName,
@@ -49,25 +49,26 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                                     model.ResponsableCargo,
                                     model.ResponsableEmail,
                                     model.ResponsableTelefono,
-                                    model.ResponsablePassword);
-          
+                                    model.ResponsablePassword,
+                                    model.Especial);
+
                 var commonManager = new CommonManager();
 
                 //TODO pasar al manejador
                 var db = new Entities();
                 var confEnlace = db.configuraciones.Single(
-                    c=> c.Clave == "site.url");
+                    c => c.Clave == "site.url");
 
-                 await commonManager.SendHtmlMail(
-                    "Registro de Nueva Cuenta - Portal de Proveedores del Grupo Nazan",
-                    "Se ha registrado una cuenta de proveedores en el portal.<br>" +
-                    "Puede ingresar en el portal con los siguientes Datos: <br> " +
-                    "<strong>Usuario:</strong> " + model.UserName + "<br> " +
-                    "<strong>Contraseña:</strong> " + model.ResponsablePassword + "<br> " +
-                    "<strong>Enlace:</strong> <a href='" + confEnlace.Valor + "'>" + confEnlace.Valor + "</a><br>" +
-                    "Al ingresar por primera vez debe cambiar su contraseña.",
-                    model.ResponsableEmail
-                    );
+                await commonManager.SendHtmlMail(
+                   "Registro de Nueva Cuenta - Portal de Proveedores del Grupo Nazan",
+                   "Se ha registrado una cuenta de proveedores en el portal.<br>" +
+                   "Puede ingresar en el portal con los siguientes Datos: <br> " +
+                   "<strong>Usuario:</strong> " + model.UserName + "<br> " +
+                   "<strong>Contraseña:</strong> " + model.ResponsablePassword + "<br> " +
+                   "<strong>Enlace:</strong> <a href='" + confEnlace.Valor + "'>" + confEnlace.Valor + "</a><br>" +
+                   "Al ingresar por primera vez debe cambiar su contraseña.",
+                   model.ResponsableEmail
+                   );
 
                 TempData["FlashSuccess"] = MensajesResource.INFO_Cuenta_CreadaCorrectamente;
                 return RedirectToAction("Index");
@@ -106,7 +107,32 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			return View();
 		}
 
-		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        public JsonResult EstablecerCuentaEspecial(int cuentaId, bool esEspecial)
+        { 
+            try
+            {
+                _cuentaManager.EstablecerCuentaEspecial(
+                    cuentaId, esEspecial);
+
+                return Json("success");
+            }
+
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                return Json(e.Message);
+            }
+        }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public JsonResult BuscarProveedor(string numeroProveedor)
 		{
 		    try

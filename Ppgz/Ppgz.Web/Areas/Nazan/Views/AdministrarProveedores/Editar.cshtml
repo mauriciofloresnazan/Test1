@@ -6,40 +6,63 @@
     var usuarioMaestro = (AspNetUser)@ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro;
 }
 
+<link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
 <div>
-    <h2>Editar Cuenta de Proveedor <a class="btn btn-default" href="@Url.Action("Index", "AdministrarProveedores")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a></h2>
-    <p class="page-description-title">
-        <i class="fa fa-info" aria-hidden="true"></i> <i>Información de la cuenta</i>
-    </p>
+    <form id="editar-form" method="POST">
+        <h2>
+            Editar Cuenta de Proveedor
+            <a class="btn btn-default" href="@Url.Action("Index", "AdministrarProveedores")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+        </h2>
+        <p class="page-description-title">
+            <i class="fa fa-info" aria-hidden="true"></i> <i>Información de la cuenta</i>
+        </p>
 
-    <div class="col-sm-6">
-        <div class="row">
-            <div class="col-sm-4">
-                <strong>Id</strong>
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Id</strong>
+                </div>
+                <div class="col-sm-8"><span style="color: #66aaaa;">@cuenta.Id</span></div>
             </div>
-            <div class=" col-sm-8" style=""><span style="color: #66aaaa;">@cuenta.Id</span></div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Nombre</strong>
+                </div>
+                <div class="col-sm-8">@cuenta.NombreCuenta</div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Es Especial</strong>
+                </div>
+                <div class="col-sm-8">
+                    @{
+                        var check = "";
+                        if (@cuenta.EsEspecial)
+                        {
+                            check = "checked";
+                        }
+                        
+                    }
+                    <input type="checkbox" @check name="especial-check" id="especial-check" data-toggle="toggle" data-size="small" data-on="SI" data-off="NO" />
+                </div>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Responsable</strong>
+                </div>
+                <div class="col-sm-8">
+                    <p>
+                        @(usuarioMaestro.Nombre + ' ' + usuarioMaestro.Apellido)<i>
+                        </i><br>
+                        @usuarioMaestro.Email
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="row">
-            <div class="col-sm-4">
-                <strong>Nombre</strong>
-            </div>
-            <div class="col-sm-8">@cuenta.NombreCuenta</div>
-        </div>
-        <hr />
-        <div class="row">
-            <div class="col-sm-4">
-                <strong>Responsable</strong>
-            </div>
-            <div class="col-sm-8">
-                <p>
-                    @(usuarioMaestro.Nombre + ' ' + usuarioMaestro.Apellido)<i>
-                    </i><br>
-                    @usuarioMaestro.Email
-                </p>
-            </div>
-        </div>
-    </div>
+    </form>
 </div>
+<br/>
 <div class="clearfix"></div>
 <div class="panel panel-default">
     <div class="panel-heading">Proveedores SAP asociados a la cuenta</div>
@@ -133,6 +156,39 @@
     </div>
 </div>
 
+
+<div class="modal fade bd-example-modal-lg" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="EditarModalError" tabindex="-1" role="dialog" aria-labelledby="myModalLabelEditar">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <strong>Error Editando Proveedor</strong>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabelEditar"><span id="mensaje-titulo-editar"></span></h4>
+            </div>
+            <div class="modal-body">
+                <p id="editarModalError-content"></p>
+
+            </div>
+        </div>
+    </div>
+</div>
 <div class="modal fade" id="buscarModalError" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -149,11 +205,14 @@
     </div>
 </div>
 @section Scripts {
+
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
 
     <script type="text/javascript">
 
         var cuentaId = "@ViewBag.cuentaConUsuarioMaestro.Cuenta.Id";
+
 
         $(function () {
             $("#buscar-form").submit(function (e) {
@@ -165,6 +224,58 @@
         var urlBuscarProveedor = "@Url.Action("BuscarProveedor", "AdministrarProveedores")";
 
         var urlAsociarProveedor = "@Url.Action("AsociarProveedor", "AdministrarProveedores")";
+
+        var urlEstablecerCuentaEspecial = "@Url.Action("EstablecerCuentaEspecial", "AdministrarProveedores")";
+
+        $("#especial-check").change(function () {
+
+            var checked;
+            var checkbox = document.getElementById('especial-check');
+            if (checkbox.checked) {
+                checked = true;
+            } else {
+                checked = false;
+            }
+
+            var data = {
+                cuentaid: cuentaId,
+                esEspecial: checked
+            };
+
+            $.ajax({
+                type: "POST",
+                url: urlEstablecerCuentaEspecial,
+                data: data,
+                cache: false
+            }).done(function (result) {
+
+                if (result.error) {
+                    alert(result.error);
+                    return;
+                }
+
+                var alerta = $("#alerta");
+        if (alerta) {
+            alerta.remove();
+        }
+
+
+                var contenido = $('body .body-content');
+                contenido.prepend(
+                    '<div id="alerta" class="alert alert-success alert-dismissible" role="alert"> \
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\
+                        Actualización realizada correctamente. \
+                    </div>' );
+
+              
+                
+            }).fail(function (result) {
+                alert(result.error);
+
+            });
+
+        });
+
 
         function buscarProveedor() {
 
@@ -194,7 +305,7 @@
                 $(footer).html("");
                 $(title).text("Datos del Proveedor #" + data.numeroProveedor);
                 var dl = $("<dl class='dl-horizontal'></dl>").appendTo(body);
-              
+
                 for (var key in result) {
                     if (result.hasOwnProperty(key)) {
                         $(dl).append("<dt>" + key + "</dt>");
@@ -217,3 +328,4 @@
 
     </script>
 }
+

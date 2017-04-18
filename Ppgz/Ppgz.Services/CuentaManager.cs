@@ -92,7 +92,8 @@ namespace Ppgz.Services
         
         public void Crear(string tipo, string nombreProveedor, string responsableLogin,
             string reponsableNombre, string reponsableApellido, string responsableCargo,
-            string responsableEmail, string responableTelefono, string responsablePassword)
+            string responsableEmail, string responableTelefono, string responsablePassword,
+            bool esEspecial)
         {
             ValidarTipo(tipo);
 
@@ -119,6 +120,7 @@ namespace Ppgz.Services
                 NombreCuenta = nombreProveedor,
                 Activo = true,
                 Tipo = tipo,
+                EsEspecial = esEspecial
             };
 
             _db.cuentas.Add(cuenta);
@@ -180,8 +182,6 @@ namespace Ppgz.Services
         //TODO
         public void Eliminar(int id)
         {
-
-            
             var messageError = new MySqlParameter
             {
                 ParameterName = "messageError",
@@ -207,44 +207,6 @@ namespace Ppgz.Services
                 throw new BusinessException(messageError.Value.ToString());
             }
   
-            return;
-            _db.Database.ExecuteSqlCommand("call delete_account(@p_cuentaId, @messageError);" +
-                                           "SELECT @messageError;",
-                new MySqlParameter("p_cuentaId", id),
-                messageError);
-
-            Console.WriteLine(messageError.Value);
-
-
-            return;
-            ;
-            var cuenta = _db.cuentas.Find(id);
-
-            if (cuenta == null) return;
-
-
-            foreach ( var proveedor in cuenta.proveedores)
-            {
-                EliminarProveedorEnCuenta(id, proveedor.Id);
-            }
-
-            cuenta.proveedores.Clear();
-
-            cuenta.cuentasmensajes.Clear();
-
-            // TODO CUENTAS USUARIOS INFORMAR SI SE DEBEN ELIMINAR LOS USUARIOS
-            cuenta.AspNetUsers.Clear();
-
-            var perfilManager = new PerfilManager();
-            
-            foreach (var perfil in cuenta.perfiles)
-            {
-                perfilManager.Eliminar(perfil.Id);
-                
-            }
-            cuenta.perfiles.Clear();
-            _db.cuentas.Remove(cuenta);
-            _db.SaveChanges();
         }
 
 
@@ -341,8 +303,19 @@ namespace Ppgz.Services
 
             _db.Entry(proveedor).State = EntityState.Modified;
             _db.SaveChanges();
+        }
 
+        public void EstablecerCuentaEspecial(int cuentaId, bool esEspecial)
+        {
+            var cuenta = _db.cuentas.Find(cuentaId);
 
+            if (cuenta == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+            }
+            cuenta.EsEspecial = esEspecial;
+            _db.Entry(cuenta).State = EntityState.Modified;
+            _db.SaveChanges();
         }
     }
 }

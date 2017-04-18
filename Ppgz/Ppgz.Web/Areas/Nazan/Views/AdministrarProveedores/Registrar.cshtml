@@ -31,7 +31,13 @@
                     @Html.ValidationMessageFor(m => m.TipoCuenta)
                 </div>
             </div>
-
+            <div class="form-group">
+               
+                <div class="col-sm-offset-3 col-sm-7">
+                    @Html.CheckBoxFor(m => m.Especial, new { @class = "" }) ¿Es proveedor especial?
+                    @Html.ValidationMessageFor(m => m.Especial)
+                </div>
+            </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.UserName, new { @class = "col-sm-3 control-label" })
                 <div class="col-sm-7">
@@ -55,6 +61,8 @@
             <p class="form-legend" style="">
                 <i>Datos del Responsable (Usuario Maestro)</i>
             </p>
+
+            
 
             <div class="form-group">
                 @Html.LabelFor(m => m.ResponsableNombre, new { @class = "col-sm-3 control-label" })
