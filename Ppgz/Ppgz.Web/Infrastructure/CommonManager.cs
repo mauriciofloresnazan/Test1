@@ -202,12 +202,34 @@ namespace Ppgz.Web.Infrastructure
             var senderSmtpServer = ConfigurationManager.AppSettings["Smtp"];
             */
 
+            var db = new Entities();
+            var senderMailAddress = new MailAddress(
+                db.configuraciones
+                    .Single(c => c.Clave == "mail.main.address").Valor
+            );
+
+            var senderMailPassword = db.configuraciones
+                .Single(c => c.Clave == "mail.main.password").Valor;
+
+            var senderSmtpServer = db.configuraciones
+
+                .Single(c => c.Clave == "mail.main.smtp.host").Valor;
+
+            var senderSmtpPort = int.Parse(db.configuraciones
+
+                .Single(c => c.Clave == "mail.main.smtp.port").Valor);
+
+            var enableSsl = (db.configuraciones
+
+                .Single(c => c.Clave == "mail.main.smtp.enablessl").Valor == "1");
+            
+/*
             var senderMailAddress = new MailAddress("impuls.ppgz@gmail.com");
             var senderMailPassword = "Venezuela2017";
             var senderSmtpPort = 587;
             var senderSmtpServer = "smtp.gmail.com";
             var enableSsl = true;
-            
+  */          
             /*var senderMailAddress = new MailAddress("impuls@servicioshorizonte.com.ve");
             var senderMailPassword = "impmsh123$$";
             var senderSmtpPort = 25;
