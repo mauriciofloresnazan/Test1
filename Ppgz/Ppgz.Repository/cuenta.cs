@@ -28,6 +28,7 @@ namespace Ppgz.Repository
         public string NombreCuenta { get; set; }
         public Nullable<System.DateTime> FechaRegistro { get; set; }
         public string Tipo { get; set; }
+        public bool EsEspecial { get; set; }
         public bool Activo { get; set; }
         public bool Borrado { get; set; }
         public Nullable<System.DateTime> FechaTx { get; set; }

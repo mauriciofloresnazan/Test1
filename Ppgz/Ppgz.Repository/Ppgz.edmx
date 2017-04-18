@@ -160,6 +160,7 @@
           <Property Name="NombreCuenta" Type="varchar" MaxLength="50" />
           <Property Name="FechaRegistro" Type="datetime" Precision="0" />
           <Property Name="Tipo" Type="enum" />
+          <Property Name="EsEspecial" Type="bool" Nullable="false" />
           <Property Name="Activo" Type="bool" Nullable="false" />
           <Property Name="Borrado" Type="bool" Nullable="false" />
           <Property Name="FechaTx" Type="datetime" Precision="0" />
@@ -1181,6 +1182,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="NombreCuenta" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="FechaRegistro" Type="DateTime" />
           <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
+          <Property Name="EsEspecial" Type="Boolean" Nullable="false" />
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <Property Name="Borrado" Type="Boolean" Nullable="false" />
           <Property Name="FechaTx" Type="DateTime" />
@@ -2071,6 +2073,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="NombreCuenta" ColumnName="NombreCuenta" />
                 <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="EsEspecial" ColumnName="EsEspecial" />
                 <ScalarProperty Name="Activo" ColumnName="Activo" />
                 <ScalarProperty Name="Borrado" ColumnName="Borrado" />
                 <ScalarProperty Name="FechaTx" ColumnName="FechaTx" />
