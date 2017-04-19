@@ -30,13 +30,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="SAPConnectionManager">
       <HintPath>..\SAP Connection Manager\SAPConnectionManager.dll</HintPath>
     </Reference>
-    <Reference Include="sapnco">
+    <Reference Include="sapnco, Version=3.0.0.42, Culture=neutral, PublicKeyToken=50436dca5c7f7d23, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SAP Connection Manager\sapnco.dll</HintPath>
     </Reference>
-    <Reference Include="sapnco_utils">
+    <Reference Include="sapnco_utils, Version=3.0.0.42, Culture=neutral, PublicKeyToken=50436dca5c7f7d23, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SAP Connection Manager\sapnco_utils.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -56,6 +61,12 @@
     <Compile Include="SapProveedorManager.cs" />
     <Compile Include="IRfcTableExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ppgz.Repository\Ppgz.Repository.csproj">
+      <Project>{805197a6-6948-483e-a738-7ae7745ac953}</Project>
+      <Name>Ppgz.Repository</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

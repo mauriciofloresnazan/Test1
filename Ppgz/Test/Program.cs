@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Ppgz.Repository;
 using Ppgz.Services;
+using SapWrapper;
 using SAP.Middleware.Connector;
 
 namespace Test
@@ -16,7 +18,54 @@ namespace Test
         
         static void Main(string[] args)
         {
-            new TestCitas();
+
+            Console.WriteLine(DateTime.Now.Hour);
+            Console.ReadLine();
+            return;
+
+
+            var sapFechaEntrega = DateTime.Today;
+            
+            var semana = CultureInfo
+                .GetCultureInfo("es-MX")
+                .Calendar
+                .GetWeekOfYear(sapFechaEntrega, CalendarWeekRule.FirstDay, sapFechaEntrega.DayOfWeek);
+            
+            Console.WriteLine(semana);
+
+            var day = sapFechaEntrega.AddDays(-30);
+
+            while (day < sapFechaEntrega.AddDays(30))
+            {
+                var semana2 = CultureInfo
+                    .GetCultureInfo("es-MX")
+                    .Calendar
+                    .GetWeekOfYear(day, CalendarWeekRule.FirstDay, day.DayOfWeek);
+
+                if (semana2 >= semana - 2 && semana2 <= semana + 2)
+                    Console.WriteLine(day.ToString("dd/MM/yyyy"));
+                day = day.AddDays(1);
+            }
+
+
+
+            Console.ReadLine();
+            return;
+
+            var db = new Entities();
+
+            var proveedor = db.proveedores.Find(41);
+            var testPartida = new SapPartidaManager();
+
+            var ds = testPartida.GetPartidas1001(proveedor.NumeroProveedor);
+
+            foreach (var column in ds.Tables["T_LISTA_PAGOS"].Columns)
+            {
+                Console.WriteLine(column);
+            }
+
+            Console.WriteLine(JsonConvert.SerializeObject(ds.Tables["T_LISTA_PAGOS"]));
+            ;
             return;
 
             
@@ -95,7 +144,7 @@ namespace Test
                     "Nombre del Proveedor",
                     "test_x1", "Nombre del Responsable", "Apellido del Responsable",
                     "Responsable Cargo", "juan.godoy@test.com", "04145555555",
-                    "123456");
+                    "123456", true);
 
             }
             catch (Exception ex)

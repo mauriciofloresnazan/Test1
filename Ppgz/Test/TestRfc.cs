@@ -8,14 +8,6 @@ namespace Test
     public class TestRfc
     {
 
-        public void TestPartidas(string numeroProveedor)
-        {
-            var sapPartidaManager = new SapPartidaManager();
-            var resultDt = sapPartidaManager.GetPatidasAbiertas(numeroProveedor);
-            Console.WriteLine(JsonConvert.SerializeObject(resultDt));
-            Console.ReadLine();
-
-        }
 
         public void TestOrdenesDeCompraHeader(string nuemroProveedor)
         {
