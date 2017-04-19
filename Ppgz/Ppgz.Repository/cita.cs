@@ -16,6 +16,7 @@ namespace Ppgz.Repository
     {
         public cita()
         {
+            this.asns = new HashSet<asn>();
             this.horariorieles = new HashSet<horarioriele>();
         }
     
@@ -24,7 +25,7 @@ namespace Ppgz.Repository
         public Nullable<System.DateTime> FechaCita { get; set; }
         public Nullable<System.DateTime> FechaCreacion { get; set; }
         public string Tienda { get; set; }
-        public Nullable<int> CantidadAproximada { get; set; }
+        public Nullable<int> CantidadTotal { get; set; }
         public int ProveedorId { get; set; }
         public bool Borrado { get; set; }
         public Nullable<System.DateTime> FechaTx { get; set; }
@@ -34,6 +35,7 @@ namespace Ppgz.Repository
         public int EstatusCitaId { get; set; }
         public bool Penalizado { get; set; }
     
+        public virtual ICollection<asn> asns { get; set; }
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual estatuscita estatuscita { get; set; }
         public virtual ICollection<horarioriele> horariorieles { get; set; }

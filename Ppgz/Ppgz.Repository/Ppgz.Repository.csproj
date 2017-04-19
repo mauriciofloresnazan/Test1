@@ -65,6 +65,9 @@
     <Compile Include="andene.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="asn.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="AspNetRole.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>

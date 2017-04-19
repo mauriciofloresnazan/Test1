@@ -28,6 +28,7 @@ namespace Ppgz.Repository
         public virtual DbSet<acumuladore> acumuladores { get; set; }
         public virtual DbSet<almacene> almacenes { get; set; }
         public virtual DbSet<andene> andenes { get; set; }
+        public virtual DbSet<asn> asns { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
         public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
