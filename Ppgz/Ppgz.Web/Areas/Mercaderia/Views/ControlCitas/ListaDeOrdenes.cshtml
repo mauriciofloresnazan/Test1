@@ -5,6 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
+
+    var fechaCita = (DateTime)@currentCita.Fecha;
 }    
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
@@ -27,7 +29,7 @@
         <div class="row">
             <label class="col-sm-3 control-label">Fecha de la Cita</label>
             <div class="col-sm-3">
-                <div>@currentCita.Fecha.ToString("dd/MM/yyyy")</div>
+                <div>@fechaCita.ToString("dd/MM/yyyy")</div>
             </div>
             <div class="col-sm-6">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">

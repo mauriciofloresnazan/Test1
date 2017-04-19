@@ -5,7 +5,6 @@
     
     var proveedor = (proveedore)ViewBag.proveedor;
 
-    var ordenCompra = (ordencompra)ViewBag.ordenCompra;
 
     ViewBag.Title = "Registrar Cita";
     ViewBag.Descripcion = "Paso 2.1 - Seleccione la fecha de la Cita";
@@ -35,13 +34,13 @@
     <div class="panel-heading">Fecha de la Cita</div>
     <div class="panel-body">
 
-        @using (Html.BeginForm("AgregarOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("AgregarPrimeraOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
             @Html.AntiForgeryToken()
 
             @Html.ValidationSummary(true)
             @Html.Hidden("proveedorId",@proveedor.Id)
-            @Html.Hidden("numeroDocumento", @ordenCompra.NumeroDocumento)
+            @Html.Hidden("numeroDocumento", (string)@ViewBag.NumeroDocumento)
             <div class="form-group">
                 <label class="col-sm-3 control-label"> Fecha de la Cita</label>
                 <div class="col-sm-7">

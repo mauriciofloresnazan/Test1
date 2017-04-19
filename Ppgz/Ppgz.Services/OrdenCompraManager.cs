@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using Ppgz.Repository;
 using SapWrapper;
@@ -296,19 +297,57 @@ namespace Ppgz.Services
         
         public List<DateTime> GetAvailableDatesByOrdenCompra(string numeroDocumento, int proveedorId)
         {
-            // TODO HACER
-
-            return new List<DateTime>
+      
+            
+            var proveedor = _db.proveedores.Find(proveedorId);
+            if (proveedor == null)
             {
-                DateTime.Today.AddDays(2),
-                DateTime.Today.AddDays(3),
-                DateTime.Today.AddDays(4),
-                DateTime.Today.AddDays(5),
-                DateTime.Today.AddDays(6),
-                DateTime.Today.AddDays(7),
-                DateTime.Today.AddDays(8),
+                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
 
-            };
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+            var result = sapOrdenCompraManager.GetOrdenDeCompraDetalle(numeroDocumento, proveedor.NumeroProveedor);
+
+            var availableDates = new List<DateTime>();
+
+            if (result.Rows.Count > 0)
+            {
+                // Se toma la fecha de entrega del primer registro del detalle de acuerdo a la solicitud del cliente
+                var sapFechaEntrega = DateTime.ParseExact(
+                    result.Rows[0]["EINDT"].ToString(), 
+                    "yyyyMMdd", 
+                    CultureInfo.InvariantCulture);
+
+                // Se calcula el numero de la semana del año
+                var semana = CultureInfo
+                    .GetCultureInfo("es-MX")
+                    .Calendar
+                    .GetWeekOfYear(sapFechaEntrega, CalendarWeekRule.FirstDay, sapFechaEntrega.DayOfWeek);
+
+                // TODO MEJORAR
+                // Se agregan los días del rango entre 2 semanas antes y 2 semanas despues de la fecha de entrega
+                var day = sapFechaEntrega.AddDays(-30);
+
+                while (day < sapFechaEntrega.AddDays(30))
+                {
+                    var semana2 = CultureInfo
+                        .GetCultureInfo("es-MX")
+                        .Calendar
+                        .GetWeekOfYear(day, CalendarWeekRule.FirstDay, day.DayOfWeek);
+
+                    if (semana2 >= semana - 2 && semana2 <= semana + 2)
+                    {
+                        // TODO INCLUIR SOLO LOS DIAS CONFIGURADOS PARA OPERAR
+                        // TODO EXCLUIR LOS DIAS ESPECIALES SI EL PROVEEDOR NO TIENE ESA CATEGÍA
+
+                        availableDates.Add(day);
+                    }
+                    day = day.AddDays(1);
+                }
+            
+            }
+
+            return availableDates;
         }
 
         public ordencompra FindOrdenCompraActiva(string numeroDocumento, int proveedorId, string fecha)
@@ -319,5 +358,8 @@ namespace Ppgz.Services
 
 
 
+
     }
+
+
 }

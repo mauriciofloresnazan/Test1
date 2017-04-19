@@ -8,7 +8,11 @@ namespace Ppgz.Web.Areas.Mercaderia
 {
     public class CurrentCita
     {
+        #region Escepciones
+        public class NumeroDocumentoException : Exception
+        {
 
+        }
         public class OrdenDuplicadaException : Exception
         {
             
@@ -17,6 +21,7 @@ namespace Ppgz.Web.Areas.Mercaderia
         {
             
         }
+        #endregion Escepciones
 
         private readonly proveedore _proveedor;
         public proveedore Proveedor
@@ -24,57 +29,109 @@ namespace Ppgz.Web.Areas.Mercaderia
             get { return _proveedor; }
         }
 
-        private readonly List<ordencompra> _ordenes;
-        public DateTime Fecha
+        private readonly List<PreAsn> _ordenes;
+
+        public DateTime? Fecha { get; private set; }
+
+        private readonly List<ordencompra> _ordenesActivas;
+
+        public List<ordencompra> GetOrdenesActivasDisponibles()
         {
-            get { return _fecha; }
+            var documentos = _ordenes
+                .Select(o => o.NumeroDocumento).ToArray();
+
+            return  _ordenesActivas
+                .Where(o => !documentos.Contains(o.NumeroDocumento))
+                .ToList();
         }
-        private readonly DateTime _fecha;
-        
-        public CurrentCita(int cuentaId, int proveedorId, DateTime fecha)
+
+        public ordencompra GetOrdenActivaDisponible(string numeroDocumento)
+        {
+            var ordenesActivasDisponibles = GetOrdenesActivasDisponibles();
+            return !ordenesActivasDisponibles.Any() ? 
+                null : 
+                ordenesActivasDisponibles.FirstOrDefault(oa => oa.NumeroDocumento == numeroDocumento);
+        }
+
+        public CurrentCita(int cuentaId, int proveedorId)
         {
             var proveedorManager = new ProveedorManager();
 
-            var proveedor = proveedorManager.Find(proveedorId);
+            var proveedor = proveedorManager.Find(proveedorId, cuentaId);
 
-            if (proveedor.CuentaId != cuentaId)
+            if (proveedor== null)
             {
-                throw new BusinessException("Error en la cuenta del proveedor");
+                throw new BusinessException("Proveedor incorrecto");
             }
 
             _proveedor = proveedor;
 
-            if (fecha.Date < DateTime.Today.Date)
+            _ordenes = new List<PreAsn>();
+
+            var ordenCompraManager = new OrdenCompraManager();
+
+            _ordenesActivas = ordenCompraManager
+                .FindOrdenesDecompraActivas(proveedor.Id);
+
+            if (!_ordenesActivas.Any())
             {
-                throw new BusinessException("Fecha incorrecta");
+                throw new BusinessException("El proveedor no tiene ordenes de compra activas");
             }
-
-            _fecha = fecha;
-
-            _ordenes = new List<ordencompra>();
-
         }
 
-        public void AddOrden(ordencompra orden)
+        public void SetFecha(DateTime fecha)
         {
-            if (_ordenes.Any(o => o.NumeroDocumento == orden.NumeroDocumento))
+            if (fecha < DateTime.Today)
+            {
+                // TODO 
+                throw new BusinessException("Fecha incorrecta");
+                
+            }
+            
+            Fecha = fecha;
+            
+        }
+
+        public void AddPreAsn(string numeroDocumento)
+        {
+            var orden = _ordenesActivas.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+
+        
+            if (orden == null)
+            {
+                throw new NumeroDocumentoException();
+            }
+            
+
+            if (_ordenes.Any(o => o.NumeroDocumento == numeroDocumento))
             {
                 throw new OrdenDuplicadaException();
             }
 
-            if (orden.ordencompradetalles == null)
-            {
-                throw new OrdenSinDetalleException();
-            }
-            if (!orden.ordencompradetalles.Any())
+            var asnManager = new AsnManager();
+            var details = asnManager.GetPreAsnDetails(numeroDocumento, Proveedor.NumeroProveedor);
+
+
+            if (!details.Any())
             {
                 throw new OrdenSinDetalleException();
             }
 
-            _ordenes.Add(orden);
+            var preAsn = new PreAsn
+            {
+                NumeroDocumento =  orden.NumeroDocumento,
+                NumeroProveedor = orden.NumeroProveedor,
+                ProveedorId = orden.ProveedorId,
+                proveedore = orden.proveedore,
+                PreAsnDetails = details
+            };
+
+     
+
+            _ordenes.Add(preAsn);
         }
 
-        public void RemoveOrden(string numeroDocumento)
+        public void RemovePreAsn(string numeroDocumento)
         {
             var orden = _ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
             if (orden != null)
@@ -83,27 +140,53 @@ namespace Ppgz.Web.Areas.Mercaderia
             }
         }
 
-
+        /*
         public bool HasOrdenes()
         {
             return _ordenes.Any();
-        }
+        }*/
 
-        public bool HasOrden(string numeroDocumento)
+        public bool HasPreAsn(string numeroDocumento)
         {
             return _ordenes.Any(o=> o.NumeroDocumento == numeroDocumento);
         }
 
-        public ordencompra GetOrden(string numeroDocumento)
+        public PreAsn GetPreAsn(string numeroDocumento)
         {
             return _ordenes.Single(o => o.NumeroDocumento == numeroDocumento);
         }
 
 
-        public List<ordencompra> GetOrdenes()
+        public List<PreAsn> GetPreAsns()
         {
             return _ordenes;
         }
+
+
+        public void UpdateDetail(string numeroDocumento, string numeroMaterial, int cantidad)
+        {
+            var preAsn = _ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+
+            if (preAsn == null)
+            {
+                throw new BusinessException("Numero de documento incorrecto");
+            }
+
+            var detalle = preAsn.PreAsnDetails.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial);
+
+            if (detalle == null)
+            {
+                throw new BusinessException("Numero de material incorrecto");
+            }
+
+            if (cantidad > detalle.CantidadPermitida)
+            {
+                throw new BusinessException("Cantidad incorrecta");
+            }
+
+            detalle.CantidadComprometida = cantidad;
+        } 
+
         public int UpdateElementoEnLista(string numeroDocumento, string numeroMaterial, 
             int oldValue, int newValue)
         {

@@ -1,14 +1,19 @@
 ﻿@using Ppgz.Repository
+@using Ppgz.Services
 @using Ppgz.Web.Areas.Mercaderia
 @{
     ViewBag.Title = "Registrar Cita";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var ordenCompra = (ordencompra)ViewBag.OrdenCompra;
+    var preAsn = (PreAsn)ViewBag.OrdenCompra;
 
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
-    ViewBag.TotalPedido = ordenCompra.ordencompradetalles.AsEnumerable().Sum(x => float.Parse(x.CantidadPedido));
-    ViewBag.TotalComprometido = ordenCompra.ordencompradetalles.AsEnumerable().Sum(x => x.CantidadComprometida);
+
+
+    var fechaCita = (DateTime)@currentCita.Fecha;
+
+    ViewBag.TotalPedido = preAsn.ordencompradetalles.AsEnumerable().Sum(x => float.Parse(x.CantidadPedido));
+    ViewBag.TotalComprometido = preAsn.ordencompradetalles.AsEnumerable().Sum(x => x.CantidadComprometida);
 
     ViewBag.ordenTmp = "";
 }
@@ -55,7 +60,7 @@
         <div class="row">
             <label class="col-sm-3 control-label">Fecha de la Cita</label>
             <div class="col-sm-3">
-                <div>@currentCita.Fecha.ToString("dd/MM/yyyy")</div>
+                <div>@fechaCita.ToString("dd/MM/yyyy")</div>
             </div>
             <div class="col-sm-6">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
@@ -96,7 +101,7 @@
             <div style="line-height: 2em;" class="col-sm-4">
                 <strong>Orden #</strong>
                 
-                <span>@ordenCompra.NumeroDocumento</span>
+                <span>@preAsn.NumeroDocumento</span>
                 
             </div>
             <div style="line-height: 2em;" class="col-sm-4">
@@ -118,7 +123,7 @@
                         Planilla Excel <i class="fa fa-file-excel-o" aria-hidden="true"></i>
                     </div>
                     <div class="input-group-btn">
-                        <a class="btn btn-link" href="@Url.Action("DescargarPlantilla", "ControlCitas", new {@numeroDocumento = ordenCompra.NumeroDocumento})">
+                        <a class="btn btn-link" href="@Url.Action("DescargarPlantilla", "ControlCitas", new { @numeroDocumento = preAsn.NumeroDocumento })">
                             <i class="fa fa-arrow-down" aria-hidden="true"></i> Descargar
                         </a>
                     </div>
@@ -129,7 +134,7 @@
                                 <i class="fa fa-arrow-up" aria-hidden="true"></i>
                                 Cargar <input type="file" name="cargar-planilla" hidden>
                             </label>
-                            @Html.Hidden("numeroDocumento", ordenCompra.NumeroDocumento)
+                            @Html.Hidden("numeroDocumento", preAsn.NumeroDocumento)
                         </form>
 
                     </div>
@@ -152,7 +157,7 @@
             <tbody>
 
 
-                @foreach (var detalle in ordenCompra.ordencompradetalles)
+                @foreach (var detalle in preAsn.PreAsnDetails)
                 {
 
                     var cantComp = Decimal.ToInt32(detalle.CantidadComprometida);
@@ -247,15 +252,6 @@
 
         $(document).ready(function () {
 
-            var valOrdenesCargadas = '@Request.RequestContext.HttpContext.Session["ordenesCargadas"]';
-
-            for (i = 0; i <= valOrdenesCargadas; i++) {
-
-                var nombre = "ordenTemp" + i;
-                console.log("Valor de Session: ordenTemp [" + i + "]: ");
-
-            }
-
 
             var asn = $('#asn').DataTable({
                 "language": {
@@ -278,13 +274,13 @@
 
             $('#modalEditarCantidad').on('hidden.bs.modal', function (e) {
 
-                if ($("#hidCancelarActualizar").val() == "0") {
+                if ($("#hidCancelarActualizar").val() === "0") {
 
                     var cantidadOrg = parseFloat($($(editingTd).parent().find('td')[5]).text());
 
                     var cantidadNueva = parseInt($("#editar-cantidad").val());
                     var vlItem = $($(editingTd).parent().find('td')[0]).text();
-                    var vlNumOrden = "@ordenCompra.NumeroDocumento";
+                    var vlNumOrden = "@preAsn.NumeroDocumento";
 
                     if (isNaN(cantidadNueva)) {
                         //todo mejorar
@@ -314,22 +310,26 @@
                             NewValue: cantidadNueva
                         };
 
-                        $.ajax({
-                            url: '/ControlCitas/updItemOrden',
-                            type: 'POST',
-                            data: JSON.stringify(requestData),
-                            dataType: 'json',
-                            contentType: 'application/json; charset=utf-8',
-                            error: function (xhr) {
-                                alert('Error: ' + xhr.statusText);
-                            },
-                            success: function (result) {
-                                console.log(result);
-                            },
-                            async: true,
-                            processData: false
-                        });
 
+                        var data = {
+                            numeroDocumento: "@preAsn.NumeroDocumento",
+                            numeroMaterial: vlItem.trim(),
+                            cantidad: cantidadNueva
+                        };
+
+                        $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("AsnActualizarDetalle", "ControlCitas")",
+                            data: data,
+                            cache: false
+                        }).done(function (result) {
+                            console.log("-------DONE-------");
+                            console.log(result);
+
+                        }).fail(function (response) {
+                            console.log("-------FAIL-------");
+                            console.log(response);
+                        });
                     }
                 }
             });

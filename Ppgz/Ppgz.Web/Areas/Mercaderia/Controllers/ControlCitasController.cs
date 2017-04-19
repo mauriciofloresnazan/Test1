@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -42,13 +41,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				}
 				return (CurrentCita)System.Web.HttpContext.Current.Session[NombreVarSession];
 			}
+            set
+            {
+                System.Web.HttpContext.Current.Session[NombreVarSession] = value;
+            }
 		}
-
-		internal void InitCurrentCita(int cuentaId, int proveedorId, DateTime fecha)
-		{
-			System.Web.HttpContext.Current.Session[NombreVarSession] = new CurrentCita(cuentaId, proveedorId, fecha);
-		}
-
+        
 		//
 		// GET: /Mercaderia/ControlCitas/
 		[Authorize(Roles = "MAESTRO-MERCADERIA")]
@@ -63,64 +61,27 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return View();
 		}
 
-		internal proveedore GetProveedor(int proveedorId)
-		{
-
-			// TODO
-			const string proveedorIcorrectoMsg = "Proveedor incorrecto";
-
-			if (CurrentCita != null)
-			{
-				if (proveedorId != CurrentCita.Proveedor.Id)
-				{
-					throw new BusinessException(proveedorIcorrectoMsg);
-				}
-			}
-
-			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-
-			var proveedor = _proveedorManager.Find(proveedorId, cuenta.Id);
-			
-			if (proveedor == null)
-			{
-				throw new BusinessException(proveedorIcorrectoMsg);
-			}
-
-			return proveedor;
-		}
-
+        
 		[Authorize(Roles = "MAESTRO-MERCADERIA")]
-		public ActionResult BuscarOrden(int proveedorId)
+		public ActionResult BuscarOrden(int proveedorId = 0)
 		{
-		   
-			/*
-
-			if (System.Web.HttpContext.Current.Session["controlCita"] == null)
-			{
-				System.Web.HttpContext.Current.Session["controlCita"] = new CurrentCita(cuenta.Id, proveedorId);
-
-			} else if (System.Web.HttpContext.Current.Session["controlCita"] != null)
-			{
-
-				int proveedorIdtmp = ((CurrentCita) System.Web.HttpContext.Current.Session["controlCita"]).Proveedor.Id;
-
-				if (proveedorId != proveedorIdtmp)
-				{
-					System.Web.HttpContext.Current.Session["controlCita"] = new CurrentCita(cuenta.Id, proveedorId);
-
-				}
-
-			}*/
 			try
 			{
-				ViewBag.proveedor = GetProveedor(proveedorId); 
+                if (CurrentCita == null)
+                {
+                    // La primera vez se crea una nueva isntancia de la cita
+                    var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+                    CurrentCita = new CurrentCita(cuenta.Id, proveedorId);
+                }
+
 			}
 			catch (BusinessException exception)
 			{
 				TempData["FlashError"] = exception.Message;
 				return RedirectToAction("Index");
 			}
-		
+
+            ViewBag.proveedor = CurrentCita.Proveedor; 
 			ViewBag.CurrentCita = CurrentCita;
 			
 			return View();
@@ -129,132 +90,146 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		[Authorize(Roles = "MAESTRO-MERCADERIA")]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public ActionResult BuscarOrden(int proveedorId, string numeroDocumento)
+		public ActionResult BuscarOrden(string numeroDocumento)
 		{
-			try
-			{
-				var proveedor = GetProveedor(proveedorId);
-				ViewBag.proveedor = proveedor;
-				TempData["proveedor"] = proveedor;
-			}
-			catch (BusinessException exception)
-			{
-				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("Index");
-			}
 
-			var ordenCompra = _ordenCompraManager.FindOrdenCompra(numeroDocumento, proveedorId);
-			if (ordenCompra == null)
+            if (CurrentCita == null)
+            {
+                return RedirectToAction("Index");
+            }
+            
+
+		    var proveedor = CurrentCita.Proveedor;
+            
+
+           /* var ordenCompra = CurrentCita.GetOrdenActivaDisponible(numeroDocumento);
+			
+            if (ordenCompra == null)
 			{
+                // TODO pasar a resource
 				TempData["FlashError"] = "Numero de documento incorrecto";
-				return RedirectToAction("BuscarOrden", new { proveedorId });
-			}
+                return RedirectToAction("BuscarOrden", new { proveedor.Id });
+			}*/
 			
 			//TODO
-			if (CurrentCita != null)
+			if (CurrentCita.Fecha != null)
             {
-                var ordencompradetalles = _ordenCompraManager.FindDetalle(numeroDocumento, proveedorId);
-                //todo normalizar en una sola busqueda
-                ordenCompra.ordencompradetalles = ordencompradetalles;
                 try
                 {
-                    CurrentCita.AddOrden(ordenCompra);
-                    return RedirectToAction("Asn", new { numeroDocumento = ordenCompra.NumeroDocumento });
+                    CurrentCita.AddPreAsn(numeroDocumento);
+                    return RedirectToAction("Asn", new {numeroDocumento });
 
                 }
                 catch (CurrentCita.OrdenDuplicadaException)
                 {
                     TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
-                    return RedirectToAction("BuscarOrden", new {proveedorId});
+                    return RedirectToAction("BuscarOrden", new {proveedor.Id});
                 }
                 catch (CurrentCita.OrdenSinDetalleException)
                 {
                     TempData["FlashError"] = "Numero de documento incorrecto";
-                    return RedirectToAction("BuscarOrden", new { proveedorId });
+                    return RedirectToAction("BuscarOrden", new {proveedor.Id});
+                }
+                catch (CurrentCita.NumeroDocumentoException)
+                {
+                    TempData["FlashError"] = "Numero de documento incorrecto";
+                    return RedirectToAction("BuscarOrden", new { proveedor.Id });
                 }
 			}
 
-			TempData["orden"] = ordenCompra;
+		    if (CurrentCita.GetOrdenActivaDisponible(numeroDocumento) == null)
+            {
+                TempData["FlashError"] = "Numero de documento incorrecto";
+                return RedirectToAction("BuscarOrden", new { proveedor.Id });
+		        
+		    }
+
+
+            TempData["numeroDocumento"] = numeroDocumento;
 			ViewBag.CurrentCita = CurrentCita;
 			
 			return RedirectToAction("FechaCita");
-
-
 		}
 
 		public ActionResult FechaCita()
 		{
-			if (CurrentCita != null)
+
+            if (CurrentCita == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+			if (CurrentCita.Fecha != null)
 			{
+                // TODO redireccionar a la seccion de busqueda o al checkout
 				return RedirectToAction("Index");
 			}
 
 
-			if (TempData["proveedor"] == null)
+            if (TempData["numeroDocumento"] == null)
 			{
 				return RedirectToAction("Index");
 			}
+		    var numeroDocumento = (string) TempData["numeroDocumento"];
 
-			if (TempData["orden"] == null)
-			{
-				return RedirectToAction("Index");
-			}
-			var proveedor = (proveedore)TempData["proveedor"];
-			var ordenCompra = (ordencompra)TempData["orden"];
+            var proveedor = CurrentCita.Proveedor;
+		
 
 			ViewBag.Fechas = _ordenCompraManager
-				.GetAvailableDatesByOrdenCompra(ordenCompra.NumeroDocumento, proveedor.Id);
+                .GetAvailableDatesByOrdenCompra(numeroDocumento, proveedor.Id);
 
-            ViewBag.OrdenCompra = ordenCompra;
+            ViewBag.NumeroDocumento = numeroDocumento;
 			ViewBag.proveedor = proveedor;
 
 			return View();
 		}
 
+
+        
+
+
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public ActionResult AgregarOrden(int proveedorId, string numeroDocumento, string fecha)
+		public ActionResult AgregarPrimeraOrden(string numeroDocumento, string fecha)
 		{
-			
-			try
-			{
-				var proveedor = GetProveedor(proveedorId);
-				var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-				var ordenCompra = _ordenCompraManager.FindOrdenCompra(numeroDocumento, proveedorId);
 
-			    if (ordenCompra == null)
-			    {
-                    return RedirectToAction("Index");
-			    }
+            if (CurrentCita == null)
+            {
+                return RedirectToAction("Index");
+            }
+            
+            
+            var proveedor = CurrentCita.Proveedor;
 
-                var ordencompradetalles = _ordenCompraManager.FindDetalle(numeroDocumento, proveedorId);
+            try
+            {
+                CurrentCita.SetFecha(DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture));
 
-                ordenCompra.ordencompradetalles = ordencompradetalles;
-				if (CurrentCita == null)
-				{
-					InitCurrentCita(
-                        cuenta.Id, 
-                        proveedor.Id, 
-                        DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture));
-				}
+                CurrentCita.AddPreAsn(numeroDocumento);
 
-				Debug.Assert(CurrentCita != null, "CurrentCita != null");
-				if (CurrentCita.HasOrden(numeroDocumento))
-				{
+                return RedirectToAction("Asn", new {numeroDocumento });
 
-					TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
-                    return RedirectToAction("BuscarOrden", new { proveedorId });
-				}
-
-				CurrentCita.AddOrden(ordenCompra);
-				return RedirectToAction("Asn",new{ numeroDocumento = ordenCompra.NumeroDocumento });
-
-			}
-			catch (BusinessException exception)
-			{
-				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("Index");
-			}
+            }
+            catch (CurrentCita.OrdenDuplicadaException)
+            {
+                TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
+                return RedirectToAction("BuscarOrden", new { proveedor.Id });
+            }
+            catch (CurrentCita.OrdenSinDetalleException)
+            {
+                TempData["FlashError"] = "Numero de documento incorrecto";
+                return RedirectToAction("BuscarOrden", new { proveedor.Id });
+            }
+            catch (CurrentCita.NumeroDocumentoException)
+            {
+                TempData["FlashError"] = "Numero de documento incorrecto";
+                return RedirectToAction("BuscarOrden", new { proveedor.Id });
+            }
+            catch (BusinessException exception)
+            {
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("BuscarOrden", new { proveedor.Id });
+            }
 		}
    
 		public ActionResult Asn(string numeroDocumento)
@@ -265,23 +240,32 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				return RedirectToAction("Index");
 			}
 
-			if(!CurrentCita.HasOrden(numeroDocumento))
+			if(!CurrentCita.HasPreAsn(numeroDocumento))
 			{
 				return RedirectToAction("ListaDeOrdenes");
 			}
 
-            ViewBag.OrdenCompra = CurrentCita.GetOrden(numeroDocumento);
+            ViewBag.OrdenCompra = CurrentCita.GetPreAsn(numeroDocumento);
 			ViewBag.CurrentCita = CurrentCita;
 			return View();
 		
 		}
 
 
+
+        [HttpPost]
+        public JsonResult AsnActualizarDetalle(string numeroDocumento, string numeroMaterial, int cantidad)
+        {
+            CurrentCita.UpdateDetail(numeroDocumento, numeroMaterial, cantidad);
+            return Json("ACtualizado correctamente");
+        }
+
+
 		[HttpPost]
 		[AcceptVerbs(HttpVerbs.Post)]
 		public  ActionResult updItemOrden(string Orden, string Item, string OldValue, string NewValue)
 		{
-            var ordenCompra = CurrentCita.GetOrden(Orden);
+            var ordenCompra = CurrentCita.GetPreAsn(Orden);
             var detalles = ordenCompra.ordencompradetalles;
             var detalle = detalles.FirstOrDefault(d => d.NumeroMaterial == Item);
 		    var cantidad = int.Parse(NewValue);
@@ -324,7 +308,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		        return;
 		    }
 
-		    var ordenCompra = CurrentCita.GetOrden(numeroDocumento);
+		    var ordenCompra = CurrentCita.GetPreAsn(numeroDocumento);
 
 		    if (ordenCompra == null)
 		    {
@@ -355,7 +339,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				return RedirectToAction("Index");
 			}
 
-            if (!CurrentCita.HasOrden(numeroDocumento))
+            if (!CurrentCita.HasPreAsn(numeroDocumento))
             {
                 return RedirectToAction("Index");
 		    }
@@ -384,7 +368,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				return RedirectToAction("Asn");
 			}
 
-		    var ordenCompra = CurrentCita.GetOrden(numeroDocumento);
+		    var ordenCompra = CurrentCita.GetPreAsn(numeroDocumento);
             var detalles = ordenCompra.ordencompradetalles;
 
 
@@ -434,7 +418,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 	        var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
 	        var proveedor = _proveedorManager.Find(33);
-            InitCurrentCita(cuenta.Id, proveedor.Id, DateTime.Today);
+            //InitCurrentCita(cuenta.Id, proveedor.Id, DateTime.Today);
 
             ViewBag.CurrentCita = CurrentCita;
 
