@@ -35,37 +35,54 @@
         </div>
         @if (currentCita.Fecha != null)
         {
-            var fecha = (DateTime)@currentCita.Fecha;
-        <div class="row">
-            <label class="col-sm-3 control-label">Fecha de la cita</label>
-            <div class="col-sm-3">
-                <div>@fecha.ToString("dd/MM/yyyy")</div>
-            </div>
-            <div class="col-sm-6">
-                <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
-                    <a class="btn btn-primary" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
-                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
-                    </a>
-                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
-                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
-                    </a>
-                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")">
-                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
-                    </a>
+            var fecha = (DateTime) @currentCita.Fecha;
+            <div class="row">
+                <label class="col-sm-3 control-label">Fecha de la cita</label>
+                <div class="col-sm-3">
+                    <div>@fecha.ToString("dd/MM/yyyy")</div>
                 </div>
-                <div class="visible-sm visible-xs">
-                    <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
-                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
-                    </a>
-                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
-                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
-                    </a>
-                    <a class="btn btn-default btn-block" href="@Url.Action("Index", "ControlCitas")">
-                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
-                    </a>
+                <div class="col-sm-6">
+                    <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                        <a class="btn btn-primary" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                            <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                        </a>
+                        <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                        </a>
+                        <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")">
+                            <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                        </a>
+                    </div>
+                    <div class="visible-sm visible-xs">
+                        <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                            <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                        </a>
+                        <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                        </a>
+                        <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")">
+                            <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-6">
+                    <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                        <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")">
+                            <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                        </a>
+                    </div>
+                    <div class="visible-sm visible-xs">
+                        <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")">
+                            <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                        </a>
+                    </div>
+                </div>
+            </div>
         }
 
 

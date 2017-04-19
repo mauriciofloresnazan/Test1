@@ -10,10 +10,10 @@
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
 
 
-    var fechaCita = (DateTime)@currentCita.Fecha;
+    var fechaCita = (DateTime)currentCita.Fecha;
 
-    ViewBag.TotalPedido = preAsn.ordencompradetalles.AsEnumerable().Sum(x => float.Parse(x.CantidadPedido));
-    ViewBag.TotalComprometido = preAsn.ordencompradetalles.AsEnumerable().Sum(x => x.CantidadComprometida);
+    ViewBag.TotalPedido = preAsn.TotalPermitido;
+    ViewBag.TotalComprometido = preAsn.TotalCantidad;
 
     ViewBag.ordenTmp = "";
 }
@@ -98,18 +98,23 @@
     <div class="panel-heading">Datos del ASN</div>
     <div class="panel-body">
         <div class="row">
-            <div style="line-height: 2em;" class="col-sm-4">
+            <div style="line-height: 2em;" class="col-sm-3">
                 <strong>Orden #</strong>
                 
                 <span>@preAsn.NumeroDocumento</span>
                 
             </div>
-            <div style="line-height: 2em;" class="col-sm-4">
+            <div style="line-height: 2em;" class="col-sm-3">
                 <strong>Total. Pedido</strong>
-                <span id="idProductosEnOrden" style="font-size: 1.5em; color: #22aaaa;">@ViewBag.TotalPedido</span>
+                <span id="idProductosEnOrden" style="font-size: 1.5em; color: #22aaaa;">@preAsn.TotalPedido</span>
                 
             </div>
-            <div style="line-height: 2em;" class="col-sm-4">
+            <div style="line-height: 2em;" class="col-sm-3">
+                <strong>Total. Permitido</strong>
+                <span id="idProductosEnOrden" style="font-size: 1.5em; color: orange;">@preAsn.TotalPermitido</span>
+
+            </div>
+            <div style="line-height: 2em;" class="col-sm-3">
                 <strong>Total a Entregar</strong>
                 <span id="total-entregar" style="font-size: 1.5em; color: green;">0</span>
                 
@@ -236,7 +241,7 @@
 @Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitas", new { @proveedorId = ViewBag.ProveedorId }))
 @Html.Hidden("RedirectTo2", Url.Action("ListaDeOrdenes", "ControlCitas"))
 
-@Scripts.Render("~/Scripts/jquery-1.10.2.js");
+@Scripts.Render("~/Scripts/jquery-1.10.2.js")
 
 @section Scripts {
 
@@ -348,60 +353,6 @@
 
         }
 
-        function validarSiguiente() {
-
-            var origen = "@ViewBag.origen";
-            //**************************************************************************
-            // Si origen vale 1 = La Orden se esta cargando en la Lista por primera vez
-            // Si origen vale 2 = Venimos de la Pantalla Lista de Ordenes (Posible Edicion)
-            //**************************************************************************
-
-            if (origen == "1") {
-
-                var box = bootbox.dialog({
-                    title: "<i class=" + String.fromCharCode(34) + "fa fa-times-circle fa-2x" + String.fromCharCode(34) + "></i>&nbsp;Grupo Nazan - Mensajes",
-                    message: "Desea agregar otra Orden a la Lista ?",
-                    buttons: {
-                        success: {
-                            label: "Si",
-                            className: "msgbtn-info",
-                            callback: function () {
-
-
-                                var url = $("#RedirectTo1").val();
-                                location.href = url;
-
-
-                            }
-                        },
-                        main: {
-                            label: "No",
-                            className: "msgbtn-info active",
-                            callback: function () {
-
-
-                                var url = $("#RedirectTo2").val();
-                                location.href = url;
-
-                            }
-                        }
-                    }
-                });
-
-
-                box.find('.modal-header').addClass("msgInfo-title"); // Aqui cambio el color del Header
-                box.find('.modal-content').addClass("msgDanger"); // Aqui Cambio el Color del formulario
-                box.show();
-
-            } else if (origen == "2") {
-
-                var url = $("#RedirectTo2").val();
-                location.href = url;
-
-            }
-
-
-        }
 
 
         function cancelar() {

@@ -240,6 +240,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				return RedirectToAction("Index");
 			}
 
+
+            if (CurrentCita.Fecha == null)
+            {
+                return RedirectToAction("BuscarOrden");
+            }
+
 			if(!CurrentCita.HasPreAsn(numeroDocumento))
 			{
 				return RedirectToAction("ListaDeOrdenes");
@@ -260,7 +266,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return Json("ACtualizado correctamente");
         }
 
-
+        /*
 		[HttpPost]
 		[AcceptVerbs(HttpVerbs.Post)]
 		public  ActionResult updItemOrden(string Orden, string Item, string OldValue, string NewValue)
@@ -286,6 +292,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return Json(Res, JsonRequestBehavior.DenyGet);
 
 		}
+        */
+
 
 		public ActionResult ListaDeOrdenes(string orden = "0")
 		{
@@ -294,7 +302,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             {
                 return RedirectToAction("Index");
 		    }
-            
+
+            if (CurrentCita.Fecha == null)
+            {
+                return RedirectToAction("BuscarOrden");
+            }
+
 		    ViewBag.CurrentCita = CurrentCita;
 			
 			return View();
@@ -307,6 +320,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		    {
 		        return;
 		    }
+            if (CurrentCita.Fecha == null)
+            {
+                return;
+            }
 
 		    var ordenCompra = CurrentCita.GetPreAsn(numeroDocumento);
 
@@ -338,7 +355,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			{
 				return RedirectToAction("Index");
 			}
-
+            if (CurrentCita.Fecha == null)
+            {
+                return RedirectToAction("BuscarOrden");
+            }
             if (!CurrentCita.HasPreAsn(numeroDocumento))
             {
                 return RedirectToAction("Index");
@@ -415,43 +435,32 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 	    public ActionResult SeleccionarRieles()
 	    {
-	        var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-
-	        var proveedor = _proveedorManager.Find(33);
-            //InitCurrentCita(cuenta.Id, proveedor.Id, DateTime.Today);
-
-            ViewBag.CurrentCita = CurrentCita;
-
-
-            const string sql = @"
-                SELECT * 
-                FROM   vwdashboard
-                WHERE  Fecha = @fecha";
-
-            var parametros = new List<MySqlParameter>
+            if (CurrentCita == null)
             {
-                new MySqlParameter("@fecha", DateTime.Today.Date)
+                return RedirectToAction("Index");
+            }
+            
+            if (CurrentCita.Fecha == null)
+            {
+                return RedirectToAction("BuscarOrden");
+            }
+	        var date = ((DateTime) CurrentCita.Fecha).Date;
+            var parameters = new List<MySqlParameter>()
+            {
+                new MySqlParameter
+                {
+                    ParameterName = "pTotal",
+                    Direction = ParameterDirection.Output,
+                    MySqlDbType = MySqlDbType.VarChar
+                },
+                new MySqlParameter("pFecha", date)
             };
 
-            var result = Db.GetDataTable(sql, parametros);
+            Db.ExecuteProcedureOut(parameters, "config_appointment");
+            
+            ViewBag.CurrentCita = CurrentCita;
 
-	        result.AsEnumerable().Select(dr =>
-	            new
-	            {
-                    a = dr[""],
-	            });
-    
             var db = new Entities();
-
-	        var date = DateTime.Today.Date;
-	        if (DateTime.Today.DayOfWeek == DayOfWeek.Saturday)
-	        {
-                date = date.AddDays(2);
-	        }
-            if (DateTime.Today.DayOfWeek == DayOfWeek.Sunday)
-            {
-                date = date.AddDays(1);
-            }
 
             var horarioRieles = db.horariorieles.Where(h => h.Fecha == date.Date).ToList();
 

@@ -7,6 +7,8 @@
 
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
 
+    var fechaCita = (DateTime)currentCita.Fecha;
+    
     var horarioRieles = (List<horarioriele>)ViewBag.HorarioRieles;
 
     var horarios = horarioRieles.Select(hr => new
@@ -66,7 +68,7 @@
         <div class="row">
             <label class="col-sm-3 control-label">Fecha de la cita</label>
             <div class="col-sm-3">
-                <div>@currentCita.Fecha.ToString("dd/MM/yyyy")</div>
+                <div>@fechaCita.ToString("dd/MM/yyyy")</div>
             </div>
             <div class="col-sm-6">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
@@ -76,7 +78,7 @@
                     <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
                     </a>
-                    <a class="btn btn-default" href="@Url.Action("Index", "ControlCitas")">
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>

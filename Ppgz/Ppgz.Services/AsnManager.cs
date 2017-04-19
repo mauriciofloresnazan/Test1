@@ -176,6 +176,14 @@ namespace Ppgz.Services
                 return PreAsnDetails.AsEnumerable().Sum(x => x.CantidadPermitida);
             }
         }
+
+        public int TotalCantidad
+        {
+            get
+            {
+                return PreAsnDetails.AsEnumerable().Sum(x => x.Cantidad);
+            }
+        }
     }
 
     public class PreAsnDetail : ordencompradetalle

@@ -24,7 +24,22 @@
             </div>
             <label class="col-sm-3 control-label">Nombre</label>
             <div class="col-sm-3">
-                <div>@proveedor.Nombre1</div>
+                <div>@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-6 col-sm-offset-6">
+                <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+                <div class="visible-sm visible-xs">
+                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
             </div>
         </div>
     </div>
