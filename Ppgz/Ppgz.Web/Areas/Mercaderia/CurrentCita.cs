@@ -165,7 +165,7 @@ namespace Ppgz.Web.Areas.Mercaderia
         }
 
 
-        public void UpdateDetail(string numeroDocumento, string numeroMaterial, int cantidad)
+        public void UpdateDetail(string numeroDocumento, string numeroPosicion, string numeroMaterial, int cantidad)
         {
             var preAsn = _ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
 
@@ -174,11 +174,11 @@ namespace Ppgz.Web.Areas.Mercaderia
                 throw new BusinessException("Numero de documento incorrecto");
             }
 
-            var detalle = preAsn.Detalles.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial);
+            var detalle = preAsn.Detalles.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial && d.NumeroPosicion == numeroPosicion);
 
             if (detalle == null)
             {
-                throw new BusinessException("Numero de material incorrecto");
+                throw new BusinessException("Item incorrecto");
             }
 
             if (cantidad > detalle.CantidadPermitida)

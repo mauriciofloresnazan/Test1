@@ -290,9 +290,17 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 
         [HttpPost]
-        public JsonResult AsnActualizarDetalle(string numeroDocumento, string numeroMaterial, int cantidad)
+        public JsonResult AsnActualizarDetalle(string numeroDocumento, string numeroPosicion,  string numeroMaterial, int cantidad)
         {
-            CurrentCita.UpdateDetail(numeroDocumento, numeroMaterial, cantidad);
+            try
+            {
+                CurrentCita.UpdateDetail(numeroDocumento, numeroPosicion, numeroMaterial, cantidad);
+            }
+            catch (Exception exception)
+            {
+                Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+                return Json(exception.Message);
+            }
             return Json("ACtualizado correctamente");
         }
 

@@ -100,14 +100,14 @@
         <div class="row">
             <div style="line-height: 2em;" class="col-sm-3">
                 <strong>Orden #</strong>
-                
+
                 <span>@preAsn.NumeroDocumento</span>
-                
+
             </div>
             <div style="line-height: 2em;" class="col-sm-3">
                 <strong>Total. Pedido</strong>
                 <span id="idProductosEnOrden" style="font-size: 1.5em; color: #22aaaa;">@preAsn.TotalPedido</span>
-                
+
             </div>
             <div style="line-height: 2em;" class="col-sm-3">
                 <strong>Total. Permitido</strong>
@@ -117,7 +117,7 @@
             <div style="line-height: 2em;" class="col-sm-3">
                 <strong>Total a Entregar</strong>
                 <span id="total-entregar" style="font-size: 1.5em; color: green;">0</span>
-                
+
             </div>
         </div>
         <hr style="margin-top: 5px; margin-bottom: 5px;" />
@@ -155,6 +155,8 @@
                     <th class="text-center">Almacen</th>
                     <th class="text-center">Descripcion</th>
                     <th class="text-center">Cant. Pedido</th>
+                    <th class="text-center">Cant. Entregada</th>
+                    <th class="text-center">Cant. Citas</th>
                     <th class="text-center">Cant. Permitida</th>
                     <th class="text-center">Cant. Entregar</th>
 
@@ -172,21 +174,18 @@
                         color = "red";
                     }
 
-                    <tr>
-
-                        <td class="text-center"> @detalle.NumeroMaterial</td>
-                        <td class="text-center"> @detalle.Centro</td>
-                        <td class="text-center"> @detalle.Almacen</td>
-                        <td class="text-center"> @detalle.DescripcionMaterial</td>
-                        <td class="text-center" style="font-weight: bold; cursor: pointer"> @detalle.CantidadPedido </td>
-                        <td class="text-center" style="font-weight: bold; cursor: pointer"> @detalle.CantidadPermitida </td>
-                        <td class="text-center" style="font-weight: bold; cursor: pointer; color: @color;">@detalle.Cantidad</td>
+                    <tr data-numeroposicion="@detalle.NumeroPosicion" data-numeromaterial="@detalle.NumeroMaterial" data-descripcionmaterial="@detalle.DescripcionMaterial" data-cantidadpermitida="@detalle.CantidadPermitida">
+                        <td class="text-center vert-align"> @detalle.NumeroMaterial</td>
+                        <td class="text-center vert-align"> @detalle.Centro</td>
+                        <td class="text-center vert-align"> @detalle.Almacen</td>
+                        <td class="text-center vert-align"> @detalle.DescripcionMaterial</td>
+                        <td class="text-center vert-align"> @detalle.CantidadPedido </td>
+                        <td class="text-center vert-align"> @detalle.CantidadEntregada </td>
+                        <td class="text-center vert-align"> @detalle.CantidadCitasFuturas </td>
+                        <td class="text-center vert-align" style="color: green;">@detalle.CantidadPermitida</td>
+                        <td class="text-center cantidad-entregar vert-align" style="font-weight: bold; cursor: pointer; color: @color;">@detalle.Cantidad</td>
                     </tr>
-
                 }
-
-
-
             </tbody>
         </table>
 
@@ -217,6 +216,8 @@
                         <div class="form-group">
                             <label class="col-xs-4 control-label">Cantidad</label>
                             <div class="col-xs-8">
+                                <input type="hidden" id="editar-numeromaterial">
+                                <input type="hidden" id="editar-numeroposicion">
                                 <input type="text" class="form-control numeric" id="editar-cantidad" placeholder="Cantidad">
                             </div>
                         </div>
@@ -246,13 +247,22 @@
 
     <script type="text/javascript">
 
+
         $(".numeric").numeric();
 
         $("input[name='cargar-planilla']").change(function () { this.form.submit(); });
 
+        var editingItem = {
+            numeroPosicion: null,
+            numeroMaterial: null,
+            descripcionMaterial: null,
+            cantidadPermitida: null,
+            cantidadEntregar: null
+        };
+
         var editingCell;
         var editingTd;
-
+        var tr;
 
         $(document).ready(function () {
 
@@ -265,10 +275,24 @@
             });
 
 
-            $('#asn tbody').on('click', 'td:nth-child(5)', function () {
-                $("#editar-material").text($($(this.parentNode).find('td')[0]).text());
-                $("#editar-descripcion").text($($(this.parentNode).find('td')[3]).text());
-                $("#editar-cantidad").val($($(this.parentNode).find('td')[4]).text());
+            $('#asn .cantidad-entregar').on('click', function () {
+
+                tr = $(this).parent();
+
+
+                editingItem.numeroPosicion = tr.attr("data-numeroposicion");
+                editingItem.numeroMaterial = tr.attr("data-numeromaterial");
+                editingItem.descripcionMaterial = tr.attr("data-descripcionmaterial");
+                editingItem.cantidadPermitida = tr.attr("data-cantidadpermitida");
+                editingItem.cantidadEntregar = $(tr.find(".cantidad-entregar")[0]).text();
+
+                $("#editar-material").text(editingItem.numeroPosicion + " - " + editingItem.numeroMaterial);
+                $("#editar-descripcion").text(editingItem.descripcionMaterial);
+
+                $("#editar-cantidad").val(editingItem.cantidadEntregar);
+                $("#editar-numeroposicion").val(editingItem.numeroPosicion);
+                $("#editar-numeromaterial").val(editingItem.numeroMaterial);
+
                 $("#modalEditarCantidad").modal('show');
                 editingCell = asn.cell(this);
                 editingTd = this;
@@ -278,11 +302,48 @@
 
             $('#modalEditarCantidad').on('hidden.bs.modal', function (e) {
 
-                if ($("#hidCancelarActualizar").val() === "0") {
+                var cantidadNueva = parseInt($("#editar-cantidad").val());
+                if (isNaN(cantidadNueva)) {
+                    //todo mejorar
+                    msgError("Incorrecto, Por favor coloque una cantidad");
+                    return;
+                }
+                var data = {
+                    numeroDocumento: "@preAsn.NumeroDocumento",
+                    numeroPosicion: editingItem.numeroPosicion,
+                    numeroMaterial: editingItem.numeroMaterial,
+                    cantidad: cantidadNueva
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AsnActualizarDetalle", "ControlCitas")",
+                    data: data,
+                    cache: false
+                }).done(function (result) {
+                    var td = $(tr.find(".cantidad-entregar")[0]);
+                    td.text(cantidadNueva);
+
+                    if (cantidadNueva < editingItem.cantidadPermitida) {
+                        td.css("color", "red");
+                    } else {
+                        td.css("color", "#000");
+                    }
+                    msgExito(result);
+
+
+                }).fail(function (response) {
+                    msgError(response.responseText);
+
+
+                });
+
+
+                @*if ($("#hidCancelarActualizar").val() === "0") {
 
                     var cantidadOrg = parseFloat($($(editingTd).parent().find('td')[5]).text());
 
-                    var cantidadNueva = parseInt($("#editar-cantidad").val());
+                     cantidadNueva = parseInt($("#editar-cantidad").val());
                     var vlItem = $($(editingTd).parent().find('td')[0]).text();
                     var vlNumOrden = "@preAsn.NumeroDocumento";
 
@@ -335,7 +396,7 @@
                             console.log(response);
                         });
                     }
-                }
+                }*@
             });
 
             calcularTotalEntregar();
@@ -360,7 +421,5 @@
             $("#modalEditarCantidad").modal('hidden.bs.modal');
 
         }
-
-
     </script>
 }

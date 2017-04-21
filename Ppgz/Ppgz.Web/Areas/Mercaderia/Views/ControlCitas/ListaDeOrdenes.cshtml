@@ -83,8 +83,8 @@
             <tbody>
             @foreach (var preAsn in currentCita.GetPreAsns())
             {
-                var cantPed = Decimal.ToInt32(preAsn.PreAsnDetails.AsEnumerable().Sum(x => x.CantidadPedido));
-                var cantComp = Decimal.ToInt32(preAsn.PreAsnDetails.AsEnumerable().Sum(x => x.CantidadComprometida));
+                var cantPed = Decimal.ToInt32(preAsn.Detalles.AsEnumerable().Sum(x => x.CantidadPedido));
+                var cantComp = Decimal.ToInt32(preAsn.Detalles.AsEnumerable().Sum(x => x.Cantidad));
 
                 var color = "#000";
                 if (cantComp < cantPed)

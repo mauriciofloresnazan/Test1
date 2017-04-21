@@ -48,6 +48,30 @@ namespace Ppgz.CitaWrapper
             var sapOrdenCompraManager = new SapOrdenCompraManager();
             var detalles = sapOrdenCompraManager.GetDetalle(proveedor.NumeroProveedor, organizacionCompras, numerDocumento);
 
+            var result = new List<PreAsnDetalle>();
+            foreach (var detalle in detalles)
+            {
+                var preAsnDetalle = new PreAsnDetalle()
+                {
+                    NumeroPosicion = detalle.NumeroPosicion,
+                    Centro = detalle.Centro,
+                    Almacen = detalle.Almacen,
+                    CantidadCitasFuturas = asnFuturos
+                        .Where(asn => asn.NumeroMaterial == detalle.NumeroMaterial)
+                        .Sum(asn => asn.Cantidad),
+                    CantidadEntregada = detalle.CantidadEntregada,
+                    CantidadPedido = detalle.CantidadPedido,
+                    DescripcionMaterial = detalle.Descripcion,
+                    NumeroMaterial = detalle.NumeroMaterial
+
+                };
+
+                preAsnDetalle.Cantidad = preAsnDetalle.CantidadPermitida;
+                result.Add(preAsnDetalle);
+            }
+
+            return result;
+
             return detalles.Select(detalle => new PreAsnDetalle()
             {
                 NumeroPosicion = detalle.NumeroPosicion,
