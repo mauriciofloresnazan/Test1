@@ -13,7 +13,7 @@ namespace Ppgz.CitaWrapper.Entities
 	{
 		/// <summary>Fecha de la cita.</summary>
 		[DataMember(Name = @"fechaCita", IsRequired = true, Order = 0)]
-		public string fechaCita;
+		public DateTime fechaCita;
 
 		/// <summary>Nombre de la tienda.</summary>
 		[DataMember(Name = @"tienda", IsRequired = true, Order = 1)]
