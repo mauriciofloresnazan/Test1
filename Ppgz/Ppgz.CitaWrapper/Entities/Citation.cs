@@ -44,23 +44,28 @@ namespace Ppgz.CitaWrapper.Entities
 	[DataContract(Name = @"Item", Namespace = @"http://localhost/CitationControlService", IsReference = false)]
 	public class Asn
 	{
+		/// <summary>Identificador único en el documento de orden de compra.</summary>
+		[DataMember(Name = @"numeroPosicion", IsRequired = true, Order = 0)]
+		[StringLength(10, MinimumLength = 1, ErrorMessage = @"Rango permitido es [1-30] caracteres.")]
+		public string numeroPosicion;
+		
 		/// <summary>Número de orden.</summary>
-		[DataMember(Name = @"ordenNumeroDocumento", IsRequired = true, Order = 0)]
+		[DataMember(Name = @"ordenNumeroDocumento", IsRequired = true, Order = 1)]
 		[StringLength(30, MinimumLength = 10, ErrorMessage = @"Rango permitido es [10-30] caracteres.")]
 		public string ordenNumeroDocumento;
 
 		/// <summary>Código del material.</summary>
-		[DataMember(Name = @"numeroMaterial", IsRequired = true, Order = 1)]
+		[DataMember(Name = @"numeroMaterial", IsRequired = true, Order = 2)]
 		[StringLength(10, MinimumLength = 10, ErrorMessage = @"Rango permitido es [10-10] caracteres.")]
 		public string numeroMaterial;
 
 		/// <summary>Nombre del material asociado.</summary>
-		[DataMember(Name = @"nombreMaterial", IsRequired = true, Order = 2)]
+		[DataMember(Name = @"nombreMaterial", IsRequired = true, Order = 3)]
 		[StringLength(50, MinimumLength = 10, ErrorMessage = @"Rango permitido es [10-50] caracteres.")]
 		public string nombreMaterial;
 
 		/// <summary>Catidad de dicho material.</summary>
-		[DataMember(Name = @"cantidad", IsRequired = true, Order = 3)]
+		[DataMember(Name = @"cantidad", IsRequired = true, Order = 4)]
 		public int cantidad;
 	}
 }

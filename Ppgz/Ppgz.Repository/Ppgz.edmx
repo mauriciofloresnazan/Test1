@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="impuls_portalModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="impuls_portalModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="acumuladores">
           <Key>
             <PropertyRef Name="Id" />
@@ -37,8 +37,9 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CitaId" Type="int" Nullable="false" />
+          <Property Name="CitaId" Type="int" />
           <Property Name="OrdenNumeroDocumento" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="NumeroPosicion" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="NumeroMaterial" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="NombreMaterial" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Cantidad" Type="int" Nullable="false" />
@@ -196,8 +197,8 @@
           <Property Name="UsuarioId" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="CuentaId" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'def.impuls_portal.devoluciones' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="devoluciones">
           <Key>
             <PropertyRef Name="id" />
@@ -344,8 +345,8 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
           <Property Name="FechaCargaPortal" Type="timestamp" Precision="0" Nullable="false" />
           <Property Name="CantidadComprometida" Type="decimal" Precision="18" Scale="3" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'def.impuls_portal.pagos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'def.impuls_portal.pagos' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="pagos">
           <Key>
             <PropertyRef Name="id" />
@@ -454,8 +455,8 @@ warning 6002: The table/view 'def.impuls_portal.pagos' does not have a primary k
           <Property Name="Nombre" Type="varchar" MaxLength="30" />
           <Property Name="Descripcion" Type="varchar" MaxLength="200" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'def.impuls_portal.vwdashboard' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'def.impuls_portal.vwdashboard' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="vwdashboard">
           <Key>
             <PropertyRef Name="horarioRielId" />
@@ -482,8 +483,8 @@ warning 6002: The table/view 'def.impuls_portal.vwdashboard' does not have a pri
           <Property Name="Hasta" Type="varchar" MaxLength="11" Nullable="false" />
           <Property Name="ProveedorId" Type="int" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <!--Errores durante la generación:
+advertencia 6002: La tabla o vista 'def.impuls_portal.vwmensajes' no tiene definida ninguna clave principal. Se ha inferido la clave y la definición se creado como una vista o tabla de solo lectura.-->
         <EntityType Name="vwmensajes">
           <Key>
             <PropertyRef Name="Id" />
@@ -542,7 +543,7 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_asn_cita">
-          <End Role="citas" Type="Self.citas" Multiplicity="1" />
+          <End Role="citas" Type="Self.citas" Multiplicity="0..1" />
           <End Role="asn" Type="Self.asn" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="citas">
@@ -1038,8 +1039,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="cuentasusuarios" EntitySet="cuentasusuarios" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="impuls_portalModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -1084,6 +1084,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="NombreMaterial" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Cantidad" Type="Int32" Nullable="false" />
           <NavigationProperty Name="cita" Relationship="Self.fk_asn_cita" FromRole="asn" ToRole="citas" />
+          <Property Name="NumeroPosicion" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="AspNetRole">
           <Key>
@@ -2010,6 +2011,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySetMapping Name="asns">
             <EntityTypeMapping TypeName="impuls_portalModel.asn">
               <MappingFragment StoreEntitySet="asn">
+                <ScalarProperty Name="NumeroPosicion" ColumnName="NumeroPosicion" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="CitaId" ColumnName="CitaId" />
                 <ScalarProperty Name="OrdenNumeroDocumento" ColumnName="OrdenNumeroDocumento" />
