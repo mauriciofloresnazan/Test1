@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CitaManager.cs" />
     <Compile Include="Entities\Citation.cs" />
     <Compile Include="PreAsn.cs" />
     <Compile Include="PreAsnDetalle.cs" />
