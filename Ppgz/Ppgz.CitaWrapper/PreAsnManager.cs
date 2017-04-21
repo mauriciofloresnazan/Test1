@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Ppgz.Repository;
 using SapWrapper;
 
 namespace Ppgz.CitaWrapper
@@ -10,7 +9,7 @@ namespace Ppgz.CitaWrapper
     {
         public List<PreAsn> GetOrdenesActivas(int proveedorId)
         {
-            var db = new Entities();
+            var db = new Repository.Entities();
             var proveedor = db.proveedores.Single(p => p.Id == proveedorId);
             
             
@@ -36,7 +35,7 @@ namespace Ppgz.CitaWrapper
         
         public List<PreAsnDetalle> GetDetalles(int proveedorId, string numerDocumento)
         {
-            var db = new Entities();
+            var db = new Repository.Entities();
             var proveedor = db.proveedores.Single(p => p.Id == proveedorId);
             
             var asnFuturos = db.asns

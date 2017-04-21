@@ -53,7 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ppgz.Repository\Ppgz.Repository.csproj">
-      <Project>{805197A6-6948-483E-A738-7AE7745AC953}</Project>
+      <Project>{805197a6-6948-483e-a738-7ae7745ac953}</Project>
       <Name>Ppgz.Repository</Name>
     </ProjectReference>
     <ProjectReference Include="..\SapWrapper\SapWrapper.csproj">
