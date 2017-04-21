@@ -1,0 +1,22 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TestServiceWCF.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TestJSON" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{
+	"fechaCita":"21/04/2017",
+	"tienda":"T001",
+	"cantidadTotal":10,
+	"proveedorId": 33,
+	"usuarioId":"15e814e8-0967-46e1-9a9d-fdfb7a1f2d4b",
+	"asnItems":[{
+		"numeroPosicion":"0015",
+		"ordenNumeroDocumento":"0001",
+		"numeroMaterial":"MAT01",
+		"nombreMaterial":"Zapatos",
+		"cantidad": 5
+	}]
+}</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

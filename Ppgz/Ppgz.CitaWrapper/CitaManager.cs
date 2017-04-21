@@ -1,82 +1,110 @@
-﻿using Ppgz.CitaWrapper.Entities;
+﻿using MySql.Data.MySqlClient;
+using Ppgz.CitaWrapper.Entities;
 using Ppgz.Repository;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.SqlClient;
 
 namespace Ppgz.CitaWrapper
 {
 	/// <summary>Clase gestora de citas.</summary>
-	public class CitaManager
+	public static class CitaManager
 	{
-		/// <summary>Propiedad de contexto de base de datos.</summary>
-		private Repository.Entities db;
-
-		/// <summary>Constructor de la clase.</summary>
-		public CitaManager()
-		{
-			db = new Repository.Entities();
-		}
-
 		/// <summary>Método que aplica las reglas de negocio para las citas.</summary>
 		/// <param name="cita"></param>
-		public void ValidarCita(Citation cita)
+		public static bool ValidarCita(Citation cita)
 		{
+			try
+			{
+				return true;
+			}
+			catch (Exception e)
+			{
+				//TODO: Manejar la excepción.
+				return false;
+			}
 		}
 
 		/// <summary>Método que agrega un registro en la tabla cita.</summary>
 		/// <param name="value">Objeto cita.</param>
-		private void InsertCita(Citation value)
+		public static bool InsertCita(Citation value)
 		{
-            try
-            {
-
-            	ValidarCita(value);
+			try
+			{
+				string queryCitas = @"INSERT INTO citas (FechaCita, Tienda, CantidadTotal, ProveedorId, UsuarioIdTx) VALUES (@param1, @param2, @param3, @param4, @param5); ";
+				List<MySqlParameter> valuesCitas = new List<MySqlParameter>
+				{
+					new MySqlParameter {
+						 ParameterName = @"param1",
+						Value = Convert.ToDateTime(value.fechaCita).ToString(@"yyyy-MM-dd")
+					},
+					new MySqlParameter {
+						 ParameterName = @"param2",
+						Value = value.tienda
+					},
+					new MySqlParameter {
+						 ParameterName = @"param3",
+						Value = value.cantidadTotal
+					},
+					new MySqlParameter {
+						 ParameterName = @"param4",
+						Value = value.proveedorId
+					},
+					new MySqlParameter {
+						 ParameterName = @"param5",
+						Value = value.usuarioId
+					}
+				};
+				Db.Insert(queryCitas, valuesCitas);
+				return true;
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
 				//TODO: Manejar la excepción.
+				return false;
 			}
-
-			cita objCita = new cita
-			{
-				FechaCita = value.fechaCita,
-				Tienda = value.tienda,
-				CantidadTotal = value.cantidadTotal,
-				ProveedorId = value.proveedorId,
-				UsuarioIdTx = value.usuarioId
-			};
-			db.citas.Add(objCita);
-			db.SaveChanges();
-
-
-            InsertAsn(value.asnItems);
 		}
 
 		/// <summary>Método que agrega un registro en la tabla asn.</summary>
 		/// <param name="items">Objeto Asn de la cita.</param>
-		private void InsertAsn(List<Asn> items)
+		public static bool InsertAsn(List<Asn> items)
 		{
-			foreach (Asn item in items)
+			try
 			{
-				try
+				string queryAsn = @"INSERT INTO asn (OrdenNumeroDocumento, NumeroMaterial, NombreMaterial, Cantidad, NumeroPosicion) VALUES (@param1, @param2, @param3, @param4, @param5);";
+				foreach (Asn item in items)
 				{
-					asn objAsn = new asn
-					{
-						OrdenNumeroDocumento = item.ordenNumeroDocumento,
-						NumeroMaterial = item.nombreMaterial,
-						Cantidad = item.cantidad,
-						NombreMaterial = item.nombreMaterial,
-						NumeroPosicion = item.numeroPosicion
+					List<MySqlParameter> itemAsn = new List<MySqlParameter> {
+						new MySqlParameter {
+								ParameterName = @"param1",
+							Value = item.ordenNumeroDocumento
+						},
+						new MySqlParameter {
+								ParameterName = @"param2",
+							Value = item.numeroMaterial
+						},
+						new MySqlParameter {
+								ParameterName = @"param3",
+							Value = item.nombreMaterial
+						},
+						new MySqlParameter {
+								ParameterName = @"param4",
+							Value = item.cantidad
+						},
+						new MySqlParameter {
+								ParameterName = @"param5",
+							Value = item.numeroPosicion
+						}
 					};
-					db.asns.Add(objAsn);
-					db.SaveChanges();
+					Db.Insert(queryAsn, itemAsn);
 				}
-				catch 
-				{
-				}
+				return true;
+			}
+			catch (Exception e)
+			{
+				//TODO: Manejar la excepción
+				return false;
 			}
 		}
 	}
 }
+
