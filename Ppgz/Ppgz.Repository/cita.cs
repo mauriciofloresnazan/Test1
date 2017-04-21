@@ -22,7 +22,7 @@ namespace Ppgz.Repository
     
         public int Id { get; set; }
         public string Codigo { get; set; }
-        public Nullable<System.DateTime> FechaCita { get; set; }
+        public System.DateTime FechaCita { get; set; }
         public Nullable<System.DateTime> FechaCreacion { get; set; }
         public string Tienda { get; set; }
         public Nullable<int> CantidadTotal { get; set; }
@@ -32,7 +32,7 @@ namespace Ppgz.Repository
         public string UsuarioIdTx { get; set; }
         public string OperacionTx { get; set; }
         public sbyte RielesOcupados { get; set; }
-        public int EstatusCitaId { get; set; }
+        public Nullable<int> EstatusCitaId { get; set; }
         public bool Penalizado { get; set; }
     
         public virtual ICollection<asn> asns { get; set; }

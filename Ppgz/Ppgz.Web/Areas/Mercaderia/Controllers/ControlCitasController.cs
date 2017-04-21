@@ -61,6 +61,30 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return View();
 		}
 
+
+        //
+        // GET: /Mercaderia/ControlCitas/
+        [Authorize(Roles = "MAESTRO-MERCADERIA")]
+        public ActionResult SeleccionarProveedor(int proveedorId)
+        {
+            if (CurrentCita != null)
+            {
+                LimpiarCita();
+            }
+
+            try
+            {
+                var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+                CurrentCita = new CurrentCita(cuenta.Id, proveedorId);
+                return RedirectToAction("BuscarOrden");
+            }
+            catch (Exception exception)
+            {
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("Index"); 
+            }
+        }
+
         
 		[Authorize(Roles = "MAESTRO-MERCADERIA")]
 		public ActionResult BuscarOrden(int proveedorId = 0)
@@ -173,10 +197,18 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		    var numeroDocumento = (string) TempData["numeroDocumento"];
 
             var proveedor = CurrentCita.Proveedor;
-		
 
-			ViewBag.Fechas = _ordenCompraManager
-                .GetAvailableDatesByOrdenCompra(numeroDocumento, proveedor.Id);
+		    var orden = CurrentCita.GetOrdenActivaDisponible(numeroDocumento);
+
+		    if (orden == null)
+            {
+                TempData["FlashError"] = "Numero de documento incorrecto";
+                return RedirectToAction("BuscarOrden");
+		        
+		    }
+
+
+            ViewBag.Fechas = orden.FechasPermitidas;
 
             ViewBag.NumeroDocumento = numeroDocumento;
 			ViewBag.proveedor = proveedor;
@@ -337,9 +369,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			dt.Columns.Add("Descripcion");
 			dt.Columns.Add("Cantidad");
 
-            foreach (var detalle in ordenCompra.ordencompradetalles)
+            foreach (var detalle in ordenCompra.Detalles)
 			{
-				dt.Rows.Add(detalle.NumeroMaterial, detalle.DescripcionMaterial, Decimal.ToInt32(decimal.Parse(detalle.CantidadPedido)));
+				dt.Rows.Add(detalle.NumeroMaterial, detalle.DescripcionMaterial, detalle.CantidadPedido);
 			}
 			
             FileManager.ExportExcel(dt, numeroDocumento + "_plantilla", HttpContext);
@@ -389,7 +421,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 
 		    var ordenCompra = CurrentCita.GetPreAsn(numeroDocumento);
-            var detalles = ordenCompra.ordencompradetalles;
+            var detalles = ordenCompra.Detalles;
 
 
 			var wb = new XLWorkbook(file.InputStream);
@@ -402,16 +434,16 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				for (var i = 2; i < detalles.Count + 2; i++)
 				{
 					var numeroMaterial = ws.Row(i).Cell(1).Value.ToString();
-					var cantidad = decimal.Parse(ws.Row(i).Cell(3).Value.ToString());
+					var cantidad = int.Parse(ws.Row(i).Cell(3).Value.ToString());
 
 					var detalle = detalles.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial);
 					if (detalle != null)
 					{
-						if (cantidad > decimal.Parse(detalle.CantidadPedido))
+						if (cantidad > detalle.CantidadPedido)
 						{
 							throw new BusinessException(string.Format("Error en la cantidad del Material {0}", detalle.NumeroMaterial));
 						}
-						detalle.CantidadComprometida = cantidad;
+						detalle.Cantidad  = cantidad;
 					}
 				}
 			}

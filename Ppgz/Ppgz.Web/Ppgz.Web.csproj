@@ -210,7 +210,6 @@
     <Compile Include="Areas\Mercaderia\Models\PefilProveedorViewModel.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarMensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
-    <None Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs.old" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\CuentasPagarController.cs" />
@@ -247,7 +246,6 @@
     <Content Include="Areas\Nazan\Views\AdministrarProveedores\Index.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarProveedores\Editar.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarProveedores\Registrar.cshtml" />
-    <None Include="Areas\Nazan\Views\AdministrarProveedores\Registrar.cshtml.old" />
     <Content Include="Areas\Nazan\Views\AdministrarMensajesInstitucionales\Crear.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarMensajesInstitucionales\Editar.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarMensajesInstitucionales\Index.cshtml" />
@@ -265,7 +263,6 @@
     <Content Include="Areas\Servicio\Views\AdministrarUsuarios\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\MensajesInstitucionales\index.cshtml" />
     <Content Include="Areas\Servicio\Views\MensajesInstitucionales\index.cshtml" />
-    <None Include="Areas\Nazan\Views\AdministrarProveedores\Editar.cshtml.old" />
     <Content Include="assets\css\msgcolores.css" />
     <Content Include="assets\js\bootbox.js" />
     <Content Include="assets\js\bootbox.min.js" />
@@ -293,6 +290,7 @@
     <Content Include="assets\vendor\bootstrap-toggle-master\js\bootstrap-toggle.min.js" />
     <Content Include="assets\vendor\bootstrap-toggle-master\js\bootstrap2-toggle.js" />
     <Content Include="assets\vendor\bootstrap-toggle-master\js\bootstrap2-toggle.min.js" />
+    <Content Include="assets\vendor\bootstrap3-typeahead.min.js" />
     <Content Include="assets\vendor\chosen_v1.6.2\bower.json" />
     <Content Include="assets\vendor\chosen_v1.6.2\package.json" />
     <Compile Include="Controllers\PoliticasController.cs" />
@@ -328,7 +326,6 @@
     <Compile Include="Infrastructure\TerminosCondiciones.cs" />
     <Compile Include="Infrastructure\TipoUsuario.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
-    <None Include="Areas\Nazan\Models\CuentaViewModel.cs.old" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Areas\Nazan\Models\MensajeViewModel.cs" />
     <Compile Include="Models\Nazan\PerfilViewModel.cs" />
@@ -1243,6 +1240,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ppgz.CitaWrapper\Ppgz.CitaWrapper.csproj">
+      <Project>{0dfd36c2-d8cf-48c7-b677-9372e11a62af}</Project>
+      <Name>Ppgz.CitaWrapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ppgz.Repository\Ppgz.Repository.csproj">
       <Project>{805197a6-6948-483e-a738-7ae7745ac953}</Project>
       <Name>Ppgz.Repository</Name>

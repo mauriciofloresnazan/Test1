@@ -1,4 +1,7 @@
-﻿using System.Data;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using Ppgz.Repository;
 using SAP.Middleware.Connector;
 
 namespace SapWrapper
@@ -49,5 +52,45 @@ namespace SapWrapper
             var result = function.GetTable("ET_DET");
             return result.ToDataTable("ET_DET");
         }
+
+        public List<SapOrdenCompra> GetActivasSinDetalle(string numeroProveedor, string organizacionCompras)
+        {
+            var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
+            var rfcRepository = rfcDestinationManager.Repository;
+            var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
+
+            function.SetValue("IM_LIFNR", numeroProveedor);
+            function.SetValue("IM_EKORG", organizacionCompras);
+            function.SetValue("IM_LOEKZ", "A");
+            function.SetValue("IM_GET_DET", " ");
+
+            function.Invoke(rfcDestinationManager);
+
+            var result = function.GetTable("ET_HDR");
+            var dt = result.ToDataTable("ET_HDR");
+
+            return (from DataRow dr in dt.Rows select new SapOrdenCompra(dr)).ToList();
+        }
+
+        public List<SapOrdenCompraDetalle> GetDetalle(string numeroProveedor, string organizacionCompras, string numeroDocumento)
+        {
+            var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
+            var rfcRepository = rfcDestinationManager.Repository;
+            var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
+
+            function.SetValue("IM_LIFNR", numeroProveedor);
+            function.SetValue("IM_EKORG", organizacionCompras);
+            function.SetValue("IM_LOEKZ", "A");
+            function.SetValue("IM_EBELN", numeroDocumento);
+            function.SetValue("IM_GET_DET", "X");
+
+            function.Invoke(rfcDestinationManager);
+
+            var result = function.GetTable("ET_DET");
+            var dt = result.ToDataTable("ET_DET");
+
+            return (from DataRow dr in dt.Rows select new SapOrdenCompraDetalle(dr)).ToList();
+        } 
+    
     }
 }

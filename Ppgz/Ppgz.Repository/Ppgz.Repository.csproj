@@ -158,6 +158,8 @@
     <Compile Include="riele.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="SapOrdenCompra.cs" />
+    <Compile Include="SapOrdenCompraDetalle.cs" />
     <Compile Include="tipocuenta.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>

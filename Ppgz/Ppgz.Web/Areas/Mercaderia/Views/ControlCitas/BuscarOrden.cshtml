@@ -3,18 +3,18 @@
 @model Ppgz.Web.Areas.Mercaderia.Models.PefilProveedorViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    
+
     var proveedor = (proveedore)ViewBag.proveedor;
-    
+
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
 
 
     ViewBag.Title = "Registrar Cita";
     ViewBag.Descripcion = "Paso 2 - Busque una Orden de Compra";
-    
-    
+
+
 }
-@Styles.Render("~/assets/vendor/bootstrap-chosen/bootstrap-chosen.css")
+
 <h2>Registrar Cita</h2>
 <p class="page-description-title">
     <i class="fa fa-calendar" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
@@ -35,7 +35,7 @@
         </div>
         @if (currentCita.Fecha != null)
         {
-            var fecha = (DateTime) @currentCita.Fecha;
+            var fecha = (DateTime)@currentCita.Fecha;
             <div class="row">
                 <label class="col-sm-3 control-label">Fecha de la cita</label>
                 <div class="col-sm-3">
@@ -108,8 +108,7 @@
                 <label class="col-sm-3 control-label"> Numero de Documento</label>
                 <div class="col-sm-7">
                     <input type="hidden" name="proveedorId" value="@proveedor.Id" />
-                    
-                    <input type="text" class="form-control" name="numeroDocumento" placeholder="Numero de Orden de Compra"/>
+                    <input type="text" id="numeroDocumento" autocomplete="off" class="form-control" name="numeroDocumento" placeholder="Numero de Orden de Compra" />
                 </div>
             </div>
 
@@ -128,8 +127,31 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/assets/vendor/chosen_v1.6.2/chosen.jquery.min.js")
-    <script>
+    @Scripts.Render("~/assets/vendor/bootstrap3-typeahead.min.js")
 
+    
+    <script>
+        $(document).ready(function () {
+            $('#numeroDocumento').typeahead({
+                source: [
+                    @foreach (var orden in currentCita.GetOrdenesActivasDisponibles())
+                    {<text>
+                         { id: "@orden.NumeroDocumento", name: "@orden.NumeroDocumento" },
+          
+                     
+                     </text>
+                    }
+                ],
+                autoSelect: true,
+                items: "all",
+                minLength: 0,
+                showHintOnFocus: true
+
+
+        });
+
+
+
+        });
     </script>
 }

@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="46462a75185749749d53cda599f96162" Name="Diagram1">
+      <Diagram DiagramId="15ac76a67f9a4b74806059c4c56b694b" Name="Diagram1">
         <EntityTypeShape EntityType="impuls_portalModel.acumuladore" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.almacene" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.andene" Width="1.5" PointX="13.5" PointY="25.75" IsExpanded="true" />
@@ -39,7 +39,7 @@
         <EntityTypeShape EntityType="impuls_portalModel.vwmensaje" Width="1.5" PointX="8.75" PointY="3.75" IsExpanded="true" />
         <AssociationConnector Association="impuls_portalModel.fk_acumulador_almacen" ManuallyRouted="false" />
         <AssociationConnector Association="impuls_portalModel.fk_rieles_anden" ManuallyRouted="false" />
-        <AssociationConnector Association="impuls_portalModel.fk_cita_asn" ManuallyRouted="false" />
+        <AssociationConnector Association="impuls_portalModel.fk_asn_cita" ManuallyRouted="false" />
         <AssociationConnector Association="impuls_portalModel.ApplicationUser_Claims" ManuallyRouted="false" />
         <AssociationConnector Association="impuls_portalModel.ApplicationUser_Logins" ManuallyRouted="false" />
         <AssociationConnector Association="impuls_portalModel.fk_citas_usuario" ManuallyRouted="false" />

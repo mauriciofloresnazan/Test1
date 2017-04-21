@@ -37,11 +37,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="CitaId" Type="int" />
-          <Property Name="OrdenNumeroDocumento" Type="varchar" MaxLength="30" />
-          <Property Name="NumeroMaterial" Type="varchar" MaxLength="10" />
-          <Property Name="NombreMaterial" Type="varchar" MaxLength="50" />
-          <Property Name="Cantidad" Type="int" />
+          <Property Name="CitaId" Type="int" Nullable="false" />
+          <Property Name="OrdenNumeroDocumento" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="NumeroMaterial" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="NombreMaterial" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cantidad" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="AspNetRoles">
           <Key>
@@ -113,7 +113,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Codigo" Type="varchar" MaxLength="5" />
-          <Property Name="FechaCita" Type="datetime" Precision="0" />
+          <Property Name="FechaCita" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="FechaCreacion" Type="datetime" Precision="0" />
           <Property Name="Tienda" Type="varchar" MaxLength="5" />
           <Property Name="CantidadTotal" Type="int" />
@@ -123,7 +123,7 @@
           <Property Name="UsuarioIdTx" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="OperacionTx" Type="enum" Nullable="false" />
           <Property Name="RielesOcupados" Type="tinyint" Nullable="false" />
-          <Property Name="EstatusCitaId" Type="int" Nullable="false" />
+          <Property Name="EstatusCitaId" Type="int" />
           <Property Name="Penalizado" Type="bool" Nullable="false" />
         </EntityType>
         <EntityType Name="configuraciones">
@@ -541,6 +541,18 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_asn_cita">
+          <End Role="citas" Type="Self.citas" Multiplicity="1" />
+          <End Role="asn" Type="Self.asn" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="citas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="asn">
+              <PropertyRef Name="CitaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_aspnetuserroles_role">
           <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1" />
           <End Role="AspNetUserRoles" Type="Self.AspNetUserRoles" Multiplicity="*" />
@@ -565,20 +577,8 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_cita_asn">
-          <End Role="citas" Type="Self.citas" Multiplicity="0..1" />
-          <End Role="asn" Type="Self.asn" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="citas">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="asn">
-              <PropertyRef Name="CitaId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_citas_estatus">
-          <End Role="estatuscitas" Type="Self.estatuscitas" Multiplicity="1" />
+          <End Role="estatuscitas" Type="Self.estatuscitas" Multiplicity="0..1" />
           <End Role="citas" Type="Self.citas" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="estatuscitas">
@@ -937,6 +937,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="almacenes" EntitySet="almacenes" />
             <End Role="acumuladores" EntitySet="acumuladores" />
           </AssociationSet>
+          <AssociationSet Name="fk_asn_cita" Association="Self.fk_asn_cita">
+            <End Role="citas" EntitySet="citas" />
+            <End Role="asn" EntitySet="asn" />
+          </AssociationSet>
           <AssociationSet Name="fk_aspnetuserroles_role" Association="Self.fk_aspnetuserroles_role">
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
@@ -944,10 +948,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="fk_aspnetuserroles_usuario" Association="Self.fk_aspnetuserroles_usuario">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserRoles" EntitySet="AspNetUserRoles" />
-          </AssociationSet>
-          <AssociationSet Name="fk_cita_asn" Association="Self.fk_cita_asn">
-            <End Role="citas" EntitySet="citas" />
-            <End Role="asn" EntitySet="asn" />
           </AssociationSet>
           <AssociationSet Name="fk_citas_estatus" Association="Self.fk_citas_estatus">
             <End Role="estatuscitas" EntitySet="estatuscitas" />
@@ -1078,12 +1078,12 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CitaId" Type="Int32" />
-          <Property Name="OrdenNumeroDocumento" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="NumeroMaterial" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="NombreMaterial" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Cantidad" Type="Int32" />
-          <NavigationProperty Name="cita" Relationship="Self.fk_cita_asn" FromRole="asn" ToRole="citas" />
+          <Property Name="CitaId" Type="Int32" Nullable="false" />
+          <Property Name="OrdenNumeroDocumento" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NumeroMaterial" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NombreMaterial" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Cantidad" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="cita" Relationship="Self.fk_asn_cita" FromRole="asn" ToRole="citas" />
         </EntityType>
         <EntityType Name="AspNetRole">
           <Key>
@@ -1160,7 +1160,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Codigo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="FechaCita" Type="DateTime" />
+          <Property Name="FechaCita" Type="DateTime" Nullable="false" />
           <Property Name="FechaCreacion" Type="DateTime" />
           <Property Name="Tienda" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="CantidadTotal" Type="Int32" />
@@ -1170,9 +1170,9 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="UsuarioIdTx" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="RielesOcupados" Type="SByte" Nullable="false" />
-          <Property Name="EstatusCitaId" Type="Int32" Nullable="false" />
+          <Property Name="EstatusCitaId" Type="Int32" />
           <Property Name="Penalizado" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="asns" Relationship="Self.fk_cita_asn" FromRole="citas" ToRole="asn" />
+          <NavigationProperty Name="asns" Relationship="Self.fk_asn_cita" FromRole="citas" ToRole="asn" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_citas_usuario" FromRole="citas" ToRole="AspNetUsers" />
           <NavigationProperty Name="estatuscita" Relationship="Self.fk_citas_estatus" FromRole="citas" ToRole="estatuscitas" />
           <NavigationProperty Name="horariorieles" Relationship="Self.fk_horariorieles_citas" FromRole="citas" ToRole="horariorieles" />
@@ -1581,8 +1581,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_cita_asn">
-          <End Role="citas" Type="Self.cita" Multiplicity="0..1" />
+        <Association Name="fk_asn_cita">
+          <End Role="citas" Type="Self.cita" Multiplicity="1" />
           <End Role="asn" Type="Self.asn" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="citas">
@@ -1682,7 +1682,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           </ReferentialConstraint>
         </Association>
         <Association Name="fk_citas_estatus">
-          <End Role="estatuscitas" Type="Self.estatuscita" Multiplicity="1" />
+          <End Role="estatuscitas" Type="Self.estatuscita" Multiplicity="0..1" />
           <End Role="citas" Type="Self.cita" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="estatuscitas">
@@ -1878,7 +1878,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="andenes" EntitySet="andenes" />
             <End Role="rieles" EntitySet="rieles" />
           </AssociationSet>
-          <AssociationSet Name="fk_cita_asn" Association="Self.fk_cita_asn">
+          <AssociationSet Name="fk_asn_cita" Association="Self.fk_asn_cita">
             <End Role="citas" EntitySet="citas" />
             <End Role="asn" EntitySet="asns" />
           </AssociationSet>

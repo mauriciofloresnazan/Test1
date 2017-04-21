@@ -15,11 +15,11 @@ namespace Ppgz.Repository
     public partial class asn
     {
         public int Id { get; set; }
-        public Nullable<int> CitaId { get; set; }
+        public int CitaId { get; set; }
         public string OrdenNumeroDocumento { get; set; }
         public string NumeroMaterial { get; set; }
         public string NombreMaterial { get; set; }
-        public Nullable<int> Cantidad { get; set; }
+        public int Cantidad { get; set; }
     
         public virtual cita cita { get; set; }
     }

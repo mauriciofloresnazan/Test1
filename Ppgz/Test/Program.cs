@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.Linq;
 using MySql.Data.MySqlClient;
@@ -18,6 +19,21 @@ namespace Test
         
         static void Main(string[] args)
         {
+            const string sql = @"INSERT INTO citas (FechaCita, Tienda, CantidadTotal, ProveedorId, UsuarioIdTx)
+                        VALUES(@FechaCita, @Tienda, @CantidadTotal, @ProveedorId, @UsuarioIdTx)";
+
+                var parameters =new List<MySqlParameter>
+                {
+                    new MySqlParameter("FechaCita", DateTime.Today.Date),
+                    new MySqlParameter("Tienda", "TD01"),
+                    new MySqlParameter("CantidadTotal", 50),
+                    new MySqlParameter("ProveedorId", "33"),
+                    new MySqlParameter("UsuarioIdTx", "15e814e8-0967-46e1-9a9d-fdfb7a1f2d4b"),              
+
+                };
+
+                Db.Insert(sql, parameters);
+
 
             Console.WriteLine(DateTime.Now.Hour);
             Console.ReadLine();
@@ -192,6 +208,8 @@ namespace Test
 
         static void TestDao(string id)
         {
+            
+
             var i = 10000;
             while (i > 0)
             {

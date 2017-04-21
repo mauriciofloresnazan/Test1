@@ -108,6 +108,25 @@ namespace Ppgz.Services
             return true;
         }
 
+        public List<SapOrdenCompra> GetActivasSinDetalle(int cuentaId, int proveedorId)
+        {
+            var proveedor = _db.proveedores.Find(proveedorId);
+            if (proveedor == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
+
+            if (proveedor.CuentaId != cuentaId)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
+            
+            // TODO DEFINIR COMO OBTENER LA ORGANIZACIÓN DE COMPRAS
+            const string organizacionCompra = "OC01";
+            var sapOrdenCompraManager  = new SapOrdenCompraManager();
+            return sapOrdenCompraManager.GetActivasSinDetalle(proveedor.NumeroProveedor, organizacionCompra);
+        }
+
         public List<PreAsnDetail> GetPreAsnDetails(string numeroDocumento, string numeroProveedor)
         {
             var sapOrdenCompraManager = new SapOrdenCompraManager();
@@ -157,8 +176,9 @@ namespace Ppgz.Services
 
     }
 
-    public class PreAsn : ordencompra
+    public class PreAsn 
     {
+        public proveedore Proveedor { get; set; }
 
         public ICollection<PreAsnDetail> PreAsnDetails { get; set; }
 
@@ -184,6 +204,8 @@ namespace Ppgz.Services
                 return PreAsnDetails.AsEnumerable().Sum(x => x.Cantidad);
             }
         }
+
+        public string NumeroDocumento { get; set; }
     }
 
     public class PreAsnDetail : ordencompradetalle

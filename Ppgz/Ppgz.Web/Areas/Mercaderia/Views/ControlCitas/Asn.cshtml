@@ -5,7 +5,7 @@
     ViewBag.Title = "Registrar Cita";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var preAsn = (PreAsn)ViewBag.OrdenCompra;
+    var preAsn = (Ppgz.CitaWrapper.PreAsn)ViewBag.OrdenCompra;
 
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
 
@@ -162,10 +162,10 @@
             <tbody>
 
 
-                @foreach (var detalle in preAsn.PreAsnDetails)
+                @foreach (var detalle in preAsn.Detalles)
                 {
 
-                    var cantComp = Decimal.ToInt32(detalle.CantidadComprometida);
+                    var cantComp = Decimal.ToInt32(detalle.Cantidad);
                     var cantPed = Convert.ToInt32(decimal.Parse(detalle.CantidadPedido.ToString()));
                     var color = "#000";
                     if (cantComp < cantPed)

@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ppgz.CitaWrapper;
 using Ppgz.Repository;
 using Ppgz.Services;
+using PreAsn = Ppgz.CitaWrapper.PreAsn;
+
 
 namespace Ppgz.Web.Areas.Mercaderia
 {
     public class CurrentCita
     {
-        #region Escepciones
+        #region Excepciones
         public class NumeroDocumentoException : Exception
         {
 
@@ -33,9 +36,9 @@ namespace Ppgz.Web.Areas.Mercaderia
 
         public DateTime? Fecha { get; private set; }
 
-        private readonly List<ordencompra> _ordenesActivas;
+        private readonly List<PreAsn> _ordenesActivas;
 
-        public List<ordencompra> GetOrdenesActivasDisponibles()
+        public List<PreAsn> GetOrdenesActivasDisponibles()
         {
             var documentos = _ordenes
                 .Select(o => o.NumeroDocumento).ToArray();
@@ -45,7 +48,7 @@ namespace Ppgz.Web.Areas.Mercaderia
                 .ToList();
         }
 
-        public ordencompra GetOrdenActivaDisponible(string numeroDocumento)
+        public PreAsn GetOrdenActivaDisponible(string numeroDocumento)
         {
             var ordenesActivasDisponibles = GetOrdenesActivasDisponibles();
             return !ordenesActivasDisponibles.Any() ? 
@@ -68,10 +71,9 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             _ordenes = new List<PreAsn>();
 
-            var ordenCompraManager = new OrdenCompraManager();
+            var preAsnManager = new PreAsnManager();
 
-            _ordenesActivas = ordenCompraManager
-                .FindOrdenesDecompraActivas(proveedor.Id);
+            _ordenesActivas = preAsnManager.GetOrdenesActivas(proveedor.Id);
 
             if (!_ordenesActivas.Any())
             {
@@ -108,22 +110,22 @@ namespace Ppgz.Web.Areas.Mercaderia
                 throw new OrdenDuplicadaException();
             }
 
-            var asnManager = new AsnManager();
-            var details = asnManager.GetPreAsnDetails(numeroDocumento, Proveedor.NumeroProveedor);
+            var preAsnManager = new PreAsnManager();
+            var detalles = preAsnManager.GetDetalles(Proveedor.Id, numeroDocumento);
 
 
-            if (!details.Any())
+            if (!detalles.Any())
             {
                 throw new OrdenSinDetalleException();
             }
 
             var preAsn = new PreAsn
             {
+                NumeroProveedor =  orden.NumeroProveedor,
                 NumeroDocumento =  orden.NumeroDocumento,
-                NumeroProveedor = orden.NumeroProveedor,
-                ProveedorId = orden.ProveedorId,
-                proveedore = orden.proveedore,
-                PreAsnDetails = details
+                Detalles =  detalles,
+                
+     
             };
 
      
@@ -172,7 +174,7 @@ namespace Ppgz.Web.Areas.Mercaderia
                 throw new BusinessException("Numero de documento incorrecto");
             }
 
-            var detalle = preAsn.PreAsnDetails.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial);
+            var detalle = preAsn.Detalles.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial);
 
             if (detalle == null)
             {
@@ -184,46 +186,10 @@ namespace Ppgz.Web.Areas.Mercaderia
                 throw new BusinessException("Cantidad incorrecta");
             }
 
-            detalle.CantidadComprometida = cantidad;
+            detalle.Cantidad = cantidad;
         } 
 
-        public int UpdateElementoEnLista(string numeroDocumento, string numeroMaterial, 
-            int oldValue, int newValue)
-        {
 
-            /**************************************
-            METODO PARA ACTUALIZAR LA CANTIDAD
-             DE LA TALLA, EXISTENTE EN UN ITEMS
-             PARA UN NUMERO DE ORDEN
-            ***************************************/
-
-            var resultado = 0;
-
-            var orden = _ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
-
-            if (orden == null)
-            {
-                return resultado;
-            }
-
-            if (!orden.ordencompradetalles.Any())
-            {
-                return resultado;
-            }
-
-            var detalle = orden.ordencompradetalles.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial);
-          
-            if (detalle == null)
-            {
-                return resultado;
-            }
-
-            detalle.CantidadComprometida = newValue;
-            resultado = 1;
-
-            return resultado;
-
-        }
-        
+    
     }
 }
