@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ppgz.BatchFileProcessor", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ppgz.CitaWrapper", "Ppgz.CitaWrapper\Ppgz.CitaWrapper.csproj", "{0DFD36C2-D8CF-48C7-B677-9372E11A62AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CitationControl", "CitationControl\CitationControl.csproj", "{46DD4D34-DE34-4EFC-8AA1-F23DEA3AA457}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{0DFD36C2-D8CF-48C7-B677-9372E11A62AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0DFD36C2-D8CF-48C7-B677-9372E11A62AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0DFD36C2-D8CF-48C7-B677-9372E11A62AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46DD4D34-DE34-4EFC-8AA1-F23DEA3AA457}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46DD4D34-DE34-4EFC-8AA1-F23DEA3AA457}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46DD4D34-DE34-4EFC-8AA1-F23DEA3AA457}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46DD4D34-DE34-4EFC-8AA1-F23DEA3AA457}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
