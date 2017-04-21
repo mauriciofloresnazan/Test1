@@ -64,7 +64,12 @@ namespace Ppgz.CitaWrapper
             }).ToList();
             
 
-        } 
+        }
 
+        public void ValidarOrden()
+        {
+
+            
+        }
     }
 }

@@ -154,8 +154,9 @@
                     <th class="text-center">Centro</th>
                     <th class="text-center">Almacen</th>
                     <th class="text-center">Descripcion</th>
-                    <th class="text-center">Cant. Entregar</th>
                     <th class="text-center">Cant. Pedido</th>
+                    <th class="text-center">Cant. Permitida</th>
+                    <th class="text-center">Cant. Entregar</th>
 
                 </tr>
             </thead>
@@ -165,10 +166,8 @@
                 @foreach (var detalle in preAsn.Detalles)
                 {
 
-                    var cantComp = Decimal.ToInt32(detalle.Cantidad);
-                    var cantPed = Convert.ToInt32(decimal.Parse(detalle.CantidadPedido.ToString()));
                     var color = "#000";
-                    if (cantComp < cantPed)
+                    if (detalle.Cantidad < detalle.CantidadPermitida)
                     {
                         color = "red";
                     }
@@ -179,9 +178,9 @@
                         <td class="text-center"> @detalle.Centro</td>
                         <td class="text-center"> @detalle.Almacen</td>
                         <td class="text-center"> @detalle.DescripcionMaterial</td>
-                        <td class="text-center" style="font-weight: bold; cursor: pointer; color: @color;">@cantComp</td>
-                        <td class="text-center" style="font-weight: bold; cursor: pointer"> @cantPed </td>
-
+                        <td class="text-center" style="font-weight: bold; cursor: pointer"> @detalle.CantidadPedido </td>
+                        <td class="text-center" style="font-weight: bold; cursor: pointer"> @detalle.CantidadPermitida </td>
+                        <td class="text-center" style="font-weight: bold; cursor: pointer; color: @color;">@detalle.Cantidad</td>
                     </tr>
 
                 }

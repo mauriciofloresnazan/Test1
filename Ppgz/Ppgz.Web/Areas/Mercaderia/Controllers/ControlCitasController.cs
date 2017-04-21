@@ -10,7 +10,6 @@ using MySql.Data.MySqlClient;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
-using OrdenCompraManager = Ppgz.Services.OrdenCompraManager;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -20,9 +19,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 	{
 		readonly ProveedorManager _proveedorManager = new ProveedorManager();
 		readonly CommonManager _commonManager = new CommonManager();
-		readonly OrdenCompraManager _ordenCompraManager = new OrdenCompraManager();
 
-		private const string NombreVarSession = "controlCita";
+	    private const string NombreVarSession = "controlCita";
 		internal void LimpiarCita()
 		{
 			if (System.Web.HttpContext.Current.Session[NombreVarSession] != null)
