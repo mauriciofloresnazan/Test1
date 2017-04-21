@@ -23,21 +23,22 @@ namespace Ppgz.CitaWrapper
 		/// <param name="cita"></param>
 		public void ValidarCita(Citation cita)
 		{
-			try
-			{
-				InsertCita(cita);
-				InsertAsn(cita.asnItems);
-			}
-			catch (Exception)
-			{
-				//TODO: Manejar la excepción.
-			}
 		}
 
 		/// <summary>Método que agrega un registro en la tabla cita.</summary>
 		/// <param name="value">Objeto cita.</param>
 		private void InsertCita(Citation value)
 		{
+            try
+            {
+
+            	ValidarCita(value);
+			}
+			catch (Exception)
+			{
+				//TODO: Manejar la excepción.
+			}
+
 			cita objCita = new cita
 			{
 				FechaCita = value.fechaCita,
@@ -48,6 +49,9 @@ namespace Ppgz.CitaWrapper
 			};
 			db.citas.Add(objCita);
 			db.SaveChanges();
+
+
+            InsertAsn(value.asnItems);
 		}
 
 		/// <summary>Método que agrega un registro en la tabla asn.</summary>
