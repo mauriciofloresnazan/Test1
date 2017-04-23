@@ -155,6 +155,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     TempData["FlashError"] = "Numero de documento incorrecto";
                     return RedirectToAction("BuscarOrden", new { proveedor.Id });
                 }
+                catch (CurrentCita.FechaException)
+                {
+                    TempData["FlashError"] = "La orden no puede ser entregada en la fecha de la cita";
+                    return RedirectToAction("BuscarOrden", new { proveedor.Id });
+                }
 			}
 
 		    if (CurrentCita.GetOrdenActivaDisponible(numeroDocumento) == null)
@@ -231,7 +236,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             try
             {
-                CurrentCita.SetFecha(DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                CurrentCita.SetFecha(DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture), numeroDocumento);
 
                 CurrentCita.AddPreAsn(numeroDocumento);
 
@@ -256,6 +261,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             catch (BusinessException exception)
             {
                 TempData["FlashError"] = exception.Message;
+                return RedirectToAction("BuscarOrden", new { proveedor.Id });
+            }
+            catch (CurrentCita.FechaException)
+            {
+                TempData["FlashError"] = "La orden no puede ser entregada en la fecha de la cita";
                 return RedirectToAction("BuscarOrden", new { proveedor.Id });
             }
 		}

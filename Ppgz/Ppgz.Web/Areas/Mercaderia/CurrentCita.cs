@@ -24,6 +24,10 @@ namespace Ppgz.Web.Areas.Mercaderia
         {
             
         }
+        public class FechaException : Exception
+        {
+
+        }
         #endregion Escepciones
 
         private readonly proveedore _proveedor;
@@ -42,6 +46,18 @@ namespace Ppgz.Web.Areas.Mercaderia
         {
             var documentos = _ordenes
                 .Select(o => o.NumeroDocumento).ToArray();
+
+
+
+            if (Fecha != null)
+            {
+                var fecha = (DateTime)Fecha;
+                return _ordenesActivas
+                    .Where(o => !documentos.Contains(o.NumeroDocumento))
+                    .Where(o => o.FechasPermitidas.Contains(fecha))
+                    .ToList();
+            }
+
 
             return  _ordenesActivas
                 .Where(o => !documentos.Contains(o.NumeroDocumento))
@@ -81,17 +97,24 @@ namespace Ppgz.Web.Areas.Mercaderia
             }
         }
 
-        public void SetFecha(DateTime fecha)
+        public void SetFecha(DateTime fecha, string numeroDocumento)
         {
-            if (fecha < DateTime.Today)
+            var orden = GetOrdenActivaDisponible(numeroDocumento);
+
+            if (orden == null)
             {
-                // TODO 
+                // TODO pasar a resource
+                throw new BusinessException("Numero de documento incorrecto");
+            }
+            
+            if (!orden.FechasPermitidas.Contains(fecha))
+            {
+                // TODO pasar a resource
                 throw new BusinessException("Fecha incorrecta");
                 
             }
             
             Fecha = fecha;
-            
         }
 
         public void AddPreAsn(string numeroDocumento)
@@ -108,6 +131,12 @@ namespace Ppgz.Web.Areas.Mercaderia
             if (_ordenes.Any(o => o.NumeroDocumento == numeroDocumento))
             {
                 throw new OrdenDuplicadaException();
+            }
+
+            if (!orden.FechasPermitidas.Contains((DateTime) Fecha))
+            {
+                // TODO pasar a resource
+                throw new FechaException();
             }
 
             var preAsnManager = new PreAsnManager();

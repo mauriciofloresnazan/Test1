@@ -75,6 +75,12 @@ namespace Ppgz.CitaWrapper
             return result;
         }
         
+
+        /// <summary>
+        /// Basado en las reglas de negocio calcula las fechas permitidas para una orden de compra
+        /// este componente sera consumido por el modulo de citas para mostrar las fechas disponibles 
+        /// para las ordenes mejorando la usabilidad
+        /// </summary>
         public static List<DateTime> GetFechasPermitidas(DateTime sapFechaEntrega, bool esProveedorEspecial)
         {
             // Limpieza de fecha
@@ -164,56 +170,7 @@ namespace Ppgz.CitaWrapper
             return fechasPermitidas;*/
         }
 
-        private static bool EsFechaValida(DateTime dateTime, bool esProveedorEspecial)
-        {
-            var fecha = dateTime.Date;
-
-            var manana = DateTime.Today.Date.AddDays(1);
-            // Las fechas deben ser superiores al dia en curso
-            if (fecha < manana)
-            {
-                return false;
-            }
-
-            // Solo tien hasta las 5pm del día en curso se poder incluir el día siguiente 
-            // TODO pasar al la tabla de configuraciones
-            if (fecha == manana)
-            {
-                if (DateTime.Now.Hour > 17)
-                {
-                    return false;
-                }
-            }
-
-            var diaDeSemana = fecha.DayOfWeek.ToString();
-            if (!esProveedorEspecial)
-            {
-                // TODO OBTENER DE CONFIGURACIONES
-                var diasEspeciales = new[]
-                {
-                    "",
-                };
-                if (diasEspeciales.Contains(diaDeSemana))
-                {
-                    return false;
-                }
-            }
-
-            // TODO INCLUIR SOLO LOS DIAS CONFIGURADOS PARA OPERAR
-            return true;
-        }
-
-
-
-
-
-
-
-
-
-
-
-
+        
 
 
 
