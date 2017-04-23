@@ -56,7 +56,7 @@ namespace Ppgz.Web.Areas.Mercaderia
                 ordenesActivasDisponibles.FirstOrDefault(oa => oa.NumeroDocumento == numeroDocumento);
         }
 
-        public CurrentCita(int cuentaId, int proveedorId)
+        public CurrentCita(int cuentaId, int proveedorId, string centro)
         {
             var proveedorManager = new ProveedorManager();
 

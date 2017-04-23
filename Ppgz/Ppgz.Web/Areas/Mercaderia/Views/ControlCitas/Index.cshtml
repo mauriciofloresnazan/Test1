@@ -33,7 +33,10 @@
                             <td class="text-center">@proveedor.Rfc</td>
                             <td class="text-center vert-align">@proveedor.Nombre1</td>
                             <td class="text-center">
-                                <a class="btn btn-primary btn-sm" href="@Url.Action("SeleccionarProveedor", "ControlCitas", new {@proveedorId = @proveedor.Id})">
+
+
+
+                                <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#centro-modal" data-proveedorid="@proveedor.Id">
                                     <i class="fa fa-check" aria-hidden="true"></i> Siguiente
                                 </a>
                             </td>
@@ -45,13 +48,46 @@
     </div>
 </div>
 
+<div class="modal fade" id="centro-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Seleccione un Almacén</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="btn-group" data-toggle="buttons">
+                        <label class="btn btn-primary">
+                            <input type="radio" name="radio-almacen" id="CD01" autocomplete="off"> CD01
+                        </label>
+                        <label class="btn btn-primary">
+                            <input type="radio" name="radio-almacen" id="CD02" autocomplete="off"> CD02
+                        </label>
+                    </div>
+ 
+                </div>
+
+            </div>
+    </div>
+</div>
+
 
 @section Scripts {
     <script type="text/javascript">
-        var usuarioMensajes = "@ViewBag.mensajesUsuario";
+        
+        var url = "@Url.Action("SeleccionarProveedor", "ControlCitas")";
+
+        var proveedorId;
 
         $(document).ready(function () {
 
+            $('#centro-modal').on('show.bs.modal', function (e) {
+                proveedorId = $(e.relatedTarget).data('proveedorid');
+            });
+
+            $("#centro-modal input[name=radio-almacen]:radio").change(function () {
+                location.href = url + "?proveedorId=" + proveedorId + "&centro=" +$(this).attr("id");
+            });
 
             $('#proveedores').DataTable({
                 "language": {

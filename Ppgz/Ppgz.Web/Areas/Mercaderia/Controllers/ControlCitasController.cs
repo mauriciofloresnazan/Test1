@@ -63,7 +63,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         //
         // GET: /Mercaderia/ControlCitas/
         [Authorize(Roles = "MAESTRO-MERCADERIA")]
-        public ActionResult SeleccionarProveedor(int proveedorId)
+        public ActionResult SeleccionarProveedor(int proveedorId, string centro)
         {
             if (CurrentCita != null)
             {
@@ -73,7 +73,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             try
             {
                 var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-                CurrentCita = new CurrentCita(cuenta.Id, proveedorId);
+                CurrentCita = new CurrentCita(cuenta.Id, proveedorId, centro);
                 return RedirectToAction("BuscarOrden");
             }
             catch (Exception exception)
@@ -91,9 +91,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			{
                 if (CurrentCita == null)
                 {
-                    // La primera vez se crea una nueva isntancia de la cita
-                    var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-                    CurrentCita = new CurrentCita(cuenta.Id, proveedorId);
+                    return RedirectToAction("Index");
                 }
 
 			}
