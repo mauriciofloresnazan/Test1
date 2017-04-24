@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Web.ModelBinding;
 
 namespace Ppgz.Web.Models
 {
@@ -67,7 +68,7 @@ namespace Ppgz.Web.Models
     public class ForgotPasswordViewModel
     {
         [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Debe colocar un correo electrónico válido")]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
     }
@@ -75,7 +76,7 @@ namespace Ppgz.Web.Models
     public class ResetPasswordViewModel
     {
         [Required]
-        [EmailAddress]
+        [EmailAddress(ErrorMessage = "Debe colocar un correo electrónico válido")]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
 

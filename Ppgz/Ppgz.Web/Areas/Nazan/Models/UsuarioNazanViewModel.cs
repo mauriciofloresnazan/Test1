@@ -46,14 +46,14 @@ namespace Ppgz.Web.Areas.Nazan.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
-        [StringLength(100, ErrorMessage = "El Password debe tener al menos 6 caracteres.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "La contraseña debe tener al menos 6 caracteres.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
-        [Compare("Password", ErrorMessage = "El password y la confirmación no coinciden.")]
+        [Compare("Password", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
         public string ConfirmarPassword { get; set; }
 
     }

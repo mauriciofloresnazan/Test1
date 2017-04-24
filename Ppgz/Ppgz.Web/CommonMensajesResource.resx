@@ -124,7 +124,7 @@
     <value>Su cuenta ha sido bloqueada por {0} minutos debido a {1} intentos fallidos.</value>
   </data>
   <data name="ERROR_Identity_UsuarioPassword" xml:space="preserve">
-    <value>Usuario o Password incorrecto</value>
+    <value>Usuario o Contraseña incorrecto</value>
   </data>
   <data name="ERROR_NombreUsuarioExistente" xml:space="preserve">
     <value>El nombre de usuario ya fue utilizado. Por favor intente con otro.</value>
@@ -145,10 +145,10 @@
     <value>El nombre para el perfil ya fue utilizado</value>
   </data>
   <data name="ERROR_PerfilProveedor_PefilIdIncorrecto" xml:space="preserve">
-    <value>Pefil incorrecto</value>
+    <value>Perfil incorrecto</value>
   </data>
   <data name="Error_Telefono" xml:space="preserve">
-    <value>Error en el numero telefónico</value>
+    <value>Error en el número telefónico</value>
   </data>
   <data name="ERROR_UsuarioProveedor_EliminarMaestro" xml:space="preserve">
     <value>No puede eliminar el Usuario Maestro</value>
@@ -184,7 +184,7 @@
     <value>Usuario eliminado correctamente</value>
   </data>
   <data name="RegistroGeneral" xml:space="preserve">
-    <value>No se pudo guardar. Intente nuevamente si el problema persiste contacte los adminsitradores del sistema.</value>
+    <value>No se pudo guardar. Intente nuevamente si el problema persiste contacte los administradores del sistema.</value>
     <comment>Error de registro general </comment>
   </data>
 </root>

@@ -148,7 +148,11 @@
 
                 for (var key in result) {
                     if (result.hasOwnProperty(key)) {
-                        $(dl).append("<dt>" + key + "</dt>");
+                        if (key.toString() == 'Rfc') {
+                            $(dl).append("<dt>" + key.toUpperCase() + "</dt>");
+                        } else {
+                            $(dl).append("<dt>" + key + "</dt>");
+                        }
                         $(dl).append("<dd>" + result[key] + "</dd>");
                     }
                 }

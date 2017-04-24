@@ -71,7 +71,7 @@
 
                          @{
                             var tipo = "";
-                            switch (@drPago["BLART_COMPEN"].ToString())
+                            switch (@drPago["BLART"].ToString())
                             {
                                 case "4":
                                     tipo = "Cargo a proveedor";
@@ -141,7 +141,7 @@
                 }
                 </tbody>
             </table>
-            <b>Total: </b> @importeTotal
+            <b>Total: </b> @string.Format("{0:N}", importeTotal)
         </div>
     </div>
 </div>

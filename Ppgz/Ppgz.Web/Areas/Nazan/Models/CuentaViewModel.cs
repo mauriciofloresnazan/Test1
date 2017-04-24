@@ -50,8 +50,8 @@ namespace Ppgz.Web.Areas.Nazan.Models
 
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
-        [EmailAddress(ErrorMessage = "Debe ingresar un email valído.")]
-        [DataType(DataType.EmailAddress, ErrorMessage = "Debe ingresar un email valído.")]
+        [EmailAddress(ErrorMessage = "Debe ingresar un correo electrónico valído.")]
+        [DataType(DataType.EmailAddress, ErrorMessage = "Debe ingresar un correo electrónico valído.")]
         [Display(Name = "Email")]
         public string ResponsableEmail { get; set; }
 
@@ -68,14 +68,14 @@ namespace Ppgz.Web.Areas.Nazan.Models
         public string ResponsableTelefono { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
-        [StringLength(100, ErrorMessage = "El Password debe tener al menos 6 caracteres.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "La Contraseña debe tener al menos 6 caracteres.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]
         public string ResponsablePassword { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
-        [Compare("ResponsablePassword", ErrorMessage = "El password y la confirmación no coinciden.")]
+        [Compare("ResponsablePassword", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
         public string ResponsableConfirmarPassword { get; set; }
     }
 }

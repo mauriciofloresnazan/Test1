@@ -58,7 +58,7 @@
                         <tr>
                             <td class="text-center vert-align">@pago["BELNR"]</td>
                             <td class="text-center vert-align">@fecha.ToString("dd/MM/yyyy")</td>
-                            <td class="text-center vert-align">@pago["DMBTR"]</td>
+                            <td class="text-center vert-align">@string.Format("{0:N}", pago["DMBTR"])</td>
                             <td class="text-center vert-align">
                                 <a class="btn btn-primary btn-xs" href="@Url.Action("PagosDetalle", "CuentasPagar", new { @numeroDocumento = @pago["BELNR"] })">
                                     Ver Detalle

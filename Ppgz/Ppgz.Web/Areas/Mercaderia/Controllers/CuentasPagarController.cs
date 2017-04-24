@@ -447,7 +447,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             dt.Columns["WAERS_COMPEN"].ColumnName = "Ml";
             dt.Columns["BLART_COMPEN"].ColumnName = "Tipo de Movimiento";
 
-            FileManager.ExportExcel(dt, numeroDocumento, HttpContext);
+            FileManager.ExportExcel(dt,"RefdPago" + numeroDocumento, HttpContext);
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]

@@ -131,7 +131,7 @@
                         }
                         <td class="text-center">@drPago["BELNR_COMPEN"]</td>
                         @*<td class="text-center">@drPago["BLNRCOMPEN"]</td>*@
-                        <td class="text-center">@drPago["DMBTR_COMPEN"]</td>
+                        <td class="text-center">@string.Format("{0:N}", drPago["DMBTR_COMPEN"])</td>
                         <td class="text-center">@drPago["WAERS_COMPEN"]</td>
                         @*<td class="text-center">@drPago["WAERS_COMPEN"]</td>*@
 
@@ -141,7 +141,7 @@
                 }
                 </tbody>
             </table>
-            <b>Total Pagado: </b> @pago["DMBTR"]
+            <b>Total Pagado: </b> @string.Format("{0:N}", pago["DMBTR"])
         </div>
     </div>
 </div>

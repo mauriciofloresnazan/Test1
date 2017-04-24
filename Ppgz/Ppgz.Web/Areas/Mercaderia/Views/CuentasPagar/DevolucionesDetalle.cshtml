@@ -72,7 +72,7 @@
 
                             <td class="text-center">@detalle["MATNR"]</td>
                             <td class="text-center">@detalle["MAKTX"]</td>
-                            <td class="text-center">@detalle["DMBTR"]</td>
+                            <td class="text-center">@string.Format("{0:N}", detalle["DMBTR"])</td>
                             <td class="text-center">@detalle["MENGE"]</td>
                         </tr>
                     }
@@ -82,11 +82,11 @@
             <div class="clearfix">
                 <dl class="dl-horizontal pull-right">
                     <dt>Sub Total: </dt>
-                    <dd class="text-right">@subTotal</dd>
+                    <dd class="text-right">@string.Format("{0:N}", @subTotal)</dd>
                     <dt>IVA: </dt>
-                    <dd class="text-right">@impuesto</dd>
+                    <dd class="text-right">@string.Format("{0:N}", @impuesto)></dd>
                     <dt>Total: </dt>
-                    <dd class="text-right">@total</dd>
+                    <dd class="text-right">@string.Format("{0:N}", @total)</dd>
                 </dl>
             </div>
         </div>

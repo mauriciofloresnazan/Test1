@@ -43,26 +43,26 @@
 @section Scripts {
     <script type="text/javascript">
 
-    var proveedorId = "@ViewBag.proveedorId";
+        var sessionStorage.getItem(id);proveedorId = "@ViewBag.proveedorId";
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        //if (proveedorId === "") {
-        //    $("#navbar > ul:nth-child(1) > li:nth-child(2)").css("display","none");
-        //}
-        //$(document).on("click", "#btnProveedor", function () {
-        //    fnProveedorSeleccionado($(this).data('idproveedor'));
-        //});
+            //if (proveedorId === "") {
+            //    $("#navbar > ul:nth-child(1) > li:nth-child(2)").css("display","none");
+            //}
+            //$(document).on("click", "#btnProveedor", function () {
+            //    fnProveedorSeleccionado($(this).data('idproveedor'));
+            //});
 
-        $('#cuentasXpagar').DataTable({
-            "language": {
-                "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
-            },
-            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+            $('#cuentasXpagar').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+            });
         });
-    });
 
-    @*function fnProveedorSeleccionado(proveedorId) {
+        @*function fnProveedorSeleccionado(proveedorId) {
         $.ajax({
             url: '@Url.Action("PersitedProviderId", "CuentasPagar")',
             data: { proveedorId: proveedorId },

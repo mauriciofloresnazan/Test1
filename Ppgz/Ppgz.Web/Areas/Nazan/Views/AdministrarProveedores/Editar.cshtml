@@ -123,7 +123,7 @@
                         <td class ="vert-align">@proveedor.Direccion</td>
                         <td>
                             <div class="btn-group-vertical">
-                                <a class="btn btn-danger btn-xs" href="@Url.Action("DesAsociarProveedor", "AdministrarProveedores", new {cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="Cuidad el proveedor será desvinculado de la cuenta.">
+                                <a class="btn btn-danger btn-xs" href="@Url.Action("DesAsociarProveedor", "AdministrarProveedores", new {cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El proveedor será desvinculado de esta cuenta.">
                                     <i class="fa fa-times" aria-hidden="true"></i> Eliminar
                                 </a>
                                 <a class="btn btn-warning btn-xs" href="@Url.Action("RefrescarProveedor", "AdministrarProveedores", new { cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id })">
