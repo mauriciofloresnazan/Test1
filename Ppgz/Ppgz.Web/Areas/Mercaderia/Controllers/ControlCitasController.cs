@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -595,5 +596,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             return View();
         }
+
+	
     }
 }
