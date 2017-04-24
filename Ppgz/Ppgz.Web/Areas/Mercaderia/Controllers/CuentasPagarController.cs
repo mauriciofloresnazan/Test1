@@ -237,6 +237,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 using System;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Ppgz.Repository;
@@ -625,6 +626,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             foreach (DataRow dr in dt.Rows)
             {
+                dr["FECHA_PAGO"] = DateTime.ParseExact(dr["FECHA_PAGO"].ToString(), "yyyyMMdd",
+                CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
 
                 var tipo = "";
                 switch (dr["BLART"].ToString())
@@ -701,7 +704,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             dt.Columns["WAERS"].ColumnName = "Ml";
             dt.Columns["BLART"].ColumnName = "Tipo de Movimiento";
 
-            FileManager.ExportExcel(dt, ProveedorCxp.NumeroProveedor, HttpContext);
+           FileManager.ExportExcel(dt, "NroSAP" + ProveedorCxp.NumeroProveedor, HttpContext);
         }
 
 
