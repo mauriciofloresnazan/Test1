@@ -49,7 +49,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             }
             
-            FileManager.ExportExcel(dt, numeroDocumento, HttpContext);
+            FileManager.ExportExcel(dt, "ORDEN" + numeroDocumento, HttpContext);
         }
     }
 }
