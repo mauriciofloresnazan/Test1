@@ -627,7 +627,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             {
 
                 var tipo = "";
-                switch (dr["BLART_COMPEN"].ToString())
+                switch (dr["BLART"].ToString())
                 {
                     case "4":
                         tipo = "Cargo a proveedor";
