@@ -53,10 +53,7 @@ namespace Ppgz.Services
         {
             // Validaciones
             // TODO VALIDACIONES DE LA ESTRUCTURA DE LOS DATOS
-            if (telefono != null)
-            {
-                ValidarTelefono(telefono);
-            }
+           
             ValidarNombreApellido(nombre);
             ValidarNombreApellido(apellido);
             ValidarEmail(email);
@@ -222,10 +219,7 @@ namespace Ppgz.Services
         {
             // Validaciones
             // TODO VALIDACIONES DE LA ESTRUCTURA DE LOS DATOS
-            if (telefono != null)
-            {
-                ValidarTelefono(telefono);
-            }
+           
             ValidarNombreApellido(nombre);
             ValidarNombreApellido(apellido);
             ValidarEmail(email);

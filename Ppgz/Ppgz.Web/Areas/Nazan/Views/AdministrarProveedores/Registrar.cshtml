@@ -2,6 +2,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@Styles.Render("~/assets/css/bootstrap-formhelpers.min.css")
 <h2 class="form-signin-heading">Registrar Cuenta de Proveedor</h2>
 <p class="page-description-title"><i class="fa fa-info" aria-hidden="true"></i> <i>Registre una Cuenta de Proveedor, esto generará un usuario Maestro</i></p>
 <div class="panel panel-default">
@@ -99,7 +100,7 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.ResponsableTelefono, new { @class = "col-sm-3 control-label" })
                 <div class="col-sm-7">
-                    @Html.TextBoxFor(m => m.ResponsableTelefono, new { @class = "form-control" })
+                    @Html.TextBoxFor(m => m.ResponsableTelefono, new { @class = "form-control  bfh-phone", @data_country = "MX", @data_format = "+dd (ddd) ddd-dddd" })                   
                     @Html.ValidationMessageFor(m => m.ResponsableTelefono)
                 </div>
             </div>
@@ -135,4 +136,6 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/bootstrap-formhelpers-phone.en_US.js")
+    @Scripts.Render("~/Scripts/bootstrap-formhelpers-phone.js")
 }
