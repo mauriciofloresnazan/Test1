@@ -1,0 +1,183 @@
+﻿@using Ppgz.Repository
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var horarioRieles = (List<horarioriele>)ViewBag.HorarioRieles;
+
+    var horarios = horarioRieles.Select(hr => new
+    {
+        hr.horario
+    }).Distinct().ToList().OrderBy(h => h.horario.HoraDesde);
+
+    var andenes = horarioRieles.Select(hr => new
+    {
+        hr.riele.andene
+    }).Distinct().ToList().OrderBy(a => a.andene.Codigo);
+
+}
+
+<h2 class="form-signin-heading">Mensajes Institucionales</h2>
+<p class="page-description-title"><i class="fa fa-envelope" aria-hidden="true"></i> <i>Muestra la lista de los mensajes</i></p>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Fecha de la Cita</div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("Index", "AdministrarCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+
+            @Html.ValidationSummary(true)
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label"> Fecha de la Cita</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-arrow-right" aria-hidden="true"></i> Siguiente</button>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Mensajes Registrados</div>
+    <div class="panel-body">
+        <table class="" width="100%" id="tb-3" style="">
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        <h2>Horario</h2>
+                    </th>
+                    @foreach (var result in andenes)
+                    {
+                        var anden = result.andene;
+
+                        var borderRight = "";
+                        if (int.Parse(anden.Anden) < andenes.Count())
+                        {
+                            borderRight = "solid 1px #666";
+                        }
+                        <th class="text-center" colspan="2" style="border-right: @borderRight">
+                            <i class="fa fa-truck fa-5x" aria-hidden="true"></i>
+                            ANDEN @anden.Anden
+                            <div class="row">
+                                @foreach (var riel in anden.rieles)
+                                {
+                                    <div class="col-xs-6">Riel @riel.Riel</div>
+
+                                }
+                            </div>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in horarios)
+                {
+                    <tr class="border-bottom">
+
+                        @{
+                    var horario = result.horario;
+                    var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+
+                    var rielPostition = 0;
+                        }
+
+                        <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
+
+                        @foreach (var riel in rieles)
+                        {
+                            rielPostition++;
+
+                            var borderRight = "";
+                            if (rielPostition < rieles.Count())
+                            {
+                                borderRight = "solid 1px #666";
+                            }
+
+
+                            var btnText = "Disponible";
+                            var btnClass = "btn-default";
+                            
+              
+
+                            if (!riel.Disponibilidad)
+                            {
+
+                                btnText = riel.cita.ProveedorId.ToString();
+                                foreach (var orden in riel.cita.asns.ToList().Select(asn=> asn.OrdenNumeroDocumento).Distinct())
+                                {
+                                    btnText = btnText + " </br> " + orden;
+                                }
+                                btnClass = "btn-success";
+                                
+                            }
+
+                            <td class="text-center" style="border-right: @borderRight;">
+                                <div style="height: 60px;">
+                                    <button id="@riel.Id" data-citaid="@riel.CitaId" style="height: 100%;" type="button" class="btn @btnClass btn-block btn-riel">
+                                        @Html.Raw(btnText)
+                                    </button>
+                                </div>
+                            </td>
+
+                        }
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+@section Scripts {
+
+    @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js");
+
+    <script type="text/javascript">
+
+        var rielesSeleccionados = [];
+
+
+        $(document).ready(function() {
+            $("#tb-3").sortable();
+
+            $('.btn-riel').on('click', function() {
+       
+                var horarioRielId = $(this).attr("id");
+
+                if (!$(this).hasClass("active")) {
+
+                    if (rielesSeleccionados.indexOf(horarioRielId) === -1) {
+                        rielesSeleccionados.push(horarioRielId);
+                    }
+                } else {
+                    rielesSeleccionados.splice(rielesSeleccionados.indexOf(horarioRielId), 1);
+                }
+
+                if (rielesSeleccionados.length === 2) {
+                    var citaId1 = $("#" + rielesSeleccionados[0]).data("citaid");
+                    var citaId2 = $("#" + rielesSeleccionados[1]).data("citaid");
+
+                    if((citaId1 === "") && (citaId2 === ""))
+                    {
+                        $("#" + rielesSeleccionados[0]).removeClass('active');
+                        $("#" + rielesSeleccionados[1]).removeClass('active');
+                        msgError("Debe seleccionar al menus un riel ocupado");
+
+                    }
+                }
+            });
+        });
+
+    </script>
+}

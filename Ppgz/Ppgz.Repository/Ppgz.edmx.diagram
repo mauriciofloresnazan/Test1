@@ -4,32 +4,32 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="15ac76a67f9a4b74806059c4c56b694b" Name="Diagram1">
+      <Diagram DiagramId="a4098ff2bea24177a0d66a70d1351cec" Name="Diagram1">
         <EntityTypeShape EntityType="impuls_portalModel.acumuladore" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.almacene" Width="1.5" PointX="0.75" PointY="1" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.andene" Width="1.5" PointX="13.5" PointY="25.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.andene" Width="1.5" PointX="13.5" PointY="25.875" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.asn" Width="1.5" PointX="15" PointY="17.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.AspNetRole" Width="1.5" PointX="5.25" PointY="16.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.AspNetUserClaim" Width="1.5" PointX="9.75" PointY="14" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.AspNetUserLogin" Width="1.5" PointX="9.75" PointY="16.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.AspNetUser" Width="1.5" PointX="7.5" PointY="14.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.cita" Width="1.5" PointX="12.75" PointY="16.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.AspNetRole" Width="1.5" PointX="5.25" PointY="16.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.AspNetUserClaim" Width="1.5" PointX="9.75" PointY="14.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.AspNetUserLogin" Width="1.5" PointX="9.75" PointY="16.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.AspNetUser" Width="1.5" PointX="7.5" PointY="14.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.cita" Width="1.5" PointX="12.75" PointY="16.25" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.configuracione" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.cr" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.cuentaproveedore" Width="1.5" PointX="3" PointY="12.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.cuenta" Width="1.5" PointX="0.75" PointY="18.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.cuentasmensaje" Width="1.5" PointX="12" PointY="21.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.estatuscita" Width="1.5" PointX="10.5" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.cuentaproveedore" Width="1.5" PointX="3" PointY="12.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.cuenta" Width="1.5" PointX="0.75" PointY="18.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.cuentasmensaje" Width="1.5" PointX="12" PointY="21.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.estatuscita" Width="1.5" PointX="10.5" PointY="10.625" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.etiqueta" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.horarioriele" Width="1.5" PointX="18" PointY="17" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.horario" Width="1.5" PointX="15.75" PointY="14" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.horarioriele" Width="1.5" PointX="18" PointY="17.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.horario" Width="1.5" PointX="15.75" PointY="14.125" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.impuls_logs" Width="1.5" PointX="5.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.mensaje" Width="1.5" PointX="9.75" PointY="27.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.niveleseervicio" Width="1.5" PointX="5.25" PointY="19.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.mensaje" Width="1.5" PointX="9.75" PointY="27.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.niveleseervicio" Width="1.5" PointX="5.25" PointY="19.375" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.ordencompra" Width="1.5" PointX="5.25" PointY="23" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.ordencompradetalle" Width="1.5" PointX="7.5" PointY="23.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.perfile" Width="1.5" PointX="3" PointY="16.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="impuls_portalModel.proveedore" Width="1.5" PointX="3" PointY="19.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.ordencompradetalle" Width="1.5" PointX="7.5" PointY="23.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.perfile" Width="1.5" PointX="3" PointY="16.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.proveedore" Width="1.5" PointX="3" PointY="20" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.riele" Width="1.5" PointX="15.75" PointY="25.625" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.tipocuenta" Width="1.5" PointX="6.75" PointY="3.75" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.tipousuario" Width="1.5" PointX="6.75" PointY="6.75" IsExpanded="true" />

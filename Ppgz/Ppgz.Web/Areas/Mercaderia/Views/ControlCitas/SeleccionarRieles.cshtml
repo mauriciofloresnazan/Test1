@@ -134,7 +134,7 @@
                     @foreach (var result in andenes)
                     {
                         var anden = result.andene;
-                        
+
                         var borderRight = "";
                         if (int.Parse(anden.Anden) < andenes.Count())
                         {
@@ -155,64 +155,64 @@
                 </tr>
             </thead>
             <tbody>
-            @foreach (var result in horarios)
-            {
-                <tr class="border-bottom">
+                @foreach (var result in horarios)
+                {
+                    <tr class="border-bottom">
 
-                    @{
-                        var horario = result.horario;
-                        var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+                        @{
+                    var horario = result.horario;
+                    var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
 
-                        var rielPostition = 0;
-                    }
-
-                    <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
-                    
-                    @foreach (var riel in rieles)
-                    {
-                        rielPostition++;
-                        
-                        var borderRight = "";
-                        if (rielPostition < rieles.Count())
-                        {
-                            borderRight = "solid 1px #666";
+                    var rielPostition = 0;
                         }
 
-                        var disabledChecked = "";
-                        var dataOn = "MI RESERVA";
-                        var offStyle = "primary";
-                        var onStyle = "success";
-                        var disponibleClass = "riel-disponible";
-                        
-                        if (!riel.Disponibilidad)
-                        {
-                            disabledChecked = "disabled checked";
-                            dataOn = "OCUPADO";
-                            onStyle = "danger";
-                            disponibleClass = "";
-                        }
-                        
-                        <td class="text-center" style="border-right: @borderRight">
-                            <input id="@riel.Id" class="@disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="DISPONIBLE" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
-                            
-                        </td>
-                        
-                    }
+                        <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
 
-                    @*<td class="text-center" style="border-right: solid 1px #666">
-                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                    <td class="text-center" style="border-right: solid 1px #666">
-                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                    <td class="text-center" style="border-right: solid 1px #666">
-                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                    <td class="text-center" style="border-right: solid 1px #666">
-                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                    <td class="text-center" style="border-right: solid 1px #666">
-                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                    <td class="text-center">
-                        <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
-                </tr> 
-            }
+                        @foreach (var riel in rieles)
+                        {
+                            rielPostition++;
+
+                            var borderRight = "";
+                            if (rielPostition < rieles.Count())
+                            {
+                                borderRight = "solid 1px #666";
+                            }
+
+                            var disabledChecked = "";
+                            var dataOn = "MI RESERVA";
+                            var offStyle = "primary";
+                            var onStyle = "success";
+                            var disponibleClass = "riel-disponible";
+
+                            if (!riel.Disponibilidad)
+                            {
+                                disabledChecked = "disabled checked";
+                                dataOn = "OCUPADO";
+                                onStyle = "danger";
+                                disponibleClass = "";
+                            }
+
+                            <td class="text-center" style="border-right: @borderRight">
+                                <input id="@riel.Id" class="@disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="DISPONIBLE" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
+
+                            </td>
+
+                        }
+
+                        @*<td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
+                    </tr>
+                }
             </tbody>
         </table>
         @using (Html.BeginForm("Agendar", "ControlCitas", new { }, FormMethod.Post, new { id="form-agendar" }))

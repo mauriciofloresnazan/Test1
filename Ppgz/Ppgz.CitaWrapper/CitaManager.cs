@@ -121,7 +121,7 @@ namespace Ppgz.CitaWrapper
 	            UsuarioIdTx = precita.UsuarioId,
 	            CantidadTotal = precita.Cantidad,
 	            ProveedorId = precita.ProveedorId,
-	            Tienda = precita.Centro,
+	            Almacen = precita.Centro,
                 RielesOcupados = (sbyte) precita.HorarioRielesIds.Count,
                 OperacionTx = "CREATE"
 	        };

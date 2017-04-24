@@ -208,6 +208,7 @@
     </Compile>
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
     <Compile Include="Areas\Mercaderia\Models\PefilProveedorViewModel.cs" />
+    <Compile Include="Areas\Nazan\Controllers\AdministrarCitasController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarMensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarPerfilesNazanController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
@@ -1149,10 +1150,13 @@
     <Content Include="Areas\Mercaderia\Views\CuentasPagar\Pagos.cshtml" />
     <Content Include="Areas\Mercaderia\Views\CuentasPagar\PagosPendientes.cshtml" />
     <Content Include="Areas\Mercaderia\Views\CuentasPagar\PagosPendientesDetalle.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitas\Citas.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitas\CitaDetalle.cshtml" />
     <None Include="Areas\Mercaderia\Views\CuentasPagar\Devoluciones.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ReporteProveedores\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ReporteProveedores\Reportes.cshtml" />
     <Content Include="Areas\Nazan\Views\RegistrarNivelServicio\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarCitas\Index.cshtml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

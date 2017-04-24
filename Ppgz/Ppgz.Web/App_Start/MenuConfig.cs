@@ -110,12 +110,13 @@ namespace Ppgz.Web
                 //"|Órdenes de Compra|||fa fa-address-book|Nazan",
                 //"|Administración de Facturas|||fa fa-calculator|Nazan",
                 "ADMINISTRAMENSAJESINSTITUCIONALES|Administrar Mensajes Institucionales|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan",
-                //"|Control de Citas|||fa fa-calendar|Nazan",
+               
                 //"|Reportes|||fa fa-file-pdf-o|Nazan",
                 "ADMINISTRARUSUARIOSNAZAN|Administración de Usuarios|Index|AdministrarUsuariosNazan|fa fa fa-users|Nazan",
                 "ADMINISTRARPERFILESNAZAN|Administración de Perfiles|Index|AdministrarPerfilesNazan|fa fa fa-road|Nazan",
                 "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores|Index|AdministrarProveedores|fa fa-address-book-o|Nazan",
-                "ADMINISTRARNIVELSERVICIONAZAN|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan"
+                "ADMINISTRARNIVELSERVICIONAZAN|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan",
+                "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
             };
             return menuLista;
         }

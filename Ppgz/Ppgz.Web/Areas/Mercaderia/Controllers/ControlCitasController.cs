@@ -550,11 +550,50 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     });
                 }
             }
+            try
+            {
 
-            CitaManager.RegistrarCita(preCita);
+                CitaManager.RegistrarCita(preCita);
+            }
+            catch (Exception exception)
+            {
+                
+                throw;
+            }
 
-            return RedirectToAction("SeleccionarRieles");
+            //TODO
+            TempData["FlashSuccess"] = "Ha terminado de configurar su cita exitosamente";
+            return RedirectToAction("Citas");
 	    }
-    
+
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA")]
+	    public ActionResult Citas()
+        {
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+            
+            var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
+            var db = new Entities();
+
+            var fecha = DateTime.Today.Date;
+            var citas = db.citas.Where(c => proveedoresIds.Contains(c.ProveedorId) && c.FechaCita >= fecha).ToList();
+
+            ViewBag.Citas = citas;
+
+            return View();
+        }
+        public ActionResult CitaDetalle(int citaId)
+        {
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+            var proveedoresIds = cuenta.proveedores.Select(p => p.Id).ToList();
+
+            var db = new Entities();
+            var cita = db.citas.FirstOrDefault(c => c.Id == citaId && proveedoresIds.Contains(c.ProveedorId));
+
+            ViewBag.Cita = cita;
+
+            return View();
+        }
     }
 }
