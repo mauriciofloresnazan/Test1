@@ -79,6 +79,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ppgz.CitaWrapper\Ppgz.CitaWrapper.csproj">
+      <Project>{0dfd36c2-d8cf-48c7-b677-9372e11a62af}</Project>
+      <Name>Ppgz.CitaWrapper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Ppgz.Repository\Ppgz.Repository.csproj">
       <Project>{805197a6-6948-483e-a738-7ae7745ac953}</Project>
       <Name>Ppgz.Repository</Name>

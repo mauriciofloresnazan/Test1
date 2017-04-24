@@ -1,4 +1,5 @@
-﻿@using Ppgz.Repository
+﻿@using Ppgz.CitaWrapper
+@using Ppgz.Repository
 @using Ppgz.Web.Areas.Mercaderia
 @{
     ViewBag.Title = "Lista de Ordenes de Compra";
@@ -21,6 +22,9 @@
         hr.riele.andene
     }).Distinct().ToList().OrderBy(a => a.andene.Codigo);
 
+
+    var rielesNecesarios = RulesManager.GetCantidadRieles(currentCita.Cantidad);
+    
 }
 <link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
 <style>
@@ -70,10 +74,17 @@
             <div class="col-sm-3">
                 <div>@fechaCita.ToString("dd/MM/yyyy")</div>
             </div>
-            <div class="col-sm-6">
+            <label class="col-sm-3 control-label">Total a Entregar</label>
+            <div class="col-sm-3">
+                <h4 style="margin: 0;">@currentCita.Cantidad</h4>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-offset-6 col-sm-6">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
-                    <a class="btn btn-primary" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
-                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                    <a class="btn btn-primary btn-agendar" href="#">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Agendar Cita
                     </a>
                     <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
@@ -83,8 +94,8 @@
                     </a>
                 </div>
                 <div class="visible-sm visible-xs">
-                    <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
-                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                    <a class="btn btn-primary btn-block btn-agendar" href="#">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Agendar Cita
                     </a>
                     <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
@@ -98,18 +109,18 @@
 
 
 
-
     </div>
 </div>
 
 
 
 <div class="panel panel-default">
-    <div class="panel-heading">Asn Registrados</div>
+    <div class="panel-heading">Rieles Disponibles</div>
     <div class="panel-body">
 
-        <p class="form-legend" style="">
-            <i>Lista de Ordenes</i>
+        <p><i>
+                Debe entergar <strong>@currentCita.Cantidad</strong> pares, por lo que debe seleccionar 
+            <strong>@rielesNecesarios</strong> rieles.</i>
         </p>
 
 
@@ -168,13 +179,21 @@
                         }
 
                         var disabledChecked = "";
+                        var dataOn = "MI RESERVA";
+                        var offStyle = "primary";
+                        var onStyle = "success";
+                        var disponibleClass = "riel-disponible";
+                        
                         if (!riel.Disponibilidad)
                         {
                             disabledChecked = "disabled checked";
+                            dataOn = "OCUPADO";
+                            onStyle = "danger";
+                            disponibleClass = "";
                         }
                         
                         <td class="text-center" style="border-right: @borderRight">
-                            <input id="@riel.Id" type="checkbox" @disabledChecked data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary">
+                            <input id="@riel.Id" class="@disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="DISPONIBLE" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
                             
                         </td>
                         
@@ -196,11 +215,67 @@
             }
             </tbody>
         </table>
-
+        @using (Html.BeginForm("Agendar", "ControlCitas", new { }, FormMethod.Post, new { id="form-agendar" }))
+        {
+            @Html.AntiForgeryToken()
+            
+        }
 
 
     </div>
 </div>
 @section Scripts {
     @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
+
+    <script type="text/javascript">
+        var rielesNecesarios = parseInt("@rielesNecesarios");
+        var rielesSeleccionados = [];
+
+        $(function() {
+            $('.btn-agendar').click(function() {
+
+                // TODO MEJORAR
+                if (rielesSeleccionados.length === rielesNecesarios) {
+
+                    for (var i = 0; i < rielesNecesarios; i++) {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: 'rielesIds',
+                            value: rielesSeleccionados[i]
+                        }).appendTo('#form-agendar');
+                    }
+
+                    $("#form-agendar").submit();
+                }
+
+
+            });
+
+
+            $('.riel-disponible').change(function() {
+
+                var horarioRielId = $(this).attr("id");
+
+                if ($(this).prop('checked') === true) {
+                    if (rielesSeleccionados.indexOf(horarioRielId) === -1) {
+                        rielesSeleccionados.push(horarioRielId);
+                    }
+
+                    $(this).addClass("usado");
+                } else {
+                    rielesSeleccionados.splice(rielesSeleccionados.indexOf(horarioRielId), 1);
+                }
+
+                if (rielesSeleccionados.length === rielesNecesarios) {
+                    $('.riel-disponible:not(.usado)').bootstrapToggle('disable');
+                } else {
+
+                    $('.riel-disponible:not(.usado)').bootstrapToggle('enable');
+                }
+                //alert('Toggle: ' + $(this).prop('checked'));
+            });
+        });
+
+
+    </script>
 }

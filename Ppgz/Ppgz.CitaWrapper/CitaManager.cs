@@ -3,6 +3,8 @@ using Ppgz.CitaWrapper.Entities;
 using Ppgz.Repository;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 
 namespace Ppgz.CitaWrapper
 {
@@ -76,23 +78,23 @@ namespace Ppgz.CitaWrapper
 					List<MySqlParameter> itemAsn = new List<MySqlParameter> {
 						new MySqlParameter {
 								ParameterName = @"param1",
-							Value = item.ordenNumeroDocumento
+							Value = item.OrdenNumeroDocumento
 						},
 						new MySqlParameter {
 								ParameterName = @"param2",
-							Value = item.numeroMaterial
+							Value = item.NumeroMaterial
 						},
 						new MySqlParameter {
 								ParameterName = @"param3",
-							Value = item.nombreMaterial
+							Value = item.NombreMaterial
 						},
 						new MySqlParameter {
 								ParameterName = @"param4",
-							Value = item.cantidad
+							Value = item.Cantidad
 						},
 						new MySqlParameter {
 								ParameterName = @"param5",
-							Value = item.numeroPosicion
+							Value = item.NumeroPosicion
 						}
 					};
 					Db.Insert(queryAsn, itemAsn);
@@ -105,6 +107,66 @@ namespace Ppgz.CitaWrapper
 				return false;
 			}
 		}
-	}
+
+
+
+
+	    public static void RegistrarCita(PreCita precita)
+	    {
+	        //TODO VALIDAR LA CITA
+
+	        var cita = new cita
+	        {
+	            FechaCita = precita.Fecha,
+	            UsuarioIdTx = precita.UsuarioId,
+	            CantidadTotal = precita.Cantidad,
+	            ProveedorId = precita.ProveedorId,
+	            Tienda = precita.Centro,
+                RielesOcupados = (sbyte) precita.HorarioRielesIds.Count,
+                OperacionTx = "CREATE"
+	        };
+
+	        foreach (var asn in precita.Asns)
+	        {
+	            cita.asns.Add(new asn
+	            {
+	                Cantidad = asn.Cantidad,
+                    NombreMaterial = asn.NombreMaterial,
+                    NumeroMaterial = asn.NumeroMaterial,
+                    NumeroPosicion = asn.NumeroPosicion,
+                    OrdenNumeroDocumento = asn.OrdenNumeroDocumento
+	            });
+	        }
+
+	        try
+	        {
+                var db = new Repository.Entities();
+                db.citas.Add(cita);
+                db.SaveChanges();
+
+                foreach (var horarioRielId in precita.HorarioRielesIds)
+                {
+
+                    db = new Repository.Entities();
+                    var horarioRiel = db.horariorieles.Find(horarioRielId);
+                    horarioRiel.Disponibilidad = false;
+                    horarioRiel.CitaId = cita.Id;
+                    db.Entry(horarioRiel).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+
+	        }
+	        catch (Exception exception)
+	        {
+	            
+	            throw new Exception(exception.Message);
+	        }
+
+	  
+	    }
+
+
+    
+    }
 }
 

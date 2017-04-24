@@ -50,6 +50,7 @@
     <Compile Include="PreAsn.cs" />
     <Compile Include="PreAsnDetalle.cs" />
     <Compile Include="PreAsnManager.cs" />
+    <Compile Include="PreCita.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RulesManager.cs" />
   </ItemGroup>

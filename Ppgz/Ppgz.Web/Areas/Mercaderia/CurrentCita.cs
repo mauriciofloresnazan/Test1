@@ -37,10 +37,16 @@ namespace Ppgz.Web.Areas.Mercaderia
         }
 
         private readonly List<PreAsn> _ordenes;
-
+        
+        public readonly string Centro;
         public DateTime? Fecha { get; private set; }
 
         private readonly List<PreAsn> _ordenesActivas;
+
+        public int Cantidad
+        {
+            get { return _ordenes.Sum(o => o.TotalCantidad); }
+        }
 
         public List<PreAsn> GetOrdenesActivasDisponibles()
         {
@@ -95,6 +101,7 @@ namespace Ppgz.Web.Areas.Mercaderia
             {
                 throw new BusinessException("El proveedor no tiene ordenes de compra activas");
             }
+            Centro = centro;
         }
 
         public void SetFecha(DateTime fecha, string numeroDocumento)
@@ -171,11 +178,6 @@ namespace Ppgz.Web.Areas.Mercaderia
             }
         }
 
-        /*
-        public bool HasOrdenes()
-        {
-            return _ordenes.Any();
-        }*/
 
         public bool HasPreAsn(string numeroDocumento)
         {
@@ -192,6 +194,8 @@ namespace Ppgz.Web.Areas.Mercaderia
         {
             return _ordenes;
         }
+
+
 
 
         public void UpdateDetail(string numeroDocumento, string numeroPosicion, string numeroMaterial, int cantidad)

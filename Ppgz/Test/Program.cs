@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using Ppgz.CitaWrapper;
 using Ppgz.Repository;
 using Ppgz.Services;
 using SapWrapper;
@@ -19,6 +20,12 @@ namespace Test
         
         static void Main(string[] args)
         {
+
+            Console.WriteLine(RulesManager.GetCantidadRieles(3300));
+            Console.ReadKey();
+            return;
+
+
             const string sql = @"INSERT INTO citas (FechaCita, Tienda, CantidadTotal, ProveedorId, UsuarioIdTx)
                         VALUES(@FechaCita, @Tienda, @CantidadTotal, @ProveedorId, @UsuarioIdTx)";
 

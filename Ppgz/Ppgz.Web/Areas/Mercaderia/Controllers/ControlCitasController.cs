@@ -7,6 +7,8 @@ using System.Linq;
 using System.Web.Mvc;
 using ClosedXML.Excel;
 using MySql.Data.MySqlClient;
+using Ppgz.CitaWrapper;
+using Ppgz.CitaWrapper.Entities;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
@@ -513,5 +515,46 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 	        ViewBag.HorarioRieles = horarioRieles;
             return View();
 	    }
-	}
+
+
+
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult Agendar(int[] rielesIds)
+        {
+
+            var preCita = new PreCita()
+            {
+                Cantidad = CurrentCita.Cantidad,
+                Centro = CurrentCita.Centro,
+                Fecha = (DateTime) CurrentCita.Fecha,
+                ProveedorId = CurrentCita.Proveedor.Id,
+                UsuarioId = _commonManager.GetUsuarioAutenticado().Id,
+                Asns = new List<Asn>(),
+                HorarioRielesIds = rielesIds.ToList()
+            };
+
+            foreach (var preAsn in CurrentCita.GetPreAsns())
+            {
+                foreach (var preAsnDetail in preAsn.Detalles.Where(preAsnDetail => preAsnDetail.Cantidad > 0))
+                {
+                    preCita.Asns.Add(new Asn
+                    {
+                        Cantidad = preAsnDetail.Cantidad,
+                        NombreMaterial = preAsnDetail.DescripcionMaterial,
+                        NumeroMaterial = preAsnDetail.NumeroMaterial,
+                        NumeroPosicion = preAsnDetail.NumeroPosicion,
+                        OrdenNumeroDocumento = preAsn.NumeroDocumento
+                    });
+                }
+            }
+
+            CitaManager.RegistrarCita(preCita);
+
+            return RedirectToAction("SeleccionarRieles");
+	    }
+    
+    }
 }

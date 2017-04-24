@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Net.NetworkInformation;
 using Ppgz.Repository;
 
 namespace Ppgz.CitaWrapper
@@ -170,7 +169,43 @@ namespace Ppgz.CitaWrapper
             return fechasPermitidas;*/
         }
 
-        
+
+        /// <summary>
+        /// Basado en las Reglas:
+        /// #7.	Cada espacio de tiempo en el riel es equivalente a una hora y una capacidad de 600 pares por hora.
+        /// #8.	La tolerancia en márgenes de pares por hora se maneja en base a “0.16” de diferencia y se 
+        /// calculara con la siguiente formula:(Nº de pares / 600)= Cantidad de espacios necesarios
+        /// #9.	Si el decimal de “Cantidad de espacios necesarios” es menor a 0.17 se redondea hacia abajo, 
+        /// si es igual o mayor se redondea hacia arriba.
+        ///  #10.	El monto total de pares a entregar en la cita se divide entre todos los 
+        /// espacios  de tiempo disponibles, por lo cual el margen de tolerancia por hora en la cantidad de 
+        /// pares a recibir, también se divide entre todos los espacios ocupados por la cita. Ejemplo: 
+        /// Un proveedor tiene cita para 3300 pares, según el cálculo designado a asignación de rieles 
+        /// necesitaría 5.5 Rieles y la regla de negocio Nº 8 indica que si el decimal es menor a 0.17 
+        /// se redondea hacia abajo, necesitando para esa cita 6 Rieles, cada uno de esos rieles 
+        /// procesara 550 pares por hora para un total de 3300.
+        /// </summary>
+        public static int GetCantidadRieles(int totalPares)
+        {
+  
+
+            var paresPorHora = Convert.ToInt32(GetConfiguraciones()
+                .Single(c => c.Clave == "warehouse.platform-rail.max-pair.hour").Valor);
+            var tolerancia = Convert.ToDecimal(GetConfiguraciones()
+                .Single(c => c.Clave == "warehouse.platform-rail.max-pair-hour.tolerance").Valor);
+
+
+            if (totalPares <= paresPorHora)
+            {
+                return 1;
+            }
+
+            var resultado = (totalPares / Convert.ToDecimal(paresPorHora));
+
+            var rielesRequeridos = decimal.ToInt32((resultado % 1) > tolerancia ? Math.Ceiling(resultado) : Math.Floor(resultado));
+
+            return rielesRequeridos;
+        }
 
 
 
@@ -236,15 +271,15 @@ namespace Ppgz.CitaWrapper
             //TODO CALCULAR CUANDO ESTOY EN LA ULTIMA DESMANA DEL AÑO
 
 
-            var semanaCita = System.Globalization.CultureInfo
+            var semanaCita = CultureInfo
                 .GetCultureInfo(EspMexicoCultureName)
                 .Calendar
-                .GetWeekOfYear(fechaCita, System.Globalization.CalendarWeekRule.FirstDay, fechaCita.DayOfWeek);
+                .GetWeekOfYear(fechaCita, CalendarWeekRule.FirstDay, fechaCita.DayOfWeek);
 
-            var semanaOrden = System.Globalization.CultureInfo
+            var semanaOrden = CultureInfo
                 .GetCultureInfo(EspMexicoCultureName)
                 .Calendar
-                .GetWeekOfYear(fechaEntregaOrden, System.Globalization.CalendarWeekRule.FirstDay, fechaEntregaOrden.DayOfWeek);
+                .GetWeekOfYear(fechaEntregaOrden, CalendarWeekRule.FirstDay, fechaEntregaOrden.DayOfWeek);
 
             // TODO pasar a tabla de configuraciones
             return semanaCita >= semanaOrden - 2 && semanaCita <= semanaOrden + 2;
@@ -262,15 +297,15 @@ namespace Ppgz.CitaWrapper
 
 
 
-            var semanaCita = System.Globalization.CultureInfo
+            var semanaCita = CultureInfo
                .GetCultureInfo(EspMexicoCultureName)
                .Calendar
-               .GetWeekOfYear(fechaCita, System.Globalization.CalendarWeekRule.FirstDay, fechaCita.DayOfWeek);
+               .GetWeekOfYear(fechaCita, CalendarWeekRule.FirstDay, fechaCita.DayOfWeek);
 
-            var semanaEnCurso = System.Globalization.CultureInfo
+            var semanaEnCurso = CultureInfo
                 .GetCultureInfo(EspMexicoCultureName)
                 .Calendar
-                .GetWeekOfYear(DateTime.Today, System.Globalization.CalendarWeekRule.FirstDay, DateTime.Today.DayOfWeek);
+                .GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstDay, DateTime.Today.DayOfWeek);
 
 
             // TODO pasar a tabla de configuraciones
