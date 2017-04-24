@@ -53,7 +53,7 @@
                         <td class="text-center">@DateTime.Today.ToString("dd/MM/yyyy")</td>
                         <td class="text-center">@proveedor.Rfc</td>
                         <td class="text-center">@proveedor.Nombre1</td>
-                        <td class="text-center">@string.Format("{0:N}", importeTotal)</td>
+                        <td class="text-right">@string.Format("{0:N}", importeTotal)</td>
                         <td class="text-center">
                             <a class="btn btn-success btn-xs" href="@Url.Action("PagosPendientesDetalle", "CuentasPagar", new { proveedorId = ViewBag.proveedor.Id })">Detalle</a>
                         </td>

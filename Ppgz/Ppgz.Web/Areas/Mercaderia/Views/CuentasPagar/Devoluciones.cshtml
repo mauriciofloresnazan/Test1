@@ -60,7 +60,7 @@
                         <tr>
                             <td class="text-center vert-align">@devolucion["XBLNR"]</td>
                             <td class="text-center vert-align">@fecha.ToString("dd/MM/yyyy")</td>
-                            <td class="text-center vert-align">@string.Format("{0:N}", devolucion["DMBTR"])</td>
+                            <td class="text-right vert-align">@string.Format("{0:N}", devolucion["DMBTR"])</td>
                             <td class="text-center vert-align">
                                 <a class="btn btn-primary btn-xs" href="@Url.Action("DevolucionesDetalle", "CuentasPagar", new { @numeroDocumento = @devolucion["BELNR"] })">
                                     Ver Detalle

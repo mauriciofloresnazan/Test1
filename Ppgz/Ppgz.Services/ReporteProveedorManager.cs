@@ -71,8 +71,9 @@ namespace Ppgz.Services
         public void CrearNivelServicio(string numeroProveedor, decimal ultimoMes, decimal temporadaActual,
            decimal acumuladoAnual, decimal pedidoAtrasado, decimal pedidoEntiempo, decimal pedidoTotal)
         {
+            var pad = '0';
             var proveedorManager = new ProveedorManager();
-            var proveedor = proveedorManager.FindByNumeroProveedor(numeroProveedor);
+            var proveedor = proveedorManager.FindByNumeroProveedor(numeroProveedor.PadLeft(10, pad));
 
             if (proveedor == null)
             {
