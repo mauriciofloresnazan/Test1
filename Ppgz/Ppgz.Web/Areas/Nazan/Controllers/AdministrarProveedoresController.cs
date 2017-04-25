@@ -157,7 +157,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         proveedor.Apartado,
                         proveedor.Distrito,
                         proveedor.CodigoPostal,
-                        proveedor.Direccion,
+                        Direccion = proveedor.Calle,
 		            });
 		    }
             catch (BusinessException businessEx)
