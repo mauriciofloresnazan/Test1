@@ -16,6 +16,7 @@ namespace Ppgz.Repository
     {
         public proveedore()
         {
+            this.citas = new HashSet<cita>();
             this.niveleseervicios = new HashSet<niveleseervicio>();
             this.ordencompras = new HashSet<ordencompra>();
         }
@@ -56,6 +57,7 @@ namespace Ppgz.Repository
         public string Rfc { get; set; }
         public bool Borrado { get; set; }
     
+        public virtual ICollection<cita> citas { get; set; }
         public virtual cuenta cuenta { get; set; }
         public virtual ICollection<niveleseervicio> niveleseervicios { get; set; }
         public virtual ICollection<ordencompra> ordencompras { get; set; }

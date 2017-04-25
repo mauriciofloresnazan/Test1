@@ -38,6 +38,7 @@ namespace Ppgz.Repository
         public virtual ICollection<asn> asns { get; set; }
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual estatuscita estatuscita { get; set; }
+        public virtual proveedore proveedore { get; set; }
         public virtual ICollection<horarioriele> horariorieles { get; set; }
     }
 }

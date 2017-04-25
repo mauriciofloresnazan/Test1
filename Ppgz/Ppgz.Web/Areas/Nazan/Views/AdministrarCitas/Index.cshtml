@@ -86,7 +86,7 @@
 
                     @{
                         var horario = result.horario;
-                        var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+                        var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id).ToList();
 
                         var rielPostition = 0;
                     }
@@ -112,18 +112,19 @@
                         if (!riel.Disponibilidad)
                         {
                             
-                            btnText = riel.cita.ProveedorId.ToString();
-                            foreach (var orden in riel.cita.asns.ToList().Select(asn => asn.OrdenNumeroDocumento).Distinct())
-                            {
-                                btnText = btnText + " </br> " + orden;
-                            }
+                            btnText = string.Format(
+                                "{0} {1} {2} {3}<br>{4}<br>{5} Pares",
+                                riel.cita.proveedore.Nombre1, riel.cita.proveedore.Nombre2,
+                                riel.cita.proveedore.Nombre3, riel.cita.proveedore.Nombre4,
+                                riel.cita.Almacen, riel.cita.CantidadTotal);
+     
                             btnClass = "btn-success";
 
                         }
 
                         <td class="text-center" style="border-right: @borderRight;">
-                            <div style="height: 60px;">
-                                <button id="@riel.Id" data-citaid="@riel.CitaId" style="height: 100%;" type="button" class="btn @btnClass btn-block btn-riel">
+                            <div style="height: 80px;">
+                                <button id="@riel.Id" data-citaid="@riel.CitaId" style="height: 100%;" type="button" class="btn btn-xs @btnClass btn-block btn-riel ">
                                     @Html.Raw(btnText)
                                 </button>
                             </div>
@@ -175,7 +176,7 @@
                 defaultDate: '@ViewBag.Fecha'
             });
 
-            $("#fecha").on("dp.change", function (e) {
+            $("#fecha").on("dp.change", function () {
                 $("#form-fecha").submit();
             });
             
@@ -215,7 +216,7 @@
                 }
             });
 
-            $('#modal-enroque ').on('hidden.bs.modal', function(e) {
+            $('#modal-enroque ').on('hidden.bs.modal', function() {
                 LimpiarSelecciones();
             });
 
