@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using Ppgz.Repository;
 using SapWrapper;
@@ -89,12 +90,18 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
             }
 
-            //TODO VALIDAR LAS CITAS
+            proveedor.niveleseervicios.ToList().ForEach(n => _db.niveleseervicios.Remove(n));
+            
 
-            proveedor.ordencompras.Clear();
+            foreach (var cita in proveedor.citas)
+            {
+                cita.asns.ToList().ForEach(asn => _db.asns.Remove(asn));
+            }
+
+            proveedor.citas.ToList().ForEach(c => _db.citas.Remove(c));
 
 
-            _db.proveedores.Remove(proveedor);
+            _db.Entry(proveedor).State = EntityState.Deleted;
             _db.SaveChanges();
         }
         
