@@ -328,6 +328,10 @@
                     } else {
                         td.css("color", "#000");
                     }
+                    editingCell.data(cantidadNueva).draw();
+
+                    calcularTotalEntregar();
+
                     msgExito(result);
 
 
@@ -405,7 +409,7 @@
 
         function calcularTotalEntregar() {
             var totalEntregar = 0;
-            $($(asn).DataTable().column(4).data()).each(function () {
+            $($(asn).DataTable().column(8).data()).each(function () {
                 totalEntregar = totalEntregar + parseFloat(this);
             });
             $("#total-entregar").text(totalEntregar);

@@ -154,6 +154,10 @@ namespace Ppgz.Web.Areas.Mercaderia
             {
                 throw new OrdenSinDetalleException();
             }
+            if (detalles.Sum(de=> de.CantidadPermitida) < 0)
+            {
+                throw new OrdenSinDetalleException();
+            }
 
             var preAsn = new PreAsn
             {

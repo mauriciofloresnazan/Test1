@@ -57,7 +57,9 @@ namespace Ppgz.CitaWrapper
                     Centro = detalle.Centro,
                     Almacen = detalle.Almacen,
                     CantidadCitasFuturas = asnFuturos
-                        .Where(asn => asn.NumeroMaterial == detalle.NumeroMaterial)
+                        .Where(asn => asn.OrdenNumeroDocumento == detalle.NumeroDocumento && 
+                            asn.NumeroPosicion == detalle.NumeroPosicion &&
+                            asn.NumeroMaterial == detalle.NumeroMaterial)
                         .Sum(asn => asn.Cantidad),
                     CantidadEntregada = detalle.CantidadEntregada,
                     CantidadPedido = detalle.CantidadPedido,

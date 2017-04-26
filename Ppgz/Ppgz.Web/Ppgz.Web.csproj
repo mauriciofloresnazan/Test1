@@ -267,7 +267,6 @@
     <Content Include="assets\css\msgcolores.css" />
     <Content Include="assets\js\bootbox.js" />
     <Content Include="assets\js\bootbox.min.js" />
-    <Content Include="assets\js\jquery.numeric.js" />
     <Content Include="assets\js\mensajes.js" />
     <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen-variables.less" />
     <Content Include="assets\vendor\bootstrap-chosen\bootstrap-chosen-variables.scss" />
@@ -1157,6 +1156,7 @@
     <Content Include="Areas\Mercaderia\Views\ReporteProveedores\Reportes.cshtml" />
     <Content Include="Areas\Nazan\Views\RegistrarNivelServicio\Index.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas\Index.cshtml" />
+    <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -1180,7 +1180,7 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Confirm.cshtml" />
     <Content Include="Uploads\formato_nivel_servicio.xlsx" />
-    <None Include="Web.config" />
+    <Content Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

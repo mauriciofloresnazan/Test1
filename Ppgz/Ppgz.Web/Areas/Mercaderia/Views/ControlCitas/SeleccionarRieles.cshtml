@@ -264,6 +264,7 @@
                     $(this).addClass("usado");
                 } else {
                     rielesSeleccionados.splice(rielesSeleccionados.indexOf(horarioRielId), 1);
+                    $(this).removeClass("usado");
                 }
 
                 if (rielesSeleccionados.length === rielesNecesarios) {

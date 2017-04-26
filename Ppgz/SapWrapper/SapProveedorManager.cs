@@ -20,7 +20,7 @@ namespace SapWrapper
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZEXTRAE_PROV");
-            function.SetValue("LIFNR", numeroProveedor);
+            function.SetValue("LIFNR", numeroProveedor.PadLeft(10, '0'));
             function.Invoke(rfcDestinationManager);
 
             var result = function.GetTable("T_PROV");

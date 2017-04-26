@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 
-namespace Ppgz.Repository
+namespace SapWrapper
 {
     public class SapOrdenCompra
     {

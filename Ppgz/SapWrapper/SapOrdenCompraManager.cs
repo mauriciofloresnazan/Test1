@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using Ppgz.Repository;
 using SAP.Middleware.Connector;
 
 namespace SapWrapper
