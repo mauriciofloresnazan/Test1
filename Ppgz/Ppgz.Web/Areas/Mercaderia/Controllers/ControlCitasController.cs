@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web.Mvc;
 using ClosedXML.Excel;
 using MySql.Data.MySqlClient;
@@ -163,6 +163,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					TempData["FlashError"] = "La orden no puede ser entregada en la fecha de la cita";
 					return RedirectToAction("BuscarOrden", new { proveedor.Id });
 				}
+                catch (CurrentCita.OrdenCentroException)
+                {
+                    TempData["FlashError"] = "La orden no contiene items para el Almacén seleccionado";
+                    return RedirectToAction("BuscarOrden", new { proveedor.Id });
+                }
 			}
 
 			if (CurrentCita.GetOrdenActivaDisponible(numeroDocumento) == null)
@@ -217,6 +222,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			ViewBag.NumeroDocumento = numeroDocumento;
 			ViewBag.proveedor = proveedor;
 
+            ViewBag.CurrentCita = CurrentCita;
 			return View();
 		}
 
@@ -237,40 +243,45 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			
 			var proveedor = CurrentCita.Proveedor;
 
-			try
-			{
-				CurrentCita.SetFecha(DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture), numeroDocumento);
+		    try
+		    {
+		        CurrentCita.SetFecha(DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture), numeroDocumento);
 
-				CurrentCita.AddPreAsn(numeroDocumento);
+		        CurrentCita.AddPreAsn(numeroDocumento);
 
-				return RedirectToAction("Asn", new {numeroDocumento });
+		        return RedirectToAction("Asn", new {numeroDocumento});
 
-			}
-			catch (CurrentCita.OrdenDuplicadaException)
-			{
-				TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
-				return RedirectToAction("BuscarOrden", new { proveedor.Id });
-			}
-			catch (CurrentCita.OrdenSinDetalleException)
-			{
-				TempData["FlashError"] = "La orden no contiene items para entregar, por favor seleccione otra orden";
-				return RedirectToAction("BuscarOrden", new { proveedor.Id });
-			}
-			catch (CurrentCita.NumeroDocumentoException)
-			{
-				TempData["FlashError"] = "Numero de documento incorrecto";
-				return RedirectToAction("BuscarOrden", new { proveedor.Id });
-			}
-			catch (BusinessException exception)
-			{
-				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("BuscarOrden", new { proveedor.Id });
-			}
-			catch (CurrentCita.FechaException)
-			{
-				TempData["FlashError"] = "La orden no puede ser entregada en la fecha de la cita";
-				return RedirectToAction("BuscarOrden", new { proveedor.Id });
-			}
+		    }
+		    catch (CurrentCita.OrdenDuplicadaException)
+		    {
+		        TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
+		        return RedirectToAction("BuscarOrden", new {proveedor.Id});
+		    }
+		    catch (CurrentCita.OrdenSinDetalleException)
+		    {
+		        TempData["FlashError"] = "La orden no contiene items para entregar, por favor seleccione otra orden";
+		        return RedirectToAction("BuscarOrden", new {proveedor.Id});
+		    }
+		    catch (CurrentCita.NumeroDocumentoException)
+		    {
+		        TempData["FlashError"] = "Numero de documento incorrecto";
+		        return RedirectToAction("BuscarOrden", new {proveedor.Id});
+		    }
+		    catch (BusinessException exception)
+		    {
+		        TempData["FlashError"] = exception.Message;
+		        return RedirectToAction("BuscarOrden", new {proveedor.Id});
+		    }
+		    catch (CurrentCita.FechaException)
+		    {
+		        TempData["FlashError"] = "La orden no puede ser entregada en la fecha de la cita";
+		        return RedirectToAction("BuscarOrden", new {proveedor.Id});
+		    }
+		    catch (CurrentCita.OrdenCentroException)
+            {
+                TempData["FlashError"] = "La orden no contiene items para el Almacén seleccionado";
+                return RedirectToAction("BuscarOrden", new { proveedor.Id });
+		    }
 		}
    
 		public ActionResult Asn(string numeroDocumento)
@@ -309,7 +320,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 			catch (Exception exception)
 			{
-				Response.StatusCode = (int)System.Net.HttpStatusCode.BadRequest;
+				Response.StatusCode = (int)HttpStatusCode.BadRequest;
 				return Json(exception.Message);
 			}
 			return Json("ACtualizado correctamente");
@@ -318,7 +329,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 	
 
 
-		public ActionResult ListaDeOrdenes(string orden = "0")
+		public ActionResult ListaDeOrdenes()
 		{
 
 			if (CurrentCita == null)
@@ -335,6 +346,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			
 			return View();
 		}
+
+	    public ActionResult EliminarOrden(string numeroDocumento)
+	    {
+	        CurrentCita.RemovePreAsn(numeroDocumento);
+
+            TempData["FlashSuccess"] = "Archivo cargado exitosamente";
+            return RedirectToAction("ListaDeOrdenes");
+	    }
 
 		public void DescargarPlantilla(string numeroDocumento)
 		{
@@ -394,13 +413,13 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			if (file != null && file.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 			{
 				TempData["FlashError"] = "Archivo incorrecto";
-				return RedirectToAction("Asn");
+                return RedirectToAction("Asn", new { numeroDocumento });
 			}
 
 			if (file == null)
 			{
 				TempData["FlashError"] = "Archivo incorrecto";
-				return RedirectToAction("Asn");
+                return RedirectToAction("Asn", new { numeroDocumento });
 			}
 
 			var fileName = Path.GetFileName(file.FileName);
@@ -410,7 +429,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			if (fileName == null)
 			{
 				TempData["FlashError"] = "Archivo incorrecto";
-				return RedirectToAction("Asn");
+                return RedirectToAction("Asn", new { numeroDocumento });
 			}
 
 			/*var ordenCompra = CurrentCita.GetPreAsn(numeroDocumento);
@@ -481,6 +500,13 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			{
 				return RedirectToAction("BuscarOrden");
 			}
+
+		    if (CurrentCita.Cantidad < 1)
+            {
+                TempData["FlashError"] = "Debe incluir al menos un (1) PAR para poder agendar la Cita";
+                return RedirectToAction("BuscarOrden");
+		    }
+
 			var date = ((DateTime) CurrentCita.Fecha).Date;
 			var parameters = new List<MySqlParameter>()
 			{
@@ -546,8 +572,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 			catch (Exception exception)
 			{
-				
-				throw;
+
+                //TODO
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("Citas");
 			}
 
 			//TODO

@@ -2058,3 +2058,19 @@ System.InvalidOperationException: The operation failed: The relationship could n
    at System.Data.Entity.DbContext.SaveChanges()
    at Ppgz.Services.CuentaManager.Eliminar(Int32 id) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Services\CuentaManager.cs:line 194
    at Ppgz.Web.Areas.Nazan.Controllers.AdministrarProveedoresController.Eliminar(Int32 id) in c:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Web\Areas\Nazan\Controllers\AdministrarProveedoresController.cs:line 171
+2017-04-26 11:34:59,298 
+Nombre del Controlador = 
+Nombre del método o acción solicitada = 
+Tipo de mensaje = Error.
+Traza detallada: 
+System.ArgumentException: Unable to sort because the IComparer.Compare() method returns inconsistent results. Either a value does not compare equal to itself, or one value repeatedly compared to another value yields different results. IComparer: 'System.Array+FunctorComparer`1[Microsoft.VisualStudio.Web.PageInspector.Runtime.Tracing.RenderedRange]'.
+   at System.Collections.Generic.IntrospectiveSortUtilities.ThrowOrIgnoreBadComparer(Object comparer)
+   at System.Collections.Generic.ArraySortHelper`1.Sort(T[] keys, Int32 index, Int32 length, IComparer`1 comparer)
+   at System.Array.Sort[T](T[] array, Int32 index, Int32 length, IComparer`1 comparer)
+   at System.Collections.Generic.List`1.Sort(Comparison`1 comparison)
+   at Microsoft.VisualStudio.Web.PageInspector.Runtime.MappingData.RenderedRangeMap.SortMappings()
+   at Microsoft.VisualStudio.Web.PageInspector.Runtime.MappingData.MappingDataUtilities.CreateRenderedRangeMap(IEnumerable`1 renderedRanges)
+   at Microsoft.VisualStudio.Web.PageInspector.Runtime.MappingData.MappingDataUtilities.ProcessDataIntoJsonObjects(IEnumerable`1 renderedOutputList)
+   at Microsoft.VisualStudio.Web.PageInspector.Runtime.Tracing.RequestDataHttpHandler.System.Web.IHttpHandler.ProcessRequest(HttpContext context)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)

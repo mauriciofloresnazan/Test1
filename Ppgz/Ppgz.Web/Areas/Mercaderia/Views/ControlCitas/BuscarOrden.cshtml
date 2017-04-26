@@ -24,13 +24,14 @@
     <div class="panel-heading">Datos de la Cita</div>
     <div class="panel-body">
         <div class="row">
-            <label class="col-sm-3 control-label">RFC</label>
-            <div class="col-sm-3">
-                <div>@proveedor.Rfc</div>
+            <label class="col-sm-2 control-label">Proveedor</label>
+            <div class="col-sm-6">
+                <div>@proveedor.Rfc - @proveedor.Nombre1</div>
             </div>
-            <label class="col-sm-3 control-label">Nombre</label>
-            <div class="col-sm-3">
-                <div>@proveedor.Nombre1</div>
+           
+            <label class="col-sm-2 control-label">Almacén</label>
+            <div class="col-sm-2">
+                <div>@currentCita.Centro</div>
             </div>
         </div>
         @if (currentCita.Fecha != null)

@@ -2,8 +2,8 @@
 @using Ppgz.Repository
 @using Ppgz.Web.Areas.Mercaderia
 @{
-    ViewBag.Title = "Lista de Ordenes de Compra";
-    ViewBag.Descripcion = "Paso 4 cofirmación de la cita";
+    ViewBag.Title = "Selección de Rieles";
+    ViewBag.Descripcion = "Paso 5 Selección de Rieles";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
@@ -60,22 +60,23 @@
     <div class="panel-heading">Datos de la cita</div>
     <div class="panel-body">
         <div class="row">
-            <label class="col-sm-3 control-label">RFC</label>
-            <div class="col-sm-3">
-                <div>@currentCita.Proveedor.Rfc</div>
+            <label class="col-sm-2 control-label">Proveedor</label>
+            <div class="col-sm-6">
+                <div>@currentCita.Proveedor.Rfc - @currentCita.Proveedor.Nombre1</div>
             </div>
-            <label class="col-sm-3 control-label">Nombre</label>
-            <div class="col-sm-3">
-                <div>@currentCita.Proveedor.Nombre1</div>
+
+            <label class="col-sm-2 control-label">Almacén</label>
+            <div class="col-sm-2">
+                <div>@currentCita.Centro</div>
             </div>
         </div>
         <div class="row">
-            <label class="col-sm-3 control-label">Fecha de la cita</label>
-            <div class="col-sm-3">
+            <label class="col-sm-2 control-label">Fecha de la cita</label>
+            <div class="col-sm-6">
                 <div>@fechaCita.ToString("dd/MM/yyyy")</div>
             </div>
-            <label class="col-sm-3 control-label">Total a Entregar</label>
-            <div class="col-sm-3">
+            <label class="col-sm-2 control-label">Total a Entregar</label>
+            <div class="col-sm-2">
                 <h4 style="margin: 0;">@currentCita.Cantidad</h4>
             </div>
         </div>
@@ -180,7 +181,7 @@
 
                             var disabledChecked = "";
                             var dataOn = "MI RESERVA";
-                            var offStyle = "primary";
+                            const string offStyle = "primary";
                             var onStyle = "success";
                             var disponibleClass = "riel-disponible";
 

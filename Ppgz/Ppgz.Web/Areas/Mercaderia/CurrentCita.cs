@@ -24,6 +24,10 @@ namespace Ppgz.Web.Areas.Mercaderia
         {
             
         }
+        public class OrdenCentroException : Exception
+        {
+
+        }
         public class FechaException : Exception
         {
 
@@ -64,9 +68,11 @@ namespace Ppgz.Web.Areas.Mercaderia
                     .ToList();
             }
 
-
             return  _ordenesActivas
                 .Where(o => !documentos.Contains(o.NumeroDocumento))
+                //.Where(o=> o.TotalPermitido > 0)
+                // todo incluir el detalle en la consulta inicial
+                //.Where( o=> o.Detalles.Any(de=> de.Almacen.ToUpper() == Centro))
                 .ToList();
         }
 
@@ -158,12 +164,16 @@ namespace Ppgz.Web.Areas.Mercaderia
             {
                 throw new OrdenSinDetalleException();
             }
+            if (detalles.All(de => de.Centro != Centro))
+            {
+                throw new OrdenCentroException();
+            }
 
             var preAsn = new PreAsn
             {
                 NumeroProveedor =  orden.NumeroProveedor,
                 NumeroDocumento =  orden.NumeroDocumento,
-                Detalles =  detalles,
+                Detalles =  detalles.Where(de=> de.Centro == Centro).ToList(),
                 
      
             };

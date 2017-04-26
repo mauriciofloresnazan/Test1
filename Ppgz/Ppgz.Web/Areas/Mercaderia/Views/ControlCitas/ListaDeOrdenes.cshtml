@@ -7,7 +7,7 @@
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
 
     var fechaCita = (DateTime)@currentCita.Fecha;
-}    
+}
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
     <i class="fa fa-calculator" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
@@ -17,18 +17,19 @@
     <div class="panel-heading">Datos de la Cita</div>
     <div class="panel-body">
         <div class="row">
-            <label class="col-sm-3 control-label">RFC</label>
-            <div class="col-sm-3">
-                <div>@currentCita.Proveedor.Rfc</div>
+            <label class="col-sm-2 control-label">Proveedor</label>
+            <div class="col-sm-6">
+                <div>@currentCita.Proveedor.Rfc - @currentCita.Proveedor.Nombre1</div>
             </div>
-            <label class="col-sm-3 control-label">Nombre</label>
-            <div class="col-sm-3">
-                <div>@currentCita.Proveedor.Nombre1</div>
+
+            <label class="col-sm-2 control-label">Almacén</label>
+            <div class="col-sm-2">
+                <div>@currentCita.Centro</div>
             </div>
         </div>
         <div class="row">
-            <label class="col-sm-3 control-label">Fecha de la Cita</label>
-            <div class="col-sm-3">
+            <label class="col-sm-2 control-label">Fecha de la Cita</label>
+            <div class="col-sm-4">
                 <div>@fechaCita.ToString("dd/MM/yyyy")</div>
             </div>
             <div class="col-sm-6">
@@ -71,37 +72,41 @@
         </p>
         <table class="table table-striped table-condensed" id="asn">
             <thead>
-            <tr>
-
-                <th class="text-center">Numero de Orden</th>
-                <th class="text-center">Total Solicitado</th>
-                <th class="text-center">Total a Entregar</th>
-                <th class="text-center"></th>
-
-            </tr>
-            </thead>
-            <tbody>
-            @foreach (var preAsn in currentCita.GetPreAsns())
-            {
-                var cantPed = Decimal.ToInt32(preAsn.Detalles.AsEnumerable().Sum(x => x.CantidadPedido));
-                var cantComp = Decimal.ToInt32(preAsn.Detalles.AsEnumerable().Sum(x => x.Cantidad));
-
-                var color = "#000";
-                if (cantComp < cantPed)
-                {
-                    color = "red";
-                }
                 <tr>
 
-                    <td class="text-center"> @preAsn.NumeroDocumento</td>
-                    <td class="text-center"> @cantPed</td>
-                    <td class="text-center" style="color: @color;"> @cantComp</td>
-                    <td class="text-center" style="font-weight: bold; cursor: pointer">
+                    <th class="text-center">Numero de Orden</th>
+                    <th class="text-center">Total Solicitado</th>
+                    <th class="text-center">Total Permitido</th>
+                    <th class="text-center">Total a Entregar</th>
+                    <th class="text-center"></th>
+                    <th class="text-center"></th>
 
-                        @Html.ActionLink("Editar Orden", "Asn", "ControlCitas", new {@numeroDocumento = @preAsn.NumeroDocumento}, null)
-                    </td>
                 </tr>
-            }
+            </thead>
+            <tbody>
+                @foreach (var preAsn in currentCita.GetPreAsns())
+                {
+
+
+                    var color = "#000";
+                    if (preAsn.TotalCantidad < preAsn.TotalPermitido)
+                    {
+                        color = "red";
+                    }
+                    <tr>
+
+                        <td class="text-center"> @preAsn.NumeroDocumento</td>
+                        <td class="text-center"> @preAsn.TotalPedido</td>
+                        <td class="text-center"> @preAsn.TotalPermitido</td>
+                        <td class="text-center" style="color: @color;"> @preAsn.TotalCantidad</td>
+                        <td class="text-center" style="font-weight: bold; cursor: pointer">
+                            @Html.ActionLink("Editar", "Asn", "ControlCitas", new { @numeroDocumento = @preAsn.NumeroDocumento }, null)
+                        </td>
+                        <td class="text-center" style="font-weight: bold; cursor: pointer">
+                            @Html.ActionLink("Eliminar", "EliminarOrden", "ControlCitas", new { @numeroDocumento = @preAsn.NumeroDocumento }, null)
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 
@@ -109,11 +114,15 @@
     </div>
 </div>
 
-<div class="text-center">
-    <a class="btn btn-primary btn-lg" href="@Url.Action("SeleccionarRieles", "ControlCitas")">
-        <i class="fa fa-th" aria-hidden="true"></i> Seleccionar Rieles
-    </a>
-</div>
+@if (currentCita.Cantidad > 0)
+{
+    <div class="text-center">
+        <a class="btn btn-primary btn-lg" href="@Url.Action("SeleccionarRieles", "ControlCitas")">
+            <i class="fa fa-th" aria-hidden="true"></i> Seleccionar Rieles
+        </a>
+    </div>
+
+}
 
 
 

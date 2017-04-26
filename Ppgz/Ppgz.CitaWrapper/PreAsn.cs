@@ -28,7 +28,7 @@ namespace Ppgz.CitaWrapper
         {
             get
             {
-                return Detalles.AsEnumerable().Sum(x => x.CantidadPermitida);
+                return Detalles == null ? 0 : Detalles.AsEnumerable().Sum(x => x.CantidadPermitida);
             }
         }
 
