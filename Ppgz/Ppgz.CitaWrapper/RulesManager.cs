@@ -192,7 +192,7 @@ namespace Ppgz.CitaWrapper
             var paresPorHora = Convert.ToInt32(GetConfiguraciones()
                 .Single(c => c.Clave == "warehouse.platform-rail.max-pair.hour").Valor);
             var tolerancia = Convert.ToDecimal(GetConfiguraciones()
-                .Single(c => c.Clave == "warehouse.platform-rail.max-pair-hour.tolerance").Valor);
+                .Single(c => c.Clave == "warehouse.platform-rail.max-pair-hour.tolerance").Valor, CultureInfo.InvariantCulture);
 
 
             if (totalPares <= paresPorHora)
