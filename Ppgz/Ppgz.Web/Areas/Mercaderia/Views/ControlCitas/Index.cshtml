@@ -61,17 +61,17 @@
                             <input type="radio" name="radio-almacen" id="CD06" autocomplete="off"> CD06
                         </label>
                     </div>
- 
+
                 </div>
 
             </div>
+        </div>
     </div>
 </div>
 
-
 @section Scripts {
     <script type="text/javascript">
-        
+
         var url = "@Url.Action("SeleccionarProveedor", "ControlCitas")";
 
         var proveedorId;
@@ -83,7 +83,7 @@
             });
 
             $("#centro-modal input[name=radio-almacen]:radio").change(function () {
-                location.href = url + "?proveedorId=" + proveedorId + "&centro=" +$(this).attr("id");
+                location.href = url + "?proveedorId=" + proveedorId + "&centro=" + $(this).attr("id");
             });
 
             $('#proveedores').DataTable({
