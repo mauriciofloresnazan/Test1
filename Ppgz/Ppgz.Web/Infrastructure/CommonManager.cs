@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Linq;
@@ -29,6 +30,17 @@ namespace Ppgz.Web.Infrastructure
 	/// </summary>
 	public class CommonManager
 	{
+
+        private static List<configuracione> _configuraciones;
+        public static List<configuracione> GetConfiguraciones()
+        {
+            if (_configuraciones != null) return _configuraciones;
+            var db = new Entities();
+            _configuraciones = db.configuraciones.ToList();
+
+            return _configuraciones;
+        }
+
 		/// <summary> Log para almacenar errores de negocio.</summary>
 		public static readonly ILog BusinessLog = LogManager.GetLogger(@"BusinessLog");
 

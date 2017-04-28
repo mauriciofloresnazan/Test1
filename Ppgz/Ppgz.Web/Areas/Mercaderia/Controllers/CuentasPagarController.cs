@@ -1,241 +1,4 @@
-﻿/*using System;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Web.Mvc;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using MySql.Data.MySqlClient;
-using Ppgz.Repository;
-using Ppgz.Services;
-using Ppgz.Web.Infrastructure;
-
-namespace Ppgz.Web.Areas.Mercaderia.Controllers
-{
-    [Authorize]
-    [TerminosCondiciones]
-    public class CuentasPagarController : Controller
-    {
-
-        readonly CommonManager _commonManager = new CommonManager();
-        readonly CuentasPorPagarManager _cuentasPorPagarManager = new CuentasPorPagarManager();
-        readonly ProveedorManager _proveedorManager = new ProveedorManager();
-
-
-        // GET: /Mercaderia/CuentasPagar/
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult Index()
-        {
-            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-
-            ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
-
-            return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult Devoluciones(int proveedorId = 0)
-        {
-            int id = proveedorId > 0 ? proveedorId : Convert.ToInt32(System.Web.HttpContext.Current.Session["proveedorId"]);
-
-            if (id == 0)
-                return RedirectToAction("Index");
-            var commonManager = new CommonManager();
-            MySqlParameter[] parametes = {
-					new MySqlParameter("id", id)
-				};
-            const string sql = @"
-				SELECT * 
-				FROM   devoluciones d
-				JOIN   proveedores p ON p.Id = d.ProveedorId
-				WHERE  p.Id = @id";
-            //ViewBag.devoluciones = commonManager.QueryToTable(sql, parametes);
-            return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult DevolucionesDetalle(int id)
-        {
-            var commonManager = new CommonManager();
-            MySqlParameter[] parametes = {
-					new MySqlParameter("id", id)
-				};
-            const string sql = @"
-				SELECT * 
-				FROM   devoluciones d
-				WHERE  d.Id = @id";
-            ViewBag.devolucion = commonManager.QueryToTable(sql, parametes).Rows[0];
-
-            return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public JsonResult PagoDetalle(string numeroCompensacion)
-        {
-            var transacciones = _cuentasPorPagarManager.FindPagoDetalleByNumeroCompensacion(numeroCompensacion).ToList();
-
-            var jsonData = new
-            {
-                data = from transaccion in transacciones select transaccion
-            };
-            return Json(jsonData, JsonRequestBehavior.AllowGet);
-
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult Pagos(int proveedorId = 0)
-        {
-            int id = proveedorId > 0 ? proveedorId : Convert.ToInt32(System.Web.HttpContext.Current.Session["proveedorId"]);
-
-            if (id == 0)
-                return RedirectToAction("Index");
-
-            ViewBag.pagos = _cuentasPorPagarManager.FindPagosByProveedorId(id);
-      
-            ViewBag.proveedor = _proveedorManager.Find(id);
-            return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult PagosDetalle(string numeroCompensacion)
-        {
-            var data = _cuentasPorPagarManager.FindPagoDetalleByNumeroCompensacion(numeroCompensacion).ToList();
-
-            ViewBag.pagos = data;
-
-            var id = Convert.ToInt32(System.Web.HttpContext.Current.Session["proveedorId"]);
-
-            ViewBag.proveedor = _proveedorManager.Find(id);
-
-            return View();
-        }
-
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult PagosPendientes(int proveedorId = 0)
-        {
-            int id = proveedorId > 0 ? proveedorId : Convert.ToInt32(System.Web.HttpContext.Current.Session["proveedorId"]);
-
-            if (id == 0)
-                return RedirectToAction("Index");
-            Entities db = new Entities();
-            string[] tiposMovimientos = new string[] { "10", "21", "4" };
-
-            ViewBag.proveedor = _proveedorManager.Find(id);
-            return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult PagosPendientesDetalle(int proveedorId)
-        {
-            Entities db = new Entities();
-
-            string[] tiposMovimientos = new string[] { "10", "21", "4" };
-
-
-
-            ViewBag.proveedor = _proveedorManager.Find(proveedorId);
-            return View();
-        }
-
-        public string PersitedProviderId(string proveedorId)
-        {
-            int result = 0;
-            if (int.TryParse(proveedorId, out result))
-                System.Web.HttpContext.Current.Session["proveedorId"] = result;
-
-            System.Web.HttpContext.Current.Session["razonsocial"] = _proveedorManager.Find(result).Rfc;
-
-            return System.Web.HttpContext.Current.Session["proveedorId"].ToString();
-        }
-
-        public void DevolucionesDetalleDescargar(int id)
-        {
-            var commonManager = new CommonManager();
-            MySqlParameter[] parametes = {
-                    new MySqlParameter("id", id)
-                };
-            const string sql = @"
-				SELECT * 
-				FROM   devoluciones d
-				WHERE  d.Id = @id";
-            var data = commonManager.QueryToTable(sql, parametes).Rows[0];
-
-            var cantidad = int.Parse(data["cantidad"].ToString());
-
-            var dt = new DataTable();
-
-            dt.Columns.Add(new DataColumn("Articulo"));
-            dt.Columns.Add(new DataColumn("Descripcion"));
-            dt.Columns.Add(new DataColumn("Total"));
-            dt.Columns.Add(new DataColumn("Cantidad"));
-
-            while (cantidad > 0)
-            {
-
-                dt.Rows.Add(new[] { data["Material"], data["Descripcion"], 230.5, 1 });
-
-
-                cantidad--;
-            }
-            ExportExcel(dt, id.ToString());
-        }
-
-        public void ExportExcel(DataTable dt, string nombreXls)
-        {
-
-            var grid = new GridView();
-            grid.DataSource = dt;
-            grid.DataBind();
-
-            Response.ClearContent();
-            Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment; filename=" + nombreXls + ".xls");
-            Response.ContentType = "application/ms-excel";
-
-            Response.Charset = "";
-            StringWriter sw = new StringWriter();
-            HtmlTextWriter htw = new HtmlTextWriter(sw);
-
-            grid.RenderControl(htw);
-
-            Response.Output.Write(sw.ToString());
-            Response.Flush();
-            Response.End();
-
-            return;
-
-        }
-
-        public CuentasPagarController()
-        {
-            if (!(Convert.ToInt32(System.Web.HttpContext.Current.Session["proveedorId"]) > 0))
-                System.Web.HttpContext.Current.Session["proveedorId"] = 0;
-        }
-
-        public void Descargar(int id)
-        {
-            var commonManager = new CommonManager();
-
-            MySqlParameter[] parametes = {
-                    new MySqlParameter("id", id)
-                };
-
-            const string sql = @"
-			SELECT * 
-			FROM   cuentasxpagar 
-			WHERE TipoMovimiento in(10,21,4) AND ProveedoresId = @id;";
-
-            var dt = commonManager.QueryToTable(sql, parametes);
-
-            ExportExcel(dt, id.ToString());
-
-        }
-
-    }
-}*/
-
-using System;
+﻿using System;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -312,7 +75,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor);
+
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             ViewBag.Pagos = dsPagos.Tables["T_LISTA_PAGOS"];
 
@@ -333,7 +98,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor);
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad,DateTime.Today);
 
             ViewBag.Pago = dsPagos.Tables["T_LISTA_PAGOS"]
                 .Select(string.Format("BELNR = '{0}'", numeroDocumento))[0];
@@ -356,7 +122,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor);
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             var dt = dsPagos.Tables["T_PAGOS"]
                 .Select(string.Format("BELNR_PAGO = '{0}'", numeroDocumento)).CopyToDataTable();
@@ -368,10 +135,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             foreach (DataRow dr in dt.Rows)
             {
-
-
-
-
                 var tipo = "";
                 switch (dr["BLART_COMPEN"].ToString())
                 {
@@ -427,10 +190,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     case "ZP":
                         tipo = "Pago";
                         break;
-
-
                 }
-
 
                 dr["BLART_COMPEN"] = tipo;
             }
@@ -463,7 +223,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor);
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             ViewBag.Devoluciones = dsDevoluciones.Tables["T_DEVOLUCIONES"];
 
@@ -484,7 +245,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor);
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             ViewBag.Devolucion = dsDevoluciones.Tables["T_DEVOLUCIONES"]
                 .Select(string.Format("BELNR = '{0}'", numeroDocumento))[0];
@@ -519,7 +281,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor);
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             var dt = dsDevoluciones.Tables["T_MAT_DEV"]
                 .Select(string.Format("BELNR = '{0}'", numeroDocumento)).CopyToDataTable();
@@ -545,8 +308,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 }
             }
 
-
-
             dt.Columns["EBELN"].ColumnName = "Documento";
             dt.Columns["MATNR"].ColumnName = "Artículo";
             dt.Columns["MAKTX"].ColumnName = "Descripción";
@@ -555,11 +316,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             FileManager.ExportExcel(dt, numeroDocumento, HttpContext);
         }
-
-
-
-
-
 
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
@@ -574,7 +330,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor);
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
 
@@ -595,7 +352,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor);
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
 
@@ -615,7 +373,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor);
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             var dt = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
 

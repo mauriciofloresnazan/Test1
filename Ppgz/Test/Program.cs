@@ -21,7 +21,7 @@ namespace Test
         static void Main(string[] args)
         {
 
-            Console.WriteLine(RulesManager.GetCantidadRieles(3300));
+            Console.WriteLine(RulesManager.GetCantidadRieles(1716));
             Console.ReadKey();
             return;
 
@@ -80,15 +80,6 @@ namespace Test
             var proveedor = db.proveedores.Find(41);
             var testPartida = new SapPartidaManager();
 
-            var ds = testPartida.GetPartidas1001(proveedor.NumeroProveedor);
-
-            foreach (var column in ds.Tables["T_LISTA_PAGOS"].Columns)
-            {
-                Console.WriteLine(column);
-            }
-
-            Console.WriteLine(JsonConvert.SerializeObject(ds.Tables["T_LISTA_PAGOS"]));
-            ;
             return;
 
             
