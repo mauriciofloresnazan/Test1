@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Ppgz.Repository;
 
@@ -11,16 +9,30 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 {
     public class AdministrarCitasController : Controller
     {
+        [Authorize(Roles = "MAESTRO-NAZAN")]
+        public ActionResult Index()
+        {
+            var db = new Entities();
 
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR,NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR")]
-        public ActionResult Index(string fecha = null)
+            var fecha = DateTime.Today.AddMonths(-3);
+
+            ViewBag.Citas = db.citas.Where(c => c.FechaCita > fecha).ToList();
+
+            ViewBag.EstatusCita = db.estatuscitas.ToList();
+
+            return View();
+        }
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN")]
+        public ActionResult Enroque(string fecha = null)
         {
             if (fecha == null)
             {
                 fecha = DateTime.Today.Date.ToString("dd/MM/yyyy");
             }
             var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-    
+
             var db = new Entities();
 
             var horarioRieles = db.horariorieles.Where(h => h.Fecha == date).ToList();
@@ -32,6 +44,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
+        [Authorize(Roles = "MAESTRO-NAZAN")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
         public ActionResult Enroque(int horarioRielId1, int horarioRielId2)
         {
 
@@ -46,20 +61,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var horarioRiel2 = db.horariorieles.Find(horarioRielId2);
             var citaId2 = horarioRiel2.CitaId;
             var disponibilidad2 = horarioRiel2.Disponibilidad;
-
-
-            DateTime? fecha = horarioRiel1.cita != null ? horarioRiel1.cita.FechaCita : horarioRiel2.cita.FechaCita;
-
-            /*horarioRiel1.CitaId = null;
-            db.Entry(horarioRiel1).State = EntityState.Modified;
-            horarioRiel2.CitaId = null;
-            db.Entry(horarioRiel2).State = EntityState.Modified;
-            db.SaveChanges();
-
-            var horarioRiel1_1 = db.horariorieles.Find(horarioRielId1);
-            var horarioRiel2_2 = db.horariorieles.Find(horarioRielId2);
-            *
-            horarioRiel1_1.CitaId = citaId2;*/
+            
 
             horarioRiel1.CitaId = citaId2;
             horarioRiel1.Disponibilidad = disponibilidad2;
@@ -74,7 +76,41 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 
             TempData["FlashSuccess"] = "Enroque aplicado exitosamente";
-            return RedirectToAction("Index", new { fecha = ((DateTime)fecha).ToString("dd/MM/yyyy") });
+            return RedirectToAction("Index");
         }
-	}
+        
+        [Authorize(Roles = "MAESTRO-NAZAN")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult Penalizar(int citaId, int? estatusId = null)
+        {
+            var db = new Entities();
+
+
+            var cita  = db.citas.FirstOrDefault(c => c.Id == citaId);
+
+            if (cita == null)
+            {
+                TempData["FlashError"] = "Cita incorrecta";
+                return RedirectToAction("Index"); 
+            }
+            var estatus = db.estatuscitas.FirstOrDefault(e=> e.Id == estatusId);
+
+            if (estatus == null)
+            {
+                cita.EstatusCitaId = null;
+            }
+            else
+            {
+                cita.EstatusCitaId = estatus.Id;
+            }
+
+            db.Entry(cita).State = EntityState.Modified;
+            db.SaveChanges();
+
+
+            TempData["FlashSuccess"] = "Penalización aplicada exitosamente";
+            return RedirectToAction("Index");
+        }
+    }
 }

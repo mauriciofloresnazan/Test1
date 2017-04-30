@@ -1,0 +1,252 @@
+﻿@using Ppgz.Repository
+@{
+    ViewBag.Title = "Administración de Citas - Enroque";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var horarioRieles = (List<horarioriele>)ViewBag.HorarioRieles;
+
+    var horarios = horarioRieles.Select(hr => new
+    {
+        hr.horario
+    }).Distinct().ToList().OrderBy(h => h.horario.HoraDesde);
+
+    var andenes = horarioRieles.Select(hr => new
+    {
+        hr.riele.andene
+    }).Distinct().ToList().OrderBy(a => a.andene.Codigo);
+
+    var citas = horarioRieles.Where(hr => hr.CitaId != null).Select(hr=> hr.cita).ToList();
+
+    var totalCantidad = citas.Sum(c => c.CantidadTotal);
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-envelope" aria-hidden="true"></i> <i>Puede modificar los rieles ocupados por la cita</i>
+    
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Seleccione la Fecha</div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("Index", "AdministrarCitas", new { ViewBag.ReturnUrl }, FormMethod.Get, new { @id="form-fecha", @class = "form-horizontal", role = "form" }))
+        {
+
+            @Html.ValidationSummary(true)
+
+            <div class="">
+                <label class="col-sm-2 control-label"> Fecha</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
+                </div>
+                <label class="col-sm-2 control-label"> Cantidad</label>
+                <div class="col-sm-3">
+                    <h3 style="margin-top: 4px;">@totalCantidad</h3>
+                </div>
+                <div class="col-sm-2">
+                    <a class="btn btn-default pull-right" href="@Url.Action("Index", "AdministrarCitas")"> <i class="fa fa-undo" aria-hidden="true"></i> Cancelar Enroque</a>
+
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Rieles por Anden</div>
+    <div class="panel-body">
+        <table class="" width="100%" id="tb-3" style="">
+            <thead>
+            <tr>
+                <th class="text-center">
+                    <h2>Horario</h2>
+                </th>
+                @foreach (var result in andenes)
+                {
+                    var anden = result.andene;
+
+                    var borderRight = "";
+                    if (int.Parse(anden.Anden) < andenes.Count())
+                    {
+                        borderRight = "solid 1px #666";
+                    }
+                    <th class="text-center" colspan="2" style="border-right: @borderRight">
+                        <i class="fa fa-truck fa-5x" aria-hidden="true"></i>
+                        ANDEN @anden.Anden
+                        <div class="row">
+                            @foreach (var riel in anden.rieles)
+                            {
+                                <div class="col-xs-6">Riel @riel.Riel</div>
+
+                            }
+                        </div>
+                    </th>
+                }
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var result in horarios)
+            {
+                <tr class="border-bottom">
+
+                    @{
+                        var horario = result.horario;
+                        var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id).ToList();
+
+                        var rielPostition = 0;
+                    }
+
+                    <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
+
+                    @foreach (var riel in rieles)
+                    {
+                        rielPostition++;
+
+                        var borderRight = "";
+                        if (rielPostition < rieles.Count())
+                        {
+                            borderRight = "solid 1px #666";
+                        }
+
+
+                        var btnText = "Disponible";
+                        var btnClass = "btn-default";
+
+
+
+                        if (!riel.Disponibilidad)
+                        {
+                            
+                            btnText = string.Format(
+                                "{0} {1} {2} {3}<br>{4}<br>Cita #{5} / Total: {6} Pares",
+                                riel.cita.proveedore.Nombre1, riel.cita.proveedore.Nombre2,
+                                riel.cita.proveedore.Nombre3, riel.cita.proveedore.Nombre4,
+                                riel.cita.Almacen, riel.cita.Id, riel.cita.CantidadTotal);
+     
+                            btnClass = "btn-success";
+
+                        }
+
+                        <td class="text-center" style="border-right: @borderRight;">
+                            <div style="height: 80px;">
+                                <button id="@riel.Id" data-citaid="@riel.CitaId" style="height: 100%;" type="button" class="btn btn-xs @btnClass btn-block btn-riel ">
+                                    @Html.Raw(btnText)
+                                </button>
+                            </div>
+                        </td>
+
+                    }
+
+                </tr>
+            }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="modal-enroque" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            @using (Html.BeginForm("Enroque", "AdministrarCitas", new { }, FormMethod.Post, new { id = "form-agendar" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="horarioRielId1" />
+                <input type="hidden" name="horarioRielId2" />
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Enroque</h4>
+                </div>
+                <div class="modal-body">
+                    <p>¿Esta seguro que desar aplicar el Enroque?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Aplicar Enroque</button>
+                </div>   
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/jquery-sortable/0.9.13/jquery-sortable-min.js");
+
+    <script type="text/javascript">
+
+        var url = "@Url.Action("Enroque", "AdministrarCitas")";
+        var rielesSeleccionados = [];
+
+
+        $(document).ready(function() {
+
+            $('#fecha').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: '@ViewBag.Fecha'
+            });
+
+            $("#fecha").on("dp.change", function () {
+                $("#form-fecha").submit();
+            });
+            
+
+            $('.btn-riel').on('click', function() {
+
+                if (!$(this).hasClass("active")) {
+                    $(this).addClass("active");
+                } else {
+                    $(this).removeClass("active");
+                }
+
+                var horarioRielId = $(this).attr("id");
+
+                if ($(this).hasClass("active")) {
+
+                    if (rielesSeleccionados.indexOf(horarioRielId) === -1) {
+                        rielesSeleccionados.push(horarioRielId);
+                    }
+                } else {
+                    rielesSeleccionados.splice(rielesSeleccionados.indexOf(horarioRielId), 1);
+                }
+
+                if (rielesSeleccionados.length === 2) {
+                    var citaId1 = $("#" + rielesSeleccionados[0]).data("citaid");
+                    var citaId2 = $("#" + rielesSeleccionados[1]).data("citaid");
+
+                    if ((citaId1 === "") && (citaId2 === "")) {
+                        LimpiarSelecciones();
+                        //msgError("Para hacer el Enroquese al menos 1 riel debe estar ocupado.");
+
+                    } else {
+
+                        $("#modal-enroque input[name='horarioRielId1']").val(rielesSeleccionados[0]);
+                        $("#modal-enroque input[name='horarioRielId2']").val(rielesSeleccionados[1]);
+
+                       // $("#modal-enroque .aplicar-enroque-button ").attr("href", url + "?horarioRielId1=" + rielesSeleccionados[0] + "&horarioRielId2=" + rielesSeleccionados[1]);
+                        $("#modal-enroque").modal('show');
+                        
+                    }
+                }
+            });
+
+            $('#modal-enroque ').on('hidden.bs.modal', function() {
+                LimpiarSelecciones();
+            });
+
+            
+        });
+
+        function LimpiarSelecciones() {
+            $("#" + rielesSeleccionados[0]).removeClass('active');
+            $("#" + rielesSeleccionados[1]).removeClass('active');
+            rielesSeleccionados = [];
+        }
+
+    </script>
+}
