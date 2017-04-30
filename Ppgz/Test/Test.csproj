@@ -95,6 +95,10 @@
       <Project>{FF45BCAC-FBF6-451B-B36D-39E22F4EA1E3}</Project>
       <Name>SapWrapper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SatWrapper\SatWrapper.csproj">
+      <Project>{183d2b79-0f95-48a5-9924-8b90ec0527e8}</Project>
+      <Name>SatWrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

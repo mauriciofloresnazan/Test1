@@ -109,6 +109,9 @@
     <Compile Include="etiqueta.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="factura.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="horario.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>

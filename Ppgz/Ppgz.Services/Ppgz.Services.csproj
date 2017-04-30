@@ -74,6 +74,7 @@
     </Compile>
     <Compile Include="ConfiguracionesManager.cs" />
     <Compile Include="CuentaManager.cs" />
+    <Compile Include="FacturaManager.cs" />
     <Compile Include="MensajesResource.Designer.cs">
       <DependentUpon>MensajesResource.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -101,6 +102,10 @@
     <ProjectReference Include="..\SapWrapper\SapWrapper.csproj">
       <Project>{ff45bcac-fbf6-451b-b36d-39e22f4ea1e3}</Project>
       <Name>SapWrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SatWrapper\SatWrapper.csproj">
+      <Project>{183D2B79-0F95-48A5-9924-8B90EC0527E8}</Project>
+      <Name>SatWrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

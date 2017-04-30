@@ -191,9 +191,11 @@
     <Compile Include="App_Start\MenuConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\FacturaViewModel.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\AdministrarUsuariosController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ControlCitasController.cs" />
+    <Compile Include="Areas\Mercaderia\Controllers\FacturasController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\GestionProveedoresController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ImpresionEtiquetasController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\MensajesInstitucionalesController.cs" />
@@ -1155,7 +1157,11 @@
     <Content Include="Areas\Mercaderia\Views\ReporteProveedores\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ReporteProveedores\Reportes.cshtml" />
     <Content Include="Areas\Nazan\Views\RegistrarNivelServicio\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarCitas\Enroque.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\Facturas\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\Facturas\Facturas.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\Facturas\CargarFactura.cshtml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

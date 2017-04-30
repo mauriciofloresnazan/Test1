@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Principal;
-using System.Text;
-using System.Web;
-using System.Web.Security;
-using System.Web.UI.HtmlControls;
-using Microsoft.Ajax.Utilities;
 
 namespace Ppgz.Web
 {
@@ -130,7 +123,7 @@ namespace Ppgz.Web
                 "COMPROBANTERECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
                 //"IMPRESIONETIQUETAS|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-file-pdf-o|Mercaderia",
-                //"|Administración de Facturas|||fa fa-calculator|Mercaderia",
+                "FACTURAS|Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
                 "|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",

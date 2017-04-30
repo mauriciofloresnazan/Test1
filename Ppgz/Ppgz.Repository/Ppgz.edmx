@@ -233,6 +233,18 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
           <Property Name="OrdenCompraId" Type="int" />
           <Property Name="OrdenCompraNumeroDoc" Type="varchar" MaxLength="20" />
         </EntityType>
+        <EntityType Name="facturas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="proveedor_id" Type="int" Nullable="false" />
+          <Property Name="Uuid" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Fecha" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="Total" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="XmlRuta" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="PdfRuta" Type="varchar" MaxLength="1000" Nullable="false" />
+        </EntityType>
         <EntityType Name="horariorieles">
           <Key>
             <PropertyRef Name="Id" />
@@ -698,6 +710,18 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_facturas_proveedores">
+          <End Role="proveedores" Type="Self.proveedores" Multiplicity="1" />
+          <End Role="facturas" Type="Self.facturas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proveedores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="facturas">
+              <PropertyRef Name="proveedor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_horariorieles_citas">
           <End Role="citas" Type="Self.citas" Multiplicity="0..1" />
           <End Role="horariorieles" Type="Self.horariorieles" Multiplicity="*" />
@@ -873,6 +897,7 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           <EntitySet Name="cuentasusuarios" EntityType="Self.cuentasusuarios" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="estatuscitas" EntityType="Self.estatuscitas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="etiquetas" EntityType="Self.etiquetas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="facturas" EntityType="Self.facturas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="horariorieles" EntityType="Self.horariorieles" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="horarios" EntityType="Self.horarios" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="impuls_logs" EntityType="Self.impuls_logs" Schema="impuls_portal" store:Type="Tables" />
@@ -1001,6 +1026,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="fk_cuetnasprov" Association="Self.fk_cuetnasprov">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentaproveedores" EntitySet="cuentaproveedores" />
+          </AssociationSet>
+          <AssociationSet Name="fk_facturas_proveedores" Association="Self.fk_facturas_proveedores">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="facturas" EntitySet="facturas" />
           </AssociationSet>
           <AssociationSet Name="fk_horariorieles_citas" Association="Self.fk_horariorieles_citas">
             <End Role="citas" EntitySet="citas" />
@@ -1287,6 +1316,19 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="OrdenCompraId" Type="Int32" />
           <Property Name="OrdenCompraNumeroDoc" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="factura">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="proveedor_id" Type="Int32" Nullable="false" />
+          <Property Name="Uuid" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" />
+          <Property Name="Total" Type="Decimal" Nullable="false" />
+          <Property Name="XmlRuta" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="PdfRuta" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="proveedore" Relationship="Self.fk_facturas_proveedores" FromRole="facturas" ToRole="proveedores" />
+        </EntityType>
         <EntityType Name="horarioriele">
           <Key>
             <PropertyRef Name="Id" />
@@ -1462,6 +1504,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Borrado" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="citas" Relationship="Self.fk_citas_proveedor" FromRole="proveedores" ToRole="citas" />
           <NavigationProperty Name="cuenta" Relationship="Self.fk_proveedores_cuenta" FromRole="proveedores" ToRole="cuentas" />
+          <NavigationProperty Name="facturas" Relationship="Self.fk_facturas_proveedores" FromRole="proveedores" ToRole="facturas" />
           <NavigationProperty Name="niveleseervicios" Relationship="Self.fk_nivelservicio_proveedor" FromRole="proveedores" ToRole="niveleseervicio" />
           <NavigationProperty Name="ordencompras" Relationship="Self.fk_ordencompra_proveedor" FromRole="proveedores" ToRole="ordencompra" />
         </EntityType>
@@ -1797,6 +1840,18 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_facturas_proveedores">
+          <End Role="proveedores" Type="Self.proveedore" Multiplicity="1" />
+          <End Role="facturas" Type="Self.factura" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proveedores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="facturas">
+              <PropertyRef Name="proveedor_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_horariorieles_horarios">
           <End Role="horarios" Type="Self.horario" Multiplicity="1" />
           <End Role="horariorieles" Type="Self.horarioriele" Multiplicity="*" />
@@ -1886,6 +1941,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensaje" />
           <EntitySet Name="estatuscitas" EntityType="Self.estatuscita" />
           <EntitySet Name="etiquetas" EntityType="Self.etiqueta" />
+          <EntitySet Name="facturas" EntityType="Self.factura" />
           <EntitySet Name="horariorieles" EntityType="Self.horarioriele" />
           <EntitySet Name="horarios" EntityType="Self.horario" />
           <EntitySet Name="impuls_logs" EntityType="Self.impuls_logs" />
@@ -1973,6 +2029,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="fk_cuentasmensajes_mensaje" Association="Self.fk_cuentasmensajes_mensaje">
             <End Role="mensajes" EntitySet="mensajes" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
+          </AssociationSet>
+          <AssociationSet Name="fk_facturas_proveedores" Association="Self.fk_facturas_proveedores">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="facturas" EntitySet="facturas" />
           </AssociationSet>
           <AssociationSet Name="fk_horariorieles_horarios" Association="Self.fk_horariorieles_horarios">
             <End Role="horarios" EntitySet="horarios" />
@@ -2217,6 +2277,19 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />
                 <ScalarProperty Name="OrdenCompraId" ColumnName="OrdenCompraId" />
                 <ScalarProperty Name="OrdenCompraNumeroDoc" ColumnName="OrdenCompraNumeroDoc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="facturas">
+            <EntityTypeMapping TypeName="impuls_portalModel.factura">
+              <MappingFragment StoreEntitySet="facturas">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="proveedor_id" ColumnName="proveedor_id" />
+                <ScalarProperty Name="Uuid" ColumnName="Uuid" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="XmlRuta" ColumnName="XmlRuta" />
+                <ScalarProperty Name="PdfRuta" ColumnName="PdfRuta" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

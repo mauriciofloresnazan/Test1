@@ -21,6 +21,12 @@ namespace Test
         static void Main(string[] args)
         {
 
+            var response = SatWrapper.CfdiServiceConsulta.Consulta(@"C:\temp\borrar\factura.xml");
+
+
+            Console.WriteLine(response);
+            Console.ReadKey();
+            return;
             Console.WriteLine(RulesManager.GetCantidadRieles(1716));
             Console.ReadKey();
             return;
