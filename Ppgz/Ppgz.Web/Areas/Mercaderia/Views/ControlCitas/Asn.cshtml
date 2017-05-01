@@ -167,24 +167,27 @@
 
                 @foreach (var detalle in preAsn.Detalles)
                 {
-
-                    var color = "#000";
-                    if (detalle.Cantidad < detalle.CantidadPermitida)
+                    if (detalle.CantidadPermitida > 0)
                     {
-                        color = "red";
-                    }
 
-                    <tr data-numeroposicion="@detalle.NumeroPosicion" data-numeromaterial="@detalle.NumeroMaterial" data-descripcionmaterial="@detalle.DescripcionMaterial" data-cantidadpermitida="@detalle.CantidadPermitida">
-                        <td class="text-center vert-align"> @detalle.NumeroMaterial</td>
-                        <td class="text-center vert-align"> @detalle.Centro</td>
-                        <td class="text-center vert-align"> @detalle.Almacen</td>
-                        <td class="text-center vert-align"> @detalle.DescripcionMaterial</td>
-                        <td class="text-center vert-align"> @detalle.CantidadPedido </td>
-                        <td class="text-center vert-align"> @detalle.CantidadEntregada </td>
-                        <td class="text-center vert-align"> @detalle.CantidadCitasFuturas </td>
-                        <td class="text-center vert-align" style="color: green;">@detalle.CantidadPermitida</td>
-                        <td class="text-center cantidad-entregar vert-align" style="font-weight: bold; cursor: pointer; color: @color;">@detalle.Cantidad</td>
-                    </tr>
+                        var color = "#000";
+                        if (detalle.Cantidad < detalle.CantidadPermitida)
+                        {
+                            color = "red";
+                        }
+
+                        <tr data-numeroposicion="@detalle.NumeroPosicion" data-numeromaterial="@detalle.NumeroMaterial" data-descripcionmaterial="@detalle.DescripcionMaterial" data-cantidadpermitida="@detalle.CantidadPermitida">
+                            <td class="text-center vert-align"> @detalle.NumeroMaterial</td>
+                            <td class="text-center vert-align"> @detalle.Centro</td>
+                            <td class="text-center vert-align"> @detalle.Almacen</td>
+                            <td class="text-center vert-align"> @detalle.DescripcionMaterial</td>
+                            <td class="text-center vert-align"> @detalle.CantidadPedido </td>
+                            <td class="text-center vert-align"> @detalle.CantidadEntregada </td>
+                            <td class="text-center vert-align"> @detalle.CantidadCitasFuturas </td>
+                            <td class="text-center vert-align" style="color: green;">@detalle.CantidadPermitida</td>
+                            <td class="text-center cantidad-entregar vert-align" style="font-weight: bold; cursor: pointer; color: @color;">@detalle.Cantidad</td>
+                        </tr>
+                }
                 }
             </tbody>
         </table>

@@ -125,7 +125,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             var db = new Entities();
 
-            var cita = db.citas.FirstOrDefault(c => c.FechaCita > DateTime.Today && c.Id == citaId);
+            var cita = db.citas.FirstOrDefault(c => c.FechaCita >= DateTime.Today && c.Id == citaId);
 
             if (cita == null)
             {
@@ -179,7 +179,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             var db = new Entities();
 
-            var cita = db.citas.FirstOrDefault(c => c.FechaCita > DateTime.Today && c.Id == citaId);
+            var cita = db.citas.FirstOrDefault(c => c.FechaCita >= DateTime.Today && c.Id == citaId);
 
             if (cita == null)
             {

@@ -166,6 +166,29 @@ namespace Ppgz.CitaWrapper
 	    }
 
 
+	    public static void CancelarCita(int citaId)
+	    {
+            var db = new Repository.Entities();
+	        var cita = db.citas.Find(citaId);
+
+	        if(!RulesManager.PuedeCancelarCita(cita.FechaCita)) return;
+
+            foreach (var horarioRiel in cita.horariorieles.ToList())
+            {
+                horarioRiel.CitaId = null;
+                horarioRiel.Disponibilidad = true;
+                db.Entry(horarioRiel).State = EntityState.Modified;
+            }
+
+            cita.asns.ToList().ForEach(asn => db.asns.Remove(asn));
+
+
+            db.Entry(cita).State = EntityState.Deleted;
+            db.SaveChanges();
+
+
+	    }
+
     
     }
 }

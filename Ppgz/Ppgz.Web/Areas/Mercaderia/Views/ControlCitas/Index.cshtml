@@ -16,29 +16,34 @@
     <div class="panel-heading">Razones Sociales</div>
     <div class="panel-body">
         <div class="col-md-12">
+
+            <a class="btn btn-default" href="@Url.Action("Citas", "ControlCitas")">
+                <i class="fa fa-undo" aria-hidden="true"></i> Regresar al listado de Citas
+            </a>
+            <hr />
             <table id="proveedores" class="table table-striped table-condensed table-bordered">
                 <thead>
-                    <tr>
-                        <th class="text-center">Numero de Proveedor</th>
-                        <th class="text-center">RFC</th>
-                        <th class="text-center">Nombre Proveedor</th>
-                        <th class="text-center"></th>
-                    </tr>
+                <tr>
+                    <th class="text-center">Numero de Proveedor</th>
+                    <th class="text-center">RFC</th>
+                    <th class="text-center">Nombre Proveedor</th>
+                    <th class="text-center"></th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (proveedore proveedor in (ViewBag.proveedores))
-                    {
-                        <tr>
-                            <td class="text-center vert-align">@proveedor.NumeroProveedor</td>
-                            <td class="text-center vert-align">@proveedor.Rfc</td>
-                            <td class="text-center vert-align">@proveedor.Nombre1</td>
-                            <td class="text-center vert-align">
-                                <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#centro-modal" data-proveedorid="@proveedor.Id">
-                                    <i class="fa fa-check" aria-hidden="true"></i> Siguiente
-                                </a>
-                            </td>
-                        </tr>
-                    }
+                @foreach (proveedore proveedor in (ViewBag.proveedores))
+                {
+                    <tr>
+                        <td class="text-center vert-align">@proveedor.NumeroProveedor</td>
+                        <td class="text-center vert-align">@proveedor.Rfc</td>
+                        <td class="text-center vert-align">@proveedor.Nombre1</td>
+                        <td class="text-center vert-align">
+                            <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#centro-modal" data-proveedorid="@proveedor.Id">
+                                <i class="fa fa-check" aria-hidden="true"></i> Siguiente
+                            </a>
+                        </td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>

@@ -160,7 +160,7 @@ namespace Ppgz.Web.Areas.Mercaderia
             {
                 throw new OrdenSinDetalleException();
             }
-            if (detalles.Sum(de=> de.CantidadPermitida) < 0)
+            if (detalles.Sum(de=> de.CantidadPermitida) < 1)
             {
                 throw new OrdenSinDetalleException();
             }
@@ -178,7 +178,7 @@ namespace Ppgz.Web.Areas.Mercaderia
      
             };
 
-            if (preAsn.TotalCantidad < 0)
+            if (preAsn.TotalPermitido < 1)
             {
                 throw new OrdenSinDetalleException();
             }

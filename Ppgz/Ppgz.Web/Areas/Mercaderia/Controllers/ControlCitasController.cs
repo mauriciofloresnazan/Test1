@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -382,8 +383,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			foreach (var detalle in ordenCompra.Detalles)
 			{
-				dt.Rows.Add(detalle.NumeroPosicion, detalle.NumeroMaterial, 
-					detalle.DescripcionMaterial, detalle.CantidadPermitida);
+			    if (detalle.CantidadPermitida > 0)
+                {
+                    dt.Rows.Add(detalle.NumeroPosicion, detalle.NumeroMaterial,
+                        detalle.DescripcionMaterial, detalle.CantidadPermitida);
+			        
+			    }
 			}
 			
 			FileManager.ExportExcel(dt, numeroDocumento + "_plantilla", HttpContext);
@@ -603,16 +608,121 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		{
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-			var proveedoresIds = cuenta.proveedores.Select(p => p.Id).ToList();
+            var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
 
 			var db = new Entities();
 			var cita = db.citas.FirstOrDefault(c => c.Id == citaId && proveedoresIds.Contains(c.ProveedorId));
+
+            if (cita == null)
+            {
+                //TODO
+                TempData["FlashError"] = "Cita incorrecta";
+                return RedirectToAction("Citas");
+            }
 
 			ViewBag.Cita = cita;
 
 			return View();
 		}
 
-	
+	    [Authorize(Roles = "MAESTRO-MERCADERIA")]
+	    public ActionResult CancelarCita(int citaId)
+	    {
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+            var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
+            
+            var db = new Entities();
+
+            var cita = db.citas.FirstOrDefault(c => proveedoresIds.Contains(c.ProveedorId) && c.Id == citaId);
+
+	        if (cita == null)
+            {
+                //TODO
+                TempData["FlashError"] = "Cita incorrecta";
+                return RedirectToAction("Citas");
+	        }
+
+	        if (!RulesManager.PuedeCancelarCita(cita.FechaCita))
+            {
+                //TODO
+                TempData["FlashError"] = "La cita no puede ser Cancelada";
+                return RedirectToAction("Citas");
+	        }
+
+            CitaManager.CancelarCita(citaId);
+
+            //TODO
+            TempData["FlashSuccess"] = "Cita cancelada exitosamente";
+            return RedirectToAction("Citas");
+	    }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+	    public ActionResult ActualizarCita(int citaId, FormCollection collection)
+        {
+            var db = new Entities();
+
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+            var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
+            var cita = db.citas.FirstOrDefault(c => proveedoresIds.Contains(c.ProveedorId) && c.Id == citaId);
+            
+            if (cita == null)
+            {
+                //TODO
+                TempData["FlashError"] = "Cita incorrecta";
+                return RedirectToAction("Citas");
+            }
+
+            if (!RulesManager.PuedeEditarCita(cita.FechaCita))
+            {
+                //TODO
+                TempData["FlashError"] = "La cita no puede ser Editada";
+                return RedirectToAction("Citas");
+            }
+
+            foreach (var element in collection)
+            {
+                if (element.ToString().IndexOf("asnid-", StringComparison.Ordinal) == 0)
+                {
+                    var asnId = int.Parse(element.ToString().Replace("asnid-", string.Empty));
+                    var cantidad = int.Parse(collection[element.ToString()]);
+
+                    var asn = db.asns.FirstOrDefault(a => a.Id == asnId && a.CitaId == citaId);
+
+                    if (asn == null)
+                    {
+                        //TODO
+                        TempData["FlashError"] = "Asns incorrectos en la edición.";
+                        return RedirectToAction("Citas");
+                    }
+                    if (cantidad > 0)
+                    {
+                        asn.Cantidad = cantidad;
+                        db.Entry(asn).State = EntityState.Modified;
+                    }
+                    else
+                    {
+                        db.Entry(asn).State = EntityState.Deleted;
+                    }
+                }
+
+            }
+            
+            db.SaveChanges();
+
+
+            cita = db.citas.FirstOrDefault(c => proveedoresIds.Contains(c.ProveedorId) && c.Id == citaId);
+            if (cita != null)
+            {
+                cita.CantidadTotal = cita.asns.Sum(a => a.Cantidad);
+                db.Entry(cita).State = EntityState.Modified;
+            }
+            db.SaveChanges();
+
+            TempData["FlashSuccess"] = "Cita actualizada exitosamente";
+            return RedirectToAction("Citas");
+	    }
 	}
 }

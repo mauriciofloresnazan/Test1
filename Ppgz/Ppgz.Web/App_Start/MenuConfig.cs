@@ -119,7 +119,7 @@ namespace Ppgz.Web
             {
                 "GESTIONPROVEEDORES|Gestión de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Mercaderia",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Mercaderia",
-                "CONTROLCITAS|Control de Citas|Index|ControlCitas|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
                 "COMPROBANTERECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
                 //"IMPRESIONETIQUETAS|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-file-pdf-o|Mercaderia",

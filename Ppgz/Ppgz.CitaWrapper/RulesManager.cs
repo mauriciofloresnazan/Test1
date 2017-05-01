@@ -353,5 +353,43 @@ namespace Ppgz.CitaWrapper
         {
             return GetDiasOperativos().Contains(fechaCita.DayOfWeek);
         }
+
+        /// <summary>
+        /// •	El Proveedor tiene hasta las 12pm del día anterior a la cita para cancelarla.
+        /// </summary>
+        /// <returns></returns>
+        public static bool PuedeCancelarCita(DateTime fechaCita)
+        {
+            if (DateTime.Today.Date >= fechaCita.Date)
+            {
+                return false;
+            }
+
+            if (DateTime.Today.AddDays(1).Date == fechaCita.Date)
+            {
+                if (DateTime.Now.Hour > 12)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public static bool PuedeEditarCita(DateTime fechaCita)
+        {
+            if (DateTime.Today.Date >= fechaCita.Date)
+            {
+                return false;
+            }
+
+            if (DateTime.Today.AddDays(1).Date == fechaCita.Date)
+            {
+                if (DateTime.Now.Hour > 17)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }
