@@ -214,8 +214,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     return RedirectToAction("CambiarFecha", new {citaId, fecha });
                 }
             }
+            
 
-            foreach (var horarioRiel in cita.horariorieles)
+            foreach (var horarioRiel in cita.horariorieles.ToList())
             {
                 horarioRiel.CitaId = null;
                 horarioRiel.Disponibilidad = true;
@@ -231,7 +232,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 horarioRiel.Disponibilidad = false;
                 db.Entry(horarioRiel).State = EntityState.Modified;
             }
-
+            cita.FechaCita = date;
+            db.Entry(cita).State = EntityState.Modified;
             db.SaveChanges();
 
             TempData["FlashSuccess"] = "Cambio de fecha aplicado exitosamente";
