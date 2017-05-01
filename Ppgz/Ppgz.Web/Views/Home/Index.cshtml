@@ -1,9 +1,60 @@
 ﻿@{
     ViewBag.Title = "Home Page";
+
+    var photoSlides = Directory.GetFiles(Server.MapPath("~/assets/img/Photoslide"), "*.jpg")
+                                     .Select(Path.GetFileName)
+                                     .ToArray();
 }
 
 <div>
-    <h2 class="form-signin-heading" style="color: white">  '</h2>
+    <h2 style="color: white"> </h2>
     <hr>
 </div>
-<img src="@Url.Content("~/assets/img/logo-grupo-nazan.png")" class="img-responsive center-block" width="500px">
+
+
+
+
+<div id="carousel-home" class="carousel slide" data-ride="carousel">
+    <!-- Indicators -->
+    <ol class="carousel-indicators">
+
+        @for (var i = 0; i < photoSlides.Length; i++)
+        {
+            var active = "";
+            if (@i == 0)
+            {
+                active = "active";
+            }
+
+            <li data-target="#carousel-home" data-slide-to="@i" class="@active"></li>
+        }
+
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" role="listbox">
+
+        @for (var i = 0; i < photoSlides.Length; i++)
+        {
+            var active = "";
+            if (@i == 0)
+            {
+                active = "active";
+            }
+            <div class="item @active">
+                <img src="~/assets/img/Photoslide/@photoSlides[i]" width="1170" alt="photosslide">
+            </div>
+        }
+
+
+    </div>
+
+</div>
+<img src="@Url.Content("~/assets/img/marcas.png")" class="img-responsive center-block" width="1120">
+
+
+@section Scripts {
+    <script type="text/javascript">
+
+    </script>
+}
