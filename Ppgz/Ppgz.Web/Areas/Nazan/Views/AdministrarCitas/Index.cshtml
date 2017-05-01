@@ -39,7 +39,7 @@
                         {
                             <tr>
                                 <td class="text-center vert-align">@cita.Id</td>
-                                <td class="text-center vert-align">@cita.FechaCita</td>
+                                <td class="text-center vert-align">@cita.FechaCita.ToString("dd/M/yyyy")</td>
                                 <td class="text-center vert-align">@cita.RielesOcupados</td>
                                 <td class="text-center vert-align">@cita.CantidadTotal</td>
                                 <td class="text-center vert-align">@cita.proveedore.Rfc</td>
@@ -60,7 +60,7 @@
                                 <td class="text-center vert-align">
                                     <div class="btn-group btn-group-justified">
 
-                                        @if (cita.FechaCita > DateTime.Today)
+                                        @if (cita.FechaCita >= DateTime.Today)
                                         {
                                             <a class="btn btn-warning btn-xs" href="@Url.Action("Enroque", "AdministrarCitas", new {@fecha = @cita.FechaCita.ToString("dd/MM/yyyy")})" title="Enroque">
 

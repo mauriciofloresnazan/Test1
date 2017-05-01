@@ -178,6 +178,11 @@ namespace Ppgz.Web.Areas.Mercaderia
      
             };
 
+            if (preAsn.TotalCantidad < 0)
+            {
+                throw new OrdenSinDetalleException();
+            }
+
      
 
             _ordenes.Add(preAsn);
