@@ -18,68 +18,70 @@
             <div class="table-responsive">
                 <table class="table table-striped table-condensed table-bordered" id="citas">
                     <thead>
-                    <tr>
-                        <th class="text-center">Id</th>
-                        <th class="text-center">Fecha</th>
-                        <th class="text-center">Rieles</th>
-                        <th class="text-center">Cantidad</th>
-                        <th class="text-center">RFC Proveedor</th>
-                        <th class="text-center">Nombre Proveedor</th>
-                        <th class="text-center">Tiene CR</th>
-                        <th class="text-center">Penalización
-                        </th>
-                        <th class="text-center" style="width: 100px"> Opciones
-                        </th>
-                    </tr>
+                        <tr>
+                            <th class="text-center">Id</th>
+                            <th class="text-center">Fecha</th>
+                            <th class="text-center">Rieles</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-center">RFC Proveedor</th>
+                            <th class="text-center">Nombre Proveedor</th>
+                            <th class="text-center">Tiene CR</th>
+                            <th class="text-center">
+                                Penalización
+                            </th>
+                            <th class="text-center" style="width: 100px">
+                                Opciones
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
-                    @foreach (var cita in citas)
-                    {
-                        <tr>
-                            <td class="text-center vert-align">@cita.Id</td>
-                            <td class="text-center vert-align">@cita.FechaCita</td>
-                            <td class="text-center vert-align">@cita.RielesOcupados</td>
-                            <td class="text-center vert-align">@cita.CantidadTotal</td>
-                            <td class="text-center vert-align">@cita.proveedore.Rfc</td>
-                            <td class="text-center vert-align">@cita.proveedore.Nombre1 @cita.proveedore.Nombre2 @cita.proveedore.Nombre3 @cita.proveedore.Nombre4</td>
-                            <td class="text-center vert-align">
-                                @if (cita.estatuscita != null)
-                                {
-                                    @cita.estatuscita.Nombre
-                                }
-                                else
-                                {<text>N/A</text>
-                                }
-                            </td>
-                            <td class="text-center vert-align">
-                                NO
-                            </td>
-
-                            <td class="text-center vert-align">
-                                <div class="btn-group btn-group-justified">
-
-                                    @if (cita.FechaCita > DateTime.Today)
+                        @foreach (var cita in citas)
+                        {
+                            <tr>
+                                <td class="text-center vert-align">@cita.Id</td>
+                                <td class="text-center vert-align">@cita.FechaCita</td>
+                                <td class="text-center vert-align">@cita.RielesOcupados</td>
+                                <td class="text-center vert-align">@cita.CantidadTotal</td>
+                                <td class="text-center vert-align">@cita.proveedore.Rfc</td>
+                                <td class="text-center vert-align">@cita.proveedore.Nombre1 @cita.proveedore.Nombre2 @cita.proveedore.Nombre3 @cita.proveedore.Nombre4</td>
+                                <td class="text-center vert-align">
+                                    @if (cita.estatuscita != null)
                                     {
-                                        <a class="btn btn-warning btn-xs" href="@Url.Action("Enroque", "AdministrarCitas", new {@fecha = @cita.FechaCita.ToString("dd/MM/yyyy")})" title="Enroque">
-
-                                            <i class="fa fa-random" aria-hidden="true"></i>
-                                        </a>
-                                        <a class="btn btn-info btn-xs" href="@Url.Action("", "", new {@id = @cita.Id})" title="Cambio de fecha">
-                                            <i class="fa fa-calendar-times-o" aria-hidden="true"></i>
-                                        </a>
+                                        @cita.estatuscita.Nombre
                                     }
-                                    @if (cita.FechaCita < DateTime.Today)
-                                    {
-                                        <a class="btn btn-danger btn-xs" href="#" onclick=" javascript:ShowModalPenalizar(@cita.Id);" title="Penalizar">
-                                            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                                        </a>
+                                    else
+                                    {<text>N/A</text>
                                     }
-                                </div>
+                                </td>
+                                <td class="text-center vert-align">
+                                    NO
+                                </td>
 
-                            </td>
-                        </tr>
+                                <td class="text-center vert-align">
+                                    <div class="btn-group btn-group-justified">
 
-                    }
+                                        @if (cita.FechaCita > DateTime.Today)
+                                        {
+                                            <a class="btn btn-warning btn-xs" href="@Url.Action("Enroque", "AdministrarCitas", new {@fecha = @cita.FechaCita.ToString("dd/MM/yyyy")})" title="Enroque">
+
+                                                <i class="fa fa-random" aria-hidden="true"></i>
+                                            </a>
+                                            <a class="btn btn-info btn-xs" href="#" onclick="javascript:ShowModalCambiarFecha(@cita.Id);" title="Cambio de fecha">
+                                                <i class="fa fa-calendar-times-o" aria-hidden="true"></i>
+                                            </a>
+                                        }
+                                        @if (cita.FechaCita < DateTime.Today)
+                                        {
+                                            <a class="btn btn-danger btn-xs" href="#" onclick="javascript:ShowModalPenalizar(@cita.Id);" title="Penalizar">
+                                                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                            </a>
+                                        }
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                        }
 
                     </tbody>
                 </table>
@@ -94,32 +96,56 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
 
-            @using (Html.BeginForm("Penalizar", "AdministrarCitas", new { }, FormMethod.Post, new { id = "form-penalizar" }))
+            @using (Html.BeginForm("Penalizar", "AdministrarCitas", new {}, FormMethod.Post, new {id = "form-penalizar"}))
             {
-                @Html.AntiForgeryToken()
-                <input type="hidden" name="citaId" />
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="citaId" />
 
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title">Penalizar</h4>
-                </div>
-                <div class="modal-body">
-                    <label>Seleccione una opción</label>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Penalizar</h4>
+            </div>
+            <div class="modal-body">
+                <label>Seleccione una opción</label>
 
-                    <select class="form-control" name="estatusId">
-                        <option>Quitar penalización</option>
-                        @foreach (var estatus in estatusCita)
+                <select class="form-control" name="estatusId">
+                    <option>Quitar penalización</option>
+                    @foreach (var estatus in estatusCita)
                         {
-                            <option value="@estatus.Id">@estatus.Nombre</option>
+                        <option value="@estatus.Id">@estatus.Nombre</option>
 
                         }
-                    </select>
-                </div>
-                <div class="modal-footer">
-                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
-                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Aplicar Selección</button>
-                </div>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                <button type="submit" class="aplicar-enroque-button btn btn-primary">Aplicar Selección</button>
+            </div>
             }
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" id="modal-cambiar-fecha" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Cambiar fecha</h4>
+            </div>
+            <div class="modal-body">
+                <label>Seleccione la nueva fecha</label>
+
+
+                <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
+
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                <a class="btn btn-primary" onclick="javascript: CambiarFecha();">Cambiar Fecha</a>
+            </div>
+
         </div>
     </div>
 </div>
@@ -135,6 +161,12 @@
                 },
                 "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
             });
+
+            $('#fecha').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
         });
 
         function ShowModalPenalizar(citaId) {
@@ -142,6 +174,22 @@
             $("#modal-penalizar").modal('show');
         }
 
+        var citaIdCambiarFecha;
+
+        function ShowModalCambiarFecha(citaId) {
+            citaIdCambiarFecha = citaId;
+            $("#modal-cambiar-fecha").modal('show');
+        }
+
+        function CambiarFecha() {
+            var url = "@Url.Action("CambiarFecha", "AdministrarCitas")";
+            var fecha = $('#fecha').val();
+            url = url + "?citaId=" + citaIdCambiarFecha + "&fecha=" + fecha;
+            location.href = url;
+        }
 
     </script>
+
+
+
 }

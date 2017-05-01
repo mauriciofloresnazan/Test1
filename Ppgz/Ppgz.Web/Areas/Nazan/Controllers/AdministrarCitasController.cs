@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using MySql.Data.MySqlClient;
 using Ppgz.Repository;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
@@ -110,6 +113,128 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 
             TempData["FlashSuccess"] = "Penalización aplicada exitosamente";
+            return RedirectToAction("Index");
+        }
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN")]
+        public ActionResult CambiarFecha(int citaId, string fecha)
+        {
+
+            var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            var db = new Entities();
+
+            var cita = db.citas.FirstOrDefault(c => c.FechaCita > DateTime.Today && c.Id == citaId);
+
+            if (cita == null)
+            {
+                TempData["FlashError"] = "Cita incorrecta";
+                return RedirectToAction("Index"); 
+            }
+
+            if (date.Date == cita.FechaCita.Date)
+            {
+                TempData["FlashError"] = "Fecha incorrecta para el cambio";
+                return RedirectToAction("Index");
+            }
+
+            if (date.Date < DateTime.Today.Date)
+            {
+                TempData["FlashError"] = "Fecha incorrecta para el cambio";
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Fecha = date;
+            ViewBag.Cita = cita;
+
+
+            var parameters = new List<MySqlParameter>()
+			{
+				new MySqlParameter
+				{
+					ParameterName = "pTotal",
+					Direction = ParameterDirection.Output,
+					MySqlDbType = MySqlDbType.VarChar
+				},
+				new MySqlParameter("pFecha", date)
+			};
+
+            Db.ExecuteProcedureOut(parameters, "config_appointment");
+
+            var horarioRieles = db.horariorieles.Where(h => h.Fecha == date.Date).ToList();
+
+            ViewBag.HorarioRieles = horarioRieles;
+
+            return View();
+        }
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult CambiarFecha(int citaId, string fecha, int[] horarioRielesIds)
+        {
+            var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            var db = new Entities();
+
+            var cita = db.citas.FirstOrDefault(c => c.FechaCita > DateTime.Today && c.Id == citaId);
+
+            if (cita == null)
+            {
+                TempData["FlashError"] = "Cita incorrecta";
+                return RedirectToAction("Index");
+            }
+
+            if (date.Date == cita.FechaCita.Date)
+            {
+                TempData["FlashError"] = "Fecha incorrecta para el cambio";
+                return RedirectToAction("Index");
+            }
+
+            if (date.Date < DateTime.Today.Date)
+            {
+                TempData["FlashError"] = "Fecha incorrecta para el cambio";
+                return RedirectToAction("Index");
+            }
+
+            foreach (var horarioRileId in horarioRielesIds)
+            {
+                var horarioRiel = db.horariorieles.FirstOrDefault(hr => hr.Id == horarioRileId);
+
+                if (horarioRiel == null)
+                {
+                    TempData["FlashError"] = "Rieles incorrectos";
+                    return RedirectToAction("Index");
+                }
+                if (horarioRiel.CitaId != null)
+                {
+                    TempData["FlashError"] = "Selección incorrecta de Rieles";
+                    return RedirectToAction("CambiarFecha", new {citaId, fecha });
+                }
+            }
+
+            foreach (var horarioRiel in cita.horariorieles)
+            {
+                horarioRiel.CitaId = null;
+                horarioRiel.Disponibilidad = true;
+                db.Entry(horarioRiel).State = EntityState.Modified;
+            }
+
+
+
+            foreach (var horarioRileId in horarioRielesIds)
+            {
+                var horarioRiel = db.horariorieles.FirstOrDefault(hr => hr.Id == horarioRileId);
+                horarioRiel.CitaId = citaId;
+                horarioRiel.Disponibilidad = false;
+                db.Entry(horarioRiel).State = EntityState.Modified;
+            }
+
+            db.SaveChanges();
+
+            TempData["FlashSuccess"] = "Cambio de fecha aplicado exitosamente";
             return RedirectToAction("Index");
         }
     }
