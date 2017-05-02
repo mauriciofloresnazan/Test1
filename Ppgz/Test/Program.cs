@@ -20,7 +20,14 @@ namespace Test
         
         static void Main(string[] args)
         {
+            var preasnManager = new PreAsnManager();
 
+            var test = preasnManager.GetOrdenesActivasConDetalle(33);
+
+            var query = test.Where(o => o.Detalles.Any(de => de.Centro.ToUpper() == "CD01")).ToList();
+            Console.WriteLine(JsonConvert.SerializeObject(query));
+            Console.ReadKey();
+            return;
             var response = SatWrapper.CfdiServiceConsulta.Consulta(@"C:\temp\borrar\factura.xml");
 
 

@@ -227,8 +227,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult Devoluciones()
+        public ActionResult Devoluciones(string numeroDocumento, string date = null)
         {
+            var fecha = DateTime.Today;
+
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                fecha = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+
             if (ProveedorCxp == null)
             {
                 // TODO pasar a recurso
@@ -239,17 +246,17 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var partidasManager = new PartidasManager();
 
             var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             ViewBag.Devoluciones = dsDevoluciones.Tables["T_DEVOLUCIONES"];
 
             ViewBag.Proveedor = ProveedorCxp;
-
+            ViewBag.Fecha = fecha;
             return View();
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult DevolucionesDetalle(string numeroDocumento)
+        public ActionResult DevolucionesDetalle(string numeroDocumento, string date)
         {
             if (ProveedorCxp == null)
             {
@@ -257,11 +264,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 TempData["FlashError"] = "Proveedor incorrecto";
                 return RedirectToAction("Index");
             }
-
+            var fecha = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             var partidasManager = new PartidasManager();
 
             var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             ViewBag.Devolucion = dsDevoluciones.Tables["T_DEVOLUCIONES"]
                 .Select(string.Format("BELNR = '{0}'", numeroDocumento))[0];
@@ -281,23 +288,23 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             ViewBag.Impuesto = impuesto;
 
             ViewBag.Proveedor = ProveedorCxp;
-
+            ViewBag.Fecha = fecha;
             return View();
         }
 
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public void DevolucionesDetalleDescargar(string numeroDocumento)
+        public void DevolucionesDetalleDescargar(string numeroDocumento, string date)
         {
             if (ProveedorCxp == null)
             {
                 return;
             }
-
+            var fecha = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             var partidasManager = new PartidasManager();
 
             var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             var dt = dsDevoluciones.Tables["T_MAT_DEV"]
                 .Select(string.Format("BELNR = '{0}'", numeroDocumento)).CopyToDataTable();
