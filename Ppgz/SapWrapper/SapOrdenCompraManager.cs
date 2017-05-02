@@ -15,7 +15,7 @@ namespace SapWrapper
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
-            function.SetValue("IM_LOEKZ", "A");
+            function.SetValue("IM_LOEKZ", "C");
             function.SetValue("IM_LIFNR", numeroProveedor);
             // TODO CONFIGURAR CUANDO SEA DE SERVICIO
             function.SetValue("IM_EKORG", "OC01");
@@ -123,7 +123,47 @@ namespace SapWrapper
             var dt = result.ToDataTable("ET_DET");
 
             return (from DataRow dr in dt.Rows select new SapOrdenCompraDetalle(dr)).ToList();
-        } 
-    
+        }
+
+
+        public List<SapOrdenCompra> GetActivasConDetalle(string numeroProveedor, string organizacionCompras)
+        {
+            var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
+            var rfcRepository = rfcDestinationManager.Repository;
+            var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
+
+            function.SetValue("IM_LIFNR", numeroProveedor);
+            function.SetValue("IM_EKORG", organizacionCompras);
+            function.SetValue("IM_LOEKZ", "A");
+            function.SetValue("IM_GET_DET", "X");
+
+            function.Invoke(rfcDestinationManager);
+
+            var resultH = function.GetTable("ET_HDR");
+            var dtH = resultH.ToDataTable("ET_HDR");
+
+            var resultD = function.GetTable("ET_DET");
+            var dtD = resultD.ToDataTable("ET_DET");
+
+            var result = new List<SapOrdenCompra>();
+            foreach (DataRow dr in dtH.Rows)
+            {
+                var sapOrdenCompra = new SapOrdenCompra(dr);
+
+                // Relacion del encabezado del orden con el detalle a traves del número de orden de compra
+                var drsDetalle = dtD.Select(string.Format("EBELN = '{0}'", dr["EBELN"]));
+
+                var detalles = drsDetalle.Select(drDetalle => new SapOrdenCompraDetalle(drDetalle)).ToList();
+
+
+                sapOrdenCompra.Detalles = detalles; 
+
+                result.Add(sapOrdenCompra);
+            }
+
+            return result;
+        }
+
+
     }
 }

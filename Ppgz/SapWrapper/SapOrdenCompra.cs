@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace SapWrapper
@@ -126,6 +127,11 @@ namespace SapWrapper
         /// </summary>
         public DateTime FechaEntrega;
 
+
+        /// <summary>
+        /// Items de la orden de compra
+        /// </summary>
+        public List<SapOrdenCompraDetalle> Detalles;
 
     }
 

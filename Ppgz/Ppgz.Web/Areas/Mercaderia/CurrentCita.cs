@@ -57,8 +57,6 @@ namespace Ppgz.Web.Areas.Mercaderia
             var documentos = _ordenes
                 .Select(o => o.NumeroDocumento).ToArray();
 
-
-
             if (Fecha != null)
             {
                 var fecha = (DateTime)Fecha;
@@ -101,12 +99,19 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             var preAsnManager = new PreAsnManager();
 
-            _ordenesActivas = preAsnManager.GetOrdenesActivas(proveedor.Id);
+            var result = preAsnManager.GetOrdenesActivasConDetalle(proveedor.Id);
 
+            _ordenesActivas = result
+                .Where(o => o.Detalles.Any(de => String.Equals(de.Centro, centro, StringComparison.CurrentCultureIgnoreCase)))
+                .Where(o => o.TotalPermitido > 0)
+                .ToList();
+
+               
             if (!_ordenesActivas.Any())
             {
                 throw new BusinessException("El proveedor no tiene ordenes de compra activas");
             }
+
             Centro = centro;
         }
 
@@ -152,40 +157,31 @@ namespace Ppgz.Web.Areas.Mercaderia
                 throw new FechaException();
             }
 
-            var preAsnManager = new PreAsnManager();
+           /* var preAsnManager = new PreAsnManager();
             var detalles = preAsnManager.GetDetalles(Proveedor.Id, numeroDocumento);
 
 
             if (!detalles.Any())
             {
                 throw new OrdenSinDetalleException();
-            }
-            if (detalles.Sum(de=> de.CantidadPermitida) < 1)
+            }*/
+            if (orden.Detalles.Sum(de => de.CantidadPermitida) < 1)
             {
                 throw new OrdenSinDetalleException();
             }
-            if (detalles.All(de => de.Centro != Centro))
+            if (orden.Detalles.All(de => de.Centro != Centro))
             {
                 throw new OrdenCentroException();
             }
 
-            var preAsn = new PreAsn
-            {
-                NumeroProveedor =  orden.NumeroProveedor,
-                NumeroDocumento =  orden.NumeroDocumento,
-                Detalles =  detalles.Where(de=> de.Centro == Centro).ToList(),
-                
-     
-            };
-
-            if (preAsn.TotalPermitido < 1)
+            if (orden.TotalPermitido < 1)
             {
                 throw new OrdenSinDetalleException();
             }
 
      
 
-            _ordenes.Add(preAsn);
+            _ordenes.Add(orden);
         }
 
         public void RemovePreAsn(string numeroDocumento)
