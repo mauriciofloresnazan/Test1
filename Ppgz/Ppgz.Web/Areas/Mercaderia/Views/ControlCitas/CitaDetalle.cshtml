@@ -57,11 +57,15 @@
             </div>
         </div>
         <div class="row">
-            <label class="col-sm-3 control-label">Fecha de la Cita</label>
-            <div class="col-sm-3">
+            <label class="col-sm-2 control-label">Fecha</label>
+            <div class="col-sm-2">
                 <div>@cita.FechaCita.ToString("dd/MM/yyyy")</div>
             </div>
-            <div class="col-sm-6">
+            <label class="col-sm-2 control-label">Total</label>
+            <div class="col-sm-2">
+                <div>@cita.CantidadTotal <strong class="text-danger" id="total-entregar"></strong></div>
+            </div>
+            <div class="col-sm-4">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
 
                     @if (RulesManager.PuedeEditarCita(cita.FechaCita))
@@ -98,7 +102,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">Items de la Cita</div>
     <div class="panel-body">
-        
+
         <table class="table table-striped table-condensed" id="asn">
             <thead>
                 <tr>
@@ -121,7 +125,7 @@
 
                     <tr data-asnid="@detalle.Id" data-numeroposicion="@detalle.NumeroPosicion" data-numeromaterial="@detalle.NumeroMaterial" data-descripcionmaterial="@detalle.NombreMaterial" data-cantidadpermitida="@detalle.Cantidad">
                         <td class="text-center vert-align"> @detalle.OrdenNumeroDocumento</td>
-                         <td class="text-center vert-align"> @detalle.NumeroMaterial</td>
+                        <td class="text-center vert-align"> @detalle.NumeroMaterial</td>
                         <td class="text-center vert-align"> @detalle.cita.Almacen</td>
                         <td class="text-center vert-align"> @detalle.NombreMaterial</td>
                         <td class="text-center vert-align cantidad-entregar" style="font-weight: bold; cursor: pointer; ">@detalle.Cantidad</td>
@@ -177,10 +181,42 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalDescartarRieles" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Seleccionar Rieles</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <p>Tiene reservados @cita.horariorieles.Count Rieles, pero ahora solo necesita <span id="nuevos-rieles-necesarios"></span></p>
+                    <label> Seleccione los rieles a que va a utilizar</label>
+                    @foreach (var horarioRiel in cita.horariorieles)
+                    {
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="horarioriel" value="@horarioRiel.Id">
+                                Anden @horarioRiel.riele.andene.Anden / Riel @horarioRiel.riele.Riel (@horarioRiel.horario.HoraDesde - @horarioRiel.horario.HoraHasta)
+                            </label>
+                        </div>
+                    }
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+                <a href="#" class="btn btn-primary" onclick="javascript:ActualizarCitaRieles();">Actualizar Cita</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @using (Html.BeginForm("ActualizarCita", "ControlCitas", new { }, FormMethod.Post, new { id = "form-actualizar" }))
 {
     @Html.AntiForgeryToken()
-    <input type="hidden" name="citaId" value="@cita.Id"/>
+    <input type="hidden" name="citaId" value="@cita.Id" />
 
 }
 
@@ -194,6 +230,27 @@
 
     <script type="text/javascript">
 
+
+        var cita = {
+            id: "@cita.Id",
+            total: "@cita.CantidadTotal",
+            totalEntregar: "@cita.CantidadTotal",
+            rielesOcupados: "@cita.horariorieles.Count",
+            rieles: []
+
+            };
+
+        @foreach (var horarioRiel in cita.horariorieles)
+        {
+            <text>
+            cita.rieles.push({
+                id: "@horarioRiel.Id",
+                hora: "Anden @horarioRiel.riele.andene.Codigo / Riel @horarioRiel.riele.Codigo (@horarioRiel.horario.HoraDesde - @horarioRiel.horario.HoraHasta)"
+
+            });
+            
+            </text>
+        }
 
         $(".numeric").numeric();
 
@@ -221,11 +278,15 @@
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
                 },
-                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
             });
 
 
-            $('#asn .cantidad-entregar').on('click', function() {
+
+            @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+            {
+                <text>
+            $('#asn .cantidad-entregar').on('click', function () {
 
                 tr = $(this).parent();
 
@@ -248,92 +309,152 @@
 
                 $("#hidCancelarActualizar").val("0");
             });
-            @if (RulesManager.PuedeEditarCita(cita.FechaCita))
-            {
-                <text>
 
-                $('#modalEditarCantidad').on('hidden.bs.modal', function(e) {
+            $('#modalEditarCantidad').on('hidden.bs.modal', function(e) {
 
-                    var td = $(tr.find(".cantidad-entregar")[0]);
+                var td = $(tr.find(".cantidad-entregar")[0]);
 
-                    var cantidadNueva = parseInt($("#editar-cantidad").val());
+                var cantidadNueva = parseInt($("#editar-cantidad").val());
 
-                    if (isNaN(cantidadNueva)) {
-                        //todo mejorar
-                        msgError("Incorrecto, Por favor coloque una cantidad");
-                        return;
+                if (isNaN(cantidadNueva)) {
+                    //todo mejorar
+                    msgError("Incorrecto, Por favor coloque una cantidad");
+                    return;
+                }
+
+                if (parseInt(cantidadNueva) > parseInt(editingItem.cantidadPermitida)) {
+                    //todo mejorar
+                    msgError("Debe ingresar una cantidad menor");
+                    return;
+                }
+
+
+                if (cantidadNueva < editingItem.cantidadPermitida) {
+                    editedAsns["asnid-" + editingItem.asnId] = cantidadNueva;
+
+                    td.css("color", "red");
+                } else {
+
+                    if (editedAsns["asnid-" + editingItem.asnId] !== undefined) {
+                        delete editedAsns["asnid-" + editingItem.asnId];
                     }
+                    td.css("color", "#000");
+                }
 
-                    if (parseInt(cantidadNueva) > parseInt(editingItem.cantidadPermitida)) {
-                        //todo mejorar
-                        msgError("Debe ingresar una cantidad menor");
-                        return;
-                    }
-
-
-                    if (cantidadNueva < editingItem.cantidadPermitida) {
-                        editedAsns["asnid-" + editingItem.asnId] = cantidadNueva;
-
-                        td.css("color", "red");
-                    } else {
-
-                        if (editedAsns["asnid-" + editingItem.asnId] === undefined) {
-                            delete editedAsns[editingItem.asnId];
-                        }
-                        td.css("color", "#000");
-                    }
-
-                    editingCell.data(cantidadNueva).draw();
-
-
-                });
-
+                editingCell.data(cantidadNueva).draw();
                 calcularTotalEntregar();
 
 
             });
+
             </text>
-        }
-        function calcularTotalEntregar() {
-            var totalEntregar = 0;
-            $($(asn).DataTable().column(4).data()).each(function() {
-                totalEntregar = totalEntregar + parseFloat(this);
-            });
-            $("#total-entregar").text(totalEntregar);
-
-        }
-
-
-        function cancelar() {
-
-            $("#hidCancelarActualizar").val("1");
-            $("#modalEditarCantidad").modal('hidden.bs.modal');
-
-        }
-
-
-        function ActualizarCita() {
-
-           
-            var count = 0;
-            for (var key in editedAsns) {
-                if (editedAsns.hasOwnProperty(key)) {
-                    $('<input>').attr({
-                        type: 'hidden',
-                        name: key,
-                        value: editedAsns[key]
-                    }).appendTo('#form-actualizar');
-                    count++;
-                }
             }
 
-            if (count < 1) {
-                msgError("La cita no tiene modificaciones");
+        });
+        @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+        {
+        <text>
+            function calcularTotalEntregar() {
+                var totalEntregar = 0;
+                $($(asn).DataTable().column(4).data()).each(function() {
+                    totalEntregar = totalEntregar + parseFloat(this);
+                });
+
+                cita.totalEntregar = totalEntregar;
+
+                if (totalEntregar < cita.total) {
+                    $("#total-entregar").text("Modificado:" + totalEntregar);
+                } else {
+
+                    $("#total-entregar").text("");
+                }
+
+            }
+
+
+            function cancelar() {
+
+                $("#hidCancelarActualizar").val("1");
+                $("#modalEditarCantidad").modal('hidden.bs.modal');
+
+            }
+
+
+            function ActualizarCita() {
+
+
+                var count = 0;
+                for (var key in editedAsns) {
+                    if (editedAsns.hasOwnProperty(key)) {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: key,
+                            value: editedAsns[key]
+                        }).appendTo('#form-actualizar');
+                        count++;
+                    }
+                }
+
+                if (count < 1) {
+                    msgError("La cita no tiene modificaciones");
+                    return;
+                }
+
+
+                
+                var urlCalcularRieles = "@Url.Action("CalcularRieles", "ControlCitas")";
+
+                var data = {
+                    cantidad: cita.totalEntregar
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: urlCalcularRieles,
+                    data: data,
+                    cache: false
+                }).done(function (result) {
+                                     
+                    if (result.rieles !== cita.rielesOcupados) {
+                        $("#nuevos-rieles-necesarios").text(result.rieles);
+                        $('#modalDescartarRieles').modal('show');
+
+                    } else {
+
+                        $("#form-actualizar").submit();
+                    }
+
+                });
+
+            }
+
+        
+
+        function ActualizarCitaRieles() {
+
+            if ($("#modalDescartarRieles input:checked").length !== parseInt($("#nuevos-rieles-necesarios").text())) {
+
+                msgError("Selección incorrecta de rieles");
                 return;
             }
 
 
+            $("#modalDescartarRieles input:checked").each(function () {
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: $(this).attr("name"),
+                        value: $(this).attr("value")
+                }).appendTo('#form-actualizar');
+            });
+     
+            
+
             $("#form-actualizar").submit();
+
+
+        }
+
+        </text>
         }
     </script>
 }

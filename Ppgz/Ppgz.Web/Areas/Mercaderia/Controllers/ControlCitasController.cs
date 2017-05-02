@@ -675,13 +675,20 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 return RedirectToAction("Citas");
             }
 
+            foreach (var hriel in cita.horariorieles.ToList())
+            {
+                hriel.CitaId = null;
+                hriel.Disponibilidad = true;
+                db.Entry(hriel).State = EntityState.Modified;
+            }
+
             if (!RulesManager.PuedeEditarCita(cita.FechaCita))
             {
                 //TODO
                 TempData["FlashError"] = "La cita no puede ser Editada";
                 return RedirectToAction("Citas");
             }
-
+            
             foreach (var element in collection)
             {
                 if (element.ToString().IndexOf("asnid-", StringComparison.Ordinal) == 0)
@@ -707,22 +714,48 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         db.Entry(asn).State = EntityState.Deleted;
                     }
                 }
+                if (element.ToString().IndexOf("horarioriel", StringComparison.Ordinal) == 0)
+                {
+                    var horarioRielId = int.Parse(collection[element.ToString()]);
+                    var horarioRiel = db.horariorieles.Find(horarioRielId);
+                    if (horarioRiel == null)
+                    {
+                        //TODO
+                        TempData["FlashError"] = "Rieles incorrectos en la edición.";
+                        return RedirectToAction("Citas");
+                    }
+
+                    horarioRiel.Disponibilidad = false;
+                    horarioRiel.CitaId = citaId;
+                    db.Entry(horarioRiel).State = EntityState.Modified;
+                }
+
 
             }
-            
-            db.SaveChanges();
 
+            db.SaveChanges();
 
             cita = db.citas.FirstOrDefault(c => proveedoresIds.Contains(c.ProveedorId) && c.Id == citaId);
             if (cita != null)
             {
                 cita.CantidadTotal = cita.asns.Sum(a => a.Cantidad);
+                cita.RielesOcupados = (sbyte) cita.horariorieles.Count;
                 db.Entry(cita).State = EntityState.Modified;
             }
+            
+
             db.SaveChanges();
 
             TempData["FlashSuccess"] = "Cita actualizada exitosamente";
             return RedirectToAction("Citas");
 	    }
-	}
+
+
+        public JsonResult CalcularRieles(int cantidad)
+        {
+                return Json(new { rieles = RulesManager.GetCantidadRieles(cantidad) });
+            
+        }
+    
+    }
 }
