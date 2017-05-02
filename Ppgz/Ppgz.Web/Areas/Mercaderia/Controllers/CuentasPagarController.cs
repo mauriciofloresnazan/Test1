@@ -64,8 +64,16 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult Pagos()
+        public ActionResult Pagos(string date = null)
         {
+
+            var fecha = DateTime.Today;
+
+            if (!string.IsNullOrWhiteSpace(date))
+            {
+                fecha = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+
             if (ProveedorCxp == null)
             {
                 // TODO pasar a recurso
@@ -77,17 +85,19 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 
             var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             ViewBag.Pagos = dsPagos.Tables["T_LISTA_PAGOS"];
 
             ViewBag.Proveedor = ProveedorCxp;
 
+            ViewBag.Fecha = fecha;
+
             return View();
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult PagosDetalle(string numeroDocumento)
+        public ActionResult PagosDetalle(string numeroDocumento, string date)
         {
             if (ProveedorCxp == null)
             {
@@ -96,10 +106,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 return RedirectToAction("Index");
             }
 
+            var fecha = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
             var partidasManager = new PartidasManager();
 
             var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad,DateTime.Today);
+            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             ViewBag.Pago = dsPagos.Tables["T_LISTA_PAGOS"]
                 .Select(string.Format("BELNR = '{0}'", numeroDocumento))[0];
@@ -109,21 +121,24 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             ViewBag.Proveedor = ProveedorCxp;
 
+            ViewBag.Fecha = fecha;
+
             return View();
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public void PagoDetallesDescargar(string numeroDocumento)
+        public void PagoDetallesDescargar(string numeroDocumento, string date)
         {
             if (ProveedorCxp == null)
             {
                 return;
             }
+            var fecha = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
             var partidasManager = new PartidasManager();
 
             var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             var dt = dsPagos.Tables["T_PAGOS"]
                 .Select(string.Format("BELNR_PAGO = '{0}'", numeroDocumento)).CopyToDataTable();
