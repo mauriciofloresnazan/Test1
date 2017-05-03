@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web.Mvc;
 using MySql.Data.MySqlClient;
 using Ppgz.Repository;
+using Ppgz.Web.Infrastructure;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
@@ -272,6 +273,49 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             return View();
         }
-    
+
+
+
+        public void PenalizacionesExportar(string fechaDesde, string fechaHasta)
+        {
+            var dateFechaDesde  = DateTime.ParseExact(fechaDesde, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+      
+
+            var dateFechaHasta = DateTime.ParseExact(fechaHasta, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+      
+
+            var db = new Entities();
+
+            var citas = db.citas.Where(c => c.EstatusCitaId != null && (dateFechaDesde <= c.FechaCita && dateFechaHasta >= c.FechaCita))
+                .ToList();
+
+
+            var dt = new DataTable();
+            dt.Columns.Add("Id");
+            dt.Columns.Add("Fecha");
+            dt.Columns.Add("Rieles");
+            dt.Columns.Add("Cantidad");
+            dt.Columns.Add("RFC Proveedor");
+            dt.Columns.Add("Nombre Proveedor");
+            dt.Columns.Add("Es Especial");
+            dt.Columns.Add("Penalización");
+
+
+
+            foreach (var cita in citas)
+            {
+                dt.Rows.Add(
+                    cita.Id,
+                    cita.FechaCita.ToString("dd/M/yyyy"),
+                    cita.RielesOcupados,
+                    cita.CantidadTotal,
+                    cita.proveedore.Rfc,
+                    cita.proveedore.Nombre1 + " " + cita.proveedore.Nombre2+ " " + cita.proveedore.Nombre3+ " " + cita.proveedore.Nombre4,
+                    cita.proveedore.cuenta.EsEspecial ? "SI" : "NO",
+                    cita.estatuscita.Nombre);
+            }
+
+            FileManager.ExportExcel(dt, "Pen_" + dateFechaDesde.ToString("ddMMyyyy") + "_" + dateFechaHasta.ToString("ddMMyyyy"), HttpContext);
+        }
     }
 }

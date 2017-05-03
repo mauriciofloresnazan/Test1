@@ -13,76 +13,95 @@
 <p class="page-description-title"><i class="fa fa-envelope" aria-hidden="true"></i> <i>Registro desde hace 3 meses</i></p>
 
 <div class="panel panel-default">
+    <div class="panel-heading">Seleccione la Fecha</div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("Penalizaciones", "AdministrarCitas", new { ViewBag.ReturnUrl }, FormMethod.Get, new { @id = "form-fecha", @class = "form-horizontal", role = "form" }))
+        {
+
+            @Html.ValidationSummary(true)
+
+            <div class="">
+                <label class="col-sm-2 control-label"> Fecha Desde</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="fecha" id="fechaDesde" placeholder="Fecha" />
+                </div>
+                <label class="col-sm-2 control-label"> Fecha Hasta</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="fecha" id="fechaHasta" placeholder="Fecha" />
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-primary pull-right" type="submit"> <i class="fa fa-filter" aria-hidden="true"></i> Filtrar</button>
+
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+<div class="panel panel-default">
     <div class="panel-heading">Lista de Citas</div>
     <div class="panel-body">
         <div class="col-md-12">
             <div class="table-responsive">
+                <div class="col-sm-6">
+
+                </div>
+                <div class="col-sm-6 text-right">
+                    <a href="@Url.Action("PenalizacionesExportar", "AdministrarCitas", new { fechaDesde = @fechaDesde.ToString("dd/MM/yyyy"), fechaHasta = @fechaHasta.ToString("dd/MM/yyyy") })" class="btn btn-primary"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
+                </div>
+                <hr />
                 <table class="table table-striped table-condensed table-bordered" id="citas">
                     <thead>
-                        <tr>
-                            <th class="text-center">Id</th>
-                            <th class="text-center">Fecha</th>
-                            <th class="text-center">Rieles</th>
-                            <th class="text-center">Cantidad</th>
-                            <th class="text-center">RFC Proveedor</th>
-                            <th class="text-center">Nombre Proveedor</th>
-                            <th class="text-center">Tiene CR</th>
-                            <th class="text-center">
-                                Penalización
-                            </th>
-                            <th class="text-center" style="width: 100px">
-                                Opciones
-                            </th>
-                        </tr>
+                    <tr>
+                        <th class="text-center">Id</th>
+                        <th class="text-center">Fecha</th>
+                        <th class="text-center">Rieles</th>
+                        <th class="text-center">Cantidad</th>
+                        <th class="text-center">RFC Proveedor</th>
+                        <th class="text-center">Nombre Proveedor</th>
+
+                        <th class="text-center">Es Especial</th>
+                        <th class="text-center">
+                            Penalización
+                        </th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach (var cita in citas)
-                        {
-                            <tr>
-                                <td class="text-center vert-align">@cita.Id</td>
-                                <td class="text-center vert-align">@cita.FechaCita.ToString("dd/M/yyyy")</td>
-                                <td class="text-center vert-align">@cita.RielesOcupados</td>
-                                <td class="text-center vert-align">@cita.CantidadTotal</td>
-                                <td class="text-center vert-align">@cita.proveedore.Rfc</td>
-                                <td class="text-center vert-align">@cita.proveedore.Nombre1 @cita.proveedore.Nombre2 @cita.proveedore.Nombre3 @cita.proveedore.Nombre4</td>
-                                <td class="text-center vert-align">
-                                    NO
-                                </td>
-                                <td class="text-center vert-align">
-                                    @if (cita.estatuscita != null)
-                                    {
-                                        @cita.estatuscita.Nombre
-                                    }
-                                    else
-                                    {<text>N/A</text>
-                                    }
-                                </td>
+                    @foreach (var cita in citas)
+                    {
+                        <tr>
+                            <td class="text-center vert-align">@cita.Id</td>
+                            <td class="text-center vert-align">@cita.FechaCita.ToString("dd/M/yyyy")</td>
+                            <td class="text-center vert-align">@cita.RielesOcupados</td>
+                            <td class="text-center vert-align">@cita.CantidadTotal</td>
+                            <td class="text-center vert-align">@cita.proveedore.Rfc</td>
 
-                                <td class="text-center vert-align">
-                                    <div class="btn-group btn-group-justified">
+                            <td class="text-center vert-align">@cita.proveedore.Nombre1 @cita.proveedore.Nombre2 @cita.proveedore.Nombre3 @cita.proveedore.Nombre4</td>
+                            <td class="text-center vert-align">
+                                @if (cita.proveedore.cuenta.EsEspecial)
+                                {
+                                    <text>SI</text>
+                                }
+                                else
+                                {
+                                    <text>NO</text>
+                                }
+                            </td>
+                            <td class="text-center vert-align">
+                                @if (cita.estatuscita != null)
+                                {
+                                    @cita.estatuscita.Nombre
+                                }
+                                else
+                                {<text>N/A</text>
+                                }
+                            </td>
 
-                                        @if (cita.FechaCita >= DateTime.Today)
-                                        {
-                                            <a class="btn btn-warning btn-xs" href="@Url.Action("Enroque", "AdministrarCitas", new {@fecha = @cita.FechaCita.ToString("dd/MM/yyyy")})" title="Enroque">
+                        </tr>
 
-                                                <i class="fa fa-random" aria-hidden="true"></i>
-                                            </a>
-                                            <a class="btn btn-info btn-xs" href="#" onclick="javascript:ShowModalCambiarFecha(@cita.Id);" title="Cambio de fecha">
-                                                <i class="fa fa-calendar-times-o" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                        @if (cita.FechaCita < DateTime.Today)
-                                        {
-                                            <a class="btn btn-danger btn-xs" href="#" onclick="javascript:ShowModalPenalizar(@cita.Id);" title="Penalizar">
-                                                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                    </div>
-
-                                </td>
-                            </tr>
-
-                        }
+                    }
 
                     </tbody>
                 </table>
@@ -101,39 +120,35 @@
     <script type="text/javascript">
 
 
-        $(document).ready(function () {
-            $('#citas').DataTable({
-                "language": {
-                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
-                },
-                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
-            });
-
-            $('#fecha').datetimepicker({
-                locale: 'es',
-                format: 'DD/MM/YYYY',
-                defaultDate: new Date()
-            });
+    $(document).ready(function () {
+        $('#citas').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+            },
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
         });
 
-        function ShowModalPenalizar(citaId) {
-            $('#form-penalizar > input[name="citaId"]').val(citaId);
-            $("#modal-penalizar").modal('show');
-        }
+        $('#fechaDesde').datetimepicker({
+            locale: 'es',
+            format: 'DD/MM/YYYY',
+            defaultDate: "@fechaDesde.ToString("yyyyMMdd")"
+        });
+        $('#fechaHasta').datetimepicker({
+            locale: 'es',
+            format: 'DD/MM/YYYY',
+            defaultDate: "@fechaHasta.ToString("yyyyMMdd")"
+    });
+    });
 
-        var citaIdCambiarFecha;
 
-        function ShowModalCambiarFecha(citaId) {
-            citaIdCambiarFecha = citaId;
-            $("#modal-cambiar-fecha").modal('show');
-        }
 
-        function CambiarFecha() {
-            var url = "@Url.Action("CambiarFecha", "AdministrarCitas")";
-            var fecha = $('#fecha').val();
-            url = url + "?citaId=" + citaIdCambiarFecha + "&fecha=" + fecha;
-            location.href = url;
-        }
+    var citaIdCambiarFecha;
+
+    function ShowModalCambiarFecha(citaId) {
+        citaIdCambiarFecha = citaId;
+        $("#modal-cambiar-fecha").modal('show');
+    }
+
 
     </script>
 
