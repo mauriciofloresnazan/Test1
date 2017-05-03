@@ -259,7 +259,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             var db = new Entities();
 
-            var citas = db.citas.Where(c => c.EstatusCitaId != null && (c.FechaCita >= dateFechaDesde && c.FechaCita >= dateFechaHasta))
+            var citas = db.citas.Where(c => c.EstatusCitaId != null && (dateFechaDesde <= c.FechaCita && dateFechaHasta >=  c.FechaCita))
                 .ToList();
 
 

@@ -30,7 +30,7 @@
     <div class="panel-heading">Seleccione la Fecha</div>
     <div class="panel-body">
 
-        @using (Html.BeginForm("Index", "AdministrarCitas", new { ViewBag.ReturnUrl }, FormMethod.Get, new { @id="form-fecha", @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("Enroque", "AdministrarCitas", new { ViewBag.ReturnUrl }, FormMethod.Get, new { @id="form-fecha", @class = "form-horizontal", role = "form" }))
         {
 
             @Html.ValidationSummary(true)
