@@ -1170,6 +1170,7 @@
     <Content Include="Areas\Mercaderia\Views\Facturas\Facturas.cshtml" />
     <Content Include="Areas\Mercaderia\Views\Facturas\CargarFactura.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas\CambiarFecha.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarCitas\Penalizaciones.cshtml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

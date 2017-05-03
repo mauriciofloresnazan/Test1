@@ -267,6 +267,15 @@ namespace Ppgz.Web
             List<string> menu;
             switch (nombreControllerActual)
             {
+                case "AdministrarCitas":
+                    menu = new List<string>
+                    {
+                        "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
+                        "ADMINISTRARCITAS|Vista Diaria|Enroque|AdministrarCitas|fa fa-calendar|Nazan",
+                        "ADMINISTRARCITAS|Reporte de Penalizaciones|Penalizaciones|AdministrarCitas|fa fa-line-chart|Nazan",
+
+                    };
+                    break;
                  default:
                     string menuDefault = "";
                     menuDefault = NombreXController(nombreControllerActual, "NAZAN");

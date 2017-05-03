@@ -115,7 +115,14 @@
                                     tipo = "Cargo a proveedor";
                                     break;
                                 case "RE":
-                                    tipo = "Factura a proveedor";
+
+                                    if ((decimal) drPago["DMBTR_COMPEN"]> 0)
+                                    {
+                                        tipo = "Factura de mercancia";
+                                        break;
+                                    
+                                    }
+                                    tipo = "Devolucion de mercancia";
                                     break;
 
                                 case "RV":

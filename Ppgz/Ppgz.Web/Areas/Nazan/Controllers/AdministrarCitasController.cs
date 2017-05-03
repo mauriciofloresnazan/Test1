@@ -239,5 +239,39 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             TempData["FlashSuccess"] = "Cambio de fecha aplicado exitosamente";
             return RedirectToAction("Index");
         }
+
+        [Authorize(Roles = "MAESTRO-NAZAN")]
+        public ActionResult Penalizaciones(string fechaDesde = null, string fechaHasta = null)
+        {
+
+            var dateFechaDesde = DateTime.Today.AddDays(-5);
+            if (!string.IsNullOrWhiteSpace(fechaDesde))
+            {
+                dateFechaDesde = DateTime.ParseExact(fechaDesde, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+
+            var dateFechaHasta = DateTime.Today;
+            if (!string.IsNullOrWhiteSpace(fechaHasta))
+            {
+                dateFechaHasta = DateTime.ParseExact(fechaHasta, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+
+
+            var db = new Entities();
+
+            var citas = db.citas.Where(c => c.EstatusCitaId != null && (c.FechaCita >= dateFechaDesde && c.FechaCita >= dateFechaHasta))
+                .ToList();
+
+
+
+            ViewBag.FechaDesde = dateFechaDesde;
+
+            ViewBag.FechaHasta = dateFechaHasta;
+            ViewBag.Citas = citas;
+         
+
+            return View();
+        }
+    
     }
 }

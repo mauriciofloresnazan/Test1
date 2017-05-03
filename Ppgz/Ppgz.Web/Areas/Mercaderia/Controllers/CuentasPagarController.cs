@@ -190,7 +190,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         tipo = "Cargo a proveedor";
                         break;
                     case "RE":
-                        tipo = "Factura a proveedor";
+
+                        if ((decimal)dr["DMBTR_COMPEN"] > 0)
+                        {
+                            tipo = "Factura de mercancia";
+                            break;
+                                    
+                        }
+                        tipo = "Devolucion de mercancia";
                         break;
 
                     case "RV":
