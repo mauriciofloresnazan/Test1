@@ -47,7 +47,12 @@
     <div class="panel-body">
         <div class="col-md-12">
             <div class="col-sm-6">
-                <b>Referencia de pago : </b> @pago["BELNR"]
+                <div class="col-sm-6">
+                    <b>Referencia: </b> @pago["BELNR"]
+                </div>
+                <div class="col-sm-6">
+                    <b>Total Pagado: </b> @string.Format("{0:N}", pago["DMBTR"])
+                </div>
             </div>
             <div class="col-sm-6 text-right">
                 <a href="@Url.Action("PagoDetallesDescargar", "CuentasPagar", new { @numeroDocumento = @pago["BELNR"], date = fechaParam.ToString("dd/MM/yyyy") })" class="btn btn-primary"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
