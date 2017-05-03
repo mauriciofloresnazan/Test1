@@ -121,7 +121,34 @@ namespace Ppgz.CitaWrapper
                     CantidadEntregada = detalle.CantidadEntregada, 
                     CantidadPedido = detalle.CantidadPedido, 
                     DescripcionMaterial = detalle.Descripcion, 
-                    NumeroMaterial = detalle.NumeroMaterial
+                    NumeroMaterial = detalle.NumeroMaterial,
+
+
+
+
+
+
+
+
+
+
+                    Cantidad = detalle.CantidadPedido - (asnFuturos
+                        .Where(asn => asn.OrdenNumeroDocumento == detalle.NumeroDocumento
+                               && asn.NumeroPosicion == detalle.NumeroPosicion
+                               && asn.NumeroMaterial == detalle.NumeroMaterial)
+                        .Sum(asn => asn.Cantidad) + detalle.CantidadEntregada)
+
+
+
+
+
+
+
+
+
+
+
+
                 }).ToList();
 
                 preAsn.Detalles = detalles;
