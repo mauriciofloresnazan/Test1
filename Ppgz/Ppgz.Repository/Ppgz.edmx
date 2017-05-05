@@ -626,6 +626,18 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_crs_cita">
+          <End Role="citas" Type="Self.citas" Multiplicity="1" />
+          <End Role="crs" Type="Self.crs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="citas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="crs">
+              <PropertyRef Name="CitaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_cuenta">
           <End Role="cuentas" Type="Self.cuentas" Multiplicity="0..1" />
           <End Role="perfiles" Type="Self.perfiles" Multiplicity="*" />
@@ -999,6 +1011,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="citas" EntitySet="citas" />
           </AssociationSet>
+          <AssociationSet Name="fk_crs_cita" Association="Self.fk_crs_cita">
+            <End Role="citas" EntitySet="citas" />
+            <End Role="crs" EntitySet="crs" />
+          </AssociationSet>
           <AssociationSet Name="fk_cuenta" Association="Self.fk_cuenta">
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="perfiles" EntitySet="perfiles" />
@@ -1223,6 +1239,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_citas_usuario" FromRole="citas" ToRole="AspNetUsers" />
           <NavigationProperty Name="estatuscita" Relationship="Self.fk_citas_estatus" FromRole="citas" ToRole="estatuscitas" />
           <NavigationProperty Name="proveedore" Relationship="Self.fk_citas_proveedor" FromRole="citas" ToRole="proveedores" />
+          <NavigationProperty Name="crs" Relationship="Self.fk_crs_cita" FromRole="citas" ToRole="crs" />
           <NavigationProperty Name="horariorieles" Relationship="Self.fk_horariorieles_citas" FromRole="citas" ToRole="horariorieles" />
         </EntityType>
         <EntityType Name="configuracione">
@@ -1244,6 +1261,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="ArchivoCR" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="Fecha" Type="DateTime" />
           <Property Name="CitaId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="cita" Relationship="Self.fk_crs_cita" FromRole="crs" ToRole="citas" />
         </EntityType>
         <EntityType Name="cuentaproveedore">
           <Key>
@@ -1768,6 +1786,18 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_crs_cita">
+          <End Role="citas" Type="Self.cita" Multiplicity="1" />
+          <End Role="crs" Type="Self.cr" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="citas">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="crs">
+              <PropertyRef Name="CitaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_horariorieles_citas">
           <End Role="citas" Type="Self.cita" Multiplicity="0..1" />
           <End Role="horariorieles" Type="Self.horarioriele" Multiplicity="*" />
@@ -2005,6 +2035,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="fk_citas_proveedor" Association="Self.fk_citas_proveedor">
             <End Role="proveedores" EntitySet="proveedores" />
             <End Role="citas" EntitySet="citas" />
+          </AssociationSet>
+          <AssociationSet Name="fk_crs_cita" Association="Self.fk_crs_cita">
+            <End Role="citas" EntitySet="citas" />
+            <End Role="crs" EntitySet="crs" />
           </AssociationSet>
           <AssociationSet Name="fk_horariorieles_citas" Association="Self.fk_horariorieles_citas">
             <End Role="citas" EntitySet="citas" />

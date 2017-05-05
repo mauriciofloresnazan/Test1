@@ -182,6 +182,19 @@ namespace Ppgz.Services
         //TODO
         public void Eliminar(int id)
         {
+
+            var cuenta = _db.cuentas.Find(id);
+
+            if (cuenta != null)
+            {
+                foreach (var proveedor in cuenta.proveedores.ToList())
+                {
+                    var prvoeProveedorManager = new ProveedorManager();
+                    prvoeProveedorManager.Eliminar(proveedor.Id);
+                }
+
+            }
+
             var messageError = new MySqlParameter
             {
                 ParameterName = "messageError",

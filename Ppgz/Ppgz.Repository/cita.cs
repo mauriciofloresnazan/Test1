@@ -17,6 +17,7 @@ namespace Ppgz.Repository
         public cita()
         {
             this.asns = new HashSet<asn>();
+            this.crs = new HashSet<cr>();
             this.horariorieles = new HashSet<horarioriele>();
         }
     
@@ -39,6 +40,7 @@ namespace Ppgz.Repository
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual estatuscita estatuscita { get; set; }
         public virtual proveedore proveedore { get; set; }
+        public virtual ICollection<cr> crs { get; set; }
         public virtual ICollection<horarioriele> horariorieles { get; set; }
     }
 }

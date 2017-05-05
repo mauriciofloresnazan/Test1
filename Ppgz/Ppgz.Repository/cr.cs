@@ -19,5 +19,7 @@ namespace Ppgz.Repository
         public string ArchivoCR { get; set; }
         public Nullable<System.DateTime> Fecha { get; set; }
         public int CitaId { get; set; }
+    
+        public virtual cita cita { get; set; }
     }
 }

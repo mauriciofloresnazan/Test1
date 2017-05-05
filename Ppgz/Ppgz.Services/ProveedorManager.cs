@@ -89,17 +89,27 @@ namespace Ppgz.Services
             {
                 throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
             }
-
-            proveedor.niveleseervicios.ToList().ForEach(n => _db.niveleseervicios.Remove(n));
             
-
             foreach (var cita in proveedor.citas)
             {
                 cita.asns.ToList().ForEach(asn => _db.asns.Remove(asn));
+
+
+                foreach (var horarioRiel in cita.horariorieles.ToList())
+                {
+                    horarioRiel.CitaId = null;
+                    horarioRiel.Disponibilidad = true;
+                    _db.Entry(horarioRiel).State = EntityState.Modified;
+                }
+
+                cita.crs.ToList().ForEach(cr => _db.crs.Remove(cr));
+   
             }
-
+           
             proveedor.citas.ToList().ForEach(c => _db.citas.Remove(c));
-
+            proveedor.facturas.ToList().ForEach(f => _db.facturas.Remove(f));
+            proveedor.ordencompras.ToList().ForEach(oc => _db.ordencompras.Remove(oc));
+            proveedor.niveleseervicios.ToList().ForEach(ns => _db.niveleseervicios.Remove(ns));
 
             _db.Entry(proveedor).State = EntityState.Deleted;
             _db.SaveChanges();
