@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Ppgz.Web.Infrastructure;
@@ -7,36 +6,34 @@ using Ppgz.Web.Infrastructure.Nazan;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
-    [Authorize]
-    [TerminosCondiciones]
+	[Authorize]
+	[TerminosCondiciones]
 	public class MensajesInstitucionalesController : Controller
 	{
-        private readonly CommonManager _commonManager = new CommonManager();
+		private readonly CommonManager _commonManager = new CommonManager();
 		private readonly MensajesInstitucionalesManager _mensajesInstitucionalesManager = new MensajesInstitucionalesManager();
-        
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-MENSAJESINSTITUCIONALES")]
+		
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-MENSAJESINSTITUCIONALES")]
 		public ActionResult Index()
 		{
 			//CUENTAS
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-            var mensajes = _mensajesInstitucionalesManager.FindMensajesVigentesByCuentaId(cuenta.Id);
-
-			var mensajesUsuario = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
-
+			var mensajes = _mensajesInstitucionalesManager.FindMensajesVigentesByCuentaId(cuenta.Id);
+			
 			ViewBag.mensajes = mensajes;
 
-			ViewBag.mensajesUsuario = Json(mensajesUsuario);
+			ViewBag.Cuenta = cuenta;
 
 			return View();
 		}
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-MENSAJESINSTITUCIONALES")]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-MENSAJESINSTITUCIONALES")]
 		[HttpPost]
 		public ActionResult Visualizar(int id)
-        {
-            //CUENTAS
-            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+		{
+			//CUENTAS
+			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
 			var mensajes = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
 
@@ -50,16 +47,16 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return Content("Actualizado");
 		}
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-MENSAJESINSTITUCIONALES")]
-        [HttpPost]
-        public JsonResult MensajesSinLeer()
-        {
-            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-MENSAJESINSTITUCIONALES")]
+		[HttpPost]
+		public JsonResult MensajesSinLeer()
+		{
+			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-            var mensajes = _mensajesInstitucionalesManager.FindPublicadosSinLeerByCuentaId(cuenta.Id);
+			var mensajes = _mensajesInstitucionalesManager.FindPublicadosSinLeerByCuentaId(cuenta.Id);
 
-            return Json(mensajes);
+			return Json(mensajes.Count);
 
-        }
-    }
+		}
+	}
 }

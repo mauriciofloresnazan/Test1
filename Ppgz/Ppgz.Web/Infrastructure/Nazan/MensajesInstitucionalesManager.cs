@@ -69,7 +69,7 @@ namespace Ppgz.Web.Infrastructure.Nazan
 
             var cuenta = cuentaManager.Find(cuentaId);
             return _db.mensajes
-                .Where(m=> m.cuentasmensajes.All(cm => cm.MensajeId != m.Id)
+                .Where(m=> !m.cuentasmensajes.Any(cm => cm.MensajeId == m.Id && cm.CuentaId == cuentaId)
                 &&(m.FechaPublicacion < DateTime.Now && (m.EnviadoA == "TODOS" || m.EnviadoA == cuenta.Tipo)))
                 .Where(m => m.FechaCaducidad >= DateTime.Today)
                 .ToList();
@@ -87,13 +87,13 @@ namespace Ppgz.Web.Infrastructure.Nazan
                 .ToList();
         }
 
-        public List<vwmensaje> FindMensajesVigentesByCuentaId(int cuentaId)
+        public List<mensaje> FindMensajesVigentesByCuentaId(int cuentaId)
         {
             var cuentaManager = new CuentaManager();
 
             var cuenta = cuentaManager.Find(cuentaId);
 
-            return _db.vwmensajes
+            return _db.mensajes
                 .Where(m => m.FechaPublicacion < DateTime.Now && (m.EnviadoA == "TODOS" || m.EnviadoA == cuenta.Tipo))
                 .Where(m => m.FechaCaducidad >= DateTime.Today)
                 .ToList();

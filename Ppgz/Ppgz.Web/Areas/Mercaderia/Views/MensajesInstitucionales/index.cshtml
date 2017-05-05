@@ -1,7 +1,9 @@
 ﻿@using Microsoft.AspNet.Identity
+@using Ppgz.Repository
 @{
     ViewBag.Title = "Mensajes Institucionales";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    cuenta cuenta = ViewBag.Cuenta;
 }
 
 <h2 class="form-signin-heading">Gestión de Proveedores</h2>
@@ -23,14 +25,21 @@
                 </thead>
                 <tbody>
 
-                    @foreach (var mensaje in (ViewBag.mensajes))
+                    @foreach (mensaje mensaje in (ViewBag.mensajes))
                     {
+                        var visualizado = "NO";
+
+                        if (mensaje.cuentasmensajes.ToList().Any(c => c.CuentaId == cuenta.Id))
+                        {
+                            visualizado = "SI";
+                        }
+  
                         <tr id="mensaje-tr-id-@mensaje.Id">
                             <td class="text-center vert-align">@mensaje.FechaPublicacion.ToString("dd/MM/yyyy")</td>
 
                             <td class="text-center vert-align"><i>@mensaje.Titulo</i></td>
                             <td class="leido-flag text-center">
-                                @mensaje.Visualizado
+                                @visualizado
                             </td>
                             <td class="text-center">
 

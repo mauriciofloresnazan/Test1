@@ -21,11 +21,9 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var mensajes = _mensajesInstitucionalesManager.FindMensajesVigentesByCuentaId(cuenta.Id);
 
-            var mensajesUsuario = _mensajesInstitucionalesManager.FindCuentaMensajes(cuenta.Id);
-
             ViewBag.mensajes = mensajes;
 
-            ViewBag.mensajesUsuario = Json(mensajesUsuario);
+            ViewBag.Cuenta = cuenta;
 
             return View();
         }
@@ -59,7 +57,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var mensajes = _mensajesInstitucionalesManager.FindPublicadosSinLeerByCuentaId(cuenta.Id);
 
-            return Json(mensajes);
+            return Json(mensajes.Count);
 
         }
     }

@@ -12,7 +12,7 @@ namespace Ppgz.Web.Infrastructure
         var commonManager = new CommonManager();
 
         var usuario = commonManager.GetUsuarioAutenticado();
-        if (usuario.Tipo == "PROVEEDOR" || usuario.Tipo == "PROVEEDOR-MAESTRO")
+        if (usuario.Tipo == "PROVEEDOR" || usuario.Tipo == "MAESTRO-PROVEEDOR")
         if (usuario.TerminosCondicionesFecha == null)
         {
             filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Politicas", action = "Index", area = "" }));

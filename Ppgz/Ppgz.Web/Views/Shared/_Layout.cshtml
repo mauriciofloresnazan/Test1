@@ -202,10 +202,10 @@
                         url: Url,
                         cache: false
                     }).done(function (result) {
-                        var mensajesSinLeer = parseInt(result.length);
+                        var mensajesSinLeer = parseInt(result);
 
                         if ((mensajesSinLeer) > 0) {
-                            $("#mensajes-notificador .badge").text(result.length);
+                            $("#mensajes-notificador .badge").text(result);
                             $("#mensajes-notificador").show();
                         } else {
                             $("#mensajes-notificador").hide();
