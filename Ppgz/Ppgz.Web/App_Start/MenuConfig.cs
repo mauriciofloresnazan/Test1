@@ -110,6 +110,7 @@ namespace Ppgz.Web
                 "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores|Index|AdministrarProveedores|fa fa-address-book-o|Nazan",
                 "ADMINISTRARNIVELSERVICIONAZAN|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan",
                 "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
+                "CONFIGURACIONES|Configuración de Sistema|Index|Configsys|fa fa-cogs|",
             };
             return menuLista;
         }
