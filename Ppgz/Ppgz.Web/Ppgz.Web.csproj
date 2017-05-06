@@ -240,6 +240,7 @@
     <Compile Include="Areas\Servicio\ServicioAreaRegistration.cs" />
     <Compile Include="Areas\UsuarioProveedorViewModel.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ConfigsysController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Content Include="Areas\Nazan\Views\AdministrarPerfilesNazan\Editar.cshtml" />
@@ -1196,6 +1197,7 @@
     <Content Include="Views\Account\Confirm.cshtml" />
     <Content Include="Uploads\formato_nivel_servicio.xlsx" />
     <Content Include="Web.config" />
+    <Content Include="Views\Configsys\Index.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

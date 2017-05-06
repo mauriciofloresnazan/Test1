@@ -169,7 +169,6 @@ namespace Ppgz.CitaWrapper
             return fechasPermitidas;*/
         }
 
-
         /// <summary>
         /// Basado en las Reglas:
         /// #7.	Cada espacio de tiempo en el riel es equivalente a una hora y una capacidad de 600 pares por hora.
@@ -187,8 +186,6 @@ namespace Ppgz.CitaWrapper
         /// </summary>
         public static int GetCantidadRieles(int totalPares)
         {
-  
-
             var paresPorHora = Convert.ToInt32(GetConfiguraciones()
                 .Single(c => c.Clave == "warehouse.platform-rail.max-pair.hour").Valor);
             var tolerancia = Convert.ToDecimal(GetConfiguraciones()
@@ -206,8 +203,7 @@ namespace Ppgz.CitaWrapper
 
             return rielesRequeridos;
         }
-
-
+        
 
         /// <summary>
         /// Nombre del  ISO 639 del español en México
@@ -235,9 +231,13 @@ namespace Ppgz.CitaWrapper
         /// 1.	El proveedor puede modificar el número de pares a entregar por talla solo hacia abajo, 
         /// no se permitirá incluir un número mayor de pares que el definido en la orden de compra
         /// </summary>
-        public static bool Regla1()
+        public static bool Regla1(int cantidadPermitida, int cantidad)
         {
-            throw new NotImplementedException();
+            if (cantidad > cantidadPermitida)
+            {
+                return false;
+            }
+            return true;
         }
 
 
@@ -318,7 +318,93 @@ namespace Ppgz.CitaWrapper
         /// </summary>
         public static bool Regla5()
         {
+            // La configuracion de los rieles contempla la validaión de la cita.
+           return true;
+        }
+
+        /// <summary>
+        /// /6.	La totalidad de la entrega debe hacerse el mismo día, no podrá seleccionarse en la misma cita una entrega a las 8pm y una a las 7am del siguiente día, por ejemplo. 
+        /// </summary>
+        public static bool Regla6()
+        {
+            // El modelo de datos contempla una fecha unica por cita.
+            return true;
+        }
+
+        /// <summary>
+        /// 7.	Cada espacio de tiempo en el riel es equivalente a una hora y una capacidad de 600 pares por hora.
+        /// </summary>
+        public static bool Regla7()
+        {
+            // Valida de acuerdo a la siguiente regla y la estructura de datos
+            return true;
+        }
+        
+        /// <summary>
+        /// 8.	La tolerancia en márgenes de pares por hora se maneja en base a “0.16” de diferencia y se calculara con la siguiente formula: 
+        /// (Nº de pares / 600)= Cantidad de espacios necesarios
+        /// </summary>
+        public static bool Regla8(int cantidadPares, int cantidadRieles)
+        {
+            var result =  GetCantidadRieles(cantidadPares);
+
+            return result == cantidadRieles;
+        }
+
+        /// <summary>
+        /// 9.	Si el decimal de “Cantidad de espacios necesarios” es menor a 0.17 se redondea hacia abajo, si es igual o mayor se redondea hacia arriba.
+        /// </summary>
+        public static bool Regla9()
+        {
+            // Validado con la regla 8
+            return true;
+        }
+
+        /// <summary>
+        /// 10.	El monto total de pares a entregar en la cita se divide entre todos los espacios de tiempo disponibles, por lo cual el margen de tolerancia por hora 
+        /// en la cantidad de pares a recibir, también se divide entre todos los espacios ocupados por la cita. Ejemplo:
+        /// Un proveedor tiene cita para 3300 pares, según el cálculo designado a asignación de rieles necesitaría 5.5 Rieles y la regla de negocio Nº 8 indica que 
+        /// si el decimal es menor a 0.17 se redondea hacia abajo, necesitando para esa cita 6 Rieles, cada uno de esos rieles procesara 550 pares por hora para un 
+        /// total de 3300.
+        /// </summary>
+        public static bool Regla10()
+        {
+            // Validado con la regla 8
+            return true;
+        }
+
+        /// <summary>
+        /// 11.	Un riel, al tener una cita comprometida ya no se mostrará como disponible para otro proveedor aun cuando los pares a recibir sean menores a su 
+        /// capacidad (600).
+        /// </summary>
+        public static bool Regla11()
+        {
+            // Validado con la estructura de datos
+            return true;
+        }
+
+
+        /// <summary>
+        /// 12.	En el caso de las entregas parciales, para garantizar que el proveedor no entregue más de lo requerido en la orden de compra, 
+        /// correspondiente a una entrega posterior a la primera, se consultará la orden de compra para verificar las parcialidades entregadas.
+        /// </summary>
+        public static bool Regla12(int cantidad, int cantidadPedido, int cantidadEntregado, int cantidadCitasFuturas)
+        {
+            if(cantidad > (cantidadPedido - (cantidadEntregado + cantidadCitasFuturas)))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 13.	Se establece un límite configurable de capacidad (actualmente 27000) diaria de pares a las entregas destinadas a los almacenes CD01 y CD06, 
+        /// el monto de cada almacén no puede exceder dicha cantidad
+        /// </summary>
+        public static bool Regla13()
+        {
             throw new NotImplementedException();
+            
         }
 
         /// <summary>
