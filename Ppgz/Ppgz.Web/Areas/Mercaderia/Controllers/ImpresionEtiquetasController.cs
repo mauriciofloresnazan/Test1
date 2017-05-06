@@ -12,8 +12,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     public class ImpresionEtiquetasController : Controller
     {
 
-        // GET: /Mercaderia/ImpresionEtiquetas/
-        [Authorize(Roles = "MAESTRO-MERCADERIA")]
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-IMPRESIONETIQUETAS")]
         public ActionResult Index()
         {
             var db = new Entities();
@@ -22,6 +21,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             return View();
         }
+
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-IMPRESIONETIQUETAS")]
         public FileResult Descargar(int id)
         {
             var db = new Entities();
