@@ -108,9 +108,9 @@ namespace Ppgz.Web
                 "ADMINISTRARUSUARIOSNAZAN|Administración de Usuarios|Index|AdministrarUsuariosNazan|fa fa fa-users|Nazan",
                 "ADMINISTRARPERFILESNAZAN|Administración de Perfiles|Index|AdministrarPerfilesNazan|fa fa fa-road|Nazan",
                 "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores|Index|AdministrarProveedores|fa fa-address-book-o|Nazan",
-                "ADMINISTRARNIVELSERVICIONAZAN|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan",
+                "NIVELSERVICIO|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan",
                 "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
-                "CONFIGURACIONES|Configuración de Sistema|Index|Configsys|fa fa-cogs|",
+                "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|",
             };
             return menuLista;
         }
