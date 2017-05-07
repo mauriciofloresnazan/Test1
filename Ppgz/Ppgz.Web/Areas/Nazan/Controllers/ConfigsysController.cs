@@ -2,7 +2,7 @@
 using System.Web.Mvc;
 using Ppgz.Repository;
 
-namespace Ppgz.Web.Controllers
+namespace Ppgz.Web.Areas.Nazan.Controllers
 {
     public class ConfigsysController : Controller
     {
