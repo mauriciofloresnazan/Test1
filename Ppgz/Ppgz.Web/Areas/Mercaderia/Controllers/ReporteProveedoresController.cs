@@ -28,7 +28,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             return View();
         }
-        
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-REPORTES")]
         public ActionResult Reportes(int proveedorId = 0)
@@ -60,7 +59,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             return View();
         }
-        
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-REPORTES")]
         public void Descargar(string numeroProveedor)
         {
             var detalles = _reporteProveedorManager.FindReporteProveedor(numeroProveedor);

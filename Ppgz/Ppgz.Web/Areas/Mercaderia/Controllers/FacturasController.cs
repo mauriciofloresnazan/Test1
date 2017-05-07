@@ -16,7 +16,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         private readonly FacturaManager _facturaManager = new FacturaManager();
 
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA")]
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public ActionResult Index()
         {
 
@@ -26,7 +26,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             return View();
         }
-
+            
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public ActionResult Facturas(int proveedorId)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -47,9 +48,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return View();
 
         }
-
-
-
+        
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public ActionResult CargarFactura(int proveedorId)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -125,9 +125,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return "~/Uploads/" + fileName;*/
         }
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA")]
+
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public ActionResult CargarFactura(FacturaViewModel model)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -211,7 +212,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
         }
 
-
+                
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public FileResult DescargarXml(int facturaId, int proveedorId)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -236,6 +238,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 
         }
+        
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public FileResult DescargarPdf(int facturaId, int proveedorId)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();

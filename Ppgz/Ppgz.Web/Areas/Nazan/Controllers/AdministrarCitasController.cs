@@ -13,7 +13,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 {
     public class AdministrarCitasController : Controller
     {
-        [Authorize(Roles = "MAESTRO-NAZAN")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         public ActionResult Index()
         {
             var db = new Entities();
@@ -28,7 +28,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
 
 
-        [Authorize(Roles = "MAESTRO-NAZAN")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         public ActionResult Enroque(string fecha = null)
         {
             if (fecha == null)
@@ -48,7 +48,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
-        [Authorize(Roles = "MAESTRO-NAZAN")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult Enroque(int horarioRielId1, int horarioRielId2)
@@ -82,8 +82,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             TempData["FlashSuccess"] = "Enroque aplicado exitosamente";
             return RedirectToAction("Index");
         }
-        
-        [Authorize(Roles = "MAESTRO-NAZAN")]
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult Penalizar(int citaId, int? estatusId = null)
@@ -118,7 +118,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
 
 
-        [Authorize(Roles = "MAESTRO-NAZAN")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         public ActionResult CambiarFecha(int citaId, string fecha)
         {
 
@@ -171,7 +171,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
 
 
-        [Authorize(Roles = "MAESTRO-NAZAN")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult CambiarFecha(int citaId, string fecha, int[] horarioRielesIds)
@@ -241,7 +241,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "MAESTRO-NAZAN")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         public ActionResult Penalizaciones(string fechaDesde = null, string fechaHasta = null)
         {
 
@@ -275,7 +275,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
 
 
-
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         public void PenalizacionesExportar(string fechaDesde, string fechaHasta)
         {
             var dateFechaDesde  = DateTime.ParseExact(fechaDesde, "dd/MM/yyyy", CultureInfo.InvariantCulture);

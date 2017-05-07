@@ -34,7 +34,6 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
-
         public async Task<ActionResult> Registrar(CuentaViewModel model)
 		{
             if (!ModelState.IsValid) return View(model);
@@ -210,7 +209,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 
 		}
-		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+		
+        
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult Eliminar(int id)
         {
             try
@@ -242,7 +243,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 			
 		}
-		
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public ActionResult DesasociarProveedor(int cuentaId, int proveedorId)
 		{
 			// TODO MEJORAR
@@ -265,6 +268,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 		}
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 	    public ActionResult RefrescarProveedor(int cuentaId, int proveedorId)
 	    {
             try { 

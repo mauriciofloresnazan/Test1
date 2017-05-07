@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Web.Mvc;
 using ClosedXML.Excel;
-using Ppgz.Repository;
 using Ppgz.Services;
-using Ppgz.Web.Areas.Nazan.Models;
-using Ppgz.Web.Infrastructure;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
@@ -15,8 +12,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 	public class RegistrarNivelServicioController : Controller
 	{
         readonly ReporteProveedorManager _reporteProveedorManager = new ReporteProveedorManager();
-        //
-        // GET: /Nazan/RegistrarNivelServicio/
+
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-REGISTRARNIVELSERVICIO")]
 		public ActionResult Index()
         {
@@ -31,7 +27,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
 
 
-
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-REGISTRARNIVELSERVICIO")]
         public FileResult Descargar()
         {
 
@@ -41,13 +37,14 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             var fileName = "formato_nivel_servicio.xlsx";
 
-            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, fileName);
+            return File(fileBytes, MediaTypeNames.Application.Pdf, fileName);
 
 
         }
 
       
         [HttpPost]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-REGISTRARNIVELSERVICIO")]
         public ActionResult CargarExcel(FormCollection collection)
         {
             //var codigoProveedor = collection["codigoProveedor"];

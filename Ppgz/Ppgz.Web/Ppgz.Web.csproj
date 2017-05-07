@@ -269,12 +269,6 @@
     <Content Include="Areas\Servicio\Views\MensajesInstitucionales\index.cshtml" />
     <Content Include="assets\css\msgcolores.css" />
     <Content Include="assets\img\marcas.png" />
-    <Content Include="assets\img\Photoslide\22587605.jpg" />
-    <Content Include="assets\img\Photoslide\36655804.jpg" />
-    <Content Include="assets\img\Photoslide\49141703.jpg" />
-    <Content Include="assets\img\Photoslide\64797006.jpg" />
-    <Content Include="assets\img\Photoslide\65516302.jpg" />
-    <Content Include="assets\img\Photoslide\94102301.jpg" />
     <Content Include="assets\js\bootbox.js" />
     <Content Include="assets\js\bootbox.min.js" />
     <Content Include="assets\js\mensajes.js" />
@@ -1226,6 +1220,7 @@
     <Folder Include="Areas\Mercaderia\Views\Shared\" />
     <Folder Include="Areas\Nazan\Views\Shared\" />
     <Folder Include="Areas\Servicio\Views\Shared\" />
+    <Folder Include="assets\img\Photoslide\" />
     <Folder Include="Infrastructure\Proveedor\" />
   </ItemGroup>
   <ItemGroup>

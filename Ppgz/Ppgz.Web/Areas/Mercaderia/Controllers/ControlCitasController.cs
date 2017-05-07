@@ -49,9 +49,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 		}
 		
-		//
-		// GET: /Mercaderia/ControlCitas/
-		[Authorize(Roles = "MAESTRO-MERCADERIA")]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult Index()
 		{
 			LimpiarCita();
@@ -62,11 +60,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			
 			return View();
 		}
-
-
-		//
-		// GET: /Mercaderia/ControlCitas/
-		[Authorize(Roles = "MAESTRO-MERCADERIA")]
+		
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult SeleccionarProveedor(int proveedorId, string centro)
 		{
 			if (CurrentCita != null)
@@ -86,9 +81,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				return RedirectToAction("Index"); 
 			}
 		}
-
 		
-		[Authorize(Roles = "MAESTRO-MERCADERIA")]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult BuscarOrden(int proveedorId = 0)
 		{
 			try
@@ -111,7 +105,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return View();
 		}
 
-		[Authorize(Roles = "MAESTRO-MERCADERIA")]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult BuscarOrden(string numeroDocumento)
@@ -184,7 +178,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			
 			return RedirectToAction("FechaCita");
 		}
-
+		
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult FechaCita()
 		{
 
@@ -226,13 +221,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			ViewBag.CurrentCita = CurrentCita;
 			return View();
 		}
-
-
 		
-
-
 		[ValidateAntiForgeryToken]
 		[HttpPost]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult AgregarPrimeraOrden(string numeroDocumento, string fecha)
 		{
 
@@ -284,7 +276,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				return RedirectToAction("BuscarOrden", new { proveedor.Id });
 			}
 		}
-   
+
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult Asn(string numeroDocumento)
 		{
 
@@ -309,10 +302,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return View();
 		
 		}
-
-
-
+		
 		[HttpPost]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public JsonResult AsnActualizarDetalle(string numeroDocumento, string numeroPosicion,  string numeroMaterial, int cantidad)
 		{
 			try
@@ -327,9 +319,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return Json("Actualizado correctamente");
 		}
 
-	
 
-
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult ListaDeOrdenes()
 		{
 
@@ -348,6 +339,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return View();
 		}
 
+
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult EliminarOrden(string numeroDocumento)
 		{
 			CurrentCita.RemovePreAsn(numeroDocumento);
@@ -356,6 +349,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return RedirectToAction("ListaDeOrdenes");
 		}
 
+
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public void DescargarPlantilla(string numeroDocumento)
 		{
 
@@ -396,6 +391,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			   
 		[HttpPost]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult CargarDesdePlantilla(FormCollection collection)
 		{
 			var numeroDocumento = collection["numeroDocumento"];
@@ -491,9 +487,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			TempData["FlashSuccess"] = "Archivo cargado exitosamente";
 			return RedirectToAction("Asn", new { numeroDocumento });
 		}
+		
 
-
-
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult SeleccionarRieles()
 		{
 			if (CurrentCita == null)
@@ -535,15 +531,18 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			ViewBag.HorarioRieles = horarioRieles;
 			return View();
 		}
+		
 
-
-
-
-		[Authorize(Roles = "MAESTRO-MERCADERIA")]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
 		public ActionResult Agendar(int[] rielesIds)
 		{
+			if (CurrentCita.Fecha == null)
+			{
+                // Todo mejorar
+				return RedirectToAction("Citas");
+			}
 
 			var preCita = new PreCita()
 			{
@@ -587,9 +586,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			TempData["FlashSuccess"] = "Ha terminado de configurar su cita exitosamente";
 			return RedirectToAction("Citas");
 		}
-
-
-		[Authorize(Roles = "MAESTRO-MERCADERIA")]
+		
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult Citas()
 		{
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -604,6 +602,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			return View();
 		}
+
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult CitaDetalle(int citaId)
 		{
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -624,8 +624,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			return View();
 		}
-
-		[Authorize(Roles = "MAESTRO-MERCADERIA")]
+		
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult CancelarCita(int citaId)
 		{
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -656,10 +656,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			TempData["FlashSuccess"] = "Cita cancelada exitosamente";
 			return RedirectToAction("Citas");
 		}
-
-		[Authorize(Roles = "MAESTRO-MERCADERIA")]
+		
 		[ValidateAntiForgeryToken]
 		[HttpPost]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult ActualizarCita(int citaId, FormCollection collection)
 		{
 			var db = new Entities();
@@ -749,8 +749,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			TempData["FlashSuccess"] = "Cita actualizada exitosamente";
 			return RedirectToAction("Citas");
 		}
-
-
+		
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public JsonResult CalcularRieles(int cantidad)
 		{
 				return Json(new { rieles = RulesManager.GetCantidadRieles(cantidad) });

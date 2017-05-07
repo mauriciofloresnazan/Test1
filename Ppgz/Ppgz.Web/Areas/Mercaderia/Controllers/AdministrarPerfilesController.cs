@@ -14,9 +14,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     {
         private readonly PerfilManager _perfilManager = new PerfilManager();
         private readonly CommonManager _commonManager = new CommonManager();
-
-        //
-        // GET: /Mercaderia/AdministrarPerfiles/
+        
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ADMINISTRARPERFILES-LISTAR,MERCADERIA-ADMINISTRARPERFILES-MODIFICAR")]
         public ActionResult Index()
         {

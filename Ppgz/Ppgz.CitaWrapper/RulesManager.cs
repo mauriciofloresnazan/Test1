@@ -390,21 +390,53 @@ namespace Ppgz.CitaWrapper
         /// </summary>
         public static bool Regla12(int cantidad, int cantidadPedido, int cantidadEntregado, int cantidadCitasFuturas)
         {
-            if(cantidad > (cantidadPedido - (cantidadEntregado + cantidadCitasFuturas)))
-            {
-                return false;
-            }
-            return true;
+            return cantidad <= (cantidadPedido - (cantidadEntregado + cantidadCitasFuturas));
         }
 
         /// <summary>
-        /// 13.	Se establece un límite configurable de capacidad (actualmente 27000) diaria de pares a las entregas destinadas a los almacenes CD01 y CD06, 
+        /// 13.	Se establece un límite configurable de capacidad (actualmente 27000) diaria de pares a las 
+        /// entregas destinadas a los almacenes CD01 y CD06, 
         /// el monto de cada almacén no puede exceder dicha cantidad
         /// </summary>
-        public static bool Regla13()
+        /// <param name="almacen"></param>
+        /// <param name="cantidadAcumulada">Cantidad en citas agendadas para el dia</param>
+        /// <param name="cantidad">Cantidad a incluir</param>
+        /// <returns></returns>
+        public static bool Regla13(string almacen, int cantidadAcumulada, int cantidad)
         {
-            throw new NotImplementedException();
-            
+            var cantidadDiariaLimite = Convert.ToInt32(GetConfiguraciones()
+                .Single(c => c.Clave == "warehouse.max-pairs.per-day").Valor); ;
+            var almacenes = GetConfiguraciones()
+                .Single(c => c.Clave == "warehouse.limited-warehouses-per-day").Valor.Split(',');
+
+            if (!almacenes.Contains(almacen))
+            {
+                return true;
+            }
+
+            return (cantidadAcumulada + cantidad) <= cantidadDiariaLimite;
+        }
+        /// <summary>
+        /// / 14.	Establecer un límite semanal configurable a los almacenes CD06 (actualmente 90000) 
+        /// y CD01, el cual debe ser administrador a través del portal
+        /// </summary>
+        /// <param name="almacen"></param>
+        /// <param name="cantidadAcumulada">Cantidad en citas agendadas para la semana</param>
+        /// <param name="cantidad">Cantidad a incluir</param>
+        /// <returns></returns>
+        public static bool Regla14(string almacen, int cantidadAcumulada, int cantidad)
+        {
+            var cantidadDiariaLimite = Convert.ToInt32(GetConfiguraciones()
+                .Single(c => c.Clave == "warehouse.max-pairs.per-week").Valor); ;
+            var almacenes = GetConfiguraciones()
+                .Single(c => c.Clave == "warehouse.limited-warehouses-per-week").Valor.Split(',');
+
+            if (!almacenes.Contains(almacen))
+            {
+                return true;
+            }
+
+            return (cantidadAcumulada + cantidad) <= cantidadDiariaLimite; 
         }
 
         /// <summary>
@@ -421,14 +453,17 @@ namespace Ppgz.CitaWrapper
         }
 
         /// <summary>
-        /// 16.	Para facilitar la logística en el CEDIS y para una fácil identificación de la cita en la pantalla administrativa de 
-        /// las citas del día, se restringe al proveedor a seleccionar múltiples órdenes de compra destinadas a un mismo almacén. 
-        /// De necesitar entregar el mismo día órdenes de compra destinadas a distintos almacenes, el proveedor deberá generar una 
-        /// cita por cada almacén destino.
+        /// 16.	Para facilitar la logística en el CEDIS y para una fácil identificación de la cita en la 
+        /// pantalla administrativa de  las citas del día, se restringe al proveedor a seleccionar 
+        /// múltiples órdenes de compra destinadas a un mismo almacén. 
+        /// De necesitar entregar el mismo día órdenes de compra destinadas a distintos almacenes, el proveedor 
+        /// deberá generar una  cita por cada almacén destino.
         /// </summary>
-        public static bool ValidarRegla16()
+        public static bool ValidarRegla16(string[] almacenesPorItem)
         {
-            throw new NotImplementedException();
+            var almacen1 = almacenesPorItem[0];
+
+            return almacenesPorItem.All(almacen => almacen == almacen1);
         }
 
         /// <summary>

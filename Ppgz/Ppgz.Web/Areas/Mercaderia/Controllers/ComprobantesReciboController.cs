@@ -10,17 +10,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     [TerminosCondiciones]
     public class ComprobantesReciboController : Controller
     {
-
-        // TODO INCLUIR EL APPSTART EL NUEVO ROL
-        //
-        // GET: /Mercaderia/ComprobantesRecibo/
-        [Authorize(Roles = "MAESTRO-MERCADERIA")]
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-COMPROBANTESRECIBO")]
         public ActionResult Index()
         {
             var db = new Entities();
             ViewBag.Crs = db.crs.ToList();
             return View();
         }
+        
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-COMPROBANTESRECIBO")]
         public FileResult Descargar(int id)
         {
             var db = new Entities();

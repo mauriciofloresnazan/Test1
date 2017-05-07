@@ -26,7 +26,11 @@ namespace Ppgz.Web
                 {"NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR", "Consultar Usuarios"},
                 {"NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR", "Modificar Usuarios"},
                 {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR", "Consultar Mensajes Insitucionales"},
-                {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR", "Modificar Mensajes Institucionales"}
+                {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR", "Modificar Mensajes Institucionales"},
+
+                {"NAZAN-CONFIGSYS", "Actualizar las configuraciones del sistema"},
+                {"NAZAN-NIVELSERVICIO", "Actualizar niveles de servicio por proveedores"},
+                {"NAZAN-ADMINISTRARCITAS", "Administracion de citas"}
             };
             return rolesNazan;
         }
@@ -46,6 +50,14 @@ namespace Ppgz.Web
                 {" MERCADERIA-CUENTASPAGAR","Cuentas por pagar"},
 
 
+                {"MERCADERIA-CONTROLCITAS","Control de Citas"},
+                {"MERCADERIA-COMPROBANTESRECIBO", "Comprobantes de Recibo"},
+                {"MERCADERIA-IMPRESIONETIQUETAS", "Impresion de Etiquetas"},
+                {"MERCADERIA-REPORTESPROVEEDORES", "Reportes Proveedores"},
+                {"MERCADERIA-FACTURAS", "Gestion de facturas"},
+                {"MERCADERIA-GESTIONPROVEEDORES", "Gestionar los proveedores asociados"}
+
+
                
             };
             return rolesMercaderia;
@@ -62,7 +74,13 @@ namespace Ppgz.Web
                 {"SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR","Modificar usuarios"},
                 {"SERVICIO-MENSAJESINSTITUCIONALES","Mensajes Insitucionales"},
                 {"SERVICIO-ORDENESCOMPRA-LISTAR","Acceso a Ordenes de Compra"},
-                {"SERVICIO-ORDENESCOMPRA-MODIFICAR","Modificar Ordenes de Compra"}
+                {"SERVICIO-ORDENESCOMPRA-MODIFICAR","Modificar Ordenes de Compra"},
+
+                
+                {"SERVICIO-FACTURAS", "Gestion de facturas"},
+                {"SERVICIO-GESTIONPROVEEDORES", "Gestionar los proveedores asociados"}
+
+
             };
             return rolesServicio;
         }

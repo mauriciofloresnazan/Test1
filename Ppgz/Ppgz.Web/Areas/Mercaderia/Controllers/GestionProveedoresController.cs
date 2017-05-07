@@ -15,8 +15,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         private readonly ProveedorManager _proveedorManager = new ProveedorManager();
         private readonly MensajesInstitucionalesManager _mensajesInstitucionalesManager = new MensajesInstitucionalesManager();
 
-        //
-        // GET: /Mercaderia/GestionProveedores/
+
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-GESTIONPROVEEDORES-LISTAR")]
         public ActionResult Index()
         {
@@ -32,6 +31,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return View();
         }
 
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-GESTIONPROVEEDORES-LISTAR")]
         public JsonResult BuscarProveedor(int id)
         {
             try

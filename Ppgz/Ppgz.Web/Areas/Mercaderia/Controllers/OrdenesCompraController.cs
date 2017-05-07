@@ -11,8 +11,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     {
         private readonly OrdenCompraManager  _ordenCompraManager = new OrdenCompraManager();
         private readonly CommonManager _commonManager = new CommonManager();
-        //
-        // GET: /Mercaderia/ComprobantesRecibo/
+
+
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA-LISTAR,MERCADERIA-ORDENESCOMPRA-MODIFICAR")]
         public ActionResult Index()
         {
@@ -22,6 +22,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             return View();
         }
+
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA-LISTAR,MERCADERIA-ORDENESCOMPRA-MODIFICAR")]
         public void Descargar(string numeroDocumento, int proveedorId)
         {
             var detalles = _ordenCompraManager.FindDetalle(numeroDocumento, proveedorId);
