@@ -4,7 +4,7 @@ using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Infrastructure.Nazan;
 
-namespace Ppgz.Web.Areas.Mercaderia.Controllers
+namespace Ppgz.Web.Areas.Servicio.Controllers
 {
     [Authorize]
     [TerminosCondiciones]
@@ -16,7 +16,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         private readonly MensajesInstitucionalesManager _mensajesInstitucionalesManager = new MensajesInstitucionalesManager();
 
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-GESTIONPROVEEDORES")]
+        [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-GESTIONPROVEEDORES")]
         public ActionResult Index()
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -31,7 +31,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return View();
         }
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-GESTIONPROVEEDORES")]
+        [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-GESTIONPROVEEDORES")]
         public JsonResult BuscarProveedor(int id)
         {
             try

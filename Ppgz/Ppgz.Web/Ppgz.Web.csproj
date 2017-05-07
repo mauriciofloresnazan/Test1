@@ -228,7 +228,7 @@
     <Compile Include="Areas\Nazan\NazanAreaRegistration.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarUsuariosController.cs" />
-    <Compile Include="Areas\Servicio\Controllers\ComprobantesReciboController.cs" />
+    <Compile Include="Areas\Servicio\Controllers\GestionProveedoresController.cs" />
     <Compile Include="Areas\Servicio\Controllers\MensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Servicio\Controllers\OrdenesCompraController.cs" />
     <Compile Include="Areas\Servicio\Mensajes.Designer.cs">
@@ -303,7 +303,6 @@
     </Compile>
     <Compile Include="Infrastructure\CommonManager.cs" />
     <Content Include="Areas\Mercaderia\Views\ComprobantesRecibo\Index.cshtml" />
-    <Content Include="Areas\Servicio\Views\ComprobantesRecibo\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\CuentasPagar\DevolucionesDetalle.cshtml" />
     <Content Include="Areas\Mercaderia\Views\CuentasPagar\PagosDetalle.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitas\BuscarOrden.cshtml" />
@@ -1166,6 +1165,7 @@
     <Content Include="Areas\Mercaderia\Views\Facturas\CargarFactura.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas\CambiarFecha.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas\Penalizaciones.cshtml" />
+    <Content Include="Areas\Servicio\Views\GestionProveedores\Index.cshtml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

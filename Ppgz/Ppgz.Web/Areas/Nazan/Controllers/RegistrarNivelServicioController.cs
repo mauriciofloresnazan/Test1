@@ -13,7 +13,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 	{
         readonly ReporteProveedorManager _reporteProveedorManager = new ReporteProveedorManager();
 
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-REGISTRARNIVELSERVICIO")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-NIVELSERVICIO")]
 		public ActionResult Index()
         {
 
@@ -27,7 +27,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
 
 
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-REGISTRARNIVELSERVICIO")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-NIVELSERVICIO")]
         public FileResult Descargar()
         {
 
@@ -44,7 +44,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
       
         [HttpPost]
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-REGISTRARNIVELSERVICIO")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-NIVELSERVICIO")]
         public ActionResult CargarExcel(FormCollection collection)
         {
             //var codigoProveedor = collection["codigoProveedor"];

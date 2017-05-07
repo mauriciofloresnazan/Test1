@@ -102,7 +102,7 @@ namespace Ppgz.Web
                 //"|Administración de Perfiles Proveedor|||fa fa-address-card|Nazan",
                 //"|Órdenes de Compra|||fa fa-address-book|Nazan",
                 //"|Administración de Facturas|||fa fa-calculator|Nazan",
-                "ADMINISTRAMENSAJESINSTITUCIONALES|Administrar Mensajes Institucionales|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan",
+                "ADMINISTRARMENSAJESINSTITUCIONALES|Administrar Mensajes Institucionales|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan",
                
                 //"|Reportes|||fa fa-file-pdf-o|Nazan",
                 "ADMINISTRARUSUARIOSNAZAN|Administración de Usuarios|Index|AdministrarUsuariosNazan|fa fa fa-users|Nazan",

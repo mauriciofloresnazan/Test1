@@ -9,8 +9,8 @@ namespace Ppgz.Web.Controllers
 
         private readonly Entities _db = new Entities();
 
-        //
-        // GET: /Configsys/
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-CONFIGSYS")]
         public ActionResult Index()
         { 
             const string sql = @"SELECT id, Clave, Valor, Habilitado, Descripcion FROM configuraciones";
@@ -34,6 +34,7 @@ namespace Ppgz.Web.Controllers
 
         [HttpPost]
         [AcceptVerbs(HttpVerbs.Post)]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-CONFIGSYS")]
         public ActionResult editarConfig(estConfig Object)
         {
 
