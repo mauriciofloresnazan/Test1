@@ -1,5 +1,5 @@
-﻿@using Microsoft.AspNet.Identity
-@using System.Data
+﻿@using System.Globalization
+@using Ppgz.Repository
 @{
     ViewBag.Title = "Ordenes de Compra";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -12,36 +12,39 @@
     <div class="panel-heading">Ordenes de Compra</div>
     <div class="panel-body">
         <div class="col-md-12">
-            <table id="mensajes" class="table table-striped table-condensed table-bordered">
+            <table id="ordenes" class="table table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center"></th>
-                        <th class="text-center">N° de Orden de Compra</th>
+                        <th class="text-center">Visualizado</th>
+                        <th class="text-center">N° Orden</th>
                         <th class="text-center">Fecha</th>
-                        <th class="text-center">Proveedor RFC</th>
+                        <th class="text-center">N° Proveedor</th>
                         <th class="text-center">Proveedor Razón Social</th>
                         <th class="text-center">Descargar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (DataRow registro in ((DataTable)ViewBag.data).Rows)
+                    @foreach (ordencompra ordenCompra in ViewBag.data)
                     {
-                        <tr>
-                            @if (registro["FechaVisualizado"] == DBNull.Value)
-                            {
-                                <td class="text-center"><i class="fa fa-lightbulb-o" aria-hidden="true" style="font-size: 24px; color: red;"></i></td>
-                            }
-                            else
-                            {
-                                <td class="text-center"><i class="fa fa-lightbulb-o" aria-hidden="true" style="font-size: 24px; color: green;"></i></td>
-                            }
-                            <td class="text-center vert-align">@registro["NumeroOrden"]</td>
-                            <td class="text-center vert-align">@registro["Fecha"]</td>
-                            <td class="text-center vert-align">@registro["Rfc"]</td>
-                            <td class="text-center vert-align">@registro["NombreProveedor"]</td>
+                        var visualizado = "No";
+                        var classTr = string.Empty;
+                        if (ordenCompra.FechaVisualizado != null)
+                        {
+                            visualizado = ((DateTime)ordenCompra.FechaVisualizado).ToString("dd/MM/yyyy");
+                            classTr = "success";
+                        }
+
+                        <tr class="@classTr">
+                            <td class="text-center">
+                                @visualizado
+                            </td>
+                            <td class="text-center vert-align">@ordenCompra.NumeroDocumento</td>
+                            <td class="text-center vert-align">@DateTime.ParseExact(ordenCompra.FechaDocCompra, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy")</td>
+                            <td class="text-center vert-align">@ordenCompra.proveedore.NumeroProveedor</td>
+                            <td class="text-center vert-align">@ordenCompra.proveedore.Nombre1 @ordenCompra.proveedore.Nombre2 @ordenCompra.proveedore.Nombre3 @ordenCompra.proveedore.Nombre4</td>
 
                             <td class="text-center vert-align">
-                                <a href="@Url.Action("Descargar", "OrdenesCompra", new {@id = @registro["Id"]})" class="descargar-visualizar"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar</a>
+                                <a href="@Url.Action("Descargar", "OrdenesCompra", new {numeroDocumento = ordenCompra.NumeroDocumento, proveedorId = ordenCompra.proveedore.Id})" class="btn btn-primary descargar-detalle"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar</a>
                             </td>
                         </tr>
                     }
@@ -55,14 +58,28 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
+            var today = "@DateTime.Today.ToString("dd/MM/yyyy")";
+            $(document).on("click", ".descargar-detalle", function () {
 
-            $(document).on("click", ".descargar-visualizar", function () {
+                var tr = $(this).parent().parent();
 
-                $(this).parent().parent().find(".fa-lightbulb-o").css("color", "green");
-
+                var trClass = $(tr).attr("class");
+                if (trClass.indexOf("success") !== -1) {
+                    return;
+                } else {
+                    $(tr).attr("class", trClass + " success");
+                    var td = $(tr).find("td")[0];
+                    $(td).text(today);
+                }
             });
 
 
+            $('#ordenes').DataTable({
+                "language": {
+                    "url": "@Url.Content("~/assets/vendor/dataTables-1.10.13/Spanish.json")"
+                },
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+            });
         });
     </script>
 }

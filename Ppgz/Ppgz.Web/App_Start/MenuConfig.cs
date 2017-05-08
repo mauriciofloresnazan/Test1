@@ -123,15 +123,13 @@ namespace Ppgz.Web
                 "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
                 "COMPROBANTESRECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
-                //"IMPRESIONETIQUETAS|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-file-pdf-o|Mercaderia",
                 "FACTURAS|Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
                 "ADMINISTRARUSUARIOS|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
                 "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Mercaderia",
                 "REPORTESPROVEEDORES|Reportes Proveedores|Index|ReporteProveedores|fa fa-bar-chart|Mercaderia",
-                //"|Autenticación de Usuarios Proveedor|||fa fa-address-book-o|Mercaderia" 
-                //"|Reportes|||fa fa-file-pdf-o|Mercaderia"
+
             };
             return menuLista;
         }
@@ -139,16 +137,16 @@ namespace Ppgz.Web
         {
             string[] menuLista =
             {
-                //"|Gestión de Proveedor|||fa fa-address-book-o|Servicio",
-                "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-address-book|Servicio",
-                //"|Cuentas por Pagar|||fa fa-calculator|Servicio",
-                //"|Administración de Facturas|||fa fa-calculator|Servicio",
+                "GESTIONPROVEEDORES|Gestión de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Servicio",
+                "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Servicio",
+               
+       
+                "FACTURAS|Facturas|Index|Facturas|fa fa-file-text-o|Servicio",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio",
-                //"|Administración de Usuarios Proveedor|||fa fa-address-card|Servicio",
-                "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-users|Servicio",
-                "ADMINISTRARUSUARIOS|Autenticación de Usuarios|Index|AdministrarUsuarios|fa fa fa-road|Servicio",
-                //"COMPROBANTESRECIBO|Comprobantes de Recibo|Index|ComprobantesRecibo|fa fa fa-road|Servicio"
-                //"|Reportes|||fa fa-file-pdf-o|Servicio"
+                "ADMINISTRARUSUARIOS|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Servicio",
+                "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Servicio",
+                "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Servicio",
+                "REPORTESPROVEEDORES|Reportes Proveedores|Index|ReporteProveedores|fa fa-bar-chart|Servicio",
             };
             return menuLista;
         }
@@ -187,6 +185,14 @@ namespace Ppgz.Web
             List<string> menu;
             switch (nombreControllerActual)
             {
+                case "CuentasPagar":
+                    menu = new List<string>
+                    {
+                        "CUENTASPAGAR|Pagos|Pagos|CuentasPagar|fa fa-calculator|Servicio",
+                        "CUENTASPAGAR|Pagos Pendientes|PagosPendientes|CuentasPagar|fa fa-calculator|Servicio",
+                        "CUENTASPAGAR|Devoluciones|Devoluciones|CuentasPagar|fa fa-calculator|Servicio"
+                    };
+                    break;
                 default:
                     string menuDefault = "";
                     menuDefault = NombreXController(nombreControllerActual, "SERVICIO");

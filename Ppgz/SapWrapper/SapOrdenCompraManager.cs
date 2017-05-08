@@ -10,27 +10,27 @@ namespace SapWrapper
     {
         private readonly CommonRfcConfigParam _rfc = new CommonRfcConfigParam();
 
-        public DataTable GetOrdenesDeCompraHeader(string numeroProveedor)
+        public DataTable GetOrdenesDeCompraHeader(string numeroProveedor, string organizacionCompras)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
-            function.SetValue("IM_LOEKZ", "C");
+            function.SetValue("IM_LOEKZ", "A");
             function.SetValue("IM_LIFNR", numeroProveedor);
-            // TODO CONFIGURAR CUANDO SEA DE SERVICIO
-            function.SetValue("IM_EKORG", "OC01");
+
+            function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_GET_DET", " ");
             function.Invoke(rfcDestinationManager);
 
             var result = function.GetTable("ET_HDR");
             return result.ToDataTable("ET_HDR");
         }
-        public DataTable GetOrdenesDeCompraHeader(string numeroDocumento, string numeroProveedor)
+        public DataTable GetOrdenesDeCompraHeader(string numeroDocumento, string numeroProveedor, string organizacionCompras)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
-            function.SetValue("IM_EKORG", "OC01");
+            function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_LOEKZ", "A");
             function.SetValue("IM_GET_DET", " ");
             function.SetValue("IM_EBELN", numeroDocumento);
@@ -40,13 +40,13 @@ namespace SapWrapper
             var result = function.GetTable("ET_HDR");
             return result.ToDataTable("ET_HDR");
         }
-        public DataTable GetOrdenDeCompraDetalle(string documento, string numeroProveedor)
+        public DataTable GetOrdenDeCompraDetalle(string documento, string numeroProveedor, string organizacionCompras)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
             function.SetValue("IM_LIFNR", numeroProveedor);
-            function.SetValue("IM_EKORG", "OC01");
+            function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_LOEKZ", "A");
             function.SetValue("IM_EBELN", documento);
             function.SetValue("IM_GET_DET", "X");

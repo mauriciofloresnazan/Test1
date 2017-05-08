@@ -72,8 +72,10 @@ namespace Ppgz.Web
                 {"SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR","Modificar usuarios"},
                 {"SERVICIO-MENSAJESINSTITUCIONALES","Mensajes Insitucionales"},
                 {"SERVICIO-ORDENESCOMPRA","Acceso a Ordenes de Compra"},
+                {"SERVICIO-CUENTASPAGAR","Cuentas por Pagar"},
 
                 
+                {"SERVICIO-REPORTESPROVEEDORES", "Reportes Proveedores"},
                 {"SERVICIO-FACTURAS", "Gestion de facturas"},
                 {"SERVICIO-GESTIONPROVEEDORES", "Gestionar los proveedores asociados"}
 
@@ -129,6 +131,8 @@ namespace Ppgz.Web
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'facturas.rootdirectory' AS Clave, 'c:\temp\facturas\\' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'facturas.rootdirectory');
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.limited-warehouses-per-day' AS Clave, 'CD01,CD06' AS Valor, 1 AS Habilitado, 'Codigos SAP de los almacenes que tienen cantidades limitadas por dia' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.limited-warehouses-per-day');
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.limited-warehouses-per-week' AS Clave, 'CD01,CD06' AS Valor, 1 AS Habilitado, 'Codigos SAP de los almacenes que tienen cantidades limitadas por semana' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.limited-warehouses-per-week');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.common.function.param.ekorg.mercaderia' AS Clave, 'OC01' AS Valor, 1 AS Habilitado, 'Parámetro de la Organización de Compras que será enviado para todos los proveedores registrados como Mercaderías' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.common.function.param.ekorg.mercaderia');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.common.function.param.ekorg.servicio' AS Clave, 'OC02' AS Valor, 1 AS Habilitado, 'Parámetro de la Organización de Compras que será enviado para todos los proveedores registrados como Servicio' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.common.function.param.ekorg.servicio');
                 ";
             Db.Insert(sql);
         }

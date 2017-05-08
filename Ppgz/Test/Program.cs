@@ -98,14 +98,14 @@ namespace Test
             
             var ordenCompraManager = new OrdenCompraManager();
 
-            ordenCompraManager.FindOrdenCompraWithAvailableDates("4500916565", 3);
+  
 
 
 
 
             return;
             
-            var result = ordenCompraManager.FindOrdenesDecompraActivas(3);
+         
 
             var testRfc = new TestRfc();
             //testRfc.TestPartidas("0000001727");
@@ -130,13 +130,7 @@ namespace Test
 
         }
         
-        static void TestOrdenCompra()
-        {
-            var ordenCompraManager= new OrdenCompraManager();
-            var orden = ordenCompraManager.FindActivaByIdAndUsuarioId(5, "");
-        
-            Console.WriteLine( JsonConvert.SerializeObject(orden));
-        }
+
 
         static void CrearUsuarioNazan()
         {

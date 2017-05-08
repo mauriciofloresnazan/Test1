@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Cuentas por Pagar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="form-signin-heading">Cuentas por Pagar</h2>
+<p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i> <i>Seleccione una Razón Social.</i></p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Razones Sociales</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <table id="cuentasXpagar" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Numero Proveedor</th>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var proveedor in (ViewBag.proveedores))
+                    {
+                        <tr>
+                            <td class="text-center">@proveedor.NumeroProveedor</td>
+                            <td class="text-center vert-align">@proveedor.Nombre1</td>
+                            <td class="text-center">
+                                @*<a id="btnProveedor" data-idproveedor="@proveedor.Id" href="#"><i class="fa fa-check" aria-hidden="true"></i> Ver Detalle</a>*@
+
+                                <a class="btn btn-primary btn-sm" href="@Url.Action("SeleccionarProveedor", "CuentasPagar", new { @proveedorId = @proveedor.Id })">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Seleccionar
+                                </a>
+
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+
+        //var sessionStorage.getItem(id);proveedorId = "@ViewBag.proveedorId";
+
+        $(document).ready(function () {
+
+            //if (proveedorId === "") {
+            //    $("#navbar > ul:nth-child(1) > li:nth-child(2)").css("display","none");
+            //}
+            //$(document).on("click", "#btnProveedor", function () {
+            //    fnProveedorSeleccionado($(this).data('idproveedor'));
+            //});
+
+            $('#cuentasXpagar').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+            });
+        });
+
+        @*function fnProveedorSeleccionado(proveedorId) {
+        $.ajax({
+            url: '@Url.Action("PersitedProviderId", "CuentasPagar")',
+            data: { proveedorId: proveedorId },
+            type: 'POST',
+            success: function (data) {
+                console.log(data);
+                location.href = '@Url.Action("Pagos", "CuentasPagar")';
+            }
+        });
+    }*@
+    </script>
+}
+
+

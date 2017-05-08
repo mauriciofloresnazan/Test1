@@ -1,0 +1,162 @@
+﻿@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Gestión de Pagos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+    var proveedor = (proveedore)ViewBag.Proveedor;
+
+    var pagosPendientes = (DataTable)ViewBag.PagosPendientes;
+    var importeTotal = pagosPendientes.Rows.Cast<DataRow>()
+     .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
+
+}
+
+<h2>Gestión de Pagos</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>En esta sección podrá gestionar los pagos pendientes</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "CuentasPagar")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Detalle de Pagos</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="col-sm-6">
+                
+            </div>
+            <div class="col-sm-6 text-right">
+                <a href="@Url.Action("PagosPendientesDescargar", "CuentasPagar")" class="btn btn-primary"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
+            </div>
+            <hr />
+
+            <table id="detallePago" class="table table-striped table-condensed table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center">Referencia</th>
+                    <th class="text-center">Importe</th>
+                    <th class="text-center">Ml</th>
+                    <th class="text-center">Fecha</th>
+                    <th class="text-center">Tipo de Movimiento</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (DataRow drPago in pagosPendientes.Rows)
+                {
+                    var fecha = DateTime.ParseExact(
+                        drPago["BLDAT"].ToString(),
+                        "yyyyMMdd",
+                        CultureInfo.InvariantCulture);
+                    <tr>
+
+                         @{
+                            var tipo = "";
+                            switch (@drPago["BLART"].ToString())
+                            {
+                                case "4":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "10":
+                                    tipo = "Factura a proveedor";
+                                    break;
+                                case "21":
+                                    tipo = "Factura a proveedor";
+                                    break;
+                                case "23":
+                                    tipo = "Nota de Cargo";
+                                    break;
+                                case "AB":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "DA":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "DG":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "DZ":
+                                    tipo = "Pago de proveedor";
+                                    break;
+                                case "KA":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "KG":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "KR":
+                                    tipo = "Devolución";
+                                    break;
+                                case "":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "RE":
+                                    tipo = "Factura a proveedor";
+                                    break;
+
+                                case "RV":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "SA":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "ZN":
+                                    tipo = "Anulación de documento";
+                                    break;
+                                case "ZP":
+                                    tipo = "Pago";
+                                    break;
+
+
+                            }
+
+                        }
+                        <td class="text-center">@drPago["BELNR"]</td>
+                        <td class="text-right">@string.Format("{0:N}", drPago["DMBTR"])</td>
+                        <td class="text-center">@drPago["WAERS"]</td>
+                        <td class="text-center">@fecha.ToString("dd/MM/yyyyy")</td>
+                        <td class="text-center">@tipo</td>
+
+                    </tr>
+                }
+                </tbody>
+            </table>
+            <b>Total: </b> @string.Format("{0:N}", importeTotal)
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#detallePago').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+            });
+        });
+    </script>
+}
+
+

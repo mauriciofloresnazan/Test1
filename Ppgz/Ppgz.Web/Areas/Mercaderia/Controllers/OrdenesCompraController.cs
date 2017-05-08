@@ -1,7 +1,8 @@
 ﻿using System.Data;
 using System.Web.Mvc;
+using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
-using OrdenCompraManager = Ppgz.Services.OrdenCompraManager;
+
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {

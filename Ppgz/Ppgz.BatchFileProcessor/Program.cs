@@ -9,6 +9,7 @@ namespace Ppgz.BatchFileProcessor
     class Program
     {
         private const string WrongFilesPath = @"C:\temp\Implus\FtpDev\WrongFiles";
+
         private const string CrInboxPath = @"C:\temp\Implus\FtpDev\Inbox";
         private const string CrPath = @"C:\temp\Implus\FtpDev\Crs";
         private const string CrFilter = "cr_*.pdf";

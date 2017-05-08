@@ -1,0 +1,131 @@
+﻿@using System.Data
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Detalle de Devoluciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var drDevolucion = (DataRow)ViewBag.Devolucion;
+
+
+    var drDevolucionDetalles = (DataRow[])ViewBag.DevolucionDetalles;
+
+    var proveedor = (proveedore)ViewBag.Proveedor;
+
+    var subTotal = drDevolucionDetalles.Aggregate<DataRow, decimal>(0, (current, dr) => current + decimal.Parse(dr["DMBTR"].ToString()));
+
+    decimal impuesto = ViewBag.Impuesto;
+
+    var total = decimal.Parse(@ViewBag.devolucion["DMBTR"].ToString()) * -1;
+
+    var fechaParam = (DateTime)ViewBag.Fecha;
+}
+
+<h2>Gestión de Devoluciones</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>Detalles de la devolución</i>
+</p>
+<a class="btn btn-link" href="@Url.Action("Devoluciones", "CuentasPagar", new { date = fechaParam.ToString("dd/MM/yyyy") })"> <i class="fa fa-arrow-left" aria-hidden="true"></i> Ver otra devolución</a>
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "CuentasPagar")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i> Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Gestión de Devolución</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="clearfix">
+                        <dl class="dl-horizontal">
+                            <dt>Folio de Referencia: </dt>
+                            <dd class="text-right">@drDevolucion["XBLNR"]</dd>
+                            <dt>Sub Total: </dt>
+                            <dd class="text-right">@string.Format("{0:N}", @subTotal)</dd>
+                            <dt>IVA: </dt>
+                            <dd class="text-right">@string.Format("{0:N}", @impuesto)</dd>
+                            <dt>Total: </dt>
+                            <dd class="text-right">@string.Format("{0:N}", @total)</dd>
+                        </dl>
+                    </div>
+
+                </div>
+                <div class="col-sm-6 text-right">
+                    <a href="@Url.Action("DevolucionesDetalleDescargar", "CuentasPagar", new {@numeroDocumento = @drDevolucion["BELNR"], date = fechaParam.ToString("dd/MM/yyyy")})" class="btn btn-primary"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
+                </div>
+            </div>
+            <hr style="margin-top: 0;"/>
+            <table id="devolucionesDetalle" class="table table-striped table-condensed table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center">Artículo</th>
+                    <th class="text-center">Descripción</th>
+                    <th class="text-center">Total</th>
+                    <th class="text-center">Cantidad</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var detalle in drDevolucionDetalles)
+                {
+                    <tr>
+
+                        <td class="text-center">@detalle["MATNR"]</td>
+                        <td class="text-center">@detalle["MAKTX"]</td>
+                        <td class="text-right">@string.Format("{0:N}", detalle["DMBTR"])</td>
+                        <td class="text-center">@detalle["MENGE"]</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            <hr/>
+            <div class="clearfix">
+                <dl class="dl-horizontal pull-right">
+                    <dt>Sub Total: </dt>
+                    <dd class="text-right">@string.Format("{0:N}", @subTotal)</dd>
+                    <dt>IVA: </dt>
+                    <dd class="text-right">@string.Format("{0:N}", @impuesto)</dd>
+                    <dt>Total: </dt>
+                    <dd class="text-right">@string.Format("{0:N}", @total)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var usuarioMensajes = "@ViewBag.mensajesUsuario";
+
+        $(document).ready(function () {
+
+
+
+            $('#devolucionesDetalle').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+            });
+        });
+
+
+    </script>
+}
+
+

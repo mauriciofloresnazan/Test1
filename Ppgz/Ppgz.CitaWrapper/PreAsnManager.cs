@@ -13,8 +13,7 @@ namespace Ppgz.CitaWrapper
             var proveedor = db.proveedores.Single(p => p.Id == proveedorId);
             
             
-            // TODO confirmar con el cliente
-            const string organizacionCompras = "OC01";
+            var organizacionCompras = db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
             var ordenes = sapOrdenCompraManager.GetActivasSinDetalle(proveedor.NumeroProveedor, organizacionCompras);
@@ -42,8 +41,7 @@ namespace Ppgz.CitaWrapper
                 .Where(asn => asn.OrdenNumeroDocumento == numerDocumento 
                     && asn.cita.FechaCita > DateTime.Today).ToList();
 
-            // TODO confirmar con el cliente
-            const string organizacionCompras = "OC01";
+            var organizacionCompras = db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
             var detalles = sapOrdenCompraManager.GetDetalle(proveedor.NumeroProveedor, organizacionCompras, numerDocumento);
@@ -85,9 +83,7 @@ namespace Ppgz.CitaWrapper
             var db = new Repository.Entities();
             var proveedor = db.proveedores.Single(p => p.Id == proveedorId);
 
-
-            // TODO confirmar con el cliente
-            const string organizacionCompras = "OC01";
+            var organizacionCompras = db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
             var ordenes = sapOrdenCompraManager.GetActivasConDetalle(proveedor.NumeroProveedor, organizacionCompras);

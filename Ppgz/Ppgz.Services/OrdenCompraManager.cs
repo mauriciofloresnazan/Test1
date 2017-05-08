@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.Linq;
 using Ppgz.Repository;
 using SapWrapper;
@@ -56,8 +54,22 @@ namespace Ppgz.Services
                 throw new Exception(CommonMensajesResource.ERROR_Proveedor_Id);
             }
 
+            var organizacionCompras = string.Empty;
+            if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Mercaderia)
+            {
+                organizacionCompras =
+                    _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
+            }
+            if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Servicio)
+            {
+                organizacionCompras =
+                    _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.servicio").Valor;
+            }
+
+
+
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(proveedor.NumeroProveedor);
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(proveedor.NumeroProveedor, organizacionCompras);
             var detalle = new List<ordencompra>();
 
             if (result.Rows.Count <= 0) return detalle;
@@ -107,9 +119,7 @@ namespace Ppgz.Services
             }
             return detalle;
         }
-
-
-        // TODO CAMBIAR EL PARAMETRO DE LA ORDEN AL NUMEROD E DOCUMENTO
+        
         public void NotificarOrdenCompra(string numeroDocumento, int proveedorId)
         {
             if (_db.ordencompras.FirstOrDefault(
@@ -121,11 +131,24 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
             }
 
+            var organizacionCompras = string.Empty;
+            if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Mercaderia)
+            {
+                organizacionCompras =
+                    _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
+            }
+            if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Servicio)
+            {
+                organizacionCompras =
+                    _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.servicio").Valor;
+            }
+
+
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(numeroDocumento, proveedor.NumeroProveedor);
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(numeroDocumento, proveedor.NumeroProveedor, organizacionCompras);
             if (result.Rows.Count > 1)
             {
-                //TODO PASAR A UN RECURSO
+
                 throw new BusinessException("Multiples ordenes de compra con el miso numero de documento");
             }
 
@@ -141,7 +164,7 @@ namespace Ppgz.Services
             _db.ordencompras.Add(orden);
             _db.SaveChanges();
         }
-
+/*
         public ordencompra FindOrdenCompra(string numeroDocumento, int proveedorId)
         {
             var proveedor = _db.proveedores.FirstOrDefault(p => p.Id == proveedorId);
@@ -158,7 +181,7 @@ namespace Ppgz.Services
 
             return orden;
         }
-
+        */
         public ordencompra FindOrdenCompraActiva(string numeroDocumento, int proveedorId)
         {
 
@@ -168,8 +191,20 @@ namespace Ppgz.Services
                 throw new Exception(CommonMensajesResource.ERROR_Proveedor_Id);
             }
 
+            var organizacionCompras = string.Empty;
+            if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Mercaderia)
+            {
+                organizacionCompras =
+                    _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
+            }
+            if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Servicio)
+            {
+                organizacionCompras =
+                    _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.servicio").Valor;
+            }
+
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(numeroDocumento, proveedor.NumeroProveedor);
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(numeroDocumento, proveedor.NumeroProveedor, organizacionCompras);
 
 
             if (result.Rows.Count > 1)
@@ -192,54 +227,12 @@ namespace Ppgz.Services
             return orden;
         }
 
-        // TODO CAMBIAR
-        public Hashtable FindOrdenCompraWithAvailableDates(string numeroDocumento, int proveedorId)
-        {
-            var hashTable = new Hashtable
-            {
-                {"orden", FindOrdenCompra(numeroDocumento, proveedorId)},
-                {
-                    "Dates", new[]
-                    {
-                        DateTime.Today.AddDays(2).ToString("yyyy-MM-dd"),
-                        DateTime.Today.AddDays(3).ToString("yyyy-MM-dd"),
-                        DateTime.Today.AddDays(4).ToString("yyyy-MM-dd"),
-                        DateTime.Today.AddDays(5).ToString("yyyy-MM-dd"),
-                        DateTime.Today.AddDays(6).ToString("yyyy-MM-dd"),
-                        DateTime.Today.AddDays(7).ToString("yyyy-MM-dd"),
-                        DateTime.Today.AddDays(8).ToString("yyyy-MM-dd"),
-                    }
-                },
-                {"detalle", FindDetalle( numeroDocumento, proveedorId)}
-            };
-
-            return hashTable;
-        }
-
-        public Hashtable FindActivaByIdAndUsuarioId(int id, string usuarioId)
-        {
-
-            var  orden = _db.ordencompras.FirstOrDefault(
-                o => o.Id == id);
-
-            var ordenDetalle = _db.ordencompradetalles.FirstOrDefault(
-                o => o.SapOrdenCompraId == id);
-
-            var result = new Hashtable
-            {
-                {"orden", orden}, 
-                {"ordenDetalle", ordenDetalle}
-            };
-
-            return result;
-
-        }
-
-        public List<ordencompradetalle> FindDetalleByDocumento(string numeroDocumento, string numeroProveedor)
+  
+        public List<ordencompradetalle> FindDetalleByDocumento(string numeroDocumento, string numeroProveedor, string organizacionCompras)
         {
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenDeCompraDetalle(numeroDocumento, numeroProveedor);
+            var result = sapOrdenCompraManager.GetOrdenDeCompraDetalle(numeroDocumento, numeroProveedor, organizacionCompras);
             var detalle = new List<ordencompradetalle>();
 
             if (result.Rows.Count > 0)
@@ -290,71 +283,95 @@ namespace Ppgz.Services
             }
             
             NotificarOrdenCompra(numeroDocumento, proveedorId);
+
+            var organizacionCompras = string.Empty;
+            if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Mercaderia)
+            {
+                organizacionCompras =
+                    _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
+            }
+            if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Servicio)
+            {
+                organizacionCompras =
+                    _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.servicio").Valor;
+            }
             
-            return FindDetalleByDocumento(ordenCompraActiva.NumeroDocumento, proveedor.NumeroProveedor);
+            return FindDetalleByDocumento(ordenCompraActiva.NumeroDocumento, proveedor.NumeroProveedor, organizacionCompras);
 
         }
-        
-        public List<DateTime> GetAvailableDatesByOrdenCompra(string numeroDocumento, int proveedorId)
-        {
+        /*  
+          public List<DateTime> GetAvailableDatesByOrdenCompra(string numeroDocumento, int proveedorId)
+          {
       
             
-            var proveedor = _db.proveedores.Find(proveedorId);
-            if (proveedor == null)
-            {
-                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
-            }
+              var proveedor = _db.proveedores.Find(proveedorId);
+              if (proveedor == null)
+              {
+                  throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
+              }
 
-            var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenDeCompraDetalle(numeroDocumento, proveedor.NumeroProveedor);
+              var organizacionCompras = string.Empty;
+              if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Mercaderia)
+              {
+                  organizacionCompras =
+                      _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
+              }
+              if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Servicio)
+              {
+                  organizacionCompras =
+                      _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.servicio").Valor;
+              }
 
-            var availableDates = new List<DateTime>();
+              var sapOrdenCompraManager = new SapOrdenCompraManager();
+              var result = sapOrdenCompraManager.GetOrdenDeCompraDetalle(numeroDocumento, proveedor.NumeroProveedor, organizacionCompras);
 
-            if (result.Rows.Count > 0)
-            {
-                // Se toma la fecha de entrega del primer registro del detalle de acuerdo a la solicitud del cliente
-                var sapFechaEntrega = DateTime.ParseExact(
-                    result.Rows[0]["EINDT"].ToString(), 
-                    "yyyyMMdd", 
-                    CultureInfo.InvariantCulture);
+              var availableDates = new List<DateTime>();
 
-                // Se calcula el numero de la semana del año
-                var semana = CultureInfo
-                    .GetCultureInfo("es-MX")
-                    .Calendar
-                    .GetWeekOfYear(sapFechaEntrega, CalendarWeekRule.FirstDay, sapFechaEntrega.DayOfWeek);
+              if (result.Rows.Count > 0)
+              {
+                  // Se toma la fecha de entrega del primer registro del detalle de acuerdo a la solicitud del cliente
+                  var sapFechaEntrega = DateTime.ParseExact(
+                      result.Rows[0]["EINDT"].ToString(), 
+                      "yyyyMMdd", 
+                      CultureInfo.InvariantCulture);
 
-                // TODO MEJORAR
-                // Se agregan los días del rango entre 2 semanas antes y 2 semanas despues de la fecha de entrega
-                var day = sapFechaEntrega.AddDays(-30);
+                  // Se calcula el numero de la semana del año
+                  var semana = CultureInfo
+                      .GetCultureInfo("es-MX")
+                      .Calendar
+                      .GetWeekOfYear(sapFechaEntrega, CalendarWeekRule.FirstDay, sapFechaEntrega.DayOfWeek);
 
-                while (day < sapFechaEntrega.AddDays(30))
-                {
-                    var semana2 = CultureInfo
-                        .GetCultureInfo("es-MX")
-                        .Calendar
-                        .GetWeekOfYear(day, CalendarWeekRule.FirstDay, day.DayOfWeek);
+                  // TODO MEJORAR
+                  // Se agregan los días del rango entre 2 semanas antes y 2 semanas despues de la fecha de entrega
+                  var day = sapFechaEntrega.AddDays(-30);
 
-                    if (semana2 >= semana - 2 && semana2 <= semana + 2)
-                    {
-                        // TODO INCLUIR SOLO LOS DIAS CONFIGURADOS PARA OPERAR
-                        // TODO EXCLUIR LOS DIAS ESPECIALES SI EL PROVEEDOR NO TIENE ESA CATEGÍA
+                  while (day < sapFechaEntrega.AddDays(30))
+                  {
+                      var semana2 = CultureInfo
+                          .GetCultureInfo("es-MX")
+                          .Calendar
+                          .GetWeekOfYear(day, CalendarWeekRule.FirstDay, day.DayOfWeek);
 
-                        availableDates.Add(day);
-                    }
-                    day = day.AddDays(1);
-                }
+                      if (semana2 >= semana - 2 && semana2 <= semana + 2)
+                      {
+                          // TODO INCLUIR SOLO LOS DIAS CONFIGURADOS PARA OPERAR
+                          // TODO EXCLUIR LOS DIAS ESPECIALES SI EL PROVEEDOR NO TIENE ESA CATEGÍA
+
+                          availableDates.Add(day);
+                      }
+                      day = day.AddDays(1);
+                  }
             
-            }
+              }
 
-            return availableDates;
-        }
-
-        public ordencompra FindOrdenCompraActiva(string numeroDocumento, int proveedorId, string fecha)
-        {
-            // TODO HACER
-            return FindOrdenCompraActiva(numeroDocumento, proveedorId);
-        }
+              return availableDates;
+          }
+      
+          public ordencompra FindOrdenCompraActiva(string numeroDocumento, int proveedorId, string fecha)
+          {
+              // TODO HACER
+              return FindOrdenCompraActiva(numeroDocumento, proveedorId);
+          }  */
 
 
 

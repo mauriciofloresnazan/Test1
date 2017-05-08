@@ -216,6 +216,7 @@
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\CuentasPagarController.cs" />
+    <Compile Include="Areas\Servicio\Controllers\CuentasPagarController.cs" />
     <Compile Include="Areas\Nazan\Controllers\RegistrarNivelServicioController.cs" />
     <Compile Include="Areas\Nazan\MensajesResource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -231,6 +232,7 @@
     <Compile Include="Areas\Servicio\Controllers\GestionProveedoresController.cs" />
     <Compile Include="Areas\Servicio\Controllers\MensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Servicio\Controllers\OrdenesCompraController.cs" />
+    <Compile Include="Areas\Servicio\Controllers\ReporteProveedoresController.cs" />
     <Compile Include="Areas\Servicio\Mensajes.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -325,7 +327,6 @@
     <Compile Include="Infrastructure\CuentasPorPagarManager.cs" />
     <Compile Include="Infrastructure\FileManager.cs" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
-    <Compile Include="Infrastructure\OrdenCompraManager.cs" />
     <Compile Include="Infrastructure\SapManager.cs" />
     <Compile Include="Infrastructure\TerminosCondiciones.cs" />
     <Compile Include="Infrastructure\TipoUsuario.cs" />
@@ -1157,7 +1158,7 @@
     <Content Include="Areas\Mercaderia\Views\CuentasPagar\PagosPendientesDetalle.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitas\Citas.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitas\CitaDetalle.cshtml" />
-    <None Include="Areas\Mercaderia\Views\CuentasPagar\Devoluciones.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\CuentasPagar\Devoluciones.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ReporteProveedores\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ReporteProveedores\Reportes.cshtml" />
     <Content Include="Areas\Nazan\Views\RegistrarNivelServicio\Index.cshtml" />
@@ -1169,6 +1170,15 @@
     <Content Include="Areas\Nazan\Views\AdministrarCitas\CambiarFecha.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas\Penalizaciones.cshtml" />
     <Content Include="Areas\Servicio\Views\GestionProveedores\Index.cshtml" />
+    <Content Include="Areas\Servicio\Views\CuentasPagar\Devoluciones.cshtml" />
+    <Content Include="Areas\Servicio\Views\CuentasPagar\DevolucionesDetalle.cshtml" />
+    <Content Include="Areas\Servicio\Views\CuentasPagar\Index.cshtml" />
+    <Content Include="Areas\Servicio\Views\CuentasPagar\Pagos.cshtml" />
+    <Content Include="Areas\Servicio\Views\CuentasPagar\PagosDetalle.cshtml" />
+    <Content Include="Areas\Servicio\Views\CuentasPagar\PagosPendientes.cshtml" />
+    <Content Include="Areas\Servicio\Views\CuentasPagar\PagosPendientesDetalle.cshtml" />
+    <Content Include="Areas\Servicio\Views\ReporteProveedores\Index.cshtml" />
+    <Content Include="Areas\Servicio\Views\ReporteProveedores\Reportes.cshtml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -1195,7 +1205,6 @@
     <Content Include="Uploads\formato_nivel_servicio.xlsx" />
     <Content Include="Web.config" />
     <Content Include="Areas\Nazan\Views\Configsys\Index.cshtml" />
-    <Content Include="Views\Home\TestRieles.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
