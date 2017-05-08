@@ -51,7 +51,7 @@ namespace Ppgz.Web.Areas
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
-        [Compare("Password", ErrorMessage = "El password y la confirmación no coinciden.")]
+        [System.Web.Mvc.Compare("Password", ErrorMessage = "El password y la confirmación no coinciden.")]
         public string ConfirmarPassword { get; set; }
 
     }

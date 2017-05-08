@@ -267,6 +267,7 @@
     <Content Include="Areas\Servicio\Views\AdministrarUsuarios\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\MensajesInstitucionales\index.cshtml" />
     <Content Include="Areas\Servicio\Views\MensajesInstitucionales\index.cshtml" />
+    <Content Include="assets\css\bootstrap-formhelpers.min.css" />
     <Content Include="assets\css\msgcolores.css" />
     <Content Include="assets\img\marcas.png" />
     <Content Include="assets\js\bootbox.js" />
@@ -1067,6 +1068,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap-formhelpers-phone.en_US.js" />
+    <Content Include="Scripts\bootstrap-formhelpers-phone.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="assets\vendor\bootstrap-3.3.6\css\bootstrap-theme.css.map" />
@@ -1192,6 +1195,7 @@
     <Content Include="Uploads\formato_nivel_servicio.xlsx" />
     <Content Include="Web.config" />
     <Content Include="Areas\Nazan\Views\Configsys\Index.cshtml" />
+    <Content Include="Views\Home\TestRieles.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

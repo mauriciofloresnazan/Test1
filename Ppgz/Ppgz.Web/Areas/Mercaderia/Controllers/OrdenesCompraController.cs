@@ -13,7 +13,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         private readonly CommonManager _commonManager = new CommonManager();
 
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA-LISTAR,MERCADERIA-ORDENESCOMPRA-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA")]
         public ActionResult Index()
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -24,7 +24,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
 
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA-LISTAR,MERCADERIA-ORDENESCOMPRA-MODIFICAR")]
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA")]
         public void Descargar(string numeroDocumento, int proveedorId)
         {
             var detalles = _ordenCompraManager.FindDetalle(numeroDocumento, proveedorId);

@@ -226,7 +226,7 @@ namespace Ppgz.Services
         public void AsociarProveedorSapEnCuenta(int cuentaId, string numeroProveedor)
         {
             var proveedorManager = new ProveedorManager();
-            if (proveedorManager.FindByNumeroProveedor(numeroProveedor) != null) 
+            if (proveedorManager.FindByNumeroProveedor(numeroProveedor.PadLeft(10, '0')) != null) 
             {
                 throw new BusinessException(CommonMensajesResource.ERROR_ProveedorSapYaAsociado);
             }

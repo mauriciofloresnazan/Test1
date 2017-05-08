@@ -71,7 +71,7 @@ namespace Ppgz.Web.Areas.Nazan.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
-        [Compare("ResponsablePassword", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
+        [System.Web.Mvc.Compare("ResponsablePassword", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
         public string ResponsableConfirmarPassword { get; set; }
     }
 }

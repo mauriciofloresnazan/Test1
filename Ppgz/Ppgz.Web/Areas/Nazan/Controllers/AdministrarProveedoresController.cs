@@ -88,6 +88,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
                 CommonManager.WriteAppLog(log, TipoMensaje.Error);
 
+                ModelState.AddModelError(string.Empty, e.Message);
                 return View(model);
             }
 		}
@@ -238,7 +239,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
                 CommonManager.WriteAppLog(log, TipoMensaje.Error);
 
-                TempData["FlashError"] = MensajesResource.ERROR_General;
+                TempData["FlashError"] = e.Message;
                 return RedirectToAction("Index");
             }
 			

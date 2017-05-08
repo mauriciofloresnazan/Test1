@@ -146,6 +146,17 @@
 
         $(document).ready(function () {
 
+            $("#Pdf").bind('change', function () {
+        
+                if (this.files[0].size / 1024 / 1024 > 3) {
+                    $(this).val("");
+
+                    alert('Debe incluir un archivo menor a 3Mb');
+                }
+            });
+
+
+
             $('.fecha-hora').datetimepicker({
                 locale: 'es',
 

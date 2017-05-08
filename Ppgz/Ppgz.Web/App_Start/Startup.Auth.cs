@@ -39,23 +39,21 @@ namespace Ppgz.Web
         {
             var rolesMercaderia = new Dictionary<string, string>
             {
-                {"MAESTRO-MERCADERIA","Acceso Total al sistema de Mercadería"},
-                {"MERCADERIA-ADMINISTRARPERFILES-LISTAR","Consultar perfiles"},
-                {"MERCADERIA-ADMINISTRARPERFILES-MODIFICAR","Modificar perfiles"},
-                {"MERCADERIA-ADMINISTRARUSUARIOS-LISTAR","Consultar usuarios"},
-                {"MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR","Modificar usuarios"},
-                {"MERCADERIA-MENSAJESINSTITUCIONALES","Mensajes Insitucionales"},
-                {"MERCADERIA-ORDENESCOMPRA-LISTAR","Acceso a Ordenes de Compra"},
-                {"MERCADERIA-ORDENESCOMPRA-MODIFICAR","Modificar Ordenes de Compra"},
-                {" MERCADERIA-CUENTASPAGAR","Cuentas por pagar"},
-
+                {"MAESTRO-MERCADERIA","Acceso Total al Sistema"},
+                {"MERCADERIA-ADMINISTRARPERFILES-LISTAR","Consultar Perfiles"},
+                {"MERCADERIA-ADMINISTRARPERFILES-MODIFICAR","Modificar Perfiles"},
+                {"MERCADERIA-ADMINISTRARUSUARIOS-LISTAR","Consultar Usuarios"},
+                {"MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR","Modificar Usuarios"},
+                {"MERCADERIA-MENSAJESINSTITUCIONALES","Mensajes Institucionales"},
+                {"MERCADERIA-ORDENESCOMPRA","Ordenes de Compra"},
+                {"MERCADERIA-CUENTASPAGAR","Cuentas por Pagar"},
 
                 {"MERCADERIA-CONTROLCITAS","Control de Citas"},
                 {"MERCADERIA-COMPROBANTESRECIBO", "Comprobantes de Recibo"},
                 {"MERCADERIA-IMPRESIONETIQUETAS", "Impresion de Etiquetas"},
                 {"MERCADERIA-REPORTESPROVEEDORES", "Reportes Proveedores"},
-                {"MERCADERIA-FACTURAS", "Gestion de facturas"},
-                {"MERCADERIA-GESTIONPROVEEDORES", "Gestionar los proveedores asociados"}
+                {"MERCADERIA-FACTURAS", "Gestion de Facturas"},
+                {"MERCADERIA-GESTIONPROVEEDORES", "Gestión de Proveedores"}
 
 
                
@@ -73,8 +71,7 @@ namespace Ppgz.Web
                 {"SERVICIO-ADMINISTRARUSUARIOS-LISTAR","Consultar usuarios"},
                 {"SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR","Modificar usuarios"},
                 {"SERVICIO-MENSAJESINSTITUCIONALES","Mensajes Insitucionales"},
-                {"SERVICIO-ORDENESCOMPRA-LISTAR","Acceso a Ordenes de Compra"},
-                {"SERVICIO-ORDENESCOMPRA-MODIFICAR","Modificar Ordenes de Compra"},
+                {"SERVICIO-ORDENESCOMPRA","Acceso a Ordenes de Compra"},
 
                 
                 {"SERVICIO-FACTURAS", "Gestion de facturas"},
@@ -84,6 +81,58 @@ namespace Ppgz.Web
             };
             return rolesServicio;
         }
+
+        public void CargarConfiguraciones()
+        {
+            const string sql = @"
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.working-day.enabled' AS Clave, '2,3,4,5,6' AS Valor, 1 AS Habilitado, 'Indica los dias de la semana, donde 1=Domingo, 2=Lunes,...7=Sabado, donde se pueden hacer las recepciones de mercancias o entregas' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.working-day.enabled');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.special-day.provider' AS Clave, '4' AS Valor, 1 AS Habilitado, 'Indica el dia de entrega para los proveedores especiales o vip de impuls' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.special-day.provider');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.max-pairs.per-day' AS Clave, '27000' AS Valor, 1 AS Habilitado, 'Indica la cantidad maxima de pares por dia permitida' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.max-pairs.per-day');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.max-pairs.per-week' AS Clave, '90000' AS Valor, 1 AS Habilitado, 'Indica la cantidad maxima de pares por semana permitida' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.max-pairs.per-week');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.platform-rail.max-pair.hour' AS Clave, '600' AS Valor, 1 AS Habilitado, 'Indica la cantidad maxima de pares por hora por riel permitida' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.platform-rail.max-pair.hour');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'site.url' AS Clave, 'http://ppgz.com' AS Valor, 1 AS Habilitado, 'Indica la dirección del portal' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'site.url');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'mail.main.address' AS Clave, 'impuls.ppgz@gmail.com' AS Valor, 1 AS Habilitado, 'Indica  la dirección del del correo emisor' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'mail.main.address');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'mail.main.password' AS Clave, 'Venezuela2017' AS Valor, 1 AS Habilitado, 'Indica la contraseña del del correo emisor' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'mail.main.password');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'mail.main.smtp.host' AS Clave, 'smtp.gmail.com' AS Valor, 1 AS Habilitado, 'Indica el host del servidor smtp del correo emisor' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'mail.main.smtp.host');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'mail.main.smtp.port' AS Clave, '587' AS Valor, 1 AS Habilitado, 'Indica el puerto del servidor smtp del correo emisor' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'mail.main.smtp.port');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'mail.main.smtp.enablessl' AS Clave, '1' AS Valor, 1 AS Habilitado, 'Indica si la conexión del servidor smtp require ssl' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'mail.main.smtp.enablessl');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.bw.name' AS Clave, 'QIM' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.bw.name');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.bw.appserverhost' AS Clave, '172.18.3.16' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.bw.appserverhost');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.bw.user' AS Clave, 'USRPORTAL' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.bw.user');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.bw.password' AS Clave, 'wspportalp' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.bw.password');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.bw.client' AS Clave, '600' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.bw.client');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.bw.systemnumber' AS Clave, '50' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.bw.systemnumber');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.bw.language' AS Clave, 'EN' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.bw.language');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.bw.poolsize' AS Clave, '5' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.bw.poolsize');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.bw.peakconnectionslimit' AS Clave, '35' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.bw.peakconnectionslimit');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.bw.idletimeout' AS Clave, '500' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.bw.idletimeout');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.main.name' AS Clave, 'QIM' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.main.name');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.main.appserverhost' AS Clave, '172.18.3.21' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.main.appserverhost');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.main.user' AS Clave, 'WSPRR' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.main.user');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.main.password' AS Clave, 'wsp2017' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.main.password');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.main.client' AS Clave, '300' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.main.client');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.main.systemnumber' AS Clave, '22' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.main.systemnumber');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.main.language' AS Clave, 'EN' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.main.language');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.main.poolsize' AS Clave, '5' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.main.poolsize');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.main.peakconnectionslimit' AS Clave, '35' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.main.peakconnectionslimit');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.main.idletimeout' AS Clave, '500' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.main.idletimeout');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.platform-rail.max-pair-hour.tolerance' AS Clave, '0.16' AS Valor, 1 AS Habilitado, 'Indica la tolerancia en márgenes de pares por hora' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.platform-rail.max-pair-hour.tolerance');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'batchfile.wrongfilespath' AS Clave, 'C:\temp\FtpDev\WrongFiles' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'batchfile.wrongfilespath');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'batchfile.crinboxpath' AS Clave, 'C:\temp\FtpDev\Inbox' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'batchfile.crinboxpath');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'batchfile.crpath' AS Clave, 'C:\temp\FtpDev\Crs' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'batchfile.crpath');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'batchfile.crfilter' AS Clave, 'cr_*.pdf' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'batchfile.crfilter');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'batchfile.etiquetasinboxpath' AS Clave, 'C:\temp\FtpDev\Etiquetas\Inbox' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'batchfile.etiquetasinboxpath');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'batchfile.etiquetaspath' AS Clave, 'C:\temp\FtpDev\Etiquetas' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'batchfile.etiquetaspath');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'batchfile.etiquetasfilter' AS Clave, 'etq_*.txt' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'batchfile.etiquetasfilter');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.common.function.param.bukrs.mercaderia' AS Clave, '1001' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.common.function.param.bukrs.mercaderia');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.common.function.param.bukrs.servicio' AS Clave, '1000' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.common.function.param.bukrs.servicio');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'facturas.rootdirectory' AS Clave, 'c:\temp\facturas\\' AS Valor, 1 AS Habilitado, '' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'facturas.rootdirectory');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.limited-warehouses-per-day' AS Clave, 'CD01,CD06' AS Valor, 1 AS Habilitado, 'Codigos SAP de los almacenes que tienen cantidades limitadas por dia' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.limited-warehouses-per-day');
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.limited-warehouses-per-week' AS Clave, 'CD01,CD06' AS Valor, 1 AS Habilitado, 'Codigos SAP de los almacenes que tienen cantidades limitadas por semana' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.limited-warehouses-per-week');
+                ";
+            Db.Insert(sql);
+        }
+
         public void ConfigureAuth(IAppBuilder app)
         {
             // Fix DbContext
@@ -216,6 +265,7 @@ namespace Ppgz.Web
                 ExpireTimeSpan = TimeSpan.FromMinutes(30)
             });
 
+             CargarConfiguraciones();
 
         }
     }

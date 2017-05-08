@@ -108,6 +108,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
                 CommonManager.WriteAppLog(log, TipoMensaje.Error);
 
+                ModelState.AddModelError(string.Empty, e.Message);
                 return View(model);
             }
         }

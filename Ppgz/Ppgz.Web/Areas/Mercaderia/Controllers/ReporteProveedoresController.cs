@@ -16,7 +16,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         readonly ReporteProveedorManager _reporteProveedorManager = new ReporteProveedorManager();
         //
         // GET: /Mercaderia/ReporteProveedores/
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-REPORTES-LISTAR")]
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-REPORTESPROVEEDORES")]
         public ActionResult Index()
         {
  
@@ -29,7 +29,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return View();
         }
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-REPORTES")]
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-REPORTESPROVEEDORES")]
         public ActionResult Reportes(int proveedorId = 0)
         {
             int id = proveedorId > 0 ? proveedorId : Convert.ToInt32(System.Web.HttpContext.Current.Session["proveedorId"]);
@@ -60,7 +60,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return View();
         }
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-REPORTES")]
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-REPORTESPROVEEDORES")]
         public void Descargar(string numeroProveedor)
         {
             var detalles = _reporteProveedorManager.FindReporteProveedor(numeroProveedor);

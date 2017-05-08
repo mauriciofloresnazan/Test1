@@ -531,7 +531,23 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			ViewBag.HorarioRieles = horarioRieles;
 			return View();
 		}
-		
+
+	    public JsonResult VerificarRieles(string fecha)
+	    {
+            var date = DateTime.ParseExact(fecha, "ddMMyyyy", CultureInfo.InvariantCulture);
+
+            var db = new Entities();
+            var horarioRieles = db.horariorieles.Where(hr => hr.Fecha == date).ToList();
+
+
+            return Json(
+                horarioRieles.Select(hr => new
+                {
+                    hr.Id,
+                    hr.Disponibilidad
+                }));
+	    }
+
 
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		[ValidateAntiForgeryToken]

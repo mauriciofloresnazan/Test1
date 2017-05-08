@@ -62,6 +62,11 @@ namespace Ppgz.Services
             {
                 throw new BusinessException(CommonMensajesResource.ERROR_NombreUsuarioExistente);
             }
+			if (_db.AspNetUsers.FirstOrDefault(u => u.Email == email) != null)
+            {
+                throw new BusinessException("La Dirección de correo ya ha sido utilizada por otro usuario");
+            }
+			
             var tipos = new[]
             {
                 Tipo.Nazan,
