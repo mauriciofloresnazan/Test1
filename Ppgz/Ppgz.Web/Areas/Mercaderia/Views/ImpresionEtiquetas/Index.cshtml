@@ -13,19 +13,24 @@
             <table id="etiquetas" class="table table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center">Numero Documento</th>
-                        <th class="text-center">Fecha</th>
+                        <th class="text-center">Orden</th>
+                        <th class="text-center">Fecha Recepción</th>
+                        <th class="text-center">RFC</th>
+                        <th class="text-center">Razón Social</th>
                         <th class="text-center">Descargar</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (etiqueta cr in ViewBag.Etiquetas)
+                    @foreach (etiqueta etiqueta in ViewBag.Etiquetas)
                     {
                         <tr>
-                            <td class="text-center">@cr.OrdenCompraNumeroDoc</td>
-                            <td class="text-center">@cr.Fecha</td>
+                            <td class="text-center">@etiqueta.NumeroOrden</td>
+                            <td class="text-center">@etiqueta.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center">@etiqueta.proveedore.Rfc</td>
+                            <td class="text-center">@etiqueta.proveedore.Nombre1 @etiqueta.proveedore.Nombre2 @etiqueta.proveedore.Nombre3 @etiqueta.proveedore.Nombre4</td>
+        
                             <td class="text-center vert-align">
-                                <a href="@Url.Action("Descargar", "ImpresionEtiquetas", new {@id = @cr.Id})">
+                                <a href="@Url.Action("Descargar", "ImpresionEtiquetas", new {@id = @etiqueta.Id})">
                                     <i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar
                                 </a>
                             </td>

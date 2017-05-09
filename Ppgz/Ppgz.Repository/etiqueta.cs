@@ -16,8 +16,10 @@ namespace Ppgz.Repository
     {
         public int Id { get; set; }
         public string Archivo { get; set; }
-        public Nullable<System.DateTime> Fecha { get; set; }
-        public Nullable<int> OrdenCompraId { get; set; }
-        public string OrdenCompraNumeroDoc { get; set; }
+        public System.DateTime Fecha { get; set; }
+        public string NumeroOrden { get; set; }
+        public int ProveedorId { get; set; }
+    
+        public virtual proveedore proveedore { get; set; }
     }
 }

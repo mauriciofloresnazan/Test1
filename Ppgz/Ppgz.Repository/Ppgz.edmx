@@ -227,11 +227,11 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
-          <Property Name="Archivo" Type="varchar" MaxLength="1000" />
-          <Property Name="Fecha" Type="datetime" Precision="0" />
-          <Property Name="OrdenCompraId" Type="int" />
-          <Property Name="OrdenCompraNumeroDoc" Type="varchar" MaxLength="20" />
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Archivo" Type="varchar" MaxLength="1000" Nullable="false" />
+          <Property Name="Fecha" Type="datetime" Precision="0" Nullable="false" />
+          <Property Name="NumeroOrden" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ProveedorId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="facturas">
           <Key>
@@ -722,6 +722,18 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_etiquetas_proveedores">
+          <End Role="proveedores" Type="Self.proveedores" Multiplicity="1" />
+          <End Role="etiquetas" Type="Self.etiquetas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proveedores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="etiquetas">
+              <PropertyRef Name="ProveedorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_facturas_proveedores">
           <End Role="proveedores" Type="Self.proveedores" Multiplicity="1" />
           <End Role="facturas" Type="Self.facturas" Multiplicity="*" />
@@ -1043,6 +1055,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <End Role="cuentas" EntitySet="cuentas" />
             <End Role="cuentaproveedores" EntitySet="cuentaproveedores" />
           </AssociationSet>
+          <AssociationSet Name="fk_etiquetas_proveedores" Association="Self.fk_etiquetas_proveedores">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="etiquetas" EntitySet="etiquetas" />
+          </AssociationSet>
           <AssociationSet Name="fk_facturas_proveedores" Association="Self.fk_facturas_proveedores">
             <End Role="proveedores" EntitySet="proveedores" />
             <End Role="facturas" EntitySet="facturas" />
@@ -1328,11 +1344,12 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="Archivo" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="Fecha" Type="DateTime" />
-          <Property Name="OrdenCompraId" Type="Int32" />
-          <Property Name="OrdenCompraNumeroDoc" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Archivo" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" />
+          <Property Name="NumeroOrden" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ProveedorId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="proveedore" Relationship="Self.fk_etiquetas_proveedores" FromRole="etiquetas" ToRole="proveedores" />
         </EntityType>
         <EntityType Name="factura">
           <Key>
@@ -1522,6 +1539,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Borrado" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="citas" Relationship="Self.fk_citas_proveedor" FromRole="proveedores" ToRole="citas" />
           <NavigationProperty Name="cuenta" Relationship="Self.fk_proveedores_cuenta" FromRole="proveedores" ToRole="cuentas" />
+          <NavigationProperty Name="etiquetas" Relationship="Self.fk_etiquetas_proveedores" FromRole="proveedores" ToRole="etiquetas" />
           <NavigationProperty Name="facturas" Relationship="Self.fk_facturas_proveedores" FromRole="proveedores" ToRole="facturas" />
           <NavigationProperty Name="niveleseervicios" Relationship="Self.fk_nivelservicio_proveedor" FromRole="proveedores" ToRole="niveleseervicio" />
           <NavigationProperty Name="ordencompras" Relationship="Self.fk_ordencompra_proveedor" FromRole="proveedores" ToRole="ordencompra" />
@@ -1870,6 +1888,18 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_etiquetas_proveedores">
+          <End Role="proveedores" Type="Self.proveedore" Multiplicity="1" />
+          <End Role="etiquetas" Type="Self.etiqueta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="proveedores">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="etiquetas">
+              <PropertyRef Name="ProveedorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_facturas_proveedores">
           <End Role="proveedores" Type="Self.proveedore" Multiplicity="1" />
           <End Role="facturas" Type="Self.factura" Multiplicity="*" />
@@ -2063,6 +2093,10 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="fk_cuentasmensajes_mensaje" Association="Self.fk_cuentasmensajes_mensaje">
             <End Role="mensajes" EntitySet="mensajes" />
             <End Role="cuentasmensajes" EntitySet="cuentasmensajes" />
+          </AssociationSet>
+          <AssociationSet Name="fk_etiquetas_proveedores" Association="Self.fk_etiquetas_proveedores">
+            <End Role="proveedores" EntitySet="proveedores" />
+            <End Role="etiquetas" EntitySet="etiquetas" />
           </AssociationSet>
           <AssociationSet Name="fk_facturas_proveedores" Association="Self.fk_facturas_proveedores">
             <End Role="proveedores" EntitySet="proveedores" />
@@ -2309,8 +2343,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Archivo" ColumnName="Archivo" />
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-                <ScalarProperty Name="OrdenCompraId" ColumnName="OrdenCompraId" />
-                <ScalarProperty Name="OrdenCompraNumeroDoc" ColumnName="OrdenCompraNumeroDoc" />
+                <ScalarProperty Name="NumeroOrden" ColumnName="NumeroOrden" />
+                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -14,12 +13,10 @@ namespace Ppgz.BatchFileProcessor
 
         private static string _crInboxPath;
         private static string _crPath;
-        private static string _crFilter;
 
         private static string _etiquetasInboxPath;
         private static string _etiquetasPath;
-        private static string _etiquetasFilter;
-
+        
         private static readonly Entities Db = new Entities();
         static internal void InitEtiquetas()
         {
@@ -28,9 +25,8 @@ namespace Ppgz.BatchFileProcessor
                 // TODO MOVER AL ARCHIVO DE CONFIGURACION DEL LA 
                 // APLCIACION WEB Y PASARLO COMO ARGUMENTO
                 Path = _etiquetasInboxPath,
-                Filter = _etiquetasFilter,
-                NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime
-                | NotifyFilters.Size | NotifyFilters.Security
+                Filter = "*.*"
+
             };
 
             fileSystemWatcher.Changed += etiquetasWatcher_Changed;
@@ -43,20 +39,16 @@ namespace Ppgz.BatchFileProcessor
 
             _crInboxPath = Db.configuraciones.Single(c => c.Clave == "batchfile.crinboxpath").Valor;
             _crPath = Db.configuraciones.Single(c => c.Clave == "batchfile.crpath").Valor;
-            _crFilter = Db.configuraciones.Single(c => c.Clave == "batchfile.crfilter").Valor;
-
+            
             _etiquetasInboxPath = Db.configuraciones.Single(c => c.Clave == "batchfile.etiquetasinboxpath").Valor;
             _etiquetasPath = Db.configuraciones.Single(c => c.Clave == "batchfile.etiquetaspath").Valor;
-            _etiquetasFilter = Db.configuraciones.Single(c => c.Clave == "batchfile.etiquetasfilter").Valor;
 
             var crWatcher = new FileSystemWatcher
             {
                 // TODO MOVER AL ARCHIVO DE CONFIGURACION DEL LA 
                 // APLCIACION WEB Y PASARLO COMO ARGUMENTO
                 Path = _crInboxPath,
-                Filter = _crFilter,
-                NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime
-                | NotifyFilters.Size | NotifyFilters.Security
+                Filter = "*.*"
             };
 
             crWatcher.Changed += crWatcher_Changed;
@@ -71,40 +63,42 @@ namespace Ppgz.BatchFileProcessor
         {
             try
             {
+                if (Path.GetExtension(e.FullPath) != ".pdf")
+                {
+                    throw new Exception("Archivo incorrecto");
+                }
 
                 var citaId = Convert.ToInt32(e.Name.Split('_')[1]);
-                var fecha = DateTime.ParseExact(
-                    e.Name.Split('_')[2].ToLower().Replace(".pdf", string.Empty),
-                    "ddMMyyyy",
-                    CultureInfo.InvariantCulture);
-
+                var fecha = DateTime.Now;
 
                 Console.WriteLine("Archivo: {0}, Actividad: {1}", e.Name, e.ChangeType);
                 MoverCr(e.FullPath, fecha, citaId);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                Console.WriteLine(exception.Message);
                 MoverError(e.FullPath);
-
             }
-
         }
-
 
         static void etiquetasWatcher_Changed(object sender, FileSystemEventArgs e)
         {
             try
             {
-                  var numeroOrden = e.Name.Split('_')[1];
-                var fecha = DateTime.ParseExact(
-                    e.Name.Split('_')[2].ToLower().Replace(".txt", string.Empty),
-                    "ddMMyyyy",
-                    CultureInfo.InvariantCulture);
+                if (Path.GetExtension(e.FullPath) != ".csv")
+                {
+                    throw new Exception("Archivo incorrecto");
+                }
 
-                MoverEtiqueta(e.FullPath, fecha, numeroOrden);
+                var numeroOrden = e.Name.Split('_')[1];
+                var numeroProveedor = e.Name.Split('_')[2];
+                var fecha = DateTime.Now;
+
+                MoverEtiqueta(e.FullPath, fecha, numeroOrden, numeroProveedor);
             }
-            catch (Exception)
+            catch (Exception exception)
             {
+                Console.WriteLine(exception.Message);
                 MoverError(e.FullPath);
 
             }
@@ -147,8 +141,7 @@ namespace Ppgz.BatchFileProcessor
                 var fileName = Path.GetFileName(path);
 
                 if (fileName == null) return;
-
-                var cita = Db.citas.Find(citaId);
+                
                 if (Db.citas.Find(citaId) == null)
                 {
                     throw  new Exception("Cita incorrecta");
@@ -206,7 +199,7 @@ namespace Ppgz.BatchFileProcessor
             }
         }
 
-        static void MoverEtiqueta(string path, DateTime fecha, string numeroOrden)
+        static void MoverEtiqueta(string path, DateTime fecha, string numeroOrden, string numeroProveedor)
         {
             try
             {
@@ -215,6 +208,12 @@ namespace Ppgz.BatchFileProcessor
                 var fileName = Path.GetFileName(path);
 
                 if (fileName == null) return;
+
+                var proveedor = Db.proveedores.FirstOrDefault(p=> p.NumeroProveedor == numeroProveedor);
+                if (proveedor == null)
+                {
+                    throw new Exception("Proveedor incorrecto");
+                }
 
                 var etiquetaRottPath = new DirectoryInfo(_etiquetasPath);
 
@@ -239,17 +238,31 @@ namespace Ppgz.BatchFileProcessor
 
                 File.Move(path, newPath);
 
-                var etiqueta = new etiqueta
+
+                var proveedorId = proveedor.Id;
+
+                 var etiqueta = Db.etiquetas.FirstOrDefault(et => et.NumeroOrden == numeroOrden
+                     && et.ProveedorId == proveedorId && et.Fecha == fecha.Date);
+                if (etiqueta == null)
                 {
-                    OrdenCompraNumeroDoc = numeroOrden,
-                    Fecha = fecha,
-                    Archivo = newPath
-                };
+                    etiqueta = new etiqueta
+                    {
+                        Fecha = fecha,
+                        NumeroOrden = numeroOrden,
+                        ProveedorId = proveedorId,
+                        Archivo = newPath
+                    };
+                    Db.Entry(etiqueta).State = EntityState.Added;
+                }
+                else
+                {
+                    etiqueta.Archivo = newPath;
 
+                    Db.Entry(etiqueta).State = EntityState.Modified;
+                }
+  
+                Db.SaveChanges();
 
-                var db = new Entities();
-                db.etiquetas.Add(etiqueta);
-                db.SaveChanges();
             }
             catch (Exception e)
             {
