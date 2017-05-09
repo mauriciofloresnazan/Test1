@@ -139,7 +139,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
             catch (Exception ex)
             {
-                TempData["FlashError"] = "Archivo incorrecto";
+                TempData["FlashError"] = ex.Message;
                 return RedirectToAction("Index");
             }
 

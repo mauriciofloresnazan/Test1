@@ -37,10 +37,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             if (id == 0)
                 return RedirectToAction("Index");
 
-            ViewBag.proveedor = _proveedorManager.Find(id);
+            var proveedor = _proveedorManager.Find(id);
+            ViewBag.proveedor = proveedor;
             try
             {
-                ViewBag.reportes = _reporteProveedorManager.FindReporteProveedor(ViewBag.proveedor.NumeroProveedor);
+                ViewBag.reportes = _reporteProveedorManager.FindReporteProveedor(proveedor.NumeroProveedor);
 
                 ViewBag.nivelservicio = _reporteProveedorManager.FindNivelSerNiveleseervicio(ViewBag.proveedor.NumeroProveedor);
 
