@@ -34,7 +34,7 @@ namespace Ppgz.Web.Areas
         [Phone(ErrorMessage = "Debe ingresar un número de teléfono valido.")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "Debe ingresar un número de teléfono valido.")]
         [Display(Name = "Telefono")]
-        [StringLength(13, ErrorMessage = "Debe tener de 3 a 12 Carácteres, y en formato +52 ddddddddd.", MinimumLength = 3)]
+        [StringLength(18, ErrorMessage = "Debe tener formato +52 (ddd) ddd-dddd", MinimumLength = 18)]
         public string Telefono { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio.")]

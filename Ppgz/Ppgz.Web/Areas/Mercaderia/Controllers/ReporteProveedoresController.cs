@@ -43,7 +43,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             {
                 ViewBag.reportes = _reporteProveedorManager.FindReporteProveedor(proveedor.NumeroProveedor);
 
-                ViewBag.nivelservicio = _reporteProveedorManager.FindNivelSerNiveleseervicio(ViewBag.proveedor.NumeroProveedor);
+                ViewBag.nivelservicio = _reporteProveedorManager.FindNivelSerNiveleseervicio(proveedor.Id);
 
             }
             catch (Exception ex)

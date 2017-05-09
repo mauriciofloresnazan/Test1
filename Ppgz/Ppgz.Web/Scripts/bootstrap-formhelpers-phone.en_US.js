@@ -152,7 +152,7 @@ var BFHPhoneFormatList = {
   'MR': '+222 ddddddddd',
   'MU': '+230 ddddddddd',
   'YT': '+262 ddddddddd',
-  'MX': '+52 ddddddddd',
+  'MX': '+52 (ddd) ddd-dddd',
   'FM': '+691 ddddddddd',
   'MD': '+373 ddddddddd',
   'MC': '+377 ddddddddd',

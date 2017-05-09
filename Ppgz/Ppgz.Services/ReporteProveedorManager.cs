@@ -115,10 +115,10 @@ namespace Ppgz.Services
 
         }
 
-        public niveleseervicio FindNivelSerNiveleseervicio(string numeroProveedor)
+        public niveleseervicio FindNivelSerNiveleseervicio(int proveedorId)
         {
             var proveedorManager = new ProveedorManager();
-            var proveedor = proveedorManager.FindByNumeroProveedor(numeroProveedor);
+            var proveedor = proveedorManager.Find(proveedorId);
 
             if (proveedor == null)
             {

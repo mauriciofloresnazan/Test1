@@ -197,7 +197,7 @@
                             }
 
                             <td class="text-center" style="border-right: @borderRight">
-                                <input id="@riel.Id" class="@disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
+                                <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
 
                             </td>
 
@@ -255,7 +255,8 @@
 
             });
 
-            CargarEventoSeleccion();
+            //CargarEventoSeleccion();
+            VerificarRieles();
 
         });
 
@@ -270,15 +271,25 @@
         }
 
         function liberarRiel(horarioRielId) {
-            rielesSeleccionados.splice(rielesSeleccionados.indexOf(horarioRielId), 1);
+
+            if (rielesSeleccionados.indexOf(horarioRielId + "") > -1) {
+                rielesSeleccionados.splice(rielesSeleccionados.indexOf(horarioRielId + ""), 1);
+            }
 
             $("#" + horarioRielId).removeClass("usado");
 
         }
 
+        function VerificarSelecciones() {
+            if (rielesSeleccionados.length === rielesNecesarios) {
+                $('.riel-disponible:not(.usado)').bootstrapToggle('disable');
+            } else {
+
+                $('.riel-disponible:not(.usado)').bootstrapToggle('enable');
+            }
+        }
+
         function CargarEventoSeleccion() {
-
-
 
             $('.riel-disponible').change(function () {
 
@@ -287,24 +298,12 @@
                 if ($(this).prop('checked') === true) {
 
                     comprometerRiel(horarioRielId);
-                    /*if (rielesSeleccionados.indexOf(horarioRielId) === -1) {
-                        rielesSeleccionados.push(horarioRielId);
-                    }*/
 
                     $(this).addClass("usado");
                 } else {
-
                     liberarRiel(horarioRielId);
-                    /*rielesSeleccionados.splice(rielesSeleccionados.indexOf(horarioRielId), 1);
-                    $(this).removeClass("usado");*/
                 }
-
-                if (rielesSeleccionados.length === rielesNecesarios) {
-                    $('.riel-disponible:not(.usado)').bootstrapToggle('disable');
-                } else {
-
-                    $('.riel-disponible:not(.usado)').bootstrapToggle('enable');
-                }
+                VerificarSelecciones();
 
             });
         }
@@ -312,21 +311,13 @@
         function RefrescarRiel(currentValue) {
 
             var input = $("#" + currentValue.Id);
-           // var on = $(input.parent()).find(".toggle-on");
-           // var off = $(input.parent()).find(".toggle-off");
 
             if (currentValue.Disponibilidad) {
-
-               // off.removeClass("btn-danger");
-                // off.addClass("btn-primary");
-
-
+                
                 input.attr("data-off", "DISPONIBLE");
                 input.attr("data-offstyle", "primary");
 
                 input.addClass("riel-disponible");
-                
-                //off.text("DISPONIBLE");
                 input.bootstrapToggle('enable');
 
             } else {
@@ -337,10 +328,8 @@
                 input.attr("data-off", "OCUPADO");
                 input.attr("data-offstyle", "danger");
                 input.removeClass("riel-disponible");
-                //off.text("OCUPADO");
                 input.bootstrapToggle('disable');
             }
-
         }
 
 
@@ -357,14 +346,15 @@
                 cache: false
             }).done(function (result) {
 
+                setTimeout(function () { VerificarRieles(); }, 10000);
+
                 $(".riel-disponible").unbind();
 
                 result.forEach(RefrescarRiel);
-                $(".riel-disponible").bootstrapToggle('destroy');
-                $(".riel-disponible").bootstrapToggle();
+                $(".horarioriel").bootstrapToggle('destroy');
+                $(".horarioriel").bootstrapToggle();
                 CargarEventoSeleccion();
-
-
+                VerificarSelecciones();
             }).fail(function (response) {
                 console.log(response);
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web.Mvc;
 using Ppgz.Repository;
+using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
@@ -13,8 +14,19 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-COMPROBANTESRECIBO")]
         public ActionResult Index()
         {
+            var commonManager = new CommonManager();
+
+            var cuenta = commonManager.GetCuentaUsuarioAutenticado();
+
+            var proveedorManager = new ProveedorManager();
+            var proveedores = proveedorManager.FindByCuentaId(cuenta.Id);
+
+            var proveedoresIds = proveedores.Select(p => p.Id).ToArray();
+
+
             var db = new Entities();
-            ViewBag.Crs = db.crs.ToList();
+
+            ViewBag.Crs = db.crs.Where(cr=> proveedoresIds.Contains(cr.cita.ProveedorId)).ToList();
             return View();
         }
         
