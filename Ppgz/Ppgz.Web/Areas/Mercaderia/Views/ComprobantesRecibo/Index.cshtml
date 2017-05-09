@@ -3,7 +3,7 @@
 }
 
 <h2>Gestión de Comprobantes de Recibo</h2>
-<p class="page-description-title"><i class="fa fa-address-book" aria-hidden="true"></i> <i>En esta sección se podrá gestionar los Comprobantes de Recibo que tiene asociados a su cuenta.</i></p>
+<p class="page-description-title"><i class="fa fa-address-book" aria-hidden="true"></i> <i>En esta sección se podrá gestionar los Comprobantes de Recibo que tiene asociados a su Cuenta.</i></p>
 
 <div class="panel panel-default">
     <div class="panel-heading">Comprobantes de Recibo</div>
@@ -12,20 +12,26 @@
             <table id="crs" class="table table-striped table-condensed table-bordered">
                 <thead>
                     <tr>
-                        <th class="text-center">Código</th>
-                        <th class="text-center">Fecha</th>
+                        <th class="text-center">Cita</th>
+                        <th class="text-center">Fecha de Cita</th>
+                        <th class="text-center">Fecha de Receción</th>
+                        <th class="text-center">RFC</th>
+                        <th class="text-center">Razón Social</th>
                         <th class="text-center">Descargar</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (Ppgz.Repository.cr cr in ViewBag.Crs)
                     {
+                        var fecha = (DateTime)cr.Fecha;
+                   
                         <tr>
-                            <td class="text-center vert-align">@cr.Codigo</td>
-                            @{
-                                var fecha = (DateTime) cr.Fecha;
-                            }
+                            <td class="text-center vert-align">@cr.cita.Id</td>
+                            <td class="text-center vert-align">@cr.cita.FechaCita.ToString("dd/MM/yyyy")</td>
                             <td class="text-center vert-align">@fecha.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center vert-align">@cr.cita.proveedore.Rfc</td>
+                            <td class="text-center vert-align">@cr.cita.proveedore.Nombre1 @cr.cita.proveedore.Nombre2 @cr.cita.proveedore.Nombre3 @cr.cita.proveedore.Nombre4</td>
+                    
                             <td class="text-center vert-align">
                                 <a href="@Url.Action("Descargar", "ComprobantesRecibo", new {@id = @cr.Id})" class="btn btn-primary">
                                     <i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar

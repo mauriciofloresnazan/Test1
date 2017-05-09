@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using Ppgz.Repository;
 
@@ -8,25 +10,25 @@ namespace Ppgz.BatchFileProcessor
 {
     class Program
     {
-        private const string WrongFilesPath = @"C:\temp\Implus\FtpDev\WrongFiles";
+        private static string _wrongFilesPath;
 
-        private const string CrInboxPath = @"C:\temp\Implus\FtpDev\Inbox";
-        private const string CrPath = @"C:\temp\Implus\FtpDev\Crs";
-        private const string CrFilter = "cr_*.pdf";
+        private static string _crInboxPath;
+        private static string _crPath;
+        private static string _crFilter;
 
+        private static string _etiquetasInboxPath;
+        private static string _etiquetasPath;
+        private static string _etiquetasFilter;
 
-        private const string EtiquetasInboxPath = @"C:\temp\Implus\FtpDev\Etiquetas\Inbox";
-        private const string EtiquetasPath = @"C:\temp\Implus\FtpDev\Etiquetas";
-        private const string EtiquetasFilter = "etq_*.txt";
-
+        private static readonly Entities Db = new Entities();
         static internal void InitEtiquetas()
         {
             var fileSystemWatcher = new FileSystemWatcher
             {
                 // TODO MOVER AL ARCHIVO DE CONFIGURACION DEL LA 
                 // APLCIACION WEB Y PASARLO COMO ARGUMENTO
-                Path = EtiquetasInboxPath,
-                Filter = EtiquetasFilter,
+                Path = _etiquetasInboxPath,
+                Filter = _etiquetasFilter,
                 NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime
                 | NotifyFilters.Size | NotifyFilters.Security
             };
@@ -37,12 +39,22 @@ namespace Ppgz.BatchFileProcessor
 
         static void Main()
         {
+            _wrongFilesPath = Db.configuraciones.Single(c => c.Clave == "batchfile.wrongfilespath").Valor;
+
+            _crInboxPath = Db.configuraciones.Single(c => c.Clave == "batchfile.crinboxpath").Valor;
+            _crPath = Db.configuraciones.Single(c => c.Clave == "batchfile.crpath").Valor;
+            _crFilter = Db.configuraciones.Single(c => c.Clave == "batchfile.crfilter").Valor;
+
+            _etiquetasInboxPath = Db.configuraciones.Single(c => c.Clave == "batchfile.etiquetasinboxpath").Valor;
+            _etiquetasPath = Db.configuraciones.Single(c => c.Clave == "batchfile.etiquetaspath").Valor;
+            _etiquetasFilter = Db.configuraciones.Single(c => c.Clave == "batchfile.etiquetasfilter").Valor;
+
             var crWatcher = new FileSystemWatcher
             {
                 // TODO MOVER AL ARCHIVO DE CONFIGURACION DEL LA 
                 // APLCIACION WEB Y PASARLO COMO ARGUMENTO
-                Path = CrInboxPath,
-                Filter = CrFilter,
+                Path = _crInboxPath,
+                Filter = _crFilter,
                 NotifyFilter = NotifyFilters.FileName | NotifyFilters.CreationTime
                 | NotifyFilters.Size | NotifyFilters.Security
             };
@@ -60,7 +72,7 @@ namespace Ppgz.BatchFileProcessor
             try
             {
 
-                var codigo = e.Name.Split('_')[1];
+                var citaId = Convert.ToInt32(e.Name.Split('_')[1]);
                 var fecha = DateTime.ParseExact(
                     e.Name.Split('_')[2].ToLower().Replace(".pdf", string.Empty),
                     "ddMMyyyy",
@@ -68,7 +80,7 @@ namespace Ppgz.BatchFileProcessor
 
 
                 Console.WriteLine("Archivo: {0}, Actividad: {1}", e.Name, e.ChangeType);
-                MoverCr(e.FullPath, fecha, codigo);
+                MoverCr(e.FullPath, fecha, citaId);
             }
             catch (Exception)
             {
@@ -110,7 +122,7 @@ namespace Ppgz.BatchFileProcessor
                 if (fileName == null) return;
 
                 var newPath = Path.Combine
-                    (WrongFilesPath, fileName);
+                    (_wrongFilesPath, fileName);
 
                 if (File.Exists(newPath))
                 {
@@ -126,7 +138,7 @@ namespace Ppgz.BatchFileProcessor
                 Console.WriteLine("Error en el proceso: {0}", e);
             }
         }
-        static void MoverCr(string path, DateTime fecha, string codigo)
+        static void MoverCr(string path, DateTime fecha, int citaId)
         {
             try
             {
@@ -136,7 +148,13 @@ namespace Ppgz.BatchFileProcessor
 
                 if (fileName == null) return;
 
-                var crRottPath = new DirectoryInfo(CrPath);
+                var cita = Db.citas.Find(citaId);
+                if (Db.citas.Find(citaId) == null)
+                {
+                    throw  new Exception("Cita incorrecta");
+                }
+
+                var crRottPath = new DirectoryInfo(_crPath);
 
                 var yearPath = crRottPath.GetDirectories(fecha.Year.ToString()).Length == 0 ?
                     crRottPath.CreateSubdirectory(fecha.Year.ToString()) :
@@ -150,7 +168,6 @@ namespace Ppgz.BatchFileProcessor
                 var newPath = Path.Combine
                     (monthPath.FullName, fileName);
 
-
                 if (File.Exists(newPath))
                 {
                     File.Delete(newPath);
@@ -162,19 +179,26 @@ namespace Ppgz.BatchFileProcessor
 
                 File.Move(path, newPath);
 
-                var cr = new cr
+                var cr = Db.crs.FirstOrDefault(c => c.CitaId == citaId);
+                if (cr == null)
                 {
-                    Codigo = codigo,
-                    Fecha = fecha,
-                    ArchivoCR = newPath
-                };
+                    cr = new cr
+                    {
+                        CitaId = citaId,
+                        Fecha = fecha,
+                        ArchivoCR = newPath
+                    };
+                    Db.Entry(cr).State = EntityState.Added;
+                }
+                else
+                {
+                    cr.Fecha = fecha;
+                    cr.ArchivoCR = newPath;
+                    Db.Entry(cr).State = EntityState.Modified;
+                }
+  
+                Db.SaveChanges();
 
-
-                var db = new Entities();
-                db.crs.Add(cr);
-                db.SaveChanges();
-
-                //Console.WriteLine("{0} fue movido a {1}.", path, newPath);
             }
             catch (Exception e)
             {
@@ -192,7 +216,7 @@ namespace Ppgz.BatchFileProcessor
 
                 if (fileName == null) return;
 
-                var etiquetaRottPath = new DirectoryInfo(EtiquetasPath);
+                var etiquetaRottPath = new DirectoryInfo(_etiquetasPath);
 
                 var yearPath = etiquetaRottPath.GetDirectories(fecha.Year.ToString()).Length == 0 ?
                     etiquetaRottPath.CreateSubdirectory(fecha.Year.ToString()) :

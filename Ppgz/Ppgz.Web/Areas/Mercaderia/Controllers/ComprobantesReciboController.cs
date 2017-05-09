@@ -30,7 +30,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
              var fileBytes = System.IO.File.ReadAllBytes(cr.ArchivoCR);
             
-            var fileName = cr.Codigo +  ".pdf";
+            var fileName = string.Format("CR_{0}_{1}.pdf", cr.cita.Id, ((DateTime)cr.Fecha).ToString("dd/MM/yyyy"));
 
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, fileName);
 

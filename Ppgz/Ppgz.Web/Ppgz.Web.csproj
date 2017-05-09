@@ -324,12 +324,9 @@
     <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetas\Index.cshtml">
       <SubType>Code</SubType>
     </Content>
-    <Compile Include="Infrastructure\CuentasPorPagarManager.cs" />
     <Compile Include="Infrastructure\FileManager.cs" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
-    <Compile Include="Infrastructure\SapManager.cs" />
     <Compile Include="Infrastructure\TerminosCondiciones.cs" />
-    <Compile Include="Infrastructure\TipoUsuario.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Areas\Nazan\Models\MensajeViewModel.cs" />
@@ -1234,7 +1231,6 @@
     <Folder Include="Areas\Nazan\Views\Shared\" />
     <Folder Include="Areas\Servicio\Views\Shared\" />
     <Folder Include="assets\img\Photoslide\" />
-    <Folder Include="Infrastructure\Proveedor\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
