@@ -132,7 +132,8 @@ namespace Ppgz.Web
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.limited-warehouses-per-week' AS Clave, 'CD01,CD06' AS Valor, 1 AS Habilitado, 'Codigos SAP de los almacenes que tienen cantidades limitadas por semana' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.limited-warehouses-per-week');
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.common.function.param.ekorg.mercaderia' AS Clave, 'OC01' AS Valor, 1 AS Habilitado, 'Parámetro de la Organización de Compras que será enviado para todos los proveedores registrados como Mercaderías' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.common.function.param.ekorg.mercaderia');
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.common.function.param.ekorg.servicio' AS Clave, 'OC02' AS Valor, 1 AS Habilitado, 'Parámetro de la Organización de Compras que será enviado para todos los proveedores registrados como Servicio' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.common.function.param.ekorg.servicio');
-                ";
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'wfc.url.cita.add' AS Clave, 'http://localhost:14766/CitationControlService.svc/rest/AddCitation' AS Valor, 1 AS Habilitado, 'Url para el servicio que persiste las citas' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'wfc.url.cita.add');                
+";
             Db.Insert(sql);
         }
 

@@ -8,12 +8,11 @@ using System.Linq;
 
 namespace Ppgz.CitaWrapper
 {
-	/// <summary>Clase gestora de citas.</summary>
+
 	public static class CitaManager
 	{
-		/// <summary>Método que aplica las reglas de negocio para las citas.</summary>
-		/// <param name="cita"></param>
-		public static bool ValidarCita(Citation cita)
+
+        public static bool ValidarCita(PreCita precita)
 		{
 			try
 			{
@@ -26,93 +25,30 @@ namespace Ppgz.CitaWrapper
 			}
 		}
 
-		/// <summary>Método que agrega un registro en la tabla cita.</summary>
-		/// <param name="value">Objeto cita.</param>
-		public static bool InsertCita(Citation value)
-		{
-			try
-			{
-				string queryCitas = @"INSERT INTO citas (FechaCita, Tienda, CantidadTotal, ProveedorId, UsuarioIdTx) VALUES (@param1, @param2, @param3, @param4, @param5); ";
-				List<MySqlParameter> valuesCitas = new List<MySqlParameter>
-				{
-					new MySqlParameter {
-						 ParameterName = @"param1",
-						Value = Convert.ToDateTime(value.fechaCita).ToString(@"yyyy-MM-dd")
-					},
-					new MySqlParameter {
-						 ParameterName = @"param2",
-						Value = value.tienda
-					},
-					new MySqlParameter {
-						 ParameterName = @"param3",
-						Value = value.cantidadTotal
-					},
-					new MySqlParameter {
-						 ParameterName = @"param4",
-						Value = value.proveedorId
-					},
-					new MySqlParameter {
-						 ParameterName = @"param5",
-						Value = value.usuarioId
-					}
-				};
-				Db.Insert(queryCitas, valuesCitas);
-				return true;
-			}
-			catch (Exception e)
-			{
-				//TODO: Manejar la excepción.
-				return false;
-			}
-		}
 
-		/// <summary>Método que agrega un registro en la tabla asn.</summary>
-		/// <param name="items">Objeto Asn de la cita.</param>
-		public static bool InsertAsn(List<Asn> items)
-		{
-			try
-			{
-				string queryAsn = @"INSERT INTO asn (OrdenNumeroDocumento, NumeroMaterial, NombreMaterial, Cantidad, NumeroPosicion) VALUES (@param1, @param2, @param3, @param4, @param5);";
-				foreach (Asn item in items)
-				{
-					List<MySqlParameter> itemAsn = new List<MySqlParameter> {
-						new MySqlParameter {
-								ParameterName = @"param1",
-							Value = item.OrdenNumeroDocumento
-						},
-						new MySqlParameter {
-								ParameterName = @"param2",
-							Value = item.NumeroMaterial
-						},
-						new MySqlParameter {
-								ParameterName = @"param3",
-							Value = item.NombreMaterial
-						},
-						new MySqlParameter {
-								ParameterName = @"param4",
-							Value = item.Cantidad
-						},
-						new MySqlParameter {
-								ParameterName = @"param5",
-							Value = item.NumeroPosicion
-						}
-					};
-					Db.Insert(queryAsn, itemAsn);
-				}
-				return true;
-			}
-			catch (Exception e)
-			{
-				//TODO: Manejar la excepción
-				return false;
-			}
-		}
 
+	
 
 
 
 	    public static void RegistrarCita(PreCita precita)
 	    {
+
+            var db = new Repository.Entities();
+ 
+            // Disponibildiad de Rieles
+	        if (db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad == false))
+	        {
+	            throw  new Exception("Uno o más rieles seleccionados ya no estan disponibles,  por favor verifique su selección.");
+	        }
+
+            if (!db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad))
+            {
+                throw new Exception("Selección de rieles incorrecta.");
+            }
+
+            throw new Exception("Cita inválida.");
+
 	        //TODO VALIDAR LA CITA
 
 	        var cita = new cita
@@ -140,7 +76,6 @@ namespace Ppgz.CitaWrapper
 
 	        try
 	        {
-                var db = new Repository.Entities();
                 db.citas.Add(cita);
                 db.SaveChanges();
 
@@ -182,6 +117,7 @@ namespace Ppgz.CitaWrapper
 
             cita.asns.ToList().ForEach(asn => db.asns.Remove(asn));
 
+            cita.crs.ToList().ForEach(cr => db.crs.Remove(cr));
 
             db.Entry(cita).State = EntityState.Deleted;
             db.SaveChanges();

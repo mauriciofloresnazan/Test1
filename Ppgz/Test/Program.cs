@@ -6,9 +6,11 @@ using System.Globalization;
 using System.Linq;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ppgz.CitaWrapper;
 using Ppgz.Repository;
 using Ppgz.Services;
+using RestSharp;
 using SapWrapper;
 using SAP.Middleware.Connector;
 
@@ -20,6 +22,31 @@ namespace Test
         
         static void Main(string[] args)
         {
+
+            var preCita = new PreCita();
+            preCita.Fecha =DateTime.Today;
+            preCita.HorarioRielesIds = new List<int> {850};
+
+            var url = "http://localhost:14766/CitationControlService.svc/rest/AddCitation";
+            var client = new RestClient(url);
+            var request = new RestRequest(string.Empty, Method.POST);
+
+            var microsoftDateFormatSettings = new JsonSerializerSettings
+            {
+                DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
+            };
+
+            var json = JsonConvert.SerializeObject(preCita, microsoftDateFormatSettings);
+
+            request.AddParameter("application/json", json, ParameterType.RequestBody);
+
+            var restResponse = (RestResponse)client.Execute(request);
+
+
+            Console.WriteLine(restResponse.Content);
+            Console.ReadLine();
+            return;
+            
             var preasnManager = new PreAsnManager();
 
             var test = preasnManager.GetOrdenesActivasConDetalle(33);

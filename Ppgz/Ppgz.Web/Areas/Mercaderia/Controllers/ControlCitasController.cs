@@ -9,11 +9,14 @@ using System.Net;
 using System.Web.Mvc;
 using ClosedXML.Excel;
 using MySql.Data.MySqlClient;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Ppgz.CitaWrapper;
 using Ppgz.CitaWrapper.Entities;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
+using RestSharp;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -587,15 +590,32 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 			try
 			{
+                
+                var url = CommonManager.GetConfiguraciones().Single(c => c.Clave == "wfc.url.cita.add").Valor;;
+                var client = new RestClient(url);
+			    var request = new RestRequest(string.Empty, Method.POST);
 
-				CitaManager.RegistrarCita(preCita);
+                var microsoftDateFormatSettings = new JsonSerializerSettings
+                {
+                    DateFormatHandling = DateFormatHandling.MicrosoftDateFormat
+                };
+
+                var json = JsonConvert.SerializeObject(preCita, microsoftDateFormatSettings);
+                request.AddParameter("application/json", json, ParameterType.RequestBody);
+
+                var response = (RestResponse)client.Execute(request);
+                
+                TempData["FlashSuccess"] = response.Content + ", " + response.StatusDescription;
+                return RedirectToAction("SeleccionarRieles");
+
+			    //CitaManager.RegistrarCita(preCita);
 			}
 			catch (Exception exception)
 			{
 
 				//TODO
 				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("Citas");
+				return RedirectToAction("SeleccionarRieles");
 			}
 
 			//TODO

@@ -110,6 +110,7 @@ namespace Ppgz.Services
             proveedor.facturas.ToList().ForEach(f => _db.facturas.Remove(f));
             proveedor.ordencompras.ToList().ForEach(oc => _db.ordencompras.Remove(oc));
             proveedor.niveleseervicios.ToList().ForEach(ns => _db.niveleseervicios.Remove(ns));
+            proveedor.etiquetas.ToList().ForEach(e => _db.etiquetas.Remove(e));
 
             _db.Entry(proveedor).State = EntityState.Deleted;
             _db.SaveChanges();
