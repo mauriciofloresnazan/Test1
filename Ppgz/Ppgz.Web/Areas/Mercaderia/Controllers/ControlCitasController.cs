@@ -510,18 +510,27 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 
 			var date = ((DateTime) CurrentCita.Fecha).Date;
-			var parameters = new List<MySqlParameter>()
-			{
-				new MySqlParameter
-				{
-					ParameterName = "pTotal",
-					Direction = ParameterDirection.Output,
-					MySqlDbType = MySqlDbType.VarChar
-				},
-				new MySqlParameter("pFecha", date)
-			};
 
-			Db.ExecuteProcedureOut(parameters, "config_appointment");
+		    try
+		    {
+		        var parameters = new List<MySqlParameter>()
+		        {
+		            new MySqlParameter
+		            {
+		                ParameterName = "pTotal",
+		                Direction = ParameterDirection.Output,
+		                MySqlDbType = MySqlDbType.VarChar
+		            },
+		            new MySqlParameter("pFecha", date)
+		        };
+
+		        Db.ExecuteProcedureOut(parameters, "config_appointment");
+		    }
+		    catch (Exception exception)
+		    {
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("ListaDeOrdenes");
+		    }
 			
 			ViewBag.CurrentCita = CurrentCita;
 

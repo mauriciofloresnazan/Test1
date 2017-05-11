@@ -70,7 +70,7 @@
                     <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
                     </a>
-                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")">
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="La cita será cancelada.">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
@@ -81,7 +81,7 @@
                     <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
                     </a>
-                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")">
+                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="La cita será cancelada.">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
@@ -340,7 +340,7 @@
 
 
                 }).fail(function (response) {
-                    msgError(response.responseText);
+                    msgError("Error al actualizar el registro, por favor verifique la cantidad.");
 
 
                 });

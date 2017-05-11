@@ -61,7 +61,7 @@
             <div class="col-sm-2">
                 <div>@cita.FechaCita.ToString("dd/MM/yyyy")</div>
             </div>
-            <label class="col-sm-2 control-label">Total</label>
+            <label class="col-sm-2 control-label">Total a Entregar</label>
             <div class="col-sm-2">
                 <div>@cita.CantidadTotal <strong class="text-danger" id="total-entregar"></strong></div>
             </div>
@@ -70,8 +70,8 @@
 
                     @if (RulesManager.PuedeEditarCita(cita.FechaCita))
                     {
-                        <a class="btn btn-primary" href="#" onclick=" javascript: ActualizarCita(); ">
-                            <i class="fa fa-check-square" aria-hidden="true"></i> Actualizar Cita
+                        <a class="btn btn-primary btn-actualizar" href="#" onclick=" javascript: ActualizarCita(); ">
+                            <i class="fa fa-check-square" aria-hidden="true"></i> Guardar Cambios
                         </a>
                     }
                     <a class="btn btn-default" href="@Url.Action("Citas", "ControlCitas")">
@@ -81,8 +81,8 @@
                 <div class="visible-sm visible-xs">
                     @if (RulesManager.PuedeEditarCita(cita.FechaCita))
                     {
-                        <a class="btn btn-primary btn-block" href="#" onclick=" javascript: ActualizarCita(); ">
-                            <i class="fa fa-check-square" aria-hidden="true"></i> Actualizar Cita
+                        <a class="btn btn-primary btn-block btn-actualizar" href="#" onclick=" javascript: ActualizarCita(); ">
+                            <i class="fa fa-check-square" aria-hidden="true"></i> Guardar Cambios
                         </a>
                     }
 
@@ -186,7 +186,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Seleccionar Rieles</h4>
+                <h4 class="modal-title">Confirmar Rieles</h4>
             </div>
             <div class="modal-body">
                 <div>
@@ -197,7 +197,7 @@
                         <div class="checkbox">
                             <label>
                                 <input type="checkbox" name="horarioriel" value="@horarioRiel.Id">
-                                Anden @horarioRiel.riele.andene.Anden / Riel @horarioRiel.riele.Riel (@horarioRiel.horario.HoraDesde - @horarioRiel.horario.HoraHasta)
+                                Anden @horarioRiel.riele.andene.Anden / Riel @horarioRiel.riele.Riel (Horario @horarioRiel.horario.HoraDesde - @horarioRiel.horario.HoraHasta)
                             </label>
                         </div>
                     }
@@ -272,13 +272,13 @@
         var tr;
 
         $(document).ready(function() {
-
+            $(".btn-actualizar").hide();
 
             var asn = $('#asn').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
                 },
-                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "Todos"]]
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
             });
 
 
@@ -343,6 +343,22 @@
 
                 editingCell.data(cantidadNueva).draw();
                 calcularTotalEntregar();
+
+
+                var count = 0;
+                for (var key in editedAsns) {
+                    if (editedAsns.hasOwnProperty(key)) {
+                        count++;
+                    }
+                }
+
+                if (count < 1) {
+                    $(".btn-actualizar").hide();
+                }
+                else {
+                    $(".btn-actualizar").show();
+
+                }
 
 
             });

@@ -109,7 +109,7 @@ namespace Ppgz.Web.Areas.Mercaderia
                
             if (!_ordenesActivas.Any())
             {
-                throw new BusinessException("El proveedor no tiene ordenes de compra activas");
+                throw new BusinessException("Este Proveedor no tiene Órdenes de Compras con entregas disponibles para el  Almacén seleccionado");
             }
 
             Centro = centro;

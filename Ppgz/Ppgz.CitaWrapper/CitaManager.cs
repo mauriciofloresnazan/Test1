@@ -146,6 +146,16 @@ namespace Ppgz.CitaWrapper
 
 	        ValidarCita(precita);
 
+            if (db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad == false))
+            {
+                throw new Exception("Uno o más rieles seleccionados ya no estan disponibles,  por favor verifique su selección.");
+            }
+
+            if (!db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad))
+            {
+                throw new Exception("Selección de rieles incorrecta.");
+            }
+
 	        var cita = new cita
 	        {
 	            FechaCita = precita.Fecha,

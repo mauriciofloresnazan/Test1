@@ -35,12 +35,12 @@
 
             <div class="col-sm-6 col-sm-offset-6">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
-                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")">
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="La cita será cancelada.">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
                 <div class="visible-sm visible-xs">
-                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")">
+                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="La cita será cancelada.">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
@@ -63,8 +63,9 @@
             <div class="form-group">
                 <label class="col-sm-3 control-label"> Fecha de la Cita</label>
                 <div class="col-sm-7">
-                    <div class="alert alert-warning" role="alert"><strong> Cambiar la Fecha de la Cita</strong> La fecha de la cita no podrá ser modificada luego de este paso. 
-                        Si desea cambiarla luego de este  paso tendrá que cancelar la cita e inciar nuevamente el proceso.</div>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>Cambiar la Fecha de la Cita:</strong> La fecha de la cita no podrá ser modificada luego de este paso. Si desea cambiarla después, tendrá que cancelar la cita e iniciar el proceso nuevamente.
+                    </div>
                     <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
                 </div>
             </div>
