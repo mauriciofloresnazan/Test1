@@ -45,8 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Asn.cs" />
     <Compile Include="CitaManager.cs" />
-    <Compile Include="Entities\Citation.cs" />
+    <None Include="Entities\Citation.cs.old" />
     <Compile Include="PreAsn.cs" />
     <Compile Include="PreAsnDetalle.cs" />
     <Compile Include="PreAsnManager.cs" />

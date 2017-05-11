@@ -1,10 +1,8 @@
-﻿using MySql.Data.MySqlClient;
-using Ppgz.CitaWrapper.Entities;
-using Ppgz.Repository;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using Ppgz.Repository;
+using SapWrapper;
 
 namespace Ppgz.CitaWrapper
 {
@@ -13,16 +11,114 @@ namespace Ppgz.CitaWrapper
 	{
 
         public static bool ValidarCita(PreCita precita)
-		{
-			try
-			{
-				return true;
-			}
-			catch (Exception e)
-			{
-				//TODO: Manejar la excepción.
-				return false;
-			}
+        {
+            var db = new Entities();
+            var organizacionCompras = db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
+                        var sapOrdenCompraManager = new SapOrdenCompraManager();
+
+            var proveedor = db.proveedores.Find(precita.ProveedorId);
+
+            var ordenes  = sapOrdenCompraManager.GetActivasConDetalle(proveedor.NumeroProveedor, organizacionCompras).ToList();
+            
+
+            var asnFuturos = db.asns.Where(asnf=> asnf.cita.FechaCita > DateTime.Today && asnf.cita.ProveedorId == precita.ProveedorId).ToList();
+
+            var documentos = precita.Asns.Select(d => d.OrdenNumeroDocumento).Distinct().ToArray();
+
+            var cantidadDiariaLimite = Convert.ToInt32(db.configuraciones.Single(c => c.Clave == "warehouse.max-pairs.per-day").Valor);
+
+            var cantidadAlmacen =
+                db.citas.Where(c => c.Almacen == precita.Centro && c.FechaCita == precita.Fecha.Date)
+                .Sum(c => c.CantidadTotal);
+
+            #region ReglasGenerales
+            if (!RulesManager.Regla2(precita.Fecha))
+            {
+                throw new Exception(string.Format("No puede agendar una cita para mañana a esta hora"));
+            }
+
+            if (!RulesManager.Regla4(precita.Fecha))
+            {
+                throw new Exception(string.Format("No puede agendar una cita para esta fecha"));
+            }
+
+            if (!RulesManager.Regla5())
+                throw new Exception(string.Format(""));
+            if (!RulesManager.Regla6())
+                throw new Exception(string.Format(""));
+            if (!RulesManager.Regla7())
+                throw new Exception(string.Format(""));
+
+            if (!RulesManager.Regla8(precita.Cantidad, precita.HorarioRielesIds.Count))
+            {
+                throw new Exception(string.Format("Selección incorrecta de rieles"));
+            }
+
+            if (!RulesManager.Regla9())
+                throw new Exception(string.Format(""));
+            if (!RulesManager.Regla10())
+                throw new Exception(string.Format(""));
+            if (!RulesManager.Regla11())
+                throw new Exception(string.Format(""));
+
+
+
+            if (!RulesManager.Regla13(precita.Centro, Convert.ToInt32(cantidadAlmacen), precita.Cantidad))
+            {
+                var cantidadDisponible = cantidadDiariaLimite - cantidadAlmacen;
+
+                throw new Exception(string.Format("El almacén {0} puede recibir {1} pares para esta fecha, pero la cita tiene {2} pares.", precita.Centro, cantidadDisponible, precita.Cantidad));
+            }
+            
+            //TODO CONTINUAR LA REGLA 14
+
+            #endregion ReglasGenerales
+
+
+
+            foreach (var documento in documentos)
+            {
+                var orden = ordenes.FirstOrDefault(o => o.NumeroDocumento == documento);
+
+                if (orden == null)
+                {
+                    throw new Exception(string.Format("Orden {0} incorrecta", documento));
+                }
+
+                if (!RulesManager.Regla3(precita.Fecha, orden.FechaEntrega))
+                {
+                    throw new Exception(string.Format("Fecha incorrecta para la orden {0}", documento));
+                }
+
+                // Para evitar un comportamiento erroneo en el compilador
+                var documento1 = documento;
+                var materiales = precita.Asns.Where(i => i.OrdenNumeroDocumento == documento1).Select(i => i.NumeroMaterial).ToArray();
+
+                foreach (var material in materiales)
+                {
+
+                    var cantidad =
+                        precita.Asns.Where(p => p.OrdenNumeroDocumento == documento1 && p.NumeroMaterial == material)
+                            .Sum(s => s.Cantidad);
+
+                    var cantidadPedido =
+                        orden.Detalles.Where(d => d.NumeroMaterial == material).Sum(s => s.CantidadPedido);
+
+                    var cantidadEntregada =
+                        orden.Detalles.Where(d => d.NumeroMaterial == material).Sum(s => s.CantidadEntregada);
+
+                    var cantidadFutura =
+                        asnFuturos.Where(af => af.OrdenNumeroDocumento == documento1 && af.NumeroMaterial == material)
+                            .Sum(s => s.Cantidad);
+
+                    if (!RulesManager.Regla12(cantidad, cantidadPedido, cantidadEntregada, cantidadFutura))
+                    {
+                        throw new Exception(string.Format("Candidad incorrecta para la Orden {0}, material {1}", documento1, material));
+                    }
+                }
+            }
+
+			return true;
 		}
 
 
@@ -34,7 +130,7 @@ namespace Ppgz.CitaWrapper
 	    public static void RegistrarCita(PreCita precita)
 	    {
 
-            var db = new Repository.Entities();
+            var db = new Entities();
  
             // Disponibildiad de Rieles
 	        if (db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad == false))
@@ -47,9 +143,8 @@ namespace Ppgz.CitaWrapper
                 throw new Exception("Selección de rieles incorrecta.");
             }
 
-            throw new Exception("Cita inválida.");
 
-	        //TODO VALIDAR LA CITA
+	        ValidarCita(precita);
 
 	        var cita = new cita
 	        {
@@ -82,7 +177,7 @@ namespace Ppgz.CitaWrapper
                 foreach (var horarioRielId in precita.HorarioRielesIds)
                 {
 
-                    db = new Repository.Entities();
+                    db = new Entities();
                     var horarioRiel = db.horariorieles.Find(horarioRielId);
                     horarioRiel.Disponibilidad = false;
                     horarioRiel.CitaId = cita.Id;
@@ -103,7 +198,7 @@ namespace Ppgz.CitaWrapper
 
 	    public static void CancelarCita(int citaId)
 	    {
-            var db = new Repository.Entities();
+            var db = new Entities();
 	        var cita = db.citas.Find(citaId);
 
 	        if(!RulesManager.PuedeCancelarCita(cita.FechaCita)) return;

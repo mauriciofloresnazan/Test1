@@ -10,9 +10,7 @@ using System.Web.Mvc;
 using ClosedXML.Excel;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using Ppgz.CitaWrapper;
-using Ppgz.CitaWrapper.Entities;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
@@ -590,7 +588,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 			try
 			{
-                
+                /*
                 var url = CommonManager.GetConfiguraciones().Single(c => c.Clave == "wfc.url.cita.add").Valor;;
                 var client = new RestClient(url);
 			    var request = new RestRequest(string.Empty, Method.POST);
@@ -607,8 +605,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 
                 TempData["FlashSuccess"] = response.Content + ", " + response.StatusDescription;
                 return RedirectToAction("SeleccionarRieles");
-
-			    //CitaManager.RegistrarCita(preCita);
+                */
+			    CitaManager.RegistrarCita(preCita);
 			}
 			catch (Exception exception)
 			{

@@ -231,12 +231,9 @@ namespace Ppgz.CitaWrapper
         /// 1.	El proveedor puede modificar el número de pares a entregar por talla solo hacia abajo, 
         /// no se permitirá incluir un número mayor de pares que el definido en la orden de compra
         /// </summary>
-        public static bool Regla1(int cantidadPermitida, int cantidad)
+        public static bool Regla1()
         {
-            if (cantidad > cantidadPermitida)
-            {
-                return false;
-            }
+            // Validado en la regla 12 
             return true;
         }
 
@@ -405,7 +402,7 @@ namespace Ppgz.CitaWrapper
         public static bool Regla13(string almacen, int cantidadAcumulada, int cantidad)
         {
             var cantidadDiariaLimite = Convert.ToInt32(GetConfiguraciones()
-                .Single(c => c.Clave == "warehouse.max-pairs.per-day").Valor); ;
+                .Single(c => c.Clave == "warehouse.max-pairs.per-day").Valor); 
             var almacenes = GetConfiguraciones()
                 .Single(c => c.Clave == "warehouse.limited-warehouses-per-day").Valor.Split(',');
 

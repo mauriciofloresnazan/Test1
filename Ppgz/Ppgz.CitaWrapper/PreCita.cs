@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Ppgz.CitaWrapper.Entities;
+
 
 namespace Ppgz.CitaWrapper
 {
