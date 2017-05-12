@@ -131,13 +131,15 @@
         $('#fechaDesde').datetimepicker({
             locale: 'es',
             format: 'DD/MM/YYYY',
-            defaultDate: "@fechaDesde.ToString("yyyyMMdd")"
+            defaultDate: "@fechaDesde.ToString("yyyyMMdd")",
+            maxDate: new Date()
         });
         $('#fechaHasta').datetimepicker({
             locale: 'es',
             format: 'DD/MM/YYYY',
-            defaultDate: "@fechaHasta.ToString("yyyyMMdd")"
-    });
+            defaultDate: "@fechaHasta.ToString("yyyyMMdd")",
+            maxDate: new Date()
+        });
     });
 
 
