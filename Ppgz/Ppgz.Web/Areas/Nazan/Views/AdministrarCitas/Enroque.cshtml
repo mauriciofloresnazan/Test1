@@ -102,6 +102,8 @@
                         var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id).ToList();
 
                         var rielPostition = 0;
+
+                        var tdWidth = Convert.ToInt32(100 / rieles.Count) + "%";
                     }
 
                     <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
@@ -137,11 +139,11 @@
                             {
                                 btnClass = "btn-danger";
 
-                                btnText = riel.ComentarioBloqueo != null ? string.Format("<i>{0}</i><hr style='margin:0'><strong>BLOQUEADO</strong>", riel.ComentarioBloqueo) : string.Format("<strong>BLOQUEADO</strong>");
+                                btnText = riel.ComentarioBloqueo != null ? string.Format("<p style='word-wrap: break-word;white-space: normal;'>{0}</p><hr style='margin:0'><strong>BLOQUEADO</strong>", riel.ComentarioBloqueo) : string.Format("<strong>BLOQUEADO</strong>");
                             }
                         }
 
-                        <td class="text-center" style="border-right: @borderRight;">
+                        <td class="text-center" width="@tdWidth" style="border-right: @borderRight;">
                        
                                 <button id="@riel.Id" data-citaid="@riel.CitaId" type="button" style="min-height: 80px;" class="btn btn-xs @btnClass btn-riel ">
                                     @Html.Raw(btnText)
@@ -213,7 +215,7 @@
                 var parentHeight = td.height();
                 btn.css("height", parentHeight);
                 //btn.css("margin", "10px");
-                btn.css("width", "90%");
+                btn.css("width", "200px");
             });
 
 
