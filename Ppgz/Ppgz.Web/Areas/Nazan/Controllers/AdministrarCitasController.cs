@@ -317,5 +317,61 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             FileManager.ExportExcel(dt, "Pen_" + dateFechaDesde.ToString("ddMMyyyy") + "_" + dateFechaHasta.ToString("ddMMyyyy"), HttpContext);
         }
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        public ActionResult DisponibilidadRieles(string fecha = null)
+        {
+            if (fecha == null)
+            {
+                fecha = DateTime.Today.Date.ToString("dd/MM/yyyy");
+            }
+            var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            var db = new Entities();
+
+            var horarioRieles = db.horariorieles.Where(h => h.Fecha == date).ToList();
+
+            ViewBag.HorarioRieles = horarioRieles;
+
+            ViewBag.Fecha = date.ToString("yyyy/MM/dd");
+
+            return View();
+        }
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult DisponibilidadRieles(int horarioRielId, string disponible)
+        {
+
+            var db = new Entities();
+
+            var horarioRiel = db.horariorieles.Find(horarioRielId);
+
+
+            if (horarioRiel == null)
+            {
+                TempData["FlashError"] = "Selección incorrecta";
+                return RedirectToAction("Index"); 
+            }
+
+            if (horarioRiel.CitaId != null)
+            {
+                TempData["FlashError"] = "No puede modificar la disponiblidad del Riel porque esta reservado para una Cita";
+                return RedirectToAction("DisponibilidadRieles", new { fecha = horarioRiel.Fecha.ToString("dd/MM/yyyy") }); 
+                
+            }
+            
+            horarioRiel.Disponibilidad = disponible == "true";
+            db.Entry(horarioRiel).State = EntityState.Modified;
+
+            db.SaveChanges();
+            
+            TempData["FlashSuccess"] = "Cambio de disponiblidad aplicado exitosamente";
+            return RedirectToAction("DisponibilidadRieles", new { fecha = horarioRiel.Fecha.ToString("dd/MM/yyyy") }); 
+        }
+    
     }
 }

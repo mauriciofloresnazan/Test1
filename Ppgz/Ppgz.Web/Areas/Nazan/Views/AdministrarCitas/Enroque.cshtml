@@ -1,6 +1,6 @@
 ﻿@using Ppgz.Repository
 @{
-    ViewBag.Title = "Administración de Citas - Enroque";
+    ViewBag.Title = "Administración de Citas - Vista Diaria (Enroque)";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var horarioRieles = (List<horarioriele>)ViewBag.HorarioRieles;
@@ -45,7 +45,7 @@
                     <h3 style="margin-top: 4px;">@totalCantidad</h3>
                 </div>
                 <div class="col-sm-2">
-                    <a class="btn btn-default pull-right" href="@Url.Action("Index", "AdministrarCitas")"> <i class="fa fa-undo" aria-hidden="true"></i> Cancelar Enroque</a>
+                    <a class="btn btn-default pull-right" href="@Url.Action("Index", "AdministrarCitas")"> <i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
 
                 </div>
             </div>
@@ -118,20 +118,22 @@
 
                         if (!riel.Disponibilidad)
                         {
-                            
-                            btnText = string.Format(
-                                "{0} {1} {2} {3}<br>{4}<br>Cita #{5} / Total: {6} Pares",
-                                riel.cita.proveedore.Nombre1, riel.cita.proveedore.Nombre2,
-                                riel.cita.proveedore.Nombre3, riel.cita.proveedore.Nombre4,
-                                riel.cita.Almacen, riel.cita.Id, riel.cita.CantidadTotal);
+                            if (riel.cita != null)
+                            {
+                                btnText = string.Format(
+                                 "{0} {1} {2} {3}<br>{4}<br>Cita #{5} / Total: {6} Pares",
+                                 riel.cita.proveedore.Nombre1, riel.cita.proveedore.Nombre2,
+                                 riel.cita.proveedore.Nombre3, riel.cita.proveedore.Nombre4,
+                                 riel.cita.Almacen, riel.cita.Id, riel.cita.CantidadTotal); 
+                            }
      
                             btnClass = "btn-success";
 
                         }
 
                         <td class="text-center" style="border-right: @borderRight;">
-                            <div style="height: 80px;">
-                                <button id="@riel.Id" data-citaid="@riel.CitaId" style="height: 100%;" type="button" class="btn btn-xs @btnClass btn-block btn-riel ">
+                            <div style="">
+                                <button id="@riel.Id" data-citaid="@riel.CitaId" style="" type="button" class="btn btn-xs @btnClass btn-block btn-riel ">
                                     @Html.Raw(btnText)
                                 </button>
                             </div>

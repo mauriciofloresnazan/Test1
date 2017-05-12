@@ -1180,6 +1180,7 @@
     <Content Include="Areas\Servicio\Views\CuentasPagar\PagosPendientesDetalle.cshtml" />
     <Content Include="Areas\Servicio\Views\ReporteProveedores\Index.cshtml" />
     <Content Include="Areas\Servicio\Views\ReporteProveedores\Reportes.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarCitas\DisponibilidadRieles.cshtml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

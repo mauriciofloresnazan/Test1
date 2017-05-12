@@ -1,0 +1,234 @@
+﻿@using Ppgz.Repository
+@{
+    ViewBag.Title = "Administración de Citas - Disponiblidad de Rieles por Fecha";
+    ViewBag.Descripcion = "Puede Bloquear o Liberar los Rieles que no esten reservados por una Cita.";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+
+    var horarioRieles = (List<horarioriele>)ViewBag.HorarioRieles;
+
+    var horarios = horarioRieles.Select(hr => new
+    {
+        hr.horario
+    }).Distinct().ToList().OrderBy(h => h.horario.HoraDesde);
+
+    var andenes = horarioRieles.Select(hr => new
+    {
+        hr.riele.andene
+    }).Distinct().ToList().OrderBy(a => a.andene.Codigo);
+
+
+
+
+}
+<link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
+<style>
+    #tb-3 .btn {
+        font-size: .9em;
+    }
+
+    #tb-3 .border-bottom {
+        border-bottom: solid 1px #f1f1f1;
+    }
+
+    .btn-primary.hover, .btn-primary:hover, .open > .dropdown-toggle.btn-primary {
+        background-color: #66aaaa;
+        border-color: #ccc;
+        background-image: none;
+    }
+
+    .btn-primary.active, .btn-primary.hover, .btn-primary:hover, .btn-primary:active, .open > .dropdown-toggle.btn-primary {
+        background-color: #66aaaa;
+        border-color: #ccc;
+        background-image: none;
+    }
+</style>
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Seleccione la Fecha</div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("DisponibilidadRieles", "AdministrarCitas", new { ViewBag.ReturnUrl }, FormMethod.Get, new { @id = "form-fecha", @class = "form-horizontal", role = "form" }))
+        {
+
+            @Html.ValidationSummary(true)
+
+            <div class="">
+                <label class="col-sm-2 control-label"> Fecha</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
+                </div>
+
+                <div class="col-sm-2">
+                    <a class="btn btn-default pull-right" href="@Url.Action("Index", "AdministrarCitas")"> <i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
+
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Rieles por Anden</div>
+    <div class="panel-body">
+        
+
+
+
+        <table class="" width="100%" id="tb-3" style="">
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        <h2>Horario</h2>
+                    </th>
+                    @foreach (var result in andenes)
+                    {
+                        var anden = result.andene;
+
+                        var borderRight = "";
+                        if (int.Parse(anden.Anden) < andenes.Count())
+                        {
+                            borderRight = "solid 1px #666";
+                        }
+                        <th class="text-center" colspan="2" style="border-right: @borderRight">
+                            <i class="fa fa-truck fa-5x" aria-hidden="true"></i>
+                            ANDEN @anden.Anden
+                            <div class="row">
+                                @foreach (var riel in anden.rieles)
+                                {
+                                    <div class="col-xs-6">Riel @riel.Riel</div>
+
+                                }
+                            </div>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in horarios)
+                {
+                    <tr class="border-bottom">
+
+                        @{
+                    var horario = result.horario;
+                    var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+
+                    var rielPostition = 0;
+                        }
+
+                        <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
+
+                        @foreach (var riel in rieles)
+                        {
+                            rielPostition++;
+
+                            var borderRight = "";
+                            if (rielPostition < rieles.Count())
+                            {
+                                borderRight = "solid 1px #666";
+                            }
+
+                            var disabledChecked = "";
+                            var check = "";
+                            var dataOff = "DISPONIBLE";
+                            var dataOn = "BLOQUEADO";
+                            var offStyle = "primary";
+                            var onStyle = "success";
+ 
+
+
+                            if (riel.CitaId != null)
+                            {
+                                disabledChecked = "disabled";
+                                dataOn = "OCUPADO";
+                                dataOff = "OCUPADO";
+                                onStyle = "danger";
+                                offStyle = "danger";
+                            }
+                            else
+                            {
+                                if (!riel.Disponibilidad)
+                                {
+                                    check = "checked";
+                                }
+                            }
+
+                            <td class="text-center" style="border-right: @borderRight">
+                                <input id="@riel.Id" class="horarioriel"  @check type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
+
+                            </td>
+
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @using (Html.BeginForm("DisponibilidadRieles", "AdministrarCitas", new { }, FormMethod.Post, new { id = "form-disponibilidad" }))
+        {
+            @Html.AntiForgeryToken()
+
+        }
+
+
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
+
+    <script type="text/javascript">
+
+        $(function () {
+            $('#fecha').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: '@ViewBag.Fecha'
+            });
+
+            $("#fecha").on("dp.change", function () {
+                $("#form-fecha").submit();
+            });
+
+
+            $('.horarioriel').change(function () {
+
+                var horarioRielId = $(this).attr("id");
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'horarioRielId',
+                    value: horarioRielId
+                }).appendTo('#form-disponibilidad');
+
+                if ($(this).prop('checked') === true) {
+
+
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'disponible',
+                        value: "false"
+                    }).appendTo('#form-disponibilidad');
+
+                } else {
+
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'disponible',
+                        value: "true"
+                    }).appendTo('#form-disponibilidad');
+                }
+
+                $("#form-disponibilidad").submit();
+
+            });
+
+        });
+       
+    </script>
+}

@@ -280,6 +280,7 @@ namespace Ppgz.Web
                         "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
                         "ADMINISTRARCITAS|Vista Diaria|Enroque|AdministrarCitas|fa fa-calendar|Nazan",
                         "ADMINISTRARCITAS|Reporte de Penalizaciones|Penalizaciones|AdministrarCitas|fa fa-line-chart|Nazan",
+                        "ADMINISTRARCITAS|Adminsitrar Disponiblidad de Rieles|DisponibilidadRieles|AdministrarCitas|fa fa-ban|Nazan",
 
                     };
                     break;
