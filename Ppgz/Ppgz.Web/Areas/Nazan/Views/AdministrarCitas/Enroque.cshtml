@@ -40,7 +40,7 @@
                 <div class="col-sm-3">
                     <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
                 </div>
-                <label class="col-sm-2 control-label"> Cantidad</label>
+                <label class="col-sm-2 control-label"> Cantidad a Descargar</label>
                 <div class="col-sm-3">
                     <h3 style="margin-top: 4px;">@totalCantidad</h3>
                 </div>
@@ -132,11 +132,11 @@
                         }
 
                         <td class="text-center" style="border-right: @borderRight;">
-                            <div style="">
-                                <button id="@riel.Id" data-citaid="@riel.CitaId" style="" type="button" class="btn btn-xs @btnClass btn-block btn-riel ">
+                       
+                                <button id="@riel.Id" data-citaid="@riel.CitaId"  type="button" class="btn btn-xs btn block @btnClass btn-block btn-riel ">
                                     @Html.Raw(btnText)
                                 </button>
-                            </div>
+                         
                         </td>
 
                     }
@@ -197,6 +197,13 @@
                 $("#form-fecha").submit();
             });
             
+            $(".btn-riel ").each(function () {
+                var btn = $(this);
+                var td = $(btn.parent());
+                var parentHeight = td.height();
+                btn.css("height", parentHeight);
+            });
+
 
             $('.btn-riel').on('click', function() {
 

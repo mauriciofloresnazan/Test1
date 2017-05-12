@@ -80,7 +80,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 
             TempData["FlashSuccess"] = "Enroque aplicado exitosamente";
-            return RedirectToAction("Index");
+            return RedirectToAction("Enroque", new { fecha = horarioRiel1.Fecha.ToString("dd/MM/yyyy") });
         }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
