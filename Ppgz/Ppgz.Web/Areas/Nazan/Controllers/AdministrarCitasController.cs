@@ -13,6 +13,23 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 {
     public class AdministrarCitasController : Controller
     {
+
+        internal void CrearRieles(DateTime date)
+        {
+            var parameters = new List<MySqlParameter>
+            {
+				new MySqlParameter
+				{
+					ParameterName = "pTotal",
+					Direction = ParameterDirection.Output,
+					MySqlDbType = MySqlDbType.VarChar
+				},
+				new MySqlParameter("pFecha", date)
+			};
+
+            Db.ExecuteProcedureOut(parameters, "config_appointment");
+        }
+
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         public ActionResult Index()
         {
@@ -36,6 +53,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 fecha = DateTime.Today.Date.ToString("dd/MM/yyyy");
             }
             var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            CrearRieles(date);
 
             var db = new Entities();
 
@@ -154,7 +173,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             ViewBag.Cita = cita;
 
 
-            var parameters = new List<MySqlParameter>()
+            /*var parameters = new List<MySqlParameter>()
 			{
 				new MySqlParameter
 				{
@@ -165,7 +184,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				new MySqlParameter("pFecha", date)
 			};
 
-            Db.ExecuteProcedureOut(parameters, "config_appointment");
+            Db.ExecuteProcedureOut(parameters, "config_appointment");*/
+
+
+            CrearRieles(date);
 
             var horarioRieles = db.horariorieles.Where(h => h.Fecha == date.Date).ToList();
 
@@ -331,6 +353,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 fecha = DateTime.Today.Date.ToString("dd/MM/yyyy");
             }
             var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            CrearRieles(date);
 
             var db = new Entities();
 
