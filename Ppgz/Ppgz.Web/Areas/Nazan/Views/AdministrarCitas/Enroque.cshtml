@@ -136,7 +136,7 @@
 
                         <td class="text-center" style="border-right: @borderRight;">
                        
-                                <button id="@riel.Id" data-citaid="@riel.CitaId"  type="button" class="btn btn-xs btn block @btnClass btn-block btn-riel ">
+                                <button id="@riel.Id" data-citaid="@riel.CitaId"  type="button" class="btn btn-xs @btnClass btn-riel ">
                                     @Html.Raw(btnText)
                                 </button>
                          
@@ -205,6 +205,14 @@
                 var td = $(btn.parent());
                 var parentHeight = td.height();
                 btn.css("height", parentHeight);
+                //btn.css("margin", "10px");
+                btn.css("width", "90%");
+            });
+
+
+            $(".btn-riel ").each(function () {
+                var btn = $(this);
+                btn.css("margin", "5px");
             });
 
 
