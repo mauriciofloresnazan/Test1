@@ -19,6 +19,12 @@
 
     var totalCantidad = citas.Sum(c => c.CantidadTotal);
 }
+<style>
+    .body-content {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+</style>
 
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
@@ -136,7 +142,7 @@
 
                         <td class="text-center" style="border-right: @borderRight;">
                        
-                                <button id="@riel.Id" data-citaid="@riel.CitaId"  type="button" class="btn btn-xs @btnClass btn-riel ">
+                                <button id="@riel.Id" data-citaid="@riel.CitaId" type="button" style="min-height: 80px;" class="btn btn-xs @btnClass btn-riel ">
                                     @Html.Raw(btnText)
                                 </button>
                          
