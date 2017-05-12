@@ -121,14 +121,17 @@
                             if (riel.cita != null)
                             {
                                 btnText = string.Format(
-                                 "{0} {1} {2} {3}<br>{4}<br>Cita #{5} / Total: {6} Pares",
-                                 riel.cita.proveedore.Nombre1, riel.cita.proveedore.Nombre2,
-                                 riel.cita.proveedore.Nombre3, riel.cita.proveedore.Nombre4,
-                                 riel.cita.Almacen, riel.cita.Id, riel.cita.CantidadTotal); 
+                                    "{0} {1} {2} {3}<br>{4}<br>Cita #{5} / Total: {6} Pares",
+                                    riel.cita.proveedore.Nombre1, riel.cita.proveedore.Nombre2,
+                                    riel.cita.proveedore.Nombre3, riel.cita.proveedore.Nombre4,
+                                    riel.cita.Almacen, riel.cita.Id, riel.cita.CantidadTotal);
+                                btnClass = "btn-success";
                             }
-     
-                            btnClass = "btn-success";
-
+                            else
+                            {
+                                btnClass = "btn-danger";
+                                btnText = "Bloqueado";
+                            }
                         }
 
                         <td class="text-center" style="border-right: @borderRight;">
