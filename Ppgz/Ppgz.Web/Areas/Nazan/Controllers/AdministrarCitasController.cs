@@ -59,20 +59,24 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var horarioRiel1 = db.horariorieles.Find(horarioRielId1);
             var citaId1 = horarioRiel1.CitaId;
             var disponibilidad1 = horarioRiel1.Disponibilidad;
+            var comentario1 = horarioRiel1.ComentarioBloqueo;
 
 
 
             var horarioRiel2 = db.horariorieles.Find(horarioRielId2);
             var citaId2 = horarioRiel2.CitaId;
             var disponibilidad2 = horarioRiel2.Disponibilidad;
+            var comentario2 = horarioRiel2.ComentarioBloqueo;
             
 
             horarioRiel1.CitaId = citaId2;
             horarioRiel1.Disponibilidad = disponibilidad2;
+            horarioRiel1.ComentarioBloqueo = comentario2;
             db.Entry(horarioRiel1).State = EntityState.Modified;
 
             horarioRiel2.CitaId = citaId1;
             horarioRiel2.Disponibilidad = disponibilidad1;
+            horarioRiel2.ComentarioBloqueo = comentario1;
             db.Entry(horarioRiel2).State = EntityState.Modified;
 
 
@@ -343,7 +347,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult DisponibilidadRieles(int horarioRielId, string disponible)
+        public ActionResult DisponibilidadRieles(int horarioRielId, string disponible, string comentario = null)
         {
 
             var db = new Entities();
@@ -365,6 +369,21 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
             
             horarioRiel.Disponibilidad = disponible == "true";
+            if (!horarioRiel.Disponibilidad)
+            {
+                if (string.IsNullOrWhiteSpace(comentario))
+                {
+
+                    TempData["FlashError"] = "Por favor ingrese un comentario para el bloqueo";
+                    return RedirectToAction("DisponibilidadRieles", new { fecha = horarioRiel.Fecha.ToString("dd/MM/yyyy") }); 
+                }
+                horarioRiel.ComentarioBloqueo = comentario;
+            }
+            else
+            {
+                horarioRiel.ComentarioBloqueo = null;
+            }
+
             db.Entry(horarioRiel).State = EntityState.Modified;
 
             db.SaveChanges();

@@ -78,107 +78,134 @@
 <div class="panel panel-default">
     <div class="panel-heading">Rieles por Anden</div>
     <div class="panel-body">
-        
+
 
 
 
         <table class="" width="100%" id="tb-3" style="">
             <thead>
-                <tr>
-                    <th class="text-center">
-                        <h2>Horario</h2>
-                    </th>
-                    @foreach (var result in andenes)
+            <tr>
+                <th class="text-center">
+                    <h2>Horario</h2>
+                </th>
+                @foreach (var result in andenes)
+                {
+                    var anden = result.andene;
+
+                    var borderRight = "";
+                    if (int.Parse(anden.Anden) < andenes.Count())
                     {
-                        var anden = result.andene;
+                        borderRight = "solid 1px #666";
+                    }
+                    <th class="text-center" colspan="2" style="border-right: @borderRight">
+                        <i class="fa fa-truck fa-5x" aria-hidden="true"></i>
+                        ANDEN @anden.Anden
+                        <div class="row">
+                            @foreach (var riel in anden.rieles)
+                            {
+                                <div class="col-xs-6">Riel @riel.Riel</div>
+
+                            }
+                        </div>
+                    </th>
+                }
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var result in horarios)
+            {
+                <tr class="border-bottom">
+
+                    @{
+                        var horario = result.horario;
+                        var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+
+                        var rielPostition = 0;
+                    }
+
+                    <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
+
+                    @foreach (var riel in rieles)
+                    {
+                        rielPostition++;
 
                         var borderRight = "";
-                        if (int.Parse(anden.Anden) < andenes.Count())
+                        if (rielPostition < rieles.Count())
                         {
                             borderRight = "solid 1px #666";
                         }
-                        <th class="text-center" colspan="2" style="border-right: @borderRight">
-                            <i class="fa fa-truck fa-5x" aria-hidden="true"></i>
-                            ANDEN @anden.Anden
-                            <div class="row">
-                                @foreach (var riel in anden.rieles)
-                                {
-                                    <div class="col-xs-6">Riel @riel.Riel</div>
 
-                                }
-                            </div>
-                        </th>
+                        var disabledChecked = "";
+                        var check = "";
+                        var dataOff = "DISPONIBLE";
+                        var dataOn = "BLOQUEADO";
+                        var offStyle = "primary";
+                        var onStyle = "danger";
+
+
+
+                        if (riel.CitaId != null)
+                        {
+                            disabledChecked = "disabled";
+                            dataOn = "OCUPADO";
+                            dataOff = "OCUPADO";
+                            onStyle = "success";
+                            offStyle = "success";
+                        }
+                        else
+                        {
+                            if (!riel.Disponibilidad)
+                            {
+                                check = "checked";
+                            }
+                        }
+
+                        <td class="text-center" style="border-right: @borderRight">
+                            <input id="@riel.Id" class="horarioriel" @check type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
+
+                        </td>
+
                     }
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var result in horarios)
-                {
-                    <tr class="border-bottom">
-
-                        @{
-                    var horario = result.horario;
-                    var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
-
-                    var rielPostition = 0;
-                        }
-
-                        <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
-
-                        @foreach (var riel in rieles)
-                        {
-                            rielPostition++;
-
-                            var borderRight = "";
-                            if (rielPostition < rieles.Count())
-                            {
-                                borderRight = "solid 1px #666";
-                            }
-
-                            var disabledChecked = "";
-                            var check = "";
-                            var dataOff = "DISPONIBLE";
-                            var dataOn = "BLOQUEADO";
-                            var offStyle = "primary";
-                            var onStyle = "danger";
- 
-
-
-                            if (riel.CitaId != null)
-                            {
-                                disabledChecked = "disabled";
-                                dataOn = "OCUPADO";
-                                dataOff = "OCUPADO";
-                                onStyle = "success";
-                                offStyle = "success";
-                            }
-                            else
-                            {
-                                if (!riel.Disponibilidad)
-                                {
-                                    check = "checked";
-                                }
-                            }
-
-                            <td class="text-center" style="border-right: @borderRight">
-                                <input id="@riel.Id" class="horarioriel"  @check type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
-
-                            </td>
-
-                        }
-                    </tr>
-                }
+            }
             </tbody>
         </table>
-        @using (Html.BeginForm("DisponibilidadRieles", "AdministrarCitas", new { }, FormMethod.Post, new { id = "form-disponibilidad" }))
+        @using (Html.BeginForm("DisponibilidadRieles", "AdministrarCitas", new {}, FormMethod.Post, new {id = "form-disponibilidad"}))
         {
             @Html.AntiForgeryToken()
+            
+            <input type="hidden" id="bloqueo-horariorielid" name="horarioRielId">
+            <input type="hidden" id="bloqueo-disponible" name="disponible">
 
         }
 
 
     </div>
 </div>
+
+
+
+<div class="modal fade" id="modalComentario" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Comentario del Bloqueo</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+
+                    <label>Debe ingresar un comentario para bloquear el Riel</label>
+                    <textarea class="form-control"></textarea>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-primary" onclick="javascript: GuardarBloqueo();">Guardar</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
 
@@ -200,35 +227,67 @@
 
                 var horarioRielId = $(this).attr("id");
 
-                $('<input>').attr({
+                $("#bloqueo-horariorielid").val(horarioRielId);
+
+              /*  $('<input>').attr({
                     type: 'hidden',
                     name: 'horarioRielId',
                     value: horarioRielId
                 }).appendTo('#form-disponibilidad');
+                */
+                if ($(this).prop('checked') === false) {
 
-                if ($(this).prop('checked') === true) {
 
+                    $("#bloqueo-disponible").val("true");
 
-                    $('<input>').attr({
+                    $("#form-disponibilidad").submit();
+
+                    $('.horarioriel').bootstrapToggle('disable');
+
+                    /*$('<input>').attr({
                         type: 'hidden',
                         name: 'disponible',
                         value: "false"
-                    }).appendTo('#form-disponibilidad');
+                    }).appendTo('#form-disponibilidad');*/
 
                 } else {
 
-                    $('<input>').attr({
+                    $("#bloqueo-disponible").val("false");
+                    $("#modalComentario").modal("show");
+                    /*$('<input>').attr({
                         type: 'hidden',
                         name: 'disponible',
                         value: "true"
-                    }).appendTo('#form-disponibilidad');
+                    }).appendTo('#form-disponibilidad');*/
                 }
 
-                $("#form-disponibilidad").submit();
+                //
 
             });
 
         });
+
+
+
+        function GuardarBloqueo() {
+
+            var comentario = $($("#modalComentario textarea")[0]).val();
+
+            if (comentario.length < 3) {
+
+                msgError("Por favor ingrese un comentario válido");
+                return;
+            }
+
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'comentario',
+                value: comentario
+            }).appendTo('#form-disponibilidad');
+
+
+            $("#form-disponibilidad").submit();
+        }
        
     </script>
 }

@@ -117,7 +117,7 @@
                         }
 
 
-                        var btnText = "Disponible";
+                        var btnText = "<strong>DISPONIBLE</strong>";
                         var btnClass = "btn-primary";
 
 
@@ -136,7 +136,8 @@
                             else
                             {
                                 btnClass = "btn-danger";
-                                btnText = "Bloqueado";
+
+                                btnText = riel.ComentarioBloqueo != null ? string.Format("<i>{0}</i><hr style='margin:0'><strong>BLOQUEADO</strong>", riel.ComentarioBloqueo) : string.Format("<strong>BLOQUEADO</strong>");
                             }
                         }
 

@@ -20,6 +20,7 @@ namespace Ppgz.Repository
         public int HorarioId { get; set; }
         public int AlmacenRielId { get; set; }
         public Nullable<int> CitaId { get; set; }
+        public string ComentarioBloqueo { get; set; }
     
         public virtual cita cita { get; set; }
         public virtual horario horario { get; set; }

@@ -255,6 +255,7 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
           <Property Name="HorarioId" Type="int" Nullable="false" />
           <Property Name="AlmacenRielId" Type="int" Nullable="false" />
           <Property Name="CitaId" Type="int" />
+          <Property Name="ComentarioBloqueo" Type="varchar" MaxLength="2000" />
         </EntityType>
         <EntityType Name="horarios">
           <Key>
@@ -1374,6 +1375,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="HorarioId" Type="Int32" Nullable="false" />
           <Property Name="AlmacenRielId" Type="Int32" Nullable="false" />
           <Property Name="CitaId" Type="Int32" />
+          <Property Name="ComentarioBloqueo" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="cita" Relationship="Self.fk_horariorieles_citas" FromRole="horariorieles" ToRole="citas" />
           <NavigationProperty Name="horario" Relationship="Self.fk_horariorieles_horarios" FromRole="horariorieles" ToRole="horarios" />
           <NavigationProperty Name="riele" Relationship="Self.fk_horariorieles_rieles" FromRole="horariorieles" ToRole="rieles" />
@@ -2370,6 +2372,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="HorarioId" ColumnName="HorarioId" />
                 <ScalarProperty Name="AlmacenRielId" ColumnName="AlmacenRielId" />
                 <ScalarProperty Name="CitaId" ColumnName="CitaId" />
+                <ScalarProperty Name="ComentarioBloqueo" ColumnName="ComentarioBloqueo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
