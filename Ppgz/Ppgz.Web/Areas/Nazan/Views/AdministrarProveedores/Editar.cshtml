@@ -1,4 +1,5 @@
 ﻿@using Ppgz.Repository
+@model Ppgz.Web.Areas.Nazan.Models.CuentaViewModel
 @{
 
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -56,6 +57,8 @@
                         @(usuarioMaestro.Nombre + ' ' + usuarioMaestro.Apellido)<i>
                         </i><br>
                         @usuarioMaestro.Email
+                        <br/>
+                        <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#editar-responsable-modal">Actualizar Datos</button>
                     </p>
                 </div>
             </div>
@@ -202,6 +205,90 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="editar-responsable-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Editar datos del Responsable</h4>
+
+            </div>
+            <div class="modal-body">
+
+                @using (Html.BeginForm("ActualizarResponsable", "AdministrarProveedores", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true)
+
+
+                    <p class="form-legend" style="">
+                        <i>Datos del Responsable (Usuario Maestro) <strong>@Model.UserName</strong></i>
+                    </p>
+
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ResponsableNombre, new { @class = "col-sm-3 control-label" })
+                        <div class="col-sm-7">
+                            @Html.TextBoxFor(m => m.ResponsableNombre, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.ResponsableNombre)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ResponsableApellido, new { @class = "col-sm-3 control-label" })
+                        <div class="col-sm-7">
+                            @Html.TextBoxFor(m => m.ResponsableApellido, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.ResponsableApellido)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ResponsableCargo, new { @class = "col-sm-3 control-label" })
+                        <div class="col-sm-7">
+                            @Html.TextBoxFor(m => m.ResponsableCargo, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.ResponsableCargo)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ResponsableEmail, new { @class = "col-sm-3 control-label" })
+                        <div class="col-sm-7">
+                            @Html.TextBoxFor(m => m.ResponsableEmail, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.ResponsableEmail)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ResponsableTelefono, new { @class = "col-sm-3 control-label" })
+                        <div class="col-sm-7">
+                            @Html.TextBoxFor(m => m.ResponsableTelefono, new { @class = "form-control  bfh-phone", @data_country = "MX", @data_format = "+dd (ddd) ddd-dddd" })
+                            @Html.ValidationMessageFor(m => m.ResponsableTelefono)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-7">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-user-plus" aria-hidden="true"></i> Registrar</button>
+                            <a class="btn btn-default" href="@Url.Action("Index", "AdministrarProveedores")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+
+                        </div>
+                    </div>
+
+                }
+
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 @section Scripts {
 
     @Scripts.Render("~/bundles/jqueryval")
@@ -253,9 +340,9 @@
                 }
 
                 var alerta = $("#alerta");
-        if (alerta) {
-            alerta.remove();
-        }
+                if (alerta) {
+                    alerta.remove();
+                }
 
 
                 var contenido = $('body .body-content');
@@ -280,6 +367,7 @@
             var data = {
                 numeroProveedor: $("#numero-proveedor").val()
             };
+            $.blockUI({ message: '<h2>Buscando el Proveedor</h2><h2>Por favor espere...</h2>' });
 
             $.ajax({
                 type: "POST",
@@ -320,6 +408,8 @@
             }).fail(function (response) {
                 $('#buscarModal').modal('show');
 
+            }).always(function () {
+                $.unblockUI();
             });
         }
 

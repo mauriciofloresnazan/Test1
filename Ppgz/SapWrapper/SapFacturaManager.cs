@@ -6,9 +6,18 @@ namespace SapWrapper
 {
     public class SapFacturaManager
     {
+        public class Resultado
+        {
+            public DataTable ErrorTable;
+
+            public string FacturaNumero;
+
+            public string Estatus;
+        }
+        
         private readonly CommonRfcConfigParam _rfc = new CommonRfcConfigParam();
 
-        public DataTable CrearFactura(string numeroProveedor, string numeroDocumentoReferencia, DateTime fechaFactura, 
+        public Resultado CrearFactura(string numeroProveedor, string numeroDocumentoReferencia, DateTime fechaFactura, 
             string importe, string importeConTaxas, string cantidad, string uuid, string rfc)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
@@ -25,11 +34,24 @@ namespace SapWrapper
             function.SetValue("I_UUID", uuid);
             function.SetValue("I_RFC", rfc);
             
-
             function.Invoke(rfcDestinationManager);
 
+
+            function.GetValue("E_STATUS");
+            
             var result = function.GetTable("T_RETURN");
-            return result.ToDataTable("T_RETURN");
+            			
+
+            var resultado = new Resultado
+            {
+                ErrorTable = result.ToDataTable("T_RETURN"),
+                Estatus = function.GetValue("E_STATUS").ToString(),
+                FacturaNumero = function.GetValue("E_INVOICE_NUM").ToString()
+            };
+
+
+            return resultado;
+
         }
     }
 }

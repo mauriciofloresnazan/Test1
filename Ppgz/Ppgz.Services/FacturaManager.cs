@@ -78,7 +78,7 @@ namespace Ppgz.Services
                 throw new BusinessException("Proveedor incorrecto en la factura");
             }
 
-            if (proveedor.Id == proveedorId)
+            if (proveedor.Id != proveedorId)
             {
                 throw new BusinessException("Proveedor incorrecto en la factura");
             }
@@ -98,16 +98,46 @@ namespace Ppgz.Services
             }
 
             //Creacion de la factura para la miro
+            var cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
+
             var sapFacturaManager = new SapFacturaManager();
-            sapFacturaManager.CrearFactura(
+            /*var facturaSap = sapFacturaManager.CrearFactura(
                 proveedor.NumeroProveedor,
-                comprobante.Serie + comprobante.Folio,
+                // todo solo para le presetnacion
+               comprobante.Folio,
                 DateTime.Parse(comprobante.Fecha, null, DateTimeStyles.RoundtripKind),
                 comprobante.SubTotal,
-                comprobante.Impuestos.TotalImpuestosTrasladados,
-                comprobante.Conceptos.Concepto.Count.ToString(),
+                comprobante.Total,
+                cantidad.ToString(),
+                 comprobante.Complemento.TimbreFiscalDigital.UUID,
+                 comprobante.Emisor.Rfc);*/
+
+            /*var facturaSap = sapFacturaManager.CrearFactura(
+                proveedor.NumeroProveedor,
+                comprobante.Folio,
+                DateTime.Parse(comprobante.Fecha, null, DateTimeStyles.RoundtripKind),
+                comprobante.SubTotal,
+                comprobante.Total,
+                cantidad.ToString(),
+                 comprobante.Complemento.TimbreFiscalDigital.UUID,
+                 comprobante.Emisor.Rfc);*/
+            
+            var facturaSap = sapFacturaManager.CrearFactura(
+                proveedor.NumeroProveedor,
+                //"0000000004",
+                /*comprobante.Serie + */comprobante.Folio,
+                DateTime.ParseExact(comprobante.Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
+                comprobante.SubTotal.Replace(".", ","),
+                comprobante.Total.Replace(".", ","),
+                cantidad.ToString(),
                  comprobante.Complemento.TimbreFiscalDigital.UUID,
                  comprobante.Emisor.Rfc);
+            
+            if (facturaSap.Estatus != "S")
+            {
+                // TODO MEJORAR
+                throw new BusinessException("Error al generar la factura en la MIRO");
+            }
 
             // Se crea el directorio de acuerdo a la fecha del comprobante
             var fecha = DateTime.ParseExact(comprobante.Fecha.Substring(0, 10), "yyyy-MM-dd",
@@ -131,7 +161,8 @@ namespace Ppgz.Services
                 proveedor_id = proveedor.Id,
                 Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
                 XmlRuta = newXmlPath,
-                PdfRuta = newPdfPath
+                PdfRuta = newPdfPath,
+                NumeroGenerado = facturaSap.FacturaNumero
             };
 
             _db.facturas.Add(factura);

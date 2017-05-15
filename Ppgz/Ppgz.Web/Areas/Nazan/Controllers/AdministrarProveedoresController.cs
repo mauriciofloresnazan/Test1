@@ -104,6 +104,21 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 			}
 
             ViewBag.cuentaConUsuarioMaestro = cuentaConUsuarioMaestro;
+
+            var model = new CuentaViewModel
+            {
+                UserName = cuentaConUsuarioMaestro.UsuarioMaestro.UserName,
+                ResponsableNombre = cuentaConUsuarioMaestro.UsuarioMaestro.Nombre,
+                ResponsableApellido= cuentaConUsuarioMaestro.UsuarioMaestro.Apellido,
+                ResponsableCargo= cuentaConUsuarioMaestro.UsuarioMaestro.Cargo,
+                ResponsableTelefono = cuentaConUsuarioMaestro.UsuarioMaestro.PhoneNumber,
+                ResponsableEmail= cuentaConUsuarioMaestro.UsuarioMaestro.Email
+            
+
+            };
+
+            return View(model);
+
 			return View();
 		}
 
@@ -284,5 +299,29 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 	    }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        public JsonResult ActualizarResponsable(int proveedorId, CuentaViewModel cuentaViewModel)
+        {
+          
+            var db = new Entities();
+            var proveedor = db.proveedores.Find(proveedorId);
+            if (proveedor == null)
+            {
+                return Json(new { error = "Proveedor Incorrecto" });
+            }
+            
+            if (ModelState.IsValidField("ResponsableNombre"))
+            {
+                
+            }
+            if (ModelState.IsValidField("ResponsableApellido"))
+            {
+                
+            }
+            return Json(new { success = "Nice" });
+
+	    }
 	}
 }

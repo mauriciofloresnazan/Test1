@@ -25,23 +25,36 @@ namespace Test
         
         static void Main(string[] args)
         {
-
+            // solo el folio
             var serializer = new XmlSerializer(typeof(Comprobante));
-            var archivoXml = new FileStream(@"C:\temp\borrar\factura.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            //var archivoXml = new FileStream(@"C:\temp\borrar\miro\factura.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            //var archivoXml = new FileStream(@"C:\temp\borrar\miro\4EEC-A....xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var archivoXml = new FileStream(@"C:\temp\borrar\miro\4939-A....xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var comprobante = (Comprobante)serializer.Deserialize(archivoXml);
             var sapFacturaManager = new SapFacturaManager();
+
+
+            decimal cantidad = 0;
+            foreach (var concepto in comprobante.Conceptos.Concepto)
+            {
+                cantidad = cantidad + Convert.ToDecimal(concepto.Cantidad);
+            }
+
             var factura = sapFacturaManager.CrearFactura(
-                "0000000004",
-                comprobante.Serie + comprobante.Folio,
-                DateTime.Parse(comprobante.Fecha, null, DateTimeStyles.RoundtripKind),
+                "0000500000",
+                //"0000000004",
+                /*comprobante.Serie + */comprobante.Folio,
+                DateTime.ParseExact(comprobante.Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
+                
+                //DateTime.Parse(comprobante.Fecha, null, DateTimeStyles.RoundtripKind),
                 comprobante.SubTotal,
-                comprobante.Impuestos.TotalImpuestosTrasladados,
-                comprobante.Conceptos.Concepto.Count.ToString(),
+                comprobante.Total,
+                cantidad.ToString(),
                  comprobante.Complemento.TimbreFiscalDigital.UUID,
                  comprobante.Emisor.Rfc);
 
-           
-
+            Console.WriteLine( JsonConvert.SerializeObject(factura));
+            Console.ReadKey();
             return;
             var preCita = new PreCita();
             preCita.Fecha =DateTime.Today;

@@ -21,6 +21,7 @@ namespace Ppgz.Repository
         public decimal Total { get; set; }
         public string XmlRuta { get; set; }
         public string PdfRuta { get; set; }
+        public string NumeroGenerado { get; set; }
     
         public virtual proveedore proveedore { get; set; }
     }
