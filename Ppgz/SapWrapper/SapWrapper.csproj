@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="BwRfcConfigParam.cs" />
     <Compile Include="CommonRfcConfigParam.cs" />
+    <Compile Include="SapFacturaManager.cs" />
     <Compile Include="SapOrdenCompra.cs" />
     <Compile Include="SapOrdenCompraDetalle.cs" />
     <Compile Include="SapOrdenCompraManager.cs" />

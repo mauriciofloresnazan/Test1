@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -12,6 +14,7 @@ using Ppgz.Repository;
 using Ppgz.Services;
 using RestSharp;
 using SapWrapper;
+using SatWrapper;
 using SAP.Middleware.Connector;
 
 namespace Test
@@ -23,6 +26,23 @@ namespace Test
         static void Main(string[] args)
         {
 
+            var serializer = new XmlSerializer(typeof(Comprobante));
+            var archivoXml = new FileStream(@"C:\temp\borrar\factura.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var comprobante = (Comprobante)serializer.Deserialize(archivoXml);
+            var sapFacturaManager = new SapFacturaManager();
+            var factura = sapFacturaManager.CrearFactura(
+                "0000000004",
+                comprobante.Serie + comprobante.Folio,
+                DateTime.Parse(comprobante.Fecha, null, DateTimeStyles.RoundtripKind),
+                comprobante.SubTotal,
+                comprobante.Impuestos.TotalImpuestosTrasladados,
+                comprobante.Conceptos.Concepto.Count.ToString(),
+                 comprobante.Complemento.TimbreFiscalDigital.UUID,
+                 comprobante.Emisor.Rfc);
+
+           
+
+            return;
             var preCita = new PreCita();
             preCita.Fecha =DateTime.Today;
             preCita.HorarioRielesIds = new List<int> {850};

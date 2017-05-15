@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
 using Ppgz.Repository;
+using SapWrapper;
 using SatWrapper;
 
 namespace Ppgz.Services
@@ -90,6 +91,19 @@ namespace Ppgz.Services
             {
                 throw new BusinessException("Comprobante rechazado por el SAT");
             }
+
+            //Creacion de la factura para la miro
+            var sapFacturaManager = new SapFacturaManager();
+            sapFacturaManager.CrearFactura(
+                proveedor.NumeroProveedor,
+                comprobante.Serie + comprobante.Folio,
+                DateTime.Parse(comprobante.Fecha, null, DateTimeStyles.RoundtripKind),
+                comprobante.SubTotal,
+                comprobante.Impuestos.TotalImpuestosTrasladados,
+                comprobante.Conceptos.Concepto.Count.ToString(),
+                 comprobante.Complemento.TimbreFiscalDigital.UUID,
+                 comprobante.Emisor.Rfc);
+
             // Se crea el directorio de acuerdo a la fecha del comprobante
             var fecha = DateTime.ParseExact(comprobante.Fecha.Substring(0, 10), "yyyy-MM-dd",
                 CultureInfo.InvariantCulture);
@@ -118,6 +132,7 @@ namespace Ppgz.Services
             _db.facturas.Add(factura);
 
             _db.SaveChanges();
+
 
         }
 
