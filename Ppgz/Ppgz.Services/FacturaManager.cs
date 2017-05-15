@@ -77,7 +77,12 @@ namespace Ppgz.Services
             {
                 throw new BusinessException("Proveedor incorrecto en la factura");
             }
-    
+
+            if (proveedor.Id == proveedorId)
+            {
+                throw new BusinessException("Proveedor incorrecto en la factura");
+            }
+
             if (_db.facturas.FirstOrDefault(fa => fa.Uuid == comprobante.Complemento.TimbreFiscalDigital.UUID) != null)
             {
                 throw new BusinessException("La factura ya esta registrada en el sistema");
