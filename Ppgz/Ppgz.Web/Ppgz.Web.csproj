@@ -1207,6 +1207,7 @@
     <Content Include="Uploads\formato_nivel_servicio.xlsx" />
     <Content Include="Web.config" />
     <Content Include="Areas\Nazan\Views\Configsys\Index.cshtml" />
+    <Content Include="Views\Account\CambiarPassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

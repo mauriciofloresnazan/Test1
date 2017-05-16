@@ -5,19 +5,19 @@ namespace Ppgz.Web.Models
 {
     public class ExternalLoginConfirmationViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio.")]
         [Display(Name = "Usuario")]
         public string UserName { get; set; }
     }
 
     public class ManageUserViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio.")]
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña actual")]
         public string OldPassword { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio.")]
         [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]       
         [DataType(DataType.Password)]
         [Display(Name = "Nueva Contraseña")]
@@ -25,17 +25,17 @@ namespace Ppgz.Web.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar nueva contraseña")]
-        [Compare("NewPassword", ErrorMessage = "La nueva contraseña y confirmación no coinciden.")]
+        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "La nueva contraseña y confirmación no coinciden.")]
         public string ConfirmPassword { get; set; }
     }
 
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio.")]
         [Display(Name = "Usuario")]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio.")]
         [DataType(DataType.Password)]
         [Display(Name = "Contraseña")]
         public string Password { get; set; }
@@ -46,11 +46,11 @@ namespace Ppgz.Web.Models
 
     public class RegisterViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio.")]
         [Display(Name = "Usuario")]
         public string UserName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio.")]
         [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
         [RegularExpression(
             "^[a-zA-Z0-9$&+,:;=?@#|'<>.^*()%!-]+$",
@@ -61,13 +61,13 @@ namespace Ppgz.Web.Models
 
         [DataType(DataType.Password)]      
         [Display(Name = "Confirmar Contraseña")]
-        [Compare("Password", ErrorMessage = "Contraseña y confirmación no coinciden.")]
+        [System.Web.Mvc.Compare("Password", ErrorMessage = "Contraseña y confirmación no coinciden.")]
         public string ConfirmPassword { get; set; }
     }
 
     public class ForgotPasswordViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio.")]
         [EmailAddress(ErrorMessage = "Debe colocar un correo electrónico válido")]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
@@ -75,12 +75,12 @@ namespace Ppgz.Web.Models
 
     public class ResetPasswordViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio.")]
         [EmailAddress(ErrorMessage = "Debe colocar un correo electrónico válido")]
         [Display(Name = "Correo electrónico")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "El campo es obligatorio.")]
         [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
         [RegularExpression(
             "^[a-zA-Z0-9$&+,:;=?@#|'<>.^*()%!-]+$",
@@ -91,9 +91,30 @@ namespace Ppgz.Web.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
-        [Compare("Password", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
+        [System.Web.Mvc.Compare("Password", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
+    }
+
+
+
+    public class CambiarPasswordViewModel
+    {
+
+        [Required(ErrorMessage = "El campo es obligatorio.")]
+        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
+        [RegularExpression(
+            "^[a-zA-Z0-9$&+,:;=?@#|'<>.^*()%!-]+$",
+            ErrorMessage = "No Debe contener espacios, solo letras, números o caracteres especiales, sin importar minusculas y mayusculas.")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Contraseña")]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirmar contraseña")]
+        [System.Web.Mvc.Compare("Password", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
+        public string ConfirmPassword { get; set; }
+   
     }
 }

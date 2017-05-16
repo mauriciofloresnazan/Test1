@@ -65,6 +65,8 @@
                                         }
                                     }
                                 }
+                                <li role="separator" class="divider"></li>
+                                <li class=""><a href="@Url.Action("CambiarPassword","Account")"><i class="fa fa-key" aria-hidden="true"></i> Cambiar contraseña</a></li>
                             </ul>
                         </li>
                     }
@@ -148,6 +150,7 @@
     <footer class="footer">
         <p>&copy; @DateTime.Now.Year - Grupo Nazan</p>
     </footer>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/assets/vendor/bootstrap-3.3.6/js/bootstrap.min.js")
     @Scripts.Render("~/assets/vendor/dataTables-1.10.13/media/js/jquery.dataTables.min.js")

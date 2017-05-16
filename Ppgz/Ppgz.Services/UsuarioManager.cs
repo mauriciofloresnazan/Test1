@@ -222,12 +222,7 @@ namespace Ppgz.Services
         public AspNetUser Actualizar(string id, string nombre = null, string apellido = null, string email = null,
             string telefono = null, string cargo = null, string password = null)
         {
-            // Validaciones
-            // TODO VALIDACIONES DE LA ESTRUCTURA DE LOS DATOS
-           
-            ValidarNombreApellido(nombre);
-            ValidarNombreApellido(apellido);
-            ValidarEmail(email);
+                    
 
             var usuario = _db.AspNetUsers.Find(id);
 
@@ -241,11 +236,21 @@ namespace Ppgz.Services
                 throw new BusinessException("La Dirección de correo ya ha sido utilizada por otro usuario");
             }
             if (nombre != null)
+			{
+				ValidarNombreApellido(nombre);
                 usuario.Nombre = nombre;
+			}
             if (apellido != null)
+			{
+				ValidarNombreApellido(apellido);
                 usuario.Apellido = apellido;
+			}
             if (email != null)
+			{
+				ValidarEmail(email);
                 usuario.Email = email;
+				
+			}
             if (telefono != null)
                 usuario.PhoneNumber = telefono;
             if (cargo != null)
