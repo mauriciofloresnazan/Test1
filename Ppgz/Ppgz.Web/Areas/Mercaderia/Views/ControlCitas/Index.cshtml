@@ -5,6 +5,8 @@
     ViewBag.Title = "Registrar Cita";
     ViewBag.Descripcion = "Paso 1 - Seleccione una Razón Social.";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string[] almacenes = ViewBag.Almacenes;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -59,12 +61,15 @@
             <div class="modal-body">
                 <div class="text-center">
                     <div class="btn-group" data-toggle="buttons">
+
+                        @foreach (var almacen in almacenes)
+                        {
                         <label class="btn btn-primary">
-                            <input type="radio" name="radio-almacen" id="CD01" autocomplete="off"> CD01
+                            <input type="radio" name="radio-almacen" id="@almacen" autocomplete="off"> @almacen
                         </label>
-                        <label class="btn btn-primary">
-                            <input type="radio" name="radio-almacen" id="CD06" autocomplete="off"> CD06
-                        </label>
+                            
+                        }
+                       
                     </div>
 
                 </div>

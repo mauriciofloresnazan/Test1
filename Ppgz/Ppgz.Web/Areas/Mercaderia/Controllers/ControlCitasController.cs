@@ -9,12 +9,10 @@ using System.Net;
 using System.Web.Mvc;
 using ClosedXML.Excel;
 using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
 using Ppgz.CitaWrapper;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
-using RestSharp;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -57,7 +55,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-			ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
+            ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
+
+            ViewBag.Almacenes = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.warehouses").Valor.Split(',');
 			
 			return View();
 		}
