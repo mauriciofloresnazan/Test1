@@ -127,8 +127,8 @@ namespace Ppgz.Services
                 //"0000000004",
                 /*comprobante.Serie + */comprobante.Folio,
                 DateTime.ParseExact(comprobante.Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
-                comprobante.SubTotal.Replace(".", ","),
-                comprobante.Total.Replace(".", ","),
+                comprobante.SubTotal,
+                comprobante.Total,
                 cantidad.ToString(),
                  comprobante.Complemento.TimbreFiscalDigital.UUID,
                  comprobante.Emisor.Rfc);

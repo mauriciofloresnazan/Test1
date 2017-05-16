@@ -207,6 +207,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                 CommonManager.WriteAppLog(log, TipoMensaje.Error);
 
+                ModelState.AddModelError(string.Empty, e.Message);
                 return View(model);
             }
 
