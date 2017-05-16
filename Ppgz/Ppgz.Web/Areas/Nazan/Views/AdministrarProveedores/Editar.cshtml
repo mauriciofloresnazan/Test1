@@ -12,7 +12,7 @@
     <form id="editar-form" method="POST">
         <h2>
             Editar Cuenta de Proveedor
-            <a class="btn btn-default" href="@Url.Action("Index", "AdministrarProveedores")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+            <a class="btn btn-default" href="@Url.Action("Index", "AdministrarProveedores")"><i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
         </h2>
         <p class="page-description-title">
             <i class="fa fa-info" aria-hidden="true"></i> <i>Información de la cuenta</i>
@@ -53,12 +53,13 @@
                     <strong>Responsable</strong>
                 </div>
                 <div class="col-sm-8">
-                    <p>
-                        @(usuarioMaestro.Nombre + ' ' + usuarioMaestro.Apellido)<i>
-                        </i><br>
-                        @usuarioMaestro.Email
+                    <p><span style="color: #66aaaa;"><strong>@usuarioMaestro.UserName</strong></span><br>
+                        @(usuarioMaestro.Nombre + ' ' + usuarioMaestro.Apellido)<br>
+                        @usuarioMaestro.Cargo<br> 
+                        @usuarioMaestro.PhoneNumber<br>
+                        @usuarioMaestro.Email<br>
                         <br/>
-                        <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#editar-responsable-modal">Actualizar Datos</button>
+                        <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#editar-responsable-modal" type="button">Actualizar Datos</button>
                     </p>
                 </div>
             </div>
@@ -217,7 +218,7 @@
             </div>
             <div class="modal-body">
 
-                @using (Html.BeginForm("ActualizarResponsable", "AdministrarProveedores", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                @using (Html.BeginForm("ActualizarResponsable", "AdministrarProveedores", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "form-actualizar" }))
                 {
                     @Html.AntiForgeryToken()
 
@@ -272,8 +273,8 @@
 
                     <div class="form-group">
                         <div class="col-sm-offset-3 col-sm-7">
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-user-plus" aria-hidden="true"></i> Registrar</button>
-                            <a class="btn btn-default" href="@Url.Action("Index", "AdministrarProveedores")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                            <a type="submit" class="btn btn-primary" href="#" onclick="javascript:ActualizarResponsable();"><i class="fa fa-user-plus" aria-hidden="true"></i> Registrar</a>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
 
                         </div>
                     </div>
@@ -293,6 +294,8 @@
 
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
+    @Scripts.Render("~/Scripts/bootstrap-formhelpers-phone.en_US.js")
+    @Scripts.Render("~/Scripts/bootstrap-formhelpers-phone.js")
 
     <script type="text/javascript">
 
@@ -327,6 +330,8 @@
                 esEspecial: checked
             };
 
+            $.blockUI({ message: '<h2>Actualizando la Cuenta</h2><h2>Por favor espere...</h2>' });
+
             $.ajax({
                 type: "POST",
                 url: urlEstablecerCuentaEspecial,
@@ -357,6 +362,8 @@
             }).fail(function (result) {
                 alert(result.error);
 
+            }).always(function () {
+                $.unblockUI();
             });
 
         });
@@ -367,6 +374,7 @@
             var data = {
                 numeroProveedor: $("#numero-proveedor").val()
             };
+
             $.blockUI({ message: '<h2>Buscando el Proveedor</h2><h2>Por favor espere...</h2>' });
 
             $.ajax({
@@ -412,7 +420,50 @@
                 $.unblockUI();
             });
         }
+        function ActualizarResponsable() {
 
+            if (!$("#form-actualizar").valid()) {
+                return;
+            }
+
+            var data = {
+                usuarioId: "@usuarioMaestro.Id",
+                nombre: $("#ResponsableNombre").val(),
+                apellido: $("#ResponsableApellido").val(),
+                cargo: $("#ResponsableCargo").val(),
+                telefono: $("#ResponsableTelefono").val(),
+                email: $("#ResponsableEmail").val()
+                
+            };
+
+            $.blockUI({ message: '<h2>Actualizando la Cuenta</h2><h2>Por favor espere...</h2>' , 
+                    baseZ: 2000});
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("ActualizarResponsable", "AdministrarProveedores")",
+                data: data,
+                cache: false
+            }).done(function (result) {
+
+                if (result.error) {
+                    alert(result.error);
+                    return;
+                }
+
+                location.href = "@Url.Action("Editar", "AdministrarProveedores", new { id = @cuenta.Id, successMessage = "Responsable actualizado correctamente" })";
+                
+
+
+
+            }).fail(function (result) {
+                alert(result);
+
+            }).always(function () {
+                $.unblockUI();
+
+            });
+        }
 
     </script>
 }

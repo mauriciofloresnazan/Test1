@@ -235,7 +235,11 @@ namespace Ppgz.Services
             {
                 throw new BusinessException(CommonMensajesResource.ERROR_Usuario_Id);
             }
-
+			
+			if (_db.AspNetUsers.FirstOrDefault(u => u.Email == email && u.Id != id) != null)
+            {
+                throw new BusinessException("La Dirección de correo ya ha sido utilizada por otro usuario");
+            }
             if (nombre != null)
                 usuario.Nombre = nombre;
             if (apellido != null)

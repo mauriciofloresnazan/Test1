@@ -10,6 +10,7 @@
 <div class="clearfix">
     <a href="@Url.Action("Registrar", "AdministrarProveedores")" class="btn btn-primary pull-right"><i class="fa fa-plus" aria-hidden="true"></i> Registrar Cuenta de Proveedor</a>
 </div>
+
 <div class="panel panel-default">
     <div class="panel-heading">Cuentas Registradas</div>
     <div class="panel-body">
@@ -33,7 +34,7 @@
                         <td class="text-center vert-align">@cuentaConUsuarioMaestro.Cuenta.NombreCuenta</td>
                         <td class="text-center vert-align">@cuentaConUsuarioMaestro.Cuenta.proveedores.Count</td>
                         <td class="text-center vert-align">
-                            @cuentaConUsuarioMaestro.UsuarioMaestro.Nombre
+                            <strong>(@cuentaConUsuarioMaestro.UsuarioMaestro.UserName)</strong> @cuentaConUsuarioMaestro.UsuarioMaestro.Nombre @cuentaConUsuarioMaestro.UsuarioMaestro.Apellido
                         </td>
                         <td class="text-center vert-align">@cuentaConUsuarioMaestro.Cuenta.Tipo
                         </td>

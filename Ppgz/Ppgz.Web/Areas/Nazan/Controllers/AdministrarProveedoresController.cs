@@ -94,7 +94,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		}
 
 		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
-		public ActionResult Editar(int id)
+		public ActionResult Editar(int id, string successMessage = null)
 		{
             var cuentaConUsuarioMaestro = _cuentaManager.FindWithUsuarioMaestro(id);
 			if (cuentaConUsuarioMaestro == null)
@@ -117,9 +117,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             };
 
+		    if (!string.IsNullOrWhiteSpace(successMessage))
+		    {
+		        TempData["FlashSuccess"] = successMessage;
+		    }
+
             return View(model);
 
-			return View();
 		}
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
@@ -299,28 +303,47 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 	    }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+ 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
-        public JsonResult ActualizarResponsable(int proveedorId, CuentaViewModel cuentaViewModel)
+        public JsonResult ActualizarResponsable(string usuarioId, string nombre, string apellido, string cargo, string telefono, string email)
         {
-          
-            var db = new Entities();
-            var proveedor = db.proveedores.Find(proveedorId);
-            if (proveedor == null)
+            var model = new CuentaViewModel
             {
-                return Json(new { error = "Proveedor Incorrecto" });
+                ResponsableNombre = nombre,
+                ResponsableApellido = apellido,
+                ResponsableCargo = cargo,
+                ResponsableTelefono = telefono,
+                ResponsableEmail = email
+            };
+
+            ModelState.Clear();
+
+            TryValidateModel(model);
+            
+            var usuarioManager = new UsuarioManager();
+
+            if (!ModelState.IsValidField("ResponsableNombre"))
+                return Json(new { error = "Nombre incorrecto" });
+            if (!ModelState.IsValidField("ResponsableApellido"))
+                return Json(new { error = "Apellido incorrecto" });
+            if (!ModelState.IsValidField("ResponsableCargo"))
+                return Json(new { error = "Cargo incorrecto" });
+            if (!ModelState.IsValidField("ResponsableTelefono"))
+                return Json(new { error = "Teléfno incorrecto" });
+            if (!ModelState.IsValidField("ResponsableEmail"))
+                return Json(new { error = "Email incorrecto" }); 
+
+            try
+            {
+                usuarioManager.Actualizar(usuarioId, nombre, apellido, email, telefono, cargo);
+            }
+            catch (Exception exception)
+            {
+
+                return Json(new { error = exception.Message}); 
             }
             
-            if (ModelState.IsValidField("ResponsableNombre"))
-            {
-                
-            }
-            if (ModelState.IsValidField("ResponsableApellido"))
-            {
-                
-            }
-            return Json(new { success = "Nice" });
+            return Json(new { success = "Responsable actualizado correctamente" });
 
 	    }
 	}
