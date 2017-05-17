@@ -278,7 +278,7 @@ namespace Ppgz.Services
             {
                 throw new BusinessException("Error en la consulta del proveedor en SAP");
             }
-
+            /*
             proveedor.ClavePais= proveedorSap.ClavePais;
             proveedor.Nombre1 = proveedorSap.Nombre1;
             proveedor.Nombre2 = proveedorSap.Nombre2;
@@ -315,7 +315,87 @@ namespace Ppgz.Services
             proveedor.Rfc = proveedorSap.Rfc;
 
             _db.Entry(proveedor).State = EntityState.Modified;
-            _db.SaveChanges();
+            _db.SaveChanges();*/
+            
+            const string sql = @"
+                UPDATE proveedores
+                SET    ClavePais = @ClavePais,
+                       Nombre1 = @Nombre1,
+	                   Nombre2 = @Nombre2,
+                       Nombre3 = @Nombre3,
+                       Nombre4 = @Nombre4,
+
+                       Poblacion = @Poblacion,
+                       Distrito = @Distrito,
+                       Apartado = @Apartado,
+                       CodigoApartado = @CodigoApartado,
+                       CodigoPostal = @CodigoPostal,
+
+                       Region = @Region,
+                       Calle = @Calle,
+                       Direccion = @Direccion,
+                       Sociedad = @Sociedad,
+                       OrganizacionCompra = @OrganizacionCompra,
+
+                       ClaveMoned = @ClaveMoned,
+                       VendedorResponsable = @VendedorResponsable,
+                       NumeroTelefono = @NumeroTelefono,
+                       CondicionPago = @CondicionPago,
+                       IncoTerminos1 = @IncoTerminos1,
+
+                       IncoTerminos2 = @IncoTerminos2,
+                       GrupoCompras = @GrupoCompras,
+                       DenominacionGrupo = @DenominacionGrupo,
+                       TelefonoGrupoCompra = @TelefonoGrupoCompra,
+                       TelefonoPrefijo = @TelefonoPrefijo,
+
+                       TelefonoExtension = @TelefonoExtension,
+                       Correo = @Correo,
+                       Rfc = @Rfc
+
+                WHERE  Id = @Id;";
+
+            var parameters = new List<MySqlParameter>
+                {
+                    new MySqlParameter("ClavePais", proveedorSap.ClavePais), 
+                    new MySqlParameter("Nombre1", proveedorSap.Nombre1), 
+                    new MySqlParameter("Nombre2", proveedorSap.Nombre2), 
+                    new MySqlParameter("Nombre3", proveedorSap.Nombre3), 
+                    new MySqlParameter("Nombre4", proveedorSap.Nombre4), 
+                    
+                    new MySqlParameter("Poblacion", proveedorSap.Poblacion), 
+                    new MySqlParameter("Distrito", proveedorSap.Distrito), 
+                    new MySqlParameter("Apartado", proveedorSap.Apartado), 
+                    new MySqlParameter("CodigoApartado", proveedorSap.CodigoApartado), 
+                    new MySqlParameter("CodigoPostal", proveedorSap.CodigoPostal), 
+                    
+                    new MySqlParameter("Region", proveedorSap.Region), 
+                    new MySqlParameter("Calle", proveedorSap.Calle), 
+                    new MySqlParameter("Direccion", proveedorSap.Direccion), 
+                    new MySqlParameter("Sociedad", proveedorSap.Sociedad), 
+                    new MySqlParameter("OrganizacionCompra", proveedorSap.OrganizacionCompra),  
+                    
+                    new MySqlParameter("ClaveMoned", proveedorSap.ClaveMoned), 
+                    new MySqlParameter("VendedorResponsable", proveedorSap.VendedorResponsable), 
+                    new MySqlParameter("NumeroTelefono", proveedorSap.NumeroTelefono), 
+                    new MySqlParameter("CondicionPago", proveedorSap.CondicionPago), 
+                    new MySqlParameter("IncoTerminos1", proveedorSap.IncoTerminos1), 
+                    
+                    new MySqlParameter("IncoTerminos2", proveedorSap.IncoTerminos2), 
+                    new MySqlParameter("GrupoCompras", proveedorSap.GrupoCompras), 
+                    new MySqlParameter("DenominacionGrupo", proveedorSap.DenominacionGrupo), 
+                    new MySqlParameter("TelefonoGrupoCompra", proveedorSap.TelefonoGrupoCompra), 
+                    new MySqlParameter("TelefonoPrefijo", proveedorSap.TelefonoPrefijo), 
+                    
+                    new MySqlParameter("TelefonoExtension", proveedorSap.TelefonoExtension), 
+                    new MySqlParameter("Correo", proveedorSap.Correo), 
+                    new MySqlParameter("Rfc", proveedorSap.Rfc), 
+
+                      new MySqlParameter("Id", proveedorId), 
+                };
+
+            Db.Insert(sql, parameters);
+
         }
 
         public void EstablecerCuentaEspecial(int cuentaId, bool esEspecial)

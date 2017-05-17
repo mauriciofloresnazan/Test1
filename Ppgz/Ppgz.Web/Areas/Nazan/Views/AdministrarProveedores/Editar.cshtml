@@ -79,16 +79,25 @@
                         <div class="col-sm-12">
                             <label>Asociar proveedor desde SAP</label>
                         </div>
-                        <form id="buscar-form" method="POST">
-                            <div class="col-sm-3">
-                                <input type="text" name="numero-proveedor" id="numero-proveedor" placeholder="Número de Proveedor" class="form-control"/>
-                            </div>
-                            <div class="col-sm-7">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-search" aria-hidden="true"></i> Buscar
-                                </button>
-                            </div>
-                        </form>
+                        <div class="col-sm-6">
+                            <form id="buscar-form" method="POST">
+                                <div class="col-sm-4">
+                                    <input type="text" name="numero-proveedor" id="numero-proveedor" placeholder="Número de Proveedor" class="form-control"/>
+                                </div>
+                                <div class="col-sm-7">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fa fa-search" aria-hidden="true"></i> Buscar
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-sm-6">
+                            <ul>
+                                <li><i>Para asociar un proveedor desde SAP utilice la opción Buscar</i></li>
+                                <li><i>Para refrescar los datos del proveedor desde SAP utilice la opcion Actualizar</i></li>
+                                
+                            </ul>
+                        </div>
                     </th>
                 </tr>
                 <tr>
@@ -128,7 +137,7 @@
                                 <a class="btn btn-danger btn-xs" href="@Url.Action("DesAsociarProveedor", "AdministrarProveedores", new {cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El proveedor será desvinculado de esta cuenta.">
                                     <i class="fa fa-times" aria-hidden="true"></i> Eliminar
                                 </a>
-                                <a class="btn btn-warning btn-xs" href="@Url.Action("RefrescarProveedor", "AdministrarProveedores", new { cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id })">
+                                <a title="Refrescar datos desde SAP" class="btn btn-warning btn-xs" href="@Url.Action("RefrescarProveedor", "AdministrarProveedores", new { cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id })">
                                     <i class="fa fa-refresh" aria-hidden="true"></i> Actualizar
                                 </a>
                             </div>
