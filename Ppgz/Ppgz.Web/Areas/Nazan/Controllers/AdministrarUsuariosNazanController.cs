@@ -109,6 +109,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		[ValidateAntiForgeryToken]
 		public ActionResult Editar(string id, UsuarioNazanViewModel model)
 		{
+            ViewBag.Perfiles =
+                new SelectList(_perfilManager.FindPerfilesNazan(), "Id", "Nombre"); 
 			var usuario = _usuarioManager.Find(id);
 
 			if (usuario == null)
