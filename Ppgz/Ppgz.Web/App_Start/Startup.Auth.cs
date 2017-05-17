@@ -30,7 +30,8 @@ namespace Ppgz.Web
 
                 {"NAZAN-CONFIGSYS", "Actualizar las configuraciones del sistema"},
                 {"NAZAN-NIVELSERVICIO", "Actualizar niveles de servicio por proveedores"},
-                {"NAZAN-ADMINISTRARCITAS", "Administracion de citas"}
+                {"NAZAN-ADMINISTRARCITAS", "Administracion de citas"},
+                {"NAZAN-ADMINISTRARFACTURAS", "Administracion de facturas"}
             };
             return rolesNazan;
         }

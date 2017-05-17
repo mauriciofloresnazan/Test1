@@ -101,7 +101,6 @@ namespace Ppgz.Web
                 //"|Administración de Usuarios Proveedor|||fa fa-address-card|Nazan",
                 //"|Administración de Perfiles Proveedor|||fa fa-address-card|Nazan",
                 //"|Órdenes de Compra|||fa fa-address-book|Nazan",
-                //"|Administración de Facturas|||fa fa-calculator|Nazan",
                 "ADMINISTRARMENSAJESINSTITUCIONALES|Administrar Mensajes Institucionales|Index|AdministrarMensajesInstitucionales|fa fa-envelope-open|Nazan",
                
                 //"|Reportes|||fa fa-file-pdf-o|Nazan",
@@ -110,6 +109,7 @@ namespace Ppgz.Web
                 "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores|Index|AdministrarProveedores|fa fa-address-book-o|Nazan",
                 "NIVELSERVICIO|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan",
                 "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
+                "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
             };
             return menuLista;

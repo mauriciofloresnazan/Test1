@@ -1,0 +1,98 @@
+﻿@using Ppgz.Repository
+@{
+    ViewBag.Title = "Administración de Facturas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    var facturas = (List<factura>)ViewBag.Facturas;
+    var fechaInicio = (DateTime)ViewBag.FechaInicio;
+}
+
+<h2>Facturas Registradas</h2>
+<p class="page-description-title"><i class="fa fa-envelope" aria-hidden="true"></i> <i>Registro desde hace 3 meses</i></p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Lista de Facturas</div>
+    <div class="panel-body">
+
+
+        <div class="col-md-12">
+            <div class="row">
+                <label class="col-sm-2">Fecha</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
+                </div>
+            </div>
+            <hr/>
+            <div class="table-responsive">
+                <table id="facturas" class="table table-striped table-condensed table-bordered">
+                    <thead>
+                    <tr>
+                        <th>RFC</th>
+                        <th>Razón Social</th>
+                        <th class="text-center">Id</th>
+                        <th class="text-center">Numero Generado</th>
+                        <th class="text-center">UUID</th>
+                        <th class="text-center">Fecha</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">Descargar</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var factura in facturas)
+                    {
+                        <tr>
+                            <td class="text-center vert-align">@factura.proveedore.Rfc</td>
+                            <td class="text-center vert-align">@factura.proveedore.Nombre1 @factura.proveedore.Nombre2 @factura.proveedore.Nombre3 @factura.proveedore.Nombre4</td>
+                            <td class="text-center vert-align">@factura.Id</td>
+                            <td class="text-center vert-align">@factura.NumeroGenerado</td>
+                            <td class="text-center vert-align">@factura.Uuid</td>
+                            <td class="text-center vert-align">@factura.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center vert-align">@factura.Total</td>
+                            <td class="text-center vert-align">
+
+                                <div class="btn-group btn-group-vertical" role="group" aria-label="Archivos">
+                                    <a class="btn btn-danger btn-xs" href="@Url.Action("DescargarXml", "AdministrarFacturas", new {proveedorId = @factura.proveedore.Id, facturaId = @factura.Id})"><i class="fa fa-file-code-o" aria-hidden="true"></i> XML </a>
+                                    <a class="btn btn-warning btn-xs" href="@Url.Action("DescargarPdf", "AdministrarFacturas", new {proveedorId = @factura.proveedore.Id, facturaId = @factura.Id})"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#facturas  ').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+
+            $('#fecha').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: "@fechaInicio.ToString("yyyyMMdd")"
+            });
+
+            $("#fecha").on("dp.change", function () {
+                location.href = "@Url.Action("Index", "AdministrarFacturas")" + "?fecha=" + $(this).val();
+            });
+        });
+
+     
+
+    </script>
+
+
+
+}
