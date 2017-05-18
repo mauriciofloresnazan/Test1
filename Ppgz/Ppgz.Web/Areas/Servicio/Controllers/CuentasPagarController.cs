@@ -145,7 +145,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var columnsNames = new[]
             {        
-                "BELNR_COMPEN","DMBTR_COMPEN","WAERS_COMPEN",  "BLART_COMPEN"
+                "XBLNR","DMBTR_COMPEN","WAERS_COMPEN",  "BLART_COMPEN"
             };
 
             foreach (DataRow dr in dt.Rows)
@@ -225,7 +225,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 }
             }
 
-            dt.Columns["BELNR_COMPEN"].ColumnName = "Referencia";
+            dt.Columns["XBLNR"].ColumnName = "Referencia";
             dt.Columns["DMBTR_COMPEN"].ColumnName = "Importe";
             dt.Columns["WAERS_COMPEN"].ColumnName = "Ml";
             dt.Columns["BLART_COMPEN"].ColumnName = "Tipo de Movimiento";
@@ -404,7 +404,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var columnsNames = new[]
             {        
-                "BELNR","DMBTR","WAERS","BLART","FECHA_PAGO"
+                "XBLNR","DMBTR","WAERS","BLART","FECHA_PAGO"
             };
 
             foreach (DataRow dr in dt.Rows)
@@ -452,7 +452,14 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                         tipo = "Cargo a proveedor";
                         break;
                     case "RE":
-                        tipo = "Factura a proveedor";
+
+                        if ((decimal)dr["DMBTR"] > 0)
+                        {
+                            tipo = "Factura de mercancia";
+                            break;
+
+                        }
+                        tipo = "Devolucion de mercancia";
                         break;
 
                     case "RV":
@@ -482,7 +489,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 }
             }
 
-            dt.Columns["BELNR"].ColumnName = "Referencia";
+            dt.Columns["XBLNR"].ColumnName = "Referencia";
             dt.Columns["DMBTR"].ColumnName = "Importe";
             dt.Columns["WAERS"].ColumnName = "Ml";
             dt.Columns["BLART"].ColumnName = "Tipo de Movimiento";
