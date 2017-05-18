@@ -123,7 +123,7 @@
                 type: 'POST',
                 success: function (data) {
                     $("#mensaje-tr-id-" + mensajeId + " .leido-flag").text("SI");
-                    //alert(data);
+                    RefrescarMensajes();
                 }
             });
         }
