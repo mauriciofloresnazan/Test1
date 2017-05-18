@@ -14,7 +14,8 @@
                 <thead>
                     <tr>
                         <th class="text-center">Numero Proveedor</th>
-                        <th class="text-center">Nombre</th>
+                        <th class="text-center">RFC</th>
+                        <th class="text-center">Razón Social</th>
                         <th class="text-center"></th>
                     </tr>
                 </thead>
@@ -23,7 +24,8 @@
                     {
                         <tr>
                             <td class="text-center">@proveedor.NumeroProveedor</td>
-                            <td class="text-center vert-align">@proveedor.Nombre1</td>
+                            <td class="text-center">@proveedor.Rfc</td>
+                            <td class="text-center vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
                             <td class="text-center">
                                 @*<a id="btnProveedor" data-idproveedor="@proveedor.Id" href="#"><i class="fa fa-check" aria-hidden="true"></i> Ver Detalle</a>*@
 
