@@ -21,15 +21,28 @@ namespace Test
 {
     class Program
     {
+        static void ValidarSat()
+        {
+            var response = CfdiServiceConsulta.Consulta(@"C:\temp\borrar\miro\4EEC-A....xml");
 
+
+            Console.WriteLine(response);
+            Console.ReadKey();
+        }
         
+        
+
         static void Main(string[] args)
         {
+            /*ValidarSat();
+            return;
+            */
             // solo el folio
             var serializer = new XmlSerializer(typeof(Comprobante));
             //var archivoXml = new FileStream(@"C:\temp\borrar\miro\factura.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             //var archivoXml = new FileStream(@"C:\temp\borrar\miro\4EEC-A....xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            var archivoXml = new FileStream(@"C:\temp\borrar\miro\4939-A....xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            //var archivoXml = new FileStream(@"C:\temp\borrar\miro\4939-A....xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var archivoXml = new FileStream(@"C:\temp\borrar\miro\error.xml", FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var comprobante = (Comprobante)serializer.Deserialize(archivoXml);
             var sapFacturaManager = new SapFacturaManager();
 

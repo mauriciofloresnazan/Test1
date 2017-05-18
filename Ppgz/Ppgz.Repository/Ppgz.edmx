@@ -244,7 +244,8 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
           <Property Name="Total" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="XmlRuta" Type="varchar" MaxLength="1000" Nullable="false" />
           <Property Name="PdfRuta" Type="varchar" MaxLength="1000" Nullable="false" />
-          <Property Name="NumeroGenerado" Type="varchar" MaxLength="5000" Nullable="false" />
+          <Property Name="NumeroGenerado" Type="varchar" MaxLength="5000" />
+          <Property Name="Error" Type="varchar" MaxLength="5000" />
         </EntityType>
         <EntityType Name="horariorieles">
           <Key>
@@ -1364,7 +1365,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Total" Type="Decimal" Nullable="false" />
           <Property Name="XmlRuta" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="PdfRuta" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="NumeroGenerado" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NumeroGenerado" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
+          <Property Name="Error" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="proveedore" Relationship="Self.fk_facturas_proveedores" FromRole="facturas" ToRole="proveedores" />
         </EntityType>
         <EntityType Name="horarioriele">
@@ -2363,6 +2365,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="XmlRuta" ColumnName="XmlRuta" />
                 <ScalarProperty Name="PdfRuta" ColumnName="PdfRuta" />
                 <ScalarProperty Name="NumeroGenerado" ColumnName="NumeroGenerado" />
+                <ScalarProperty Name="Error" ColumnName="Error" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

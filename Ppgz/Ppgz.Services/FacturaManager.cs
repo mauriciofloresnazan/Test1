@@ -129,15 +129,10 @@ namespace Ppgz.Services
                 DateTime.ParseExact(comprobante.Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
                 comprobante.SubTotal,
                 comprobante.Total,
-                cantidad.ToString(),
+                cantidad.ToString(CultureInfo.InvariantCulture),
                  comprobante.Complemento.TimbreFiscalDigital.UUID,
                  comprobante.Emisor.Rfc);
             
-            if (facturaSap.Estatus != "S")
-            {
-                // TODO MEJORAR
-                throw new BusinessException("Error al generar la factura en la MIRO");
-            }
 
             // Se crea el directorio de acuerdo a la fecha del comprobante
             var fecha = DateTime.ParseExact(comprobante.Fecha.Substring(0, 10), "yyyy-MM-dd",
@@ -162,8 +157,22 @@ namespace Ppgz.Services
                 Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
                 XmlRuta = newXmlPath,
                 PdfRuta = newPdfPath,
-                NumeroGenerado = facturaSap.FacturaNumero
             };
+
+
+            if (facturaSap.Estatus != "S")
+            {
+                factura.Error = string.Format
+                    ("Tipo:{1} {0}Mensaje:{2}", 
+                    Environment.NewLine,
+                    facturaSap.ErrorTable.Rows[0]["TYPE"],
+                    facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
+            }
+            else
+            {
+                factura.NumeroGenerado = facturaSap.FacturaNumero;
+            }
+
 
             _db.facturas.Add(factura);
 

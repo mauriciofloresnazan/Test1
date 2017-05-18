@@ -22,6 +22,7 @@ namespace Ppgz.Repository
         public string XmlRuta { get; set; }
         public string PdfRuta { get; set; }
         public string NumeroGenerado { get; set; }
+        public string Error { get; set; }
     
         public virtual proveedore proveedore { get; set; }
     }
