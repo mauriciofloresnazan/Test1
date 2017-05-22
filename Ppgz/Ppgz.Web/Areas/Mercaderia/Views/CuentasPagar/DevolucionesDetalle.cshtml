@@ -1,4 +1,5 @@
 ﻿@using System.Data
+@using System.Globalization
 @using Ppgz.Repository
 @{
     ViewBag.Title = "Detalle de Devoluciones";
@@ -6,6 +7,12 @@
 
     var drDevolucion = (DataRow)ViewBag.Devolucion;
 
+
+    var fechaDevolucion = DateTime.ParseExact(
+                        drDevolucion["BLDAT"].ToString(),
+                        "yyyyMMdd",
+                        CultureInfo.InvariantCulture);
+    
 
     var drDevolucionDetalles = (DataRow[])ViewBag.DevolucionDetalles;
 
@@ -17,6 +24,8 @@
 
     var total = decimal.Parse(@ViewBag.devolucion["DMBTR"].ToString()) * -1;
 
+    var cantidadTotal = drDevolucionDetalles.Aggregate<DataRow, decimal>(0, (current, dr) => current + decimal.Parse(dr["MENGE"].ToString()));
+    
     var fechaParam = (DateTime)ViewBag.Fecha;
 }
 
@@ -56,6 +65,10 @@
                         <dl class="dl-horizontal">
                             <dt>Folio de Referencia: </dt>
                             <dd class="text-right">@drDevolucion["XBLNR"]</dd>
+                            <dt>Fecha: </dt>
+                            <dd class="text-right">@fechaDevolucion.ToString("dd/MM/yyyy")</dd>
+                            <dt>Total Pares Devueltos: </dt>
+                            <dd class="text-right">@string.Format("{0:N}", @cantidadTotal)</dd>
                             <dt>Sub Total: </dt>
                             <dd class="text-right">@string.Format("{0:N}", @subTotal)</dd>
                             <dt>IVA: </dt>
@@ -96,6 +109,8 @@
             <hr/>
             <div class="clearfix">
                 <dl class="dl-horizontal pull-right">
+                    <dt>Total Pares Devueltos: </dt>
+                    <dd class="text-right">@string.Format("{0:N}", @cantidadTotal)</dd>
                     <dt>Sub Total: </dt>
                     <dd class="text-right">@string.Format("{0:N}", @subTotal)</dd>
                     <dt>IVA: </dt>
