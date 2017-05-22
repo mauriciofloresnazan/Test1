@@ -66,7 +66,7 @@ namespace Ppgz.Web
         {
             var rolesServicio = new Dictionary<string, string>
             {
-                {"MAESTRO-SERVICIO","Acceso Total al sistema de Servicio"},
+                {"MAESTRO-SERVICIO","Acceso Total al sistema"},
                 {"SERVICIO-ADMINISTRARPERFILES-LISTAR","Consultar perfiles"},
                 {"SERVICIO-ADMINISTRARPERFILES-MODIFICAR","Modificar perfiles"},
                 {"SERVICIO-ADMINISTRARUSUARIOS-LISTAR","Consultar usuarios"},
