@@ -16,6 +16,7 @@ using RestSharp;
 using SapWrapper;
 using SatWrapper;
 using SAP.Middleware.Connector;
+using ScaleWrapper;
 
 namespace Test
 {
@@ -29,11 +30,31 @@ namespace Test
             Console.WriteLine(response);
             Console.ReadKey();
         }
+
+        static void TestScale()
+        {
+            var db = new Entities();
+            var cita = db.citas.First();
+            var scaleManager = new ScaleManager();
+            try
+            {
+
+                scaleManager.Registrar(cita);
+            }
+            catch (Exception exception)
+            {
+                
+                Console.WriteLine(exception.Message);
+            }
+        }
         
         
 
         static void Main(string[] args)
         {
+            TestScale();
+            return;
+
             /*ValidarSat();
             return;
             */

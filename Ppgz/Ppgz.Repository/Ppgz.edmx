@@ -452,6 +452,14 @@ warning 6002: The table/view 'def.impuls_portal.pagos' does not have a primary k
           <Property Name="Riel" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="AndenId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="ScaleAlmacen">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Sap" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Scale" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
         <EntityType Name="tipocuentas">
           <Key>
             <PropertyRef Name="Id" />
@@ -936,6 +944,7 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           <EntitySet Name="perfilesroles" EntityType="Self.perfilesroles" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="rieles" EntityType="Self.rieles" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="ScaleAlmacen" EntityType="Self.ScaleAlmacen" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="tipocuentas" EntityType="Self.tipocuentas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="tipousuario" EntityType="Self.tipousuario" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="devoluciones" EntityType="Self.devoluciones" store:Type="Tables" store:Schema="impuls_portal">
@@ -1561,6 +1570,14 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <NavigationProperty Name="andene" Relationship="Self.fk_rieles_anden" FromRole="rieles" ToRole="andenes" />
           <NavigationProperty Name="horariorieles" Relationship="Self.fk_horariorieles_rieles" FromRole="rieles" ToRole="horariorieles" />
         </EntityType>
+        <EntityType Name="ScaleAlmacen">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Sap" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Scale" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
         <EntityType Name="tipocuenta">
           <Key>
             <PropertyRef Name="Id" />
@@ -2018,6 +2035,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="perfiles" EntityType="Self.perfile" />
           <EntitySet Name="proveedores" EntityType="Self.proveedore" />
           <EntitySet Name="rieles" EntityType="Self.riele" />
+          <EntitySet Name="ScaleAlmacens" EntityType="Self.ScaleAlmacen" />
           <EntitySet Name="tipocuentas" EntityType="Self.tipocuenta" />
           <EntitySet Name="tipousuarios" EntityType="Self.tipousuario" />
           <EntitySet Name="devoluciones" EntityType="Self.devolucione" />
@@ -2547,6 +2565,15 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
                 <ScalarProperty Name="Riel" ColumnName="Riel" />
                 <ScalarProperty Name="AndenId" ColumnName="AndenId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScaleAlmacens">
+            <EntityTypeMapping TypeName="impuls_portalModel.ScaleAlmacen">
+              <MappingFragment StoreEntitySet="ScaleAlmacen">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Sap" ColumnName="Sap" />
+                <ScalarProperty Name="Scale" ColumnName="Scale" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

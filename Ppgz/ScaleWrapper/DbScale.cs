@@ -10,13 +10,12 @@ using System.Threading.Tasks;
 
 namespace ScaleWrapper
 {
-    class Db
+    class DbScale
     {
 
         private static readonly DbProviderFactory Factory = DbProviderFactories.GetFactory("System.Data.SqlClient");
 
-        private static readonly string ConnectionStringName = ConfigurationManager.AppSettings.Get("ConnectionStringName");
-        private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings[ConnectionStringName].ConnectionString;
+        private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["Scale"].ConnectionString;
 
 
         #region Data Update handlers

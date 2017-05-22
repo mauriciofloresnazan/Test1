@@ -161,6 +161,9 @@
     <Compile Include="riele.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="ScaleAlmacen.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="tipocuenta.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>

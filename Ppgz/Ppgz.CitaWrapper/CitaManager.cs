@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using Ppgz.Repository;
 using SapWrapper;
+using ScaleWrapper;
 
 namespace Ppgz.CitaWrapper
 {
@@ -195,11 +196,24 @@ namespace Ppgz.CitaWrapper
                     db.SaveChanges();
                 }
 
+                
+
 	        }
 	        catch (Exception exception)
 	        {
 	            
 	            throw new Exception(exception.Message);
+	        }
+	        try
+	        {
+                var scaleManager = new ScaleManager();
+                scaleManager.Registrar(cita);
+	        }
+	        catch (Exception exception)
+	        {
+	            var error = string.Format("Cita registrada exitosamente, con errores al cargar en SCALE:{0}{1}",Environment.NewLine, exception.Message);
+
+	            throw new Exception(error);
 	        }
 
 	  

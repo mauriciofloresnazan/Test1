@@ -52,6 +52,7 @@ namespace Ppgz.Repository
         public virtual DbSet<perfile> perfiles { get; set; }
         public virtual DbSet<proveedore> proveedores { get; set; }
         public virtual DbSet<riele> rieles { get; set; }
+        public virtual DbSet<ScaleAlmacen> ScaleAlmacens { get; set; }
         public virtual DbSet<tipocuenta> tipocuentas { get; set; }
         public virtual DbSet<tipousuario> tipousuarios { get; set; }
         public virtual DbSet<devolucione> devoluciones { get; set; }
