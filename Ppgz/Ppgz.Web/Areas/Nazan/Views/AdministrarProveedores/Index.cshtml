@@ -36,7 +36,17 @@
                         <td class="text-center vert-align">
                             <strong>(@cuentaConUsuarioMaestro.UsuarioMaestro.UserName)</strong> @cuentaConUsuarioMaestro.UsuarioMaestro.Nombre @cuentaConUsuarioMaestro.UsuarioMaestro.Apellido
                         </td>
-                        <td class="text-center vert-align">@cuentaConUsuarioMaestro.Cuenta.Tipo
+                        <td class="text-center vert-align">
+                            @if (cuentaConUsuarioMaestro.Cuenta.Tipo == "MERCADERIA")
+                            {
+                                
+                                <text>MERCADERÍAS</text>
+                            }
+                            else
+                            {
+                                <text>@cuentaConUsuarioMaestro.Cuenta.Tipo</text>
+                                
+                            }
                         </td>
                         <td class="text-center vert-align">
                             @if (@cuentaConUsuarioMaestro.Cuenta.Activo)
