@@ -36,7 +36,7 @@ namespace Ppgz.Web.Controllers
         {
             if (Request.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
 
             ViewBag.ReturnUrl = returnUrl;
