@@ -137,7 +137,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             if (proveedor == null)
             {
-                // TODO
+   
                 TempData["FlashError"] = "Proveedor incorrecto";
                 return RedirectToAction("Index");
             }
@@ -173,20 +173,17 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                 var xmlFile = Request.Files["xml"];
                 ValidarXml(xmlFile);
-                var tempXmlPath = Path.Combine(Server.MapPath("~/Uploads/"), Guid.NewGuid() + ".xml");
+                var tempXmlPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".xml");
                 xmlFile.SaveAs(tempXmlPath);
                 
                 var pdfFile = Request.Files["pdf"];
                 ValidarPdf(pdfFile);
-                var tempPdfPath = Path.Combine(Server.MapPath("~/Uploads/"), Guid.NewGuid() + ".pdf");
+                var tempPdfPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".pdf");
                 pdfFile.SaveAs(tempPdfPath);
 
 
                 _facturaManager.CargarFactura(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
-       
-
-                // TODO ELIMINAR LOS ARCHIVOS TEMPORALES
-
+                
 
                 TempData["FlashSuccess"] = "Factura registrada satisfactoriamente";
                 return RedirectToAction("Facturas", new { proveedorId  = proveedor.Id });

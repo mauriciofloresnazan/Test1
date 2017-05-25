@@ -90,8 +90,6 @@ namespace Ppgz.Services
 
             var resultadoSat = CfdiServiceConsulta.Consulta(xmlFilePath);
 
-
-
             if (!resultadoSat)
             {
                 throw new BusinessException("Comprobante rechazado por el SAT");
@@ -101,30 +99,9 @@ namespace Ppgz.Services
             var cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
 
             var sapFacturaManager = new SapFacturaManager();
-            /*var facturaSap = sapFacturaManager.CrearFactura(
-                proveedor.NumeroProveedor,
-                // todo solo para le presetnacion
-               comprobante.Folio,
-                DateTime.Parse(comprobante.Fecha, null, DateTimeStyles.RoundtripKind),
-                comprobante.SubTotal,
-                comprobante.Total,
-                cantidad.ToString(),
-                 comprobante.Complemento.TimbreFiscalDigital.UUID,
-                 comprobante.Emisor.Rfc);*/
-
-            /*var facturaSap = sapFacturaManager.CrearFactura(
-                proveedor.NumeroProveedor,
-                comprobante.Folio,
-                DateTime.Parse(comprobante.Fecha, null, DateTimeStyles.RoundtripKind),
-                comprobante.SubTotal,
-                comprobante.Total,
-                cantidad.ToString(),
-                 comprobante.Complemento.TimbreFiscalDigital.UUID,
-                 comprobante.Emisor.Rfc);*/
             
             var facturaSap = sapFacturaManager.CrearFactura(
                 proveedor.NumeroProveedor,
-                //"0000000004",
                 /*comprobante.Serie + */comprobante.Folio,
                 DateTime.ParseExact(comprobante.Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
                 comprobante.SubTotal,
@@ -132,7 +109,6 @@ namespace Ppgz.Services
                 cantidad.ToString(CultureInfo.InvariantCulture),
                  comprobante.Complemento.TimbreFiscalDigital.UUID,
                  comprobante.Emisor.Rfc);
-            
 
             // Se crea el directorio de acuerdo a la fecha del comprobante
             var fecha = DateTime.ParseExact(comprobante.Fecha.Substring(0, 10), "yyyy-MM-dd",
@@ -151,18 +127,20 @@ namespace Ppgz.Services
 
             var factura = new factura
             {
+                Serie = comprobante.Serie,
+                Folio = comprobante.Folio,
                 Fecha =  fecha,
                 Total = decimal.Parse(comprobante.Total, CultureInfo.InvariantCulture),
                 proveedor_id = proveedor.Id,
                 Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
                 XmlRuta = newXmlPath,
                 PdfRuta = newPdfPath,
+                Estatus = facturaSap.Estatus
             };
 
-
-            if (facturaSap.Estatus != "S")
+            if (factura.Estatus != "S")
             {
-                factura.Error = string.Format
+                factura.Comentario = string.Format
                     ("Tipo:{1} {0}Mensaje:{2}", 
                     Environment.NewLine,
                     facturaSap.ErrorTable.Rows[0]["TYPE"],
@@ -173,10 +151,10 @@ namespace Ppgz.Services
                 factura.NumeroGenerado = facturaSap.FacturaNumero;
             }
 
-
             _db.facturas.Add(factura);
 
             _db.SaveChanges();
+
 
 
         }

@@ -51,7 +51,17 @@
                     {
                         <tr>
                             <td class="text-center vert-align">@factura.Id</td>
-                            <td class="text-center vert-align">@factura.NumeroGenerado</td>
+                            <td class="text-center vert-align">
+                                @if (factura.Estatus != "S")
+                                {
+                                    <text>EN PROCESO</text>
+                                }
+                                else
+                                {
+                                
+                                @factura.NumeroGenerado
+                                } 
+                            </td>
                             <td class="text-center vert-align">@factura.Uuid</td>
                             <td class="text-center vert-align">@factura.Fecha.ToString("dd/MM/yyyy")</td>
                             <td class="text-center vert-align">@factura.Total</td>

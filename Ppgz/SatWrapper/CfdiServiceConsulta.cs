@@ -47,6 +47,7 @@ namespace SatWrapper
 			{
 				if (service != null)
 					service.Abort();
+			    throw;
 			}
 			finally
 			{

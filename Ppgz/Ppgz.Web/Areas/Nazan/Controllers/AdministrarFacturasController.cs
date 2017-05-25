@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
@@ -72,7 +73,30 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 
         }
-    
-    
+
+
+        public ActionResult Actualizar(int facturaId, string numeroGenerado, string estatus, string comentario)
+        {
+            var db = new Entities();
+
+            var factura = db.facturas.Find(facturaId);
+
+            if (factura == null)
+            {
+
+                TempData["FlashError"] = "Factura incorrecta";
+                return RedirectToAction("Index");
+            }
+
+            factura.NumeroGenerado = numeroGenerado;
+            factura.Estatus = estatus;
+            factura.Comentario = comentario;
+            db.Entry(factura).State = EntityState.Modified;
+            
+            db.SaveChanges();
+
+            TempData["FlashSuccess"] = "Actualización realizada correctamente.";
+            return RedirectToAction("Index");
+        }
     }
 }

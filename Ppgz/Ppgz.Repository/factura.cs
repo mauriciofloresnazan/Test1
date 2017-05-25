@@ -17,12 +17,15 @@ namespace Ppgz.Repository
         public int Id { get; set; }
         public int proveedor_id { get; set; }
         public string Uuid { get; set; }
+        public string Serie { get; set; }
+        public string Folio { get; set; }
         public System.DateTime Fecha { get; set; }
         public decimal Total { get; set; }
         public string XmlRuta { get; set; }
         public string PdfRuta { get; set; }
+        public string Estatus { get; set; }
+        public string Comentario { get; set; }
         public string NumeroGenerado { get; set; }
-        public string Error { get; set; }
     
         public virtual proveedore proveedore { get; set; }
     }
