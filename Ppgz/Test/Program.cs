@@ -22,6 +22,48 @@ namespace Test
 {
     class Program
     {
+
+        static void TestCita()
+        {
+            var proveedorManager = new ProveedorManager();
+
+            var proveedor = proveedorManager.Find(67);
+            
+
+            var preAsnManager = new PreAsnManager();
+
+            var result = preAsnManager.GetOrdenesActivasConDetalle(proveedor.Id);
+
+            var test1 = result
+                .Where(o => o.Detalles.Any(de => String.Equals(de.Centro, "CD06", StringComparison.CurrentCultureIgnoreCase)))
+                .Where(o => o.TotalPermitido > 0)
+                .ToList();
+                     
+            var test2 = result
+                .Where(o => o.Detalles.Any(de => de.Centro == "CD06"))
+                //.Where(o => o.TotalPermitido > 0)
+                .ToList();
+
+            var test3 = new List<PreAsn>();
+
+            foreach (var  ord in result)
+            {
+                if (ord.EsCrossDock)
+                {
+                    Console.WriteLine("Es CrossDock");
+                }
+
+                foreach (var det in ord.Detalles)
+                {
+                    if (det.Centro == "CD06" && ord.TotalPermitido > 0)
+                    {
+                        test3.Add(ord);
+                    }
+                }}
+
+
+        }
+
         static void ValidarSat()
         {
             var response = CfdiServiceConsulta.Consulta(@"C:\temp\borrar\miro\4EEC-A....xml");
@@ -52,7 +94,7 @@ namespace Test
 
         static void Main(string[] args)
         {
-            TestScale();
+            TestCita();
             return;
 
             /*ValidarSat();

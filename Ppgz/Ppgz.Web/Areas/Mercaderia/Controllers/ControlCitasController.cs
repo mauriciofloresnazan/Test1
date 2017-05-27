@@ -591,13 +591,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 						NombreMaterial = preAsnDetail.DescripcionMaterial,
 						NumeroMaterial = preAsnDetail.NumeroMaterial,
 						NumeroPosicion = preAsnDetail.NumeroPosicion,
-						OrdenNumeroDocumento = preAsn.NumeroDocumento
+						OrdenNumeroDocumento = preAsn.NumeroDocumento,
+                        Tienda = preAsn.Tienda
 					});
 				}
 			}
-			try
-			{
-                /*
+		    try
+		    {
+		        /*
                 var url = CommonManager.GetConfiguraciones().Single(c => c.Clave == "wfc.url.cita.add").Valor;;
                 var client = new RestClient(url);
 			    var request = new RestRequest(string.Empty, Method.POST);
@@ -615,8 +616,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 TempData["FlashSuccess"] = response.Content + ", " + response.StatusDescription;
                 return RedirectToAction("SeleccionarRieles");
                 */
-			    CitaManager.RegistrarCita(preCita);
-			}
+		        CitaManager.RegistrarCita(preCita);
+		        
+		    }
+		    catch (ScaleException exception)
+		    {
+                LimpiarCita();
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("Citas");
+		    }
 			catch (Exception exception)
 			{
 
@@ -626,6 +634,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 
 			//TODO
+            LimpiarCita();
 			TempData["FlashSuccess"] = "Ha terminado de configurar su cita exitosamente";
 			return RedirectToAction("Citas");
 		}

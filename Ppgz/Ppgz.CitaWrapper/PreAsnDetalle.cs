@@ -7,12 +7,13 @@
         public string Almacen;
 
         public int CantidadPedido { get; set; }
-        public int CantidadEntregada { get; set; }
 
-        public int CantidadPermitidaSap
+        public int CantidadEntregada
         {
-            get { return CantidadPedido - CantidadEntregada; }
+            get { return CantidadPedido - CantidadPermitidaSap; }
         }
+
+        public int CantidadPermitidaSap;
 
         public int CantidadCitasFuturas { get; set; }
 

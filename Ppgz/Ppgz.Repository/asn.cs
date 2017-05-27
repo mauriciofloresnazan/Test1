@@ -21,6 +21,7 @@ namespace Ppgz.Repository
         public string NumeroMaterial { get; set; }
         public string NombreMaterial { get; set; }
         public int Cantidad { get; set; }
+        public string Tienda { get; set; }
     
         public virtual cita cita { get; set; }
     }

@@ -56,7 +56,7 @@
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title text-center">Seleccione un Almacén</h4>
+                <h4 class="modal-title text-center">Seleccione el Almacén de destino de la Cita</h4>
             </div>
             <div class="modal-body">
                 <div class="text-center">
@@ -64,11 +64,15 @@
 
                         @foreach (var almacen in almacenes)
                         {
-                        <label class="btn btn-primary">
-                            <input type="radio" name="radio-almacen" id="@almacen" autocomplete="off"> @almacen
-                        </label>
+                            <label class="btn btn-primary">
+                                <input type="radio" name="radio-almacen" id="@almacen" autocomplete="off"> @almacen
+                            </label>
                             
                         }
+
+                        <label class="btn btn-success btn-block">
+                            <input type="radio" name="radio-almacen" id="CROSSDOCK" autocomplete="off"> CROSSDOCK
+                        </label>
                        
                     </div>
 

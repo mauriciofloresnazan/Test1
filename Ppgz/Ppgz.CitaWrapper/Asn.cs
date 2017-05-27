@@ -28,5 +28,8 @@ namespace Ppgz.CitaWrapper
         [Required]
         [RegularExpression(@"([0-9]+)", ErrorMessage = @"Sólo se admiten valores números enteros")]
         public int Cantidad;
+
+        /// <summary>Tienda destino. Es opcional</summary>
+        public string Tienda;
     }
 }

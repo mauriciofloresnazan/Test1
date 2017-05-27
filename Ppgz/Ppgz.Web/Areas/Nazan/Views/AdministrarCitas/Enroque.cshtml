@@ -15,7 +15,7 @@
         hr.riele.andene
     }).Distinct().ToList().OrderBy(a => a.andene.Codigo);
 
-    var citas = horarioRieles.Where(hr => hr.CitaId != null).Select(hr=> hr.cita).ToList();
+    var citas = horarioRieles.Where(hr => hr.CitaId != null).Select(hr=> hr.cita).Distinct().ToList();
 
     var totalCantidad = citas.Sum(c => c.CantidadTotal);
 }
@@ -128,11 +128,27 @@
                         {
                             if (riel.cita != null)
                             {
+                                var crossDockLabel = "";
+                                var tiendasAlmacen = "Almacén: " + riel.cita.Almacen;
+                                if (riel.cita.Almacen.ToUpper() == "CROSSDOCK")
+                                {
+                                    crossDockLabel = "<span class='label label-default' style='background-color: #293129;'>CROSS DOCK</span >";
+                                    var tiendas = riel.cita.asns.Select(asn => asn.Tienda).ToArray();
+                                    tiendasAlmacen = "Tiendas: " + String.Join("-", tiendas);
+                                }
+                                
                                 btnText = string.Format(
-                                    "{0} {1} {2} {3}<br>{4}<br>Cita #{5} / Total: {6} Pares",
-                                    riel.cita.proveedore.Nombre1, riel.cita.proveedore.Nombre2,
-                                    riel.cita.proveedore.Nombre3, riel.cita.proveedore.Nombre4,
-                                    riel.cita.Almacen, riel.cita.Id, riel.cita.CantidadTotal);
+                                    @"<div style='font-weight: 1.5em'>Cita #{0} {1}</div>
+                                      <hr style='margin:0; margin-top: 2px;'>
+                                    <div style='' class=''>{2}</div>
+                                    <div style='word-wrap: break-word;white-space: normal;background: #407b40;color:#fff; padding: 5px;'>{3}
+                                    </div>
+                                    <div>Total: {4} Pares</div>", 
+                                    riel.cita.Id, crossDockLabel,
+                                    string.Format("{0} {1} {2} {3}",riel.cita.proveedore.Nombre1, riel.cita.proveedore.Nombre2,
+                                    riel.cita.proveedore.Nombre3, riel.cita.proveedore.Nombre4),
+                                    tiendasAlmacen, riel.cita.CantidadTotal);
+                                
                                 btnClass = "btn-success";
                             }
                             else
@@ -209,21 +225,29 @@
                 $("#form-fecha").submit();
             });
             
-            $(".btn-riel ").each(function () {
+            $(".btn-riel").each(function () {
                 var btn = $(this);
                 var td = $(btn.parent());
                 var parentHeight = td.height();
-                btn.css("height", parentHeight);
+                //btn.css("height", parentHeight);
                 //btn.css("margin", "10px");
                 btn.css("width", "200px");
             });
 
 
-            $(".btn-riel ").each(function () {
+
+
+            $(".btn-riel").each(function () {
                 var btn = $(this);
-                btn.css("margin", "5px");
+                var td = $(btn.parent());
+                var parentHeight = td.height();
+                btn.css("height", parentHeight);
             });
 
+            $(".btn-riel").each(function () {
+                var btn = $(this);
+                 btn.css("margin", "5px");
+            });
 
             $('.btn-riel').on('click', function() {
 

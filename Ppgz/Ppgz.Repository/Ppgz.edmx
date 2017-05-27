@@ -43,6 +43,7 @@
           <Property Name="NumeroMaterial" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="NombreMaterial" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Cantidad" Type="int" Nullable="false" />
+          <Property Name="Tienda" Type="varchar" MaxLength="45" />
         </EntityType>
         <EntityType Name="AspNetRoles">
           <Key>
@@ -116,7 +117,7 @@
           <Property Name="Codigo" Type="varchar" MaxLength="5" />
           <Property Name="FechaCita" Type="datetime" Precision="0" Nullable="false" />
           <Property Name="FechaCreacion" Type="datetime" Precision="0" />
-          <Property Name="Almacen" Type="varchar" MaxLength="5" />
+          <Property Name="Almacen" Type="varchar" MaxLength="45" />
           <Property Name="CantidadTotal" Type="int" />
           <Property Name="ProveedorId" Type="int" Nullable="false" />
           <Property Name="Borrado" Type="bool" Nullable="false" />
@@ -1177,6 +1178,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="NumeroMaterial" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="NombreMaterial" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Cantidad" Type="Int32" Nullable="false" />
+          <Property Name="Tienda" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="cita" Relationship="Self.fk_asn_cita" FromRole="asn" ToRole="citas" />
         </EntityType>
         <EntityType Name="AspNetRole">
@@ -1256,7 +1258,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Codigo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="FechaCita" Type="DateTime" Nullable="false" />
           <Property Name="FechaCreacion" Type="DateTime" />
-          <Property Name="Almacen" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Almacen" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="CantidadTotal" Type="Int32" />
           <Property Name="ProveedorId" Type="Int32" Nullable="false" />
           <Property Name="Borrado" Type="Boolean" Nullable="false" />
@@ -2211,6 +2213,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="NumeroMaterial" ColumnName="NumeroMaterial" />
                 <ScalarProperty Name="NombreMaterial" ColumnName="NombreMaterial" />
                 <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="Tienda" ColumnName="Tienda" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

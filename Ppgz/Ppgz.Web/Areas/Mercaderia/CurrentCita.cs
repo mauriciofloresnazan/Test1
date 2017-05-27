@@ -52,6 +52,7 @@ namespace Ppgz.Web.Areas.Mercaderia
             get { return _ordenes.Sum(o => o.TotalCantidad); }
         }
 
+        public readonly bool  EsCrossDock;
         public List<PreAsn> GetOrdenesActivasDisponibles()
         {
             var documentos = _ordenes
@@ -68,7 +69,7 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             return  _ordenesActivas
                 .Where(o => !documentos.Contains(o.NumeroDocumento))
-                //.Where(o=> o.TotalPermitido > 0)
+                .Where(o=> o.TotalPermitido > 0)
                 // todo incluir el detalle en la consulta inicial
                 //.Where( o=> o.Detalles.Any(de=> de.Almacen.ToUpper() == Centro))
                 .ToList();
@@ -101,15 +102,27 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             var result = preAsnManager.GetOrdenesActivasConDetalle(proveedor.Id);
 
-            _ordenesActivas = result
-                .Where(o => o.Detalles.Any(de => String.Equals(de.Centro, centro, StringComparison.CurrentCultureIgnoreCase)))
-                .Where(o => o.TotalPermitido > 0)
-                .ToList();
+            if (String.Equals(centro, "CROSSDOCK", StringComparison.CurrentCultureIgnoreCase))
+            {
+                EsCrossDock = true;
+                _ordenesActivas = result
+                    .Where(o => o.EsCrossDock)
+                    .Where(o => o.TotalPermitido > 0)
+                    .ToList();
+            }
+            else
+            {
+                _ordenesActivas = result
+                    .Where(o => o.Detalles.Any(de => String.Equals(de.Centro, centro, StringComparison.CurrentCultureIgnoreCase)))
+                    .Where(o => o.TotalPermitido > 0)
+                    .ToList();
+            }
+
 
                
             if (!_ordenesActivas.Any())
             {
-                throw new BusinessException("Este Proveedor no tiene Órdenes de Compras con entregas disponibles para el  Almacén seleccionado");
+                throw new BusinessException("No hay Órdenes de Compras con entregas disponibles para crear una Cita. Por favor verifique su selección (Proveedor, Almacén, CrossDock).");
             }
 
             Centro = centro;
@@ -169,10 +182,15 @@ namespace Ppgz.Web.Areas.Mercaderia
             {
                 throw new OrdenSinDetalleException();
             }
-            if (orden.Detalles.All(de => de.Centro != Centro))
+
+            if (!EsCrossDock)
             {
-                throw new OrdenCentroException();
+                if (orden.Detalles.All(de => de.Centro != Centro))
+                {
+                    throw new OrdenCentroException();
+                }
             }
+
 
             if (orden.TotalPermitido < 1)
             {

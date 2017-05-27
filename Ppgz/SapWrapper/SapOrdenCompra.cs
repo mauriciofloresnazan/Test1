@@ -30,6 +30,12 @@ namespace SapWrapper
                 dataRow["EINDT"].ToString(), 
                 "yyyyMMdd", 
                 System.Globalization.CultureInfo.InvariantCulture);
+            PurchO = dataRow["PURCH_O"].ToString();
+            CrossD = dataRow["CROSS_D"].ToString();
+            InOut = dataRow["IN_OUT"].ToString();
+            NumOs = dataRow["NUM_OS"].ToString();
+            TiOrig = dataRow["T_ORIG"].ToString();
+            TiDest = dataRow["T_DEST"].ToString();
         }
 
         /// <summary>
@@ -127,6 +133,30 @@ namespace SapWrapper
         /// </summary>
         public DateTime FechaEntrega;
 
+        /// <summary>
+        /// PURCH_O no tenemos especificaciones por lo que colocaremos el campo string
+        /// </summary>
+        public string PurchO;
+        /// <summary>
+        /// CROSS_D no tenemos especificaciones por lo que colocaremos el campo string
+        /// </summary>
+        public string CrossD;
+        /// <summary>
+        /// INT_OUT no tenemos especificaciones por lo que colocaremos el campo string
+        /// </summary>
+        public string InOut;
+        /// <summary>
+        /// NUM_OS no tenemos especificaciones por lo que colocaremos el campo string
+        /// </summary>
+        public string NumOs;
+        /// <summary>
+        /// T_ORIG no tenemos especificaciones por lo que colocaremos el campo string
+        /// </summary>
+        public string TiOrig;
+        /// <summary>
+        /// T_DEST no tenemos especificaciones por lo que colocaremos el campo string
+        /// </summary>
+        public string TiDest;
 
         /// <summary>
         /// Items de la orden de compra

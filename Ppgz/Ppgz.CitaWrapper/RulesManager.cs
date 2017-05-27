@@ -385,9 +385,9 @@ namespace Ppgz.CitaWrapper
         /// 12.	En el caso de las entregas parciales, para garantizar que el proveedor no entregue más de lo requerido en la orden de compra, 
         /// correspondiente a una entrega posterior a la primera, se consultará la orden de compra para verificar las parcialidades entregadas.
         /// </summary>
-        public static bool Regla12(int cantidad, int cantidadPedido, int cantidadEntregado, int cantidadCitasFuturas)
+        public static bool Regla12(int cantidad, int cantidadPedidaSap, int cantidadCitasFuturas)
         {
-            return cantidad <= (cantidadPedido - (cantidadEntregado + cantidadCitasFuturas));
+            return cantidad <= (cantidadPedidaSap - cantidadCitasFuturas);
         }
 
         /// <summary>

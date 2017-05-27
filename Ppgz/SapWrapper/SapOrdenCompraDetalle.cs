@@ -41,7 +41,7 @@ namespace SapWrapper
 
             ValorBruto = Convert.ToDecimal(dataRow["BRTWR"].ToString());
 
-         CantidadEntregada = decimal.ToInt32(Convert.ToDecimal(dataRow["ERFMG"].ToString()));
+         CantidadPorEntregar = decimal.ToInt32(Convert.ToDecimal(dataRow["ERFMG"].ToString()));
 
          FechaEntrega = DateTime.ParseExact(
                 dataRow["EINDT"].ToString(),
@@ -118,13 +118,17 @@ namespace SapWrapper
         /// </summary>
         public decimal ValorBruto;
         /// <summary>
-        /// ERFMG	Cantidad en unidad de medida de entrada cantidad entregada
-        /// segun especificaciones de consultores de SAP
+        /// ERFMG	Cantidad en unidad de medida de entrada cantidad por entregar 
+        /// segun nuevas especificaciones de consultores de SAP
         /// </summary>
-        public int CantidadEntregada;
+        public int CantidadPorEntregar;
         /// <summary>
         /// EINDT	Fecha de entrega de posición formatoyyyyMMdd segun especificaciones
         /// </summary>
         public DateTime FechaEntrega;
+        /// <summary>
+        /// ELIKZ Indicador de Entrega completada devuelve el valor X
+        /// </summary>
+        public string EntregaCompleta;
     }
 }

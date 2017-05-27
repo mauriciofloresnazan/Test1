@@ -6,7 +6,7 @@ using SapWrapper;
 namespace Ppgz.CitaWrapper
 {
     public class PreAsnManager
-    {
+    {/*
         public List<PreAsn> GetOrdenesActivas(int proveedorId)
         {
             var db = new Repository.Entities();
@@ -76,7 +76,7 @@ namespace Ppgz.CitaWrapper
             
 
         }
-
+        */
 
         public List<PreAsn> GetOrdenesActivasConDetalle(int proveedorId)
         {
@@ -86,7 +86,10 @@ namespace Ppgz.CitaWrapper
             var organizacionCompras = db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var ordenes = sapOrdenCompraManager.GetActivasConDetalle(proveedor.NumeroProveedor, organizacionCompras);
+            var ordenesSap = sapOrdenCompraManager.GetActivasConDetalle(proveedor.NumeroProveedor, organizacionCompras);
+
+            // TODO MEJORAR Limpieza de las ordenes de acuerdo a su fecha de entrega
+            var ordenes = ordenesSap.Where(o => o.FechaEntrega > DateTime.Today.AddDays(-22)).ToList();
 
             // TODO POSIBLE CARGA DE DATOS INCORRECTA A CAUSA DE LA SINCORNIZACIÓN DE LA RECEPCIÓN CON SAP
             var asnFuturos = db.asns
@@ -102,6 +105,9 @@ namespace Ppgz.CitaWrapper
                     NumeroDocumento = orden.NumeroDocumento,
                     NumeroProveedor = orden.NumeroProveedor,
                     FechasPermitidas = RulesManager.GetFechasPermitidas(orden.FechaEntrega, proveedor.cuenta.EsEspecial),
+
+                    EsCrossDock = orden.CrossD.ToUpper() == "X",
+                    Tienda = orden.TiDest,
                 };
 
                 var detalles = orden.Detalles.Select(detalle => new PreAsnDetalle
@@ -114,38 +120,17 @@ namespace Ppgz.CitaWrapper
                                && asn.NumeroPosicion == detalle.NumeroPosicion 
                                && asn.NumeroMaterial == detalle.NumeroMaterial)
                         .Sum(asn => asn.Cantidad), 
-                    CantidadEntregada = detalle.CantidadEntregada, 
+                    CantidadPermitidaSap = detalle.CantidadPorEntregar, 
                     CantidadPedido = detalle.CantidadPedido, 
                     DescripcionMaterial = detalle.Descripcion, 
                     NumeroMaterial = detalle.NumeroMaterial,
 
 
-
-
-
-
-
-
-
-
-                    Cantidad = detalle.CantidadPedido - (asnFuturos
+                    Cantidad = detalle.CantidadPorEntregar - asnFuturos
                         .Where(asn => asn.OrdenNumeroDocumento == detalle.NumeroDocumento
                                && asn.NumeroPosicion == detalle.NumeroPosicion
                                && asn.NumeroMaterial == detalle.NumeroMaterial)
-                        .Sum(asn => asn.Cantidad) + detalle.CantidadEntregada)
-
-
-
-
-
-
-
-
-
-
-
-
-                }).ToList();
+                        .Sum(asn => asn.Cantidad)}).ToList();
 
                 preAsn.Detalles = detalles;
                 result.Add(preAsn);

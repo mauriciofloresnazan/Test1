@@ -155,10 +155,13 @@ namespace SapWrapper
 
                 var detalles = drsDetalle.Select(drDetalle => new SapOrdenCompraDetalle(drDetalle)).ToList();
 
+                // Se devuelven las ordenes tienen detalles que no estan marcadas como entrega completa
+                sapOrdenCompra.Detalles = detalles.Where(de=> de.EntregaCompleta != "X").ToList();
 
-                sapOrdenCompra.Detalles = detalles; 
-
-                result.Add(sapOrdenCompra);
+                if (sapOrdenCompra.Detalles.Any())
+                {
+                    result.Add(sapOrdenCompra);
+                }
             }
 
             return result;
