@@ -16,7 +16,7 @@ namespace ScaleWrapper
 
             if (almacenScale == null)
             {
-                throw new Exception("Almacén no configrado para Scale");
+                throw new Exception("Almacén no configurado para Scale");
             }
 
             var numerosDocumentos = cita.asns.Select(asn=> asn.OrdenNumeroDocumento).Distinct();

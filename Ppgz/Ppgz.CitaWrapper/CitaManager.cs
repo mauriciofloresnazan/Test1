@@ -204,6 +204,8 @@ namespace Ppgz.CitaWrapper
             try
             {
                 var scaleManager = new ScaleManager();
+
+                cita = db.citas.Find(cita.Id);
                 scaleManager.Registrar(cita);
             }
             catch (Exception exception)
