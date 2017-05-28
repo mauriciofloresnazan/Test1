@@ -275,6 +275,7 @@
     <Content Include="Areas\Mercaderia\Views\MensajesInstitucionales\index.cshtml" />
     <Content Include="Areas\Servicio\Views\MensajesInstitucionales\index.cshtml" />
     <Content Include="assets\css\bootstrap-formhelpers.min.css" />
+    <Content Include="assets\css\main2.css" />
     <Content Include="assets\css\msgcolores.css" />
     <Content Include="assets\img\marcas.png" />
     <Content Include="assets\js\bootbox.js" />

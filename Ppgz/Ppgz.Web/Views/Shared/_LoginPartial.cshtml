@@ -14,7 +14,7 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("Bienvenido " + User.Identity.GetUserName() + "!", "Index", "Home", routeValues: null, htmlAttributes: new {title = "Manage"})
+            @Html.ActionLink("¡BIENVENIDO " + User.Identity.GetUserName().ToUpper() + "!", "Index", "Home", routeValues: null, htmlAttributes: new { title = "Manage" })
         </li>
         @if (cuenta != null)
         {
