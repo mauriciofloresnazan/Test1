@@ -268,8 +268,8 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="HoraDesde" Type="int" Nullable="false" />
-          <Property Name="HoraHasta" Type="int" Nullable="false" />
+          <Property Name="HoraDesde" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="HoraHasta" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="impuls_logs">
           <Key>
@@ -1406,8 +1406,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="HoraDesde" Type="Int32" Nullable="false" />
-          <Property Name="HoraHasta" Type="Int32" Nullable="false" />
+          <Property Name="HoraDesde" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="HoraHasta" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="horariorieles" Relationship="Self.fk_horariorieles_horarios" FromRole="horarios" ToRole="horariorieles" />
         </EntityType>
         <EntityType Name="impuls_logs">

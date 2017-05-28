@@ -20,8 +20,8 @@ namespace Ppgz.Repository
         }
     
         public int Id { get; set; }
-        public int HoraDesde { get; set; }
-        public int HoraHasta { get; set; }
+        public string HoraDesde { get; set; }
+        public string HoraHasta { get; set; }
     
         public virtual ICollection<horarioriele> horariorieles { get; set; }
     }

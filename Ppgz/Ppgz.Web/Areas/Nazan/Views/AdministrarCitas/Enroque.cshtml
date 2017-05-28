@@ -133,7 +133,7 @@
                                 if (riel.cita.Almacen.ToUpper() == "CROSSDOCK")
                                 {
                                     crossDockLabel = "<span class='label label-default' style='background-color: #293129;'>CROSS DOCK</span >";
-                                    var tiendas = riel.cita.asns.Select(asn => asn.Tienda).ToArray();
+                                    var tiendas = riel.cita.asns.Select(asn => asn.Tienda).Distinct().ToArray();
                                     tiendasAlmacen = "Tiendas: " + String.Join("-", tiendas);
                                 }
                                 

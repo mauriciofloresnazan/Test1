@@ -277,6 +277,8 @@
     <Content Include="assets\css\bootstrap-formhelpers.min.css" />
     <Content Include="assets\css\main2.css" />
     <Content Include="assets\css\msgcolores.css" />
+    <Content Include="assets\img\logo-black.png" />
+    <Content Include="assets\img\marcas-black.png" />
     <Content Include="assets\img\marcas.png" />
     <Content Include="assets\js\bootbox.js" />
     <Content Include="assets\js\bootbox.min.js" />

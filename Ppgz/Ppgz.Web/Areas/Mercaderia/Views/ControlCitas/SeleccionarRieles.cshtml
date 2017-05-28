@@ -15,7 +15,7 @@
     var horarios = horarioRieles.Select(hr => new
     {
         hr.horario
-    }).Distinct().ToList().OrderBy(h => h.horario.HoraDesde);
+    }).Distinct().ToList().OrderBy(h => h.horario.Id);
 
     var andenes = horarioRieles.Select(hr => new
     {
