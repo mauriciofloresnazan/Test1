@@ -9,7 +9,7 @@ body {
 .btn-primary {
     background: #333;
 }
-.btn-primary:active, .btn-primary:focus, .btn-primary:hover, .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover  {
+.btn-primary.active, .btn-primary:active, .btn-primary:focus, .btn-primary:hover, .btn-primary.active.focus, .btn-primary.active:focus, .btn-primary.active:hover, .btn-primary:active.focus, .btn-primary:active:focus, .btn-primary:active:hover  {
     background: #000;
     border-color: #000;
 }
@@ -80,7 +80,7 @@ h1, h2 {
     background: #888;
     border-color: #222;
 }
-.btn-warning:active, .btn-warning:focus, .btn-warning:hover, .btn-warning.active.focus, .btn-warning.active:focus, .btn-warning.active:hover, .btn-warning:active.focus, .btn-warning:active:focus, .btn-warning:active:hover{
+.btn-warning.active, .btn-warning:active, .btn-warning:focus, .btn-warning:hover, .btn-warning.active.focus, .btn-warning.active:focus, .btn-warning.active:hover, .btn-warning:active.focus, .btn-warning:active:focus, .btn-warning:active:hover{
     background: #555;
     border-color: #222;
 }
