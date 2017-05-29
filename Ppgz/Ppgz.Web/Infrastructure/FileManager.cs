@@ -30,5 +30,24 @@ namespace Ppgz.Web.Infrastructure
 			httpContext.Response.End();
 			GC.GetTotalMemory(true);
 		}
-	}
+
+        public static void ExportExcel(XLWorkbook workbook, string nombreXls, HttpContextBase httpContext)
+        {
+
+            GC.GetTotalMemory(true);
+            var fileStream = new MemoryStream();
+            workbook.SaveAs(fileStream, false);
+            fileStream.Position = 0;
+
+            var fileName = httpContext.Server.UrlEncode(nombreXls + ".xlsx");
+            httpContext.Response.Clear();
+            httpContext.Response.Buffer = true;
+            httpContext.Response.AddHeader("content-disposition", "attachment; filename=" + fileName);
+            httpContext.Response.ContentType = "application/vnd.ms-excel";
+            httpContext.Response.BinaryWrite(fileStream.ToArray());
+            httpContext.Response.End();
+            GC.GetTotalMemory(true);
+        }
+
+    }
 }
