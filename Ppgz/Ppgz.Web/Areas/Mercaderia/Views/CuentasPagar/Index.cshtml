@@ -44,16 +44,9 @@
 @section Scripts {
     <script type="text/javascript">
 
-        //var sessionStorage.getItem(id);proveedorId = "@ViewBag.proveedorId";
-
         $(document).ready(function () {
 
-            //if (proveedorId === "") {
-            //    $("#navbar > ul:nth-child(1) > li:nth-child(2)").css("display","none");
-            //}
-            //$(document).on("click", "#btnProveedor", function () {
-            //    fnProveedorSeleccionado($(this).data('idproveedor'));
-            //});
+            $("#navbar > ul > li.dropdown.active > ul").hide();
 
             $('#cuentasXpagar').DataTable({
                 "language": {
@@ -63,17 +56,6 @@
             });
         });
 
-        @*function fnProveedorSeleccionado(proveedorId) {
-        $.ajax({
-            url: '@Url.Action("PersitedProviderId", "CuentasPagar")',
-            data: { proveedorId: proveedorId },
-            type: 'POST',
-            success: function (data) {
-                console.log(data);
-                location.href = '@Url.Action("Pagos", "CuentasPagar")';
-            }
-        });
-    }*@
     </script>
 }
 
