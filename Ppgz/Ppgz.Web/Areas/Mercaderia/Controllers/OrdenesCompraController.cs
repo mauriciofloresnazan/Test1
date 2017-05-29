@@ -29,9 +29,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA")]
         public void Descargar(string numeroDocumento, int proveedorId)
         {
-
             var orden = _ordenCompraManager.FindOrdenConDetalles(proveedorId, numeroDocumento);
-            //var detalles = _ordenCompraManager.FindDetalle(numeroDocumento, proveedorId);
+        
 
             var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillaoc.xlsx"));
             var ws = workbook.Worksheet(1);
@@ -41,7 +40,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             ws.Cell(3, "B").Value = string.Format("{0} {1} {2} {3}", proveedor.Nombre1, proveedor.Nombre2, proveedor.Nombre3, proveedor.Nombre4);
             ws.Cell(3, "D").Value = proveedor.Rfc;
-            ws.Cell(5, "B").Value = numeroDocumento;
             ws.Cell(5, "B").Value = numeroDocumento;
             ws.Cell(6, "B").Value = orden.FechaEntrega.ToString("dd/MM/yyyy");
 
@@ -57,19 +55,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 row++;
             }
 
-            GC.GetTotalMemory(true);
-            var fileStream = new MemoryStream();
-            workbook.SaveAs(fileStream, false);
-            fileStream.Position = 0;
-
-            var fileName = Server.UrlEncode("ORDEN" + numeroDocumento + ".xlsx");
-            Response.Clear();
-            Response.Buffer = true;
-            Response.AddHeader("content-disposition", "attachment; filename=" + fileName);
-            Response.ContentType = "application/vnd.ms-excel";
-            Response.BinaryWrite(fileStream.ToArray());
-            Response.End();
-            GC.GetTotalMemory(true);
+            FileManager.ExportExcel(workbook, "ORDEN" + numeroDocumento, HttpContext);
         }
     }
 }

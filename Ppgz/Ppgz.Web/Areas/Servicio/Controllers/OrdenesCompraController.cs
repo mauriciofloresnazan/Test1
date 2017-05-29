@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Web.Mvc;
+using ClosedXML.Excel;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 
@@ -24,32 +25,33 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ORDENESCOMPRA")]
         public void Descargar(string numeroDocumento, int proveedorId)
         {
-             var detalles = _ordenCompraManager.FindDetalle(numeroDocumento, proveedorId);
+            var orden = _ordenCompraManager.FindOrdenConDetalles(proveedorId, numeroDocumento);
 
-            var dt = new DataTable();
-            dt.Columns.Add("Orde de Compra");
-            dt.Columns.Add("Material");
-            dt.Columns.Add("Descripcion");
-            dt.Columns.Add("Centro");
-            dt.Columns.Add("Almacen");
-            dt.Columns.Add("Cantidad");
-            dt.Columns.Add("Precio");
-            
 
-            foreach (var detalle in detalles)
+            var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillaoc.xlsx"));
+            var ws = workbook.Worksheet(1);
+
+            var proveedorManager = new ProveedorManager();
+            var proveedor = proveedorManager.Find(proveedorId);
+
+            ws.Cell(3, "B").Value = string.Format("{0} {1} {2} {3}", proveedor.Nombre1, proveedor.Nombre2, proveedor.Nombre3, proveedor.Nombre4);
+            ws.Cell(3, "D").Value = proveedor.Rfc;
+            ws.Cell(5, "B").Value = numeroDocumento;
+            ws.Cell(6, "B").Value = orden.FechaEntrega.ToString("dd/MM/yyyy");
+
+            var row = 9;
+            foreach (var detalle in orden.Detalles)
             {
-                dt.Rows.Add(
-                    detalle.NumeroDocumento,
-                    detalle.NumeroMaterial,
-                    detalle.DescripcionMaterial,
-                    detalle.Centro,
-                    detalle.Almacen, 
-                    detalle.CantidadPedido,
-                    detalle.PrecioNeto);
+                ws.Cell(row, "A").Value = detalle.NumeroMaterial;
+                ws.Cell(row, "B").Value = detalle.Descripcion;
+                ws.Cell(row, "C").Value = detalle.Centro;
+                ws.Cell(row, "D").Value = detalle.CantidadPedido;
+                ws.Cell(row, "E").Value = detalle.PrecioNeto;
 
+                row++;
             }
             
-            FileManager.ExportExcel(dt, "ORDEN" + numeroDocumento, HttpContext);
+            FileManager.ExportExcel(workbook, "ORDEN" + numeroDocumento, HttpContext);
         }
 
 
