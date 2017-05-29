@@ -3,6 +3,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using ClosedXML.Excel;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
@@ -140,18 +141,28 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
             var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
-            var dt = dsPagos.Tables["T_PAGOS"]
-                .Select(string.Format("BELNR_PAGO = '{0}'", numeroDocumento)).CopyToDataTable();
 
-            var columnsNames = new[]
-            {        
-                "XBLNR","DMBTR_COMPEN","WAERS_COMPEN",  "BLART_COMPEN"
-            };
+            var pago = dsPagos.Tables["T_LISTA_PAGOS"]
+                .Select(string.Format("BELNR = '{0}'", numeroDocumento))[0];
 
-            foreach (DataRow dr in dt.Rows)
+            var detalles = dsPagos.Tables["T_PAGOS"]
+                .Select(string.Format("BELNR_PAGO = '{0}'", numeroDocumento));
+
+
+            var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillapagos.xlsx"));
+            var ws = workbook.Worksheet(1);
+
+            ws.Cell(3, "B").Value = string.Format("{0} {1} {2} {3}", ProveedorCxp.Nombre1, ProveedorCxp.Nombre2, ProveedorCxp.Nombre3, ProveedorCxp.Nombre4);
+            ws.Cell(3, "D").Value = ProveedorCxp.Rfc;
+            ws.Cell(5, "B").Value = pago["BELNR"].ToString();
+            ws.Cell(6, "B").Value = pago["DMBTR"].ToString();
+
+            var row = 9;
+
+            foreach (var drPago in detalles)
             {
                 var tipo = "";
-                switch (dr["BLART_COMPEN"].ToString())
+                switch (drPago["BLART_COMPEN"].ToString())
                 {
                     case "4":
                         tipo = "Cargo a proveedor";
@@ -191,7 +202,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                         break;
                     case "RE":
 
-                        if ((decimal)dr["DMBTR_COMPEN"] > 0)
+                        if ((decimal)drPago["DMBTR_COMPEN"] > 0)
                         {
                             tipo = "Factura de mercancia";
                             break;
@@ -214,23 +225,16 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                         break;
                 }
 
-                dr["BLART_COMPEN"] = tipo;
+                ws.Cell(row, "A").Value = drPago["XBLNR"].ToString();
+                ws.Cell(row, "B").Value = drPago["DMBTR_COMPEN"].ToString();
+                ws.Cell(row, "C").Value = drPago["WAERS_COMPEN"].ToString();
+                ws.Cell(row, "D").Value = tipo;
+
+                row++;
+
             }
 
-            for (var i = dt.Columns.Count - 1; i >= 0; i--)
-            {
-                if (!columnsNames.Contains(dt.Columns[i].ColumnName))
-                {
-                    dt.Columns.RemoveAt(i);
-                }
-            }
-
-            dt.Columns["XBLNR"].ColumnName = "Referencia";
-            dt.Columns["DMBTR_COMPEN"].ColumnName = "Importe";
-            dt.Columns["WAERS_COMPEN"].ColumnName = "Ml";
-            dt.Columns["BLART_COMPEN"].ColumnName = "Tipo de Movimiento";
-
-            FileManager.ExportExcel(dt, "RefdPago" + numeroDocumento, HttpContext);
+            FileManager.ExportExcel(workbook, "PAG_" + pago["BELNR"], HttpContext);
         }
 
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-CUENTASPAGAR")]
@@ -306,39 +310,58 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             var partidasManager = new PartidasManager();
 
             var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+
+
             var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
-            var dt = dsDevoluciones.Tables["T_MAT_DEV"]
-                .Select(string.Format("BELNR = '{0}'", numeroDocumento)).CopyToDataTable();
+            var drDevolucion = dsDevoluciones.Tables["T_DEVOLUCIONES"]
+                .Select(string.Format("BELNR = '{0}'", numeroDocumento))[0];
 
-            var columnsNames = new[]
-            {        
-                "EBELN","MATNR","MAKTX","DMBTR","MENGE"
-            };
+            var drDevolucionDetalles = dsDevoluciones.Tables["T_MAT_DEV"]
+                .Select(string.Format("BELNR = '{0}' AND  BUZID = 'W'", numeroDocumento));
 
-            for (var i = dt.Rows.Count - 1; i >= 0; i--)
+            var drsImpuesto = dsDevoluciones.Tables["T_MAT_DEV"]
+                .Select(string.Format("BELNR = '{0}' AND  BUZID = 'T'", numeroDocumento));
+
+            Decimal impuesto = 0;
+            if (drsImpuesto.Any())
             {
-                if (dt.Rows[i]["BUZID"].ToString() == "T")
-                {
-                    dt.Rows.RemoveAt(i);
-                }
+                impuesto = drsImpuesto.Aggregate(
+                    impuesto, (current, dr) => current + decimal.Parse(dr["DMBTR"].ToString()));
             }
 
-            for (var i = dt.Columns.Count - 1; i >= 0; i--)
+            var subTotal = drDevolucionDetalles.Aggregate<DataRow, decimal>(0, (current, dr) => current + decimal.Parse(dr["DMBTR"].ToString()));
+
+            var total = decimal.Parse(drDevolucion["DMBTR"].ToString()) * -1;
+
+            var cantidadTotal = drDevolucionDetalles.Aggregate<DataRow, decimal>(0, (current, dr) => current + decimal.Parse(dr["MENGE"].ToString()));
+
+            var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantilladevoluciones.xlsx"));
+            var ws = workbook.Worksheet(1);
+
+            ws.Cell(3, "B").Value = string.Format("{0} {1} {2} {3}", ProveedorCxp.Nombre1, ProveedorCxp.Nombre2, ProveedorCxp.Nombre3, ProveedorCxp.Nombre4);
+            ws.Cell(3, "D").Value = ProveedorCxp.Rfc;
+            ws.Cell(5, "B").Value = drDevolucion["XBLNR"].ToString();
+            ws.Cell(6, "B").Value = DateTime.ParseExact(
+                        drDevolucion["BLDAT"].ToString(),
+                        "yyyyMMdd",
+                        CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
+            ws.Cell(7, "B").Value = cantidadTotal;
+            ws.Cell(5, "D").Value = subTotal;
+            ws.Cell(6, "D").Value = impuesto;
+            ws.Cell(7, "D").Value = total;
+            var row = 10;
+
+            foreach (var dr in drDevolucionDetalles)
             {
-                if (!columnsNames.Contains(dt.Columns[i].ColumnName))
-                {
-                    dt.Columns.RemoveAt(i);
-                }
+                ws.Cell(row, "A").Value = dr["MATNR"].ToString();
+                ws.Cell(row, "B").Value = dr["MAKTX"].ToString();
+                ws.Cell(row, "C").Value = string.Format("{0:N}", dr["DMBTR"]);
+                ws.Cell(row, "D").Value = dr["MENGE"].ToString();
+                row++;
             }
 
-            dt.Columns["EBELN"].ColumnName = "Documento";
-            dt.Columns["MATNR"].ColumnName = "Artículo";
-            dt.Columns["MAKTX"].ColumnName = "Descripción";
-            dt.Columns["DMBTR"].ColumnName = "Total";
-            dt.Columns["MENGE"].ColumnName = "Cantidad";
-
-            FileManager.ExportExcel(dt, numeroDocumento, HttpContext);
+            FileManager.ExportExcel(workbook, "DEV_" + drDevolucion["XBLNR"], HttpContext);
         }
 
 
@@ -402,16 +425,24 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var dt = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
 
-            var columnsNames = new[]
-            {        
-                "XBLNR","DMBTR","WAERS","BLART","FECHA_PAGO"
-            };
+            var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillapagospendientes.xlsx"));
+            var ws = workbook.Worksheet(1);
+
+            ws.Cell(3, "B").Value = string.Format("{0} {1} {2} {3}", ProveedorCxp.Nombre1, ProveedorCxp.Nombre2, ProveedorCxp.Nombre3, ProveedorCxp.Nombre4);
+            ws.Cell(3, "D").Value = ProveedorCxp.Rfc;
+            ws.Cell(5, "B").Value = DateTime.Today.ToString("dd/MM/yyyy");
+            ws.Cell(6, "B").Value = dt.Rows.Cast<DataRow>()
+                .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
+
+            var row = 9;
 
             foreach (DataRow dr in dt.Rows)
             {
-                dr["FECHA_PAGO"] = DateTime.ParseExact(dr["FECHA_PAGO"].ToString(), "yyyyMMdd",
+                ws.Cell(row, "A").Value = dr["XBLNR"].ToString();
+                ws.Cell(row, "B").Value = dr["DMBTR"].ToString();
+                ws.Cell(row, "C").Value = dr["WAERS"].ToString();
+                ws.Cell(row, "D").Value = DateTime.ParseExact(dr["FECHA_PAGO"].ToString(), "yyyyMMdd",
                 CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
-
                 var tipo = "";
                 switch (dr["BLART"].ToString())
                 {
@@ -457,11 +488,9 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                         {
                             tipo = "Factura de mercancia";
                             break;
-
                         }
                         tipo = "Devolucion de mercancia";
                         break;
-
                     case "RV":
                         tipo = "Cargo a proveedor";
                         break;
@@ -474,27 +503,13 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                     case "ZP":
                         tipo = "Pago";
                         break;
-
-
                 }
 
-                dr["BLART"] = tipo;
+                ws.Cell(row, "E").Value = tipo;
+
+                row++;
             }
-
-            for (var i = dt.Columns.Count - 1; i >= 0; i--)
-            {
-                if (!columnsNames.Contains(dt.Columns[i].ColumnName))
-                {
-                    dt.Columns.RemoveAt(i);
-                }
-            }
-
-            dt.Columns["XBLNR"].ColumnName = "Referencia";
-            dt.Columns["DMBTR"].ColumnName = "Importe";
-            dt.Columns["WAERS"].ColumnName = "Ml";
-            dt.Columns["BLART"].ColumnName = "Tipo de Movimiento";
-
-            FileManager.ExportExcel(dt, "NroSAP" + ProveedorCxp.NumeroProveedor, HttpContext);
+            FileManager.ExportExcel(workbook, "CXP_" + ProveedorCxp.Rfc, HttpContext);
         }
 
 
