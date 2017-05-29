@@ -88,3 +88,6 @@ h1, h2 {
 .btn-riel.btn-primary {
     background: #66aaaa;
 }
+#menu > li.active > a {
+    background: #555;
+}
