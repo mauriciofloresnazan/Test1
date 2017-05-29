@@ -6,7 +6,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
+using ClosedXML.Excel;
 using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient.Authentication;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Ppgz.CitaWrapper;
@@ -22,7 +24,31 @@ namespace Test
 {
     class Program
     {
+        static void TestExcel()
+        {
+            var fileName = Guid.NewGuid() + ".xlsx";
+            var template = new XLWorkbook(@"c:\temp\borrar\plantillaoc.xlsx");
+            template.SaveAs(fileName);
 
+            var workbook = new XLWorkbook(fileName);
+            var ws = workbook.Worksheet(1);
+
+            var row = 6;
+            while (row < 20)
+            {
+                var col = 1;
+                while (col < 10)
+                {
+                    ws.Cell(row, col).Value = string.Format("Row{0} x Col {1}", row, col);
+                    col++;
+                }
+        
+                row++;
+            }
+            workbook.Save();
+
+
+        }
         static void TestCita()
         {
             var proveedorManager = new ProveedorManager();
@@ -94,7 +120,7 @@ namespace Test
 
         static void Main(string[] args)
         {
-            TestCita();
+            TestExcel();
             return;
 
             /*ValidarSat();

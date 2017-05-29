@@ -1189,6 +1189,7 @@
     <Content Include="Areas\Servicio\Views\ReporteProveedores\Reportes.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas\DisponibilidadRieles.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarFacturas\Index.cshtml" />
+    <Content Include="App_Data\plantillaoc.xlsx" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -1289,6 +1290,10 @@
     <ProjectReference Include="..\Ppgz.Services\Ppgz.Services.csproj">
       <Project>{7A06D69C-0BA5-4FC8-9140-69D0D2C76408}</Project>
       <Name>Ppgz.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SapWrapper\SapWrapper.csproj">
+      <Project>{FF45BCAC-FBF6-451B-B36D-39E22F4EA1E3}</Project>
+      <Name>SapWrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
