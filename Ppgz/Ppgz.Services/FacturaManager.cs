@@ -102,7 +102,7 @@ namespace Ppgz.Services
             
             var facturaSap = sapFacturaManager.CrearFactura(
                 proveedor.NumeroProveedor,
-                /*comprobante.Serie + */comprobante.Folio,
+                comprobante.Serie  ?? string.Empty + comprobante.Folio,
                 DateTime.ParseExact(comprobante.Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
                 comprobante.SubTotal,
                 comprobante.Total,
@@ -127,7 +127,7 @@ namespace Ppgz.Services
 
             var factura = new factura
             {
-                Serie = comprobante.Serie,
+                Serie = comprobante.Serie ?? string.Empty,
                 Folio = comprobante.Folio,
                 Fecha =  fecha,
                 Total = decimal.Parse(comprobante.Total, CultureInfo.InvariantCulture),
@@ -154,9 +154,6 @@ namespace Ppgz.Services
             _db.facturas.Add(factura);
 
             _db.SaveChanges();
-
-
-
         }
 
 
