@@ -28,7 +28,7 @@
                 <table id="facturas" class="table table-striped table-condensed table-bordered">
                     <thead>
                         <tr>
-                            <th class="text-center">Id</th>
+         
                             <th class="text-center">RFC</th>
                             <th class="text-center">Razón Social</th>
                             <th class="text-center">Serie</th>
@@ -46,7 +46,7 @@
                         @foreach (var factura in facturas)
                         {
                             <tr>
-                                <td class="text-center vert-align">@factura.Id</td>
+               
                                 <td class="text-center vert-align">@factura.proveedore.Rfc</td>
                                 <td class="text-center vert-align" style=" white-space: inherit; font-size: .8em;">@factura.proveedore.Nombre1 @factura.proveedore.Nombre2 @factura.proveedore.Nombre3 @factura.proveedore.Nombre4</td>
                                 <td class="text-center vert-align">@factura.Serie</td>
