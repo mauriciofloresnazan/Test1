@@ -184,15 +184,28 @@ namespace Ppgz.CitaWrapper
         /// se redondea hacia abajo, necesitando para esa cita 6 Rieles, cada uno de esos rieles 
         /// procesara 550 pares por hora para un total de 3300.
         /// </summary>
-        public static int GetCantidadRieles(int totalPares)
+        public static int GetCantidadRieles(int g5)
         {
-            var paresPorHora = Convert.ToInt32(GetConfiguraciones()
+            var g3 = Convert.ToInt32(GetConfiguraciones()
+                .Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min").Valor);
+            var g4 = Convert.ToInt32(GetConfiguraciones()
                 .Single(c => c.Clave == "warehouse.platform-rail.max-pair.hour").Valor);
-            var tolerancia = Convert.ToDecimal(GetConfiguraciones()
+
+
+            /*var tolerancia = Convert.ToDecimal(GetConfiguraciones()
                 .Single(c => c.Clave == "warehouse.platform-rail.max-pair-hour.tolerance").Valor, CultureInfo.InvariantCulture);
+            */
 
+            var g6 = g5 / Convert.ToDecimal(g4);
+            var h6 = Math.Floor(g6);
+            var i6 = h6 * g4;
+            var g7 = g5 - i6;
+            var h7 = Math.Ceiling(g7 / g3);
 
-            if (totalPares <= paresPorHora)
+            var total = (h6*2) + h7;
+            return (int) total;
+
+            /*  if (totalPares <= paresPorHora)
             {
                 return 1;
             }
@@ -201,7 +214,7 @@ namespace Ppgz.CitaWrapper
 
             var rielesRequeridos = decimal.ToInt32((resultado % 1) > tolerancia ? Math.Ceiling(resultado) : Math.Floor(resultado));
 
-            return rielesRequeridos;
+            return rielesRequeridos;*/
         }
         
 
@@ -401,14 +414,25 @@ namespace Ppgz.CitaWrapper
         /// <returns></returns>
         public static bool Regla13(string almacen, int cantidadAcumulada, int cantidad)
         {
-            var cantidadDiariaLimite = Convert.ToInt32(GetConfiguraciones()
-                .Single(c => c.Clave == "warehouse.max-pairs.per-day").Valor); 
-            var almacenes = GetConfiguraciones()
-                .Single(c => c.Clave == "warehouse.limited-warehouses-per-day").Valor.Split(',');
+            var cantidadDiariaLimite = 0;
 
-            if (!almacenes.Contains(almacen))
+            if (almacen.ToUpper() == "CROSSDOCK")
             {
-                return true;
+                cantidadDiariaLimite = Convert.ToInt32(GetConfiguraciones()
+                    .Single(c => c.Clave == "warehouse.crossdock-max-pairs.per-day").Valor);
+            }
+            else
+            {
+                cantidadDiariaLimite = Convert.ToInt32(GetConfiguraciones()
+                    .Single(c => c.Clave == "warehouse.max-pairs.per-day").Valor);
+                
+                var almacenes = GetConfiguraciones()
+                    .Single(c => c.Clave == "warehouse.limited-warehouses-per-day").Valor.Split(',');
+
+                if (!almacenes.Contains(almacen))
+                {
+                    return true;
+                }
             }
 
             return (cantidadAcumulada + cantidad) <= cantidadDiariaLimite;

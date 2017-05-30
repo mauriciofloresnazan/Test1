@@ -35,11 +35,68 @@ namespace Ppgz.CitaWrapper
             var documentos = precita.Asns.Select(d => d.OrdenNumeroDocumento).Distinct().ToArray();
 
             var cantidadDiariaLimite = Convert.ToInt32(db.configuraciones.Single(c => c.Clave == "warehouse.max-pairs.per-day").Valor);
+            var cantidadSemanalLimite = Convert.ToInt32(db.configuraciones.Single(c => c.Clave == "warehouse.max-pairs.per-week").Valor);
 
-            var cantidadAlmacen =
-                db.citas.Where(c => c.Almacen == precita.Centro && c.FechaCita == precita.Fecha.Date)
-                .Sum(c => c.CantidadTotal);
+            if (precita.Centro.ToUpper() == "CROSSDOCK")
+            {
+                cantidadDiariaLimite = Convert.ToInt32(db.configuraciones.Single(c => c.Clave == "warehouse.crossdock-max-pairs.per-day").Valor);
+            }
+            var cantidadDelDiaEnAlmacen = 0;
+                
+            var citasDelDiaEnAlpmacen = db.citas.Where(c => c.Almacen == precita.Centro && c.FechaCita == precita.Fecha.Date).ToList();
 
+            if (citasDelDiaEnAlpmacen.Any())
+            {
+                cantidadDelDiaEnAlmacen = citasDelDiaEnAlpmacen.Sum(c => c.asns.Sum(asn => asn.Cantidad));
+            }
+
+            var fechaDesde = new DateTime();
+            var fechaHasta = new DateTime();
+
+            switch (precita.Fecha.DayOfWeek)
+            {
+                case DayOfWeek.Monday:
+                    fechaDesde = precita.Fecha.Date;
+                    fechaHasta = precita.Fecha.AddDays(6).Date;
+                    break;
+                case DayOfWeek.Tuesday:
+                    fechaDesde = precita.Fecha.AddDays(-1).Date;
+                    fechaHasta = precita.Fecha.AddDays(5).Date;
+                    break;
+                case DayOfWeek.Wednesday:
+                    fechaDesde = precita.Fecha.AddDays(-2).Date;
+                    fechaHasta = precita.Fecha.AddDays(4).Date;
+                    break;
+                case DayOfWeek.Thursday:
+                    fechaDesde = precita.Fecha.AddDays(-3).Date;
+                    fechaHasta = precita.Fecha.AddDays(3).Date;
+                    break;
+                case DayOfWeek.Friday:
+                    fechaDesde = precita.Fecha.AddDays(-4).Date;
+                    fechaHasta = precita.Fecha.AddDays(2).Date;
+                    break;
+                case DayOfWeek.Saturday:
+                    fechaDesde = precita.Fecha.AddDays(-5).Date;
+                    fechaHasta = precita.Fecha.AddDays(1).Date;
+                    break;
+                case DayOfWeek.Sunday:
+                    fechaDesde = precita.Fecha.AddDays(-6).Date;
+                    fechaHasta = precita.Fecha.Date;
+                    break;
+            }
+            var cantidadDeLaSemanaEnAlmacen = 0;
+
+            var citasDeLaSemanaEnAlmacen = db.citas
+                .Where(c => c.Almacen == precita.Centro)
+                .Where(c => c.FechaCita >= fechaDesde && c.FechaCita <= fechaHasta)
+                .ToList();
+
+            if (citasDeLaSemanaEnAlmacen.Any())
+            {
+                cantidadDeLaSemanaEnAlmacen = citasDeLaSemanaEnAlmacen.Sum(c => c.asns.Sum(asn => asn.Cantidad));
+            }
+
+            
             #region ReglasGenerales
             if (!RulesManager.Regla2(precita.Fecha))
             {
@@ -72,14 +129,21 @@ namespace Ppgz.CitaWrapper
 
 
 
-            if (!RulesManager.Regla13(precita.Centro, Convert.ToInt32(cantidadAlmacen), precita.Cantidad))
+            if (!RulesManager.Regla13(precita.Centro, Convert.ToInt32(cantidadDelDiaEnAlmacen), precita.Cantidad))
             {
-                var cantidadDisponible = cantidadDiariaLimite - cantidadAlmacen;
+                var cantidadDisponible = cantidadDiariaLimite - cantidadDelDiaEnAlmacen;
 
                 throw new Exception(string.Format("El almacén {0} puede recibir {1} pares para esta fecha, pero la cita tiene {2} pares.", precita.Centro, cantidadDisponible, precita.Cantidad));
             }
 
-            //TODO CONTINUAR LA REGLA 14
+
+            if (!RulesManager.Regla14(precita.Centro, Convert.ToInt32(cantidadDeLaSemanaEnAlmacen), precita.Cantidad))
+            {
+                var cantidadDisponible = cantidadSemanalLimite - cantidadSemanalLimite;
+
+                throw new Exception(string.Format("El almacén {0} puede recibir {1} pares para esta semana, pero la cita tiene {2} pares.", precita.Centro, cantidadDisponible, precita.Cantidad));
+            }
+
 
             #endregion ReglasGenerales
 
