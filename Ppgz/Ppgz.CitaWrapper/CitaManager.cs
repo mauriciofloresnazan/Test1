@@ -139,7 +139,7 @@ namespace Ppgz.CitaWrapper
 
             if (!RulesManager.Regla14(precita.Centro, Convert.ToInt32(cantidadDeLaSemanaEnAlmacen), precita.Cantidad))
             {
-                var cantidadDisponible = cantidadSemanalLimite - cantidadSemanalLimite;
+                var cantidadDisponible = cantidadSemanalLimite - cantidadDeLaSemanaEnAlmacen;
 
                 throw new Exception(string.Format("El almacén {0} puede recibir {1} pares para esta semana, pero la cita tiene {2} pares.", precita.Centro, cantidadDisponible, precita.Cantidad));
             }
