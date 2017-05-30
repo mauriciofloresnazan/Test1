@@ -36,13 +36,13 @@
         border-bottom: solid 1px #f1f1f1;
     }
 
-    .btn-primary.hover, .btn-primary:hover, .open > .dropdown-toggle.btn-primary {
+    .table-rieles .btn-primary.hover, .table-rieles .btn-primary:hover, .table-rieles .open > .dropdown-toggle.btn-primary {
         background-color: #66aaaa;
         border-color: #ccc;
         background-image: none;
     }
 
-    .btn-primary.active, .btn-primary.hover, .btn-primary:hover, .btn-primary:active, .open > .dropdown-toggle.btn-primary {
+    .table-rieles .btn-primary.active, .table-rieles .btn-primary.hover, .table-rieles .btn-primary:hover, .table-rieles .btn-primary:active, .table-rieles .open > .dropdown-toggle.btn-primary {
         background-color: #66aaaa;
         border-color: #ccc;
         background-image: none;
@@ -84,8 +84,11 @@
 
             <div class="col-sm-offset-6 col-sm-6">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
-                    <a class="btn btn-primary btn-agendar" href="#">
+                    <a class="btn btn-primary btn-agendar">
                         <i class="fa fa-check-square" aria-hidden="true"></i> Agendar Cita
+                    </a>
+                    <a class="btn btn-warning" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Modificar Cita
                     </a>
                     <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
@@ -97,6 +100,9 @@
                 <div class="visible-sm visible-xs">
                     <a class="btn btn-primary btn-block btn-agendar" href="#">
                         <i class="fa fa-check-square" aria-hidden="true"></i> Agendar Cita
+                    </a>
+                    <a class="btn btn-warning btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Modificar Cita
                     </a>
                     <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
@@ -121,12 +127,19 @@
 
         <p><i>
                 Debe entergar <strong>@currentCita.Cantidad</strong> pares, por lo que debe seleccionar 
-            <strong>@rielesNecesarios</strong> rieles.</i>
+            <strong>@rielesNecesarios</strong> rieles.</i> 
+        </p>
+        <p>
+            Es importante que la selección derieles tenga en lo posible alguno de los siguientes patrones:
+            <ul class="list-inline">
+                <li><strong>Vertical</strong> <img src="/assets/img/riel-ejemplo-vertical.jpg" alt="Vertical" /></li>
+                <li><strong>Horizontal</strong> <img src="/assets/img/riel-ejemplo-horizontal.jpg" alt="Horizontal" /> </li>
+                <li><strong>Matriz</strong> <img src="/assets/img/riel-ejemplo-matriz.jpg" alt="Matriz" /></li>
+            </ul>
         </p>
 
 
-
-        <table class="" width="100%" id="tb-3" style="">
+        <table class="table-rieles" width="100%" id="tb-3" style="">
             <thead>
                 <tr>
                     <th class="text-center">

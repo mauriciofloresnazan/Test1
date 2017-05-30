@@ -67,7 +67,7 @@
             <thead>
             <tr>
                 <th class="text-center">
-                    <h2>Horario</h2>
+                    <h3>Horario</h3>
                 </th>
                 @foreach (var result in andenes)
                 {
@@ -106,7 +106,7 @@
                         var tdWidth = Convert.ToInt32(100 / rieles.Count) + "%";
                     }
 
-                    <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
+                    <td class="text-center vert-align">@horario.HoraDesde <br> - <br/> @horario.HoraHasta</td>
 
                     @foreach (var riel in rieles)
                     {
@@ -231,7 +231,7 @@
                 var parentHeight = td.height();
                 //btn.css("height", parentHeight);
                 //btn.css("margin", "10px");
-                btn.css("width", "200px");
+                btn.css("width", "180px");
             });
 
 
