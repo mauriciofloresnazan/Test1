@@ -37,7 +37,7 @@ h1, h2 {
 }
 .navbar-main {
     background: #f0f0f0;
-        border-color: #fff;
+    border-color: #fff;
 }
 .navbar-main .navbar-nav>li>a {
     color: #000;
@@ -77,8 +77,8 @@ h1, h2 {
     border-radius: 0 !important;
 }
 .btn-warning {
-    background: #888;
-    border-color: #222;
+    background: #B8B8B8;
+    border-color: #999;
 }
 .btn-warning.active, .btn-warning:active, .btn-warning:focus, .btn-warning:hover, .btn-warning.active.focus, .btn-warning.active:focus, .btn-warning.active:hover, .btn-warning:active.focus, .btn-warning:active:focus, .btn-warning:active:hover{
     background: #555;
