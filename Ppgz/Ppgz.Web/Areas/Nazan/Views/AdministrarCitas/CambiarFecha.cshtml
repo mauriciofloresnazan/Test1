@@ -13,7 +13,7 @@
     var horarios = horarioRieles.Select(hr => new
     {
         hr.horario
-    }).Distinct().ToList().OrderBy(h => h.horario.HoraDesde);
+    }).Distinct().ToList().OrderBy(h => h.horario.Id);
 
     var andenes = horarioRieles.Select(hr => new
     {
@@ -34,7 +34,7 @@
         border-bottom: solid 1px #f1f1f1;
     }
 
-    .btn-primary.hover, .btn-primary:hover, .open > .dropdown-toggle.btn-primary {
+   /* .btn-primary.hover, .btn-primary:hover, .open > .dropdown-toggle.btn-primary {
         background-color: #66aaaa;
         border-color: #ccc;
         background-image: none;
@@ -44,7 +44,7 @@
         background-color: #66aaaa;
         border-color: #ccc;
         background-image: none;
-    }
+    }*/
 </style>
 
 <h2>@ViewBag.Title</h2>

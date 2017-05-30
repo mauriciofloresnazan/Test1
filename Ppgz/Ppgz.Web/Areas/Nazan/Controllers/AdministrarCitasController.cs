@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 using MySql.Data.MySqlClient;
 using Ppgz.Repository;
@@ -70,7 +71,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult Enroque(int horarioRielId1, int horarioRielId2)
+        public async Task<ActionResult> Enroque(int horarioRielId1, int horarioRielId2)
         {
 
             var db = new Entities();
@@ -100,6 +101,68 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 
             db.SaveChanges();
+
+
+            if (citaId1 != null)
+            {
+                var cita = db.citas.Find(citaId1);
+
+                var horarioAnterior = string.Format("ANTERIOR: Anden {0} Riel {1} Horario {2} - {3}", 
+                    horarioRiel2.riele.andene.Anden,
+                    horarioRiel2.horario.HoraDesde,
+                    horarioRiel2.horario.HoraHasta);
+
+                var horarioNuevo = string.Format("NUEVO: Anden {0} Riel {1} Horario {2} - {3}", 
+                    horarioRiel1.riele.andene.Anden,
+                    horarioRiel1.riele.Riel,
+                    horarioRiel1.horario.HoraDesde,
+                    horarioRiel1.horario.HoraHasta);
+
+                var correos = cita.proveedore.cuenta.AspNetUsers.Select(u => u.Email).ToArray();
+
+                var commonManager = new CommonManager();
+
+                foreach (var correo in correos)
+                {
+                    await commonManager.SendHtmlMail(
+                         "Modificación de la Cita #" + cita.Id,
+                         "Se ha modificado Cita #" + cita.Id + " reservada para el día " + cita.FechaCita.ToString("dd/MM/yyyy")
+                         + ".<br><br>" + horarioAnterior
+                         + ".<br>" + horarioNuevo,
+                         correo);
+                }
+            }
+            if (citaId2 != null)
+            {
+                var cita = db.citas.Find(citaId2);
+
+                var horarioNuevo = string.Format("(NUEVO: Anden {0} Riel {1} Horario {2} - {3}",
+                    horarioRiel2.riele.andene.Anden,
+                    horarioRiel1.riele.Riel,
+                    horarioRiel2.horario.HoraDesde,
+                    horarioRiel2.horario.HoraHasta);
+
+                var horarioAnterior = string.Format("ANTERIOR: Anden {0} Riel {1} Horario {2} - {3}",
+                    horarioRiel1.riele.andene.Anden,
+                    horarioRiel1.riele.Riel,
+                    horarioRiel1.horario.HoraDesde,
+                    horarioRiel1.horario.HoraHasta);
+
+                var correos = cita.proveedore.cuenta.AspNetUsers.Select(u => u.Email).ToArray();
+
+                var commonManager = new CommonManager();
+
+                foreach (var correo in correos)
+                {
+                    await commonManager.SendHtmlMail(
+                         "Modificación de la Cita #" + cita.Id,
+                         "Se ha modificado Cita #" + cita.Id + " reservada para el día " + cita.FechaCita.ToString("dd/MM/yyyy")
+                         + ".<br><br>" + horarioAnterior
+                         + ".<br>" + horarioNuevo,
+                         correo);
+                }
+            }
+
 
 
             TempData["FlashSuccess"] = "Enroque aplicado exitosamente";
@@ -200,7 +263,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult CambiarFecha(int citaId, string fecha, int[] horarioRielesIds)
+        public async Task<ActionResult> CambiarFecha(int citaId, string fecha, int[] horarioRielesIds)
         {
             var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
@@ -262,6 +325,23 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             cita.FechaCita = date;
             db.Entry(cita).State = EntityState.Modified;
             db.SaveChanges();
+
+
+
+            var correos = cita.proveedore.cuenta.AspNetUsers.Select(u => u.Email).ToArray();
+
+            var commonManager = new CommonManager();
+
+            foreach (var correo in correos)
+            {
+                await commonManager.SendHtmlMail(
+                     "Modificación de la Cita #" + cita.Id,
+                     "La cita #." + cita.Id + " se ha modificado para la fecha " + cita.FechaCita.ToString("dd/MM/yyyy"),
+                     correo);
+            }
+   
+
+
 
             TempData["FlashSuccess"] = "Cambio de fecha aplicado exitosamente";
             return RedirectToAction("Index");
