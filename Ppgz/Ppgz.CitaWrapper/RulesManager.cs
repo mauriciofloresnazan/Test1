@@ -192,6 +192,17 @@ namespace Ppgz.CitaWrapper
                 .Single(c => c.Clave == "warehouse.platform-rail.max-pair.hour").Valor);
 
 
+
+            if (g5 <= g3)
+            {
+                return 1;
+            }
+
+            if (g5 <= g4)
+            {
+                return 2;
+            }
+
             /*var tolerancia = Convert.ToDecimal(GetConfiguraciones()
                 .Single(c => c.Clave == "warehouse.platform-rail.max-pair-hour.tolerance").Valor, CultureInfo.InvariantCulture);
             */
