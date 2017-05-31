@@ -73,21 +73,18 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [HttpPost]
         public async Task<ActionResult> Enroque(int horarioRielId1, int horarioRielId2)
         {
-
             var db = new Entities();
 
             var horarioRiel1 = db.horariorieles.Find(horarioRielId1);
             var citaId1 = horarioRiel1.CitaId;
             var disponibilidad1 = horarioRiel1.Disponibilidad;
             var comentario1 = horarioRiel1.ComentarioBloqueo;
-
-
-
+            
             var horarioRiel2 = db.horariorieles.Find(horarioRielId2);
             var citaId2 = horarioRiel2.CitaId;
             var disponibilidad2 = horarioRiel2.Disponibilidad;
             var comentario2 = horarioRiel2.ComentarioBloqueo;
-            
+
 
             horarioRiel1.CitaId = citaId2;
             horarioRiel1.Disponibilidad = disponibilidad2;
@@ -99,74 +96,83 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             horarioRiel2.ComentarioBloqueo = comentario1;
             db.Entry(horarioRiel2).State = EntityState.Modified;
 
-
-            db.SaveChanges();
-
-
-            if (citaId1 != null)
+            try
             {
-                var cita = db.citas.Find(citaId1);
+                db.SaveChanges();
 
-                var horarioAnterior = string.Format("ANTERIOR: Anden {0} Riel {1} Horario {2} - {3}", 
-                    horarioRiel2.riele.andene.Anden,
-                    horarioRiel2.horario.HoraDesde,
-                    horarioRiel2.horario.HoraHasta);
 
-                var horarioNuevo = string.Format("NUEVO: Anden {0} Riel {1} Horario {2} - {3}", 
-                    horarioRiel1.riele.andene.Anden,
-                    horarioRiel1.riele.Riel,
-                    horarioRiel1.horario.HoraDesde,
-                    horarioRiel1.horario.HoraHasta);
-
-                var correos = cita.proveedore.cuenta.AspNetUsers.Select(u => u.Email).ToArray();
-
-                var commonManager = new CommonManager();
-
-                foreach (var correo in correos)
+                if (citaId1 != null)
                 {
-                    await commonManager.SendHtmlMail(
-                         "Modificación de la Cita #" + cita.Id,
-                         "Se ha modificado Cita #" + cita.Id + " reservada para el día " + cita.FechaCita.ToString("dd/MM/yyyy")
-                         + ".<br><br>" + horarioAnterior
-                         + ".<br>" + horarioNuevo,
-                         correo);
+                    var cita = db.citas.Find(citaId1);
+
+                    var horarioAnterior = string.Format("NUEVO: Anden {0} Riel {1} Horario {2} - {3}", 
+                        horarioRiel2.riele.andene.Anden,
+                        horarioRiel2.riele.Riel,
+                        horarioRiel2.horario.HoraDesde,
+                        horarioRiel2.horario.HoraHasta);
+
+                    var horarioNuevo = string.Format("ANTERIOR: Anden {0} Riel {1} Horario {2} - {3}", 
+                        horarioRiel1.riele.andene.Anden,
+                        horarioRiel1.riele.Riel,
+                        horarioRiel1.horario.HoraDesde,
+                        horarioRiel1.horario.HoraHasta);
+
+                    var correos = cita.proveedore.cuenta.AspNetUsers.Select(u => u.Email).ToArray();
+
+                    var commonManager = new CommonManager();
+
+                    foreach (var correo in correos)
+                    {
+                        await commonManager.SendHtmlMail(
+                             "Modificación de la Cita #" + cita.Id,
+                             "Se ha modificado Cita #" + cita.Id + " reservada para el día " + cita.FechaCita.ToString("dd/MM/yyyy")
+                             + ".<br><br>" + horarioAnterior
+                             + ".<br>" + horarioNuevo,
+                             correo);
+                    }
                 }
+                if (citaId2 != null)
+                {
+                    var cita = db.citas.Find(citaId2);
+
+                    var horarioNuevo = string.Format("(ANTERIOR: Anden {0} Riel {1} Horario {2} - {3}",
+                        horarioRiel2.riele.andene.Anden,
+                        horarioRiel2.riele.Riel,
+                        horarioRiel2.horario.HoraDesde,
+                        horarioRiel2.horario.HoraHasta);
+
+                    var horarioAnterior = string.Format("NUEVO: Anden {0} Riel {1} Horario {2} - {3}",
+                        horarioRiel1.riele.andene.Anden,
+                        horarioRiel1.riele.Riel,
+                        horarioRiel1.horario.HoraDesde,
+                        horarioRiel1.horario.HoraHasta);
+
+                    var correos = cita.proveedore.cuenta.AspNetUsers.Select(u => u.Email).ToArray();
+
+                    var commonManager = new CommonManager();
+
+                    foreach (var correo in correos)
+                    {
+                        await commonManager.SendHtmlMail(
+                             "Modificación de la Cita #" + cita.Id,
+                             "Se ha modificado Cita #" + cita.Id + " reservada para el día " + cita.FechaCita.ToString("dd/MM/yyyy")
+                             + ".<br><br>" + horarioAnterior
+                             + ".<br>" + horarioNuevo,
+                             correo);
+                    }
+                }
+
+
+
+                TempData["FlashSuccess"] = "Enroque aplicado exitosamente";
+                return RedirectToAction("Enroque", new { fecha = horarioRiel1.Fecha.ToString("dd/MM/yyyy"), Area = "Nazan"  });
             }
-            if (citaId2 != null)
+            catch (Exception exception)
             {
-                var cita = db.citas.Find(citaId2);
 
-                var horarioNuevo = string.Format("(NUEVO: Anden {0} Riel {1} Horario {2} - {3}",
-                    horarioRiel2.riele.andene.Anden,
-                    horarioRiel1.riele.Riel,
-                    horarioRiel2.horario.HoraDesde,
-                    horarioRiel2.horario.HoraHasta);
-
-                var horarioAnterior = string.Format("ANTERIOR: Anden {0} Riel {1} Horario {2} - {3}",
-                    horarioRiel1.riele.andene.Anden,
-                    horarioRiel1.riele.Riel,
-                    horarioRiel1.horario.HoraDesde,
-                    horarioRiel1.horario.HoraHasta);
-
-                var correos = cita.proveedore.cuenta.AspNetUsers.Select(u => u.Email).ToArray();
-
-                var commonManager = new CommonManager();
-
-                foreach (var correo in correos)
-                {
-                    await commonManager.SendHtmlMail(
-                         "Modificación de la Cita #" + cita.Id,
-                         "Se ha modificado Cita #" + cita.Id + " reservada para el día " + cita.FechaCita.ToString("dd/MM/yyyy")
-                         + ".<br><br>" + horarioAnterior
-                         + ".<br>" + horarioNuevo,
-                         correo);
-                }
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("Enroque", new { fecha = horarioRiel1.Fecha.ToString("dd/MM/yyyy"), Area = "Nazan" });
             }
-
-
-
-            TempData["FlashSuccess"] = "Enroque aplicado exitosamente";
-            return RedirectToAction("Enroque", new { fecha = horarioRiel1.Fecha.ToString("dd/MM/yyyy") });
         }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
