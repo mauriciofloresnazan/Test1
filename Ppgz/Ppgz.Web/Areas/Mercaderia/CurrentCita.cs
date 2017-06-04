@@ -102,7 +102,7 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             var result = preAsnManager.GetOrdenesActivasConDetalle(proveedor.Id);
 
-            if (String.Equals(centro, "CROSSDOCK", StringComparison.CurrentCultureIgnoreCase))
+            if (String.Equals(centro, "CROSS DOCK", StringComparison.CurrentCultureIgnoreCase))
             {
                 EsCrossDock = true;
                 _ordenesActivas = result
@@ -122,7 +122,7 @@ namespace Ppgz.Web.Areas.Mercaderia
                
             if (!_ordenesActivas.Any())
             {
-                throw new BusinessException("No hay Órdenes de Compras con entregas disponibles para crear una Cita. Por favor verifique su selección (Proveedor, Almacén, CrossDock).");
+                throw new BusinessException("No hay Órdenes de Compras con entregas disponibles para crear una Cita. Por favor verifique su selección (Proveedor, Almacén, Cross Dock).");
             }
 
             Centro = centro;

@@ -427,7 +427,7 @@ namespace Ppgz.CitaWrapper
         {
             var cantidadDiariaLimite = 0;
 
-            if (almacen.ToUpper() == "CROSSDOCK")
+            if (almacen.ToUpper() == "CROSS DOCK")
             {
                 cantidadDiariaLimite = Convert.ToInt32(GetConfiguraciones()
                     .Single(c => c.Clave == "warehouse.crossdock-max-pairs.per-day").Valor);

@@ -130,7 +130,7 @@
                             {
                                 var crossDockLabel = "";
                                 var tiendasAlmacen = "Almacén: " + riel.cita.Almacen;
-                                if (riel.cita.Almacen.ToUpper() == "CROSSDOCK")
+                                if (riel.cita.Almacen.ToUpper() == "Cross Dock")
                                 {
                                     crossDockLabel = "<span class='label label-default' style='background-color: #293129;'>Cross Dock</span >";
                                     var tiendas = riel.cita.asns.Select(asn => asn.Tienda).Distinct().ToArray();

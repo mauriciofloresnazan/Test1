@@ -37,7 +37,7 @@ namespace Ppgz.CitaWrapper
             var cantidadDiariaLimite = Convert.ToInt32(db.configuraciones.Single(c => c.Clave == "warehouse.max-pairs.per-day").Valor);
             var cantidadSemanalLimite = Convert.ToInt32(db.configuraciones.Single(c => c.Clave == "warehouse.max-pairs.per-week").Valor);
 
-            if (precita.Centro.ToUpper() == "CROSSDOCK")
+            if (precita.Centro.ToUpper() == "CROSS DOCK")
             {
                 cantidadDiariaLimite = Convert.ToInt32(db.configuraciones.Single(c => c.Clave == "warehouse.crossdock-max-pairs.per-day").Valor);
             }

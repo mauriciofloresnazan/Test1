@@ -125,17 +125,19 @@
     <div class="panel-heading">Rieles Disponibles</div>
     <div class="panel-body">
 
-        <p><i>
+        <p style="margin: 0;"><i>
                 Debe entergar <strong>@currentCita.Cantidad</strong> pares, por lo que debe seleccionar 
             <strong>@rielesNecesarios</strong> rieles.</i> 
         </p>
         <p>
-            Es importante que la selección derieles tenga en lo posible alguno de los siguientes patrones:
-            <ul class="list-inline">
-                <li><strong>Vertical</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-vertical.jpg")" alt="Vertical" /></li>
-                <li><strong>Horizontal</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-horizontal.jpg")" alt="Horizontal" /> </li>
-                <li><strong>Matriz</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-matriz.jpg")" alt="Matriz" /></li>
-            </ul>
+            <div>
+                <div class="col-md-7" style="padding: 0; margin-top: 10px;">Es importante que la selección de rieles tenga en lo posible alguno de los siguientes patrones:</div>
+                <ul class="list-inline col-md-5" style="padding: 0;">
+                    <li><strong>Vertical</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-vertical.jpg")" alt="Vertical" /></li>
+                    <li><strong>Horizontal</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-horizontal.jpg")" alt="Horizontal" /> </li>
+                    <li><strong>Matriz</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-matriz.jpg")" alt="Matriz" /></li>
+                </ul>
+            </div>
         </p>
 
 
