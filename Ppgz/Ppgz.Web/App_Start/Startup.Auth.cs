@@ -20,7 +20,7 @@ namespace Ppgz.Web
         {
             var rolesNazan = new Dictionary<string, string>
             {
-                {"MAESTRO-NAZAN", "Acceso Total al sistema de Nazan"},
+                {"MAESTRO-NAZAN", "Administrador"},
                 {"NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR", "Consultar Perfiles"},
                 {"NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR", "Modificar Perfiles"},
                 {"NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR", "Consultar Usuarios"},
@@ -28,10 +28,10 @@ namespace Ppgz.Web
                 {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR", "Consultar Mensajes Insitucionales"},
                 {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR", "Modificar Mensajes Institucionales"},
 
-                {"NAZAN-CONFIGSYS", "Actualizar las configuraciones del sistema"},
-                {"NAZAN-NIVELSERVICIO", "Actualizar niveles de servicio por proveedores"},
-                {"NAZAN-ADMINISTRARCITAS", "Administracion de citas"},
-                {"NAZAN-ADMINISTRARFACTURAS", "Administracion de facturas"}
+                {"NAZAN-CONFIGSYS", "Configurar el Sistema"},
+                {"NAZAN-NIVELSERVICIO", "Actualizar Niveles de Servicio"},
+                {"NAZAN-ADMINISTRARCITAS", "Administrar Citas"},
+                {"NAZAN-ADMINISTRARFACTURAS", "Administrar Facturas"}
             };
             return rolesNazan;
         }
@@ -40,7 +40,7 @@ namespace Ppgz.Web
         {
             var rolesMercaderia = new Dictionary<string, string>
             {
-                {"MAESTRO-MERCADERIA","Acceso Total al Sistema"},
+                {"MAESTRO-MERCADERIA","Administrador"},
                 {"MERCADERIA-ADMINISTRARPERFILES-LISTAR","Consultar Perfiles"},
                 {"MERCADERIA-ADMINISTRARPERFILES-MODIFICAR","Modificar Perfiles"},
                 {"MERCADERIA-ADMINISTRARUSUARIOS-LISTAR","Consultar Usuarios"},
@@ -66,18 +66,18 @@ namespace Ppgz.Web
         {
             var rolesServicio = new Dictionary<string, string>
             {
-                {"MAESTRO-SERVICIO","Acceso Total al sistema"},
-                {"SERVICIO-ADMINISTRARPERFILES-LISTAR","Consultar perfiles"},
-                {"SERVICIO-ADMINISTRARPERFILES-MODIFICAR","Modificar perfiles"},
-                {"SERVICIO-ADMINISTRARUSUARIOS-LISTAR","Consultar usuarios"},
+                {"MAESTRO-SERVICIO","Administrador"},
+                {"SERVICIO-ADMINISTRARPERFILES-LISTAR","Consultar Perfiles"},
+                {"SERVICIO-ADMINISTRARPERFILES-MODIFICAR","Modificar Perfiles"},
+                {"SERVICIO-ADMINISTRARUSUARIOS-LISTAR","Consultar Usuarios"},
                 {"SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR","Modificar usuarios"},
                 {"SERVICIO-MENSAJESINSTITUCIONALES","Mensajes Insitucionales"},
-                {"SERVICIO-ORDENESCOMPRA","Acceso a Ordenes de Compra"},
+                {"SERVICIO-ORDENESCOMPRA","Ordenes de Compra"},
                 {"SERVICIO-CUENTASPAGAR","Cuentas por Pagar"},
                 
                 {"SERVICIO-REPORTESPROVEEDORES", "Reportes Proveedores"},
                 {"SERVICIO-FACTURAS", "Gestion de facturas"},
-                {"SERVICIO-GESTIONPROVEEDORES", "Gestionar los proveedores asociados"}
+                {"SERVICIO-GESTIONPROVEEDORES", "Gestión de Proveedores"}
 
 
             };
