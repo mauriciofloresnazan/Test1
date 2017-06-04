@@ -147,9 +147,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             if (!ModelState.IsValid) return View(model);
 
+            var tempXmlPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".xml");
+            var tempPdfPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".pdf");
             try
             {
-                
+
                 if (Request.Files.Count == 0)
                 {
                     ModelState.AddModelError(string.Empty, "Archivos incorrectos");
@@ -161,35 +163,36 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     ModelState.AddModelError(string.Empty, "Xml Incorrecto");
 
                     return View(model);
-                    
+
                 }
                 if (Request.Files["pdf"] == null)
                 {
                     ModelState.AddModelError(string.Empty, "Pdf incorrecto.");
 
                     return View(model);
-                    
+
                 }
 
                 var xmlFile = Request.Files["xml"];
                 ValidarXml(xmlFile);
-                var tempXmlPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".xml");
                 xmlFile.SaveAs(tempXmlPath);
-                
+
                 var pdfFile = Request.Files["pdf"];
                 ValidarPdf(pdfFile);
-                var tempPdfPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".pdf");
                 pdfFile.SaveAs(tempPdfPath);
 
 
                 _facturaManager.CargarFactura(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
-                
+
+
+
 
                 TempData["FlashSuccess"] = "Factura registrada satisfactoriamente";
-                return RedirectToAction("Facturas", new { proveedorId  = proveedor.Id });
+                return RedirectToAction("Facturas", new {proveedorId = proveedor.Id});
             }
             catch (BusinessException businessEx)
             {
+
                 ModelState.AddModelError(string.Empty, businessEx.Message);
 
                 return View(model);
@@ -206,6 +209,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                 ModelState.AddModelError(string.Empty, e.Message);
                 return View(model);
+            }
+            finally
+            {
+
+                if (System.IO.File.Exists(tempPdfPath))
+                    System.IO.File.Delete(tempPdfPath);
+
+                if (System.IO.File.Exists(tempXmlPath))
+                    System.IO.File.Delete(tempXmlPath);
             }
 
         }

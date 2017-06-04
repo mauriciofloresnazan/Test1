@@ -65,19 +65,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Service References\CFDIService\ConsultaCFDIService.wsdl" />
-    <None Include="Service References\CFDIService\ConsultaCFDIService.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CFDIService\ConsultaCFDIService1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CFDIService\ConsultaCFDIService2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Service References\CFDIService\SatWrapper.CFDIService.Acuse.datasource">
+    <None Include="Service References\CFDIService\SatWrapper.CFDIService.validarDocumentosResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
+    <None Include="Service References\CFDIService\ValidadorIntegradores.wsdl" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\CFDIService\" />

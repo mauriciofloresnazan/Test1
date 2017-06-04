@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c514c496-351a-46f3-8df4-7ed33a596a64" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="2f8a55fa-20e2-4baf-be18-a322fda980fd" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
   <ClientOptions>
     <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
     <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
@@ -19,13 +19,10 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="https://test02.cfdinova.com.mx/axis2/services/ValidadorIntegradores?wsdl" Protocol="http" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="ConsultaCFDIService.xsd" MetadataType="Schema" ID="b1be8ffd-2fa4-4367-ad65-574772ff8276" SourceId="1" SourceUrl="https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc?xsd=xsd2" />
-    <MetadataFile FileName="ConsultaCFDIService1.xsd" MetadataType="Schema" ID="225d0ca7-6bc3-4fe9-b893-4f2408f68a05" SourceId="1" SourceUrl="https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc?xsd=xsd1" />
-    <MetadataFile FileName="ConsultaCFDIService2.xsd" MetadataType="Schema" ID="ca22ecd9-caab-4297-bd7f-ca304f33d8c5" SourceId="1" SourceUrl="https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc?xsd=xsd0" />
-    <MetadataFile FileName="ConsultaCFDIService.wsdl" MetadataType="Wsdl" ID="9bdbc4f6-3167-4be0-9271-4a0a8d9c5f8a" SourceId="1" SourceUrl="https://consultaqr.facturaelectronica.sat.gob.mx/ConsultaCFDIService.svc?wsdl" />
+    <MetadataFile FileName="ValidadorIntegradores.wsdl" MetadataType="Wsdl" ID="cb3b2a6c-d120-4bce-a127-5f29d7768d22" SourceId="1" SourceUrl="https://test02.cfdinova.com.mx/axis2/services/ValidadorIntegradores?wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

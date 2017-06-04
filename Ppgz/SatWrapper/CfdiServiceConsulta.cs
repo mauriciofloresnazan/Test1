@@ -1,60 +1,62 @@
-﻿using SatWrapper.CFDIService;
-using SatWrapper.Properties;
-using System;
-using System.IO;
-using System.Xml.Serialization;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using SatWrapper.CFDIService;
 
 namespace SatWrapper
 {
 	/// <summary>Clase estática que realiza la consulta con el Servicio del SAT, en base a un archivo XML enviado. </summary>
 	public static class CfdiServiceConsulta
 	{
-		/// <summary> Realiza la consulta de la factura o comprobante a partir de un archivo XML.</summary>
-		/// <param name="fileXmlPath">Ruta del archivo XML.</param>
-		
-		public static bool Consulta(string fileXmlPath)
-		{
-			GC.GetTotalMemory(true);
-			ConsultaCFDIServiceClient service = null;
+        public static bool Validar(string contenidoArchivo, string token, string password, string user, string cuenta, string rfcReceptor)
+        {
 
+            ValidadorIntegradoresPortTypeClient cient = null;
 
-			try
-			{
-				service = new ConsultaCFDIServiceClient();
+            try
+            {
+                GC.GetTotalMemory(true);
+                cient = new ValidadorIntegradoresPortTypeClient();
 
-			    var serializer = new XmlSerializer(typeof(Comprobante));
-                var archivoXml = new FileStream(fileXmlPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-				var comprobante = (Comprobante)serializer.Deserialize(archivoXml);
-				var acuse = service.Consulta(
-                    string.Format(
-                        Settings.Default.QueryString, 
-                        comprobante.Emisor.Rfc, 
-                        comprobante.Receptor.Rfc, 
-                        comprobante.Total, 
-                        comprobante.Complemento.TimbreFiscalDigital.UUID));
+                var response = cient.validarDocumentos(new[] { contenidoArchivo }, token, password, user, cuenta, rfcReceptor);
 
-                if (acuse.CodigoEstatus == "S - Comprobante obtenido satisfactoriamente." && acuse.Estado == "Vigente")
+                var xDoc = new XmlDocument();
+                xDoc.LoadXml(response);
+
+                var element = xDoc.GetElementsByTagName("UUID")[0];
+                Debug.Assert(element.Attributes != null, "element.Attributes != null");
+                var estatus = element.Attributes["status"].Value.ToLower() == "true";
+
+                if (estatus) return true;
+                var errores = new StringBuilder();
+                foreach (XmlNode error in xDoc.GetElementsByTagName("ERROR").Cast<XmlNode>().Where(error => error.Attributes != null))
                 {
-                    return true;
-			    }
-			}
-			catch (InvalidOperationException)
-			{
-				if (service != null)
-					service.Abort();
-			}
-			catch (Exception)
-			{
-				if (service != null)
-					service.Abort();
-			    throw;
-			}
-			finally
-			{
-			    if (service != null) service.Close();
-			    GC.GetTotalMemory(true);
-			}
-		    return false;
-		}
+                    Debug.Assert(error.Attributes != null, "error.Attributes != null");
+                    errores.AppendLine(error.Attributes["codigo"].Value + " - " + error.Attributes["mensaje"].Value);
+                }
+
+                throw new Exception(errores.ToString());
+            }
+            catch (InvalidOperationException)
+            {
+                if (cient != null)
+                    cient.Abort();
+            }
+            catch (Exception)
+            {
+                if (cient != null)
+                    cient.Abort();
+                throw;
+            }
+            finally
+            {
+                if (cient != null) cient.Close();
+                GC.GetTotalMemory(true);
+            }
+            return false;
+        }
+    
 	}
 }

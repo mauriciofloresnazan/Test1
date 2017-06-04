@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns="http://validadorws.cfdi.mx.konesh.com" xmlns:ns1="http://org.apache.axis2/xsd" targetNamespace="http://validadorws.cfdi.mx.konesh.com" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:documentation>ValidadorIntegradores</wsdl:documentation>
+  <wsdl:types>
+    <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://validadorws.cfdi.mx.konesh.com">
+      <xs:element name="validarDocumentos">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="cad" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="token" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="user" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="cuenta" nillable="true" type="xs:string" />
+            <xs:element minOccurs="0" name="rfcReceptor" nillable="true" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="validarDocumentosResponse">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:schema>
+  </wsdl:types>
+  <wsdl:message name="validarDocumentosRequest">
+    <wsdl:part name="parameters" element="ns:validarDocumentos" />
+  </wsdl:message>
+  <wsdl:message name="validarDocumentosResponse">
+    <wsdl:part name="parameters" element="ns:validarDocumentosResponse" />
+  </wsdl:message>
+  <wsdl:portType name="ValidadorIntegradoresPortType">
+    <wsdl:operation name="validarDocumentos">
+      <wsdl:input wsaw:Action="urn:validarDocumentos" message="ns:validarDocumentosRequest" />
+      <wsdl:output wsaw:Action="urn:validarDocumentosResponse" message="ns:validarDocumentosResponse" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ValidadorIntegradoresSoap11Binding" type="ns:ValidadorIntegradoresPortType">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="validarDocumentos">
+      <soap:operation soapAction="urn:validarDocumentos" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ValidadorIntegradoresSoap12Binding" type="ns:ValidadorIntegradoresPortType">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="validarDocumentos">
+      <soap12:operation soapAction="urn:validarDocumentos" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="ValidadorIntegradoresHttpBinding" type="ns:ValidadorIntegradoresPortType">
+    <http:binding verb="POST" />
+    <wsdl:operation name="validarDocumentos">
+      <http:operation location="validarDocumentos" />
+      <wsdl:input>
+        <mime:content part="parameters" type="application/xml" />
+      </wsdl:input>
+      <wsdl:output>
+        <mime:content part="parameters" type="application/xml" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ValidadorIntegradores">
+    <wsdl:port name="ValidadorIntegradoresHttpsSoap11Endpoint" binding="ns:ValidadorIntegradoresSoap11Binding">
+      <soap:address location="https://test02.cfdinova.com.mx/axis2/services/ValidadorIntegradores.ValidadorIntegradoresHttpsSoap11Endpoint/" />
+    </wsdl:port>
+    <wsdl:port name="ValidadorIntegradoresHttpSoap11Endpoint" binding="ns:ValidadorIntegradoresSoap11Binding">
+      <soap:address location="http://test02.cfdinova.com.mx/axis2/services/ValidadorIntegradores.ValidadorIntegradoresHttpSoap11Endpoint/" />
+    </wsdl:port>
+    <wsdl:port name="ValidadorIntegradoresHttpSoap12Endpoint" binding="ns:ValidadorIntegradoresSoap12Binding">
+      <soap12:address location="http://test02.cfdinova.com.mx/axis2/services/ValidadorIntegradores.ValidadorIntegradoresHttpSoap12Endpoint/" />
+    </wsdl:port>
+    <wsdl:port name="ValidadorIntegradoresHttpsSoap12Endpoint" binding="ns:ValidadorIntegradoresSoap12Binding">
+      <soap12:address location="https://test02.cfdinova.com.mx/axis2/services/ValidadorIntegradores.ValidadorIntegradoresHttpsSoap12Endpoint/" />
+    </wsdl:port>
+    <wsdl:port name="ValidadorIntegradoresHttpsEndpoint" binding="ns:ValidadorIntegradoresHttpBinding">
+      <http:address location="https://test02.cfdinova.com.mx/axis2/services/ValidadorIntegradores.ValidadorIntegradoresHttpsEndpoint/" />
+    </wsdl:port>
+    <wsdl:port name="ValidadorIntegradoresHttpEndpoint" binding="ns:ValidadorIntegradoresHttpBinding">
+      <http:address location="http://test02.cfdinova.com.mx/axis2/services/ValidadorIntegradores.ValidadorIntegradoresHttpEndpoint/" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -118,10 +118,10 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ERROR_CuentaManager_Crear_LoginExistente" xml:space="preserve">
-    <value>Ya exíste un usuario con ese login</value>
+    <value>Ya existe el usuario</value>
   </data>
   <data name="ERROR_CuentaManager_Crear_NombreProveedorExistente" xml:space="preserve">
-    <value>Ya exíste una cuenta maestra de proveedor registrada con este nombre</value>
+    <value>Ya existe una cuenta maestra de proveedor registrada con este nombre</value>
   </data>
   <data name="ERROR_CuentaManager_GetTipoByString" xml:space="preserve">
     <value>Tipo de proveedor Incorrecto</value>
@@ -181,7 +181,7 @@
     <value>El nombre para el perfil ya fue utilizado</value>
   </data>
   <data name="ERROR_PerfilNazan_PefilIdIncorrecto" xml:space="preserve">
-    <value>Pefil incorrecto</value>
+    <value>Perfil incorrecto</value>
   </data>
   <data name="ERROR_Proveedor_IdIncorrecto" xml:space="preserve">
     <value>Proveedor incorrecto</value>
@@ -223,7 +223,7 @@
     <value>Proveedor eliminado correctamente</value>
   </data>
   <data name="INFO_UsuarioNazan_ActualizadoCorrectamente" xml:space="preserve">
-    <value>Usuario actualizad correctamente, el usuarios deben reiniciar la sesión</value>
+    <value>Usuario actualizado correctamente</value>
   </data>
   <data name="INFO_UsuarioNazan_CreadoCorrectamente" xml:space="preserve">
     <value>Usuario creado correctamente</value>

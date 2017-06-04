@@ -70,7 +70,7 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ya exíste un usuario con ese login.
+        ///   Looks up a localized string similar to Ya existe el usuario.
         /// </summary>
         internal static string ERROR_CuentaManager_Crear_LoginExistente {
             get {
@@ -79,7 +79,7 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ya exíste una cuenta maestra de proveedor registrada con este nombre.
+        ///   Looks up a localized string similar to Ya existe una cuenta maestra de proveedor registrada con este nombre.
         /// </summary>
         internal static string ERROR_CuentaManager_Crear_NombreProveedorExistente {
             get {
@@ -250,7 +250,7 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Pefil incorrecto.
+        ///   Looks up a localized string similar to Perfil incorrecto.
         /// </summary>
         internal static string ERROR_PerfilNazan_PefilIdIncorrecto {
             get {
@@ -376,7 +376,7 @@ namespace Ppgz.Web.Areas.Nazan {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Usuario actualizad correctamente, el usuarios deben reiniciar la sesión.
+        ///   Looks up a localized string similar to Usuario actualizado correctamente.
         /// </summary>
         internal static string INFO_UsuarioNazan_ActualizadoCorrectamente {
             get {

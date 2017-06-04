@@ -64,6 +64,7 @@ namespace Ppgz.Services
             
             var xmlFileStream = new FileStream(xmlFilePath, FileMode.Open);
             
+
             var comprobante = (Comprobante)serializer.Deserialize(xmlFileStream);
             
             if (_db.facturas.FirstOrDefault(fa => fa.Uuid == comprobante.Complemento.TimbreFiscalDigital.UUID) != null)
@@ -87,14 +88,21 @@ namespace Ppgz.Services
             {
                 throw new BusinessException("La factura ya esta registrada en el sistema");
             }
+            xmlFileStream.Close();
+            xmlFileStream.Dispose();
 
-            var resultadoSat = CfdiServiceConsulta.Consulta(xmlFilePath);
+            var contenido = File.ReadAllText(xmlFilePath);
+            
+            // Validación ante el sat
 
-            if (!resultadoSat)
-            {
-                throw new BusinessException("Comprobante rechazado por el SAT");
-            }
+            var configuraciones = _db.configuraciones.ToList();
+            var cfdiToken = configuraciones.Single(c => c.Clave == "cfdi.token").Valor;
+            var cfdiPassword = configuraciones.Single(c => c.Clave == "cfdi.password").Valor;
+            var cfdiUser = configuraciones.Single(c => c.Clave == "cfdi.user").Valor;
+            var cfdiCuenta = configuraciones.Single(c => c.Clave == "cfdi.cuenta").Valor;
 
+            CfdiServiceConsulta.Validar(contenido, cfdiToken, cfdiPassword, cfdiUser, cfdiCuenta, comprobante.Receptor.Rfc);
+            
             //Creacion de la factura para la miro
             var cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
 
