@@ -7,7 +7,7 @@
 
     var horarios = horarioRieles.Select(hr => new
     {
-        hr.horario
+        hr.horario 
     }).Distinct().ToList().OrderBy(h => h.horario.Id);
 
     var andenes = horarioRieles.Select(hr => new
@@ -132,7 +132,7 @@
                                 var tiendasAlmacen = "Almacén: " + riel.cita.Almacen;
                                 if (riel.cita.Almacen.ToUpper() == "CROSSDOCK")
                                 {
-                                    crossDockLabel = "<span class='label label-default' style='background-color: #293129;'>CROSS DOCK</span >";
+                                    crossDockLabel = "<span class='label label-default' style='background-color: #293129;'>Cross Dock</span >";
                                     var tiendas = riel.cita.asns.Select(asn => asn.Tienda).Distinct().ToArray();
                                     tiendasAlmacen = "Tiendas: " + String.Join("-", tiendas);
                                 }
