@@ -18,7 +18,7 @@
                     <thead>
                         <tr>
                             <th class="text-left">Nombre</th>
-                            <th class="text-center">Accesos</th>
+                            <th class="text-left">Accesos</th>
                             <th class="text-center" width="170px">
                                 <a href="@Url.Action("Crear", "AdministrarPerfilesNazan")" class="btn btn-primary btn-xs">
                                     <i class="fa fa-plus" aria-hidden="true"></i> Crear
@@ -31,14 +31,14 @@
                         {
                             <tr>
                                 <td class="text-left vert-align">@(pefil.Nombre)</td>
-                                <td class="text-center vert-align">
+                                <td class="text-left vert-align">
                                     <ul>
                                         @foreach (var role in pefil.AspNetRoles)
                                         {
                                             <li class="text-left"> @role.Description</li>
                                         }
                                     </ul>
-        
+
                                 </td>
                                 <td class="text-center vert-align">
                                     <div class="btn-group hidden-xs">
