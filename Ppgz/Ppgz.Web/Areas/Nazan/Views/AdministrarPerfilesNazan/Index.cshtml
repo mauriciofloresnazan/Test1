@@ -17,7 +17,7 @@
                 <table class="table table-striped table-condensed table-bordered" id="usuarios">
                     <thead>
                         <tr>
-                            <th class="text-center">Nombre</th>
+                            <th class="text-left">Nombre</th>
                             <th class="text-center">Accesos</th>
                             <th class="text-center" width="170px">
                                 <a href="@Url.Action("Crear", "AdministrarPerfilesNazan")" class="btn btn-primary btn-xs">
@@ -30,7 +30,7 @@
                         @foreach (var pefil in (ViewBag.Perfiles))
                         {
                             <tr>
-                                <td class="text-center vert-align">@(pefil.Nombre)</td>
+                                <td class="text-left vert-align">@(pefil.Nombre)</td>
                                 <td class="text-center vert-align">
                                     <ul>
                                         @foreach (var role in pefil.AspNetRoles)
