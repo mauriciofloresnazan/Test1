@@ -31,7 +31,7 @@ namespace Ppgz.Web.Areas.Nazan.Models
         [Required(ErrorMessage = "El campo es obligatorio.")]
         [Phone(ErrorMessage = "Debe ingresar un número de teléfono valido.")]
         [DataType(DataType.PhoneNumber, ErrorMessage = "Debe ingresar un número de teléfono valido.")]
-        [Display(Name = "Telefono")]
+        [Display(Name = "Teléfono")]
         [StringLength(18, ErrorMessage = "Debe tener formato +52 (ddd) ddd-dddd", MinimumLength = 18)]
         public string Telefono { get; set; }
 

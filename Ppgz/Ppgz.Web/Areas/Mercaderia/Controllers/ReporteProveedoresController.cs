@@ -80,7 +80,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             dt.Columns.Add("Ventas Actual - 1 meses");
             dt.Columns.Add("Ventas Actual");
             dt.Columns.Add("Total Ventas");
-            dt.Columns.Add("Calculo Total");
+            dt.Columns.Add("Cálculo Total");
             dt.Columns.Add("Inventario TDA");
             dt.Columns.Add("Inventario Tránsito");
             dt.Columns.Add("Inventario CEDIS");

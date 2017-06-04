@@ -14,7 +14,7 @@
     <div class="panel-heading">Actualizar</div>
     <div class="panel-body">
 
-        <h4><strong>Ultima Actualizacion: </strong>@ViewBag.UltimaActualizacion</h4>
+        <h4><strong>Última Actualización: </strong>@ViewBag.UltimaActualizacion</h4>
         <hr/>
         @using (Html.BeginForm("CargarExcel", "RegistrarNivelServicio", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form", enctype = "multipart/form-data" }))
         {

@@ -149,7 +149,7 @@ namespace Ppgz.Services
             if (result.Rows.Count > 1)
             {
 
-                throw new BusinessException("Multiples ordenes de compra con el miso numero de documento");
+                throw new BusinessException("Multiples ordenes de compra con el mismo número de documento");
             }
 
             if (result.Rows.Count <= 0) return;
@@ -208,7 +208,7 @@ namespace Ppgz.Services
 
 
             if (result.Rows.Count > 1)
-                throw new BusinessException("Multiples ordenes de compra con el miso numero de documento");
+                throw new BusinessException("Multiples ordenes de compra con el mismo número de documento");
 
             if (result.Rows.Count <= 0) return null;
             

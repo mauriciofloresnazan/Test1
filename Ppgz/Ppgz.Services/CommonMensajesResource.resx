@@ -260,7 +260,7 @@
     <value>Proveedor eliminado correctamente</value>
   </data>
   <data name="ERROR_OrdenCompraActiva_NumeroDocumento" xml:space="preserve">
-    <value>No se encuentra una orden de compra activa con ese numero de documento para el proveedor</value>
+    <value>No se encuentra una orden de compra activa con ese número de documento para el proveedor</value>
   </data>
   <data name="ERROR_Cr_Id" xml:space="preserve">
     <value>Cr incorrecto</value>

@@ -94,14 +94,14 @@
                         <div class="col-sm-6">
                             <ul>
                                 <li><i>Para asociar un proveedor utilice la opción Buscar</i></li>
-                                <li><i>Para refrescar los datos del proveedor utilice la opcion Actualizar</i></li>
+                                <li><i>Para refrescar los datos del proveedor utilice la opción Actualizar</i></li>
                                 
                             </ul>
                         </div>
                     </th>
                 </tr>
                 <tr>
-                    <th class="text-center vert-align">Numero</th>
+                    <th class="text-center vert-align">Número</th>
                     <th class="text-center vert-align">RFC</th>
                     <th class="text-center vert-align">Nombre</th>
                     <th class="text-center vert-align">Teléfono</th>
@@ -110,7 +110,7 @@
                     <th class="text-center vert-align">Región</th>
                     <th class="text-center vert-align">Población</th>
 
-                    <th class="text-center vert-align">Codigo Postal</th>
+                    <th class="text-center vert-align">Código Postal</th>
                     <th class="text-center vert-align">Dirección</th>
                     <th>
                     </th>
@@ -134,7 +134,7 @@
                         <td class ="vert-align">@proveedor.Calle</td>
                         <td>
                             <div class="btn-group-vertical">
-                                <a class="btn btn-danger btn-xs" href="@Url.Action("DesAsociarProveedor", "AdministrarProveedores", new {cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Esta seguro?" data-content="El proveedor será desvinculado de esta cuenta.">
+                                <a class="btn btn-danger btn-xs" href="@Url.Action("DesAsociarProveedor", "AdministrarProveedores", new {cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="El proveedor será desvinculado de esta cuenta.">
                                     <i class="fa fa-times" aria-hidden="true"></i> Eliminar
                                 </a>
                                 <a title="Refrescar datos" class="btn btn-warning btn-xs" href="@Url.Action("RefrescarProveedor", "AdministrarProveedores", new { cuentaId = @ViewBag.cuentaConUsuarioMaestro.Cuenta.Id, proveedorId = @proveedor.Id })">
