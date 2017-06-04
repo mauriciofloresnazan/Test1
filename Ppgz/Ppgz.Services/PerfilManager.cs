@@ -80,14 +80,14 @@ namespace Ppgz.Services
             get
             {
                 var db = new Entities();
-                var perfil = db.perfiles.FirstOrDefault(p => p.Nombre == "MAESTRO-NAZAN");
+                var perfil = db.perfiles.FirstOrDefault(p => p.Nombre == "MAESTRO-ADMINISTRADOR");
 
                 if (perfil != null) return perfil;
                 var role = db.AspNetRoles.Find("MAESTRO-NAZAN");
 
                 perfil = new perfile()
                 {
-                    Nombre = "MAESTRO-NAZAN",
+                    Nombre = "MAESTRO-ADMINISTRADOR",
                     Tipo = TipoPerfil.Nazan
                 };
                 perfil.AspNetRoles.Add(role);
