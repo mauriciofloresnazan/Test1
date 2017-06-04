@@ -136,7 +136,17 @@ namespace Ppgz.Web
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.limited-warehouses-per-week' AS Clave, 'CD01,CD06' AS Valor, 1 AS Habilitado, 'Codigos SAP de los almacenes que tienen cantidades limitadas por semana' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.limited-warehouses-per-week');
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.common.function.param.ekorg.mercaderia' AS Clave, 'OC01' AS Valor, 1 AS Habilitado, 'Parámetro de la Organización de Compras que será enviado para todos los proveedores registrados como Mercaderías' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.common.function.param.ekorg.mercaderia');
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'rfc.common.function.param.ekorg.servicio' AS Clave, 'OC02' AS Valor, 1 AS Habilitado, 'Parámetro de la Organización de Compras que será enviado para todos los proveedores registrados como Servicio' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'rfc.common.function.param.ekorg.servicio');
-                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'wfc.url.cita.add' AS Clave, 'http://localhost:14766/CitationControlService.svc/rest/AddCitation' AS Valor, 1 AS Habilitado, 'Url para el servicio que persiste las citas' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'wfc.url.cita.add');                
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'wfc.url.cita.add' AS Clave, 'http://localhost:14766/CitationControlService.svc/rest/AddCitation' AS Valor, 1 AS Habilitado, 'Url para el servicio que persiste las citas' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'wfc.url.cita.add');         
+
+
+
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'cfdi.token' AS Clave, 'tokSY9Db304Kx' AS Valor, 1 AS Habilitado, 'Parámetro requerido para el servicio web de validación de facturas' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'cfdi.token');      
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'cfdi.password' AS Clave, 'pswNfFPAaQhJ2' AS Valor, 1 AS Habilitado, 'Parámetro requerido para el servicio web de validación de facturas' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'cfdi.password');      
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'cfdi.user' AS Clave, 'usraLYhIjXOCJ' AS Valor, 1 AS Habilitado, 'Parámetro requerido para el servicio web de validación de facturas' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'cfdi.user');       
+                INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'cfdi.cuenta' AS Clave, 'ctaduPw4Xeh0w' AS Valor, 1 AS Habilitado, 'Parámetro requerido para el servicio web de validación de facturas' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'cfdi.cuenta');        
+
+
+       
 ";
             Db.Insert(sql);
         }
@@ -264,6 +274,8 @@ namespace Ppgz.Web
                      true,
                      PerfilManager.MaestroNazan.Id,
                      "123456");
+
+                
             }
 
             app.UseCookieAuthentication(new CookieAuthenticationOptions
