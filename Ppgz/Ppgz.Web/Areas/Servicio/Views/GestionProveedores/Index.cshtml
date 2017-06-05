@@ -120,11 +120,11 @@
 
         function buscarNumeroProveedor(id) {
 
-
-
             var data = {
                 Id: id
             };
+            
+            $.blockUI({ message: '<h2>Por favor espere...</h2>' });
 
             $.ajax({
                 type: "POST",
@@ -145,18 +145,29 @@
                 $(body).html("");
 
                 var dl = $("<dl class='dl-horizontal'></dl>").appendTo(body);
-
-                for (var key in result) {
-                    if (result.hasOwnProperty(key)) {
-                        if (key.toString() == 'Rfc') {
-                            $(dl).append("<dt>" + key.toUpperCase() + "</dt>");
-                        } else {
-                            $(dl).append("<dt>" + key + "</dt>");
-                        }
-                        $(dl).append("<dd>" + result[key] + "</dd>");
-                    }
-                }
-
+                
+                $(dl).append("<dt>RFC</dt>");
+                $(dl).append("<dd>" + result.Rfc + "</dd>");
+                $(dl).append("<dt>Nombre</dt>");
+                $(dl).append("<dd>" + result.Nombre + "</dd>");
+                $(dl).append("<dt>Teléfono</dt>");
+                $(dl).append("<dd>" + result.Teléfono + "</dd>");
+                $(dl).append("<dt>Email</dt>");
+                $(dl).append("<dd>" + result.Email + "</dd>");
+                $(dl).append("<dt>Vendedor</dt>");
+                $(dl).append("<dd>" + result.Vendedor + "</dd>");
+                $(dl).append("<dt>Región</dt>");
+                $(dl).append("<dd>" + result.Region + "</dd>");
+                $(dl).append("<dt>Población</dt>");
+                $(dl).append("<dd>" + result.Poblacion + "</dd>");
+                $(dl).append("<dt>Apartado</dt>");
+                $(dl).append("<dd>" + result.Apartado + "</dd>");
+                $(dl).append("<dt>Distrito</dt>");
+                $(dl).append("<dd>" + result.Distrito + "</dd>");
+                $(dl).append("<dt>Código Postal</dt>");
+                $(dl).append("<dd>" + result.CodigoPostal + "</dd>");
+                $(dl).append("<dt>Dirección</dt>");
+                $(dl).append("<dd>" + result.Direccion + "</dd>");
 
 
                 $('#buscarModal').modal('show');
@@ -165,6 +176,8 @@
             }).fail(function (response) {
                 $('#buscarModal').modal('show');
 
+            }).always(function () {
+                $.unblockUI();
             });
         }
 
