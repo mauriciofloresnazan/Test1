@@ -18,7 +18,7 @@ namespace Ppgz.Web.Models
         public string OldPassword { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
-        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]       
+        [StringLength(100, ErrorMessage = "El número de caracteres de {0} deben ser al menos {2}.", MinimumLength = 6)]       
         [DataType(DataType.Password)]
         [Display(Name = "Nueva Contraseña")]
         public string NewPassword { get; set; }
@@ -51,7 +51,7 @@ namespace Ppgz.Web.Models
         public string UserName { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
-        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "El número de caracteres de {0} deben ser al menos {2}.", MinimumLength = 6)]
         [RegularExpression(
             "^[a-zA-Z0-9$&+,:;=?@#|'<>.^*()%!-]+$",
            ErrorMessage = "No Debe contener espacios, solo letras, números o caracteres especiales, sin importar minusculas y mayusculas.")]
@@ -81,7 +81,7 @@ namespace Ppgz.Web.Models
         public string Email { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
-        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "El número de caracteres de {0} deben ser al menos {2}.", MinimumLength = 6)]
         [RegularExpression(
             "^[a-zA-Z0-9$&+,:;=?@#|'<>.^*()%!-]+$",
             ErrorMessage = "No Debe contener espacios, solo letras, números o caracteres especiales, sin importar minusculas y mayusculas.")]
@@ -103,7 +103,7 @@ namespace Ppgz.Web.Models
     {
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
-        [StringLength(100, ErrorMessage = "El número de caracteres de {0} debe ser al menos {2}.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "El número de caracteres de {0} deben ser al menos {2}.", MinimumLength = 6)]
         [RegularExpression(
             "^[a-zA-Z0-9$&+,:;=?@#|'<>.^*()%!-]+$",
             ErrorMessage = "No Debe contener espacios, solo letras, números o caracteres especiales, sin importar minusculas y mayusculas.")]
