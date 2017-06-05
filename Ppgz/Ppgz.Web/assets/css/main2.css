@@ -76,14 +76,15 @@ h1, h2 {
     -ms-border-radius: 0 !important;
     border-radius: 0 !important;
 }
-.btn-warning {
+
+/*.btn-warning {
     background: #B8B8B8;
     border-color: #999;
 }
 .btn-warning.active, .btn-warning:active, .btn-warning:focus, .btn-warning:hover, .btn-warning.active.focus, .btn-warning.active:focus, .btn-warning.active:hover, .btn-warning:active.focus, .btn-warning:active:focus, .btn-warning:active:hover{
     background: #555;
     border-color: #222;
-}
+}*/
 
 .btn-riel.btn-primary {
     background: #66aaaa;
