@@ -141,7 +141,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				}
 				catch (CurrentCita.OrdenDuplicadaException)
 				{
-					TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
+					TempData["FlashError"] = "El número de documento ya se encuentra en la lista";
 					return RedirectToAction("BuscarOrden", new {proveedor.Id});
 				}
 				catch (CurrentCita.OrdenSinDetalleException)
@@ -151,7 +151,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				}
 				catch (CurrentCita.NumeroDocumentoException)
 				{
-					TempData["FlashError"] = "Numero de documento incorrecto";
+					TempData["FlashError"] = "Número de documento incorrecto";
 					return RedirectToAction("BuscarOrden", new { proveedor.Id });
 				}
 				catch (CurrentCita.FechaException)
@@ -168,7 +168,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			if (CurrentCita.GetOrdenActivaDisponible(numeroDocumento) == null)
 			{
-				TempData["FlashError"] = "Numero de documento incorrecto";
+				TempData["FlashError"] = "Número de documento incorrecto";
 				return RedirectToAction("BuscarOrden", new { proveedor.Id });
 				
 			}
@@ -208,7 +208,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			if (orden == null)
 			{
-				TempData["FlashError"] = "Numero de documento incorrecto";
+				TempData["FlashError"] = "Número de documento incorrecto";
 				return RedirectToAction("BuscarOrden");
 				
 			}
@@ -248,7 +248,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 			catch (CurrentCita.OrdenDuplicadaException)
 			{
-				TempData["FlashError"] = "El numero de documento ya se encuentra en la lista";
+				TempData["FlashError"] = "El número de documento ya se encuentra en la lista";
 				return RedirectToAction("BuscarOrden", new {proveedor.Id});
 			}
 			catch (CurrentCita.OrdenSinDetalleException)
@@ -258,7 +258,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 			catch (CurrentCita.NumeroDocumentoException)
 			{
-				TempData["FlashError"] = "Numero de documento incorrecto";
+				TempData["FlashError"] = "Número de documento incorrecto";
 				return RedirectToAction("BuscarOrden", new {proveedor.Id});
 			}
 			catch (BusinessException exception)
