@@ -1,6 +1,7 @@
 ﻿@using System.Globalization
 @using Microsoft.AspNet.Identity
 @using Ppgz.Repository
+@using Ppgz.Services
 @{
     ViewBag.Title = "Reportes Proveedores";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -60,44 +61,43 @@
             <table id="reporteDetalle" class="table table-striped table-condensed table-bordered">
                 <thead>
                 <tr>
-                    <th class="text-center">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspId_Proveedor&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
-                    <th class="text-center">Nombre_Proveedor</th>
-                    <th class="text-center">Material</th>
-                    <th class="text-center">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Nombre_Material&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
-                    <th class="text-center">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspFecha_Proceso&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</th>
-                    <th class="text-center">Unidad de Medida</th>
-                    <th class="text-center">Ventas Actual - 2 meses</th>
-                    <th class="text-center">Ventas Actual - 1 meses</th>
-                    <th class="text-center">Ventas Actual</th>
-                    <th class="text-center">Total Ventas</th>
-                    <th class="text-center">Cálculo Total</th>
-                    <th class="text-center">Inventario TDA</th>
-                    <th class="text-center">Inventario Tránsito</th>
-                    <th class="text-center">Inventario CEDIS</th>
-                    <th class="text-center">Pedidos Pendientes(TDA + CEDIS)</th>
-                    <th class="text-center">Estatus Material</th>
+
+                    <th class="text-center vert-align">Rfc</th>
+                    <th class="text-center vert-align">Razón Social</th>
+                    <th class="text-center vert-align">Material</th>
+                    <th class="text-center vert-align" style="word-wrap: normal; white-space: nowrap;">F. Proceso</th>
+                    <th class="text-center vert-align">UM</th>
+                    <th class="text-center vert-align" style="word-wrap: normal; white-space: nowrap;">Vent. Act. - 2 Meses</th>
+                    <th class="text-center vert-align" style="word-wrap: normal; white-space: nowrap;">Vent. Act. - 1 Meses</th>
+                    <th class="text-center vert-align">Ventas Actual</th>
+                    <th class="text-center vert-align">Total Ventas</th>
+                    <th class="text-center vert-align">Cálculo Total</th>
+                    <th class="text-center vert-align">Inventario TDA</th>
+                    <th class="text-center vert-align">Inventario Tránsito</th>
+                    <th class="text-center vert-align">Inventario CEDIS</th>
+                    <th class="text-center vert-align" style="word-wrap: normal; white-space: nowrap;">Pedidos Pendientes(TDA + CEDIS)</th>
+                    <th class="text-center vert-align">Estatus Material</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (var reporte in (ViewBag.reportes))
+                @foreach (ReporteProveedorManager.ReporteProveedor reporte in (ViewBag.reportes))
                 {
                     <tr>
-                        <td class="text-center">@reporte.NumeroProveedor</td>
-                        <td class="text-center">@reporte.NombreProveedor</td>
-                        <td class="text-center">@reporte.Material</td>
-                        <td class="text-center">@reporte.NombreMaterial</td>
-                        <td class="text-center">@reporte.FechaProceso.ToString("dd/MM/yyyy")</td>
-                        <td class="text-center">@reporte.UnidadMedida</td>
-                        <td class="text-center">@reporte.CantidadVentas2</td>
-                        <td class="text-center">@reporte.CantidadVentas1</td>
-                        <td class="text-center">@reporte.CantidadVentas</td>
-                        <td class="text-center">@reporte.CantidadTotal</td>
-                        <td class="text-center">@reporte.CalculoTotal</td>
-                        <td class="text-center">@reporte.InvTienda</td>
-                        <td class="text-center">@reporte.InvTransito</td>
-                        <td class="text-center">@reporte.InvCedis</td>
-                        <td class="text-center">@reporte.PedidosPendiente</td>
-                        <td class="text-center">@reporte.EstadoMaterial</td>
+                        <td class="text-center vert-align">@proveedor.Rfc</td>
+                        <td class="text-center vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
+                        <td class="text-center" style="word-wrap: normal; white-space: nowrap;">@reporte.NombreMaterial</td>
+                        <td class="text-center vert-align">@reporte.FechaProceso.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center vert-align">@reporte.UnidadMedida</td>
+                        <td class="text-center vert-align">@reporte.CantidadVentas2</td>
+                        <td class="text-center vert-align">@reporte.CantidadVentas1</td>
+                        <td class="text-center vert-align">@reporte.CantidadVentas</td>
+                        <td class="text-center vert-align">@reporte.CantidadTotal</td>
+                        <td class="text-center vert-align">@reporte.CalculoTotal</td>
+                        <td class="text-center vert-align">@reporte.InvTienda</td>
+                        <td class="text-center vert-align">@reporte.InvTransito</td>
+                        <td class="text-center vert-align">@reporte.InvCedis</td>
+                        <td class="text-center vert-align">@reporte.PedidosPendiente</td>
+                        <td class="text-center vert-align">@reporte.EstadoMaterial</td>
                     </tr>
                 }
                 </tbody>
