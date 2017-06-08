@@ -245,10 +245,10 @@ namespace ScaleWrapper
                     INTERFACE_CONDITION,
                     ERP_ORDER_LINE_NUM,
                     item,
-                    --ITEM_NET_PRICE,
+                    ITEM_NET_PRICE,
                     user_def5,
-                    --TOTAL_QTY,
-                    --QUANTITY_UM,
+                    TOTAL_QTY,
+                    QUANTITY_UM,
                     DATE_TIME_STAMP) 
                 VALUES      
                    (@INTERFACE_RECORD_ID,
@@ -258,10 +258,10 @@ namespace ScaleWrapper
                     @INTERFACE_CONDITION,
                     @ERP_ORDER_LINE_NUM,
                     @item,
-                    --@ITEM_NET_PRICE,
+                    @ITEM_NET_PRICE,
                     @user_def5,
-                    --@TOTAL_QTY,
-                    --@QUANTITY_UM,
+                    @TOTAL_QTY,
+                    @QUANTITY_UM,
                     GETDATE());");
 
             DbScale.Insert(sql, parameters);
