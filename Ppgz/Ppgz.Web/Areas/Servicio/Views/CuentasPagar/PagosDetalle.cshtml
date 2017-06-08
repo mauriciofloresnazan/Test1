@@ -1,4 +1,5 @@
 ﻿@using System.Data
+@using System.Globalization
 @using Ppgz.Repository
 @{
     ViewBag.Title = "Gestión de Pagos";
@@ -67,11 +68,17 @@
                         <th class="text-center">Ml</th>
                         @*<th class="text-center">Fecha</th>*@
                         <th class="text-center">Tipo de Movimiento</th>
+                        <th class="text-center">Fecha Doc.</th>
+                        <th class="text-center">Texto</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var drPago in pagoDetalles)
                     {
+                        var fechaDocumento = DateTime.ParseExact(
+                            drPago["FECHA_DOC"].ToString(),
+                            "yyyyMMdd",
+                            CultureInfo.InvariantCulture);
                         <tr>
 
                             @{
@@ -149,6 +156,8 @@
                             @*<td class="text-center">@drPago["WAERS_COMPEN"]</td>*@
 
                             <td class="text-center">@tipo</td>
+                            <td class="text-center">@fechaDocumento.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center">@drPago["SGTXT"]</td>
 
                         </tr>
                     }

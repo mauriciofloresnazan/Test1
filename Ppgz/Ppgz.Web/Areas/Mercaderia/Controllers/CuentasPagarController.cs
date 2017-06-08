@@ -153,7 +153,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var ws = workbook.Worksheet(1);
 
             ws.Cell(3, "B").Value = string.Format("{0} {1} {2} {3}", ProveedorCxp.Nombre1, ProveedorCxp.Nombre2, ProveedorCxp.Nombre3, ProveedorCxp.Nombre4);
-            ws.Cell(3, "D").Value = ProveedorCxp.Rfc;
+            ws.Cell(3, "F").Value = ProveedorCxp.Rfc;
             ws.Cell(5, "B").Value = pago["BELNR"].ToString();
             ws.Cell(6, "B").Value = pago["DMBTR"].ToString();
 
@@ -229,6 +229,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 ws.Cell(row, "B").Value =  drPago["DMBTR_COMPEN"].ToString();
                 ws.Cell(row, "C").Value = drPago["WAERS_COMPEN"].ToString();
                 ws.Cell(row, "D").Value = tipo;
+
+                ws.Cell(row, "E").Value = DateTime.ParseExact(
+                        drPago["FECHA_DOC"].ToString(),
+                        "yyyyMMdd",
+                        CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
+                ws.Cell(row, "F").Value = drPago["SGTXT"].ToString();
 
                 row++;
 
@@ -434,7 +440,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var ws = workbook.Worksheet(1);
 
             ws.Cell(3, "B").Value = string.Format("{0} {1} {2} {3}", ProveedorCxp.Nombre1, ProveedorCxp.Nombre2, ProveedorCxp.Nombre3, ProveedorCxp.Nombre4);
-            ws.Cell(3, "D").Value = ProveedorCxp.Rfc;
+            ws.Cell(3, "G").Value = ProveedorCxp.Rfc;
             ws.Cell(5, "B").Value = DateTime.Today.ToString("dd/MM/yyyy");
             ws.Cell(6, "B").Value = dt.Rows.Cast<DataRow>()
                 .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
@@ -511,6 +517,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 }
 
                 ws.Cell(row, "E").Value = tipo;
+
+
+                ws.Cell(row, "F").Value = DateTime.ParseExact(dr["BLDAT"].ToString(), "yyyyMMdd",
+                CultureInfo.InvariantCulture).ToString("dd/MM/yyyy");
+                ws.Cell(row, "G").Value = dr["SGTXT"].ToString();
 
                 row++;
             }
