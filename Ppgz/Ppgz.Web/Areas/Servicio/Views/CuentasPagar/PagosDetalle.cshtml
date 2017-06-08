@@ -5,9 +5,9 @@
     ViewBag.Title = "Gestión de Pagos";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-
+    
     var pago = (DataRow)ViewBag.Pago;
-
+    
     var proveedor = (proveedore)ViewBag.Proveedor;
 
     var pagoDetalles = (DataRow[])ViewBag.PagoDetalles;
@@ -61,106 +61,106 @@
             <hr />
             <table id="pagoDetalle" class="table table-striped table-condensed table-bordered">
                 <thead>
-                    <tr>
-                        <th class="text-center">Referencia</th>
-                        @*<th class="text-center">Descripción</th>*@
-                        <th class="text-center">Importe</th>
-                        <th class="text-center">Ml</th>
-                        @*<th class="text-center">Fecha</th>*@
-                        <th class="text-center">Tipo de Movimiento</th>
-                        <th class="text-center">Fecha Doc.</th>
-                        <th class="text-center">Texto</th>
-                    </tr>
+                <tr>
+                    <th class="text-center">Referencia</th>
+                    @*<th class="text-center">Descripción</th>*@
+                    <th class="text-center">Importe</th>
+                    <th class="text-center">Ml</th>
+                    @*<th class="text-center">Fecha</th>*@
+                    <th class="text-center">Tipo de Movimiento</th>
+                    <th class="text-center">Fecha Doc.</th>
+                    <th class="text-center">Texto</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var drPago in pagoDetalles)
-                    {
-                        var fechaDocumento = DateTime.ParseExact(
-                            drPago["FECHA_DOC"].ToString(),
-                            "yyyyMMdd",
-                            CultureInfo.InvariantCulture);
-                        <tr>
+                @foreach (var drPago in pagoDetalles)
+                {
+                    var fechaDocumento = DateTime.ParseExact(
+                        drPago["FECHA_DOC"].ToString(),
+                        "yyyyMMdd",
+                        CultureInfo.InvariantCulture);
+                    <tr>
 
-                            @{
-                        var tipo = "";
-                        switch (@drPago["BLART_COMPEN"].ToString())
-                        {
-                            case "4":
-                                tipo = "Cargo a proveedor";
-                                break;
-                            case "10":
-                                tipo = "Factura a proveedor";
-                                break;
-                            case "21":
-                                tipo = "Factura a proveedor";
-                                break;
-                            case "23":
-                                tipo = "Nota de Cargo";
-                                break;
-                            case "AB":
-                                tipo = "Cargo a proveedor";
-                                break;
-                            case "DA":
-                                tipo = "Cargo a proveedor";
-                                break;
-                            case "DG":
-                                tipo = "Cargo a proveedor";
-                                break;
-                            case "DZ":
-                                tipo = "Pago de proveedor";
-                                break;
-                            case "KA":
-                                tipo = "Cargo a proveedor";
-                                break;
-                            case "KG":
-                                tipo = "Cargo a proveedor";
-                                break;
-                            case "KR":
-                                tipo = "Devolución";
-                                break;
-                            case "":
-                                tipo = "Cargo a proveedor";
-                                break;
-                            case "RE":
+                        @{
+                            var tipo = "";
+                            switch (@drPago["BLART_COMPEN"].ToString())
+                            {
+                                case "4":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "10":
+                                    tipo = "Factura a proveedor";
+                                    break;
+                                case "21":
+                                    tipo = "Factura a proveedor";
+                                    break;
+                                case "23":
+                                    tipo = "Nota de Cargo";
+                                    break;
+                                case "AB":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "DA":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "DG":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "DZ":
+                                    tipo = "Pago de proveedor";
+                                    break;
+                                case "KA":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "KG":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "KR":
+                                    tipo = "Devolución";
+                                    break;
+                                case "":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "RE":
 
-                                if ((decimal)drPago["DMBTR_COMPEN"] > 0)
-                                {
-                                    tipo = "Factura de mercancia";
+                                    if ((decimal) drPago["DMBTR_COMPEN"]> 0)
+                                    {
+                                        tipo = "Factura de mercancia";
+                                        break;
+                                    
+                                    }
+                                    tipo = "Devolucion de mercancia";
                                     break;
 
-                                }
-                                tipo = "Devolucion de mercancia";
-                                break;
+                                case "RV":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "SA":
+                                    tipo = "Cargo a proveedor";
+                                    break;
+                                case "ZN":
+                                    tipo = "Anulación de documento";
+                                    break;
+                                case "ZP":
+                                    tipo = "Pago";
+                                    break;
 
-                            case "RV":
-                                tipo = "Cargo a proveedor";
-                                break;
-                            case "SA":
-                                tipo = "Cargo a proveedor";
-                                break;
-                            case "ZN":
-                                tipo = "Anulación de documento";
-                                break;
-                            case "ZP":
-                                tipo = "Pago";
-                                break;
-
-
-                        }
 
                             }
-                            <td class="text-center">@drPago["XBLNR"]</td>
-                            @*<td class="text-center">@drPago["BLNRCOMPEN"]</td>*@
-                            <td class="text-right">@string.Format("{0:N}", drPago["DMBTR_COMPEN"])</td>
-                            <td class="text-center">@drPago["WAERS_COMPEN"]</td>
-                            @*<td class="text-center">@drPago["WAERS_COMPEN"]</td>*@
 
-                            <td class="text-center">@tipo</td>
-                            <td class="text-center">@fechaDocumento.ToString("dd/MM/yyyy")</td>
-                            <td class="text-center">@drPago["SGTXT"]</td>
+                        }
+                        <td class="text-center">@drPago["XBLNR"]</td>
+                        @*<td class="text-center">@drPago["BLNRCOMPEN"]</td>*@
+                        <td class="text-right">@string.Format("{0:N}", drPago["DMBTR_COMPEN"])</td>
+                        <td class="text-center">@drPago["WAERS_COMPEN"]</td>
+                        @*<td class="text-center">@drPago["WAERS_COMPEN"]</td>*@
 
-                        </tr>
-                    }
+                        <td class="text-center">@tipo</td>
+                        <td class="text-center">@fechaDocumento.ToString("dd/MM/yyyy")</td>
+                        <td class="text-center">@drPago["SGTXT"]</td>
+
+                    </tr>
+                }
                 </tbody>
             </table>
             <b>Total Pagado: </b> @string.Format("{0:N}", pago["DMBTR"])
@@ -183,7 +183,7 @@
         });
 
 
-
+       
     </script>
 }
 
