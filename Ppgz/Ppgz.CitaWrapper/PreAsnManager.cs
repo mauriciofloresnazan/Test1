@@ -108,6 +108,10 @@ namespace Ppgz.CitaWrapper
 
                     EsCrossDock = orden.CrossD.ToUpper() == "X",
                     Tienda = orden.TiDest,
+                    TiendaOrigen = orden.TiOrig,
+                    InOut = orden.InOut,
+                    NumeroOrdenSurtido = orden.NumOs
+                   
                 };
 
                 var detalles = orden.Detalles.Select(detalle => new PreAsnDetalle
@@ -125,6 +129,8 @@ namespace Ppgz.CitaWrapper
                     DescripcionMaterial = detalle.Descripcion, 
                     NumeroMaterial = detalle.NumeroMaterial,
 
+                    Precio = detalle.ValorNeto,
+                    UnidadMedida = detalle.UnidadMedidaPedido,
 
                     Cantidad = detalle.CantidadPorEntregar - asnFuturos
                         .Where(asn => asn.OrdenNumeroDocumento == detalle.NumeroDocumento

@@ -592,7 +592,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 						NumeroMaterial = preAsnDetail.NumeroMaterial,
 						NumeroPosicion = preAsnDetail.NumeroPosicion,
 						OrdenNumeroDocumento = preAsn.NumeroDocumento,
-                        Tienda = preAsn.Tienda
+                        Tienda = preAsn.Tienda,
+
+                        TiendaOrigen = preAsn.TiendaOrigen,
+                        CantidadSolicitada = preAsnDetail.CantidadPedido,
+                        InOut = preAsn.InOut,
+                        Precio = preAsnDetail.Precio,
+                        UnidadMedida = preAsnDetail.UnidadMedida,
+                        NumeroSurtido = preAsn.NumeroOrdenSurtido
 					});
 				}
 			}

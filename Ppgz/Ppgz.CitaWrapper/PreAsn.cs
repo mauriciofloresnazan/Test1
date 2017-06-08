@@ -14,6 +14,9 @@ namespace Ppgz.CitaWrapper
         public List<DateTime> FechasPermitidas;
         public bool EsCrossDock;
         public string Tienda;
+        public string TiendaOrigen;
+        public string InOut;
+        public string NumeroOrdenSurtido;
 
         public ICollection<PreAsnDetalle> Detalles { get; set; }
 

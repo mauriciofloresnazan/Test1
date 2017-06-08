@@ -5,6 +5,8 @@
         public string NumeroPosicion;
         public string Centro;
         public string Almacen;
+        public decimal Precio;
+        public string UnidadMedida;
 
         public int CantidadPedido { get; set; }
 

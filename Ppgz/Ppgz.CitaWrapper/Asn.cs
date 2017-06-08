@@ -31,5 +31,23 @@ namespace Ppgz.CitaWrapper
 
         /// <summary>Tienda destino. Es opcional</summary>
         public string Tienda;
+
+        /// <summary>Tienda origen. Es opcional</summary>
+        public string TiendaOrigen;
+        
+        /// <summary>Precio. </summary>
+        public decimal Precio;
+
+        /// <summary>Precio. </summary>
+        public string UnidadMedida;
+
+        /// <summary>Cantidad Solicitada en Sap. </summary>
+        public int CantidadSolicitada;
+
+        /// <summary>InOut. </summary>
+        public string InOut;
+   
+        /// <summary>Numero de Surtido. </summary>
+        public string NumeroSurtido;
     }
 }

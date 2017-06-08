@@ -246,7 +246,14 @@ namespace Ppgz.CitaWrapper
                     NumeroMaterial = asn.NumeroMaterial,
                     NumeroPosicion = asn.NumeroPosicion,
                     OrdenNumeroDocumento = asn.OrdenNumeroDocumento,
-                    Tienda = asn.Tienda
+                    Tienda = asn.Tienda,
+
+                    TiendaOrigen = asn.TiendaOrigen,
+                    Precio = asn.Precio,
+                    UnidadMedida = asn.UnidadMedida,
+                    CantidadPedidoSap = asn.CantidadSolicitada,
+                    InOut = asn.InOut,
+                    NumeroOrdenSurtido = asn.NumeroSurtido
                 });
             }
 

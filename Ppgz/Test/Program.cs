@@ -92,10 +92,17 @@ namespace Test
 
         static void ValidarSat()
         {
-            var response = CfdiServiceConsulta.Consulta(@"C:\temp\borrar\miro\4EEC-A....xml");
+            var factura = File.ReadAllText(@"C:\temp\borrar\miro\4EEC-A....xml");
+            try
+            {
+                var consulta = CfdiServiceConsulta.Validar(factura, "tokSY9Db304Kx", "pswNfFPAaQhJ2", "usraLYhIjXOCJ", "ctaduPw4Xeh0w", "NCC1011058I0");
+                Console.WriteLine(consulta);
+            }
+            catch (Exception exception)
+            {
 
-
-            Console.WriteLine(response);
+                Console.WriteLine(exception.Message);
+            }
             Console.ReadKey();
         }
 
@@ -115,12 +122,29 @@ namespace Test
                 Console.WriteLine(exception.Message);
             }
         }
-        
-        
+
+        static void TestCalcularRieles()
+        {
+            Console.WriteLine(RulesManager.GetCantidadRieles(701));
+            Console.ReadLine();
+        }
+
+        static void T1()
+        {
+            var db = new Entities();
+
+            string email = null;
+
+            if (db.AspNetUsers.FirstOrDefault(u => u.Email == email) != null)
+            {
+                Console.WriteLine("La Dirección de correo ya ha sido utilizada por otro usuario");
+            }
+            Console.ReadLine();
+        }
 
         static void Main(string[] args)
         {
-            TestExcel();
+            T1();
             return;
 
             /*ValidarSat();
@@ -190,12 +214,7 @@ namespace Test
             Console.WriteLine(JsonConvert.SerializeObject(query));
             Console.ReadKey();
             return;
-            var response = SatWrapper.CfdiServiceConsulta.Consulta(@"C:\temp\borrar\factura.xml");
-
-
-            Console.WriteLine(response);
-            Console.ReadKey();
-            return;
+           
             Console.WriteLine(RulesManager.GetCantidadRieles(1716));
             Console.ReadKey();
             return;

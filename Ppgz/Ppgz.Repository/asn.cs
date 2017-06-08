@@ -22,6 +22,12 @@ namespace Ppgz.Repository
         public string NombreMaterial { get; set; }
         public int Cantidad { get; set; }
         public string Tienda { get; set; }
+        public string TiendaOrigen { get; set; }
+        public Nullable<decimal> Precio { get; set; }
+        public string UnidadMedida { get; set; }
+        public Nullable<int> CantidadPedidoSap { get; set; }
+        public string InOut { get; set; }
+        public string NumeroOrdenSurtido { get; set; }
     
         public virtual cita cita { get; set; }
     }

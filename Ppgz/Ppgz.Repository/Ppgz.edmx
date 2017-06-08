@@ -44,6 +44,12 @@
           <Property Name="NombreMaterial" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="Cantidad" Type="int" Nullable="false" />
           <Property Name="Tienda" Type="varchar" MaxLength="45" />
+          <Property Name="TiendaOrigen" Type="varchar" MaxLength="45" />
+          <Property Name="Precio" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="UnidadMedida" Type="varchar" MaxLength="45" />
+          <Property Name="CantidadPedidoSap" Type="int" />
+          <Property Name="InOut" Type="varchar" MaxLength="45" />
+          <Property Name="NumeroOrdenSurtido" Type="varchar" MaxLength="45" />
         </EntityType>
         <EntityType Name="AspNetRoles">
           <Key>
@@ -1179,6 +1185,12 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="NombreMaterial" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Cantidad" Type="Int32" Nullable="false" />
           <Property Name="Tienda" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="TiendaOrigen" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Precio" Type="Decimal" />
+          <Property Name="UnidadMedida" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="CantidadPedidoSap" Type="Int32" />
+          <Property Name="InOut" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="NumeroOrdenSurtido" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="cita" Relationship="Self.fk_asn_cita" FromRole="asn" ToRole="citas" />
         </EntityType>
         <EntityType Name="AspNetRole">
@@ -2214,6 +2226,12 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="NombreMaterial" ColumnName="NombreMaterial" />
                 <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
                 <ScalarProperty Name="Tienda" ColumnName="Tienda" />
+                <ScalarProperty Name="TiendaOrigen" ColumnName="TiendaOrigen" />
+                <ScalarProperty Name="Precio" ColumnName="Precio" />
+                <ScalarProperty Name="UnidadMedida" ColumnName="UnidadMedida" />
+                <ScalarProperty Name="CantidadPedidoSap" ColumnName="CantidadPedidoSap" />
+                <ScalarProperty Name="InOut" ColumnName="InOut" />
+                <ScalarProperty Name="NumeroOrdenSurtido" ColumnName="NumeroOrdenSurtido" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

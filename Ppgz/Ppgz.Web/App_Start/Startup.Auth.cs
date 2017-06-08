@@ -27,7 +27,8 @@ namespace Ppgz.Web
                 {"NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR", "Modificar Usuarios"},
                 {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR", "Consultar Mensajes Insitucionales"},
                 {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR", "Modificar Mensajes Institucionales"},
-
+                {"NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR", "Consultar Proveedores"},
+                {"NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR", "Modificar Proveedores"},
                 {"NAZAN-CONFIGSYS", "Configurar el Sistema"},
                 {"NAZAN-NIVELSERVICIO", "Actualizar Niveles de Servicio"},
                 {"NAZAN-ADMINISTRARCITAS", "Administrar Citas"},
