@@ -2,7 +2,7 @@
 @using System.Globalization
 @using Ppgz.Repository
 @{
-    ViewBag.Title = "Gestión de Pagos";
+    ViewBag.Title = "Gestión de Pagos Pendientes - Detalle";
     Layout = "~/Views/Shared/_Layout.cshtml";
     
     var proveedor = (proveedore)ViewBag.Proveedor;
@@ -13,7 +13,7 @@
 
 }
 
-<h2>Gestión de Pagos</h2>
+<h2>@ViewBag.Title</h2>
 <p class="page-description-title">
     <i class="fa fa-calculator" aria-hidden="true"></i>
     <i>En esta sección podrán gestionar los pagos pendientes</i>
@@ -79,7 +79,7 @@
                             var tipo = "";
                             switch (@drPago["BLART"].ToString())
                             {
-                                case "4":
+                                case "04":
                                     tipo = "Cargo a proveedor";
                                     break;
                                 case "10":

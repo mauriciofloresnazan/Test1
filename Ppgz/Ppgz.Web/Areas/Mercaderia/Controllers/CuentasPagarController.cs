@@ -164,7 +164,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 var tipo = "";
                 switch (drPago["BLART_COMPEN"].ToString())
                 {
-                    case "4":
+                    case "04":
                         tipo = "Cargo a proveedor";
                         break;
                     case "10":
@@ -457,7 +457,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 var tipo = "";
                 switch (dr["BLART"].ToString())
                 {
-                    case "4":
+                    case "04":
                         tipo = "Cargo a proveedor";
                         break;
                     case "10":

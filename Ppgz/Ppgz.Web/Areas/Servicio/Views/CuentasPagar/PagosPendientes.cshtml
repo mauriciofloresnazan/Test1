@@ -1,7 +1,7 @@
 ﻿@using System.Data
 @using Ppgz.Repository
 @{
-    ViewBag.Title = "Gestión de Pagos";
+    ViewBag.Title = "Gestión de Pagos Pendientes";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var pagosPendientes = (DataTable)ViewBag.PagosPendientes;
     var proveedor = (proveedore)ViewBag.Proveedor;
@@ -9,7 +9,7 @@
         .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
 }
 
-<h2>Gestión de Pagos Pendientes</h2>
+<h2>@ViewBag.Title</h2>
 <p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i>
     <i>En esta sección podrán gestionar los pagos pendientes</i>
 </p>
