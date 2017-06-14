@@ -2,7 +2,7 @@
 @using System.Globalization
 @using Ppgz.Repository
 @{
-    ViewBag.Title = "Gestión de Pagos";
+    ViewBag.Title = "Gestión de Pagos - Detalle";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     
@@ -16,7 +16,7 @@
 }
 
 
-<h2>Gestión de Pagos</h2>
+<h2>@ViewBag.Title</h2>
 <p class="page-description-title">
     <i class="fa fa-calculator" aria-hidden="true"></i>
     <i>En esta sección podrán gestionar el detalle del pago</i>
@@ -86,7 +86,7 @@
                             switch (@drPago["BLART_COMPEN"].ToString())
                             {
                                 case "04":
-                                    tipo = "Cargo a proveedor";
+                                    tipo = "Factura a proveedor";
                                     break;
                                 case "10":
                                     tipo = "Factura a proveedor";
@@ -118,7 +118,7 @@
                                 case "KR":
                                     tipo = "Devolución";
                                     break;
-                                case "":
+                                case "KZ":
                                     tipo = "Cargo a proveedor";
                                     break;
                                 case "RE":

@@ -165,7 +165,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 switch (drPago["BLART_COMPEN"].ToString())
                 {
                     case "04":
-                        tipo = "Cargo a proveedor";
+                        tipo = "Factura a proveedor";
                         break;
                     case "10":
                         tipo = "Factura a proveedor";
@@ -197,7 +197,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     case "KR":
                         tipo = "Devolución";
                         break;
-                    case "":
+                    case "KZ":
                         tipo = "Cargo a proveedor";
                         break;
                     case "RE":
@@ -458,7 +458,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 switch (dr["BLART"].ToString())
                 {
                     case "04":
-                        tipo = "Cargo a proveedor";
+                        tipo = "Factura a proveedor";
                         break;
                     case "10":
                         tipo = "Factura a proveedor";
@@ -490,7 +490,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     case "KR":
                         tipo = "Devolución";
                         break;
-                    case "":
+                    case "KZ":
                         tipo = "Cargo a proveedor";
                         break;
                     case "RE":
