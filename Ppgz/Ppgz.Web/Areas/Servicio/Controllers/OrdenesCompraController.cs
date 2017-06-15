@@ -44,7 +44,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             {
                 ws.Cell(row, "A").Value = detalle.NumeroMaterial;
                 ws.Cell(row, "B").Value = detalle.Descripcion;
-                ws.Cell(row, "C").Value = detalle.Centro;
+                ws.Cell(row, "C").Value = orden.CrossD == "X" ? orden.TiDest : detalle.Centro;
                 ws.Cell(row, "D").Value = detalle.CantidadPedido;
                 ws.Cell(row, "E").Value = detalle.PrecioNeto;
 

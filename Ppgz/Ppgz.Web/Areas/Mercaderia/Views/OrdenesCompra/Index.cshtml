@@ -20,6 +20,7 @@
                         <th class="text-center">Fecha</th>
                         <th class="text-center">N° Proveedor</th>
                         <th class="text-center">Razón Social</th>
+                        <th class="text-center">Destino</th>
                         <th class="text-center">Descargar</th>
                     </tr>
                 </thead>
@@ -42,6 +43,7 @@
                             <td class="text-center vert-align">@DateTime.ParseExact(ordenCompra.FechaDocCompra, "yyyyMMdd", CultureInfo.InvariantCulture).ToString("dd/MM/yyyy")</td>
                             <td class="text-center vert-align">@ordenCompra.proveedore.NumeroProveedor</td>
                             <td class="text-center vert-align">@ordenCompra.proveedore.Nombre1 @ordenCompra.proveedore.Nombre2 @ordenCompra.proveedore.Nombre3 @ordenCompra.proveedore.Nombre4</td>
+                            <td class="text-center vert-align">@ordenCompra.Destino</td>
 
                             <td class="text-center vert-align">
                                 <a href="@Url.Action("Descargar", "OrdenesCompra", new {numeroDocumento = ordenCompra.NumeroDocumento, proveedorId = ordenCompra.proveedore.Id})" class="btn btn-primary descargar-detalle"><i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar</a>

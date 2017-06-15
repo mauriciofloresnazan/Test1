@@ -34,7 +34,10 @@ namespace Ppgz.Services
                     Moneda = dr["WAERS"].ToString(),
                     TipoCambio = dr["WKURS"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["WKURS"]),
                     IndTipoCambio = dr["KUFIX"].ToString(),
-                    FechaDocCompra = dr["BEDAT"].ToString()
+                    FechaDocCompra = dr["BEDAT"].ToString(),
+                    Destino = dr["CROSS_D"].ToString() == "X" ? dr["T_DEST"].ToString() :  dr["WERKS"].ToString(), 
+
+
 
                 };
             }
