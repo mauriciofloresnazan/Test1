@@ -56,12 +56,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="acumuladore.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="almacene.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
     <Compile Include="andene.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -100,9 +94,6 @@
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="Db.cs" />
-    <Compile Include="devolucione.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
     <Compile Include="estatuscita.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -133,9 +124,6 @@
     <Compile Include="ordencompradetalle.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
-    <Compile Include="pago.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
     <Compile Include="perfile.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -162,12 +150,6 @@
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="ScaleAlmacen.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tipocuenta.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="tipousuario.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="vwdashboard.cs">

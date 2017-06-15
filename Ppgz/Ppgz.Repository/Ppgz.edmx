@@ -5,25 +5,6 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema Namespace="impuls_portalModel.Store" Provider="MySql.Data.MySqlClient" ProviderManifestToken="5.5" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-        <EntityType Name="acumuladores">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Fecha" Type="timestamp" Precision="0" Nullable="false" />
-          <Property Name="SemanaAno" Type="int" Nullable="false" />
-          <Property Name="CantidadPar" Type="int" Nullable="false" />
-          <Property Name="AlmacenId" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="almacenes">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NombreAlmacen" Type="varchar" MaxLength="30" Nullable="false" />
-          <Property Name="CapacidadDiaria" Type="int" Nullable="false" />
-          <Property Name="CapacidadSemanal" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="andenes">
           <Key>
             <PropertyRef Name="Id" />
@@ -204,24 +185,6 @@
           <Property Name="UsuarioId" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="CuentaId" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="devoluciones">
-          <Key>
-            <PropertyRef Name="id" />
-            <PropertyRef Name="Referencia" />
-            <PropertyRef Name="Material" />
-            <PropertyRef Name="Descripcion" />
-            <PropertyRef Name="Cantidad" />
-            <PropertyRef Name="Importe" />
-          </Key>
-          <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="Referencia" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Material" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Descripcion" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Cantidad" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Importe" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="estatuscitas">
           <Key>
             <PropertyRef Name="Id" />
@@ -342,6 +305,7 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
           <Property Name="ProveedorId" Type="int" />
           <Property Name="FechaVisualizado" Type="datetime" Precision="0" />
           <Property Name="CitaId" Type="int" />
+          <Property Name="Destino" Type="varchar" MaxLength="45" />
         </EntityType>
         <EntityType Name="ordencompradetalle">
           <Key>
@@ -369,32 +333,6 @@ warning 6002: The table/view 'def.impuls_portal.devoluciones' does not have a pr
           <Property Name="SapOrdenCompraId" Type="int" />
           <Property Name="FechaCargaPortal" Type="timestamp" Precision="0" Nullable="false" />
           <Property Name="CantidadComprometida" Type="decimal" Precision="18" Scale="3" Nullable="false" />
-        </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'def.impuls_portal.pagos' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
-        <EntityType Name="pagos">
-          <Key>
-            <PropertyRef Name="id" />
-            <PropertyRef Name="RFC" />
-            <PropertyRef Name="RazonSocial" />
-            <PropertyRef Name="NumeroCompensacion" />
-            <PropertyRef Name="Referencia" />
-            <PropertyRef Name="FechaDePago" />
-            <PropertyRef Name="FechaBase" />
-            <PropertyRef Name="Importe" />
-            <PropertyRef Name="ML" />
-            <PropertyRef Name="TipoMovimiento" />
-          </Key>
-          <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="RFC" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="RazonSocial" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="NumeroCompensacion" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Referencia" Type="varchar" MaxLength="45" Nullable="false" />
-          <Property Name="FechaDePago" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="FechaBase" Type="varchar" MaxLength="45" Nullable="false" />
-          <Property Name="Importe" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="ML" Type="varchar" MaxLength="5" Nullable="false" />
-          <Property Name="TipoMovimiento" Type="varchar" MaxLength="200" Nullable="false" />
         </EntityType>
         <EntityType Name="perfiles">
           <Key>
@@ -470,24 +408,6 @@ warning 6002: The table/view 'def.impuls_portal.pagos' does not have a primary k
           <Property Name="Sap" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="Scale" Type="varchar" MaxLength="500" Nullable="false" />
         </EntityType>
-        <EntityType Name="tipocuentas">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Codigo" Type="varchar" MaxLength="5" Nullable="false" />
-          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Descripcion" Type="varchar" MaxLength="200" />
-        </EntityType>
-        <EntityType Name="tipousuario">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Codigo" Type="varchar" MaxLength="5" />
-          <Property Name="Nombre" Type="varchar" MaxLength="30" />
-          <Property Name="Descripcion" Type="varchar" MaxLength="200" />
-        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'def.impuls_portal.vwdashboard' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="vwdashboard">
@@ -560,18 +480,6 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
             </Principal>
             <Dependent Role="AspNetUserLogins">
               <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_acumulador_almacen">
-          <End Role="almacenes" Type="Self.almacenes" Multiplicity="1" />
-          <End Role="acumuladores" Type="Self.acumuladores" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="almacenes">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="acumuladores">
-              <PropertyRef Name="AlmacenId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -924,8 +832,6 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="impuls_portalModelStoreContainer">
-          <EntitySet Name="acumuladores" EntityType="Self.acumuladores" Schema="impuls_portal" store:Type="Tables" />
-          <EntitySet Name="almacenes" EntityType="Self.almacenes" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="andenes" EntityType="Self.andenes" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="asn" EntityType="Self.asn" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="impuls_portal" store:Type="Tables" />
@@ -955,32 +861,6 @@ warning 6002: The table/view 'def.impuls_portal.vwmensajes' does not have a prim
           <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="rieles" EntityType="Self.rieles" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="ScaleAlmacen" EntityType="Self.ScaleAlmacen" Schema="impuls_portal" store:Type="Tables" />
-          <EntitySet Name="tipocuentas" EntityType="Self.tipocuentas" Schema="impuls_portal" store:Type="Tables" />
-          <EntitySet Name="tipousuario" EntityType="Self.tipousuario" Schema="impuls_portal" store:Type="Tables" />
-          <EntitySet Name="devoluciones" EntityType="Self.devoluciones" store:Type="Tables" store:Schema="impuls_portal">
-            <DefiningQuery>SELECT
-`devoluciones`.`id`, 
-`devoluciones`.`Referencia`, 
-`devoluciones`.`Material`, 
-`devoluciones`.`Descripcion`, 
-`devoluciones`.`Cantidad`, 
-`devoluciones`.`Importe`
-FROM `devoluciones` AS `devoluciones`</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="pagos" EntityType="Self.pagos" store:Type="Tables" store:Schema="impuls_portal">
-            <DefiningQuery>SELECT
-`pagos`.`id`, 
-`pagos`.`RFC`, 
-`pagos`.`RazonSocial`, 
-`pagos`.`NumeroCompensacion`, 
-`pagos`.`Referencia`, 
-`pagos`.`FechaDePago`, 
-`pagos`.`FechaBase`, 
-`pagos`.`Importe`, 
-`pagos`.`ML`, 
-`pagos`.`TipoMovimiento`
-FROM `pagos` AS `pagos`</DefiningQuery>
-          </EntitySet>
           <EntitySet Name="vwdashboard" EntityType="Self.vwdashboard" store:Type="Views" store:Schema="impuls_portal">
             <DefiningQuery>SELECT
 `vwdashboard`.`horarioRielId`, 
@@ -1016,10 +896,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <AssociationSet Name="ApplicationUser_Logins" Association="Self.ApplicationUser_Logins">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserLogins" EntitySet="AspNetUserLogins" />
-          </AssociationSet>
-          <AssociationSet Name="fk_acumulador_almacen" Association="Self.fk_acumulador_almacen">
-            <End Role="almacenes" EntitySet="almacenes" />
-            <End Role="acumuladores" EntitySet="acumuladores" />
           </AssociationSet>
           <AssociationSet Name="fk_asn_cita" Association="Self.fk_asn_cita">
             <End Role="citas" EntitySet="citas" />
@@ -1143,27 +1019,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="impuls_portalModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="acumuladore">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Fecha" Type="DateTime" Nullable="false" />
-          <Property Name="SemanaAno" Type="Int32" Nullable="false" />
-          <Property Name="CantidadPar" Type="Int32" Nullable="false" />
-          <Property Name="AlmacenId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="almacene" Relationship="Self.fk_acumulador_almacen" FromRole="acumuladores" ToRole="almacenes" />
-        </EntityType>
-        <EntityType Name="almacene">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NombreAlmacen" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="CapacidadDiaria" Type="Int32" Nullable="false" />
-          <Property Name="CapacidadSemanal" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="acumuladores" Relationship="Self.fk_acumulador_almacen" FromRole="almacenes" ToRole="acumuladores" />
-        </EntityType>
         <EntityType Name="andene">
           <Key>
             <PropertyRef Name="Id" />
@@ -1490,6 +1345,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="ProveedorId" Type="Int32" />
           <Property Name="FechaVisualizado" Type="DateTime" />
           <Property Name="CitaId" Type="Int32" />
+          <Property Name="Destino" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="proveedore" Relationship="Self.fk_ordencompra_proveedor" FromRole="ordencompra" ToRole="proveedores" />
           <NavigationProperty Name="ordencompradetalles" Relationship="Self.fk_ordencompradetalle_parent" FromRole="ordencompra" ToRole="ordencompradetalle" />
         </EntityType>
@@ -1598,64 +1454,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="Sap" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Scale" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
-        <EntityType Name="tipocuenta">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Codigo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="tipousuario">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Codigo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Name="Nombre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="devolucione">
-          <Key>
-            <PropertyRef Name="id" />
-            <PropertyRef Name="Referencia" />
-            <PropertyRef Name="Material" />
-            <PropertyRef Name="Descripcion" />
-            <PropertyRef Name="Cantidad" />
-            <PropertyRef Name="Importe" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="Referencia" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Material" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Descripcion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Cantidad" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Importe" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="pago">
-          <Key>
-            <PropertyRef Name="id" />
-            <PropertyRef Name="RFC" />
-            <PropertyRef Name="RazonSocial" />
-            <PropertyRef Name="NumeroCompensacion" />
-            <PropertyRef Name="Referencia" />
-            <PropertyRef Name="FechaDePago" />
-            <PropertyRef Name="FechaBase" />
-            <PropertyRef Name="Importe" />
-            <PropertyRef Name="ML" />
-            <PropertyRef Name="TipoMovimiento" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="RFC" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="RazonSocial" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="NumeroCompensacion" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Referencia" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FechaDePago" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FechaBase" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Importe" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ML" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="TipoMovimiento" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-        </EntityType>
         <EntityType Name="vwdashboard">
           <Key>
             <PropertyRef Name="horarioRielId" />
@@ -1699,18 +1497,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="EnviadoA" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
           <Property Name="Visualizado" Type="String" MaxLength="2" FixedLength="false" Unicode="false" Nullable="false" />
         </EntityType>
-        <Association Name="fk_acumulador_almacen">
-          <End Role="almacenes" Type="Self.almacene" Multiplicity="1" />
-          <End Role="acumuladores" Type="Self.acumuladore" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="almacenes">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="acumuladores">
-              <PropertyRef Name="AlmacenId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_rieles_anden">
           <End Role="andenes" Type="Self.andene" Multiplicity="1" />
           <End Role="rieles" Type="Self.riele" Multiplicity="*" />
@@ -2028,8 +1814,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
         </Association>
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="acumuladores" EntityType="Self.acumuladore" />
-          <EntitySet Name="almacenes" EntityType="Self.almacene" />
           <EntitySet Name="andenes" EntityType="Self.andene" />
           <EntitySet Name="asns" EntityType="Self.asn" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRole" />
@@ -2056,16 +1840,8 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <EntitySet Name="proveedores" EntityType="Self.proveedore" />
           <EntitySet Name="rieles" EntityType="Self.riele" />
           <EntitySet Name="ScaleAlmacens" EntityType="Self.ScaleAlmacen" />
-          <EntitySet Name="tipocuentas" EntityType="Self.tipocuenta" />
-          <EntitySet Name="tipousuarios" EntityType="Self.tipousuario" />
-          <EntitySet Name="devoluciones" EntityType="Self.devolucione" />
-          <EntitySet Name="pagos" EntityType="Self.pago" />
           <EntitySet Name="vwdashboards" EntityType="Self.vwdashboard" />
           <EntitySet Name="vwmensajes" EntityType="Self.vwmensaje" />
-          <AssociationSet Name="fk_acumulador_almacen" Association="Self.fk_acumulador_almacen">
-            <End Role="almacenes" EntitySet="almacenes" />
-            <End Role="acumuladores" EntitySet="acumuladores" />
-          </AssociationSet>
           <AssociationSet Name="fk_rieles_anden" Association="Self.fk_rieles_anden">
             <End Role="andenes" EntitySet="andenes" />
             <End Role="rieles" EntitySet="rieles" />
@@ -2185,27 +1961,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="impuls_portalModelStoreContainer" CdmEntityContainer="Entities">
-          <EntitySetMapping Name="acumuladores">
-            <EntityTypeMapping TypeName="impuls_portalModel.acumuladore">
-              <MappingFragment StoreEntitySet="acumuladores">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-                <ScalarProperty Name="SemanaAno" ColumnName="SemanaAno" />
-                <ScalarProperty Name="CantidadPar" ColumnName="CantidadPar" />
-                <ScalarProperty Name="AlmacenId" ColumnName="AlmacenId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="almacenes">
-            <EntityTypeMapping TypeName="impuls_portalModel.almacene">
-              <MappingFragment StoreEntitySet="almacenes">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="NombreAlmacen" ColumnName="NombreAlmacen" />
-                <ScalarProperty Name="CapacidadDiaria" ColumnName="CapacidadDiaria" />
-                <ScalarProperty Name="CapacidadSemanal" ColumnName="CapacidadSemanal" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="andenes">
             <EntityTypeMapping TypeName="impuls_portalModel.andene">
               <MappingFragment StoreEntitySet="andenes">
@@ -2506,6 +2261,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
                 <ScalarProperty Name="FechaVisualizado" ColumnName="FechaVisualizado" />
                 <ScalarProperty Name="CitaId" ColumnName="CitaId" />
+                <ScalarProperty Name="Destino" ColumnName="Destino" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2604,54 +2360,6 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Sap" ColumnName="Sap" />
                 <ScalarProperty Name="Scale" ColumnName="Scale" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tipocuentas">
-            <EntityTypeMapping TypeName="impuls_portalModel.tipocuenta">
-              <MappingFragment StoreEntitySet="tipocuentas">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="tipousuarios">
-            <EntityTypeMapping TypeName="impuls_portalModel.tipousuario">
-              <MappingFragment StoreEntitySet="tipousuario">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Codigo" ColumnName="Codigo" />
-                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="devoluciones">
-            <EntityTypeMapping TypeName="impuls_portalModel.devolucione">
-              <MappingFragment StoreEntitySet="devoluciones">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="Referencia" ColumnName="Referencia" />
-                <ScalarProperty Name="Material" ColumnName="Material" />
-                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
-                <ScalarProperty Name="Importe" ColumnName="Importe" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="pagos">
-            <EntityTypeMapping TypeName="impuls_portalModel.pago">
-              <MappingFragment StoreEntitySet="pagos">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="RFC" ColumnName="RFC" />
-                <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
-                <ScalarProperty Name="NumeroCompensacion" ColumnName="NumeroCompensacion" />
-                <ScalarProperty Name="Referencia" ColumnName="Referencia" />
-                <ScalarProperty Name="FechaDePago" ColumnName="FechaDePago" />
-                <ScalarProperty Name="FechaBase" ColumnName="FechaBase" />
-                <ScalarProperty Name="Importe" ColumnName="Importe" />
-                <ScalarProperty Name="ML" ColumnName="ML" />
-                <ScalarProperty Name="TipoMovimiento" ColumnName="TipoMovimiento" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
