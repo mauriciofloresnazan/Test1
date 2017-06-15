@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Web.Hosting;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
@@ -87,7 +89,7 @@ namespace Ppgz.Web
 
         public void CargarConfiguraciones()
         {
-            const string sql = @"
+            /*const string sql = @"
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.working-day.enabled' AS Clave, '2,3,4,5,6' AS Valor, 1 AS Habilitado, 'Indica los dias de la semana, donde 1=Domingo, 2=Lunes,...7=Sabado, donde se pueden hacer las recepciones de mercancias o entregas' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.working-day.enabled');
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.special-day.provider' AS Clave, '4' AS Valor, 1 AS Habilitado, 'Indica el dia de entrega para los proveedores especiales o vip de impuls' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.special-day.provider');
                 INSERT INTO configuraciones (Clave, Valor, Habilitado, Descripcion) SELECT 'warehouse.max-pairs.per-day' AS Clave, '27000' AS Valor, 1 AS Habilitado, 'Indica la cantidad maxima de pares por dia permitida' AS Descripcion FROM dual WHERE NOT EXISTS(SELECT * FROM configuraciones WHERE Clave = 'warehouse.max-pairs.per-day');
@@ -148,8 +150,22 @@ namespace Ppgz.Web
 
 
        
-";
+";*/
+
+
+            var sql = System.IO.File.ReadAllText(HostingEnvironment.MapPath(@"~/App_Data/ConfiguracionInicial.sql"));
             Db.Insert(sql);
+        }
+
+        public void CargarDemonio()
+        {
+            var runningProcessByName = Process.GetProcessesByName("Ppgz.BatchFileProcessor");
+            if (runningProcessByName.Length == 0)
+            {
+                var db = new Entities();
+                var demonio = db.configuraciones.Single(c => c.Clave == "batchfile.daemon").Valor;
+                Process.Start(demonio);
+            }
         }
 
         public void ConfigureAuth(IAppBuilder app)
@@ -285,8 +301,11 @@ namespace Ppgz.Web
                 LoginPath = new PathString("/Account/Login"),
                 ExpireTimeSpan = TimeSpan.FromMinutes(30)
             });
+            
+            CargarConfiguraciones();
+            
+            CargarDemonio();
 
-             CargarConfiguraciones();
 
         }
     }

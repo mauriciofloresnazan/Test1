@@ -250,6 +250,7 @@
     <Compile Include="Areas\Nazan\Controllers\ConfigsysController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Content Include="App_Data\ConfiguracionInicial.sql" />
     <Content Include="Areas\Nazan\Views\AdministrarPerfilesNazan\Editar.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarUsuariosNazan\Editar.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarUsuariosNazan\Crear.cshtml" />
