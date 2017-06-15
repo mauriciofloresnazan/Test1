@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Text;
 using Ppgz.Repository;
 
 namespace ScaleWrapper
@@ -33,10 +34,11 @@ namespace ScaleWrapper
 
                 var asns = cita.asns.Where(asn => asn.OrdenNumeroDocumento == numeroDocumento).ToList();
 
-                foreach (var asn in asns)
+                /*foreach (var asn in asns)
                 {
                     InsertarDetail(id, almacenScale.Scale, asn);
-                }
+                }*/
+                InsertarDetails(id,almacenScale.Scale, asns);
             }
         }
 
@@ -265,6 +267,150 @@ namespace ScaleWrapper
                     GETDATE());");
 
             DbScale.Insert(sql, parameters);
+        }
+
+
+        internal void InsertarDetails(string interfaceLinkId, string almacenScale, List<asn> asns)
+        {
+            var sql = new StringBuilder();
+
+            sql.AppendLine(@"
+
+                INSERT INTO DOWNLOAD_RECEIPT_DETAIL 
+                   (INTERFACE_RECORD_ID,
+                    Interface_link_id,
+                    warehouse,
+                    INTERFACE_ACTION_CODE,
+                    INTERFACE_CONDITION,
+                    ERP_ORDER_LINE_NUM,
+                    item,
+                    ITEM_NET_PRICE,
+                    user_def5,
+                    TOTAL_QTY,
+                    QUANTITY_UM,
+                    DATE_TIME_STAMP) 
+                VALUES");
+
+            var parameters = new List<SqlParameter>();
+
+            for (var index = 0; index < asns.Count; index++)
+            {
+                // Si es multiplo de 100 
+                if (index % 100 == 0)
+                {
+
+                    // si tiene valores lo inserta
+                    if(parameters.Any())
+                    {                        
+                        DbScale.Insert(sql.ToString(), parameters);
+                    }
+
+                    sql = new StringBuilder();
+
+                    sql.AppendLine(@"
+
+                    INSERT INTO DOWNLOAD_RECEIPT_DETAIL 
+                       (INTERFACE_RECORD_ID,
+                        Interface_link_id,
+                        warehouse,
+                        INTERFACE_ACTION_CODE,
+                        INTERFACE_CONDITION,
+                        ERP_ORDER_LINE_NUM,
+                        item,
+                        ITEM_NET_PRICE,
+                        user_def5,
+                        TOTAL_QTY,
+                        QUANTITY_UM,
+                        DATE_TIME_STAMP) 
+                    VALUES");
+                    parameters = new List<SqlParameter>();
+                }
+                else
+                {
+                    sql.Append(",");
+                }
+
+                var asn = asns[index];
+                var id = string.Format("{0}{1}{2}", DateTime.Now.ToString("yyyyMMddHHmmssfff"), asn.cita.Id, index);
+
+                parameters.Add(new SqlParameter("@INTERFACE_RECORD_ID" + index, id));
+                parameters.Add(new SqlParameter("@Interface_link_id" + index, interfaceLinkId));
+                parameters.Add(new SqlParameter("@warehouse" + index, almacenScale));
+                parameters.Add(new SqlParameter("@INTERFACE_ACTION_CODE" + index, "Save"));
+                parameters.Add(new SqlParameter("@INTERFACE_CONDITION" + index, "Ready"));
+                parameters.Add(new SqlParameter("@ERP_ORDER_LINE_NUM" + index, asn.NumeroPosicion));
+                parameters.Add(new SqlParameter("@item" + index, asn.NumeroMaterial));
+                parameters.Add(new SqlParameter("@ITEM_NET_PRICE" + index, asn.Precio));
+                parameters.Add(new SqlParameter("@user_def5" + index, asn.cita.FechaCita.ToString("yyyyMMdd")));
+                parameters.Add(new SqlParameter("@TOTAL_QTY" + index, asn.CantidadPedidoSap));
+                parameters.Add(new SqlParameter("@QUANTITY_UM" + index, asn.UnidadMedida));
+
+                sql.AppendLine(@"(@INTERFACE_RECORD_ID"+ index + @",
+                    @Interface_link_id" + index + @",
+                    @warehouse" + index + @",
+                    @INTERFACE_ACTION_CODE" + index + @",
+                    @INTERFACE_CONDITION" + index + @",
+                    @ERP_ORDER_LINE_NUM" + index + @",
+                    @item" + index + @",
+                    @ITEM_NET_PRICE" + index + @",
+                    @user_def5" + index + @",
+                    @TOTAL_QTY" + index + @",
+                    @QUANTITY_UM" + index + @",
+                    GETDATE())");
+                /*if (index + 1 < asns.Count)
+                {
+                    sql.Append(",");
+                }*/
+            }
+
+            /*var parameters = new List<SqlParameter>
+            {
+                new SqlParameter(
+                   "@INTERFACE_RECORD_ID",id),
+                    new SqlParameter("@Interface_link_id", interfaceLinkId),
+                    new SqlParameter("@warehouse", almacenScale),
+                    new SqlParameter("@INTERFACE_ACTION_CODE", "Save"),
+                    new SqlParameter("@INTERFACE_CONDITION", "Ready"),
+                    new SqlParameter("@ERP_ORDER_LINE_NUM", asn.NumeroPosicion),
+                    new SqlParameter("@item", asn.NumeroMaterial),
+                    new SqlParameter("@ITEM_NET_PRICE", asn.Precio),
+                    new SqlParameter("@user_def5",asn.cita.FechaCita.ToString("yyyyMMdd")),
+                    new SqlParameter("@TOTAL_QTY", asn.CantidadPedidoSap),
+                    new SqlParameter("@QUANTITY_UM", asn.UnidadMedida),
+              
+
+            };
+
+            var sql = string.Format(@"
+
+                INSERT INTO DOWNLOAD_RECEIPT_DETAIL 
+                   (INTERFACE_RECORD_ID,
+                    Interface_link_id,
+                    warehouse,
+                    INTERFACE_ACTION_CODE,
+                    INTERFACE_CONDITION,
+                    ERP_ORDER_LINE_NUM,
+                    item,
+                    ITEM_NET_PRICE,
+                    user_def5,
+                    TOTAL_QTY,
+                    QUANTITY_UM,
+                    DATE_TIME_STAMP) 
+                VALUES      
+                   (@INTERFACE_RECORD_ID,
+                    @Interface_link_id,
+                    @warehouse,
+                    @INTERFACE_ACTION_CODE,
+                    @INTERFACE_CONDITION,
+                    @ERP_ORDER_LINE_NUM,
+                    @item,
+                    @ITEM_NET_PRICE,
+                    @user_def5,
+                    @TOTAL_QTY,
+                    @QUANTITY_UM,
+                    GETDATE());");*/
+
+            DbScale.Insert(sql.ToString(), parameters);
         }
         
     }
