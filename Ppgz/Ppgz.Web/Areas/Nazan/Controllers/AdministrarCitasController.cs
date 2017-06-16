@@ -409,7 +409,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             dt.Columns.Add("Cantidad");
             dt.Columns.Add("RFC Proveedor");
             dt.Columns.Add("Nombre Proveedor");
-            dt.Columns.Add("Es Especial");
+            dt.Columns.Add("Pronto Pago");
             dt.Columns.Add("Penalización");
 
 

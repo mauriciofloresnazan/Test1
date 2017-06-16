@@ -5,7 +5,7 @@ namespace Ppgz.Web.Areas.Nazan.Models
     public class CuentaViewModel
     {
 
-        [Display(Name = "Proveedor Especial")]
+        [Display(Name = "Pronto pago")]
         public bool Especial { get; set; }
 
         [Required(ErrorMessage = "El campo es obligatorio.")]
