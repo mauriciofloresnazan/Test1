@@ -249,12 +249,19 @@
     <script type="text/javascript">
         var rielesNecesarios = parseInt("@rielesNecesarios");
         var rielesSeleccionados = [];
-
+        var enviado = false;
         $(function() {
             $('.btn-agendar').click(function() {
 
                 // TODO MEJORAR
                 if (rielesSeleccionados.length === rielesNecesarios) {
+
+                    if (enviado) {
+
+                        msgError("Por favor espere, se esta procesando el registro anterior.");
+                        return;
+                    }
+
 
                     for (var i = 0; i < rielesNecesarios; i++) {
                         $('<input>').attr({
@@ -265,6 +272,19 @@
                     }
 
                     $("#form-agendar").submit();
+
+                    $(this).attr("disabled", "disabled");
+
+                    $(this).unbind();
+
+                    $(this).off();
+
+                    enviado = true;
+
+
+                    $.blockUI({ message: '<h2>Por favor espere...</h2>' });
+
+
                 } else {
                     msgError("Por favor verifique su selección");
 

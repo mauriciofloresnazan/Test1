@@ -97,6 +97,11 @@
             });
 
             $("#centro-modal input[name=radio-almacen]:radio").change(function () {
+
+                $('#centro-modal').modal('hide');
+                
+                $.blockUI({ message: '<h2>Por favor espere...</h2>' });
+
                 location.href = url + "?proveedorId=" + proveedorId + "&centro=" + $(this).attr("id");
             });
 
