@@ -43,7 +43,10 @@ namespace Ppgz.Services
 
             if (result.Rows.Count > 0)
             {
-                reporteProveedor.AddRange(from DataRow dr in result.Rows
+                var statusValidos = new [] {"S1", "S2", "S3", "S6"};
+
+                reporteProveedor = (from DataRow dr in result.Rows
+                    where statusValidos.Contains(dr["ZMMSTA"].ToString().ToUpper())
                     select new ReporteProveedor
                     {
                         NumeroProveedor = dr["VENDOR"].ToString(),
@@ -62,7 +65,28 @@ namespace Ppgz.Services
                         InvCedis = dr["INVENCEDIS"].ToString(),
                         PedidosPendiente = dr["PEDIDOSPEN"].ToString(),
                         EstadoMaterial = dr["ZMMSTA"].ToString()
-                    });
+                    }).ToList();
+                
+                /*reporteProveedor.AddRange(from DataRow dr in result.Rows
+                    select new ReporteProveedor
+                    {
+                        NumeroProveedor = dr["VENDOR"].ToString(),
+                        NombreProveedor = dr["VENDOR_TXT"].ToString(),
+                        Material = dr["MATERIAL"].ToString(),
+                        NombreMaterial = dr["MATERIAL_TXT"].ToString(),
+                        FechaProceso = DateTime.ParseExact(dr["CALDAY"].ToString(), "yyyyMMdd", CultureInfo.InvariantCulture),
+                        UnidadMedida = dr["BASE_UOM"].ToString(),
+                        CantidadVentas2 = dr["MESACT2"].ToString(),
+                        CantidadVentas1 = dr["MESACT1"].ToString(),
+                        CantidadVentas = dr["MESACT"].ToString(),
+                        CantidadTotal = dr["TOTAL"].ToString(),
+                        CalculoTotal = dr["SELLTHRU"] + " %",
+                        InvTienda = dr["INVENTDA"].ToString(),
+                        InvTransito = dr["TRANSITO"].ToString(),
+                        InvCedis = dr["INVENCEDIS"].ToString(),
+                        PedidosPendiente = dr["PEDIDOSPEN"].ToString(),
+                        EstadoMaterial = dr["ZMMSTA"].ToString()
+                    });*/
             }
             return reporteProveedor;
 
@@ -71,7 +95,7 @@ namespace Ppgz.Services
         public void CrearNivelServicio(string numeroProveedor, decimal ultimoMes, decimal temporadaActual,
            decimal acumuladoAnual, decimal pedidoAtrasado, decimal pedidoEntiempo, decimal pedidoTotal)
         {
-            var pad = '0';
+            const char pad = '0';
             var proveedorManager = new ProveedorManager();
             var proveedor = proveedorManager.FindByNumeroProveedor(numeroProveedor.PadLeft(10, pad));
 
