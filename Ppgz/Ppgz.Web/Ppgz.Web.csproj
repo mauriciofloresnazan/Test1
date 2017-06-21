@@ -1197,6 +1197,7 @@
     <Content Include="App_Data\plantillapagos.xlsx" />
     <Content Include="App_Data\plantilladevoluciones.xlsx" />
     <Content Include="App_Data\plantillapagospendientes.xlsx" />
+    <Content Include="App_Data\plantillareporte.xlsx" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
