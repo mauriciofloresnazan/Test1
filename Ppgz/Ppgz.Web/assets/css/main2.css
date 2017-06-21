@@ -30,6 +30,7 @@ h1, h2 {
     padding: 5px;
     background: #f0f0f0;
     color: #000;
+    z-index: 20;
 }
 .footer p{
     margin: auto;

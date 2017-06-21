@@ -111,7 +111,7 @@ h1{
     font-size: .8em;
  }
 
-.table tbody>tr>td.vert-align, .table tbody>tr>th.vert-align{
+.table .vert-align{
     vertical-align: middle;
 }
 
