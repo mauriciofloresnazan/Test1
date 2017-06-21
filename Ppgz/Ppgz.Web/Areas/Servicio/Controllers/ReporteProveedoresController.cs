@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Data;
 using System.Web.Mvc;
+using ClosedXML.Excel;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 
@@ -43,6 +43,12 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
                 ViewBag.nivelservicio = _reporteProveedorManager.FindNivelSerNiveleseervicio(ViewBag.proveedor.NumeroProveedor);
 
+
+                if (ViewBag.nivelservicio == null)
+                {
+                    TempData["FlashError"] = "No hay datos para este proveedor";
+                    return RedirectToAction("Index");
+                }
             }
             catch (Exception ex)
             {
@@ -65,50 +71,59 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             var detalles = _reporteProveedorManager.FindReporteProveedor(numeroProveedor);
 
             var proveedor = _proveedorManager.FindByNumeroProveedor(numeroProveedor);
-            
 
-            var dt = new DataTable();
-            dt.Columns.Add("Id Proveedor");
-            dt.Columns.Add("Nombre Proveedor");
-            dt.Columns.Add("Material");
-            dt.Columns.Add("Nombre Material");
-            dt.Columns.Add("Fecha Proceso");
-            dt.Columns.Add("Unidad de Medida");
-            dt.Columns.Add("Ventas Actual - 2 meses");
-            dt.Columns.Add("Ventas Actual - 1 meses");
-            dt.Columns.Add("Ventas Actual");
-            dt.Columns.Add("Total Ventas");
-            dt.Columns.Add("Cálculo Total");
-            dt.Columns.Add("Inventario TDA");
-            dt.Columns.Add("Inventario Tránsito");
-            dt.Columns.Add("Inventario CEDIS");
-            dt.Columns.Add("Pedidos Pendientes(TDA + CEDIS)");
-            dt.Columns.Add("Estatus Material");
+            var nivelServicio = _reporteProveedorManager.FindNivelSerNiveleseervicio(proveedor.Id);
 
+
+            var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillareporte.xlsx"));
+            var ws = workbook.Worksheet(1);
+
+            ws.Cell(4, "C").Value = string.Format("{0} {1} {2} {3}", proveedor.Nombre1, proveedor.Nombre2, proveedor.Nombre3, proveedor.Nombre4);
+            ws.Cell(5, "C").Value = proveedor.Rfc;
+
+            if (nivelServicio != null)
+            {
+                ws.Cell(9, "C").Value = nivelServicio.UltimoMes / 100;
+                ws.Cell(10, "C").Value = nivelServicio.TemporadaActual / 100;
+                ws.Cell(11, "C").Value = nivelServicio.AcumuladoAnual / 100;
+
+                ws.Cell(9, "F").Value = nivelServicio.PedidoAtrasado;
+                ws.Cell(10, "F").Value = nivelServicio.PedidoEnTiempo;
+                ws.Cell(11, "F").Value = nivelServicio.PedidoTotal;
+            }
+
+            ws.Cell(4, "M").Value = detalles[0].FechaProceso.ToString("dd/MM/yyyy");
+
+            ws.Cell(14, "D").Value = string.Format("Ventas ({0})", DateTime.Today.AddMonths(-2).ToString("MM/yyyy"));
+            ws.Cell(14, "E").Value = string.Format("Ventas ({0})", DateTime.Today.AddMonths(-1).ToString("MM/yyyy"));
+            ws.Cell(14, "F").Value = string.Format("Ventas ({0})", DateTime.Today.ToString("MM/yyyy"));
+
+            var row = 15;
 
             foreach (var detalle in detalles)
             {
-                dt.Rows.Add(
-                    detalle.NumeroProveedor,
-                    detalle.NombreProveedor,
-                    detalle.Material,
-                    detalle.NombreMaterial,
-                    detalle.FechaProceso.ToString("dd/MM/yyyy"),
-                    detalle.UnidadMedida,
-                    detalle.CantidadVentas2,
-                    detalle.CantidadVentas1,
-                    detalle.CantidadVentas,
-                    detalle.CantidadTotal,
-                    detalle.CalculoTotal,
-                    detalle.InvTienda,
-                    detalle.InvTransito,
-                    detalle.InvCedis,
-                    detalle.PedidosPendiente,
-                    detalle.EstadoMaterial);
 
+
+                ws.Cell(row, "B").Value = detalle.Material.TrimStart('0');
+                ws.Cell(row, "C").Value = detalle.NombreMaterial;
+                ws.Cell(row, "D").Value = detalle.CantidadVentas2;
+                ws.Cell(row, "E").Value = detalle.CantidadVentas1;
+                ws.Cell(row, "F").Value = detalle.CantidadVentas;
+                ws.Cell(row, "G").Value = detalle.CantidadTotal;
+                ws.Cell(row, "H").Value = detalle.CalculoTotal;
+                ws.Cell(row, "I").Value = detalle.InvTienda;
+                ws.Cell(row, "J").Value = detalle.InvTransito;
+                ws.Cell(row, "K").Value = detalle.InvCedis;
+                ws.Cell(row, "L").Value = detalle.PedidosPendiente;
+                ws.Cell(row, "M").Value = detalle.EstadoMaterial;
+                row++;
             }
 
-            FileManager.ExportExcel(dt,proveedor.NumeroProveedor, HttpContext);
+            FileManager.ExportExcel(workbook, "REP_" + proveedor.Rfc + "_" + detalles[0].FechaProceso.ToString("ddMMyyyy"), HttpContext);
+
+
+
+
         }
 
     }
