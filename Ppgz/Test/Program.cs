@@ -51,45 +51,72 @@ namespace Test
         }
         static void TestCita()
         {
-            var proveedorManager = new ProveedorManager();
+            Console.WriteLine("Inicio");
+            Console.WriteLine(DateTime.Now);
+            var  preAsnManager = new PreAsnManager();
+            var ordenes = preAsnManager.GetOrdenesActivasConDetalle(69);
 
-            var proveedor = proveedorManager.Find(67);
-            
+            Console.WriteLine("Fin");
+            Console.WriteLine(DateTime.Now);
 
-            var preAsnManager = new PreAsnManager();
-
-            var result = preAsnManager.GetOrdenesActivasConDetalle(proveedor.Id);
-
-            var test1 = result
-                .Where(o => o.Detalles.Any(de => String.Equals(de.Centro, "CD06", StringComparison.CurrentCultureIgnoreCase)))
-                .Where(o => o.TotalPermitido > 0)
-                .ToList();
-                     
-            var test2 = result
-                .Where(o => o.Detalles.Any(de => de.Centro == "CD06"))
-                //.Where(o => o.TotalPermitido > 0)
-                .ToList();
-
-            var test3 = new List<PreAsn>();
-
-            foreach (var  ord in result)
+            Console.ReadLine();
+            /*
+            var preCita = new PreCita()
             {
-                if (ord.EsCrossDock)
-                {
-                    Console.WriteLine("Es CrossDock");
-                }
+                Cantidad = 2,
+                Centro = CurrentCita.Centro,
+                Fecha = (DateTime)CurrentCita.Fecha,
+                ProveedorId = CurrentCita.Proveedor.Id,
+                UsuarioId = _commonManager.GetUsuarioAutenticado().Id,
+                Asns = new List<Asn>(),
+                HorarioRielesIds = rielesIds.ToList()
+            };
 
-                foreach (var det in ord.Detalles)
+            foreach (var preAsn in CurrentCita.GetPreAsns())
+            {
+                foreach (var preAsnDetail in preAsn.Detalles.Where(preAsnDetail => preAsnDetail.Cantidad > 0))
                 {
-                    if (det.Centro == "CD06" && ord.TotalPermitido > 0)
+                    preCita.Asns.Add(new Asn
                     {
-                        test3.Add(ord);
-                    }
-                }}
+                        Cantidad = preAsnDetail.Cantidad,
+                        NombreMaterial = preAsnDetail.DescripcionMaterial,
+                        NumeroMaterial = preAsnDetail.NumeroMaterial,
+                        NumeroPosicion = preAsnDetail.NumeroPosicion,
+                        OrdenNumeroDocumento = preAsn.NumeroDocumento,
+                        Tienda = preAsn.Tienda,
 
+                        TiendaOrigen = preAsn.TiendaOrigen,
+                        CantidadSolicitada = preAsnDetail.CantidadPedido,
+                        InOut = preAsn.InOut,
+                        Precio = preAsnDetail.Precio,
+                        UnidadMedida = preAsnDetail.UnidadMedida,
+                        NumeroSurtido = preAsn.NumeroOrdenSurtido
+                    });
+                }
+            }
+            try
+            {
+                
+                CitaManager.RegistrarCita(preCita);
+
+            }
+            catch (ScaleException exception)
+            {
+                LimpiarCita();
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("Citas");
+            }
+            catch (Exception exception)
+            {
+
+                //TODO
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("SeleccionarRieles");
+            }
+            */
 
         }
-
+        
         static void ValidarSat()
         {
             var factura = File.ReadAllText(@"C:\temp\borrar\miro\4EEC-A....xml");
@@ -109,7 +136,7 @@ namespace Test
         static void TestScale()
         {
             var db = new Entities();
-            var cita = db.citas.First();
+            var cita = db.citas.Find(79);
             var scaleManager = new ScaleManager();
             try
             {
@@ -144,7 +171,7 @@ namespace Test
 
         static void Main(string[] args)
         {
-            T1();
+            TestScale();
             return;
 
             /*ValidarSat();
