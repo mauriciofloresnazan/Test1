@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using log4net;
 using Ppgz.Repository;
 
 namespace ScaleWrapper
 {
     public class ScaleManager
     {
+        public static readonly ILog ErrorAppLog = LogManager.GetLogger(@"ErrorAppLog");
 
         public void Registrar(cita cita)
         {
@@ -17,7 +19,9 @@ namespace ScaleWrapper
 
             if (almacenScale == null)
             {
-                throw new Exception("Almacén no configurado para Scale");
+
+                ErrorAppLog.Error(string.Format("El Almacén {0} no esta configurado para Scale. Error en la Cita # {1}", cita.Almacen, cita.Id));
+                return;
             }
 
             var numerosDocumentos = cita.asns.Select(asn=> asn.OrdenNumeroDocumento).Distinct();
@@ -58,7 +62,7 @@ namespace ScaleWrapper
                     new SqlParameter("@INTERFACE_CONDITION", "Ready"),
                     new SqlParameter("@warehouse", almacenScale),
                     new SqlParameter("@ERP_ORDER_NUM", numeroOrden),
-                    new SqlParameter("@RECEIPT_ID", string.Format("{0}-{1}", numeroOrden, cita.Id)),
+                    //new SqlParameter("@RECEIPT_ID", string.Format("{0}-{1}", numeroOrden, cita.Id)),
 
                     new SqlParameter("@RECEIPT_ID_TYPE", cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra"),
                     new SqlParameter("@RECEIPT_TYPE", cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra"),
@@ -68,7 +72,7 @@ namespace ScaleWrapper
                     new SqlParameter("@SHIP_FROM_ADDRESS1", proveedor.Calle),
                     new SqlParameter("@SHIP_FROM_ADDRESS2", proveedor.Direccion),
                     new SqlParameter("@Ship_From_city", proveedor.Poblacion),
-                    new SqlParameter("@SHIP_FROM_STATE", proveedor.Region),
+                    new SqlParameter("@SHIP_FROM_STATE", proveedor.EstadoNombre),
                     new SqlParameter("@SHIP_FROM_COUNTRY", "MEXICO"),
                     new SqlParameter("@SHIP_FROM_POSTAL_CODE", proveedor.CodigoPostal),
                     new SqlParameter("@SHIP_FROM_NAME",
@@ -92,7 +96,7 @@ namespace ScaleWrapper
                     new SqlParameter("@SOURCE_ADDRESS1", proveedor.Calle),
                     new SqlParameter("@SOURCE_ADDRESS2", proveedor.Direccion),
                     new SqlParameter("@Source_City", proveedor.Poblacion),
-                    new SqlParameter("@Source_State", proveedor.Region),
+                    new SqlParameter("@Source_State", proveedor.EstadoNombre),
                     new SqlParameter("@SOURCE_POSTAL_CODE", proveedor.CodigoPostal),
                     new SqlParameter("@SOURCE_COUNTRY","MEXICO"),
                     new SqlParameter("@SOURCE_PHONE_NUM", proveedor.NumeroTelefono),
@@ -172,7 +176,8 @@ namespace ScaleWrapper
                              @INTERFACE_CONDITION, 
                              @warehouse, 
                              @ERP_ORDER_NUM, 
-                             @RECEIPT_ID, 
+                             --@RECEIPT_ID, 
+                             dbo.GNZN_Fn_Folio_Recibo(@ERP_ORDER_NUM),
                              @RECEIPT_ID_TYPE, 
                              @RECEIPT_TYPE, 
                              @RECEIPT_DATE, 
