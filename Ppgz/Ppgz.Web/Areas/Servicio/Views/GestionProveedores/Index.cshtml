@@ -55,12 +55,8 @@
                                 <td class="text-center vert-align">@(proveedor.Rfc)</td>
                                 <td class="text-center vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
                                 <td class="text-center vert-align">
-                                    <div class="btn-group hidden-xs">
-                                        <a href="javascript:buscarNumeroProveedor(@proveedor.Id)" class="ver-mensaje"> Ver Detalle</a>
-                                    </div>
-                                    <div class="btn-group-vertical visible-xs">
-                                        <a href="javascript:buscarNumeroProveedor(@proveedor.Id)" class="ver-mensaje"> Ver Detalle</a>
-                                    </div>
+                                    <a href="javascript:buscarNumeroProveedor(@proveedor.Id)" class="ver-mensaje btn btn-primary btn-sm"> Ver Detalle</a>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -158,6 +154,8 @@
                 $(dl).append("<dd>" + result.Vendedor + "</dd>");
                 $(dl).append("<dt>Región</dt>");
                 $(dl).append("<dd>" + result.Region + "</dd>");
+                $(dl).append("<dt>Estado</dt>");
+                $(dl).append("<dd>" + result.EstadoNombre + "</dd>");
                 $(dl).append("<dt>Población</dt>");
                 $(dl).append("<dd>" + result.Poblacion + "</dd>");
                 $(dl).append("<dt>Apartado</dt>");

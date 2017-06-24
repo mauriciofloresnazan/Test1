@@ -351,7 +351,8 @@ namespace Ppgz.Services
 
                        TelefonoExtension = @TelefonoExtension,
                        Correo = @Correo,
-                       Rfc = @Rfc
+                       Rfc = @Rfc,
+                       EstadoNombre = @EstadoNombre
 
                 WHERE  Id = @Id;";
 
@@ -389,7 +390,8 @@ namespace Ppgz.Services
                     
                     new MySqlParameter("TelefonoExtension", proveedorSap.TelefonoExtension), 
                     new MySqlParameter("Correo", proveedorSap.Correo), 
-                    new MySqlParameter("Rfc", proveedorSap.Rfc), 
+                    new MySqlParameter("Rfc", proveedorSap.Rfc),  
+                    new MySqlParameter("EstadoNombre", proveedorSap.EstadoNombre), 
 
                       new MySqlParameter("Id", proveedorId), 
                 };

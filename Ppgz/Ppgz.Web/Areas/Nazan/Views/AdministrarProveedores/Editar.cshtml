@@ -108,6 +108,7 @@
                     <th class="text-center vert-align">Email</th>
                     <th class="text-center vert-align">Vendedor</th>
                     <th class="text-center vert-align">Región</th>
+                    <th class="text-center vert-align">Estado</th>
                     <th class="text-center vert-align">Población</th>
 
                     <th class="text-center vert-align">Código Postal</th>
@@ -128,6 +129,7 @@
                         <td class="vert-align">@proveedor.Correo</td>
                         <td class="vert-align">@proveedor.VendedorResponsable</td>
                         <td class="vert-align">@proveedor.Region</td>
+                        <td class="vert-align">@proveedor.EstadoNombre</td>
                         <td class="vert-align">@proveedor.Poblacion</td>
 
                         <td class="vert-align">@proveedor.CodigoPostal</td>
@@ -421,6 +423,8 @@
                 $(dl).append("<dd>" + result.Vendedor + "</dd>");
                 $(dl).append("<dt>Región</dt>");
                 $(dl).append("<dd>" + result.Region + "</dd>");
+                $(dl).append("<dt>Estado</dt>");
+                $(dl).append("<dd>" + result.EstadoNombre + "</dd>");
                 $(dl).append("<dt>Población</dt>");
                 $(dl).append("<dd>" + result.Poblacion + "</dd>");
                 $(dl).append("<dt>Apartado</dt>");

@@ -71,7 +71,8 @@ namespace Ppgz.Services
                 TelefonoPrefijo = result["TEL_NUMER"].ToString(),
                 TelefonoExtension = result["TEL_EXTENS"].ToString(),
                 Correo = result["SMTP_ADDR"].ToString(),
-                Rfc = result["STCD1"].ToString()
+                Rfc = result["STCD1"].ToString(),
+                EstadoNombre = result["BEZEI"].ToString()
             };
 
             return proveedor;
