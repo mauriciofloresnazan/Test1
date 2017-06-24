@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using Ppgz.Repository;
 using SapWrapper;
 using ScaleWrapper;
@@ -272,19 +273,14 @@ namespace Ppgz.CitaWrapper
                 db.SaveChanges();
             }
 
-            try
+            Task.Factory.StartNew(() =>
             {
                 var scaleManager = new ScaleManager();
 
                 cita = db.citas.Find(cita.Id);
                 scaleManager.Registrar(cita);
-            }
-            catch (Exception exception)
-            {
-                var error = string.Format("Cita registrada exitosamente, con errores al cargar en SCALE:{0}{1}", Environment.NewLine, exception.Message);
-
-                throw new ScaleException(error);
-            }
+              
+            });
         }
 
 
