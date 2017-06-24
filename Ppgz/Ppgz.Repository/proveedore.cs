@@ -58,6 +58,7 @@ namespace Ppgz.Repository
         public string OperacionTx { get; set; }
         public string Rfc { get; set; }
         public bool Borrado { get; set; }
+        public string EstadoNombre { get; set; }
     
         public virtual ICollection<cita> citas { get; set; }
         public virtual cuenta cuenta { get; set; }

@@ -390,6 +390,7 @@
           <Property Name="OperacionTx" Type="enum" Nullable="false" />
           <Property Name="Rfc" Type="varchar" MaxLength="100" />
           <Property Name="Borrado" Type="bool" Nullable="false" />
+          <Property Name="EstadoNombre" Type="varchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="rieles">
           <Key>
@@ -1428,6 +1429,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
           <Property Name="OperacionTx" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Rfc" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Borrado" Type="Boolean" Nullable="false" />
+          <Property Name="EstadoNombre" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="citas" Relationship="Self.fk_citas_proveedor" FromRole="proveedores" ToRole="citas" />
           <NavigationProperty Name="cuenta" Relationship="Self.fk_proveedores_cuenta" FromRole="proveedores" ToRole="cuentas" />
           <NavigationProperty Name="etiquetas" Relationship="Self.fk_etiquetas_proveedores" FromRole="proveedores" ToRole="etiquetas" />
@@ -2341,6 +2343,7 @@ FROM `vwmensajes` AS `vwmensajes`</DefiningQuery>
                 <ScalarProperty Name="OperacionTx" ColumnName="OperacionTx" />
                 <ScalarProperty Name="Rfc" ColumnName="Rfc" />
                 <ScalarProperty Name="Borrado" ColumnName="Borrado" />
+                <ScalarProperty Name="EstadoNombre" ColumnName="EstadoNombre" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
