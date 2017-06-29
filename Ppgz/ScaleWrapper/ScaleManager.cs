@@ -348,7 +348,7 @@ namespace ScaleWrapper
                 parameters.Add(new SqlParameter("@ITEM_NET_PRICE" + index, asn.Precio));
                 parameters.Add(new SqlParameter("@user_def5" + index, asn.cita.FechaCita.ToString("yyyyMMdd")));
                 parameters.Add(new SqlParameter("@TOTAL_QTY" + index, asn.CantidadPedidoSap));
-                parameters.Add(new SqlParameter("@QUANTITY_UM" + index, asn.UnidadMedida));
+                parameters.Add(new SqlParameter("@QUANTITY_UM" + index, asn.UnidadMedida.Substring(0, 3)));
 
                 sql.AppendLine(@"(@INTERFACE_RECORD_ID"+ index + @",
                     @Interface_link_id" + index + @",
