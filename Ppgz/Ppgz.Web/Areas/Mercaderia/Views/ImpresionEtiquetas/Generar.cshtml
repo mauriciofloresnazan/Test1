@@ -1,0 +1,182 @@
+﻿@using Ppgz.Repository
+@{
+    ViewBag.Title = "Generar  Etiquetas - Formulario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var proveedor = (proveedore)ViewBag.Proveedor;
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-ticket" aria-hidden="true"></i> <i>Generación del archivo de Etiquetas en formato csv.</i>
+</p>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "ImpresionEtiquetas")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i> Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Formulario para Generar el Archivo</div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Generar", "ImpresionEtiquetas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form"  }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true)
+
+            <input type="hidden" name="proveedorId" value="@proveedor.Id"/>
+
+            <div class="form-group">
+                @*@Html.LabelFor(m => m.Xml, new { @class = "col-sm-3 control-label" })*@
+                <label class="col-sm-3 control-label">Tipo de Etiqueta</label>
+                <div class="col-sm-7">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="nazan" id="nazanTipo" value="true" checked>
+                            Nazan
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="nazan" id="precioTipo" value="false">
+                            Etiqueta de Precios
+                        </label>
+                    </div>
+
+                    @*@Html.TextBoxFor(m => m.Xml, new { @type = "file" })
+                    @Html.ValidationMessageFor(m => m.Xml)*@
+
+                </div>
+            </div>
+            <p class="form-legend" style="">
+                <i>Puede incluir hasta 5 Órdenes para este archivo de etiquetas. Cada Órden debe ser 10 dígitos.</i>
+            </p>
+
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Órden 1</label>
+                <div class="col-sm-7">
+                    <input class="form-control orden-etiqueta" name="orden1" id="orden1" />
+                    <span class="field-validation-valid" data-valmsg-for="orden1" data-valmsg-replace="true"></span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Órden 2 (opcional)</label>
+                <div class="col-sm-7">
+                    <input class="form-control orden-etiqueta" name="orden2" id="orden2" />
+                    <span class="field-validation-valid" data-valmsg-for="orden2" data-valmsg-replace="true"></span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Órden 3 (opcional)</label>
+                <div class="col-sm-7">
+                    <input class="form-control orden-etiqueta" name="orden3" id="orden3" />
+                    <span class="field-validation-valid" data-valmsg-for="orden3" data-valmsg-replace="true"></span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Órden 4 (opcional)</label>
+                <div class="col-sm-7">
+                    <input class="form-control orden-etiqueta" name="orden4" id="orden4" />
+                    <span class="field-validation-valid" data-valmsg-for="orden4" data-valmsg-replace="true"></span>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Órden 5 (opcional)</label>
+                <div class="col-sm-7">
+                    <input class="form-control orden-etiqueta" name="orden5" id="orden5" />
+                    <span class="field-validation-valid" data-valmsg-for="orden5" data-valmsg-replace="true"></span>
+                </div>
+            </div>
+            
+
+
+
+
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-play" aria-hidden="true"></i> Generar</button>
+                    <a class="btn btn-default" href="@Url.Action("Index", "ImpresionEtiquetas")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+        var form = $("#form");
+
+        $(document).ready(function() {
+
+            $(".orden-etiqueta").numeric();
+
+
+            $(".orden-etiqueta").each(function () {
+                $(this).rules("add", {
+                    rangelength: [10, 10],
+                    messages: {
+                        rangelength: "Debe ingresar 10 dígitos"
+                    }
+
+                });
+            });
+            $("#orden1").rules("add", {
+
+                required: true,
+                messages: {
+                    required: "Campo requerido"
+                }
+            });
+
+
+        form.submit(function() {
+           
+            /*var ordenes = $("#text-ordenes").val().split("\n");
+
+            for (var i = 0; i < ordenes.length; i++) {
+
+                $('<input />').attr('type', 'hidden')
+                    .attr('name', "ordenes")
+                    .attr('value', ordenes[i])
+                    .appendTo(form);
+            }*/
+
+
+            if ($("#nazanTipo").prop("checked")) {
+                $('<input />').attr('type', 'hidden')
+                    .attr('nazan', "ordenes")
+                    .attr('value', true)
+                    .appendTo(form);
+            }
+
+        });
+    });
+
+    </script>
+
+
+}

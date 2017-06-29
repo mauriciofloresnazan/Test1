@@ -1,0 +1,85 @@
+﻿@using System.Data
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Generar  Etiquetas - Resultado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var proveedor = (proveedore)ViewBag.Proveedor;
+    bool puedeDescargar = ViewBag.PuedeDescargar;
+    DataTable resultado = ViewBag.Resultado;
+    resultado.DefaultView.Sort = "TYPE DESC";
+
+    var dv = resultado.DefaultView;
+    dv.Sort = "TYPE DESC";
+    resultado = dv.ToTable();
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-ticket" aria-hidden="true"></i> <i>Generación del archivo de Etiquetas en formato csv.</i>
+</p>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Resultado de la generación</div>
+    <div class="panel-body">
+
+
+        <dl class="dl-horizontal">
+            <dt>Razón Social</dt>
+            <dd>@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</dd>
+            <dt>RFC</dt>
+            <dd>@proveedor.Rfc</dd>
+            <dt>Resultado</dt>
+            <dd>
+                <ul>
+                    @foreach (DataRow dr in resultado.Rows)
+                    {
+                        var cssClass = "bg-success";
+                        if (dr["TYPE"].ToString().ToUpper() == "E")
+                        {
+                            cssClass = "bg-danger";
+                        }
+                        <li class="@cssClass" style="margin: 2px;">@dr["MESSAGE"]</li>
+    
+                    }
+                </ul>
+            </dd>
+            @if (puedeDescargar)
+            {
+                <dt>Archivo</dt>
+                <dd><a class="btn btn-primary" href="@Url.Action("Descargar","ImpresionEtiquetas")"><i class="fa fa-download"></i> Descargar</a></dd>
+            } 
+        </dl>
+        <a class="btn btn-default" href="@Url.Action("Index", "ImpresionEtiquetas")"><i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
+        
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+        var form = $("#form");
+
+        $(document).ready(function () {
+            form.submit(function () {
+                $('<input />').attr('type', 'hidden')
+                    .attr('name', "ordenes")
+                    .attr('value', ["1", "2"])
+                    .appendTo(form);
+
+                if ($("#nazanTipo").prop("checked")) {
+                    $('<input />').attr('type', 'hidden')
+                       .attr('nazan', "ordenes")
+                       .attr('value', true)
+                       .appendTo(form);
+                }
+
+            });
+        });
+
+    </script>
+
+
+}
