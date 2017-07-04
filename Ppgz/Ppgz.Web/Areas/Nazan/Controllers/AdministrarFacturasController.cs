@@ -17,7 +17,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             if (!string.IsNullOrWhiteSpace(fecha))
             {
-                fechaInicio = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture).AddMonths(-3);
+                fechaInicio = DateTime.ParseExact(fecha, "MM/yyyy", CultureInfo.InvariantCulture);
+                fechaInicio = new DateTime(fechaInicio.Year, fechaInicio.Month, 1);
             }
 
 
