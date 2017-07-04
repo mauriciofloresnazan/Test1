@@ -50,7 +50,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 ws.Cell(row, "B").Value = detalle.Descripcion;
                 ws.Cell(row, "C").Value = orden.CrossD == "X" ? orden.TiDest : detalle.Centro;
                 ws.Cell(row, "D").Value = detalle.CantidadPedido;
-                ws.Cell(row, "E").Value = detalle.PrecioNeto;
+                //ws.Cell(row, "E").Value = detalle.PrecioNeto;
 
                 row++;
             }
