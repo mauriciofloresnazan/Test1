@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using ClosedXML.Excel;
 using MySql.Data.MySqlClient;
@@ -24,6 +25,32 @@ namespace Test
 {
     class Program
     {
+        static void TestRule()
+        {
+            Console.WriteLine(RulesManager.Regla2(DateTime.Today.AddDays(1)));
+            Console.ReadLine();
+        }
+
+        static void TestEtiquetas()
+        {
+            var ordenes = new[]
+            {
+                "4700000080", "0000500000",
+                "4700000081", "4700000082", "4700000083", "4700000084", "4700000085", "4700000086",
+                "4700000087", 
+                "4700000088", "4700000089","4700000080","4700000080","4700000080","4700000080",
+            };
+
+            var sapEtiquetasManager = new SapEtiquetasManager();
+            var resultado = sapEtiquetasManager.GetContenidoCsv("0000500000", true, ordenes);
+
+            Console.WriteLine(string.Join(",", (string[])resultado["s_orders"]));
+            Console.WriteLine(string.Join(",", (string[])resultado["e_orders"]));
+            Console.WriteLine(resultado["csv"]);
+            Console.ReadLine();
+
+        }
+
         static void TestExcel()
         {
             var fileName = Guid.NewGuid() + ".xlsx";
@@ -119,7 +146,24 @@ namespace Test
         
         static void ValidarSat()
         {
-            var factura = File.ReadAllText(@"C:\temp\borrar\miro\4EEC-A....xml");
+
+            var serializer = new XmlSerializer(typeof(Comprobante));
+
+            //var factura = File.ReadAllText(@"C:\temp\borrar\miro\4EEC-A....xml");
+            //var factura = File.ReadAllText(@"C:\Users\Juan\Downloads\fwdrvfacturasutilizadasenpruebas\-2017-04-07-FOJG690223SE5_i_9378_09.41.06.20170407_2298C412-8116-46AD-B55C-A3A3684FAAF9.pdf");
+            //var factura = File.ReadAllText(@"C:\Users\Juan\Downloads\fwdrvfacturasutilizadasenpruebas\F0000004597.xml");
+            var factura = File.ReadAllText(@"C:\Users\Juan\Downloads\fwdrvfacturasutilizadasenpruebas\-2017-04-07-RILG7812305Q9_i_6388_10.02.56.20170407_18ECB762-C296-4EAF-8D33-E12AFE1962FF.pdf");
+            
+            var archivoXml = new StreamReader(@"C:\Users\Juan\Downloads\fwdrvfacturasutilizadasenpruebas\F0000004597_1_mod.xml");
+
+
+            //var doc = XDocument.Load(archivoXml);
+            /*var test = from folios in doc.Root.Elements("folio")
+                            //where address.Element("firstName").Value.Contains("er")
+                       select folios;*/
+
+            //var comprobante = (Comprobante)serializer.Deserialize(archivoXml);
+
             try
             {
                 var consulta = CfdiServiceConsulta.Validar(factura, "tokSY9Db304Kx", "pswNfFPAaQhJ2", "usraLYhIjXOCJ", "ctaduPw4Xeh0w", "NCC1011058I0");
@@ -171,7 +215,7 @@ namespace Test
 
         static void Main(string[] args)
         {
-            TestScale();
+            TestRule();
             return;
 
             /*ValidarSat();

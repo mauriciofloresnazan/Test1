@@ -73,6 +73,7 @@
     </Compile>
     <Compile Include="ConfiguracionesManager.cs" />
     <Compile Include="CuentaManager.cs" />
+    <Compile Include="EtiquetasManager.cs" />
     <Compile Include="FacturaManager.cs" />
     <Compile Include="MensajesResource.Designer.cs">
       <DependentUpon>MensajesResource.resx</DependentUpon>

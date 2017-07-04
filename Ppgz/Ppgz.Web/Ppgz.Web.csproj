@@ -336,9 +336,8 @@
     <Content Include="assets\vendor\bootstrap-toggle-master\LICENSE" />
     <Content Include="assets\vendor\bootstrap-toggle-master\package.json" />
     <Content Include="assets\vendor\bootstrap-toggle-master\README.md" />
-    <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetas\Index.cshtml">
-      <SubType>Code</SubType>
-    </Content>
+    <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetas\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetas\Generar.cshtml" />
     <Compile Include="Infrastructure\FileManager.cs" />
     <Compile Include="Infrastructure\Nazan\MensajesInstitucionalesManager.cs" />
     <Compile Include="Infrastructure\TerminosCondiciones.cs" />
@@ -1198,6 +1197,7 @@
     <Content Include="App_Data\plantilladevoluciones.xlsx" />
     <Content Include="App_Data\plantillapagospendientes.xlsx" />
     <Content Include="App_Data\plantillareporte.xlsx" />
+    <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetas\Resultado.cshtml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
