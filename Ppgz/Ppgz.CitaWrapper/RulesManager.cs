@@ -263,7 +263,9 @@ namespace Ppgz.CitaWrapper
 
 
         /// <summary>
-        /// 2.	El proveedor tiene hasta las 5pm del día en curso para poder seleccionar cita para el día siguiente
+        /// 2.	El proveedor tiene hasta las 5pm del día en curso para poder seleccionar
+        /// cita para el día siguiente. Como valor agregado colocamos el parámetro en la
+        /// tabla de configuraciones.
         /// </summary>
         public static bool Regla2(DateTime fechaCita)
         {
@@ -274,8 +276,10 @@ namespace Ppgz.CitaWrapper
 
             if (fechaCita != manana) return true;
 
-            // TODO pasar la hora limite al la tabla de configuraciones
-            return DateTime.Now.Hour <= 17;
+            var horaTope = Convert.ToInt32(GetConfiguraciones()
+                .Single(c => c.Clave == "warehouse.deadline-hour-next-day").Valor);
+
+            return DateTime.Now.Hour <= horaTope;
         }
 
         /// <summary>
