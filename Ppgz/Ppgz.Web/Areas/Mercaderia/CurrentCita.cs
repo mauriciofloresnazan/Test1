@@ -113,6 +113,7 @@ namespace Ppgz.Web.Areas.Mercaderia
             else
             {
                 _ordenesActivas = result
+                    .Where(o => !o.EsCrossDock)
                     .Where(o => o.Detalles.Any(de => String.Equals(de.Centro, centro, StringComparison.CurrentCultureIgnoreCase)))
                     .Where(o => o.TotalPermitido > 0)
                     .ToList();
@@ -122,7 +123,7 @@ namespace Ppgz.Web.Areas.Mercaderia
                
             if (!_ordenesActivas.Any())
             {
-                throw new BusinessException("No hay Órdenes de Compras con entregas disponibles para crear una Cita. Por favor verifique su selección (Proveedor, Almacén, Cross Dock).");
+                throw new BusinessException("No hay Órdenes de Compras con entregas disponibles para crear una Cita. Por favor verifique su selección (Proveedor, Almacén, Directo a Tienda).");
             }
 
             Centro = centro;
