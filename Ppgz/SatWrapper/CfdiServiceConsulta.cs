@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using log4net;
 using SatWrapper.CFDIService;
 
 namespace SatWrapper
@@ -10,6 +11,7 @@ namespace SatWrapper
 	/// <summary>Clase estática que realiza la consulta con el Servicio del SAT, en base a un archivo XML enviado. </summary>
 	public static class CfdiServiceConsulta
 	{
+        public static readonly ILog ErrorAppLog = LogManager.GetLogger(@"ErrorAppLog");
         public static bool Validar(string contenidoArchivo, string token, string password, string user, string cuenta, string rfcReceptor)
         {
 
@@ -44,11 +46,12 @@ namespace SatWrapper
                 if (cient != null)
                     cient.Abort();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                ErrorAppLog.Error(string.Format(ex.Message));
                 if (cient != null)
                     cient.Abort();
-                throw;
+                throw new Exception("No es posible realizar la validación de la factura en este momento. Por favor intente mas tarde.");
             }
             finally
             {

@@ -46,7 +46,7 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.Xml, new { @class = "col-sm-3 control-label" })
                 <div class="col-sm-7">
-                    @Html.TextBoxFor(m => m.Xml, new { @type = "file" })
+                    @Html.TextBoxFor(m => m.Xml, new { @type = "file", @accept = "application/xml" })
                     @Html.ValidationMessageFor(m => m.Xml)
     
                 </div>
@@ -55,7 +55,7 @@
             <div class="form-group">
                 @Html.LabelFor(m => m.Pdf, new { @class = "col-sm-3 control-label" })
                 <div class="col-sm-7">
-                    @Html.TextBoxFor(m => m.Pdf, new { @type = "file" })
+                    @Html.TextBoxFor(m => m.Pdf, new { @type = "file", @accept = "application/pdf" })
                     @Html.ValidationMessageFor(m => m.Xml)
     
                 </div>

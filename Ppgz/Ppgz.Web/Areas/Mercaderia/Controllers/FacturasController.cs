@@ -100,12 +100,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         {
             if (file != null && file.ContentType != "text/xml")
             {
-                throw new BusinessException("Xml Invalido");
+                throw new BusinessException("El archivo no puede ser procesado");
             }
 
             if (file == null)
             {
-                throw new BusinessException("Xml Invalido");
+                throw new BusinessException("El archivo no puede ser procesado");
             }
 
             _facturaManager.ValidarFactura(file.InputStream);

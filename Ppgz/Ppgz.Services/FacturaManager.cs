@@ -34,8 +34,8 @@ namespace Ppgz.Services
             }
             catch (Exception )
             {
-                
-                throw new BusinessException("Xml incorrecto");
+
+                throw new BusinessException("-1 - Documento no validable (¿no es un cfdi?)");
             }
         }
 
@@ -69,6 +69,8 @@ namespace Ppgz.Services
             
             if (_db.facturas.FirstOrDefault(fa => fa.Uuid == comprobante.Complemento.TimbreFiscalDigital.UUID) != null)
             {
+                xmlFileStream.Close();
+                xmlFileStream.Dispose();
                 throw new BusinessException("La factura ya esta registrada en el sistema");
             }
 
@@ -76,16 +78,22 @@ namespace Ppgz.Services
             
             if (proveedor == null)
             {
+                xmlFileStream.Close();
+                xmlFileStream.Dispose();
                 throw new BusinessException("Proveedor incorrecto en la factura");
             }
 
             if (proveedor.Id != proveedorId)
             {
+                xmlFileStream.Close();
+                xmlFileStream.Dispose();
                 throw new BusinessException("Proveedor incorrecto en la factura");
             }
 
             if (_db.facturas.FirstOrDefault(fa => fa.Uuid == comprobante.Complemento.TimbreFiscalDigital.UUID) != null)
             {
+                xmlFileStream.Close();
+                xmlFileStream.Dispose();
                 throw new BusinessException("La factura ya esta registrada en el sistema");
             }
             xmlFileStream.Close();
@@ -100,8 +108,16 @@ namespace Ppgz.Services
             var cfdiPassword = configuraciones.Single(c => c.Clave == "cfdi.password").Valor;
             var cfdiUser = configuraciones.Single(c => c.Clave == "cfdi.user").Valor;
             var cfdiCuenta = configuraciones.Single(c => c.Clave == "cfdi.cuenta").Valor;
-
-            CfdiServiceConsulta.Validar(contenido, cfdiToken, cfdiPassword, cfdiUser, cfdiCuenta, comprobante.Receptor.Rfc);
+            try
+            {
+                CfdiServiceConsulta.Validar(contenido, cfdiToken, cfdiPassword, cfdiUser, cfdiCuenta, comprobante.Receptor.Rfc);
+            }
+            catch (Exception)
+            {
+                xmlFileStream.Close();
+                xmlFileStream.Dispose();
+                throw;
+            }
             
             //Creacion de la factura para la miro
             var cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
