@@ -76,16 +76,6 @@ namespace Ppgz.Web.Infrastructure.Nazan
   
         }
 
-        public List<vwmensaje> FindPublicadosByCuentaId(int cuentaId)
-        {
-            var cuentaManager = new CuentaManager();
-
-            var cuenta = cuentaManager.Find(cuentaId);
-
-            return _db.vwmensajes
-                .Where(m => m.FechaPublicacion < DateTime.Now && (m.EnviadoA == "TODOS" || m.EnviadoA == cuenta.Tipo))
-                .ToList();
-        }
 
         public List<mensaje> FindMensajesVigentesByCuentaId(int cuentaId)
         {
