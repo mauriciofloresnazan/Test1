@@ -38,7 +38,6 @@ namespace Ppgz.Repository
         public virtual DbSet<cuenta> cuentas { get; set; }
         public virtual DbSet<cuentasmensaje> cuentasmensajes { get; set; }
         public virtual DbSet<estatuscita> estatuscitas { get; set; }
-        public virtual DbSet<etiqueta> etiquetas { get; set; }
         public virtual DbSet<factura> facturas { get; set; }
         public virtual DbSet<horarioriele> horariorieles { get; set; }
         public virtual DbSet<horario> horarios { get; set; }
@@ -51,7 +50,5 @@ namespace Ppgz.Repository
         public virtual DbSet<proveedore> proveedores { get; set; }
         public virtual DbSet<riele> rieles { get; set; }
         public virtual DbSet<ScaleAlmacen> ScaleAlmacens { get; set; }
-        public virtual DbSet<vwdashboard> vwdashboards { get; set; }
-        public virtual DbSet<vwmensaje> vwmensajes { get; set; }
     }
 }

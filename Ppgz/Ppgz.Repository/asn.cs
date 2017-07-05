@@ -28,6 +28,7 @@ namespace Ppgz.Repository
         public Nullable<int> CantidadPedidoSap { get; set; }
         public string InOut { get; set; }
         public string NumeroOrdenSurtido { get; set; }
+        public string NumeroMaterial2 { get; set; }
     
         public virtual cita cita { get; set; }
     }

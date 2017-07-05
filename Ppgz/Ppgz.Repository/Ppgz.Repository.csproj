@@ -97,9 +97,6 @@
     <Compile Include="estatuscita.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
-    <Compile Include="etiqueta.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
     <Compile Include="factura.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -152,18 +149,14 @@
     <Compile Include="ScaleAlmacen.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
-    <Compile Include="vwdashboard.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
-    <Compile Include="vwmensaje.cs">
-      <DependentUpon>Ppgz.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <EntityDeploy Include="Ppgz.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
