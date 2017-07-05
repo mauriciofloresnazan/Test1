@@ -49,7 +49,7 @@
                         <th class="text-center">Total</th>
                         <th class="text-center">Estatus</th>
                         <th class="text-center">Comentario</th>
-                        <th class="text-center">Descargar</th>
+                        <th class="text-center">Opciones</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -72,8 +72,8 @@
                             <td class="text-center vert-align">
 
                                 <div class="btn-group btn-group-vertical" role="group" aria-label="Archivos">
-                                    <a class="btn btn-danger btn-xs btn-block" href="@Url.Action("DescargarXml", "AdministrarFacturas", new {proveedorId = @factura.proveedore.Id, facturaId = @factura.Id})"><i class="fa fa-file-code-o" aria-hidden="true"></i> XML </a>
-                                    <a class="btn btn-warning btn-xs btn-block" href="@Url.Action("DescargarPdf", "AdministrarFacturas", new {proveedorId = @factura.proveedore.Id, facturaId = @factura.Id})"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF </a>
+                                    <a class="btn btn-danger btn-xs btn-block" href="@Url.Action("DescargarXml", "AdministrarFacturas", new {proveedorId = @factura.proveedore.Id, facturaId = @factura.Id})"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-file-code-o" aria-hidden="true"></i> XML </a>
+                                    <a class="btn btn-warning btn-xs btn-block" href="@Url.Action("DescargarPdf", "AdministrarFacturas", new {proveedorId = @factura.proveedore.Id, facturaId = @factura.Id})"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF </a>
                                     <a class="btn btn-primary btn-xs btn-block btn-modificar-factura" data-facturaid="@factura.Id" data-facturaserie="@factura.Serie" data-facturafolio="@factura.Folio" data-facturaestatus="@factura.Estatus" data-facturauuid="@factura.Uuid" data-facturacomentario="@factura.Comentario" data-facturanumerogenerado="@factura.NumeroGenerado"><i class="fa fa-edit" aria-hidden="true"></i> MODIFICAR </a>
                                 </div>
                             </td>
