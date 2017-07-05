@@ -241,7 +241,7 @@ namespace Ppgz.CitaWrapper
         {
             // Limpieza de fecha
             var fecha = fechaCita.Date;
-            var manana = DateTime.Today.Date.AddDays(1);
+            var manana = DateTime.Today.Date.AddDays(1).Date;
 
             if (fecha < manana)
             {
