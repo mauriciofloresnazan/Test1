@@ -599,7 +599,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         InOut = preAsn.InOut,
                         Precio = preAsnDetail.Precio,
                         UnidadMedida = preAsnDetail.UnidadMedida,
-                        NumeroSurtido = preAsn.NumeroOrdenSurtido
+                        NumeroSurtido = preAsn.NumeroOrdenSurtido,
+                        NumeroMaterial2 = preAsnDetail.NumeroMaterial2
 					});
 				}
 			}

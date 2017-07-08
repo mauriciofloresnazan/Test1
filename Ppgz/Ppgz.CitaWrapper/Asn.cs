@@ -49,5 +49,9 @@ namespace Ppgz.CitaWrapper
    
         /// <summary>Numero de Surtido. </summary>
         public string NumeroSurtido;
+
+
+        /// <summary>Numero de Material2 Usado par Scale. </summary>
+        public string NumeroMaterial2;
     }
 }

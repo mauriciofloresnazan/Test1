@@ -220,7 +220,7 @@ namespace ScaleWrapper
 
             return id;
         }
-        internal void InsertarDetail(string interfaceLinkId, string almacenScale, asn asn)
+        /*internal void InsertarDetail(string interfaceLinkId, string almacenScale, asn asn)
         {
             var id = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHHmmssfff"), asn.cita.Id);
 
@@ -273,7 +273,7 @@ namespace ScaleWrapper
 
             DbScale.Insert(sql, parameters);
         }
-
+        */
 
         internal void InsertarDetails(string interfaceLinkId, string almacenScale, List<asn> asns)
         {
@@ -344,7 +344,7 @@ namespace ScaleWrapper
                 parameters.Add(new SqlParameter("@INTERFACE_ACTION_CODE" + index, "Save"));
                 parameters.Add(new SqlParameter("@INTERFACE_CONDITION" + index, "Ready"));
                 parameters.Add(new SqlParameter("@ERP_ORDER_LINE_NUM" + index, asn.NumeroPosicion));
-                parameters.Add(new SqlParameter("@item" + index, asn.NumeroMaterial));
+                parameters.Add(new SqlParameter("@item" + index, asn.NumeroMaterial2));
                 parameters.Add(new SqlParameter("@ITEM_NET_PRICE" + index, asn.Precio));
                 parameters.Add(new SqlParameter("@user_def5" + index, asn.cita.FechaCita.ToString("yyyyMMdd")));
                 parameters.Add(new SqlParameter("@TOTAL_QTY" + index, asn.CantidadPedidoSap));

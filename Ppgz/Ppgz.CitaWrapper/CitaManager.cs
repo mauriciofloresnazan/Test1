@@ -254,7 +254,8 @@ namespace Ppgz.CitaWrapper
                     UnidadMedida = asn.UnidadMedida,
                     CantidadPedidoSap = asn.CantidadSolicitada,
                     InOut = asn.InOut,
-                    NumeroOrdenSurtido = asn.NumeroSurtido
+                    NumeroOrdenSurtido = asn.NumeroSurtido,
+                    NumeroMaterial2 = asn.NumeroMaterial2
                 });
             }
 

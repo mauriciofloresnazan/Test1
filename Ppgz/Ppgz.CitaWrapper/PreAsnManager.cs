@@ -128,7 +128,7 @@ namespace Ppgz.CitaWrapper
                     CantidadPedido = detalle.CantidadPedido, 
                     DescripcionMaterial = detalle.Descripcion, 
                     NumeroMaterial = detalle.NumeroMaterial,
-
+                    NumeroMaterial2 = detalle.NumeroMaterial2,
                     Precio = detalle.ValorNeto,
                     UnidadMedida = detalle.UnidadMedidaPedido,
 

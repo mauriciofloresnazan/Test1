@@ -18,7 +18,7 @@ namespace SapWrapper
             Centro = dataRow["WERKS"].ToString();
 
             Almacen = dataRow["LGORT"].ToString();
- 
+
             GrupoArticulos = dataRow["MATKL"].ToString();
 
             CantidadPedido = decimal.ToInt32(Convert.ToDecimal(dataRow["MENGE"].ToString()));
@@ -32,7 +32,7 @@ namespace SapWrapper
             Umrez = Convert.ToDecimal(dataRow["UMREZ"].ToString());
 
             Umren = Convert.ToDecimal(dataRow["UMREN"].ToString());
- 
+
             PrecioNeto = Convert.ToDecimal(dataRow["NETPR"].ToString());
 
             CantidadBase = Convert.ToDecimal(dataRow["PEINH"].ToString());
@@ -41,12 +41,16 @@ namespace SapWrapper
 
             ValorBruto = Convert.ToDecimal(dataRow["BRTWR"].ToString());
 
-         CantidadPorEntregar = decimal.ToInt32(Convert.ToDecimal(dataRow["ERFMG"].ToString()));
+            CantidadPorEntregar = decimal.ToInt32(Convert.ToDecimal(dataRow["ERFMG"].ToString()));
 
-         FechaEntrega = DateTime.ParseExact(
-                dataRow["EINDT"].ToString(),
-                "yyyyMMdd",
-                System.Globalization.CultureInfo.InvariantCulture);
+            FechaEntrega = DateTime.ParseExact(
+                   dataRow["EINDT"].ToString(),
+                   "yyyyMMdd",
+                   System.Globalization.CultureInfo.InvariantCulture);
+
+            EntregaCompleta = dataRow["ELIKZ"].ToString();
+
+            NumeroMaterial2 = dataRow["BISMT"].ToString();
         }
 
         /// <summary>
@@ -130,5 +134,9 @@ namespace SapWrapper
         /// ELIKZ Indicador de Entrega completada devuelve el valor X
         /// </summary>
         public string EntregaCompleta;
+        /// <summary>
+        /// BISMT	Número de material
+        /// </summary>
+        public string NumeroMaterial2;
     }
 }

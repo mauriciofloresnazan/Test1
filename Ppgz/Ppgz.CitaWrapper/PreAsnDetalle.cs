@@ -30,6 +30,6 @@
 
         public string DescripcionMaterial;
 
-
+        public string NumeroMaterial2;
     }
 }
