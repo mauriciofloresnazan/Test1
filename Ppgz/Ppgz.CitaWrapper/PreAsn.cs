@@ -17,6 +17,7 @@ namespace Ppgz.CitaWrapper
         public string TiendaOrigen;
         public string InOut;
         public string NumeroOrdenSurtido;
+        public string Centro;
 
         public ICollection<PreAsnDetalle> Detalles { get; set; }
 

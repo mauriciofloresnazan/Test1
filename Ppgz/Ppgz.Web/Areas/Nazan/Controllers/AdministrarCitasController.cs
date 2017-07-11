@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using MySql.Data.MySqlClient;
+using Ppgz.CitaWrapper;
 using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
 
@@ -332,7 +333,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             db.Entry(cita).State = EntityState.Modified;
             db.SaveChanges();
 
-
+            CitaManager.ActualizarFechaScale(citaId);
 
             var correos = cita.proveedore.cuenta.AspNetUsers.Select(u => u.Email).ToArray();
 

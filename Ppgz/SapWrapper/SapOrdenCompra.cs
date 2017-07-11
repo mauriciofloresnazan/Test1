@@ -10,6 +10,7 @@ namespace SapWrapper
         {
             NumeroDocumento = dataRow["EBELN"].ToString();
             Sociedad = dataRow["BUKRS"].ToString();
+            Centro = dataRow["WERKS"].ToString();
             TipoDocumento = dataRow["BSTYP"].ToString();
             ClaseDocumento = dataRow["BSART"].ToString();
             IndicadorControl = dataRow["BSAKZ"].ToString();
@@ -47,6 +48,11 @@ namespace SapWrapper
         /// BUKRS
         /// </summary>
         public String Sociedad;
+
+        /// <summary>
+        /// WERKS	Centro
+        /// </summary>
+        public String Centro;
 
         /// <summary>
         /// BSTYP

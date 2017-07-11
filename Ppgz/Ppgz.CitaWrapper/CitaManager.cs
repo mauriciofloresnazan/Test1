@@ -191,13 +191,7 @@ namespace Ppgz.CitaWrapper
 
             return true;
         }
-
-
-
-
-
-
-
+        
         public static void RegistrarCita(PreCita precita)
         {
 
@@ -216,6 +210,7 @@ namespace Ppgz.CitaWrapper
 
 
             ValidarCita(precita);
+            db = new Entities();
 
             if (db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad == false))
             {
@@ -255,7 +250,8 @@ namespace Ppgz.CitaWrapper
                     CantidadPedidoSap = asn.CantidadSolicitada,
                     InOut = asn.InOut,
                     NumeroOrdenSurtido = asn.NumeroSurtido,
-                    NumeroMaterial2 = asn.NumeroMaterial2
+                    NumeroMaterial2 = asn.NumeroMaterial2,
+                    Centro = asn.Centro
                 });
             }
 
@@ -283,8 +279,7 @@ namespace Ppgz.CitaWrapper
               
             });
         }
-
-
+        
         public static void CancelarCita(int citaId)
         {
             var db = new Entities();
@@ -306,10 +301,31 @@ namespace Ppgz.CitaWrapper
             db.Entry(cita).State = EntityState.Deleted;
             db.SaveChanges();
 
+            Task.Factory.StartNew(() =>
+            {
+                var scaleManager = new ScaleManager();
+                scaleManager.Cancelar(citaId);
+            });
 
         }
 
-
+        public static void ActualizarFechaScale(int citaId)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                var scaleManager = new ScaleManager();
+                scaleManager.ActualizarFecha(citaId);
+            });
+        }
+        
+        public static void ActualizarCantidadScale(int[] asnIds)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                var scaleManager = new ScaleManager();
+                scaleManager.ActualizarCantidad(asnIds);
+            });
+        }
     }
 }
 

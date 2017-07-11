@@ -10,20 +10,12 @@ namespace ScaleWrapper
 {
     public class ScaleManager
     {
-        public static readonly ILog ErrorAppLog = LogManager.GetLogger(@"ErrorAppLog");
+        public readonly ILog ErrorAppLog = LogManager.GetLogger(@"ErrorAppLog");
 
+    
         public void Registrar(cita cita)
         {
             var entities = new Entities();
-            var almacenScale = entities.ScaleAlmacens.FirstOrDefault(sa => sa.Sap == cita.Almacen);
-
-            if (almacenScale == null)
-            {
-
-                ErrorAppLog.Error(string.Format("El Almacén {0} no esta configurado para Scale. Error en la Cita # {1}", cita.Almacen, cita.Id));
-                return;
-            }
-
             var numerosDocumentos = cita.asns.Select(asn=> asn.OrdenNumeroDocumento).Distinct();
 
             foreach (var numeroDocumento in numerosDocumentos)
@@ -32,16 +24,19 @@ namespace ScaleWrapper
 
                 var orden = cita.asns
                     .FirstOrDefault(asn => asn.OrdenNumeroDocumento == documento);
-                
+  
+                var almacenScale = entities.ScaleAlmacens.FirstOrDefault(sa => sa.Sap == orden.Centro);
+
+                if (almacenScale == null)
+                {
+                    ErrorAppLog.Error(string.Format("El Almacén {0} no está configurado para Scale. Error en la Cita # {1},  Órden {2}", orden.Centro, cita.Id, orden.OrdenNumeroDocumento));
+                    continue;
+                }
 
                var id = InsertarHeader(cita, almacenScale.Scale, numeroDocumento, orden.TiendaOrigen,orden.Tienda, orden.NumeroOrdenSurtido, orden.InOut);
 
                 var asns = cita.asns.Where(asn => asn.OrdenNumeroDocumento == numeroDocumento).ToList();
 
-                /*foreach (var asn in asns)
-                {
-                    InsertarDetail(id, almacenScale.Scale, asn);
-                }*/
                 InsertarDetails(id,almacenScale.Scale, asns);
             }
         }
@@ -220,60 +215,6 @@ namespace ScaleWrapper
 
             return id;
         }
-        /*internal void InsertarDetail(string interfaceLinkId, string almacenScale, asn asn)
-        {
-            var id = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHHmmssfff"), asn.cita.Id);
-
-            var parameters = new List<SqlParameter>
-            {
-                new SqlParameter(
-                   "@INTERFACE_RECORD_ID",id),
-                    new SqlParameter("@Interface_link_id", interfaceLinkId),
-                    new SqlParameter("@warehouse", almacenScale),
-                    new SqlParameter("@INTERFACE_ACTION_CODE", "Save"),
-                    new SqlParameter("@INTERFACE_CONDITION", "Ready"),
-                    new SqlParameter("@ERP_ORDER_LINE_NUM", asn.NumeroPosicion),
-                    new SqlParameter("@item", asn.NumeroMaterial),
-                    new SqlParameter("@ITEM_NET_PRICE", asn.Precio),
-                    new SqlParameter("@user_def5",asn.cita.FechaCita.ToString("yyyyMMdd")),
-                    new SqlParameter("@TOTAL_QTY", asn.CantidadPedidoSap),
-                    new SqlParameter("@QUANTITY_UM", asn.UnidadMedida),
-              
-
-            };
-
-            var sql = string.Format(@"
-
-                INSERT INTO DOWNLOAD_RECEIPT_DETAIL 
-                   (INTERFACE_RECORD_ID,
-                    Interface_link_id,
-                    warehouse,
-                    INTERFACE_ACTION_CODE,
-                    INTERFACE_CONDITION,
-                    ERP_ORDER_LINE_NUM,
-                    item,
-                    ITEM_NET_PRICE,
-                    user_def5,
-                    TOTAL_QTY,
-                    QUANTITY_UM,
-                    DATE_TIME_STAMP) 
-                VALUES      
-                   (@INTERFACE_RECORD_ID,
-                    @Interface_link_id,
-                    @warehouse,
-                    @INTERFACE_ACTION_CODE,
-                    @INTERFACE_CONDITION,
-                    @ERP_ORDER_LINE_NUM,
-                    @item,
-                    @ITEM_NET_PRICE,
-                    @user_def5,
-                    @TOTAL_QTY,
-                    @QUANTITY_UM,
-                    GETDATE());");
-
-            DbScale.Insert(sql, parameters);
-        }
-        */
 
         internal void InsertarDetails(string interfaceLinkId, string almacenScale, List<asn> asns)
         {
@@ -347,7 +288,7 @@ namespace ScaleWrapper
                 parameters.Add(new SqlParameter("@item" + index, asn.NumeroMaterial2));
                 parameters.Add(new SqlParameter("@ITEM_NET_PRICE" + index, asn.Precio));
                 parameters.Add(new SqlParameter("@user_def5" + index, asn.cita.FechaCita.ToString("yyyyMMdd")));
-                parameters.Add(new SqlParameter("@TOTAL_QTY" + index, asn.CantidadPedidoSap));
+                parameters.Add(new SqlParameter("@TOTAL_QTY" + index, asn.Cantidad));
                 parameters.Add(new SqlParameter("@QUANTITY_UM" + index, asn.UnidadMedida.Substring(0, 3)));
 
                 sql.AppendLine(@"(@INTERFACE_RECORD_ID"+ index + @",
@@ -362,61 +303,153 @@ namespace ScaleWrapper
                     @TOTAL_QTY" + index + @",
                     @QUANTITY_UM" + index + @",
                     GETDATE())");
-                /*if (index + 1 < asns.Count)
-                {
-                    sql.Append(",");
-                }*/
             }
-
-            /*var parameters = new List<SqlParameter>
-            {
-                new SqlParameter(
-                   "@INTERFACE_RECORD_ID",id),
-                    new SqlParameter("@Interface_link_id", interfaceLinkId),
-                    new SqlParameter("@warehouse", almacenScale),
-                    new SqlParameter("@INTERFACE_ACTION_CODE", "Save"),
-                    new SqlParameter("@INTERFACE_CONDITION", "Ready"),
-                    new SqlParameter("@ERP_ORDER_LINE_NUM", asn.NumeroPosicion),
-                    new SqlParameter("@item", asn.NumeroMaterial),
-                    new SqlParameter("@ITEM_NET_PRICE", asn.Precio),
-                    new SqlParameter("@user_def5",asn.cita.FechaCita.ToString("yyyyMMdd")),
-                    new SqlParameter("@TOTAL_QTY", asn.CantidadPedidoSap),
-                    new SqlParameter("@QUANTITY_UM", asn.UnidadMedida),
-              
-
-            };
-
-            var sql = string.Format(@"
-
-                INSERT INTO DOWNLOAD_RECEIPT_DETAIL 
-                   (INTERFACE_RECORD_ID,
-                    Interface_link_id,
-                    warehouse,
-                    INTERFACE_ACTION_CODE,
-                    INTERFACE_CONDITION,
-                    ERP_ORDER_LINE_NUM,
-                    item,
-                    ITEM_NET_PRICE,
-                    user_def5,
-                    TOTAL_QTY,
-                    QUANTITY_UM,
-                    DATE_TIME_STAMP) 
-                VALUES      
-                   (@INTERFACE_RECORD_ID,
-                    @Interface_link_id,
-                    @warehouse,
-                    @INTERFACE_ACTION_CODE,
-                    @INTERFACE_CONDITION,
-                    @ERP_ORDER_LINE_NUM,
-                    @item,
-                    @ITEM_NET_PRICE,
-                    @user_def5,
-                    @TOTAL_QTY,
-                    @QUANTITY_UM,
-                    GETDATE());");*/
 
             DbScale.Insert(sql.ToString(), parameters);
         }
-        
+
+        public void Cancelar(int citaId)
+        {
+
+            if (citaId < 1)
+            {
+                ErrorAppLog.Error(string.Format("Cita # {0} incorrecta", citaId));
+                return;
+            }
+
+            const string sql = @"
+
+                UPDATE DOWNLOAD_RECEIPT_DETAIL
+                SET    INTERFACE_CONDITION = 'Ready',
+                       INTERFACE_ACTION_CODE = 'Delete'
+                WHERE  INTERFACE_LINK_ID IN(SELECT INTERFACE_RECORD_ID FROM DOWNLOAD_RECEIPT_HEADER WHERE USER_DEF8 = @CitaId)
+
+                UPDATE DOWNLOAD_RECEIPT_HEADER
+                SET    INTERFACE_CONDITION = 'Ready',
+                       INTERFACE_ACTION_CODE = 'Delete'
+                WHERE  USER_DEF8 = @CitaId";
+
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@CitaId", citaId)
+            };
+
+            try
+            {
+                DbScale.Insert(sql, parameters);
+            }
+            catch (Exception exception)
+            {
+                ErrorAppLog.Error(string.Format("Cita # {0}. {1}", citaId, exception.Message));
+            }
+            
+        }
+
+        public void ActualizarFecha(int citaId)
+        {
+            var entities = new Entities();
+
+            var cita = entities.citas.Find(citaId);
+
+            if (cita == null)
+            {
+                ErrorAppLog.Error(string.Format("Cita # {0} incorrecta", citaId));
+                return;
+            }
+
+            const string sql = @"
+
+                UPDATE DOWNLOAD_RECEIPT_DETAIL
+                SET    USER_DEF5 = @user_def5,
+	                   INTERFACE_CONDITION = 'Ready'
+                WHERE  INTERFACE_LINK_ID IN(SELECT INTERFACE_RECORD_ID FROM DOWNLOAD_RECEIPT_HEADER WHERE USER_DEF8 = @CitaId)
+
+                UPDATE DOWNLOAD_RECEIPT_HEADER
+                SET    RECEIPT_DATE = @RECEIPT_DATE, 
+	                   ARRIVED_DATE_TIME = @ARRIVED_DATE_TIME,
+	                   USER_DEF1 = @USER_DEF1,
+	                   INTERFACE_CONDITION = 'Ready'
+                WHERE  USER_DEF8 = @CitaId";
+
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@CitaId", citaId),
+                new SqlParameter("@user_def5", cita.FechaCita.ToString("yyyyMMdd")),
+
+                new SqlParameter("@RECEIPT_DATE", cita.FechaCita),
+                new SqlParameter("@ARRIVED_DATE_TIME", cita.FechaCita),
+                new SqlParameter("@user_def1", cita.FechaCita.ToString("yyyyMMdd")),
+            };
+
+            try
+            {
+                DbScale.Insert(sql, parameters);
+            }
+            catch (Exception exception)
+            {
+                ErrorAppLog.Error(string.Format("Cita # {0}. {1}", citaId, exception.Message));
+            }
+        }
+
+        public void ActualizarCantidad(int[] asnIds)
+        {
+            var entities = new Entities();
+
+            if (!asnIds.Any())
+            {
+                return;
+            }
+
+            foreach (var asnId in asnIds)
+            {
+                var asn = entities.asns.Find(asnId);
+
+                if (asn == null)
+                {
+                    ErrorAppLog.Error(string.Format("Asn # {0} incorrecto", asnId));
+                    return;
+                }
+                const string sql = @"
+
+                UPDATE DOWNLOAD_RECEIPT_DETAIL
+                SET    TOTAL_QTY = @cantidad,
+	                   INTERFACE_CONDITION = 'Ready'
+                WHERE  INTERFACE_LINK_ID IN(SELECT INTERFACE_RECORD_ID FROM DOWNLOAD_RECEIPT_HEADER WHERE USER_DEF8 = @CitaId AND ERP_ORDER_NUM = @ERP_ORDER_NUM)
+                AND    item = @item 
+                AND    ERP_ORDER_LINE_NUM = CAST (@ERP_ORDER_LINE_NUM AS NUMERIC)
+
+                UPDATE DOWNLOAD_RECEIPT_HEADER
+                SET    INTERFACE_CONDITION = 'Ready'
+                WHERE  USER_DEF8 = @CitaId
+                AND    ERP_ORDER_NUM = @ERP_ORDER_NUM";
+
+                var parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@CitaId", asn.cita.Id),
+                    new SqlParameter("@cantidad", asn.Cantidad),
+                    new SqlParameter("@ERP_ORDER_LINE_NUM", asn.NumeroPosicion),
+                    new SqlParameter("@item", asn.NumeroMaterial2),
+                    new SqlParameter("@ERP_ORDER_NUM", asn.OrdenNumeroDocumento),
+                };
+
+                try
+                {
+                    DbScale.Insert(sql, parameters);
+                }
+                catch (Exception exception)
+                {
+                    ErrorAppLog.Error(string.Format("Asn # {0}. {1}", asn.Id, exception.Message));
+                }
+
+
+
+            }
+
+
+          
+
+
+           
+        }
     }
 }

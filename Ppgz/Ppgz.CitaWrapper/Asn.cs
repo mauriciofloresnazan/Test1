@@ -53,5 +53,8 @@ namespace Ppgz.CitaWrapper
 
         /// <summary>Numero de Material2 Usado par Scale. </summary>
         public string NumeroMaterial2;
+
+        /// <summary>Centro que viene del ERP. </summary>
+        public string Centro;
     }
 }

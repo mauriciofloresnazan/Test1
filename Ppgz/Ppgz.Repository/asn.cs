@@ -29,6 +29,7 @@ namespace Ppgz.Repository
         public string InOut { get; set; }
         public string NumeroOrdenSurtido { get; set; }
         public string NumeroMaterial2 { get; set; }
+        public string Centro { get; set; }
     
         public virtual cita cita { get; set; }
     }

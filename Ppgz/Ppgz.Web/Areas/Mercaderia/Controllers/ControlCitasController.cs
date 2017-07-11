@@ -600,7 +600,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         Precio = preAsnDetail.Precio,
                         UnidadMedida = preAsnDetail.UnidadMedida,
                         NumeroSurtido = preAsn.NumeroOrdenSurtido,
-                        NumeroMaterial2 = preAsnDetail.NumeroMaterial2
+                        NumeroMaterial2 = preAsnDetail.NumeroMaterial2,
+
+                        Centro = preAsn.Centro
 					});
 				}
 			}
@@ -748,12 +750,16 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				TempData["FlashError"] = "La cita no puede ser Editada";
 				return RedirectToAction("Citas");
 			}
-			
+
+		    var asnIds = new List<int>();
+
 			foreach (var element in collection)
 			{
 				if (element.ToString().IndexOf("asnid-", StringComparison.Ordinal) == 0)
 				{
 					var asnId = int.Parse(element.ToString().Replace("asnid-", string.Empty));
+                    asnIds.Add(asnId);
+
 					var cantidad = int.Parse(collection[element.ToString()]);
 
 					var asn = db.asns.FirstOrDefault(a => a.Id == asnId && a.CitaId == citaId);
@@ -805,6 +811,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			
 
 			db.SaveChanges();
+
+		    CitaManager.ActualizarCantidadScale(asnIds.ToArray());
 
 			TempData["FlashSuccess"] = "Cita actualizada exitosamente";
 			return RedirectToAction("Citas");

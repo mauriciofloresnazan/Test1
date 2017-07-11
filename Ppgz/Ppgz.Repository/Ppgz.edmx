@@ -32,6 +32,7 @@
           <Property Name="InOut" Type="varchar" MaxLength="45" />
           <Property Name="NumeroOrdenSurtido" Type="varchar" MaxLength="45" />
           <Property Name="NumeroMaterial2" Type="varchar" MaxLength="45" />
+          <Property Name="Centro" Type="varchar" MaxLength="45" />
         </EntityType>
         <EntityType Name="AspNetRoles">
           <Key>
@@ -947,6 +948,7 @@
           <Property Name="InOut" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="NumeroOrdenSurtido" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="NumeroMaterial2" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Centro" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="cita" Relationship="Self.fk_asn_cita" FromRole="asn" ToRole="citas" />
         </EntityType>
         <EntityType Name="AspNetRole">
@@ -1816,6 +1818,7 @@
                 <ScalarProperty Name="InOut" ColumnName="InOut" />
                 <ScalarProperty Name="NumeroOrdenSurtido" ColumnName="NumeroOrdenSurtido" />
                 <ScalarProperty Name="NumeroMaterial2" ColumnName="NumeroMaterial2" />
+                <ScalarProperty Name="Centro" ColumnName="Centro" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
