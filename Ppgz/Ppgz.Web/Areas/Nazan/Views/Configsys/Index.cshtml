@@ -184,7 +184,8 @@
 
             $.ajax({
                 type: 'POST',
-                url: '/Configsys/editarConfig',
+                //url: '/Configsys/editarConfig',
+                url: "@Url.Action("editarConfig", "Configsys")",
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(Object),
                 dataType: "json",
@@ -200,7 +201,8 @@
                         msgProcesando.hide();
                         //msgExito();
                         Inicio();
-                        window.location = '/Nazan/Configsys/Index';
+                        window.location = "@Url.Action("Index", "Configsys")";
+                        //window.location = '/Nazan/Configsys/Index';
                     } else {
                         
                         msgProcesando.hide();
