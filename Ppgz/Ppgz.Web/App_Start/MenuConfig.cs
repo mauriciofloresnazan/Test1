@@ -146,7 +146,7 @@ namespace Ppgz.Web
                 "ADMINISTRARUSUARIOS|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Servicio",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Servicio",
                 "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Servicio",
-                "REPORTESPROVEEDORES|Reportes Proveedores|Index|ReporteProveedores|fa fa-bar-chart|Servicio",
+                //"REPORTESPROVEEDORES|Reportes Proveedores|Index|ReporteProveedores|fa fa-bar-chart|Servicio",
             };
             return menuLista;
         }
