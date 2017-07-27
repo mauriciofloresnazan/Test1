@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using Ppgz.Repository;
+using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
-using Ppgz.Web.Infrastructure.Nazan;
-using Ppgz.Web.Models;
-using System.Threading.Tasks;
 
 namespace Ppgz.Web.Controllers
 {
@@ -32,6 +22,22 @@ namespace Ppgz.Web.Controllers
             return Content(DateTime.Now.Hour.ToString());
         }
 
+        public FileResult Ayuda()
+        {
+            var commonManager = new CommonManager();
+            var usuario = commonManager.GetUsuarioAutenticado();
 
+            var fileBytes = usuario.Tipo == UsuarioManager.Tipo.Nazan
+                ? System.IO.File.ReadAllBytes(Server.MapPath(@"~/App_Data/manual_administrador.pdf"))
+                : System.IO.File.ReadAllBytes(Server.MapPath(@"~/App_Data/manual_usuario.pdf"));
+
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, "manual.pdf");
+        }
+
+         [AllowAnonymous]
+        public ActionResult Privacidad()
+        {
+            return View();
+        }
     }
 }

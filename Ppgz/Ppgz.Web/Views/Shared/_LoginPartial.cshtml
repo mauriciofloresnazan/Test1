@@ -14,8 +14,16 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("¡BIENVENIDO " + User.Identity.GetUserName().ToUpper() + "!", "Index", "Home", routeValues: null, htmlAttributes: new { title = "Manage" })
+            @Html.ActionLink("¡BIENVENIDO " + User.Identity.GetUserName().ToUpper() + "!", "Index", "Home", routeValues: null, htmlAttributes: new {title = "Manage"})
         </li>
+        <li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i> Ayuda<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="@Url.Action("Ayuda","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual</a></li>
+            </ul>
+
+        </li>
+
         @if (cuenta != null)
         {
             <li id="mensajes-notificador">
