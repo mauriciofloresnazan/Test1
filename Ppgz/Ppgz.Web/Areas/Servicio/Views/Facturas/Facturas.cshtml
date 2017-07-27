@@ -1,0 +1,100 @@
+﻿@using Ppgz.Repository
+@{
+    ViewBag.Title = "Facturas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var proveedor = (proveedore) ViewBag.Proveedor;
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-address-book" aria-hidden="true"></i> <i>Detalle de las facturas cargadas en el portal.</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "Facturas")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Facturas</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <table id="facturas" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Id</th>
+                        <th class="text-center">Número Generado</th>
+                        <th class="text-center">UUID</th>
+                        <th class="text-center">Fecha</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center"><a class="btn btn-primary btn-xs" href="@Url.Action("CargarFactura", "Facturas", new { proveedorId = proveedor.Id })"><i class="fa fa-plus" aria-hidden="true"></i> Cargar </a></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (factura factura in ViewBag.Facturas)
+                    {
+                        <tr>
+                            <td class="text-center vert-align">@factura.Id</td>
+                            <td class="text-center vert-align">
+                                @if (factura.Estatus != "S")
+                                {
+                                    <text>EN PROCESO</text>
+                                }
+                                else
+                                {
+                                
+                                @factura.NumeroGenerado
+                                } 
+                            </td>
+                            <td class="text-center vert-align">@factura.Uuid</td>
+                            <td class="text-center vert-align">@factura.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center vert-align">@factura.Total</td>
+                            <td class="text-center vert-align">
+                                
+                                <div class="btn-group " role="group" aria-label="Archivos">
+                                    <a class="btn btn-danger btn-xs" href="@Url.Action("DescargarXml", "Facturas", new { proveedorId = @proveedor.Id, facturaId = @factura.Id })"><i class="fa fa-file-code-o" aria-hidden="true"></i> XML </a>
+                                    <a class="btn btn-warning btn-xs" href="@Url.Action("DescargarPdf", "Facturas", new { proveedorId = @proveedor.Id, facturaId = @factura.Id })"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+         
+
+
+            $('#facturas').DataTable({
+                "language": {
+                    "url": "@Url.Content("~/assets/vendor/dataTables-1.10.13/Spanish.json")"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+    </script>
+}
+
+

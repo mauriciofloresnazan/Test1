@@ -234,6 +234,7 @@
     <Compile Include="Areas\Nazan\NazanAreaRegistration.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Servicio\Controllers\AdministrarUsuariosController.cs" />
+    <Compile Include="Areas\Servicio\Controllers\FacturasController.cs" />
     <Compile Include="Areas\Servicio\Controllers\GestionProveedoresController.cs" />
     <Compile Include="Areas\Servicio\Controllers\MensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Servicio\Controllers\OrdenesCompraController.cs" />
@@ -1198,6 +1199,11 @@
     <Content Include="App_Data\plantillapagospendientes.xlsx" />
     <Content Include="App_Data\plantillareporte.xlsx" />
     <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetas\Resultado.cshtml" />
+    <Content Include="Areas\Servicio\Views\Facturas\CargarFactura.cshtml" />
+    <Content Include="Areas\Servicio\Views\Facturas\Facturas.cshtml" />
+    <Content Include="Areas\Servicio\Views\Facturas\Index.cshtml" />
+    <Content Include="App_Data\manual_administrador.pdf" />
+    <Content Include="App_Data\manual_usuario.pdf" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -1225,6 +1231,7 @@
     <Content Include="Web.config" />
     <Content Include="Areas\Nazan\Views\Configsys\Index.cshtml" />
     <Content Include="Views\Account\CambiarPassword.cshtml" />
+    <Content Include="Views\Home\Privacidad.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -1318,11 +1325,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>16636</DevelopmentServerPort>
+          <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:16636/</IISUrl>
+          <IISUrl>http://localhost:17320/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -1,0 +1,87 @@
+﻿@using Ppgz.Repository
+@model Ppgz.Web.Areas.FacturaViewModel
+@{
+    ViewBag.Title = "Cargar Factura";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var proveedor = (proveedore)ViewBag.Proveedor;
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-envelope" aria-hidden="true"></i> <i>Registro de nueva factura. Recuerde que no debe estar cargada previamente en el sistema.</i>
+</p>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "Facturas")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i> Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Formulario de la factura</div>
+    <div class="panel-body">
+        @using (Html.BeginForm("CargarFactura", "Facturas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true)
+            
+            @Html.HiddenFor(m => m.ProveedorId)
+            
+            <div class="form-group">
+                @Html.LabelFor(m => m.Xml, new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-7">
+                    @Html.TextBoxFor(m => m.Xml, new { @type = "file", @accept = "application/xml" })
+                    @Html.ValidationMessageFor(m => m.Xml)
+    
+                </div>
+            </div>
+            
+            <div class="form-group">
+                @Html.LabelFor(m => m.Pdf, new { @class = "col-sm-3 control-label" })
+                <div class="col-sm-7">
+                    @Html.TextBoxFor(m => m.Pdf, new { @type = "file", @accept = "application/pdf" })
+                    @Html.ValidationMessageFor(m => m.Xml)
+    
+                </div>
+            </div>
+            
+
+
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-upload" aria-hidden="true"></i> Cargar</button>
+                    <a class="btn btn-default" href="@Url.Action("Facturas", "Facturas", new { proveedorId = proveedor .Id })"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+       
+
+    </script>
+
+
+}

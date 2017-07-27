@@ -1,0 +1,64 @@
+﻿@using Ppgz.Repository
+@model dynamic
+
+@{
+    ViewBag.Title = "Facturas";
+    ViewBag.Descripcion = "Paso 1 - Seleccione una Razón Social.";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Razones Sociales</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <table id="proveedores" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Número Proveedor</th>
+                        <th class="text-center">RFC</th>
+                        <th class="text-center">Nombre Proveedor</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (proveedore proveedor in (ViewBag.proveedores))
+                    {
+                        <tr>
+                            <td class="text-center vert-align">@proveedor.NumeroProveedor</td>
+                            <td class="text-center vert-align">@proveedor.Rfc</td>
+                            <td class="text-center vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
+                            <td class="text-center vert-align">
+                                <a class="btn btn-primary btn-sm" href="@Url.Action("Facturas", "Facturas", new { proveedorId = proveedor.Id })">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Seleccionar
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        
+        $(document).ready(function () {
+
+
+            $('#proveedores').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+
+    </script>
+}
