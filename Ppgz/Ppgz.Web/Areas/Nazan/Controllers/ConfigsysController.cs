@@ -13,13 +13,25 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-CONFIGSYS")]
         public ActionResult Index()
         { 
-            const string sql = @"SELECT id, Clave, Valor, Habilitado, Descripcion FROM configuraciones";
+            const string sql = @"SELECT id, Clave, Valor, Habilitado, Descripcion, Negocio FROM configuraciones";
 
             var result = Db.GetDataTable(sql);
 
             ViewBag.Resultado = result;
              
             return View(); 
+        }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-CONFIGSYS")]
+        public ActionResult Negocio()
+        {
+            const string sql = @"SELECT id, Clave, Valor, Habilitado, Descripcion, Negocio FROM configuraciones";
+
+            var result = Db.GetDataTable(sql);
+
+            ViewBag.Resultado = result;
+
+            return View();
         }
 
         public class estConfig

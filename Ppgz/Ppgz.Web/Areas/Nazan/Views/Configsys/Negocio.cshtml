@@ -1,0 +1,224 @@
+﻿@using Microsoft.AspNet.Identity
+@using System.Data
+@using Ppgz.Repository
+@using Ppgz.Web.Controllers
+@{
+    ViewBag.Title = "Configuraciones del Negocio";
+    ViewBag.Descripcion = "Parámetros de Configuración del Negocio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var dtConfiguraciones = (DataTable)ViewBag.Resultado;
+}
+<h2>@ViewBag.Title</h2>
+@Styles.Render("~/assets/css/build.css")
+<p class="page-description-title">
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+<input type="hidden" id="idConfig" value="0" />
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de Configuración</div>
+    <div class="panel-body">
+
+        <div class="row">
+            <div class="col-sm-4">
+                <label class="control-label">Clave</label>
+                <div>
+                    <input type="text" class="form-control" id="txtClave" maxlength="50" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <label class="control-label">Valor</label>
+                <div>
+                    <input type="text" class="form-control" id="txtValor" maxlength="200" />
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <label class="control-label">Descripción</label>
+                <div>
+                    <textarea class="form-control" id="txtDescripcion" rows="5" maxlength="1000"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="checkbox checkbox-circle checkbox-success">
+                    <input id="chkHabilitado" class="styled" type="checkbox" value="1" />
+                    <label for="chkHabilitado">Habilitado</label>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="pull-right">
+                    <input type="button" class="btn btn-primary btn-sm" value="Guardar" id="cmdGuardar" onclick="editarConfig();" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Configuraciones Registradas</div>
+    <div class="panel-body">
+        <p class="form-legend" style="">
+            <i>Lista de Configuraciones</i>
+        </p>
+        <table class="table table-striped table-condensed" id="config">
+            <thead>
+                <tr>
+                    <th class="text-center">Clave</th>
+                    <th class="text-center">Valor</th>
+                    <th class="text-center">Descripcion</th>
+                    <th class="text-center">Habilitado</th>
+                    <th class="text-center"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (DataRow dtConfig in dtConfiguraciones.Rows)
+                {
+                    var vlNegocio = dtConfig["Negocio"];
+                    if (Convert.ToInt32(vlNegocio) == 1)
+                    {
+
+                   
+                    var vlHabilitado = dtConfig["Habilitado"];
+
+                    <tr>
+                        <td class="text-center">@dtConfig["Clave"]</td>
+                        <td class="text-center">@dtConfig["Valor"]</td>
+                        <td class="text-center">@dtConfig["Descripcion"]</td>
+
+                        @if (Convert.ToInt32(vlHabilitado) == 1)
+                        {
+
+                            <td class="text-center"><i class="fa fa-check-circle-o " style="font-size: 18px;" aria-hidden="true"></i></td>
+                        }
+                        else
+                        {
+
+                            <td class="text-center"><i class="fa fa-circle-o " style="font-size: 18px;" aria-hidden="true"></i></td>
+                        }
+                        <td class="text-center"><a href="javascript:;" onclick="getValores('@dtConfig["id"]','@dtConfig["Clave"]','@dtConfig["Valor"]','@dtConfig["Descripcion"]','@Convert.ToInt32(vlHabilitado)')" class=" btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Editar</a></td>
+                    </tr>
+                    }
+               }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        function Config(prmid, prmClave, prmValor, prmDescripcion, prmHabilitado) {
+            this.id = prmid;
+            this.Clave = prmClave;
+            this.Valor = prmValor;
+            this.Descripcion = prmDescripcion;
+            this.Habilitado = prmHabilitado;
+        }
+
+        function Inicio() {
+
+            $('#idConfig').val("0");
+            $('#txtClave').val("");
+            $('#txtValor').val("");
+            $('#txtDescripcion').val("");
+            $('#chkHabilitado').prop('checked', false);
+
+        }
+
+        function getValores(prmid, prmClave, prmValor, prmDescripcion, prmHabilitado) {
+
+            $('#idConfig').val(prmid);
+            $('#txtClave').val(prmClave);
+            $('#txtValor').val(prmValor);
+            $('#txtDescripcion').val(prmDescripcion);
+
+            if (prmHabilitado == 1) {
+                $('#chkHabilitado').prop('checked', true);
+            } else {
+                $('#chkHabilitado').prop('checked', false);
+            }
+
+        }
+
+        function editarConfig() {
+
+            var msgProcesando = msgboxProcesando();
+
+            var Habilitado = 0;
+
+            if ($('#chkHabilitado').prop('checked') == true) {
+
+                Habilitado = 1;
+
+            }
+
+            var Object = new Config($('#idConfig').val(),$('#txtClave').val(),$('#txtValor').val(),$('#txtDescripcion').val(),Habilitado);
+
+
+
+            $.ajax({
+                type: 'POST',
+                //url: '/Configsys/editarConfig',
+                url: "@Url.Action("editarConfig", "Configsys")",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(Object),
+                dataType: "json",
+                beforeSend: function () {
+                    //console.log("La Nombre del Registro: " + vlSuceso.NombreSuceso);
+                    //msgProcesando.show();
+                },
+                success: function (response) {
+                    var arr = response;
+                    //console.log(arr);
+
+                    if (response == 1) {
+                        msgProcesando.hide();
+                        //msgExito();
+                        Inicio();
+                        window.location = "@Url.Action("Negocio", "Configsys")";
+                        //window.location = '/Nazan/Configsys/Index';
+                    } else {
+
+                        msgProcesando.hide();
+                        msgError(xhr.statusText);
+
+                    }
+
+
+                }
+                ,
+                error: function (xhr) {
+                    msgProcesando.hide();
+                    msgError(xhr.statusText);
+                }
+
+
+            });
+
+
+        }
+
+
+        $(document).ready(function() {
+
+            $('#config').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+
+
+    </script>
+}
