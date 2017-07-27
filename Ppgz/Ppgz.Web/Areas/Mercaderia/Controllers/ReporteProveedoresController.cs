@@ -47,11 +47,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                 ViewBag.nivelservicio = _reporteProveedorManager.FindNivelSerNiveleseervicio(proveedor.Id);
 
-                if (ViewBag.nivelservicio == null)
+                /*if (ViewBag.nivelservicio == null)
                 {
                     TempData["FlashError"] = "No hay datos para este proveedor";
                     return RedirectToAction("Index");
-                }
+                }*/
 
             }
             catch (Exception ex)
