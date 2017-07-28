@@ -1,8 +1,10 @@
 ﻿@using Ppgz.Repository
+@using System.Data
 @{
     ViewBag.Title = "Generar  Etiquetas - Formulario";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var proveedor = (proveedore)ViewBag.Proveedor;
+    var ordenes = ViewBag.Ordenes;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -34,13 +36,13 @@
 <div class="panel panel-default">
     <div class="panel-heading">Formulario para Generar el Archivo</div>
     <div class="panel-body">
-        @using (Html.BeginForm("Generar", "ImpresionEtiquetas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form"  }))
+        @using (Html.BeginForm("Generar", "ImpresionEtiquetas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form" }))
         {
             @Html.AntiForgeryToken()
 
             @Html.ValidationSummary(true)
 
-            <input type="hidden" name="proveedorId" value="@proveedor.Id"/>
+            <input type="hidden" name="proveedorId" value="@proveedor.Id" />
 
             <div class="form-group">
                 @*@Html.LabelFor(m => m.Xml, new { @class = "col-sm-3 control-label" })*@
@@ -60,123 +62,231 @@
                     </div>
 
                     @*@Html.TextBoxFor(m => m.Xml, new { @type = "file" })
-                    @Html.ValidationMessageFor(m => m.Xml)*@
+                        @Html.ValidationMessageFor(m => m.Xml)*@
 
                 </div>
             </div>
             <p class="form-legend" style="">
                 <i>Puede incluir hasta 5 Órdenes para este archivo de etiquetas. Cada Orden debe ser 10 dígitos.</i>
             </p>
-
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Orden 1</label>
-                <div class="col-sm-7">
-                    <input class="form-control orden-etiqueta" name="orden1" id="orden1" />
-                    <span class="field-validation-valid" data-valmsg-for="orden1" data-valmsg-replace="true"></span>
-
+            @*<div class="row">
+                <div class="col-sm-6">
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Orden 2 (opcional)</label>
-                <div class="col-sm-7">
-                    <input class="form-control orden-etiqueta" name="orden2" id="orden2" />
-                    <span class="field-validation-valid" data-valmsg-for="orden2" data-valmsg-replace="true"></span>
+                <div class="col-sm-6">*@
+                    <table cellspacing="5" cellpadding="5" border="0">
+                        <tbody>
+                            <tr>
+                                <td><label>Orden Inicial: <input class="form-control input-sm" id="min" name="min" type="text"></label> </td>
+                                <td> <label>Orden Final: <input class="form-control input-sm" id="max" name="max" type="text"></label></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-striped table-condensed" id="ordenesimprimir">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Ordenes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (ordencompra ordendeCompra in ordenes)
+                            {
 
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Orden 3 (opcional)</label>
-                <div class="col-sm-7">
-                    <input class="form-control orden-etiqueta" name="orden3" id="orden3" />
-                    <span class="field-validation-valid" data-valmsg-for="orden3" data-valmsg-replace="true"></span>
 
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Orden 4 (opcional)</label>
-                <div class="col-sm-7">
-                    <input class="form-control orden-etiqueta" name="orden4" id="orden4" />
-                    <span class="field-validation-valid" data-valmsg-for="orden4" data-valmsg-replace="true"></span>
+                                <tr>
+                                    <td class="text-center">@ordendeCompra.NumeroDocumento</td>
 
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label">Orden 5 (opcional)</label>
-                <div class="col-sm-7">
-                    <input class="form-control orden-etiqueta" name="orden5" id="orden5" />
-                    <span class="field-validation-valid" data-valmsg-for="orden5" data-valmsg-replace="true"></span>
-                </div>
-            </div>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                @*</div>
+            </div>*@
             
 
 
+                    @*<div class="form-group">
+                            <label class="col-sm-3 control-label">Orden 1</label>
+                            <div class="col-sm-7">
+                                <input class="form-control orden-etiqueta" name="orden1" id="orden1" />
+                                <span class="field-validation-valid" data-valmsg-for="orden1" data-valmsg-replace="true"></span>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Orden 2 (opcional)</label>
+                            <div class="col-sm-7">
+                                <input class="form-control orden-etiqueta" name="orden2" id="orden2" />
+                                <span class="field-validation-valid" data-valmsg-for="orden2" data-valmsg-replace="true"></span>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Orden 3 (opcional)</label>
+                            <div class="col-sm-7">
+                                <input class="form-control orden-etiqueta" name="orden3" id="orden3" />
+                                <span class="field-validation-valid" data-valmsg-for="orden3" data-valmsg-replace="true"></span>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Orden 4 (opcional)</label>
+                            <div class="col-sm-7">
+                                <input class="form-control orden-etiqueta" name="orden4" id="orden4" />
+                                <span class="field-validation-valid" data-valmsg-for="orden4" data-valmsg-replace="true"></span>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Orden 5 (opcional)</label>
+                            <div class="col-sm-7">
+                                <input class="form-control orden-etiqueta" name="orden5" id="orden5" />
+                                <span class="field-validation-valid" data-valmsg-for="orden5" data-valmsg-replace="true"></span>
+                            </div>
+                        </div>*@
 
 
 
-            <div class="form-group">
-                <div class="col-sm-offset-3 col-sm-7">
-                    <button type="submit" class="btn btn-primary"><i class="fa fa-play" aria-hidden="true"></i> Generar</button>
-                    <a class="btn btn-default" href="@Url.Action("Index", "ImpresionEtiquetas")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
-                </div>
-            </div>
+
+
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-7">
+                            <button type="submit" class="btn btn-primary"><i class="fa fa-play" aria-hidden="true"></i> Generar</button>
+                            <a class="btn btn-default" href="@Url.Action("Index", "ImpresionEtiquetas")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                        </div>
+                    </div>
         }
     </div>
-</div>
 
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+            </div>
 
-    <script type="text/javascript">
+            @section Scripts {
+                @Scripts.Render("~/bundles/jqueryval")
 
-        var form = $("#form");
+                <script type="text/javascript">
 
-        $(document).ready(function() {
+                    var form = $("#form");
+                    $.fn.dataTable.ext.search.push(
 
-            $(".orden-etiqueta").numeric();
+                        function (settings, data, dataIndex) {
+                            var min = parseInt($('#min').val(), 10);
+                            var max = parseInt($('#max').val(), 10);
+                            var Ordenes = parseFloat(data[0]) || 0; // use data for the age column
+
+                            if ((isNaN(min) && isNaN(max)) ||
+                                (isNaN(min) && Ordenes <= max) ||
+                                (min <= Ordenes && isNaN(max)) ||
+                                (min <= Ordenes && Ordenes <= max)) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    );
+
+                    $(document).ready(function () {
+
+                        var table = $('#ordenesimprimir').DataTable({
+                            select: {
+                                style: 'multi'
+                            },
+                            buttons: [
+                                'pageLength',
+                                {
+                                    text: 'Seleccionar Todo',
+                                    action: function () {
+                                        table.rows().select();
+                                    }
+                                },
+                                {
+                                    text: 'Deseleccionar Todo',
+                                    action: function () {
+                                        table.rows().deselect();
+                                    }
+                                },
+                                {
+                                    text: 'Ordenes por Rango',
+                                    action: function () {
+                                        table.rows({ search: 'applied' }).select();
+                                    }
+                                }
+                            ],
+                            dom: 'Bfrtip',
+                            "language": {
+                                "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                            },
+                            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+                        });
+                        //new $.fn.dataTable.Buttons(table, {
+                        //    buttons: [
+                        //        'selectAll',
+                        //        'selectNone',
+                        //        {
+                        //            text: 'My button',
+                        //            action: function () {
+                        //                table.rows({ search: 'applied' }).select();
+                        //            }
+                        //        }
+                        //    ]
+                        //});
+                        
+
+                        //$('#ordenesimprimir tbody').on('click', 'tr', function () {
+                        //    $(this).toggleClass('selected');
+                        //});
+
+                        $('#min, #max').keyup(function () {
+                            table.draw();
+                        });
 
 
-            $(".orden-etiqueta").each(function () {
-                $(this).rules("add", {
-                    rangelength: [10, 10],
-                    messages: {
-                        rangelength: "Debe ingresar 10 dígitos"
-                    }
-
-                });
-            });
-            $("#orden1").rules("add", {
-
-                required: true,
-                messages: {
-                    required: "Campo requerido"
-                }
-            });
+                        //$(".orden-etiqueta").numeric();
 
 
-        form.submit(function() {
-           
-            /*var ordenes = $("#text-ordenes").val().split("\n");
+                        //$(".orden-etiqueta").each(function () {
+                        //    $(this).rules("add", {
+                        //        rangelength: [10, 10],
+                        //        messages: {
+                        //            rangelength: "Debe ingresar 10 dígitos"
+                        //        }
 
-            for (var i = 0; i < ordenes.length; i++) {
+                        //    });
+                        //});
+                        //$("#orden1").rules("add", {
 
-                $('<input />').attr('type', 'hidden')
-                    .attr('name', "ordenes")
-                    .attr('value', ordenes[i])
-                    .appendTo(form);
-            }*/
+                        //    required: true,
+                        //    messages: {
+                        //        required: "Campo requerido"
+                        //    }
+                        //});
 
 
-            if ($("#nazanTipo").prop("checked")) {
-                $('<input />').attr('type', 'hidden')
-                    .attr('nazan', "ordenes")
-                    .attr('value', true)
-                    .appendTo(form);
+                        form.submit(function () {
+
+                            /*var ordenes = $("#text-ordenes").val().split("\n");
+
+                            for (var i = 0; i < ordenes.length; i++) {
+
+                                $('<input />').attr('type', 'hidden')
+                                    .attr('name', "ordenes")
+                                    .attr('value', ordenes[i])
+                                    .appendTo(form);
+                            }*/
+
+
+                            if ($("#nazanTipo").prop("checked")) {
+                                $('<input />').attr('type', 'hidden')
+                                    .attr('nazan', "ordenes")
+                                    .attr('value', true)
+                                    .appendTo(form);
+                            }
+
+                        });
+                    });
+
+
+
+                </script>
+
+
             }
-
-        });
-    });
-
-    </script>
-
-
-}

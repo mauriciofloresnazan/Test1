@@ -101,7 +101,41 @@ namespace Ppgz.Services
             }
             return detalle;
         }
-        
+
+        public List<ordencompra> FindOrdenesDecompraImprimir(string proveedorId)
+        {
+            //var proveedor = _db.proveedores.FirstOrDefault(p => p.Id == proveedorId);
+            //if (proveedor == null)
+            //{
+            //    throw new Exception(CommonMensajesResource.ERROR_Proveedor_Id);
+            //}
+
+            var organizacionCompras = string.Empty;
+           
+                organizacionCompras =
+                    _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
+          
+
+
+
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(proveedorId , organizacionCompras);
+            var detalle = new List<ordencompra>();
+
+            if (result.Rows.Count <= 0) return detalle;
+
+            foreach (DataRow dr in result.Rows)
+            {
+                var orden = MapearOrden(dr);
+                var numeroDocumento = dr["EBELN"].ToString();
+                detalle.Add(orden);
+            }
+
+
+
+            return detalle;
+        }
+
         public List<ordencompra> FindOrdenesDecompraActivasByCuenta(int cuentaId)
         {
             var cuenta = _db.cuentas.Find(cuentaId);

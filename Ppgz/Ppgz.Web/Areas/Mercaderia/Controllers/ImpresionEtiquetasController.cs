@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
+using System;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -16,6 +17,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         private readonly CommonManager _commonManager = new CommonManager();
         private readonly ProveedorManager _proveedorManager = new ProveedorManager();
         private readonly EtiquetasManager _etiquetasManager = new EtiquetasManager();
+        private readonly OrdenCompraManager _ordenesCompraManager = new OrdenCompraManager();
+
         private const string NombreVarSession = "etiqueta_csv";
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-IMPRESIONETIQUETAS")]
@@ -56,6 +59,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
 
             ViewBag.Proveedor = proveedor;
+            ViewBag.Ordenes = _ordenesCompraManager.FindOrdenesDecompraImprimir(proveedor.NumeroProveedor);
             return View();
         }
 

@@ -137,3 +137,7 @@ h1{
     background-color: #66aaaa;
     text-align: center;
 }
+
+.selected {
+    background:rgba(121, 217, 35, 0.71) !important;
+}
