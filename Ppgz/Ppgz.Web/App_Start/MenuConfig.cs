@@ -111,7 +111,7 @@ namespace Ppgz.Web
                 "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
-                "CONFIGSYS|Configuración de Negocio|Negocio|Configsys|fa fa-cogs|Nazan",
+                "CONFIGNEG|Configuración de Negocio|Index|Configneg|fa fa-cogs|Nazan",
             };
             return menuLista;
         }

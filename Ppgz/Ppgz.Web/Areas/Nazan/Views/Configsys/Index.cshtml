@@ -49,6 +49,14 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="checkbox checkbox-circle checkbox-success">
+                        <input id="chknegocio" class="styled" type="checkbox" value="1" />
+                        <label for="chknegocio">Negocio</label>
+                    </div>
+                </div>
+            </div>
 
 
             <div class="row">
@@ -87,6 +95,7 @@
                 <th class="text-center">Clave</th>
                 <th class="text-center">Valor</th>
                 <th class="text-center">Descripcion</th>
+                <th class="text-center">Negocio</th>
                 <th class="text-center">Habilitado</th>
                 <th class="text-center"></th>
 
@@ -98,7 +107,8 @@
             {
 
                 var vlHabilitado = dtConfig["Habilitado"];
-                
+                var vlNegocio = dtConfig["Negocio"];
+
                 <tr>
 
                     <td class="text-center">@dtConfig["Clave"]</td>
@@ -106,7 +116,7 @@
                     <td class="text-center">@dtConfig["Descripcion"]</td>
 
 
-                    @if ( Convert.ToInt32(vlHabilitado) == 1)
+                    @if ( Convert.ToInt32(vlNegocio) == 1)
                     {
 
                         <td class="text-center"><i class="fa fa-check-circle-o " style="font-size: 18px;" aria-hidden="true"></i></td>
@@ -117,7 +127,18 @@
                         <td class="text-center"><i class="fa fa-circle-o " style="font-size: 18px;" aria-hidden="true"></i></td>
                     }
 
-                    <td class="text-center"><a href="javascript:;" onclick="getValores('@dtConfig["id"]','@dtConfig["Clave"]','@dtConfig["Valor"]','@dtConfig["Descripcion"]','@Convert.ToInt32(vlHabilitado)')" class=" btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Editar</a></td>
+                    @if (Convert.ToInt32(vlHabilitado) == 1)
+                    {
+
+                        <td class="text-center"><i class="fa fa-check-circle-o " style="font-size: 18px;" aria-hidden="true"></i></td>
+                    }
+                    else
+                    {
+
+                        <td class="text-center"><i class="fa fa-circle-o " style="font-size: 18px;" aria-hidden="true"></i></td>
+                    }
+
+                    <td class="text-center"><a href="javascript:;" onclick="getValores('@dtConfig["id"]','@dtConfig["Clave"]','@dtConfig["Valor"]','@dtConfig["Descripcion"]','@Convert.ToInt32(vlHabilitado)','@Convert.ToInt32(vlNegocio)')" class=" btn btn-primary btn-sm"><i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Editar</a></td>
 
                 </tr>
             }
@@ -133,12 +154,13 @@
 @section Scripts {
     <script type="text/javascript">
 
-        function Config(prmid, prmClave, prmValor, prmDescripcion, prmHabilitado) {
+        function Config(prmid, prmClave, prmValor, prmDescripcion, prmHabilitado, negocio) {
             this.id = prmid;
             this.Clave = prmClave;
             this.Valor = prmValor;
             this.Descripcion = prmDescripcion;
             this.Habilitado = prmHabilitado;
+            this.Negocio = negocio;
         }
 
         function Inicio() {
@@ -148,20 +170,29 @@
             $('#txtValor').val("");
             $('#txtDescripcion').val("");
             $('#chkHabilitado').prop('checked', false);
+            $('#chknegocio').prop('checked', false);
+            
         
         }
 
-        function getValores(prmid, prmClave, prmValor, prmDescripcion, prmHabilitado) {
+        function getValores(prmid, prmClave, prmValor, prmDescripcion, prmHabilitado, negocio) {
 
             $('#idConfig').val(prmid);
             $('#txtClave').val(prmClave);
             $('#txtValor').val(prmValor);
             $('#txtDescripcion').val(prmDescripcion);
 
+
             if (prmHabilitado == 1) {
                 $('#chkHabilitado').prop('checked', true);
             } else {
                 $('#chkHabilitado').prop('checked', false);
+            }
+
+            if (negocio == 1) {
+                $('#chknegocio').prop('checked', true);
+            } else {
+                $('#chknegocio').prop('checked', false);
             }
 
         }
@@ -178,7 +209,15 @@
 
             }
 
-            var Object = new Config($('#idConfig').val(),$('#txtClave').val(),$('#txtValor').val(),$('#txtDescripcion').val(),Habilitado);
+            var Negocio = 0;
+
+            if ($('#chknegocio').prop('checked') == true) {
+
+                Negocio = 1;
+
+            }
+
+            var Object = new Config($('#idConfig').val(), $('#txtClave').val(), $('#txtValor').val(), $('#txtDescripcion').val(), Habilitado, Negocio);
 
          
 

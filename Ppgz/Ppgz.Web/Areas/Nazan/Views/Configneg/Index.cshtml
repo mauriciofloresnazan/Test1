@@ -168,8 +168,8 @@
 
             $.ajax({
                 type: 'POST',
-                //url: '/Configsys/editarConfig',
-                url: "@Url.Action("editarConfig", "Configsys")",
+                //url: '/Configneg/editarConfig',
+                url: "@Url.Action("editarConfig", "Configneg")",
                 contentType: 'application/json; charset=utf-8',
                 data: JSON.stringify(Object),
                 dataType: "json",
@@ -185,8 +185,8 @@
                         msgProcesando.hide();
                         //msgExito();
                         Inicio();
-                        window.location = "@Url.Action("Negocio", "Configsys")";
-                        //window.location = '/Nazan/Configsys/Index';
+                        window.location = "@Url.Action("Index", "Configneg")";
+                        //window.location = '/Nazan/Configneg/Index';
                     } else {
 
                         msgProcesando.hide();
