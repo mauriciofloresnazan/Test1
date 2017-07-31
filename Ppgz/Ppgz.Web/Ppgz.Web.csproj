@@ -1205,7 +1205,6 @@
     <Content Include="Areas\Servicio\Views\Facturas\Index.cshtml" />
     <Content Include="App_Data\manual_administrador.pdf" />
     <Content Include="App_Data\manual_usuario.pdf" />
-    <Content Include="Areas\Nazan\Views\Configsys\Negocio.cshtml" />
     <Content Include="Areas\Nazan\Views\Configneg\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />

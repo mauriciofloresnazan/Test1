@@ -90,7 +90,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-IMPRESIONETIQUETAS")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Generar(int proveedorId, bool nazan, string orden1, string orden2 = "", string orden3 = "", string orden4 = "", string orden5 = "")
+        public ActionResult Generar(int proveedorId, bool nazan, string ordenesy)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
@@ -101,13 +101,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 TempData["FlashError"] = "Proveedor incorrecto";
                 return RedirectToAction("Index");
             }
+            
 
-            var ordenes = new[]
-            {
-                orden1, orden2, orden3, orden4, orden5
-            };
-
-            var resultado = _etiquetasManager.GetArchivoCsv(proveedorId, cuenta.Id, nazan, ordenes.Where(o => !string.IsNullOrEmpty(o)).ToArray());
+            var resultado = _etiquetasManager.GetArchivoCsv(proveedorId, cuenta.Id, nazan, ordenesy.Split(','));
 
             TempData["resultado"] = resultado;
             TempData["proveedor"] = proveedor;
