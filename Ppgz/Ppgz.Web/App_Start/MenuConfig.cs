@@ -119,12 +119,12 @@ namespace Ppgz.Web
         {
             string[] menuLista =
             {
-                "GESTIONPROVEEDORES|Gestión de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Mercaderia",
+                "GESTIONPROVEEDORES|Administración de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Mercaderia",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
                 "COMPROBANTESRECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
-                "FACTURAS|Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
+                "FACTURAS|Administración de Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
                 "ADMINISTRARUSUARIOS|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
@@ -138,11 +138,11 @@ namespace Ppgz.Web
         {
             string[] menuLista =
             {
-                "GESTIONPROVEEDORES|Gestión de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Servicio",
+                "GESTIONPROVEEDORES|Administración de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Servicio",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Servicio",
-               
-       
-                "FACTURAS|Facturas|Index|Facturas|fa fa-file-text-o|Servicio",
+
+
+                "FACTURAS|Administración de Facturas|Index|Facturas|fa fa-file-text-o|Servicio",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio",
                 "ADMINISTRARUSUARIOS|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Servicio",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Servicio",

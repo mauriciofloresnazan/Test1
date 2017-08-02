@@ -60,6 +60,12 @@
                             Etiqueta de Precios
                         </label>
                     </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="nazan" id="zapatoTipo" value="false">
+                            Etiqueta Colgante
+                        </label>
+                    </div>
 
                     
 
@@ -162,6 +168,13 @@
                                     .attr('nazan', "ordenes")
                                     .attr('value', true)
                                     .appendTo(form);
+                            }
+                            if ($("#zapatoTipo").prop("checked")) {
+                                var input = $("<input>").attr({ "type": "hidden", "name": "zapato" }).val(true);
+                                $('#form').append(input);
+                            } else {
+                                var input = $("<input>").attr({ "type": "hidden", "name": "zapato" }).val(false);
+                                $('#form').append(input);
                             }
                             var input = $("<input>").attr({ "type": "hidden", "name": "ordenesy" }).val(ordenes);
                             $('#form').append(input);
