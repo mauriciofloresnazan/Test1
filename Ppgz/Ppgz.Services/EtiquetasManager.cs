@@ -16,7 +16,7 @@ namespace Ppgz.Services
         /// 1 return: Contiene un datatable con el resultado del rfc
         /// 2 "csv" el contenido del archivo si hay ordenes correctas.
         /// </summary>
-        public Hashtable GetArchivoCsv(int proveedorId, int cuentaId, bool etiquetaNazan, string[] ordenes)
+        public Hashtable GetArchivoCsv(int proveedorId, int cuentaId, bool etiquetaNazan, string[] ordenes, bool zapato)
         {
             var proveedor = _db.proveedores.FirstOrDefault(p => p.Id == proveedorId && p.CuentaId == cuentaId);
 

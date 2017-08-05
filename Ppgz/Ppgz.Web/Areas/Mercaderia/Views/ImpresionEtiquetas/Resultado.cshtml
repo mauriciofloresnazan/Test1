@@ -4,15 +4,22 @@
     ViewBag.Title = "Generar  Etiquetas - Resultado";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var proveedor = (proveedore)ViewBag.Proveedor;
-    List<string> etiquetas = ViewBag.etiquetas;
-    string etiquetasPrint = ViewBag.etiquetasPrint;
     bool puedeDescargar = ViewBag.PuedeDescargar;
-    DataTable resultado = ViewBag.Resultado;
-    resultado.DefaultView.Sort = "TYPE DESC";
+    DataTable resultado= new DataTable();
+    List<string> etiquetas = new List<string>();
+    string etiquetasPrint = "";
+    if (puedeDescargar)
+    {
+        etiquetas = ViewBag.etiquetas;
+        etiquetasPrint = ViewBag.etiquetasPrint;
+        resultado = ViewBag.Resultado;
+        resultado.DefaultView.Sort = "TYPE DESC";
+        var dv = resultado.DefaultView;
+        dv.Sort = "TYPE DESC";
+        resultado = dv.ToTable();
+    }
 
-    var dv = resultado.DefaultView;
-    dv.Sort = "TYPE DESC";
-    resultado = dv.ToTable();
+
 }
 
 <h2>@ViewBag.Title</h2>
@@ -35,23 +42,41 @@
             <dd>
                 <div class="row">
                     <div class="col-sm-12" style="">
-                        <b>
-                            Vista Previa de primera etiqueta:
-                        </b><br><br>
+                        
+                                                    @if (puedeDescargar)
+                                                    {
+                                                        <b>
+                                                            Vista Previa de primera etiqueta:
+                                                        </b>
+                                                    }
+                                                    else
+                                                    {
+                                                        <b>
+                                                            Etiquetas no disponibles
+                                                        </b>
+                                                    }
 
-                        <img src="http://api.labelary.com/v1/printers/8dpmm/labels/3x2/0/@etiquetas[0]" style="max-height: 200px;">
+                                                        <br><br>
+                        @if (puedeDescargar)
+                        { 
+                            <img src="http://api.labelary.com/v1/printers/8dpmm/labels/3x2/0/@etiquetas[0]" style="max-height: 200px;">
+                        }
+                        
                     </div>
                 </div>
                 <ul>
-                    @foreach (DataRow dr in resultado.Rows)
+                    @if (puedeDescargar)
                     {
-                        var cssClass = "bg-success";
-                        if (dr["TYPE"].ToString().ToUpper() == "E")
+                        foreach (DataRow dr in resultado.Rows)
                         {
-                            cssClass = "bg-danger";
-                        }
-                        <li class="@cssClass" style="margin: 2px;">@dr["MESSAGE"]</li>
+                            var cssClass = "bg-success";
+                            if (dr["TYPE"].ToString().ToUpper() == "E")
+                            {
+                                cssClass = "bg-danger";
+                            }
+                            <li class="@cssClass" style="margin: 2px;">@dr["MESSAGE"]</li>
     
+                        }
                     }
                 </ul>
             </dd>
@@ -64,7 +89,10 @@
             } 
         </dl>
         <a class="btn btn-default" href="@Url.Action("Index", "ImpresionEtiquetas")"><i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
-        <input type="hidden" id="impeti" value="@etiquetasPrint" name="impeti" />
+            @if (puedeDescargar)
+            {
+                <input type="hidden" id="impeti" value="@etiquetasPrint" name="impeti" />
+            }        
     </div>
 </div>
 
