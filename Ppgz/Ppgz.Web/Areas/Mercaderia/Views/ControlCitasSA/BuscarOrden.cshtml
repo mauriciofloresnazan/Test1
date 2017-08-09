@@ -1,0 +1,160 @@
+﻿@using Ppgz.Repository
+@using Ppgz.Web.Areas.Mercaderia
+@model Ppgz.Web.Areas.Mercaderia.Models.PefilProveedorViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var proveedor = (proveedore)ViewBag.proveedor;
+
+    var currentCita = (CurrentCita)ViewBag.CurrentCita;
+
+
+    ViewBag.Title = "Registrar Cita";
+    ViewBag.Descripcion = "Paso 2 - Busque una Orden de Compra";
+
+
+}
+
+<h2>Registrar Cita</h2>
+<p class="page-description-title">
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de la Cita</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">Proveedor</label>
+            <div class="col-sm-6">
+                <div>@proveedor.Rfc - @proveedor.Nombre1</div>
+            </div>
+           
+            <label class="col-sm-2 control-label">Almacén</label>
+            <div class="col-sm-2">
+                <div>@currentCita.Centro</div>
+            </div>
+        </div>
+        @if (currentCita.Fecha != null)
+        {
+            var fecha = (DateTime)@currentCita.Fecha;
+            <div class="row">
+                <label class="col-sm-3 control-label">Fecha de la cita</label>
+                <div class="col-sm-3">
+                    <div>@fecha.ToString("dd/MM/yyyy")</div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                        <a class="btn btn-primary" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                            <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                        </a>
+                        <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                        </a>
+                        <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                            <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                        </a>
+                    </div>
+                    <div class="visible-sm visible-xs">
+                        <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                            <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                        </a>
+                        <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                        </a>
+                        <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                            <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-6">
+                    <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                        <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")">
+                            <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                        </a>
+                    </div>
+                    <div class="visible-sm visible-xs">
+                        <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")">
+                            <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+
+
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Buscar Orden de Compra</div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("BuscarOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true)
+
+
+
+            <div class="form-group">
+                <div class="alert alert-info text-center" role="alert">Si su orden de compra no aparace listada, no esta en rango de entrega para apartar una cita</div>
+                
+                <label class="col-sm-3 control-label"> Número de Documento</label>
+                <div class="col-sm-7">
+                    <input type="hidden" name="proveedorId" value="@proveedor.Id"/>
+                    <input type="text" id="numeroDocumento" autocomplete="off" class="form-control" name="numeroDocumento" placeholder="Número de Orden de Compra"/>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/assets/vendor/bootstrap3-typeahead.min.js")
+
+    
+    <script>
+        $(document).ready(function () {
+            $('#numeroDocumento').typeahead({
+                source: [
+                    @foreach (var orden in currentCita.GetOrdenesActivasDisponibles())
+                    {<text>
+                         { id: "@orden.NumeroDocumento", name: "@orden.NumeroDocumento" },
+          
+                     
+                     </text>
+                    }
+                ],
+                autoSelect: true,
+                items: "all",
+                minLength: 0,
+                showHintOnFocus: true
+
+
+        });
+
+
+
+        });
+    </script>
+}

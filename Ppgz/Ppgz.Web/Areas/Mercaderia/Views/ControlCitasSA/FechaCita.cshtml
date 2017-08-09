@@ -1,0 +1,103 @@
+﻿@using Ppgz.Repository
+@using Ppgz.Web.Areas.Mercaderia
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var fechas = (List<DateTime>)ViewBag.Fechas;
+    
+    var proveedor = (proveedore)ViewBag.proveedor;
+
+    var currentCita = (CurrentCita) ViewBag.CurrentCita;
+
+
+    ViewBag.Title = "Registrar Cita";
+    ViewBag.Descripcion = "Paso 2.1 - Seleccione la fecha de la Cita";
+}
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de la Cita</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">Proveedor</label>
+            <div class="col-sm-6">
+                <div>@proveedor.Rfc - @proveedor.Nombre1</div>
+            </div>
+
+            <label class="col-sm-2 control-label">Almacén</label>
+            <div class="col-sm-2">
+                <div>@currentCita.Centro</div>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-6 col-sm-offset-6">
+                <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+                <div class="visible-sm visible-xs">
+                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Fecha de la Cita</div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("AgregarPrimeraOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true)
+            @Html.Hidden("proveedorId",@proveedor.Id)
+            @Html.Hidden("numeroDocumento", (string)@ViewBag.NumeroDocumento)
+            <div class="form-group">
+                <label class="col-sm-3 control-label"> Fecha de la Cita</label>
+                <div class="col-sm-7">
+                    <div class="alert alert-warning" role="alert">
+                        La fecha de la cita no podrá ser modificada luego de este paso. Si desea cambiarla después, tendrá que cancelar la cita e iniciar el proceso nuevamente.
+                    </div>
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-arrow-right" aria-hidden="true" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La fecha de la cita no podrá ser modificada luego de este paso."></i> Siguiente</button>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/assets/vendor/chosen_v1.6.2/chosen.jquery.min.js")
+    <script>
+        $('#fecha').datetimepicker({
+            locale: 'es',
+            format: 'DD/MM/YYYY',
+            enabledDates: [
+                @foreach (var fecha in fechas)
+                {
+                    <text>
+                    "@fecha.ToString("yyyy-MM-dd")",
+                    </text>
+                }
+        ]
+  
+
+    });
+    </script>
+}

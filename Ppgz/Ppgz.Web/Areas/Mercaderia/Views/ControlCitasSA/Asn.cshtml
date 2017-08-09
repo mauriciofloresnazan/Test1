@@ -1,0 +1,432 @@
+﻿@using Ppgz.Repository
+@using Ppgz.Services
+@using Ppgz.Web.Areas.Mercaderia
+@{
+    ViewBag.Title = "Registrar Cita";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var preAsn = (Ppgz.CitaWrapper.PreAsn)ViewBag.OrdenCompra;
+
+    var currentCita = (CurrentCita)ViewBag.CurrentCita;
+
+
+    var fechaCita = (DateTime)currentCita.Fecha;
+
+    ViewBag.TotalPedido = preAsn.TotalPermitido;
+    ViewBag.TotalComprometido = preAsn.TotalCantidad;
+
+}
+<style>
+    .btn-file {
+        position: relative;
+        overflow: hidden;
+    }
+
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: white;
+            cursor: inherit;
+            display: block;
+        }
+</style>
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>Paso 3 - Notificación Anticipada de Entrega</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de la Cita</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">Proveedor</label>
+            <div class="col-sm-6">
+                <div>@currentCita.Proveedor.Rfc - @currentCita.Proveedor.Nombre1</div>
+            </div>
+
+            <label class="col-sm-2 control-label">Almacén</label>
+            <div class="col-sm-2">
+                <div>@currentCita.Centro</div>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-sm-3 control-label">Fecha de la Cita</label>
+            <div class="col-sm-3">
+                <div>@fechaCita.ToString("dd/MM/yyyy")</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                    <a class="btn btn-primary" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                    </a>
+                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+                <div class="visible-sm visible-xs">
+                    <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                    </a>
+                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos del ASN</div>
+    <div class="panel-body">
+        <div class="row">
+            <div style="line-height: 2em;" class="col-sm-3">
+                <strong>Orden #</strong>
+
+                <span>@preAsn.NumeroDocumento</span>
+
+            </div>
+            <div style="line-height: 2em;" class="col-sm-3">
+                <strong>Total. Pedido</strong>
+                <span id="idProductosEnOrden" style="font-size: 1.5em; color: #22aaaa;">@preAsn.TotalPedido</span>
+
+            </div>
+            <div style="line-height: 2em;" class="col-sm-3">
+                <strong>Total. Permitido</strong>
+                <span id="idProductosEnOrden" style="font-size: 1.5em; color: orange;">@preAsn.TotalPermitido</span>
+
+            </div>
+            <div style="line-height: 2em;" class="col-sm-3">
+                <strong>Total a Entregar</strong>
+                <span id="total-entregar" style="font-size: 1.5em; color: green;">0</span>
+
+            </div>
+        </div>
+        <hr style="margin-top: 5px; margin-bottom: 5px;" />
+        <div class="row">
+            <div class="col-sm-offset-3 col-sm-6">
+                <div class="input-group" style="padding: 0; margin-bottom: 5px; background: aliceblue;">
+                    <div style="padding: 6px; font-weight: bold; font-size: 1.2em;" class="text-right">
+                        <i class="fa fa-file-excel-o" aria-hidden="true"></i>
+                    </div>
+                    <div class="input-group-btn">
+                        <a class="btn btn-link" href="@Url.Action("DescargarPlantilla", "ControlCitas", new { @numeroDocumento = preAsn.NumeroDocumento })">
+                            <i class="fa fa-arrow-down" aria-hidden="true"></i> Descargar
+                        </a>
+                    </div>
+
+                    <div class="input-group-btn">
+                        <form method="POST" action="@Url.Action("CargarDesdePlantilla", "ControlCitas")" enctype="multipart/form-data">
+                            <label class="btn btn-link btn-file pull-right">
+                                <i class="fa fa-arrow-up" aria-hidden="true"></i>
+                                Cargar <input type="file" name="cargar-planilla" hidden>
+                            </label>
+                            @Html.Hidden("numeroDocumento", preAsn.NumeroDocumento)
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-condensed" id="asn">
+            <thead>
+                <tr>
+
+                    <th class="text-center">Material</th>
+                    <th class="text-center">Centro</th>
+                    <th class="text-center">Almacén</th>
+                    <th class="text-center">Descripción</th>
+                    <th class="text-center">Cant. Pedido</th>
+                    <th class="text-center">Cant. Entregada</th>
+                    <th class="text-center">Cant. Citas</th>
+                    <th class="text-center">Cant. Permitida</th>
+                    <th class="text-center">Cant. Entregar</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+
+                @foreach (var detalle in preAsn.Detalles)
+                {
+                    if (detalle.CantidadPermitida > 0)
+                    {
+
+                        var color = "#000";
+                        if (detalle.Cantidad < detalle.CantidadPermitida)
+                        {
+                            color = "red";
+                        }
+
+                        <tr data-numeroposicion="@detalle.NumeroPosicion" data-numeromaterial="@detalle.NumeroMaterial" data-descripcionmaterial="@detalle.DescripcionMaterial" data-cantidadpermitida="@detalle.CantidadPermitida">
+                            <td class="text-center vert-align"> @detalle.NumeroMaterial</td>
+                            <td class="text-center vert-align"> @detalle.Centro</td>
+                            <td class="text-center vert-align"> @detalle.Almacen</td>
+                            <td class="text-center vert-align"> @detalle.DescripcionMaterial</td>
+                            <td class="text-center vert-align"> @detalle.CantidadPedido </td>
+                            <td class="text-center vert-align"> @detalle.CantidadEntregada </td>
+                            <td class="text-center vert-align"> @detalle.CantidadCitasFuturas </td>
+                            <td class="text-center vert-align" style="color: green;">@detalle.CantidadPermitida</td>
+                            <td class="text-center cantidad-entregar vert-align" style="font-weight: bold; cursor: pointer; color: @color;">@detalle.Cantidad</td>
+                        </tr>
+                }
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+<div class="modal fade" id="modalEditarCantidad" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modificar Cantidad <span class="codigo"></span></h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-xs-4 control-label">Material</label>
+                            <div class="col-xs-8">
+                                <label class="control-label" id="editar-material"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-4 control-label">Descripción</label>
+                            <div class="col-xs-8">
+                                <label class="control-label" id="editar-descripcion"></label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-xs-4 control-label">Cantidad</label>
+                            <div class="col-xs-8">
+                                <input type="hidden" id="editar-numeromaterial">
+                                <input type="hidden" id="editar-numeroposicion">
+                                <input type="text" class="form-control numeric" id="editar-cantidad" placeholder="Cantidad">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-4 col-sm-8">
+                                <button type="submit" class="btn btn-primary" data-dismiss="modal">Actualizar</button>
+                                <button type="button" onclick="cancelar();" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<input type="hidden" id="hidCancelarActualizar" value="0" />
+@Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitas", new { @proveedorId = ViewBag.ProveedorId }))
+@Html.Hidden("RedirectTo2", Url.Action("ListaDeOrdenes", "ControlCitas"))
+
+@Scripts.Render("~/Scripts/jquery-1.10.2.js")
+
+@section Scripts {
+
+    <script type="text/javascript">
+
+
+        $(".numeric").numeric();
+
+        $("input[name='cargar-planilla']").change(function () { this.form.submit(); });
+
+        var editingItem = {
+            numeroPosicion: null,
+            numeroMaterial: null,
+            descripcionMaterial: null,
+            cantidadPermitida: null,
+            cantidadEntregar: null
+        };
+
+        var editingCell;
+        var editingTd;
+        var tr;
+
+        $(document).ready(function () {
+
+
+            var asn = $('#asn').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+
+
+            $('#asn .cantidad-entregar').on('click', function () {
+
+                tr = $(this).parent();
+
+
+                editingItem.numeroPosicion = tr.attr("data-numeroposicion");
+                editingItem.numeroMaterial = tr.attr("data-numeromaterial");
+                editingItem.descripcionMaterial = tr.attr("data-descripcionmaterial");
+                editingItem.cantidadPermitida = tr.attr("data-cantidadpermitida");
+                editingItem.cantidadEntregar = $(tr.find(".cantidad-entregar")[0]).text();
+
+                $("#editar-material").text(editingItem.numeroPosicion + " - " + editingItem.numeroMaterial);
+                $("#editar-descripcion").text(editingItem.descripcionMaterial);
+
+                $("#editar-cantidad").val(editingItem.cantidadEntregar);
+                $("#editar-numeroposicion").val(editingItem.numeroPosicion);
+                $("#editar-numeromaterial").val(editingItem.numeroMaterial);
+
+                $("#modalEditarCantidad").modal('show');
+                editingCell = asn.cell(this);
+                editingTd = this;
+                $("#hidCancelarActualizar").val("0");
+            });
+
+
+            $('#modalEditarCantidad').on('hidden.bs.modal', function (e) {
+
+                var cantidadNueva = parseInt($("#editar-cantidad").val());
+                if (isNaN(cantidadNueva)) {
+                    //todo mejorar
+                    msgError("Incorrecto, Por favor coloque una cantidad");
+                    return;
+                }
+                var data = {
+                    numeroDocumento: "@preAsn.NumeroDocumento",
+                    numeroPosicion: editingItem.numeroPosicion,
+                    numeroMaterial: editingItem.numeroMaterial,
+                    cantidad: cantidadNueva
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("AsnActualizarDetalle", "ControlCitas")",
+                    data: data,
+                    cache: false
+                }).done(function (result) {
+                    var td = $(tr.find(".cantidad-entregar")[0]);
+                    td.text(cantidadNueva);
+
+                    if (cantidadNueva < editingItem.cantidadPermitida) {
+                        td.css("color", "red");
+                    } else {
+                        td.css("color", "#000");
+                    }
+                    editingCell.data(cantidadNueva).draw();
+
+                    calcularTotalEntregar();
+
+                    msgExito(result);
+
+
+                }).fail(function (response) {
+                    msgError("Error al actualizar el registro, por favor verifique la cantidad.");
+
+
+                });
+
+
+                @*if ($("#hidCancelarActualizar").val() === "0") {
+
+                    var cantidadOrg = parseFloat($($(editingTd).parent().find('td')[5]).text());
+
+                     cantidadNueva = parseInt($("#editar-cantidad").val());
+                    var vlItem = $($(editingTd).parent().find('td')[0]).text();
+                    var vlNumOrden = "@preAsn.NumeroDocumento";
+
+                    if (isNaN(cantidadNueva)) {
+                        //todo mejorar
+                        //alert("cantidad incorrecta");
+                        msgError("Incorrecto, Por favor coloque una cantidad");
+                        return;
+                    }
+                    if (cantidadNueva > cantidadOrg) {
+                        //todo mejorar
+                        //alert("cantidad incorrecta");
+                        msgError("No se puede colocar un número mayor de pares, que el definido en la ODC");
+
+                        return;
+                    }
+
+                    if (cantidadNueva <= cantidadOrg) {
+                        editingCell.data(cantidadNueva).draw();
+                        $(editingTd).css("color", "red");
+                        // $($(editingTd.parentNode).find('td')[5]).html('<i class="fa fa-1x fa-exclamation-triangle" aria-hidden="true"></i>  Solicitado: ' + cantidadOrg);
+                        // $($(editingTd.parentNode).find('td')[5]).css("color", "#fe7000");
+                        calcularTotalEntregar();
+
+                        var requestData = {
+                            Orden: vlNumOrden.trim(),
+                            Item: vlItem.trim(),
+                            OldValue: cantidadOrg,
+                            NewValue: cantidadNueva
+                        };
+
+
+                        var data = {
+                            numeroDocumento: "@preAsn.NumeroDocumento",
+                            numeroMaterial: vlItem.trim(),
+                            cantidad: cantidadNueva
+                        };
+
+                        $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("AsnActualizarDetalle", "ControlCitas")",
+                            data: data,
+                            cache: false
+                        }).done(function (result) {
+                            console.log("-------DONE-------");
+                            console.log(result);
+
+                        }).fail(function (response) {
+                            console.log("-------FAIL-------");
+                            console.log(response);
+                        });
+                    }
+                }*@
+            });
+
+            calcularTotalEntregar();
+
+
+        });
+
+        function calcularTotalEntregar() {
+            var totalEntregar = 0;
+            $($(asn).DataTable().column(8).data()).each(function () {
+                totalEntregar = totalEntregar + parseFloat(this);
+            });
+            $("#total-entregar").text(totalEntregar);
+
+        }
+
+
+
+        function cancelar() {
+
+            $("#hidCancelarActualizar").val("1");
+            $("#modalEditarCantidad").modal('hidden.bs.modal');
+
+        }
+    </script>
+}
