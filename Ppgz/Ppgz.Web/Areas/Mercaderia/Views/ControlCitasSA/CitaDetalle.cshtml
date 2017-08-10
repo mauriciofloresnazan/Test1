@@ -74,7 +74,7 @@
                             <i class="fa fa-check-square" aria-hidden="true"></i> Guardar Cambios
                         </a>
                     }
-                    <a class="btn btn-default" href="@Url.Action("Citas", "ControlCitas")">
+                    <a class="btn btn-default" href="@Url.Action("Citas", "ControlCitasSA")">
                         <i class="fa fa-undo" aria-hidden="true"></i> Regresar
                     </a>
                 </div>
@@ -86,7 +86,7 @@
                         </a>
                     }
 
-                    <a class="btn btn-default btn-block" href="@Url.Action("Citas", "ControlCitas")">
+                    <a class="btn btn-default btn-block" href="@Url.Action("Citas", "ControlCitasSA")">
                         <i class="fa fa-undo" aria-hidden="true"></i> Regresar
                     </a>
                 </div>
@@ -213,7 +213,7 @@
 </div>
 
 
-@using (Html.BeginForm("ActualizarCita", "ControlCitas", new { }, FormMethod.Post, new { id = "form-actualizar" }))
+@using (Html.BeginForm("ActualizarCita", "ControlCitasSA", new { }, FormMethod.Post, new { id = "form-actualizar" }))
 {
     @Html.AntiForgeryToken()
     <input type="hidden" name="citaId" value="@cita.Id" />
@@ -221,8 +221,8 @@
 }
 
 <input type="hidden" id="hidCancelarActualizar" value="0" />
-@Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitas", new { @proveedorId = ViewBag.ProveedorId }))
-@Html.Hidden("RedirectTo2", Url.Action("ListaDeOrdenes", "ControlCitas"))
+@Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitasSA", new { @proveedorId = ViewBag.ProveedorId }))
+@Html.Hidden("RedirectTo2", Url.Action("ListaDeOrdenes", "ControlCitasSA"))
 
 @Scripts.Render("~/Scripts/jquery-1.10.2.js")
 
@@ -418,7 +418,7 @@
 
 
                 
-                var urlCalcularRieles = "@Url.Action("CalcularRieles", "ControlCitas")";
+                var urlCalcularRieles = "@Url.Action("CalcularRieles", "ControlCitasSA")";
 
                 var data = {
                     cantidad: cita.totalEntregar

@@ -13,7 +13,7 @@
     <div class="panel-body">
         <div class="col-md-12">
 
-            <a class="btn btn-primary" href="@Url.Action("Index", "ControlCitas")">
+            <a class="btn btn-primary" href="@Url.Action("Index", "ControlCitasSA")">
                 <i class="fa fa-calendar" aria-hidden="true"></i> Registrar Nueva Cita
             </a>
             <hr />
@@ -47,12 +47,12 @@
                         <td class="text-center vert-align">@cita.proveedore.Rfc</td>
                         <td class="text-center vert-align">@cita.proveedore.Nombre1 @cita.proveedore.Nombre2 @cita.proveedore.Nombre3 @cita.proveedore.Nombre4</td>
                         <td class="text-center">
-                            <a class="btn btn-primary btn-sm" href="@Url.Action("CitaDetalle", "ControlCitas", new {@citaId = @cita.Id})">
+                            <a class="btn btn-primary btn-sm" href="@Url.Action("CitaDetalle", "ControlCitasSA", new {@citaId = @cita.Id})">
                                 <i class="fa fa-check" aria-hidden="true"></i> Ver Detalle
                             </a>
                             @if (RulesManager.PuedeCancelarCita(cita.FechaCita))
                             {
-                                <a class="btn btn-danger btn-sm" href="@Url.Action("CancelarCita", "ControlCitas", new {@citaId = @cita.Id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será eliminada.">
+                                <a class="btn btn-danger btn-sm" href="@Url.Action("CancelarCita", "ControlCitasSA", new {@citaId = @cita.Id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será eliminada.">
                                     <i class="fa fa-check" aria-hidden="true"></i> Cancelar
                                 </a>
                             }

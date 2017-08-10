@@ -7,6 +7,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     string[] almacenes = ViewBag.Almacenes;
+    var fechas = (List<DateTime>)ViewBag.FechasPermitidas;
 }
 
 <h2>@ViewBag.Title</h2>
@@ -19,7 +20,7 @@
     <div class="panel-body">
         <div class="col-md-12">
 
-            <a class="btn btn-default" href="@Url.Action("Citas", "ControlCitas")">
+            <a class="btn btn-default" href="@Url.Action("Citas", "ControlCitasSA")">
                 <i class="fa fa-undo" aria-hidden="true"></i> Regresar al listado de Citas
             </a>
             <hr />
@@ -60,22 +61,11 @@
             </div>
             <div class="modal-body">
                 <div class="text-center">
-                    <div class="btn-group" data-toggle="buttons">
-
-                        @foreach (var almacen in almacenes)
-                        {
-                            <label class="btn btn-primary">
-                                <input type="radio" name="radio-almacen" id="@almacen" autocomplete="off"> @almacen
-                            </label>
-                            
-                        }
-
-                        <label class="btn btn-warning btn-block">
-                            <input type="radio" name="radio-almacen" id="Cross Dock" autocomplete="off">Directo a Tienda
-                        </label>
-                       
-                    </div>
-
+                    <label>Cantidad de pares a entregar:<input class="form-control input-sm" id="inCantidad"></label><br /><br />
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" /><br /><br />
+                    <a class="btn btn-primary btn-sm" href="#" onclick="enviar();">
+                        <i class="fa fa-check" aria-hidden="true"></i> Siguiente
+                    </a>
                 </div>
 
             </div>
@@ -85,12 +75,42 @@
 
 @section Scripts {
     <script type="text/javascript">
+        function enviar() {
+            $('#centro-modal').modal('hide');
 
-        var url = "@Url.Action("SeleccionarProveedor", "ControlCitas")";
+            $.blockUI({ message: '<h2>Por favor espere...</h2>' });
+
+            fechas = $("#fecha").val();
+
+            location.href = url + "?proveedorId=" + proveedorId + "&fecha=" + fechas + "&cantidad=" + cantidad;
+        }
+
+
+        $("#inCantidad").change(function () {
+            cantidad = $("#inCantidad").val();
+        });
+
+        var url = "@Url.Action("SeleccionarProveedor", "ControlCitasSA")";
 
         var proveedorId;
 
         $(document).ready(function () {
+
+
+            $('#fecha').datetimepicker({
+            locale: 'es',
+            format: 'DD/MM/YYYY',
+            enabledDates: [
+                @foreach (var fecha in fechas)
+                {
+                    <text>
+                    "@fecha.ToString("yyyy-MM-dd")",
+                    </text>
+                }
+        ]
+
+
+    });
 
             $('#centro-modal').on('show.bs.modal', function (e) {
                 proveedorId = $(e.relatedTarget).data('proveedorid');
@@ -99,11 +119,15 @@
             $("#centro-modal input[name=radio-almacen]:radio").change(function () {
 
                 $('#centro-modal').modal('hide');
-                
+
                 $.blockUI({ message: '<h2>Por favor espere...</h2>' });
 
-                location.href = url + "?proveedorId=" + proveedorId + "&centro=" + $(this).attr("id");
+                location.href = url + "?proveedorId=" + proveedorId;
             });
+
+           
+
+            
 
             $('#proveedores').DataTable({
                 "language": {

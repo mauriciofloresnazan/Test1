@@ -34,21 +34,21 @@
             </div>
             <div class="col-sm-6">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
-                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
+                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitasSA", new {proveedorId = currentCita.Proveedor.Id})">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
                     </a>
-                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitasSA")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
                 <div class="visible-sm visible-xs">
-                    <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                    <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitasSA")">
                         <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
                     </a>
-                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
+                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitasSA", new { proveedorId = currentCita.Proveedor.Id })">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
                     </a>
-                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitasSA")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
@@ -100,10 +100,10 @@
                         <td class="text-center"> @preAsn.TotalPermitido</td>
                         <td class="text-center" style="color: @color;"> @preAsn.TotalCantidad</td>
                         <td class="text-center" style="font-weight: bold; cursor: pointer">
-                            @Html.ActionLink("Editar", "Asn", "ControlCitas", new { @numeroDocumento = @preAsn.NumeroDocumento }, null)
+                            @Html.ActionLink("Editar", "Asn", "ControlCitasSA", new { @numeroDocumento = @preAsn.NumeroDocumento }, null)
                         </td>
                         <td class="text-center" style="font-weight: bold; cursor: pointer">
-                            @Html.ActionLink("Eliminar", "EliminarOrden", "ControlCitas", new { @numeroDocumento = @preAsn.NumeroDocumento }, null)
+                            @Html.ActionLink("Eliminar", "EliminarOrden", "ControlCitasSA", new { @numeroDocumento = @preAsn.NumeroDocumento }, null)
                         </td>
                     </tr>
                 }
@@ -117,7 +117,7 @@
 @if (currentCita.Cantidad > 0)
 {
     <div class="text-center">
-        <a class="btn btn-primary btn-lg" href="@Url.Action("SeleccionarRieles", "ControlCitas")">
+        <a class="btn btn-primary btn-lg" href="@Url.Action("SeleccionarRieles", "ControlCitasSA")">
             <i class="fa fa-th" aria-hidden="true"></i> Seleccionar Rieles
         </a>
     </div>

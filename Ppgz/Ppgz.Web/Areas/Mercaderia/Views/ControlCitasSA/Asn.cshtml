@@ -64,24 +64,24 @@
             </div>
             <div class="col-sm-6">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
-                    <a class="btn btn-primary" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                    <a class="btn btn-primary" href="@Url.Action("ListaDeOrdenes", "ControlCitasSA")">
                         <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
                     </a>
-                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitas", new {proveedorId = currentCita.Proveedor.Id})">
+                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitasSA", new {proveedorId = currentCita.Proveedor.Id})">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
                     </a>
-                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitasSA")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
                 <div class="visible-sm visible-xs">
-                    <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitas")">
+                    <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitasSA")">
                         <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
                     </a>
-                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitas", new { proveedorId = currentCita.Proveedor.Id })">
+                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitasSA", new { proveedorId = currentCita.Proveedor.Id })">
                         <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
                     </a>
-                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitas")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitasSA")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
                 </div>
@@ -128,13 +128,13 @@
                         <i class="fa fa-file-excel-o" aria-hidden="true"></i>
                     </div>
                     <div class="input-group-btn">
-                        <a class="btn btn-link" href="@Url.Action("DescargarPlantilla", "ControlCitas", new { @numeroDocumento = preAsn.NumeroDocumento })">
+                        <a class="btn btn-link" href="@Url.Action("DescargarPlantilla", "ControlCitasSA", new { @numeroDocumento = preAsn.NumeroDocumento })">
                             <i class="fa fa-arrow-down" aria-hidden="true"></i> Descargar
                         </a>
                     </div>
 
                     <div class="input-group-btn">
-                        <form method="POST" action="@Url.Action("CargarDesdePlantilla", "ControlCitas")" enctype="multipart/form-data">
+                        <form method="POST" action="@Url.Action("CargarDesdePlantilla", "ControlCitasSA")" enctype="multipart/form-data">
                             <label class="btn btn-link btn-file pull-right">
                                 <i class="fa fa-arrow-up" aria-hidden="true"></i>
                                 Cargar <input type="file" name="cargar-planilla" hidden>
@@ -241,8 +241,8 @@
 
 
 <input type="hidden" id="hidCancelarActualizar" value="0" />
-@Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitas", new { @proveedorId = ViewBag.ProveedorId }))
-@Html.Hidden("RedirectTo2", Url.Action("ListaDeOrdenes", "ControlCitas"))
+@Html.Hidden("RedirectTo1", Url.Action("BuscarOrden", "ControlCitasSA", new { @proveedorId = ViewBag.ProveedorId }))
+@Html.Hidden("RedirectTo2", Url.Action("ListaDeOrdenes", "ControlCitasSA"))
 
 @Scripts.Render("~/Scripts/jquery-1.10.2.js")
 
@@ -320,7 +320,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "@Url.Action("AsnActualizarDetalle", "ControlCitas")",
+                    url: "@Url.Action("AsnActualizarDetalle", "ControlCitasSA")",
                     data: data,
                     cache: false
                 }).done(function (result) {
@@ -391,7 +391,7 @@
 
                         $.ajax({
                             type: "POST",
-                            url: "@Url.Action("AsnActualizarDetalle", "ControlCitas")",
+                            url: "@Url.Action("AsnActualizarDetalle", "ControlCitasSA")",
                             data: data,
                             cache: false
                         }).done(function (result) {

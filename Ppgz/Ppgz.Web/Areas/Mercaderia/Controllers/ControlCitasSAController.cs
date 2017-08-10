@@ -55,15 +55,21 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-            ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
+            var proveedoresSA = _proveedorManager.FindByCuentaId(cuenta.Id);
+
+            ViewBag.proveedores = proveedoresSA;
 
             ViewBag.Almacenes = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.warehouses").Valor.Split(',');
-			
-			return View();
+
+            DateTime thisDay = DateTime.Today;
+
+            ViewBag.FechasPermitidas = RulesManager.GetFechasPermitidas(thisDay, proveedoresSA[0].cuenta.EsEspecial);
+
+            return View();
 		}
 		
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public ActionResult SeleccionarProveedor(int proveedorId, string centro)
+		public ActionResult SeleccionarProveedor(int proveedorId, int cantidad, string fecha)
 		{
 			if (CurrentCita != null)
 			{
@@ -73,8 +79,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			try
 			{
 				var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-				CurrentCita = new CurrentCita(cuenta.Id, proveedorId, centro);
-				return RedirectToAction("BuscarOrden");
+				CurrentCita = new CurrentCita(cuenta.Id, proveedorId);
+                CurrentCita.CantidadSinASN = cantidad;
+                CurrentCita.SetFecha(DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                return RedirectToAction("SeleccionarRieles");
 			}
 			catch (Exception exception)
 			{
@@ -83,411 +92,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 		}
 		
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public ActionResult BuscarOrden(int proveedorId = 0)
-		{
-			try
-			{
-				if (CurrentCita == null)
-				{
-					return RedirectToAction("Index");
-				}
-
-			}
-			catch (BusinessException exception)
-			{
-				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("Index");
-			}
-
-			ViewBag.proveedor = CurrentCita.Proveedor; 
-			ViewBag.CurrentCita = CurrentCita;
-			
-			return View();
-		}
-
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		[ValidateAntiForgeryToken]
-		[HttpPost]
-		public ActionResult BuscarOrden(string numeroDocumento)
-		{
-
-			if (CurrentCita == null)
-			{
-				return RedirectToAction("Index");
-			}
-			
-
-			var proveedor = CurrentCita.Proveedor;
-			
-
-		   /* var ordenCompra = CurrentCita.GetOrdenActivaDisponible(numeroDocumento);
-			
-			if (ordenCompra == null)
-			{
-				// TODO pasar a resource
-				TempData["FlashError"] = "Numero de documento incorrecto";
-				return RedirectToAction("BuscarOrden", new { proveedor.Id });
-			}*/
-			
-			//TODO
-			if (CurrentCita.Fecha != null)
-			{
-				try
-				{
-					CurrentCita.AddPreAsn(numeroDocumento);
-					return RedirectToAction("Asn", new {numeroDocumento });
-
-				}
-				catch (CurrentCita.OrdenDuplicadaException)
-				{
-					TempData["FlashError"] = "El número de documento ya se encuentra en la lista";
-					return RedirectToAction("BuscarOrden", new {proveedor.Id});
-				}
-				catch (CurrentCita.OrdenSinDetalleException)
-				{
-					TempData["FlashError"] = "La orden no contiene items para entregar, por favor seleccione otra orden";
-					return RedirectToAction("BuscarOrden", new {proveedor.Id});
-				}
-				catch (CurrentCita.NumeroDocumentoException)
-				{
-					TempData["FlashError"] = "Número de documento incorrecto";
-					return RedirectToAction("BuscarOrden", new { proveedor.Id });
-				}
-				catch (CurrentCita.FechaException)
-				{
-					TempData["FlashError"] = "La orden no puede ser entregada en la fecha de la cita";
-					return RedirectToAction("BuscarOrden", new { proveedor.Id });
-				}
-				catch (CurrentCita.OrdenCentroException)
-				{
-					TempData["FlashError"] = "La orden no contiene items para el Almacén seleccionado";
-					return RedirectToAction("BuscarOrden", new { proveedor.Id });
-				}
-			}
-
-			if (CurrentCita.GetOrdenActivaDisponible(numeroDocumento) == null)
-			{
-				TempData["FlashError"] = "Número de documento incorrecto";
-				return RedirectToAction("BuscarOrden", new { proveedor.Id });
-				
-			}
-
-
-			TempData["numeroDocumento"] = numeroDocumento;
-			ViewBag.CurrentCita = CurrentCita;
-			
-			return RedirectToAction("FechaCita");
-		}
 		
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public ActionResult FechaCita()
-		{
 
-			if (CurrentCita == null)
-			{
-				return RedirectToAction("Index");
-			}
-
-			if (CurrentCita.Fecha != null)
-			{
-				// TODO redireccionar a la seccion de busqueda o al checkout
-				return RedirectToAction("Index");
-			}
-
-
-			if (TempData["numeroDocumento"] == null)
-			{
-				return RedirectToAction("Index");
-			}
-			var numeroDocumento = (string) TempData["numeroDocumento"];
-
-			var proveedor = CurrentCita.Proveedor;
-
-			var orden = CurrentCita.GetOrdenActivaDisponible(numeroDocumento);
-
-			if (orden == null)
-			{
-				TempData["FlashError"] = "Número de documento incorrecto";
-				return RedirectToAction("BuscarOrden");
-				
-			}
-
-
-			ViewBag.Fechas = orden.FechasPermitidas;
-
-			ViewBag.NumeroDocumento = numeroDocumento;
-			ViewBag.proveedor = proveedor;
-
-			ViewBag.CurrentCita = CurrentCita;
-			return View();
-		}
 		
-		[ValidateAntiForgeryToken]
-		[HttpPost]
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public ActionResult AgregarPrimeraOrden(string numeroDocumento, string fecha)
-		{
-
-			if (CurrentCita == null)
-			{
-				return RedirectToAction("Index");
-			}
-			
-			
-			var proveedor = CurrentCita.Proveedor;
-
-			try
-			{
-				CurrentCita.SetFecha(DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture), numeroDocumento);
-
-				CurrentCita.AddPreAsn(numeroDocumento);
-
-				return RedirectToAction("Asn", new {numeroDocumento});
-
-			}
-			catch (CurrentCita.OrdenDuplicadaException)
-			{
-				TempData["FlashError"] = "El número de documento ya se encuentra en la lista";
-				return RedirectToAction("BuscarOrden", new {proveedor.Id});
-			}
-			catch (CurrentCita.OrdenSinDetalleException)
-			{
-				TempData["FlashError"] = "La orden no contiene items para entregar, por favor seleccione otra orden";
-				return RedirectToAction("BuscarOrden", new {proveedor.Id});
-			}
-			catch (CurrentCita.NumeroDocumentoException)
-			{
-				TempData["FlashError"] = "Número de documento incorrecto";
-				return RedirectToAction("BuscarOrden", new {proveedor.Id});
-			}
-			catch (BusinessException exception)
-			{
-				TempData["FlashError"] = exception.Message;
-				return RedirectToAction("BuscarOrden", new {proveedor.Id});
-			}
-			catch (CurrentCita.FechaException)
-			{
-				TempData["FlashError"] = "La orden no puede ser entregada en la fecha de la cita";
-				return RedirectToAction("BuscarOrden", new {proveedor.Id});
-			}
-			catch (CurrentCita.OrdenCentroException)
-			{
-				TempData["FlashError"] = "La orden no contiene items para el Almacén seleccionado";
-				return RedirectToAction("BuscarOrden", new { proveedor.Id });
-			}
-		}
-
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public ActionResult Asn(string numeroDocumento)
-		{
-
-			if (CurrentCita == null)
-			{
-				return RedirectToAction("Index");
-			}
-
-
-			if (CurrentCita.Fecha == null)
-			{
-				return RedirectToAction("BuscarOrden");
-			}
-
-			if(!CurrentCita.HasPreAsn(numeroDocumento))
-			{
-				return RedirectToAction("ListaDeOrdenes");
-			}
-
-			ViewBag.OrdenCompra = CurrentCita.GetPreAsn(numeroDocumento);
-			ViewBag.CurrentCita = CurrentCita;
-			return View();
-		
-		}
-		
-		[HttpPost]
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public JsonResult AsnActualizarDetalle(string numeroDocumento, string numeroPosicion,  string numeroMaterial, int cantidad)
-		{
-			try
-			{
-				CurrentCita.UpdateDetail(numeroDocumento, numeroPosicion, numeroMaterial, cantidad);
-			}
-			catch (Exception exception)
-			{
-				Response.StatusCode = (int)HttpStatusCode.BadRequest;
-				return Json(exception.Message);
-			}
-			return Json("Actualizado correctamente");
-		}
-
-
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public ActionResult ListaDeOrdenes()
-		{
-
-			if (CurrentCita == null)
-			{
-				return RedirectToAction("Index");
-			}
-
-			if (CurrentCita.Fecha == null)
-			{
-				return RedirectToAction("BuscarOrden");
-			}
-
-			ViewBag.CurrentCita = CurrentCita;
-			
-			return View();
-		}
-
-
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public ActionResult EliminarOrden(string numeroDocumento)
-		{
-			CurrentCita.RemovePreAsn(numeroDocumento);
-
-			TempData["FlashSuccess"] = "Orden eliminada exitosamente";
-			return RedirectToAction("ListaDeOrdenes");
-		}
-
-
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public void DescargarPlantilla(string numeroDocumento)
-		{
-
-			if (CurrentCita == null)
-			{
-				return;
-			}
-			if (CurrentCita.Fecha == null)
-			{
-				return;
-			}
-
-			var ordenCompra = CurrentCita.GetPreAsn(numeroDocumento);
-
-			if (ordenCompra == null)
-			{
-				return;
-			}
-
-			var dt = new DataTable();
-			dt.Columns.Add("NumeroPosicion");
-			dt.Columns.Add("NumeroMaterial");
-			dt.Columns.Add("Descripcion");
-			dt.Columns.Add("Cantidad");
-
-			foreach (var detalle in ordenCompra.Detalles)
-			{
-				if (detalle.CantidadPermitida > 0)
-				{
-					dt.Rows.Add(detalle.NumeroPosicion, detalle.NumeroMaterial,
-						detalle.DescripcionMaterial, detalle.CantidadPermitida);
-					
-				}
-			}
-			
-			FileManager.ExportExcel(dt, numeroDocumento + "_plantilla", HttpContext);
-		}
-
-			   
-		[HttpPost]
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public ActionResult CargarDesdePlantilla(FormCollection collection)
-		{
-			var numeroDocumento = collection["numeroDocumento"];
-
-			if (CurrentCita == null)
-			{
-				return RedirectToAction("Index");
-			}
-			if (CurrentCita.Fecha == null)
-			{
-				return RedirectToAction("BuscarOrden");
-			}
-			if (!CurrentCita.HasPreAsn(numeroDocumento))
-			{
-				return RedirectToAction("Index");
-			}
-
-			var file = Request.Files[0];
-
-			if (file != null && file.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-			{
-				TempData["FlashError"] = "Archivo incorrecto";
-				return RedirectToAction("Asn", new { numeroDocumento });
-			}
-
-			if (file == null)
-			{
-				TempData["FlashError"] = "Archivo incorrecto";
-				return RedirectToAction("Asn", new { numeroDocumento });
-			}
-
-			var fileName = Path.GetFileName(file.FileName);
-			
-
-
-			if (fileName == null)
-			{
-				TempData["FlashError"] = "Archivo incorrecto";
-				return RedirectToAction("Asn", new { numeroDocumento });
-			}
-
-			/*var ordenCompra = CurrentCita.GetPreAsn(numeroDocumento);
-			var detalles = ordenCompra.Detalles;
-			*/
-
-			var wb = new XLWorkbook(file.InputStream);
-
-
-			var ws = wb.Worksheet(1);
-
-			try
-			{
-				for (var i = 2; i < ws.RowsUsed().ToList().Count + 1; i++)
-				{
-					var numeroPosicion = ws.Row(i).Cell(1).Value.ToString();
-					var numeroMaterial = ws.Row(i).Cell(2).Value.ToString();
-					var cantidad = int.Parse(ws.Row(i).Cell(4).Value.ToString());
-
-					try
-					{
-						CurrentCita.UpdateDetail(numeroDocumento, numeroPosicion, numeroMaterial, cantidad);
-					}
-					catch (Exception exception)
-					{
-						throw new BusinessException(string.Format("Material {0}: {1}", numeroMaterial, exception.Message));
-					}
-
-
-/*                    var detalle = detalles.FirstOrDefault(d => d.NumeroPosicion == numeroPosicion && d.NumeroMaterial == numeroMaterial);
-
-					if (detalle != null)
-					{
-						if (cantidad > detalle.CantidadPermitida)
-						{
-							throw new BusinessException(string.Format("Error en la cantidad del Material {0}", detalle.NumeroMaterial));
-						}
-						detalle.Cantidad  = cantidad;
-					}*/
-				}
-			}
-			catch (BusinessException businessException)
-			{
-				TempData["FlashError"] = businessException.Message;
-				return RedirectToAction("Asn", new { numeroDocumento });
-			}
-			catch (Exception)
-			{
-				TempData["FlashError"] = "Archivo incorrecto";
-				return RedirectToAction("Asn", new { numeroDocumento });
-			}
-
-			//TODO
-			TempData["FlashSuccess"] = "Archivo cargado exitosamente";
-			return RedirectToAction("Asn", new { numeroDocumento });
-		}
 		
 
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
@@ -503,7 +110,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				return RedirectToAction("BuscarOrden");
 			}
 
-			if (CurrentCita.Cantidad < 1)
+			if (CurrentCita.CantidadSinASN < 1)
 			{
 				TempData["FlashError"] = "Debe incluir al menos un (1) PAR para poder agendar la Cita";
 				return RedirectToAction("BuscarOrden");
@@ -581,31 +188,31 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				HorarioRielesIds = rielesIds.ToList()
 			};
 
-			foreach (var preAsn in CurrentCita.GetPreAsns())
-			{
-				foreach (var preAsnDetail in preAsn.Detalles.Where(preAsnDetail => preAsnDetail.Cantidad > 0))
-				{
-					preCita.Asns.Add(new Asn
-					{
-						Cantidad = preAsnDetail.Cantidad,
-						NombreMaterial = preAsnDetail.DescripcionMaterial,
-						NumeroMaterial = preAsnDetail.NumeroMaterial,
-						NumeroPosicion = preAsnDetail.NumeroPosicion,
-						OrdenNumeroDocumento = preAsn.NumeroDocumento,
-                        Tienda = preAsn.Tienda,
+			//foreach (var preAsn in CurrentCita.GetPreAsns())
+			//{
+			//	foreach (var preAsnDetail in preAsn.Detalles.Where(preAsnDetail => preAsnDetail.Cantidad > 0))
+			//	{
+			//		preCita.Asns.Add(new Asn
+			//		{
+			//			Cantidad = preAsnDetail.Cantidad,
+			//			NombreMaterial = preAsnDetail.DescripcionMaterial,
+			//			NumeroMaterial = preAsnDetail.NumeroMaterial,
+			//			NumeroPosicion = preAsnDetail.NumeroPosicion,
+			//			OrdenNumeroDocumento = preAsn.NumeroDocumento,
+   //                     Tienda = preAsn.Tienda,
 
-                        TiendaOrigen = preAsn.TiendaOrigen,
-                        CantidadSolicitada = preAsnDetail.CantidadPedido,
-                        InOut = preAsn.InOut,
-                        Precio = preAsnDetail.Precio,
-                        UnidadMedida = preAsnDetail.UnidadMedida,
-                        NumeroSurtido = preAsn.NumeroOrdenSurtido,
-                        NumeroMaterial2 = preAsnDetail.NumeroMaterial2,
+   //                     TiendaOrigen = preAsn.TiendaOrigen,
+   //                     CantidadSolicitada = preAsnDetail.CantidadPedido,
+   //                     InOut = preAsn.InOut,
+   //                     Precio = preAsnDetail.Precio,
+   //                     UnidadMedida = preAsnDetail.UnidadMedida,
+   //                     NumeroSurtido = preAsn.NumeroOrdenSurtido,
+   //                     NumeroMaterial2 = preAsnDetail.NumeroMaterial2,
 
-                        Centro = preAsn.Centro
-					});
-				}
-			}
+   //                     Centro = preAsn.Centro
+			//		});
+			//	}
+			//}
 		    try
 		    {
 		        /*
