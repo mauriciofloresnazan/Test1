@@ -49,7 +49,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                                     model.ResponsableEmail,
                                     model.ResponsableTelefono,
                                     model.ResponsablePassword,
-                                    model.Especial);
+                                    model.Especial,
+                                    model.SinASN);
 
                 var commonManager = new CommonManager();
 
@@ -133,6 +134,31 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 _cuentaManager.EstablecerCuentaEspecial(
                     cuentaId, esEspecial);
+
+                return Json("success");
+            }
+
+            catch (Exception e)
+            {
+                var log = CommonManager.BuildMessageLog(
+                    TipoMensaje.Error,
+                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                    e.ToString(), Request);
+
+                CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                return Json(e.Message);
+            }
+        }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        public JsonResult EstablecerCuentaSinASN(int cuentaId, bool SinASN)
+        {
+            try
+            {
+                _cuentaManager.EstablecerCuentaSinASN(
+                    cuentaId, SinASN);
 
                 return Json("success");
             }

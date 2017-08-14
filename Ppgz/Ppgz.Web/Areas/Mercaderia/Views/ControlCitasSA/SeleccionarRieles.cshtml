@@ -87,12 +87,6 @@
                     <a class="btn btn-primary btn-agendar">
                         <i class="fa fa-check-square" aria-hidden="true"></i> Agendar Cita
                     </a>
-                    <a class="btn btn-warning" href="@Url.Action("ListaDeOrdenes", "ControlCitasSA")">
-                        <i class="fa fa-check-square" aria-hidden="true"></i> Modificar Cita
-                    </a>
-                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitasSA", new {proveedorId = currentCita.Proveedor.Id})">
-                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
-                    </a>
                     <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitasSA")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
                         <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                     </a>
@@ -132,11 +126,7 @@
         <p>
             <div>
                 <div class="col-md-7" style="padding: 0; margin-top: 10px;">Es importante que la selección de rieles tenga en lo posible alguno de los siguientes patrones:</div>
-                <ul class="list-inline col-md-5" style="padding: 0;">
-                    <li><strong>Vertical</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-vertical.jpg")" alt="Vertical" /></li>
-                    <li><strong>Horizontal</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-horizontal.jpg")" alt="Horizontal" /> </li>
-                    <li><strong>Matriz</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-matriz.jpg")" alt="Matriz" /></li>
-                </ul>
+                
             </div>
         </p>
 
@@ -150,6 +140,11 @@
                     @foreach (var result in andenes)
                     {
                         var anden = result.andene;
+
+                        if (anden.Anden=="1")
+                        {
+
+                        
 
                         var borderRight = "";
                         if (int.Parse(anden.Anden) < andenes.Count())
@@ -167,6 +162,7 @@
                                 }
                             </div>
                         </th>
+                        }
                     }
                 </tr>
             </thead>
@@ -211,10 +207,21 @@
                                 disponibleClass = "";
                             }
 
-                            <td class="text-center" style="border-right: @borderRight">
-                                <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
 
-                            </td>
+                            if (riel.AlmacenRielId == 1 || riel.AlmacenRielId == 2)
+                            {
+                                <td class="text-center" style="border-right: @borderRight">
+                                    <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
+                                </td>
+                            }
+                            else
+                            {
+
+                            }
+
+
+
+
 
                         }
 

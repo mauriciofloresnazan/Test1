@@ -233,7 +233,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 TempData["FlashSuccess"] = response.Content + ", " + response.StatusDescription;
                 return RedirectToAction("SeleccionarRieles");
                 */
-		        CitaManager.RegistrarCita(preCita);
+		        CitaManager.RegistrarCitaSinASN(preCita);
 		        
 		    }
 		    catch (ScaleException exception)
