@@ -57,7 +57,7 @@
     <div class="modal-dialog modal-sm" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title text-center">Seleccione el Almacén de destino de la Cita</h4>
+                <h4 class="modal-title text-center">Datos de la Cita</h4>
             </div>
             <div class="modal-body">
                 <div class="text-center">
@@ -75,6 +75,38 @@
 
 @section Scripts {
     <script type="text/javascript">
+
+        // forceNumeric() plug-in implementation
+        jQuery.fn.forceNumeric = function () {
+
+            return this.each(function () {
+                $(this).keydown(function (e) {
+                    var key = e.which || e.keyCode;
+
+                    if (!e.shiftKey && !e.altKey && !e.ctrlKey &&
+                        // numbers   
+                        key >= 48 && key <= 57 ||
+                        // Numeric keypad
+                        key >= 96 && key <= 105 ||
+                        // Backspace and Tab and Enter
+                        key == 8 || key == 9 || key == 13 ||
+                        // Home and End
+                        key == 35 || key == 36 ||
+                        // left and right arrows
+                        key == 37 || key == 39 ||
+                        // Del and Ins
+                        key == 46 || key == 45)
+                        return true;
+
+                    return false;
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            $("#inCantidad").forceNumeric();
+        });
+
         function enviar() {
             $('#centro-modal').modal('hide');
 

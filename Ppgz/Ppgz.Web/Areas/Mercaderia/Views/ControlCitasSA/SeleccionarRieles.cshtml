@@ -23,7 +23,7 @@
     }).Distinct().ToList().OrderBy(a => a.andene.Codigo);
 
 
-    var rielesNecesarios = RulesManager.GetCantidadRieles(currentCita.CantidadSinASN);
+    //var rielesNecesarios = RulesManager.GetCantidadRieles(currentCita.CantidadSinASN);
     
 }
 <link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
@@ -120,12 +120,11 @@
     <div class="panel-body">
 
         <p style="margin: 0;"><i>
-                Debe entergar <strong>@currentCita.Cantidad</strong> pares, por lo que debe seleccionar 
-            <strong>@rielesNecesarios</strong> rieles.</i> 
+               
         </p>
         <p>
             <div>
-                <div class="col-md-7" style="padding: 0; margin-top: 10px;">Es importante que la selección de rieles tenga en lo posible alguno de los siguientes patrones:</div>
+                <div class="col-md-7" style="padding: 0; margin-top: 10px;">.</div>
                 
             </div>
         </p>
@@ -254,14 +253,12 @@
     @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
 
     <script type="text/javascript">
-        var rielesNecesarios = parseInt("@rielesNecesarios");
+        
         var rielesSeleccionados = [];
         var enviado = false;
         $(function() {
             $('.btn-agendar').click(function() {
 
-                // TODO MEJORAR
-                if (rielesSeleccionados.length === rielesNecesarios) {
 
                     if (enviado) {
 
@@ -270,7 +267,7 @@
                     }
 
 
-                    for (var i = 0; i < rielesNecesarios; i++) {
+                    for (var i = 0; i < rielesSeleccionados.length; i++) {
                         $('<input>').attr({
                             type: 'hidden',
                             name: 'rielesIds',
@@ -292,16 +289,13 @@
                     $.blockUI({ message: '<h2>Por favor espere...</h2>' });
 
 
-                } else {
-                    msgError("Por favor verifique su selección");
-
-                }
+               
 
 
             });
 
             CargarEventoSeleccion();
-            VerificarRieles();
+          
 
         });
 
@@ -325,14 +319,7 @@
 
         }
 
-        function VerificarSelecciones() {
-            if (rielesSeleccionados.length === rielesNecesarios) {
-                $('.riel-disponible:not(.usado)').bootstrapToggle('disable');
-            } else {
-
-                $('.riel-disponible:not(.usado)').bootstrapToggle('enable');
-            }
-        }
+        
 
         function CargarEventoSeleccion() {
 
