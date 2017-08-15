@@ -1,0 +1,173 @@
+﻿@using Ppgz.Repository
+@model dynamic
+
+@{
+    ViewBag.Title = "Registrar Cita";
+    ViewBag.Descripcion = "Paso 1 - Seleccione una Razón Social.";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string[] almacenes = ViewBag.Almacenes;
+    var fechas = (List<DateTime>)ViewBag.FechasPermitidas;
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Razones Sociales</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+
+            <a class="btn btn-default" href="@Url.Action("Citas", "ControlCitasSA")">
+                <i class="fa fa-undo" aria-hidden="true"></i> Regresar al listado de Citas
+            </a>
+            <hr />
+            <table id="proveedores" class="table table-striped table-condensed table-bordered">
+                <thead>
+                <tr>
+                    <th class="text-center">Número de Proveedor</th>
+                    <th class="text-center">RFC</th>
+                    <th class="text-center">Nombre Proveedor</th>
+                    <th class="text-center"></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (proveedore proveedor in (ViewBag.proveedores))
+                {
+                    <tr>
+                        <td class="text-center vert-align">@proveedor.NumeroProveedor</td>
+                        <td class="text-center vert-align">@proveedor.Rfc</td>
+                        <td class="text-center vert-align">@proveedor.Nombre1</td>
+                        <td class="text-center vert-align">
+                            <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#centro-modal" data-proveedorid="@proveedor.Id">
+                                <i class="fa fa-check" aria-hidden="true"></i> Siguiente
+                            </a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="centro-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Datos de la Cita</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <label>Cantidad de pares a entregar:<input class="form-control input-sm" id="inCantidad"></label><br /><br />
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" /><br /><br />
+                    <a class="btn btn-primary btn-sm" href="#" onclick="enviar();">
+                        <i class="fa fa-check" aria-hidden="true"></i> Siguiente
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+        // forceNumeric() plug-in implementation
+        jQuery.fn.forceNumeric = function () {
+
+            return this.each(function () {
+                $(this).keydown(function (e) {
+                    var key = e.which || e.keyCode;
+
+                    if (!e.shiftKey && !e.altKey && !e.ctrlKey &&
+                        // numbers   
+                        key >= 48 && key <= 57 ||
+                        // Numeric keypad
+                        key >= 96 && key <= 105 ||
+                        // Backspace and Tab and Enter
+                        key == 8 || key == 9 || key == 13 ||
+                        // Home and End
+                        key == 35 || key == 36 ||
+                        // left and right arrows
+                        key == 37 || key == 39 ||
+                        // Del and Ins
+                        key == 46 || key == 45)
+                        return true;
+
+                    return false;
+                });
+            });
+        }
+
+        $(document).ready(function () {
+            $("#inCantidad").forceNumeric();
+        });
+
+        function enviar() {
+            $('#centro-modal').modal('hide');
+
+            $.blockUI({ message: '<h2>Por favor espere...</h2>' });
+
+            fechas = $("#fecha").val();
+
+            location.href = url + "?proveedorId=" + proveedorId + "&fecha=" + fechas + "&cantidad=" + cantidad;
+        }
+
+
+        $("#inCantidad").change(function () {
+            cantidad = $("#inCantidad").val();
+        });
+
+        var url = "@Url.Action("SeleccionarProveedor", "ControlCitasSA")";
+
+        var proveedorId;
+
+        $(document).ready(function () {
+
+
+            $('#fecha').datetimepicker({
+            locale: 'es',
+            format: 'DD/MM/YYYY',
+            enabledDates: [
+                @foreach (var fecha in fechas)
+                {
+                    <text>
+                    "@fecha.ToString("yyyy-MM-dd")",
+                    </text>
+                }
+        ]
+
+
+    });
+
+            $('#centro-modal').on('show.bs.modal', function (e) {
+                proveedorId = $(e.relatedTarget).data('proveedorid');
+            });
+
+            $("#centro-modal input[name=radio-almacen]:radio").change(function () {
+
+                $('#centro-modal').modal('hide');
+
+                $.blockUI({ message: '<h2>Por favor espere...</h2>' });
+
+                location.href = url + "?proveedorId=" + proveedorId;
+            });
+
+           
+
+            
+
+            $('#proveedores').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+
+    </script>
+}

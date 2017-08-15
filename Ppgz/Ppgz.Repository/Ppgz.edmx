@@ -163,6 +163,7 @@
           <Property Name="FechaRegistro" Type="datetime" Precision="0" />
           <Property Name="Tipo" Type="enum" />
           <Property Name="EsEspecial" Type="bool" Nullable="false" />
+          <Property Name="SinASN" Type="bool" Nullable="false" />
           <Property Name="Activo" Type="bool" Nullable="false" />
           <Property Name="Borrado" Type="bool" Nullable="false" />
           <Property Name="FechaTx" Type="datetime" Precision="0" />
@@ -1093,6 +1094,7 @@
           <Property Name="FechaRegistro" Type="DateTime" />
           <Property Name="Tipo" Type="String" MaxLength="65532" FixedLength="false" Unicode="false" />
           <Property Name="EsEspecial" Type="Boolean" Nullable="false" />
+          <Property Name="SinASN" Type="Boolean" Nullable="false" />
           <Property Name="Activo" Type="Boolean" Nullable="false" />
           <Property Name="Borrado" Type="Boolean" Nullable="false" />
           <Property Name="FechaTx" Type="DateTime" />
@@ -1947,6 +1949,7 @@
                 <ScalarProperty Name="FechaRegistro" ColumnName="FechaRegistro" />
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
                 <ScalarProperty Name="EsEspecial" ColumnName="EsEspecial" />
+                <ScalarProperty Name="SinASN" ColumnName="SinASN" />
                 <ScalarProperty Name="Activo" ColumnName="Activo" />
                 <ScalarProperty Name="Borrado" ColumnName="Borrado" />
                 <ScalarProperty Name="FechaTx" ColumnName="FechaTx" />

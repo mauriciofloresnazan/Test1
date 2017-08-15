@@ -198,6 +198,7 @@
     <Compile Include="Areas\FacturaViewModel.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\AdministrarPerfilesController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\AdministrarUsuariosController.cs" />
+    <Compile Include="Areas\Mercaderia\Controllers\ControlCitasSAController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ControlCitasController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\FacturasController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\GestionProveedoresController.cs" />
@@ -1206,6 +1207,14 @@
     <Content Include="App_Data\manual_administrador.pdf" />
     <Content Include="App_Data\manual_usuario.pdf" />
     <Content Include="Areas\Nazan\Views\Configneg\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitasSA\Asn.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitasSA\BuscarOrden.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitasSA\CitaDetalle.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitasSA\Citas.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitasSA\FechaCita.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitasSA\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitasSA\ListaDeOrdenes.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ControlCitasSA\SeleccionarRieles.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

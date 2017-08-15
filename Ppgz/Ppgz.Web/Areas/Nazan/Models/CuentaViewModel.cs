@@ -8,6 +8,9 @@ namespace Ppgz.Web.Areas.Nazan.Models
         [Display(Name = "Pronto pago")]
         public bool Especial { get; set; }
 
+        [Display(Name = "Sin ASN")]
+        public bool SinASN { get; set; }
+
         [Required(ErrorMessage = "El campo es obligatorio.")]
         [Display(Name = "Tipo de Proveedor")]
         public string TipoCuenta { get; set; }

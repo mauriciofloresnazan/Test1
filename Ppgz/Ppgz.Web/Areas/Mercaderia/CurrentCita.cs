@@ -49,8 +49,22 @@ namespace Ppgz.Web.Areas.Mercaderia
 
         public int Cantidad
         {
-            get { return _ordenes.Sum(o => o.TotalCantidad); }
+            get {
+                if (cantidadSinASN > 0) {
+                    return cantidadSinASN;
+                } else {
+                        return _ordenes.Sum(o => o.TotalCantidad);
+                }
+                }
         }
+
+
+        //Se agrego para poder tener una cantidad sin ASN sin modificar la logica actual
+        public int CantidadSinASN { get => cantidadSinASN; set => cantidadSinASN = value; }
+
+        private int cantidadSinASN=0;
+        //fin
+
 
         public readonly bool  EsCrossDock;
         public List<PreAsn> GetOrdenesActivasDisponibles()
@@ -120,13 +134,31 @@ namespace Ppgz.Web.Areas.Mercaderia
             }
 
 
-               
+
             if (!_ordenesActivas.Any())
             {
                 throw new BusinessException("No hay Órdenes de Compras con entregas disponibles para crear una Cita. Por favor verifique su selección (Proveedor, Almacén, Directo a Tienda).");
             }
 
             Centro = centro;
+        }
+
+        public CurrentCita(int cuentaId, int proveedorId)
+        {
+            var proveedorManager = new ProveedorManager();
+
+            var proveedor = proveedorManager.Find(proveedorId, cuentaId);
+
+            if (proveedor == null)
+            {
+                throw new BusinessException("Proveedor incorrecto");
+            }
+
+            _proveedor = proveedor;
+
+            
+
+            Centro = "Sin ASN";
         }
 
         public void SetFecha(DateTime fecha, string numeroDocumento)
@@ -146,6 +178,12 @@ namespace Ppgz.Web.Areas.Mercaderia
                 
             }
             
+            Fecha = fecha;
+        }
+
+        public void SetFecha(DateTime fecha)
+        {
+
             Fecha = fecha;
         }
 

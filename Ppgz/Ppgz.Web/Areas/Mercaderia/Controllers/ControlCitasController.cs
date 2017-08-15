@@ -653,8 +653,13 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		public ActionResult Citas()
 		{
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-			
-			var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
+
+            if (cuenta.SinASN)
+            {
+                return RedirectToAction("Citas", "ControlCitasSA");
+            }
+
+            var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
 			var db = new Entities();
 
 			var fecha = DateTime.Today.Date;

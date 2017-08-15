@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\temp\Implus\Software\Source\impuls\Ppgz\Ppgz.Repository\Ppgz.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\dev\Documents\impuls\Ppgz\Ppgz.Repository\Ppgz.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

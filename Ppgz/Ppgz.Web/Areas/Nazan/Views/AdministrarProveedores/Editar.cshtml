@@ -35,7 +35,7 @@
                 <div class="col-sm-4">
                     <strong>Pronto pago</strong>
                 </div>
-                <div class="col-sm-8">
+                <div class="col-sm-4">
                     @{
                         var check = "";
                         if (@cuenta.EsEspecial)
@@ -46,7 +46,25 @@
                     }
                     <input type="checkbox" @check name="especial-check" id="especial-check" data-toggle="toggle" data-size="small" data-on="SI" data-off="NO" />
                 </div>
+                
+             </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Sin ASN</strong>
+                </div>
+                <div class="col-sm-4">
+                    @{
+                        var checkSin = "";
+                        if (@cuenta.SinASN)
+                        {
+                            checkSin = "checked";
+                        }
+
+                    }
+                    <input type="checkbox" @checkSin name="SinASN-check" id="SinASN-check" data-toggle="toggle" data-size="small" data-on="SI" data-off="NO" />
+                </div>
             </div>
+
             <hr/>
             <div class="row">
                 <div class="col-sm-4">
@@ -325,6 +343,7 @@
         var urlAsociarProveedor = "@Url.Action("AsociarProveedor", "AdministrarProveedores")";
 
         var urlEstablecerCuentaEspecial = "@Url.Action("EstablecerCuentaEspecial", "AdministrarProveedores")";
+        var urlEstablecerCuentaSinASN = "@Url.Action("EstablecerCuentaSinASN", "AdministrarProveedores")";
 
         $("#especial-check").change(function () {
 
@@ -368,8 +387,61 @@
                         Actualización realizada correctamente. \
                     </div>' );
 
-              
-                
+
+
+            }).fail(function (result) {
+                alert(result.error);
+
+            }).always(function () {
+                $.unblockUI();
+            });
+
+        });
+
+        $("#SinASN-check").change(function () {
+
+            var checked;
+            var checkbox = document.getElementById('SinASN-check');
+            if (checkbox.checked) {
+                checked = true;
+            } else {
+                checked = false;
+            }
+
+            var data = {
+                cuentaid: cuentaId,
+                SinASN: checked
+            };
+
+            $.blockUI({ message: '<h2>Actualizando la Cuenta</h2><h2>Por favor espere...</h2>' });
+
+            $.ajax({
+                type: "POST",
+                url: urlEstablecerCuentaSinASN,
+                data: data,
+                cache: false
+            }).done(function (result) {
+
+                if (result.error) {
+                    alert(result.error);
+                    return;
+                }
+
+                var alerta = $("#alerta");
+                if (alerta) {
+                    alerta.remove();
+                }
+
+
+                var contenido = $('body .body-content');
+                contenido.prepend(
+                    '<div id="alerta" class="alert alert-success alert-dismissible" role="alert"> \
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\
+                        Actualización realizada correctamente. \
+                    </div>' );
+
+
+
             }).fail(function (result) {
                 alert(result.error);
 
@@ -470,10 +542,10 @@
                 cargo: $("#ResponsableCargo").val(),
                 telefono: $("#ResponsableTelefono").val(),
                 email: $("#ResponsableEmail").val()
-                
+
             };
 
-            $.blockUI({ message: '<h2>Actualizando la Cuenta</h2><h2>Por favor espere...</h2>' , 
+            $.blockUI({ message: '<h2>Actualizando la Cuenta</h2><h2>Por favor espere...</h2>' ,
                     baseZ: 2000});
 
             $.ajax({
@@ -489,7 +561,7 @@
                 }
 
                 location.href = "@Url.Action("Editar", "AdministrarProveedores", new { id = @cuenta.Id, successMessage = "Responsable actualizado correctamente" })";
-                
+
 
 
 

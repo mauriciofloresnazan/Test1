@@ -279,7 +279,97 @@ namespace Ppgz.CitaWrapper
               
             });
         }
-        
+
+
+        public static void RegistrarCitaSinASN(PreCita precita)
+        {
+
+            var db = new Entities();
+
+            // Disponibildiad de Rieles
+            if (db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad == false))
+            {
+                throw new Exception("Uno o más rieles seleccionados ya no estan disponibles,  por favor verifique su selección.");
+            }
+
+            if (!db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad))
+            {
+                throw new Exception("Selección de rieles incorrecta.");
+            }
+
+
+            //ValidarCita(precita);
+            db = new Entities();
+
+            if (db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad == false))
+            {
+                throw new Exception("Uno o más rieles seleccionados ya no estan disponibles,  por favor verifique su selección.");
+            }
+
+            if (!db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad))
+            {
+                throw new Exception("Selección de rieles incorrecta.");
+            }
+
+            var cita = new cita
+            {
+                FechaCita = precita.Fecha,
+                UsuarioIdTx = precita.UsuarioId,
+                CantidadTotal = precita.Cantidad,
+                ProveedorId = precita.ProveedorId,
+                Almacen = precita.Centro,
+                RielesOcupados = (sbyte)precita.HorarioRielesIds.Count,
+                OperacionTx = "CREATE"
+            };
+
+            //foreach (var asn in precita.Asns)
+            //{
+            //    cita.asns.Add(new asn
+            //    {
+            //        Cantidad = asn.Cantidad,
+            //        NombreMaterial = asn.NombreMaterial,
+            //        NumeroMaterial = asn.NumeroMaterial,
+            //        NumeroPosicion = asn.NumeroPosicion,
+            //        OrdenNumeroDocumento = asn.OrdenNumeroDocumento,
+            //        Tienda = asn.Tienda,
+
+            //        TiendaOrigen = asn.TiendaOrigen,
+            //        Precio = asn.Precio,
+            //        UnidadMedida = asn.UnidadMedida,
+            //        CantidadPedidoSap = asn.CantidadSolicitada,
+            //        InOut = asn.InOut,
+            //        NumeroOrdenSurtido = asn.NumeroSurtido,
+            //        NumeroMaterial2 = asn.NumeroMaterial2,
+            //        Centro = asn.Centro
+            //    });
+            //}
+
+
+            db.citas.Add(cita);
+            db.SaveChanges();
+
+            foreach (var horarioRielId in precita.HorarioRielesIds)
+            {
+
+                db = new Entities();
+                var horarioRiel = db.horariorieles.Find(horarioRielId);
+                horarioRiel.Disponibilidad = false;
+                horarioRiel.CitaId = cita.Id;
+                db.Entry(horarioRiel).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            //Task.Factory.StartNew(() =>
+            //{
+            //    var scaleManager = new ScaleManager();
+
+            //    cita = db.citas.Find(cita.Id);
+            //    scaleManager.Registrar(cita);
+
+            //});
+        }
+
+
         public static void CancelarCita(int citaId)
         {
             var db = new Entities();

@@ -66,7 +66,11 @@
                                         }
                                         else
                                         {
-                                            <li class=""><a href="@Url.Action(item.Split('|')[2].ToString(), item.Split('|')[3].ToString(), new {area = item.Split('|')[5].ToString()})"><i class="@item.Split('|')[4].ToString()" aria-hidden="true"></i> @item.Split('|')[1].ToString() </a></li>
+                                            if (item.Split('|')[3].ToString() != "ControlCitasSA")
+                                            {
+                                                <li class=""><a href="@Url.Action(item.Split('|')[2].ToString(), item.Split('|')[3].ToString(), new {area = item.Split('|')[5].ToString()})"><i class="@item.Split('|')[4].ToString()" aria-hidden="true"></i> @item.Split('|')[1].ToString() </a></li>
+                                            }
+
                                         }
                                     }
                                 }

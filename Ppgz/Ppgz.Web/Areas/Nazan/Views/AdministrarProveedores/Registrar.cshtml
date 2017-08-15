@@ -34,9 +34,13 @@
             </div>
             <div class="form-group">
                
-                <div class="col-sm-offset-3 col-sm-7">
+                <div class="col-sm-offset-3 col-sm-3">
                     @Html.CheckBoxFor(m => m.Especial, new { @class = "" }) ¿Es Pronto Pago?
                     @Html.ValidationMessageFor(m => m.Especial)
+                </div>
+                <div class="col-sm-3">
+                    @Html.CheckBoxFor(m => m.SinASN, new { @class = "" }) ¿Sin ASN?
+                    @Html.ValidationMessageFor(m => m.SinASN)
                 </div>
             </div>
             <div class="form-group">

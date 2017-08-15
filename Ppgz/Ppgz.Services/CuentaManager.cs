@@ -93,7 +93,7 @@ namespace Ppgz.Services
         public void Crear(string tipo, string nombreProveedor, string responsableLogin,
             string reponsableNombre, string reponsableApellido, string responsableCargo,
             string responsableEmail, string responableTelefono, string responsablePassword,
-            bool esEspecial)
+            bool esEspecial, bool SinASN)
         {
             ValidarTipo(tipo);
 
@@ -120,7 +120,8 @@ namespace Ppgz.Services
                 NombreCuenta = nombreProveedor,
                 Activo = true,
                 Tipo = tipo,
-                EsEspecial = esEspecial
+                EsEspecial = esEspecial,
+                SinASN = SinASN
             };
 
             _db.cuentas.Add(cuenta);
@@ -409,6 +410,19 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
             }
             cuenta.EsEspecial = esEspecial;
+            _db.Entry(cuenta).State = EntityState.Modified;
+            _db.SaveChanges();
+        }
+
+        public void EstablecerCuentaSinASN(int cuentaId, bool SinASN)
+        {
+            var cuenta = _db.cuentas.Find(cuentaId);
+
+            if (cuenta == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+            }
+            cuenta.SinASN = SinASN;
             _db.Entry(cuenta).State = EntityState.Modified;
             _db.SaveChanges();
         }

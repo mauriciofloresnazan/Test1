@@ -1,0 +1,128 @@
+﻿@using Ppgz.Web.Areas.Mercaderia
+@{
+    ViewBag.Title = "Lista de Órdenes de Compra";
+    ViewBag.Descripcion = "Paso 4 Confirmación de la Cita";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var currentCita = (CurrentCita)ViewBag.CurrentCita;
+
+    var fechaCita = (DateTime)@currentCita.Fecha;
+}
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de la Cita</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">Proveedor</label>
+            <div class="col-sm-6">
+                <div>@currentCita.Proveedor.Rfc - @currentCita.Proveedor.Nombre1</div>
+            </div>
+
+            <label class="col-sm-2 control-label">Almacén</label>
+            <div class="col-sm-2">
+                <div>@currentCita.Centro</div>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-sm-2 control-label">Fecha de la Cita</label>
+            <div class="col-sm-4">
+                <div>@fechaCita.ToString("dd/MM/yyyy")</div>
+            </div>
+            <div class="col-sm-6">
+                <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitasSA", new {proveedorId = currentCita.Proveedor.Id})">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitasSA")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+                <div class="visible-sm visible-xs">
+                    <a class="btn btn-primary btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitasSA")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Confirmar Cita
+                    </a>
+                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitasSA", new { proveedorId = currentCita.Proveedor.Id })">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-danger btn-block" href="@Url.Action("Index", "ControlCitasSA")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+</div>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">ASN Registrados</div>
+    <div class="panel-body">
+
+        <p class="form-legend" style="">
+            <i>Lista de Órdenes</i>
+        </p>
+        <table class="table table-striped table-condensed" id="asn">
+            <thead>
+                <tr>
+
+                    <th class="text-center">Número de Orden</th>
+                    <th class="text-center">Total Solicitado</th>
+                    <th class="text-center">Total Permitido</th>
+                    <th class="text-center">Total a Entregar</th>
+                    <th class="text-center"></th>
+                    <th class="text-center"></th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var preAsn in currentCita.GetPreAsns())
+                {
+
+
+                    var color = "#000";
+                    if (preAsn.TotalCantidad < preAsn.TotalPermitido)
+                    {
+                        color = "red";
+                    }
+                    <tr>
+
+                        <td class="text-center"> @preAsn.NumeroDocumento</td>
+                        <td class="text-center"> @preAsn.TotalPedido</td>
+                        <td class="text-center"> @preAsn.TotalPermitido</td>
+                        <td class="text-center" style="color: @color;"> @preAsn.TotalCantidad</td>
+                        <td class="text-center" style="font-weight: bold; cursor: pointer">
+                            @Html.ActionLink("Editar", "Asn", "ControlCitasSA", new { @numeroDocumento = @preAsn.NumeroDocumento }, null)
+                        </td>
+                        <td class="text-center" style="font-weight: bold; cursor: pointer">
+                            @Html.ActionLink("Eliminar", "EliminarOrden", "ControlCitasSA", new { @numeroDocumento = @preAsn.NumeroDocumento }, null)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+
+    </div>
+</div>
+
+@if (currentCita.Cantidad > 0)
+{
+    <div class="text-center">
+        <a class="btn btn-primary btn-lg" href="@Url.Action("SeleccionarRieles", "ControlCitasSA")">
+            <i class="fa fa-th" aria-hidden="true"></i> Seleccionar Rieles
+        </a>
+    </div>
+
+}
+
+
+
