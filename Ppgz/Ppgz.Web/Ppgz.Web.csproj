@@ -1244,6 +1244,7 @@
     <Content Include="Areas\Nazan\Views\Configsys\Index.cshtml" />
     <Content Include="Views\Account\CambiarPassword.cshtml" />
     <Content Include="Views\Home\Privacidad.cshtml" />
+    <Content Include="Views\Home\Terminos.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

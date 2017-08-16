@@ -39,5 +39,12 @@ namespace Ppgz.Web.Controllers
         {
             return View();
         }
+
+        [AllowAnonymous]
+        public ActionResult Terminos()
+        {
+            ViewBag.Politicas = System.IO.File.ReadAllText(Server.MapPath(@"~/App_Data/politicas.txt"));
+            return View();
+        }
     }
 }

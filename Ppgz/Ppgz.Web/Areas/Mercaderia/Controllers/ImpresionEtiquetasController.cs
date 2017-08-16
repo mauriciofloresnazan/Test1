@@ -276,23 +276,23 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     foreach (DataRow row in dt.Rows)
                     {
                         etiquetas.Add(@"^XA^JZN^
-^FO10.00,298.00^AFN,5.00,12.00^FDSKU:^FS
-^FO70.00,298.00^A0N,27.00,32.00^FD" + row["Sku_cadena"].ToString().Trim() + @"^FS
-^FO10.00,225.00^AFN,5.00,12.00^FDTalla:^FS
-^FO10.00,85.00^A0N,35.00,30.00^FD" + row["Marca"].ToString().Trim() + @"^FS
-^FO10.00,125.00^A0N,35.00,35.00^FD" + row["estilo"].ToString().Trim() + @"^FS
-^FO10.00,165.00^AFN,10.00,18.00^FD" + row["color"].ToString().Trim() + @"^FS
-^FO10.00,200.00^A0N,20.00,30.00^FD" + row["Desc_familia"].ToString().Trim() + @"^FS
-^FO10.00,260.00^A0N,35.00,40.00^FD$^FS
-^FO40.00,257.00^A0N,40.00,35.00^FD" + row["Entero_prec"].ToString().Trim() + @"^FS
-^FO95.00,255.00^A0N,19.00,29.00^FD" + row["Dec_prec"].ToString().Trim() + @"^FS
+^FO10.00,280.00^AFN,5.00,12.00^FDSKU:^FS
+^FO70.00,280.00^A0N,27.00,32.00^FD" + row["Sku_cadena"].ToString().Trim() + @"^FS
+^FO10.00,205.00^AFN,5.00,12.00^FDTalla:^FS
+^FO10.00,65.00^A0N,35.00,30.00^FD" + row["Marca"].ToString().Trim() + @"^FS
+^FO10.00,105.00^A0N,35.00,35.00^FD" + row["estilo"].ToString().Trim() + @"^FS
+^FO10.00,145.00^AFN,10.00,18.00^FD" + row["color"].ToString().Trim() + @"^FS
+^FO10.00,180.00^A0N,20.00,30.00^FD" + row["Desc_familia"].ToString().Trim() + @"^FS
+^FO10.00,240.00^A0N,35.00,40.00^FD$^FS
+^FO40.00,240.00^A0N,40.00,35.00^FD" + row["Entero_prec"].ToString().Trim() + @"^FS
+^FO95.00,235.00^A0N,19.00,29.00^FD" + row["Dec_prec"].ToString().Trim() + @"^FS
 ^ISLABEL001,N,^FS
 ^XZ
 ^XA^JZN^PR9
 ^PQ1,0,1,Y
 ^ILLABEL001^FS
-^FO105.00,225.00^AFN,10.00,18.00^FD" + row["talla"].ToString().Trim() + @"^FS
-^FO15.00,325.00^BY2,.10^BEN,60.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS
+^FO105.00,205.00^AFN,10.00,18.00^FD" + row["talla"].ToString().Trim() + @"^FS
+^FO15.00,305.00^BY2,.10^BEN,60.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS
 ^XZ
 ^XZ
 ^EG
@@ -300,23 +300,23 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         if (i <= 3)
                         {
                             etiquetasPrint = etiquetasPrint + @"^XA^JZN^
-^FO10.00,298.00^AFN,5.00,12.00^FDSKU:^FS
-^FO70.00,298.00^A0N,27.00,32.00^FD" + row["Sku_cadena"].ToString().Trim() + @"^FS
-^FO10.00,225.00^AFN,5.00,12.00^FDTalla:^FS
-^FO10.00,85.00^A0N,35.00,30.00^FD" + row["Marca"].ToString().Trim() + @"^FS
-^FO10.00,125.00^A0N,35.00,35.00^FD" + row["estilo"].ToString().Trim() + @"^FS
-^FO10.00,165.00^AFN,10.00,18.00^FD" + row["color"].ToString().Trim() + @"^FS
-^FO10.00,200.00^A0N,20.00,30.00^FD" + row["Desc_familia"].ToString().Trim() + @"^FS
-^FO10.00,260.00^A0N,35.00,40.00^FD$^FS
-^FO40.00,257.00^A0N,40.00,35.00^FD" + row["Entero_prec"].ToString().Trim() + @"^FS
-^FO95.00,255.00^A0N,19.00,29.00^FD" + row["Dec_prec"].ToString().Trim() + @"^FS
+^FO10.00,280.00^AFN,5.00,12.00^FDSKU:^FS
+^FO70.00,280.00^A0N,27.00,32.00^FD" + row["Sku_cadena"].ToString().Trim() + @"^FS
+^FO10.00,205.00^AFN,5.00,12.00^FDTalla:^FS
+^FO10.00,65.00^A0N,35.00,30.00^FD" + row["Marca"].ToString().Trim() + @"^FS
+^FO10.00,105.00^A0N,35.00,35.00^FD" + row["estilo"].ToString().Trim() + @"^FS
+^FO10.00,145.00^AFN,10.00,18.00^FD" + row["color"].ToString().Trim() + @"^FS
+^FO10.00,180.00^A0N,20.00,30.00^FD" + row["Desc_familia"].ToString().Trim() + @"^FS
+^FO10.00,240.00^A0N,35.00,40.00^FD$^FS
+^FO40.00,240.00^A0N,40.00,35.00^FD" + row["Entero_prec"].ToString().Trim() + @"^FS
+^FO95.00,235.00^A0N,19.00,29.00^FD" + row["Dec_prec"].ToString().Trim() + @"^FS
 ^ISLABEL001,N,^FS
 ^XZ
 ^XA^JZN^PR9
 ^PQ1,0,1,Y
 ^ILLABEL001^FS
-^FO105.00,225.00^AFN,10.00,18.00^FD" + row["talla"].ToString().Trim() + @"^FS
-^FO15.00,325.00^BY2,.10^BEN,60.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS
+^FO105.00,205.00^AFN,10.00,18.00^FD" + row["talla"].ToString().Trim() + @"^FS
+^FO15.00,305.00^BY2,.10^BEN,60.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS
 ^XZ
 ^XZ
 ^EG
