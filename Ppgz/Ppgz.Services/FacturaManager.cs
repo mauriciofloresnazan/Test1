@@ -123,10 +123,18 @@ namespace Ppgz.Services
             var cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
 
             var sapFacturaManager = new SapFacturaManager();
-            
+            var refe="";
+            if (comprobante.Serie=="") {
+                 refe =comprobante.Folio;
+            }
+            else
+            {
+                 refe = comprobante.Serie+comprobante.Folio;
+            }
+
             var facturaSap = sapFacturaManager.CrearFactura(
                 proveedor.NumeroProveedor,
-                comprobante.Serie  ?? string.Empty + comprobante.Folio,
+                refe,
                 DateTime.ParseExact(comprobante.Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
                 comprobante.SubTotal,
                 comprobante.Total,
@@ -162,7 +170,7 @@ namespace Ppgz.Services
                 Estatus = facturaSap.Estatus
             };
 
-            if (factura.Estatus != "S")
+            if (factura.Estatus != "S" && factura.Estatus != "H")
             {
                 factura.Comentario = string.Format
                     ("Tipo:{1} {0}Mensaje:{2}", 

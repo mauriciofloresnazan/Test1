@@ -51,7 +51,8 @@ namespace SatWrapper
                 ErrorAppLog.Error(string.Format(ex.Message));
                 if (cient != null)
                     cient.Abort();
-                throw new Exception("No es posible realizar la validación de la factura en este momento. Por favor intente mas tarde.");
+                //throw new Exception("No es posible realizar la validación de la factura en este momento. Por favor intente mas tarde.");
+                throw new Exception(ex.Message);
             }
             finally
             {
