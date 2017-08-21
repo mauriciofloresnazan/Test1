@@ -33,8 +33,17 @@ namespace Ppgz.Web.Controllers
 
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, "manual.pdf");
         }
+        public FileResult AyudaCedis()
+        {
+            var commonManager = new CommonManager();
+            var usuario = commonManager.GetUsuarioAutenticado();
 
-         [AllowAnonymous]
+            var fileBytes = System.IO.File.ReadAllBytes(Server.MapPath(@"~/App_Data/Manual-CEDIS.doc"));
+
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, "manual-cedis.doc");
+        }
+
+        [AllowAnonymous]
         public ActionResult Privacidad()
         {
             return View();

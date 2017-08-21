@@ -1215,6 +1215,7 @@
     <Content Include="Areas\Mercaderia\Views\ControlCitasSA\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitasSA\ListaDeOrdenes.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitasSA\SeleccionarRieles.cshtml" />
+    <Content Include="App_Data\Manual-CEDIS.doc" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
