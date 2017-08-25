@@ -73,6 +73,26 @@
     </div>
 </div>
 
+
+<div class="modal" id="modalerror">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alerta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Debe completar los 2 parametros</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script type="text/javascript">
 
@@ -104,23 +124,28 @@
         }
 
         $(document).ready(function () {
+
             $("#inCantidad").forceNumeric();
         });
 
         function enviar() {
             $('#centro-modal').modal('hide');
-
-            $.blockUI({ message: '<h2>Por favor espere...</h2>' });
-
             fechas = $("#fecha").val();
+            cantidad = $("#inCantidad").val();
 
-            location.href = url + "?proveedorId=" + proveedorId + "&fecha=" + fechas + "&cantidad=" + cantidad;
+            if (fechas == "" || cantidad == "") {
+                $("#modalerror").modal("show");
+            } else {
+                $.blockUI({ message: '<h2>Por favor espere...</h2>' });
+
+                location.href = url + "?proveedorId=" + proveedorId + "&fecha=" + fechas + "&cantidad=" + cantidad;
+            }
+
+            
         }
 
 
-        $("#inCantidad").change(function () {
-            cantidad = $("#inCantidad").val();
-        });
+        
 
         var url = "@Url.Action("SeleccionarProveedor", "ControlCitasSA")";
 
