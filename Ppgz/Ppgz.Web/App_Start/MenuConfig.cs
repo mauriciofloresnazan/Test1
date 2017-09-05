@@ -112,6 +112,7 @@ namespace Ppgz.Web
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
                 "CONFIGNEG|Configuración de Negocio|Index|Configneg|fa fa-cogs|Nazan",
+                "VISTAPROVEEDOR|Vista de Proveedor|Index|VistaProveedor|fa fa-binoculars|Nazan"
             };
             return menuLista;
         }
@@ -276,6 +277,16 @@ namespace Ppgz.Web
             List<string> menu;
             switch (nombreControllerActual)
             {
+
+
+                case "VistaProveedor":
+                    menu = new List<string>
+                    {
+                        "VISTAPROVEEDOR|Pagos|Pagos|VistaProveedor|fa fa-calculator|Nazan",
+                        "VISTAPROVEEDOR|Pagos Pendientes|PagosPendientes|VistaProveedor|fa fa-calculator|Nazan",
+                        "VISTAPROVEEDOR|Devoluciones|Devoluciones|VistaProveedor|fa fa-calculator|Nazan"
+                    };
+                    break;
                 case "AdministrarCitas":
                     menu = new List<string>
                     {
