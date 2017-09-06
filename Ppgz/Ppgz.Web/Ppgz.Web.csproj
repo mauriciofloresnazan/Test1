@@ -1900,6 +1900,7 @@
     <Content Include="Areas\Nazan\Views\VistaProveedor\Devoluciones.cshtml" />
     <Content Include="Areas\Nazan\Views\VistaProveedor\DevolucionesDetalle.cshtml" />
     <Content Include="Areas\Nazan\Views\VistaProveedor\OrdenesCompra.cshtml" />
+    <Content Include="Areas\Nazan\Views\VistaProveedor\ComprobantesDeRecibo.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

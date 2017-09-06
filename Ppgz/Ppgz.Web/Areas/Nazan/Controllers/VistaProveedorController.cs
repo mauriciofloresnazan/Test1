@@ -348,5 +348,60 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         //Fin Ordenes de Compra
         //////////////////////////
         /////////////////////////
+
+        //////////////////////////
+        /////////////////////////
+        //Comprobantes de Recibo 
+        //////////////////////////
+        /////////////////////////
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-COMPROBANTESRECIBO")]
+        public ActionResult ComprobantesDeRecibo()
+        {
+            var commonManager = new CommonManager();
+
+            if (ProveedorActivo == null)
+            {
+                // TODO pasar a recurso
+                TempData["FlashError"] = "Primero seleccione un proveedor";
+                return RedirectToAction("Index");
+            }
+
+            var cuenta = CuentaActiva.Cuenta;
+
+            var proveedorManager = new ProveedorManager();
+            var proveedores = proveedorManager.FindByCuentaId(cuenta.Id);
+
+            var proveedoresIds = proveedores.Select(p => p.Id).ToArray();
+
+
+            var db = new Entities();
+
+            ViewBag.Crs = db.crs.Where(cr => proveedoresIds.Contains(cr.cita.ProveedorId)).ToList();
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-COMPROBANTESRECIBO")]
+        public FileResult DescargarComprobantesDeRecibo(int id)
+        {
+            var db = new Entities();
+            var cr = db.crs.Find(id);
+            if (cr == null)
+            {
+                // TODO
+                throw new Exception("CR Incorrecto");
+            }
+            var fileBytes = System.IO.File.ReadAllBytes(cr.ArchivoCR);
+
+            var fileName = string.Format("CR_{0}_{1}.pdf", cr.cita.Id, ((DateTime)cr.Fecha).ToString("dd/MM/yyyy"));
+
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, fileName);
+
+
+        }
+        //////////////////////////
+        /////////////////////////
+        //Fin Comprobantes de Recibo
+        //////////////////////////
+        /////////////////////////
     }
 }
