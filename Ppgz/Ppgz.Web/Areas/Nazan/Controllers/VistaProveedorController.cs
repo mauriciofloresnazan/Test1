@@ -6,6 +6,7 @@ using Ppgz.Services;
 using Ppgz.Web.Areas.Nazan.Models;
 using Ppgz.Web.Infrastructure;
 using System.Linq;
+using ClosedXML.Excel;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
@@ -17,6 +18,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         readonly ProveedorManager _proveedorManager = new ProveedorManager();
         readonly CuentaManager _cuentaManager = new CuentaManager();
         readonly CommonManager _commonManager = new CommonManager();
+        readonly OrdenCompraManager _ordenCompraManager = new OrdenCompraManager();
 
         internal proveedore ProveedorActivo
         {
@@ -176,7 +178,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             if (ProveedorActivo == null)
             {
                 // TODO pasar a recurso
-                TempData["FlashError"] = "Proveedor incorrecto";
+                TempData["FlashError"] = "Primero seleccione un proveedor";
                 return RedirectToAction("Index");
             }
 
@@ -198,7 +200,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             if (ProveedorActivo == null)
             {
                 // TODO pasar a recurso
-                TempData["FlashError"] = "Proveedor incorrecto";
+                TempData["FlashError"] = "Primero seleccione un proveedor";
                 return RedirectToAction("Index");
             }
 
@@ -227,7 +229,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             if (ProveedorActivo == null)
             {
                 // TODO pasar a recurso
-                TempData["FlashError"] = "Proveedor incorrecto";
+                TempData["FlashError"] = "Primero seleccione un proveedor";
                 return RedirectToAction("Index");
             }
 
@@ -249,7 +251,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             if (ProveedorActivo == null)
             {
                 // TODO pasar a recurso
-                TempData["FlashError"] = "Proveedor incorrecto";
+                TempData["FlashError"] = "Primero seleccione un proveedor";
                 return RedirectToAction("Index");
             }
             var fecha = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -283,6 +285,67 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         //////////////////////////
         /////////////////////////
         //Fin cuentas por pagar
+        //////////////////////////
+        /////////////////////////
+
+
+        //////////////////////////
+        /////////////////////////
+        //Ordenes de Compra
+        //////////////////////////
+        /////////////////////////
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ORDENESCOMPRA")]
+        public ActionResult OrdenesCompra()
+        {
+
+            if (ProveedorActivo == null)
+            {
+                // TODO pasar a recurso
+                TempData["FlashError"] = "Primero seleccione un proveedor";
+                return RedirectToAction("Index");
+            }
+
+            var cuenta = CuentaActiva.Cuenta;
+            ViewBag.data = _ordenCompraManager.FindOrdenesDecompraActivasByCuenta(cuenta.Id);
+
+            return View();
+        }
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ORDENESCOMPRA")]
+        public void DescargarOrdenes(string numeroDocumento, int proveedorId)
+        {
+            var orden = _ordenCompraManager.FindOrdenConDetallesSN(proveedorId, numeroDocumento);
+
+
+            var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillaoc.xlsx"));
+            var ws = workbook.Worksheet(1);
+
+            var proveedorManager = new ProveedorManager();
+            var proveedor = proveedorManager.Find(proveedorId);
+
+            ws.Cell(3, "B").Value = string.Format("{0} {1} {2} {3}", proveedor.Nombre1, proveedor.Nombre2, proveedor.Nombre3, proveedor.Nombre4);
+            ws.Cell(3, "D").Value = proveedor.Rfc;
+            ws.Cell(5, "B").Value = numeroDocumento;
+            ws.Cell(6, "B").Value = orden.FechaEntrega.ToString("dd/MM/yyyy");
+
+            var row = 9;
+            foreach (var detalle in orden.Detalles)
+            {
+                ws.Cell(row, "A").Value = detalle.NumeroMaterial;
+                ws.Cell(row, "B").Value = detalle.Descripcion;
+                ws.Cell(row, "C").Value = orden.CrossD == "X" ? orden.TiDest : detalle.Centro;
+                ws.Cell(row, "D").Value = detalle.CantidadPedido;
+                //ws.Cell(row, "E").Value = detalle.PrecioNeto;
+
+                row++;
+            }
+
+            FileManager.ExportExcel(workbook, "ORDEN" + numeroDocumento, HttpContext);
+        }
+        //////////////////////////
+        /////////////////////////
+        //Fin Ordenes de Compra
         //////////////////////////
         /////////////////////////
     }

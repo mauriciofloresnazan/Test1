@@ -228,6 +228,30 @@ namespace Ppgz.Services
 
             return  sapOrdenCompraManager.GetOrdenConDetalle(proveedor.NumeroProveedor, organizacionCompras, numeroDocumento);
         }
+        public SapOrdenCompra FindOrdenConDetallesSN(int proveedorId, string numeroDocumento)
+        {
+            var proveedor = _db.proveedores.Find(proveedorId);
+            if (proveedor == null)
+            {
+                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
+            }
+
+            var organizacionCompras = string.Empty;
+            if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Mercaderia)
+            {
+                organizacionCompras =
+                    _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
+            }
+            if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Servicio)
+            {
+                organizacionCompras =
+                    _db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.servicio").Valor;
+            }
+
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+
+            return sapOrdenCompraManager.GetOrdenConDetalle(proveedor.NumeroProveedor, organizacionCompras, numeroDocumento);
+        }
 
     }
 
