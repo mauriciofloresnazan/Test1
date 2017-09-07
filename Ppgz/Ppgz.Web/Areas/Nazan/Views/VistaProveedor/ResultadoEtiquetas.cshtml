@@ -1,0 +1,136 @@
+﻿@using System.Data
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Generar  Etiquetas - Resultado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var proveedor = (proveedore)ViewBag.Proveedor;
+    bool puedeDescargar = ViewBag.PuedeDescargar;
+    DataTable resultado= new DataTable();
+    List<string> etiquetas = new List<string>();
+    string etiquetasPrint = "";
+    if (puedeDescargar)
+    {
+        etiquetas = ViewBag.etiquetas;
+        etiquetasPrint = ViewBag.etiquetasPrint;
+        resultado = ViewBag.Resultado;
+        resultado.DefaultView.Sort = "TYPE DESC";
+        var dv = resultado.DefaultView;
+        dv.Sort = "TYPE DESC";
+        resultado = dv.ToTable();
+    }
+
+
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-ticket" aria-hidden="true"></i> <i>Generación del archivo de Etiquetas en formato csv.</i>
+</p>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Resultado de la generación</div>
+    <div class="panel-body">
+
+
+        <dl class="dl-horizontal">
+            <dt>Razón Social</dt>
+            <dd>@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</dd>
+            <dt>RFC</dt>
+            <dd>@proveedor.Rfc</dd>
+            <dt>Resultado</dt>
+            <dd>
+                <div class="row">
+                    <div class="col-sm-12" style="">
+                        
+                                                    @if (puedeDescargar)
+                                                    {
+                                                        <b>
+                                                            Vista Previa de primera etiqueta:
+                                                        </b>
+                                                    }
+                                                    else
+                                                    {
+                                                        <b>
+                                                            Etiquetas no disponibles
+                                                        </b>
+                                                    }
+
+                                                        <br><br>
+                        @if (puedeDescargar)
+                        { 
+                            <img src="http://api.labelary.com/v1/printers/8dpmm/labels/3x2/0/@etiquetas[0]" style="max-height: 200px;">
+                        }
+                        
+                    </div>
+                </div>
+                <ul>
+                    @if (puedeDescargar)
+                    {
+                        foreach (DataRow dr in resultado.Rows)
+                        {
+                            var cssClass = "bg-success";
+                            if (dr["TYPE"].ToString().ToUpper() == "E")
+                            {
+                                cssClass = "bg-danger";
+                            }
+                            <li class="@cssClass" style="margin: 2px;">@dr["MESSAGE"]</li>
+    
+                        }
+                    }
+                </ul>
+            </dd>
+            @if (puedeDescargar)
+            {
+                <dt>Se imprimiran</dt>
+                <dd>@etiquetas.Count() etiquetas</dd>
+                <dt>Archivo</dt>
+                <dd><a class="btn btn-primary" href="@Url.Action("DescargarEtiquetas","VistaProveedor")"><i class="fa fa-download"></i> Descargar</a><a class="btn btn-primary" href="#" onclick="printZpl($('#impeti').val())"><i class="fa fa-print"></i> Imprimir</a> Use <img src="https://www.mozilla.org/media/img/logos/firefox/logo-wordmark-large.f1831564f64e.png" style="height: 40px;"> para imprimir etiquetas</dd>
+            } 
+        </dl>
+        <a class="btn btn-default" href="@Url.Action("ImpresionDeEtiquetas", "VistaProveedor")"><i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
+            @if (puedeDescargar)
+            {
+                <input type="hidden" id="impeti" value="@etiquetasPrint" name="impeti" />
+            }        
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+        var form = $("#form");
+
+        $(document).ready(function () {
+            form.submit(function () {
+                $('<input />').attr('type', 'hidden')
+                    .attr('name', "ordenes")
+                    .attr('value', ["1", "2"])
+                    .appendTo(form);
+
+                if ($("#nazanTipo").prop("checked")) {
+                    $('<input />').attr('type', 'hidden')
+                       .attr('nazan', "ordenes")
+                       .attr('value', true)
+                       .appendTo(form);
+                }
+
+            });
+        });
+
+
+        function printZpl(zpl) {
+            var printWindow = window.open();
+            printWindow.document.open('text/plain')
+            printWindow.document.write(zpl);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        }
+    </script>
+
+
+}

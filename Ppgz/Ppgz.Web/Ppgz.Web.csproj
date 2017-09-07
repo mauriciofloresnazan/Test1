@@ -1901,6 +1901,9 @@
     <Content Include="Areas\Nazan\Views\VistaProveedor\DevolucionesDetalle.cshtml" />
     <Content Include="Areas\Nazan\Views\VistaProveedor\OrdenesCompra.cshtml" />
     <Content Include="Areas\Nazan\Views\VistaProveedor\ComprobantesDeRecibo.cshtml" />
+    <Content Include="Areas\Nazan\Views\VistaProveedor\ImpresionDeEtiquetas.cshtml" />
+    <Content Include="Areas\Nazan\Views\VistaProveedor\ResultadoEtiquetas.cshtml" />
+    <Content Include="Areas\Nazan\Views\VistaProveedor\GenerarEtiquetas.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

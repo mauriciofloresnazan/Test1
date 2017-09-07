@@ -286,7 +286,8 @@ namespace Ppgz.Web
                         "VISTAPROVEEDOR|Pagos Pendientes|PagosPendientes|VistaProveedor|fa fa-calculator|Nazan",
                         "VISTAPROVEEDOR|Devoluciones|Devoluciones|VistaProveedor|fa fa-calculator|Nazan",
                         "VISTAPROVEEDOR|Órdenes de Compra|OrdenesCompra|VistaProveedor|fa fa-list-alt|Nazan",
-                        "VISTAPROVEEDOR|Comprobantes de Recibo|ComprobantesDeRecibo|VistaProveedor|fa fa-file-o|Nazan"
+                        "VISTAPROVEEDOR|Comprobantes de Recibo|ComprobantesDeRecibo|VistaProveedor|fa fa-file-o|Nazan",
+                        "VISTAPROVEEDOR|Impresión de Etiquetas|ImpresionDeEtiquetas|VistaProveedor|fa fa-ticket|Nazan"
                     };
                     break;
                 case "AdministrarCitas":
