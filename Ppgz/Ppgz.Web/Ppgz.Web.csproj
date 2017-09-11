@@ -1904,6 +1904,8 @@
     <Content Include="Areas\Nazan\Views\VistaProveedor\ImpresionDeEtiquetas.cshtml" />
     <Content Include="Areas\Nazan\Views\VistaProveedor\ResultadoEtiquetas.cshtml" />
     <Content Include="Areas\Nazan\Views\VistaProveedor\GenerarEtiquetas.cshtml" />
+    <Content Include="Areas\Nazan\Views\VistaProveedor\Reportes.cshtml" />
+    <Content Include="Areas\Nazan\Views\VistaProveedor\ReporteProveedores.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
