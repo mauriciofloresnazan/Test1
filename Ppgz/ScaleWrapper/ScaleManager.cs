@@ -12,11 +12,11 @@ namespace ScaleWrapper
     {
         public readonly ILog ErrorAppLog = LogManager.GetLogger(@"ErrorAppLog");
 
-    
+
         public void Registrar(cita cita)
         {
             var entities = new Entities();
-            var numerosDocumentos = cita.asns.Select(asn=> asn.OrdenNumeroDocumento).Distinct();
+            var numerosDocumentos = cita.asns.Select(asn => asn.OrdenNumeroDocumento).Distinct();
 
             foreach (var numeroDocumento in numerosDocumentos)
             {
@@ -24,7 +24,7 @@ namespace ScaleWrapper
 
                 var orden = cita.asns
                     .FirstOrDefault(asn => asn.OrdenNumeroDocumento == documento);
-  
+
                 var almacenScale = entities.ScaleAlmacens.FirstOrDefault(sa => sa.Sap == orden.Centro);
 
                 if (almacenScale == null)
@@ -33,22 +33,22 @@ namespace ScaleWrapper
                     continue;
                 }
 
-               var id = InsertarHeader(cita, almacenScale.Scale, numeroDocumento, orden.TiendaOrigen,orden.Tienda, orden.NumeroOrdenSurtido, orden.InOut);
+                var id = InsertarHeader(cita, almacenScale.Scale, numeroDocumento, orden.TiendaOrigen, orden.Tienda, orden.NumeroOrdenSurtido, orden.InOut);
 
                 var asns = cita.asns.Where(asn => asn.OrdenNumeroDocumento == numeroDocumento).ToList();
 
-                InsertarDetails(id,almacenScale.Scale, asns);
+                InsertarDetails(id, almacenScale.Scale, asns);
             }
         }
 
-        internal string InsertarHeader(cita cita, string almacenScale, string numeroOrden, 
+        internal string InsertarHeader(cita cita, string almacenScale, string numeroOrden,
             string tiendaOrigen, string tiendaDestino, string numeroOrdenSurtido, string inOut)
         {
 
             var proveedor = cita.proveedore;
 
             var id = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHHmmss"), cita.Id);
-            
+
             var parameters = new List<SqlParameter>
             {
                 new SqlParameter(
@@ -72,10 +72,10 @@ namespace ScaleWrapper
                     new SqlParameter("@SHIP_FROM_POSTAL_CODE", proveedor.CodigoPostal),
                     new SqlParameter("@SHIP_FROM_NAME",
                         string.Format(
-                            "{0} {1} {2} {3}", 
-                            proveedor.Nombre1, 
-                            proveedor.Nombre2, 
-                            proveedor.Nombre3, 
+                            "{0} {1} {2} {3}",
+                            proveedor.Nombre1,
+                            proveedor.Nombre2,
+                            proveedor.Nombre3,
                             proveedor.Nombre4)),
                     new SqlParameter("@SHIP_FROM_EMAIL_ADDRESS", proveedor.Correo),
                     new SqlParameter("@SHIP_FROM_PHONE_NUM", proveedor.NumeroTelefono),
@@ -83,10 +83,10 @@ namespace ScaleWrapper
                     new SqlParameter("@Source_id",proveedor.NumeroProveedor),
                     new SqlParameter("@Source_name",
                                             string.Format(
-                                                "{0} {1} {2} {3}", 
-                                                proveedor.Nombre1, 
-                                                proveedor.Nombre2, 
-                                                proveedor.Nombre3, 
+                                                "{0} {1} {2} {3}",
+                                                proveedor.Nombre1,
+                                                proveedor.Nombre2,
+                                                proveedor.Nombre3,
                                                 proveedor.Nombre4)),
                     new SqlParameter("@SOURCE_ADDRESS1", proveedor.Calle),
                     new SqlParameter("@SOURCE_ADDRESS2", proveedor.Direccion),
@@ -119,7 +119,7 @@ namespace ScaleWrapper
             {
                 parameters.Add(new SqlParameter("@user_def4", DBNull.Value));
                 parameters.Add(new SqlParameter("@user_def6", DBNull.Value));
-                
+
             }
 
             var sql = string.Format(@"
@@ -246,8 +246,8 @@ namespace ScaleWrapper
                 {
 
                     // si tiene valores lo inserta
-                    if(parameters.Any())
-                    {                        
+                    if (parameters.Any())
+                    {
                         DbScale.Insert(sql.ToString(), parameters);
                     }
 
@@ -289,9 +289,18 @@ namespace ScaleWrapper
                 parameters.Add(new SqlParameter("@ITEM_NET_PRICE" + index, asn.Precio));
                 parameters.Add(new SqlParameter("@user_def5" + index, asn.cita.FechaCita.ToString("yyyyMMdd")));
                 parameters.Add(new SqlParameter("@TOTAL_QTY" + index, asn.Cantidad));
-                parameters.Add(new SqlParameter("@QUANTITY_UM" + index, asn.UnidadMedida.Substring(0, 3)));
 
-                sql.AppendLine(@"(@INTERFACE_RECORD_ID"+ index + @",
+                if (asn.UnidadMedida == "ST")
+                {
+                    parameters.Add(new SqlParameter("@QUANTITY_UM" + index, "Par"));
+                }
+                else
+                {
+                    parameters.Add(new SqlParameter("@QUANTITY_UM" + index, asn.UnidadMedida.Substring(0, 3)));
+                }
+
+
+                sql.AppendLine(@"(@INTERFACE_RECORD_ID" + index + @",
                     @Interface_link_id" + index + @",
                     @warehouse" + index + @",
                     @INTERFACE_ACTION_CODE" + index + @",
@@ -342,7 +351,7 @@ namespace ScaleWrapper
             {
                 ErrorAppLog.Error(string.Format("Cita # {0}. {1}", citaId, exception.Message));
             }
-            
+
         }
 
         public void ActualizarFecha(int citaId)
@@ -446,10 +455,10 @@ namespace ScaleWrapper
             }
 
 
-          
 
 
-           
+
+
         }
     }
 }
