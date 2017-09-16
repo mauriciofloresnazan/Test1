@@ -18,6 +18,7 @@ namespace ScaleWrapper
             var entities = new Entities();
             var numerosDocumentos = cita.asns.Select(asn => asn.OrdenNumeroDocumento).Distinct();
 
+            int i = 1;
             foreach (var numeroDocumento in numerosDocumentos)
             {
                 var documento = numeroDocumento;
@@ -33,21 +34,22 @@ namespace ScaleWrapper
                     continue;
                 }
 
-                var id = InsertarHeader(cita, almacenScale.Scale, numeroDocumento, orden.TiendaOrigen, orden.Tienda, orden.NumeroOrdenSurtido, orden.InOut);
+                var id = InsertarHeader(cita, almacenScale.Scale, numeroDocumento, orden.TiendaOrigen, orden.Tienda, orden.NumeroOrdenSurtido, orden.InOut, i);
 
                 var asns = cita.asns.Where(asn => asn.OrdenNumeroDocumento == numeroDocumento).ToList();
 
                 InsertarDetails(id, almacenScale.Scale, asns);
+                i++;
             }
         }
 
         internal string InsertarHeader(cita cita, string almacenScale, string numeroOrden,
-            string tiendaOrigen, string tiendaDestino, string numeroOrdenSurtido, string inOut)
+            string tiendaOrigen, string tiendaDestino, string numeroOrdenSurtido, string inOut, int i)
         {
 
             var proveedor = cita.proveedore;
 
-            var id = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHHmmss"), cita.Id);
+            var id = string.Format("{0}{1}{2}", DateTime.Now.ToString("yyyyMMddHHmmss"), cita.Id, i);
 
             var parameters = new List<SqlParameter>
             {
