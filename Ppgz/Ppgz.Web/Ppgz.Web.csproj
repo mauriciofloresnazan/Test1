@@ -1997,6 +1997,10 @@
       <Project>{FF45BCAC-FBF6-451B-B36D-39E22F4EA1E3}</Project>
       <Name>SapWrapper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ScaleWrapper\ScaleWrapper.csproj">
+      <Project>{54171CF5-78C7-4B23-BC94-26BE97E34AA5}</Project>
+      <Name>ScaleWrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -80,6 +80,9 @@
                                             <a class="btn btn-info btn-xs" href="#" onclick="javascript:ShowModalCambiarFecha(@cita.Id);" title="Cambio de fecha">
                                                 <i class="fa fa-calendar-times-o" aria-hidden="true"></i>
                                             </a>
+                                            <a class="btn btn-xs btn-default" href="#" onclick="javascript:ShowModalReEnvio(@cita.Id);" title="ReEnvio de ASN">
+                                                <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                            </a>
                                         }
                                         @if (cita.FechaCita < DateTime.Today)
                                         {
@@ -161,6 +164,30 @@
     </div>
 </div>
 
+<div class="modal fade" tabindex="-1" id="modal-reenvio" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("ReEnvioASN", "AdministrarCitas", new { }, FormMethod.Post, new { id = "form-reenvio" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="idCita" />
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Reenvio ASN a Scale</h4>
+                </div>
+                <div class="modal-body">
+                    <label>¿Esta seguro de Reeviar la ASN a Scale?</label>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Reenviar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     <script type="text/javascript">
 
@@ -183,6 +210,11 @@
         function ShowModalPenalizar(citaId) {
             $('#form-penalizar > input[name="citaId"]').val(citaId);
             $("#modal-penalizar").modal('show');
+        }
+
+        function ShowModalReEnvio(citaId) {
+            $('#form-reenvio > input[name="idCita"]').val(citaId);
+            $("#modal-reenvio").modal('show');
         }
 
         var citaIdCambiarFecha;

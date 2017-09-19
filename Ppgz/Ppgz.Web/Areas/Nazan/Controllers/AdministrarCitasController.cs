@@ -10,6 +10,7 @@ using MySql.Data.MySqlClient;
 using Ppgz.CitaWrapper;
 using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
+using ScaleWrapper;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
@@ -502,6 +503,24 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             TempData["FlashSuccess"] = "Cambio de disponiblidad aplicado exitosamente";
             return RedirectToAction("DisponibilidadRieles", new { fecha = horarioRiel.Fecha.ToString("dd/MM/yyyy") }); 
         }
-    
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult ReEnvioASN(int idCita)
+        {
+
+            var scaleManager = new ScaleManager();
+
+            var db = new Entities();
+
+            var cita = db.citas.Find(idCita);
+            scaleManager.Registrar(cita);
+
+            TempData["FlashSuccess"] = "Reenvio de ASN exitoso";
+            return RedirectToAction("Index");
+        }
+
+
     }
 }

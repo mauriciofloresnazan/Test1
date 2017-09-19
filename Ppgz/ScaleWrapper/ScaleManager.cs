@@ -49,6 +49,8 @@ namespace ScaleWrapper
 
             var proveedor = cita.proveedore;
 
+            
+
             var id = string.Format("{0}{1}{2}", DateTime.Now.ToString("yyyyMMddHHmmss"), cita.Id, i);
 
             var parameters = new List<SqlParameter>
@@ -59,6 +61,7 @@ namespace ScaleWrapper
                     new SqlParameter("@INTERFACE_CONDITION", "Ready"),
                     new SqlParameter("@warehouse", almacenScale),
                     new SqlParameter("@ERP_ORDER_NUM", numeroOrden),
+                    new SqlParameter("@IDCITA", cita.Id),
                     //new SqlParameter("@RECEIPT_ID", string.Format("{0}-{1}", numeroOrden, cita.Id)),
 
                     new SqlParameter("@RECEIPT_ID_TYPE", cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra"),
@@ -107,6 +110,7 @@ namespace ScaleWrapper
                     new SqlParameter("@user_def8", cita.Id),
                     //new SqlParameter("@DATE_TIME_STAMP","GETDATE()"),
                     new SqlParameter("@ARRIVED_DATE_TIME",cita.FechaCita),
+                    new SqlParameter("@user_stamp",cita.CantidadTotal),
 
 
             };
@@ -165,7 +169,8 @@ namespace ScaleWrapper
                              --user_def5, 
                              user_def6, 
                              user_def7, 
-                             user_def8, 
+                             user_def8,
+                             user_stamp,
                              date_time_stamp, 
                              arrived_date_time) 
                 VALUES      (@INTERFACE_RECORD_ID, 
@@ -174,7 +179,7 @@ namespace ScaleWrapper
                              @warehouse, 
                              @ERP_ORDER_NUM, 
                              --@RECEIPT_ID, 
-                             dbo.GNZN_Fn_Folio_Recibo(@ERP_ORDER_NUM),
+                             dbo.GNZN_Fn_Folio_Recibo(@ERP_ORDER_NUM, @IDCITA),
                              @RECEIPT_ID_TYPE, 
                              @RECEIPT_TYPE, 
                              @RECEIPT_DATE, 
@@ -207,7 +212,8 @@ namespace ScaleWrapper
                              --@user_def5, 
                              @user_def6, 
                              @user_def7, 
-                             @user_def8, 
+                             @user_def8,
+                             @user_stamp,
                              GETDATE(), 
                              @ARRIVED_DATE_TIME);
 
