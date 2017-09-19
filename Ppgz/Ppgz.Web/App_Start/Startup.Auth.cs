@@ -16,75 +16,25 @@ namespace Ppgz.Web
 {
     public partial class Startup
     {
+        
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         //AFI
         public Dictionary<string, string> GetRolesNazan()
         {
-            var rolesNazan = new Dictionary<string, string>
-            {
-                {"MAESTRO-NAZAN", "Administrador"},
-                {"NAZAN-ADMINISTRARPERFILESNAZAN-LISTAR", "Consultar Perfiles"},
-                {"NAZAN-ADMINISTRARPERFILESNAZAN-MODIFICAR", "Modificar Perfiles"},
-                {"NAZAN-ADMINISTRARUSUARIOSNAZAN-LISTAR", "Consultar Usuarios"},
-                {"NAZAN-ADMINISTRARUSUARIOSNAZAN-MODIFICAR", "Modificar Usuarios"},
-                {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-LISTAR", "Consultar Mensajes Insitucionales"},
-                {"NAZAN-ADMINISTRARMENSAJESINSTITUCIONALES-MODIFICAR", "Modificar Mensajes Institucionales"},
-                {"NAZAN-ADMINISTRARPROVEEDORESNAZAN-LISTAR", "Consultar Proveedores"},
-                {"NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR", "Modificar Proveedores"},
-                {"NAZAN-CONFIGSYS", "Configurar el Sistema"},
-                {"NAZAN-NIVELSERVICIO", "Actualizar Niveles de Servicio"},
-                {"NAZAN-ADMINISTRARCITAS", "Administrar Citas"},
-                {"NAZAN-ADMINISTRARFACTURAS", "Administrar Facturas"}
-            };
-            return rolesNazan;
+            Entities _db = new Entities();
+            return _db.AspNetRoles.Where(p => p.Tipo == "NAZAN").Select(p => new { p.Id, p.Description }).AsEnumerable().ToDictionary(p => p.Id, p => p.Description);
         }
         //AFI
         public Dictionary<string, string> GetRolesMercaderia()
         {
-            var rolesMercaderia = new Dictionary<string, string>
-            {
-                {"MAESTRO-MERCADERIA","Administrador"},
-                {"MERCADERIA-ADMINISTRARPERFILES-LISTAR","Consultar Perfiles"},
-                {"MERCADERIA-ADMINISTRARPERFILES-MODIFICAR","Modificar Perfiles"},
-                {"MERCADERIA-ADMINISTRARUSUARIOS-LISTAR","Consultar Usuarios"},
-                {"MERCADERIA-ADMINISTRARUSUARIOS-MODIFICAR","Modificar Usuarios"},
-                {"MERCADERIA-MENSAJESINSTITUCIONALES","Mensajes Institucionales"},
-                {"MERCADERIA-ORDENESCOMPRA","Ordenes de Compra"},
-                {"MERCADERIA-CUENTASPAGAR","Cuentas por Pagar"},
-
-                {"MERCADERIA-CONTROLCITAS","Control de Citas"},
-                {"MERCADERIA-COMPROBANTESRECIBO", "Comprobantes de Recibo"},
-                {"MERCADERIA-IMPRESIONETIQUETAS", "Impresion de Etiquetas"},
-                {"MERCADERIA-REPORTESPROVEEDORES", "Reportes Proveedores"},
-                {"MERCADERIA-FACTURAS", "Gestion de Facturas"},
-                {"MERCADERIA-GESTIONPROVEEDORES", "Gestión de Proveedores"}
-
-
-               
-            };
-            return rolesMercaderia;
+            Entities _db = new Entities();
+            return _db.AspNetRoles.Where(p => p.Tipo == "MERCADERIA").Select(p => new { p.Id, p.Description }).AsEnumerable().ToDictionary(p => p.Id, p => p.Description);
         }
         //AFI
         public Dictionary<string,string> GetRolesServicio()
         {
-            var rolesServicio = new Dictionary<string, string>
-            {
-                {"MAESTRO-SERVICIO","Administrador"},
-                {"SERVICIO-ADMINISTRARPERFILES-LISTAR","Consultar Perfiles"},
-                {"SERVICIO-ADMINISTRARPERFILES-MODIFICAR","Modificar Perfiles"},
-                {"SERVICIO-ADMINISTRARUSUARIOS-LISTAR","Consultar Usuarios"},
-                {"SERVICIO-ADMINISTRARUSUARIOS-MODIFICAR","Modificar usuarios"},
-                {"SERVICIO-MENSAJESINSTITUCIONALES","Mensajes Insitucionales"},
-                {"SERVICIO-ORDENESCOMPRA","Ordenes de Compra"},
-                {"SERVICIO-CUENTASPAGAR","Cuentas por Pagar"},
-                
-                {"SERVICIO-REPORTESPROVEEDORES", "Reportes Proveedores"},
-                {"SERVICIO-FACTURAS", "Gestion de facturas"},
-                {"SERVICIO-GESTIONPROVEEDORES", "Gestión de Proveedores"}
-
-
-            };
-            return rolesServicio;
+            Entities _db = new Entities();
+            return _db.AspNetRoles.Where(p => p.Tipo == "SERVICIO").Select(p => new { p.Id, p.Description }).AsEnumerable().ToDictionary(p => p.Id, p => p.Description);
         }
 
         public void CargarConfiguraciones()

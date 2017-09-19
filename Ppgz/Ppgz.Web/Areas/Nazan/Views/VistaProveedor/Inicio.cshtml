@@ -1,0 +1,90 @@
+﻿@using Ppgz.Repository
+@model Ppgz.Web.Areas.Nazan.Models.CuentaViewModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var cuenta = (cuenta)@ViewBag.cuentaConUsuarioMaestro.Cuenta;
+    var usuarioMaestro = (AspNetUser)@ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro;
+}
+<link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
+<div>
+        <h2>
+            Cuenta y Proveedor selecionados
+            <a class="btn btn-default" href="@Url.Action("Index", "VistaProveedor")"><i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
+        </h2>
+        <p class="page-description-title">
+            <i class="fa fa-info" aria-hidden="true"></i> <i>Información de la cuenta</i>
+        </p>
+        <div class="col-sm-6">
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Id</strong>
+                </div>
+                <div class="col-sm-8"><span style="">@cuenta.Id</span></div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Nombre</strong>
+                </div>
+                <div class="col-sm-8">@cuenta.NombreCuenta</div>
+            </div>
+            
+        </div>
+</div>
+<br />
+<div class="clearfix"></div>
+<div class="panel panel-default">
+    <div class="panel-heading">Razon social seleccionada </div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-condensed table-bordered" style="font-size: .8em;">
+                <thead>
+                    <tr>
+                       
+                    </tr>
+                    <tr>
+                        <th class="text-center vert-align">Número</th>
+                        <th class="text-center vert-align">RFC</th>
+                        <th class="text-center vert-align">Nombre</th>
+                        <th class="text-center vert-align">Teléfono</th>
+                        <th class="text-center vert-align">Email</th>
+                        <th class="text-center vert-align">Vendedor</th>
+                        <th class="text-center vert-align">Región</th>
+                        <th class="text-center vert-align">Estado</th>
+                        <th class="text-center vert-align">Población</th>
+                        <th class="text-center vert-align">Código Postal</th>
+                        <th class="text-center vert-align">Dirección</th>
+                        <th>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                        <tr>
+                            <td class="vert-align">@ViewBag.Proveedor.NumeroProveedor</td>
+                            <td class="vert-align">@ViewBag.Proveedor.Rfc</td>
+                            <td class="vert-align">@ViewBag.Proveedor.Nombre1 @ViewBag.Proveedor.Nombre2 @ViewBag.Proveedor.Nombre3 @ViewBag.Proveedor.Nombre4</td>
+                            <td class="vert-align">@ViewBag.Proveedor.NumeroTelefono</td>
+                            <td class="vert-align">@ViewBag.Proveedor.Correo</td>
+                            <td class="vert-align">@ViewBag.Proveedor.VendedorResponsable</td>
+                            <td class="vert-align">@ViewBag.Proveedor.Region</td>
+                            <td class="vert-align">@ViewBag.Proveedor.EstadoNombre</td>
+                            <td class="vert-align">@ViewBag.Proveedor.Poblacion</td>
+                            <td class="vert-align">@ViewBag.Proveedor.CodigoPostal</td>
+                            <td class="vert-align">@ViewBag.Proveedor.Calle</td>
+                        </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
+    @Scripts.Render("~/Scripts/bootstrap-formhelpers-phone.en_US.js")
+    @Scripts.Render("~/Scripts/bootstrap-formhelpers-phone.js")
+    
+}

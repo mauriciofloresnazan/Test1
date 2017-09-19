@@ -4,7 +4,7 @@
     ViewBag.Title = "Iniciar Sesión";
 }
 
-<div class="text-center"><img class="img-responsive  center-block" src="/assets/img/logo-default.png" width="300" /></div>
+<div class="text-center"><img class="img-responsive  center-block" src="@Request.Url.Scheme://@Request.Url.Authority@Request.ApplicationPath.TrimEnd('/')/assets/img/logo-default.png" width="300" /></div>
 <h1 class="text-center">@ViewBag.Title</h1>
 <div class="row">
     <div class="col-md-10 col-md-offset-1">
