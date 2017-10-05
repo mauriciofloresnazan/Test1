@@ -53,7 +53,7 @@
     <div class="panel-heading">Fecha de la Cita</div>
     <div class="panel-body">
 
-        @using (Html.BeginForm("AgregarPrimeraOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("AgregarPrimeraOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id="formu"}))
         {
             @Html.AntiForgeryToken()
 
@@ -66,7 +66,7 @@
                     <div class="alert alert-warning" role="alert">
                         La fecha de la cita no podrá ser modificada luego de este paso. Si desea cambiarla después, tendrá que cancelar la cita e iniciar el proceso nuevamente.
                     </div>
-                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" required />
                 </div>
             </div>
 
@@ -84,7 +84,13 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/assets/vendor/chosen_v1.6.2/chosen.jquery.min.js")
+    @Scripts.Render("https://cdnjs.cloudflare.com/ajax/libs/1000hz-bootstrap-validator/0.11.9/validator.min.js")
     <script>
+        $(document).ready(function () {
+            $('#formu').validator();
+        });
+
+       
         $('#fecha').datetimepicker({
             locale: 'es',
             format: 'DD/MM/YYYY',
