@@ -19,7 +19,7 @@ namespace Ppgz.CitaWrapper
             var ordenesSap = sapOrdenCompraManager.GetActivasConDetalle(proveedor.NumeroProveedor, organizacionCompras);
 
             // TODO MEJORAR Limpieza de las ordenes de acuerdo a su fecha de entrega
-            var ordenes = ordenesSap.Where(o => o.FechaEntrega > DateTime.Today.AddDays(-22)).ToList();
+            var ordenes = ordenesSap.Where(o => o.FechaEntrega > DateTime.Today.AddDays(-22) || o.Autorizada==true).ToList();
 
             // TODO POSIBLE CARGA DE DATOS INCORRECTA A CAUSA DE LA SINCORNIZACIÓN DE LA RECEPCIÓN CON SAP
             var asnFuturos = db.asns
@@ -34,7 +34,7 @@ namespace Ppgz.CitaWrapper
                     FechaEntrega = orden.FechaEntrega,
                     NumeroDocumento = orden.NumeroDocumento,
                     NumeroProveedor = orden.NumeroProveedor,
-                    FechasPermitidas = RulesManager.GetFechasPermitidas(orden.FechaEntrega, proveedor.cuenta.EsEspecial),
+                    FechasPermitidas = RulesManager.GetFechasPermitidas(orden.FechaEntrega, proveedor.cuenta.EsEspecial, orden.Autorizada),
 
                     EsCrossDock = orden.CrossD.ToUpper() == "X",
                     Tienda = orden.TiDest,

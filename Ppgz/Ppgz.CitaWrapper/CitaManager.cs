@@ -159,10 +159,14 @@ namespace Ppgz.CitaWrapper
                     throw new Exception(string.Format("Orden {0} incorrecta", documento));
                 }
 
-                if (!RulesManager.Regla3(precita.Fecha, orden.FechaEntrega))
+                if (!orden.Autorizada)
                 {
-                    throw new Exception(string.Format("Fecha incorrecta para la orden {0}", documento));
+                    if (!RulesManager.Regla3(precita.Fecha, orden.FechaEntrega))
+                    {
+                        throw new Exception(string.Format("Fecha incorrecta para la orden {0}", documento));
+                    }
                 }
+                
 
                 // Para evitar un comportamiento erroneo en el compilador
                 var documento1 = documento;

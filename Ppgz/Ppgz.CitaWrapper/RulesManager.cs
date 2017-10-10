@@ -80,47 +80,80 @@ namespace Ppgz.CitaWrapper
         /// este componente sera consumido por el modulo de citas para mostrar las fechas disponibles 
         /// para las ordenes mejorando la usabilidad
         /// </summary>
-        public static List<DateTime> GetFechasPermitidas(DateTime sapFechaEntrega, bool esProveedorEspecial)
+        public static List<DateTime> GetFechasPermitidas(DateTime sapFechaEntrega, bool esProveedorEspecial, bool esAutorizada)
         {
             // Limpieza de fecha
             sapFechaEntrega = sapFechaEntrega.Date;
          
             var fechasPermitidas = new List<DateTime>();
 
-            // TODO mejorar El proveedor solo puede agendar con un máximo tiempo que comprende la semana en curso más 2 semanas
-            if (sapFechaEntrega > DateTime.Today.AddDays(30))
+            if (esAutorizada)
             {
-                return fechasPermitidas;
+                var fechactual = DateTime.Today;
+                var fechafutura = fechactual.AddDays(30);
+
+                while (fechactual < fechafutura)
+                {
+
+                    var fechaValida = ValidarReglasGenerales(fechactual);
+
+                    if (!Regla2(fechactual))
+                        fechaValida = false;
+
+                    if (!Regla4(fechactual))
+                        fechaValida = false;
+
+                    if (!Regla15(fechactual, esProveedorEspecial))
+                        fechaValida = false;
+
+                    if (!Regla20(fechactual))
+                        fechaValida = false;
+
+                    if (fechaValida)
+                        fechasPermitidas.Add(fechactual);
+
+                    fechactual = fechactual.AddDays(1);
+                }
+            }
+            else
+            {
+                // TODO mejorar El proveedor solo puede agendar con un máximo tiempo que comprende la semana en curso más 2 semanas
+                if (sapFechaEntrega > DateTime.Today.AddDays(30))
+                {
+                    return fechasPermitidas;
+                }
+
+                // TODO MEJORAR obtener 2 semanas atras el dia en curso.
+                var dia = sapFechaEntrega.AddDays(-30);
+
+                while (dia < sapFechaEntrega.AddDays(30))
+                {
+                    var fechaValida = ValidarReglasGenerales(dia);
+
+                    if (!Regla2(dia))
+                        fechaValida = false;
+
+                    if (!Regla3(dia, sapFechaEntrega))
+                        fechaValida = false;
+
+                    if (!Regla4(dia))
+                        fechaValida = false;
+
+                    if (!Regla15(dia, esProveedorEspecial))
+                        fechaValida = false;
+
+                    if (!Regla20(dia))
+                        fechaValida = false;
+
+                    if (fechaValida)
+                        fechasPermitidas.Add(dia);
+
+                    dia = dia.AddDays(1);
+
+                }
             }
 
-            // TODO MEJORAR obtener 2 semanas atras el dia en curso.
-            var dia = sapFechaEntrega.AddDays(-30);
-
-            while (dia < sapFechaEntrega.AddDays(30))
-            {
-                var fechaValida = ValidarReglasGenerales(dia);
-
-                if (!Regla2(dia))
-                    fechaValida = false;
-
-                if (!Regla3(dia, sapFechaEntrega))
-                    fechaValida = false;
-
-                if (!Regla4(dia))
-                    fechaValida = false;
-
-                if (!Regla15(dia, esProveedorEspecial))
-                    fechaValida = false;
-
-                if (!Regla20(dia))
-                    fechaValida = false;
-
-                if (fechaValida)
-                    fechasPermitidas.Add(dia);
-
-                dia = dia.AddDays(1);
-
-            }
+            
 
 
             return fechasPermitidas;

@@ -26,19 +26,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-IMPRESIONETIQUETAS")]
         public ActionResult Index()
         {
-            /*var commonManager = new CommonManager();
-
-            var cuenta = commonManager.GetCuentaUsuarioAutenticado();
-        
-            var proveedorManager = new ProveedorManager();
-            var proveedores = proveedorManager.FindByCuentaId(cuenta.Id).ToList();
-
-            var proveedoresIds = proveedores.Select(p => p.Id).ToArray();
-
-            var db = new Entities();
             
-
-            ViewBag.Etiquetas = db.etiquetas.Where(e=> proveedoresIds.Contains(e.ProveedorId)).ToList();*/
 
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
@@ -65,29 +53,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return View();
         }
 
-        /*
-                [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-IMPRESIONETIQUETAS")]
-                [HttpPost]
-                [ValidateAntiForgeryToken]
-                public ActionResult Generar(int proveedorId, bool nazan, string [] ordenes)
-                {
-                    var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-
-                    var proveedor = _proveedorManager.Find(proveedorId, cuenta.Id);
-
-                    if (proveedor == null)
-                    {
-                        TempData["FlashError"] = "Proveedor incorrecto";
-                        return RedirectToAction("Index");
-                    }
-
-                    var resultado = _etiquetasManager.GetArchivoCsv(proveedorId, cuenta.Id, nazan, ordenes);
-
-                    TempData["resultado"] = resultado;
-                    TempData["proveedor"] = proveedor;
-
-                    return RedirectToAction("Resultado"); 
-                }*/
+        
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-IMPRESIONETIQUETAS")]
         [HttpPost]

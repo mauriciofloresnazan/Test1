@@ -63,7 +63,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             DateTime thisDay = DateTime.Today;
 
-            ViewBag.FechasPermitidas = RulesManager.GetFechasPermitidas(thisDay, proveedoresSA[0].cuenta.EsEspecial);
+            ViewBag.FechasPermitidas = RulesManager.GetFechasPermitidas(thisDay, proveedoresSA[0].cuenta.EsEspecial, false);
 
             return View();
 		}
