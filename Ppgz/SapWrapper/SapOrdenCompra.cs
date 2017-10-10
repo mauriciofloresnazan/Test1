@@ -37,6 +37,18 @@ namespace SapWrapper
             NumOs = dataRow["NUM_OS"].ToString();
             TiOrig = dataRow["T_ORIG"].ToString();
             TiDest = dataRow["T_DEST"].ToString();
+
+            if (dataRow["ABGRU"].ToString() == "X")
+            {
+                Autorizada = true;
+            }
+            else
+            {
+                Autorizada = false;
+            }
+            
+
+
         }
 
         /// <summary>
@@ -163,6 +175,12 @@ namespace SapWrapper
         /// T_DEST no tenemos especificaciones por lo que colocaremos el campo string
         /// </summary>
         public string TiDest;
+
+        /// <summary>
+        /// ABGRU Campo para saber si la orden esta autorizada o no, de tipo bool
+        /// </summary>
+        public bool Autorizada;
+
 
         /// <summary>
         /// Items de la orden de compra
