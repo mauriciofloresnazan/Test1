@@ -38,9 +38,16 @@ namespace SapWrapper
             TiOrig = dataRow["T_ORIG"].ToString();
             TiDest = dataRow["T_DEST"].ToString();
 
-            if (dataRow["ABGRU"].ToString() == "X")
+            if (dataRow.Table.Columns.Contains("ABGRU"))
             {
-                Autorizada = true;
+                if (dataRow["ABGRU"].ToString() == "X")
+                {
+                    Autorizada = true;
+                }
+                else
+                {
+                    Autorizada = false;
+                }
             }
             else
             {
