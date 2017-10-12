@@ -787,18 +787,44 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				}
 				if (element.ToString().IndexOf("horarioriel", StringComparison.Ordinal) == 0)
 				{
-					var horarioRielId = int.Parse(collection[element.ToString()]);
-					var horarioRiel = db.horariorieles.Find(horarioRielId);
-					if (horarioRiel == null)
-					{
-						//TODO
-						TempData["FlashError"] = "Rieles incorrectos en la edición.";
-						return RedirectToAction("Citas");
-					}
 
-					horarioRiel.Disponibilidad = false;
-					horarioRiel.CitaId = citaId;
-					db.Entry(horarioRiel).State = EntityState.Modified;
+                    //Fix para manejar multiples rieles
+                    var rieles = collection[element.ToString()];
+                    if (rieles.Contains(","))
+                    {
+                        var arrayRieles=rieles.Split(',');
+                        foreach (var riel in arrayRieles)
+                        {
+                            var horarioRielId = int.Parse(riel);
+                            var horarioRiel = db.horariorieles.Find(horarioRielId);
+                            if (horarioRiel == null)
+                            {
+                                //TODO
+                                TempData["FlashError"] = "Rieles incorrectos en la edición.";
+                                return RedirectToAction("Citas");
+                            }
+
+                            horarioRiel.Disponibilidad = false;
+                            horarioRiel.CitaId = citaId;
+                            db.Entry(horarioRiel).State = EntityState.Modified;
+                        }
+                    }
+                    else
+                    {
+                        var horarioRielId = int.Parse(collection[element.ToString()]);
+                        var horarioRiel = db.horariorieles.Find(horarioRielId);
+                        if (horarioRiel == null)
+                        {
+                            //TODO
+                            TempData["FlashError"] = "Rieles incorrectos en la edición.";
+                            return RedirectToAction("Citas");
+                        }
+
+                        horarioRiel.Disponibilidad = false;
+                        horarioRiel.CitaId = citaId;
+                        db.Entry(horarioRiel).State = EntityState.Modified;
+                    }
+
 				}
 
 
