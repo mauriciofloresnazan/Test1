@@ -23,7 +23,7 @@ namespace Ppgz.CitaWrapper
 
             // TODO POSIBLE CARGA DE DATOS INCORRECTA A CAUSA DE LA SINCORNIZACIÓN DE LA RECEPCIÓN CON SAP
             var asnFuturos = db.asns
-                .Where(asn => asn.cita.ProveedorId == proveedor.Id && asn.cita.FechaCita > DateTime.Today).ToList();
+                .Where(asn => asn.cita.ProveedorId == proveedor.Id && asn.cita.FechaCita >= DateTime.Today).ToList();
 
             var result = new List<PreAsn>();
 
