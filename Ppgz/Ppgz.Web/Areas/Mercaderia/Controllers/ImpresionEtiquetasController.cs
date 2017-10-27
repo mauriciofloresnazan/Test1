@@ -272,7 +272,17 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     foreach (DataRow row in dt.Rows)
                     {
                         for (int xx = 0; xx < Int32.Parse(row["pares"].ToString()); xx++)
-                        { 
+                        {
+                            var barras = "";
+                            if (row["Centro"].ToString().Trim() != "CD04")
+                            {
+                                barras = @"^FO30,283.50^A0N,40.50,50.00^FD$^FS
+^FO82.50,267.50^A0N,77.60,72.00^FD" + row["Entero_prec"].ToString().Trim() + @"^FS
+^FO190.50,267.50^A0N,35.60,34.00^FD" + row["Dec_prec"].ToString().Trim() + @"^FS
+^FO300.00,296.00^BY2.0.20,.20^BEN,48.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS";
+
+                            }
+
                             etiquetas.Add(@"^XA
 ^SZ2^JMA
 ^MCY^PMN
@@ -303,9 +313,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^FO318.00,119.50^AFN,3.00,8.50^FD" + row["color"].ToString().Trim() + @"^FS
 ^FO318.50,226.00^AFN,2.00,4.50^FD" + row["acabado"].ToString().Trim() + @"^FS
 ^FO30.50,235.50^A0N,20.50,25.00^FD" + row["Pedido"].ToString().Trim() + @"^FS
-^FO30,283.50^A0N,40.50,50.00^FD$^FS
-^FO82.50,267.50^A0N,77.60,72.00^FD" + row["Entero_prec"].ToString().Trim() + @"^FS
-^FO190.50,267.50^A0N,35.60,34.00^FD" + row["Dec_prec"].ToString().Trim() + @"^FS
 ^FO30.00,342.50^A0N,30.20,30.50^FD" + row["No_Prov"].ToString().Trim() + @"^FS
 ^FO30.50,400.00^A0N,10.50,15.00^FDWeb 1^FS
 ^FO30.50,9.00^A0N,18.50,30.00^FD" + i + @" / " + dt.Rows.Count + @"^FS
@@ -315,7 +322,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^PQ1,0,1,Y
 ^ILLABEL001^FS
 ^FO318.00,157.50^AFN,7.00,32.50^FD" + row["talla"].ToString().Trim() + @"^FS
-^FO300.00,296.00^BY2.0.20,.20^BEN,48.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS
+" + barras + @"
 ^XZ
 ^XA
 ^JZN");
