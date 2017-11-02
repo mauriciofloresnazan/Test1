@@ -33,6 +33,14 @@ namespace Ppgz.Services
 
         }
 
+
+        private string QuitarDecimales( string valor)
+        {
+            string[] sindecimal = valor.Split(".".ToCharArray());
+            return sindecimal[0];
+        }
+
+
         public List<ReporteProveedor> FindReporteProveedor(string codigoProveedor)
         {
 
@@ -45,6 +53,8 @@ namespace Ppgz.Services
             {
                 var statusValidos = new [] {"S1", "S2", "S3", "S6"};
 
+                
+
                 reporteProveedor = (from DataRow dr in result.Rows
                     where statusValidos.Contains(dr["ZMMSTA"].ToString().ToUpper())
                     select new ReporteProveedor
@@ -55,15 +65,15 @@ namespace Ppgz.Services
                         NombreMaterial = dr["MATERIAL_TXT"].ToString(),
                         FechaProceso = DateTime.ParseExact(dr["CALDAY"].ToString(), "yyyyMMdd", CultureInfo.InvariantCulture),
                         UnidadMedida = dr["BASE_UOM"].ToString(),
-                        CantidadVentas2 = dr["MESACT2"].ToString(),
-                        CantidadVentas1 = dr["MESACT1"].ToString(),
-                        CantidadVentas = dr["MESACT"].ToString(),
-                        CantidadTotal = dr["TOTAL"].ToString(),
+                        CantidadVentas2 = QuitarDecimales(dr["MESACT2"].ToString()),
+                        CantidadVentas1 = QuitarDecimales(dr["MESACT1"].ToString()),
+                        CantidadVentas = QuitarDecimales(dr["MESACT"].ToString()),
+                        CantidadTotal = QuitarDecimales(dr["TOTAL"].ToString()),
                         CalculoTotal = dr["SELLTHRU"] + " %",
-                        InvTienda = dr["INVENTDA"].ToString(),
-                        InvTransito = dr["TRANSITO"].ToString(),
-                        InvCedis = dr["INVENCEDIS"].ToString(),
-                        PedidosPendiente = dr["PEDIDOSPEN"].ToString(),
+                        InvTienda = QuitarDecimales(dr["INVENTDA"].ToString()),
+                        InvTransito = QuitarDecimales(dr["TRANSITO"].ToString()),
+                        InvCedis = QuitarDecimales(dr["INVENCEDIS"].ToString()),
+                        PedidosPendiente = QuitarDecimales(dr["PEDIDOSPEN"].ToString()),
                         EstadoMaterial = dr["ZMMSTA"].ToString()
                     }).ToList();
                 
