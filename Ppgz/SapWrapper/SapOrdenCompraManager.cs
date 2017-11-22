@@ -19,10 +19,22 @@ namespace SapWrapper
 
             function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_GET_DET", " ");
-            function.Invoke(rfcDestinationManager);
 
-            var result = function.GetTable("ET_HDR");
-            return result.ToDataTable("ET_HDR");
+            function.SetValue("IM_AEDAT", "20150101");
+
+            try
+            {
+                function.Invoke(rfcDestinationManager);
+                var result = function.GetTable("ET_HDR");
+                return result.ToDataTable("ET_HDR");
+            }
+            catch
+            {
+                return new DataTable();
+            }
+
+
+
         }
         public DataTable GetOrdenesDeCompraHeader(string numeroDocumento, string numeroProveedor, string organizacionCompras)
         {
@@ -34,10 +46,19 @@ namespace SapWrapper
             function.SetValue("IM_GET_DET", " ");
             function.SetValue("IM_EBELN", numeroDocumento);
             function.SetValue("IM_LIFNR", numeroProveedor);
-            function.Invoke(rfcDestinationManager);
+            function.SetValue("IM_AEDAT", "20150101");
 
-            var result = function.GetTable("ET_HDR");
-            return result.ToDataTable("ET_HDR");
+
+            try
+            {
+                function.Invoke(rfcDestinationManager);
+                var result = function.GetTable("ET_HDR");
+                return result.ToDataTable("ET_HDR");
+            }
+            catch
+            {
+                return new DataTable();
+            }
         }
         public DataTable GetOrdenDeCompraDetalle(string documento, string numeroProveedor, string organizacionCompras)
         {
@@ -45,16 +66,24 @@ namespace SapWrapper
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
             function.SetValue("IM_LIFNR", numeroProveedor);
+            function.SetValue("IM_AEDAT", "20150101");
             function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_LOEKZ", "A");
             function.SetValue("IM_EBELN", documento);
             function.SetValue("IM_GET_DET", "X");
 
-            function.Invoke(rfcDestinationManager);
-            var result = function.GetTable("ET_DET");
-            return result.ToDataTable("ET_DET");
+            try
+            {
+                function.Invoke(rfcDestinationManager);
+                var result = function.GetTable("ET_HDR");
+                return result.ToDataTable("ET_HDR");
+            }
+            catch
+            {
+                return new DataTable();
+            }
         }
-        
+
         public List<SapOrdenCompra> GetActivasConDetalle(string numeroProveedor, string organizacionCompras)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
@@ -64,15 +93,26 @@ namespace SapWrapper
             function.SetValue("IM_LIFNR", numeroProveedor);
             function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_LOEKZ", "A");
+            function.SetValue("IM_AEDAT", "20150101");
             function.SetValue("IM_GET_DET", "X");
+            var dtH = new DataTable();
+            var dtD = new DataTable();
+            try
+            {
+                function.Invoke(rfcDestinationManager);
+                var resultH = function.GetTable("ET_HDR");
+                dtH = resultH.ToDataTable("ET_HDR");
 
-            function.Invoke(rfcDestinationManager);
+                var resultD = function.GetTable("ET_DET");
+                dtD = resultD.ToDataTable("ET_DET");
 
-            var resultH = function.GetTable("ET_HDR");
-            var dtH = resultH.ToDataTable("ET_HDR");
+            }
+            catch
+            {
 
-            var resultD = function.GetTable("ET_DET");
-            var dtD = resultD.ToDataTable("ET_DET");
+            }
+
+
 
             var result = new List<SapOrdenCompra>();
             foreach (DataRow dr in dtH.Rows)
@@ -85,7 +125,7 @@ namespace SapWrapper
                 var detalles = drsDetalle.Select(drDetalle => new SapOrdenCompraDetalle(drDetalle)).ToList();
 
                 // Se devuelven las ordenes tienen detalles que no estan marcadas como entrega completa
-                sapOrdenCompra.Detalles = detalles.Where(de=> de.EntregaCompleta != "X").ToList();
+                sapOrdenCompra.Detalles = detalles.Where(de => de.EntregaCompleta != "X").ToList();
 
                 if (sapOrdenCompra.Detalles.Any())
                 {
@@ -95,7 +135,7 @@ namespace SapWrapper
 
             return result;
         }
-        
+
         public SapOrdenCompra GetOrdenConDetalle(string numeroProveedor, string organizacionCompras, string numeroDocumento)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
@@ -106,15 +146,25 @@ namespace SapWrapper
             function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_EBELN", numeroDocumento);
             function.SetValue("IM_LOEKZ", "A");
+            function.SetValue("IM_AEDAT", "20150101");
             function.SetValue("IM_GET_DET", "X");
 
-            function.Invoke(rfcDestinationManager);
+            var dtH = new DataTable();
+            var dtD = new DataTable();
+            try
+            {
+                function.Invoke(rfcDestinationManager);
+                var resultH = function.GetTable("ET_HDR");
+                dtH = resultH.ToDataTable("ET_HDR");
 
-            var resultH = function.GetTable("ET_HDR");
-            var dtH = resultH.ToDataTable("ET_HDR");
+                var resultD = function.GetTable("ET_DET");
+                dtD = resultD.ToDataTable("ET_DET");
 
-            var resultD = function.GetTable("ET_DET");
-            var dtD = resultD.ToDataTable("ET_DET");
+            }
+            catch
+            {
+
+            }
 
             var result = new List<SapOrdenCompra>();
             foreach (DataRow dr in dtH.Rows)
@@ -125,7 +175,7 @@ namespace SapWrapper
                 var drsDetalle = dtD.Select(string.Format("EBELN = '{0}'", dr["EBELN"]));
 
                 var detalles = drsDetalle.Select(drDetalle => new SapOrdenCompraDetalle(drDetalle)).ToList();
-     
+
                 sapOrdenCompra.Detalles = detalles;
 
                 if (sapOrdenCompra.Detalles.Any())
