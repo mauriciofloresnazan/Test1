@@ -65,9 +65,15 @@ namespace SatWrapper
 		public RegimenFiscal RegimenFiscal { get; set; }
 		[XmlAttribute(AttributeName = "rfc")]
 		public string Rfc { get; set; }
-		[XmlAttribute(AttributeName = "nombre")]
+        [XmlAttribute(AttributeName = "nombre")]
 		public string Nombre { get; set; }
-	}
+
+        //Version 3.34
+        [XmlAttribute(AttributeName = "Rfc")]
+        public string Rfc33 { get; set; }
+        [XmlAttribute(AttributeName = "Nombre")]
+        public string Nombre33 { get; set; }
+    }
 
 	[XmlRoot(ElementName = "Domicilio", Namespace = "http://www.sat.gob.mx/cfd/3")]
 	public class Domicilio
@@ -114,7 +120,19 @@ namespace SatWrapper
 		public string ValorUnitario { get; set; }
 		[XmlAttribute(AttributeName = "importe")]
 		public string Importe { get; set; }
-	}
+
+        //CFDI 3.3
+        [XmlAttribute(AttributeName = "Cantidad")]
+        public string Cantidad33 { get; set; }
+        [XmlAttribute(AttributeName = "Unidad")]
+        public string Unidad33 { get; set; }
+        [XmlAttribute(AttributeName = "Descripcion")]
+        public string Descripcion33 { get; set; }
+        [XmlAttribute(AttributeName = "ValorUnitario")]
+        public string ValorUnitario33 { get; set; }
+        [XmlAttribute(AttributeName = "Importe")]
+        public string Importe33 { get; set; }
+    }
 
 	[XmlRoot(ElementName = "Conceptos", Namespace = "http://www.sat.gob.mx/cfd/3")]
 	public class Conceptos
@@ -132,9 +150,17 @@ namespace SatWrapper
 		public string Tasa { get; set; }
 		[XmlAttribute(AttributeName = "importe")]
 		public string Importe { get; set; }
-	}
 
-	[XmlRoot(ElementName = "Traslados", Namespace = "http://www.sat.gob.mx/cfd/3")]
+        //CFDI 3.3
+        [XmlAttribute(AttributeName = "Impuesto")]
+        public string Impuesto33 { get; set; }
+        [XmlAttribute(AttributeName = "Tasa")]
+        public string Tasa33 { get; set; }
+        [XmlAttribute(AttributeName = "Importe")]
+        public string Importe33 { get; set; }
+    }
+
+    [XmlRoot(ElementName = "Traslados", Namespace = "http://www.sat.gob.mx/cfd/3")]
 	public class Traslados
 	{
 		[XmlElement(ElementName = "Traslado", Namespace = "http://www.sat.gob.mx/cfd/3")]
@@ -201,7 +227,7 @@ namespace SatWrapper
 		public string SchemaLocation { get; set; }
 		[XmlAttribute(AttributeName = "version")]
 		public string Version { get; set; }
-		[XmlAttribute(AttributeName = "serie")]
+        [XmlAttribute(AttributeName = "serie")]
 		public string Serie { get; set; }
 		[XmlAttribute(AttributeName = "folio")]
 		public string Folio { get; set; }
@@ -233,5 +259,20 @@ namespace SatWrapper
 		public string LugarExpedicion { get; set; }
 		[XmlAttribute(AttributeName = "NumCtaPago")]
 		public string NumCtaPago { get; set; }
-	}
+
+        //CFDI3.3
+        [XmlAttribute(AttributeName = "Version")]
+        public string Version33 { get; set; }
+        [XmlAttribute(AttributeName = "Serie")]
+        public string Serie33 { get; set; }
+        [XmlAttribute(AttributeName = "Folio")]
+        public string Folio33 { get; set; }
+        [XmlAttribute(AttributeName = "Fecha")]
+        public string Fecha33 { get; set; }
+        [XmlAttribute(AttributeName = "Total")]
+        public string Total33 { get; set; }
+        [XmlAttribute(AttributeName = "SubTotal")]
+        public string SubTotal33 { get; set; }
+
+    }
 }

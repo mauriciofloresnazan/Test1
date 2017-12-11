@@ -74,7 +74,36 @@ namespace Ppgz.Services
                 throw new BusinessException("La factura ya esta registrada en el sistema");
             }
 
-            var proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc);
+            var proveedor= new proveedore();
+            var RFC = "";
+            var Serie = "";
+            var Folio = "";
+            var SubTotal = "";
+            var Fecha = "";
+            var Total = "";
+
+            if (comprobante.Version33=="3.3")
+            {
+                proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc33);
+                RFC = comprobante.Emisor.Rfc33;
+                Serie = comprobante.Serie33;
+                Folio = comprobante.Folio33;
+                SubTotal = comprobante.SubTotal33;
+                Total = comprobante.Total33;
+                Fecha = comprobante.Fecha33;
+            }
+            else
+            {
+                proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc);
+                RFC = comprobante.Emisor.Rfc;
+                Serie = comprobante.Serie;
+                Folio = comprobante.Folio;
+                SubTotal = comprobante.SubTotal;
+                Total = comprobante.Total;
+                Fecha = comprobante.Fecha;
+            }
+
+            
             
             if (proveedor == null)
             {
@@ -110,7 +139,7 @@ namespace Ppgz.Services
             var cfdiCuenta = configuraciones.Single(c => c.Clave == "cfdi.cuenta").Valor;
             try
             {
-                CfdiServiceConsulta.Validar(contenido, cfdiToken, cfdiPassword, cfdiUser, cfdiCuenta, comprobante.Receptor.Rfc);
+                CfdiServiceConsulta.Validar(contenido, cfdiToken, cfdiPassword, cfdiUser, cfdiCuenta, RFC);
             }
             catch (Exception)
             {
@@ -118,32 +147,44 @@ namespace Ppgz.Services
                 xmlFileStream.Dispose();
                 throw;
             }
-            
-            //Creacion de la factura para la miro
-            var cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
+
+            var cantidad = new decimal();
+
+            if (comprobante.Version33 == "3.3")
+            {
+                //Creacion de la factura para la miro
+                cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad33));
+            }
+            else
+            {
+                //Creacion de la factura para la miro
+                cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
+
+            }
+
 
             var sapFacturaManager = new SapFacturaManager();
             var refe="";
             if (comprobante.Serie=="") {
-                 refe =comprobante.Folio;
+                 refe =Folio;
             }
             else
             {
-                 refe = comprobante.Serie+comprobante.Folio;
+                 refe = Serie+ Folio;
             }
 
             var facturaSap = sapFacturaManager.CrearFactura(
                 proveedor.NumeroProveedor,
                 refe,
-                DateTime.ParseExact(comprobante.Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
-                comprobante.SubTotal,
-                comprobante.Total,
+                DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
+                SubTotal,
+                Total,
                 cantidad.ToString(CultureInfo.InvariantCulture),
                  comprobante.Complemento.TimbreFiscalDigital.UUID,
-                 comprobante.Emisor.Rfc);
+                 RFC);
 
             // Se crea el directorio de acuerdo a la fecha del comprobante
-            var fecha = DateTime.ParseExact(comprobante.Fecha.Substring(0, 10), "yyyy-MM-dd",
+            var fecha = DateTime.ParseExact(Fecha.Substring(0, 10), "yyyy-MM-dd",
                 CultureInfo.InvariantCulture);
             var directory = GetFacturaDirectory(fecha);
            
@@ -159,8 +200,8 @@ namespace Ppgz.Services
 
             var factura = new factura
             {
-                Serie = comprobante.Serie ?? string.Empty,
-                Folio = comprobante.Folio,
+                Serie = Serie ?? string.Empty,
+                Folio = Folio,
                 Fecha =  fecha,
                 Total = decimal.Parse(comprobante.Total, CultureInfo.InvariantCulture),
                 proveedor_id = proveedor.Id,
