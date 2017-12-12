@@ -13,7 +13,7 @@ namespace Ppgz.Services
     public class FacturaManager
     {
         private readonly Entities _db = new Entities();
-        public List<factura>GetFacturas(int proveedorId)
+        public List<factura> GetFacturas(int proveedorId)
         {
             return _db.facturas.Where(f => f.proveedor_id == proveedorId).ToList();
 
@@ -32,7 +32,7 @@ namespace Ppgz.Services
 
                 serializer.Deserialize(xmlFileStream);
             }
-            catch (Exception )
+            catch (Exception)
             {
 
                 throw new BusinessException("-1 - Documento no validable (¿no es un cfdi?)");
@@ -46,7 +46,7 @@ namespace Ppgz.Services
             {
                 throw new BusinessException("Xml incorrecto");
             }
-            if(Path.GetExtension(xmlFilePath).ToLower() != ".xml")
+            if (Path.GetExtension(xmlFilePath).ToLower() != ".xml")
             {
                 throw new BusinessException("Xml incorrecto");
             }
@@ -54,19 +54,19 @@ namespace Ppgz.Services
             {
                 throw new BusinessException("Pdf incorrecto");
             }
-            if(Path.GetExtension(pdfFilePath).ToLower() != ".pdf")
+            if (Path.GetExtension(pdfFilePath).ToLower() != ".pdf")
             {
                 throw new BusinessException("Pdf incorrecto");
             }
 
             // Validacion de la factura 
             var serializer = new XmlSerializer(typeof(Comprobante));
-            
+
             var xmlFileStream = new FileStream(xmlFilePath, FileMode.Open);
-            
+
 
             var comprobante = (Comprobante)serializer.Deserialize(xmlFileStream);
-            
+
             if (_db.facturas.FirstOrDefault(fa => fa.Uuid == comprobante.Complemento.TimbreFiscalDigital.UUID) != null)
             {
                 xmlFileStream.Close();
@@ -74,18 +74,20 @@ namespace Ppgz.Services
                 throw new BusinessException("La factura ya esta registrada en el sistema");
             }
 
-            var proveedor= new proveedore();
+            var proveedor = new proveedore();
             var RFC = "";
+            var RFCReceptor = "";
             var Serie = "";
             var Folio = "";
             var SubTotal = "";
             var Fecha = "";
             var Total = "";
 
-            if (comprobante.Version33=="3.3")
+            if (comprobante.Version33 == "3.3")
             {
                 proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc33);
                 RFC = comprobante.Emisor.Rfc33;
+                RFCReceptor = comprobante.Receptor.Rfc33;
                 Serie = comprobante.Serie33;
                 Folio = comprobante.Folio33;
                 SubTotal = comprobante.SubTotal33;
@@ -96,6 +98,7 @@ namespace Ppgz.Services
             {
                 proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc);
                 RFC = comprobante.Emisor.Rfc;
+                RFCReceptor = comprobante.Receptor.Rfc;
                 Serie = comprobante.Serie;
                 Folio = comprobante.Folio;
                 SubTotal = comprobante.SubTotal;
@@ -103,8 +106,8 @@ namespace Ppgz.Services
                 Fecha = comprobante.Fecha;
             }
 
-            
-            
+
+
             if (proveedor == null)
             {
                 xmlFileStream.Close();
@@ -129,7 +132,7 @@ namespace Ppgz.Services
             xmlFileStream.Dispose();
 
             var contenido = File.ReadAllText(xmlFilePath);
-            
+
             // Validación ante el sat
 
             var configuraciones = _db.configuraciones.ToList();
@@ -139,7 +142,7 @@ namespace Ppgz.Services
             var cfdiCuenta = configuraciones.Single(c => c.Clave == "cfdi.cuenta").Valor;
             try
             {
-                CfdiServiceConsulta.Validar(contenido, cfdiToken, cfdiPassword, cfdiUser, cfdiCuenta, RFC);
+                CfdiServiceConsulta.Validar(contenido, cfdiToken, cfdiPassword, cfdiUser, cfdiCuenta, RFCReceptor);
             }
             catch (Exception)
             {
@@ -164,13 +167,14 @@ namespace Ppgz.Services
 
 
             var sapFacturaManager = new SapFacturaManager();
-            var refe="";
-            if (comprobante.Serie=="") {
-                 refe =Folio;
+            var refe = "";
+            if (comprobante.Serie == "")
+            {
+                refe = Folio;
             }
             else
             {
-                 refe = Serie+ Folio;
+                refe = Serie + Folio;
             }
 
             var facturaSap = sapFacturaManager.CrearFactura(
@@ -187,7 +191,7 @@ namespace Ppgz.Services
             var fecha = DateTime.ParseExact(Fecha.Substring(0, 10), "yyyy-MM-dd",
                 CultureInfo.InvariantCulture);
             var directory = GetFacturaDirectory(fecha);
-           
+
             // Movemos el xml
             var xmlFileName = comprobante.Complemento.TimbreFiscalDigital.UUID + ".xml";
             var newXmlPath = Path.Combine(directory.FullName, xmlFileName);
@@ -202,8 +206,8 @@ namespace Ppgz.Services
             {
                 Serie = Serie ?? string.Empty,
                 Folio = Folio,
-                Fecha =  fecha,
-                Total = decimal.Parse(comprobante.Total, CultureInfo.InvariantCulture),
+                Fecha = fecha,
+                Total = decimal.Parse(Total, CultureInfo.InvariantCulture),
                 proveedor_id = proveedor.Id,
                 Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
                 XmlRuta = newXmlPath,
@@ -214,7 +218,7 @@ namespace Ppgz.Services
             if (factura.Estatus != "S" && factura.Estatus != "H")
             {
                 factura.Comentario = string.Format
-                    ("Tipo:{1} {0}Mensaje:{2}", 
+                    ("Tipo:{1} {0}Mensaje:{2}",
                     Environment.NewLine,
                     facturaSap.ErrorTable.Rows[0]["TYPE"],
                     facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
