@@ -26,7 +26,9 @@ namespace Ppgz.Repository
         public string Estatus { get; set; }
         public string Comentario { get; set; }
         public string NumeroGenerado { get; set; }
-    
-        public virtual proveedore proveedore { get; set; }
+        public bool Procesado { get; set; }
+        public string numeroProveedor { get; set; }
+
+    public virtual proveedore proveedore { get; set; }
     }
 }

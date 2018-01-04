@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
+using ScaleWrapper;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -19,7 +20,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public ActionResult Index()
         {
-
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
             ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);

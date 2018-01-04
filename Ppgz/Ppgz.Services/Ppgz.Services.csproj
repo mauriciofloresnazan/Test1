@@ -107,6 +107,10 @@
       <Project>{183D2B79-0F95-48A5-9924-8B90EC0527E8}</Project>
       <Name>SatWrapper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ScaleWrapper\ScaleWrapper.csproj">
+      <Project>{54171cf5-78c7-4b23-bc94-26be97e34aa5}</Project>
+      <Name>ScaleWrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CommonMensajesResource.resx">

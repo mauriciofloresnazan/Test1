@@ -7,6 +7,8 @@ using System.Xml.Serialization;
 using Ppgz.Repository;
 using SapWrapper;
 using SatWrapper;
+using ScaleWrapper;
+
 
 namespace Ppgz.Services
 {
@@ -106,6 +108,16 @@ namespace Ppgz.Services
                 Fecha = comprobante.Fecha;
             }
 
+            var refe = "";
+            if (comprobante.Serie == "")
+            {
+                refe = Folio;
+            }
+            else
+            {
+                refe = Serie + Folio;
+            }
+
 
 
             if (proveedor == null)
@@ -151,41 +163,7 @@ namespace Ppgz.Services
                 throw;
             }
 
-            var cantidad = new decimal();
 
-            if (comprobante.Version33 == "3.3")
-            {
-                //Creacion de la factura para la miro
-                cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad33));
-            }
-            else
-            {
-                //Creacion de la factura para la miro
-                cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
-
-            }
-
-
-            var sapFacturaManager = new SapFacturaManager();
-            var refe = "";
-            if (comprobante.Serie == "")
-            {
-                refe = Folio;
-            }
-            else
-            {
-                refe = Serie + Folio;
-            }
-
-            var facturaSap = sapFacturaManager.CrearFactura(
-                proveedor.NumeroProveedor,
-                refe,
-                DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
-                SubTotal,
-                Total,
-                cantidad.ToString(CultureInfo.InvariantCulture),
-                 comprobante.Complemento.TimbreFiscalDigital.UUID,
-                 RFC);
 
             // Se crea el directorio de acuerdo a la fecha del comprobante
             var fecha = DateTime.ParseExact(Fecha.Substring(0, 10), "yyyy-MM-dd",
@@ -202,35 +180,106 @@ namespace Ppgz.Services
             var newPdfPath = Path.Combine(directory.FullName, pdfFileName);
             File.Copy(pdfFilePath, newPdfPath);
 
-            var factura = new factura
-            {
-                Serie = Serie ?? string.Empty,
-                Folio = Folio,
-                Fecha = fecha,
-                Total = decimal.Parse(Total, CultureInfo.InvariantCulture),
-                proveedor_id = proveedor.Id,
-                Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
-                XmlRuta = newXmlPath,
-                PdfRuta = newPdfPath,
-                Estatus = facturaSap.Estatus
-            };
 
-            if (factura.Estatus != "S" && factura.Estatus != "H")
+            ////////////////////////////////
+            //Inicio de validacion Scale
+            ////////////////////////////////
+            var result = DbScale.GetDataTable("SELECT * FROM GNZN_Cifras_Control_CR_Facturas  WHERE Proveedor = '"+ proveedor.NumeroProveedor + "' AND Factura='"+ refe +"';");
+
+            ////////////////////////////////
+            //Fin de validacion Scale
+            ////////////////////////////////
+
+            if (result.Rows.Count == 1)
             {
-                factura.Comentario = string.Format
-                    ("Tipo:{1} {0}Mensaje:{2}",
-                    Environment.NewLine,
-                    facturaSap.ErrorTable.Rows[0]["TYPE"],
-                    facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
+
+
             }
             else
             {
-                factura.NumeroGenerado = facturaSap.FacturaNumero;
+                var factura = new factura
+                {
+                    Serie = Serie ?? string.Empty,
+                    Folio = Folio,
+                    Fecha = fecha,
+                    Total = decimal.Parse(Total, CultureInfo.InvariantCulture),
+                    proveedor_id = proveedor.Id,
+                    Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
+                    XmlRuta = newXmlPath,
+                    PdfRuta = newPdfPath,
+                    Estatus = "P",
+                    Procesado = false,
+                    numeroProveedor = proveedor.NumeroProveedor,
+                    Comentario = "Factura no disponible en Scale"
+
+                };
+
+                _db.facturas.Add(factura);
+
+                _db.SaveChanges();
             }
 
-            _db.facturas.Add(factura);
+            ////////////////////////////////
+            //Despues de validacion Scale
+            ////////////////////////////////
 
-            _db.SaveChanges();
+            var cantidad = new decimal();
+
+            if (comprobante.Version33 == "3.3")
+            {
+                //Creacion de la factura para la miro
+                cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad33));
+            }
+            else
+            {
+                //Creacion de la factura para la miro
+                cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
+
+            }
+
+
+            var sapFacturaManager = new SapFacturaManager();
+
+            var facturaSap = sapFacturaManager.CrearFactura(
+                proveedor.NumeroProveedor,
+                refe,
+                DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
+                SubTotal,
+                Total,
+                cantidad.ToString(CultureInfo.InvariantCulture),
+                 comprobante.Complemento.TimbreFiscalDigital.UUID,
+                 RFC);
+
+            
+            //var factura = new factura
+            //{
+            //    Serie = Serie ?? string.Empty,
+            //    Folio = Folio,
+            //    Fecha = fecha,
+            //    Total = decimal.Parse(Total, CultureInfo.InvariantCulture),
+            //    proveedor_id = proveedor.Id,
+            //    Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
+            //    XmlRuta = newXmlPath,
+            //    PdfRuta = newPdfPath,
+            //    Estatus = facturaSap.Estatus
+            //};
+
+            //if (factura.Estatus != "S" && factura.Estatus != "H")
+            //{
+            //    factura.Comentario = string.Format
+            //        ("Tipo:{1} {0}Mensaje:{2}",
+            //        Environment.NewLine,
+            //        facturaSap.ErrorTable.Rows[0]["TYPE"],
+            //        facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
+            //}
+            //else
+            //{
+            //    factura.NumeroGenerado = facturaSap.FacturaNumero;
+            //}
+
+            //_db.facturas.Add(factura);
+
+            //_db.SaveChanges();
         }
 
 
