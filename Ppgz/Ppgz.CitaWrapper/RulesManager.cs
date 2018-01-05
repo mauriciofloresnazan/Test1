@@ -12,7 +12,7 @@ namespace Ppgz.CitaWrapper
 
         // TODO MEJORAR
         private static List<configuracione> _configuraciones;
-        
+
         // TODO MEJORAR
         private static List<configuracione> GetConfiguraciones()
         {
@@ -22,7 +22,7 @@ namespace Ppgz.CitaWrapper
 
             return _configuraciones;
         }
-        
+
         internal static List<DayOfWeek> GetDiasOperativos()
         {
 
@@ -73,7 +73,7 @@ namespace Ppgz.CitaWrapper
             }
             return result;
         }
-        
+
 
         /// <summary>
         /// Basado en las reglas de negocio calcula las fechas permitidas para una orden de compra
@@ -84,7 +84,7 @@ namespace Ppgz.CitaWrapper
         {
             // Limpieza de fecha
             sapFechaEntrega = sapFechaEntrega.Date;
-         
+
             var fechasPermitidas = new List<DateTime>();
 
             if (esAutorizada)
@@ -153,7 +153,7 @@ namespace Ppgz.CitaWrapper
                 }
             }
 
-            
+
 
 
             return fechasPermitidas;
@@ -246,8 +246,8 @@ namespace Ppgz.CitaWrapper
             var g7 = g5 - i6;
             var h7 = Math.Ceiling(g7 / g3);
 
-            var total = (h6*2) + h7;
-            return (int) total;
+            var total = (h6 * 2) + h7;
+            return (int)total;
 
             /*  if (totalPares <= paresPorHora)
             {
@@ -260,7 +260,7 @@ namespace Ppgz.CitaWrapper
 
             return rielesRequeridos;*/
         }
-        
+
 
         /// <summary>
         /// Nombre del  ISO 639 del español en México
@@ -325,49 +325,103 @@ namespace Ppgz.CitaWrapper
             fechaCita = fechaCita.Date;
             fechaEntregaOrden = fechaEntregaOrden.Date;
 
+            var fechasValidas = Calcular2SemanasAdelanteYatras(fechaEntregaOrden);
 
-            //TODO CALCULAR CUANDO ESTOY EN LA ULTIMA DESMANA DEL AÑO
-
-
-            var semanaCita = CultureInfo
-                .GetCultureInfo(EspMexicoCultureName)
-                .Calendar
-                .GetWeekOfYear(fechaCita, CalendarWeekRule.FirstDay, fechaCita.DayOfWeek);
-
-            var semanaOrden = CultureInfo
-                .GetCultureInfo(EspMexicoCultureName)
-                .Calendar
-                .GetWeekOfYear(fechaEntregaOrden, CalendarWeekRule.FirstDay, fechaEntregaOrden.DayOfWeek);
-
-            // TODO pasar a tabla de configuraciones
-            return semanaCita >= semanaOrden - 2 && semanaCita <= semanaOrden + 2;
+            return fechaCita <= fechasValidas[1] && fechaCita >= fechasValidas[0];
         }
 
         /// <summary>
         /// 4.	El proveedor solo puede agendar con un máximo tiempo que comprende la semana en curso más 2 semanas
         /// </summary>
         public static bool Regla4(DateTime fechaCita)
-        {            
+        {
             // Limpieza de fecha 
             fechaCita = fechaCita.Date;
 
-            //TODO CALCULAR CUANDO ESTOY EN LA ULTIMA DESMANA DEL AÑO
+            var fechasValidas = Calcular2SemanasAdelanteYatras(DateTime.Today);
+
+            return fechaCita > DateTime.Today && fechaCita <= fechasValidas[1];
+        }
+
+        public static DateTime[] Calcular2SemanasAdelanteYatras(DateTime fecha)
+        {
+            var diaSemanaActual = fecha.DayOfWeek;
+            var FechaHaciaAdelante = fecha;
+            var FechaHaciaAtras = fecha;
 
 
+            ///Agregamos los dias necesarios para cubrir la semana actual mas 2 semanas segun el dia de la semana
+            ///La semana empieza los Lunes
+            switch (diaSemanaActual)
+            {
 
-            var semanaCita = CultureInfo
-               .GetCultureInfo(EspMexicoCultureName)
-               .Calendar
-               .GetWeekOfYear(fechaCita, CalendarWeekRule.FirstDay, fechaCita.DayOfWeek);
+                case DayOfWeek.Monday:
+                    FechaHaciaAdelante=FechaHaciaAdelante.AddDays(20);
+                    break;
 
-            var semanaEnCurso = CultureInfo
-                .GetCultureInfo(EspMexicoCultureName)
-                .Calendar
-                .GetWeekOfYear(DateTime.Today, CalendarWeekRule.FirstDay, DateTime.Today.DayOfWeek);
+                case DayOfWeek.Tuesday:
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(19);
+                    break;
+
+                case DayOfWeek.Wednesday:
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(18);
+                    break;
+
+                case DayOfWeek.Thursday:
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(17);
+                    break;
+
+                case DayOfWeek.Friday:
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(16);
+                    break;
+
+                case DayOfWeek.Saturday:
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(15);
+                    break;
+
+                case DayOfWeek.Sunday:
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(14);
+                    break;
+            }
 
 
-            // TODO pasar a tabla de configuraciones
-            return semanaCita >= semanaEnCurso && semanaCita <= semanaEnCurso + 2;
+            switch (diaSemanaActual)
+            {
+                case DayOfWeek.Monday:
+                    FechaHaciaAtras = FechaHaciaAtras.AddDays(-15);
+                    break;
+
+                case DayOfWeek.Tuesday:
+                    FechaHaciaAtras = FechaHaciaAtras.AddDays(-16);
+                    break;
+
+                case DayOfWeek.Wednesday:
+                    FechaHaciaAtras = FechaHaciaAtras.AddDays(-17);
+                    break;
+
+                case DayOfWeek.Thursday:
+                    FechaHaciaAtras = FechaHaciaAtras.AddDays(-18);
+                    break;
+
+                case DayOfWeek.Friday:
+                    FechaHaciaAtras = FechaHaciaAtras.AddDays(-19);
+                    break;
+
+                case DayOfWeek.Saturday:
+                    FechaHaciaAtras = FechaHaciaAtras.AddDays(-10);
+                    break;
+
+                case DayOfWeek.Sunday:
+                    FechaHaciaAtras = FechaHaciaAtras.AddDays(-21);
+                    break;
+            }
+
+            
+            return new DateTime[]
+            {
+               FechaHaciaAtras,
+               FechaHaciaAdelante
+            };
         }
 
         /// <summary>
@@ -580,6 +634,16 @@ namespace Ppgz.CitaWrapper
                 }
             }
             return true;
+        }
+
+        public static int GetWeeksInYear(int year)
+        {
+            DateTime date1 = new DateTime(year, 12, 31);
+
+           return CultureInfo
+                .GetCultureInfo(EspMexicoCultureName)
+                .Calendar
+                .GetWeekOfYear(date1, CalendarWeekRule.FirstDay, date1.DayOfWeek);
         }
     }
 }

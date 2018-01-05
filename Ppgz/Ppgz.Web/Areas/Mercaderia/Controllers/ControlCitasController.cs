@@ -652,7 +652,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult Citas()
 		{
-			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+            //Test para probar las reglas de las fechas
+            //DateTime myDT = new DateTime(2018, 1, 5);
+            //DateTime orden = new DateTime(2018, 1, 22);
+
+            //var tes = RulesManager.Regla4(myDT);
+            //var tes2 = RulesManager.Regla3(myDT, orden);
+
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
             if (cuenta.SinASN)
             {
