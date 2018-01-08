@@ -15,6 +15,7 @@ namespace Ppgz.Services
     public class FacturaManager
     {
         private readonly Entities _db = new Entities();
+
         public List<factura> GetFacturas(int proveedorId)
         {
             return _db.facturas.Where(f => f.proveedor_id == proveedorId).ToList();
@@ -39,6 +40,17 @@ namespace Ppgz.Services
 
                 throw new BusinessException("-1 - Documento no validable (¿no es un cfdi?)");
             }
+        }
+
+        public void ProcesarFacturasAtoradas()
+        {
+            List<factura> Facturas = _db.facturas.Where(f => f.Procesado == false).ToList();
+
+            foreach ( factura itemFactura in Facturas)
+            {
+                var nose = itemFactura;
+            }
+
         }
 
         public void CargarFactura(int proveedorId, int cuentaId, string xmlFilePath, string pdfFilePath)
@@ -192,11 +204,109 @@ namespace Ppgz.Services
 
             if (result.Rows.Count == 1)
             {
+                
+                var row = result.Rows[0];
+                int paresScale = Int32.Parse(row["Pares"].ToString());
+
+                SapOrdenCompraManager ConsultaSap = new SapOrdenCompraManager();
+                var totalParesSAP=ConsultaSap.GetCantidadValidacionSAP("2017", "1001", refe);
+
+                if (paresScale == totalParesSAP)
+                {
+                    ///////////////////
+                    //Se ejecuta si todo coincide
+                    ///////////////////
+                    var cantidad = new decimal();
+
+                    if (comprobante.Version33 == "3.3")
+                    {
+                        //Creacion de la factura para la miro
+                        cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad33));
+                    }
+                    else
+                    {
+                        //Creacion de la factura para la miro
+                        cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
+
+                    }
 
 
+                    var sapFacturaManager = new SapFacturaManager();
+
+                    var facturaSap = sapFacturaManager.CrearFactura(
+                        proveedor.NumeroProveedor,
+                        refe,
+                        DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
+                        SubTotal,
+                        Total,
+                        cantidad.ToString(CultureInfo.InvariantCulture),
+                         comprobante.Complemento.TimbreFiscalDigital.UUID,
+                         RFC);
+                    var factura = new factura
+                    {
+                        Serie = Serie ?? string.Empty,
+                        Folio = Folio,
+                        Fecha = fecha,
+                        Total = decimal.Parse(Total, CultureInfo.InvariantCulture),
+                        proveedor_id = proveedor.Id,
+                        Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
+                        XmlRuta = newXmlPath,
+                        PdfRuta = newPdfPath,
+                        Estatus = facturaSap.Estatus,
+                        Procesado = true,
+                        numeroProveedor = proveedor.NumeroProveedor
+                    };
+
+                    if (factura.Estatus != "S" && factura.Estatus != "H")
+                    {
+                        factura.Comentario = string.Format
+                            ("Tipo:{1} {0}Mensaje:{2}",
+                            Environment.NewLine,
+                            facturaSap.ErrorTable.Rows[0]["TYPE"],
+                            facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
+                    }
+                    else
+                    {
+                        factura.NumeroGenerado = facturaSap.FacturaNumero;
+                    }
+
+                    _db.facturas.Add(factura);
+
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    ///////////////////
+                    //Se ejecuta si los montos de Scale y Sap son diferentes
+                    ///////////////////
+                    var factura = new factura
+                    {
+                        Serie = Serie ?? string.Empty,
+                        Folio = Folio,
+                        Fecha = fecha,
+                        Total = decimal.Parse(Total, CultureInfo.InvariantCulture),
+                        proveedor_id = proveedor.Id,
+                        Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
+                        XmlRuta = newXmlPath,
+                        PdfRuta = newPdfPath,
+                        Estatus = "P",
+                        Procesado = false,
+                        numeroProveedor = proveedor.NumeroProveedor,
+                        Comentario = "N° de pares en Scale y SAP son diferentes"
+
+                    };
+
+                    _db.facturas.Add(factura);
+
+                    _db.SaveChanges();
+                }
+                
             }
             else
             {
+                ///////////////////
+                //Se ejecuta si La factura todavia no esta en Scale
+                ///////////////////
                 var factura = new factura
                 {
                     Serie = Serie ?? string.Empty,
@@ -219,67 +329,6 @@ namespace Ppgz.Services
                 _db.SaveChanges();
             }
 
-            ////////////////////////////////
-            //Despues de validacion Scale
-            ////////////////////////////////
-
-            var cantidad = new decimal();
-
-            if (comprobante.Version33 == "3.3")
-            {
-                //Creacion de la factura para la miro
-                cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad33));
-            }
-            else
-            {
-                //Creacion de la factura para la miro
-                cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
-
-            }
-
-
-            var sapFacturaManager = new SapFacturaManager();
-
-            var facturaSap = sapFacturaManager.CrearFactura(
-                proveedor.NumeroProveedor,
-                refe,
-                DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
-                SubTotal,
-                Total,
-                cantidad.ToString(CultureInfo.InvariantCulture),
-                 comprobante.Complemento.TimbreFiscalDigital.UUID,
-                 RFC);
-
-            
-            //var factura = new factura
-            //{
-            //    Serie = Serie ?? string.Empty,
-            //    Folio = Folio,
-            //    Fecha = fecha,
-            //    Total = decimal.Parse(Total, CultureInfo.InvariantCulture),
-            //    proveedor_id = proveedor.Id,
-            //    Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
-            //    XmlRuta = newXmlPath,
-            //    PdfRuta = newPdfPath,
-            //    Estatus = facturaSap.Estatus
-            //};
-
-            //if (factura.Estatus != "S" && factura.Estatus != "H")
-            //{
-            //    factura.Comentario = string.Format
-            //        ("Tipo:{1} {0}Mensaje:{2}",
-            //        Environment.NewLine,
-            //        facturaSap.ErrorTable.Rows[0]["TYPE"],
-            //        facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
-            //}
-            //else
-            //{
-            //    factura.NumeroGenerado = facturaSap.FacturaNumero;
-            //}
-
-            //_db.facturas.Add(factura);
-
-            //_db.SaveChanges();
         }
 
 
