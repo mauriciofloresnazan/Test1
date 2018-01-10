@@ -43,11 +43,11 @@ namespace SapWrapper
             //function.SetValue("PI_KOKRS", sociedad);
             //function.SetValue("PI_XBLNR", referencia);
 
-            
-            //    function.Invoke(rfcDestinationManager);
-            //    var result = function.GetTable("PE_ERFMG");
-            //    result.ToDataTable("PE_ERFMG");
 
+            //function.Invoke(rfcDestinationManager);
+            //var result = function.GetTable("PE_ERFMG");
+            //result.ToDataTable("PE_ERFMG");
+            //var noe= result.ToDataTable("PE_ERFMG");
             return 3;
         }
 

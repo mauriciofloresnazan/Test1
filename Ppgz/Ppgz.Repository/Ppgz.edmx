@@ -212,6 +212,8 @@
           <Property Name="Estatus" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="Comentario" Type="varchar" MaxLength="5000" />
           <Property Name="NumeroGenerado" Type="varchar" MaxLength="1000" />
+          <Property Name="Procesado" Type="bool" Nullable="false" />
+          <Property Name="numeroProveedor" Type="varchar" MaxLength="15" />
         </EntityType>
         <EntityType Name="horariorieles">
           <Key>
@@ -1145,6 +1147,8 @@
           <Property Name="Estatus" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Comentario" Type="String" MaxLength="5000" FixedLength="false" Unicode="false" />
           <Property Name="NumeroGenerado" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Procesado" Type="Boolean" Nullable="false" />
+          <Property Name="numeroProveedor" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="proveedore" Relationship="Self.fk_facturas_proveedores" FromRole="facturas" ToRole="proveedores" />
         </EntityType>
         <EntityType Name="horarioriele">
@@ -1993,6 +1997,8 @@
                 <ScalarProperty Name="Estatus" ColumnName="Estatus" />
                 <ScalarProperty Name="Comentario" ColumnName="Comentario" />
                 <ScalarProperty Name="NumeroGenerado" ColumnName="NumeroGenerado" />
+                <ScalarProperty Name="Procesado" ColumnName="Procesado" />
+                <ScalarProperty Name="numeroProveedor" ColumnName="numeroProveedor" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
