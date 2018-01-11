@@ -48,7 +48,7 @@ namespace SapWrapper
             //var result = function.GetTable("PE_ERFMG");
             //result.ToDataTable("PE_ERFMG");
             //var noe= result.ToDataTable("PE_ERFMG");
-            return 3;
+            return 23;
         }
 
         public DataTable GetOrdenesDeCompraHeader(string numeroDocumento, string numeroProveedor, string organizacionCompras)

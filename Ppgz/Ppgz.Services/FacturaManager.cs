@@ -10,6 +10,7 @@ using SatWrapper;
 using ScaleWrapper;
 
 
+
 namespace Ppgz.Services
 {
     public class FacturaManager
@@ -48,12 +49,136 @@ namespace Ppgz.Services
 
             foreach ( factura itemFactura in Facturas)
             {
-                var nose = itemFactura;
+                var resultado=CargarFacturaAtorada(itemFactura.proveedor_id, itemFactura.XmlRuta);
+                if (resultado != null)
+                {
+                    itemFactura.Estatus = resultado.Estatus;
+                    itemFactura.Procesado = true;
+                    if (itemFactura.Estatus != "S" && itemFactura.Estatus != "H")
+                    {
+                        itemFactura.Comentario = string.Format
+                            ("Tipo:{1} {0}Mensaje:{2}",
+                            Environment.NewLine,
+                            resultado.ErrorTable.Rows[0]["TYPE"],
+                            resultado.ErrorTable.Rows[0]["MESSAGE"]);
+                    }
+                    else
+                    {
+                        itemFactura.NumeroGenerado = resultado.FacturaNumero;
+                    }
+                    _db.SaveChanges();
+                }
             }
 
         }
 
-        public void CargarFactura(int proveedorId, int cuentaId, string xmlFilePath, string pdfFilePath)
+        public SapFacturaManager.Resultado CargarFacturaAtorada(int proveedorId, string xmlFilePath)
+        {
+            var serializer = new XmlSerializer(typeof(Comprobante));
+            var xmlFileStream = new FileStream(xmlFilePath, FileMode.Open);
+            var comprobante = (Comprobante)serializer.Deserialize(xmlFileStream);
+            var proveedor = new proveedore();
+            var RFC = "";
+            var RFCReceptor = "";
+            var Serie = "";
+            var Folio = "";
+            var SubTotal = "";
+            var Fecha = "";
+            var Total = "";
+
+            if (comprobante.Version33 == "3.3")
+            {
+                proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc33);
+                RFC = comprobante.Emisor.Rfc33;
+                RFCReceptor = comprobante.Receptor.Rfc33;
+                Serie = comprobante.Serie33;
+                Folio = comprobante.Folio33;
+                SubTotal = comprobante.SubTotal33;
+                Total = comprobante.Total33;
+                Fecha = comprobante.Fecha33;
+            }
+            else
+            {
+                proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc);
+                RFC = comprobante.Emisor.Rfc;
+                RFCReceptor = comprobante.Receptor.Rfc;
+                Serie = comprobante.Serie;
+                Folio = comprobante.Folio;
+                SubTotal = comprobante.SubTotal;
+                Total = comprobante.Total;
+                Fecha = comprobante.Fecha;
+            }
+
+            var refe = "";
+            if (comprobante.Serie == "")
+            {
+                refe = Folio;
+            }
+            else
+            {
+                refe = Serie + Folio;
+            }
+            xmlFileStream.Close();
+            xmlFileStream.Dispose();
+
+            var result = DbScale.GetDataTable("SELECT * FROM GNZN_Cifras_Control_CR_Facturas  WHERE Proveedor = '" + proveedor.NumeroProveedor + "' AND Factura='" + refe + "';");
+
+            if (result.Rows.Count == 1)
+            {
+
+                var row = result.Rows[0];
+                int paresScale = Int32.Parse(row["Pares"].ToString());
+
+                SapOrdenCompraManager ConsultaSap = new SapOrdenCompraManager();
+                var totalParesSAP = ConsultaSap.GetCantidadValidacionSAP("2017", "1001", refe);
+
+                if (paresScale == totalParesSAP)
+                {
+                    ///////////////////
+                    //Se ejecuta si todo coincide
+                    ///////////////////
+                    var cantidad = new decimal();
+
+                    if (comprobante.Version33 == "3.3")
+                    {
+                        //Creacion de la factura para la miro
+                        cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad33));
+                    }
+                    else
+                    {
+                        //Creacion de la factura para la miro
+                        cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
+
+                    }
+
+
+                    var sapFacturaManager = new SapFacturaManager();
+
+                    var facturaSap = sapFacturaManager.CrearFactura(
+                        proveedor.NumeroProveedor,
+                        refe,
+                        DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
+                        SubTotal,
+                        Total,
+                        cantidad.ToString(CultureInfo.InvariantCulture),
+                         comprobante.Complemento.TimbreFiscalDigital.UUID,
+                         RFC);
+
+                    return facturaSap;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            else
+            {
+                return null;
+            }   
+
+        }
+
+            public void CargarFactura(int proveedorId, int cuentaId, string xmlFilePath, string pdfFilePath)
         {
             // Validaciones de los archivos
             if (!File.Exists(xmlFilePath))
