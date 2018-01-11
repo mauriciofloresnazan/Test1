@@ -129,8 +129,12 @@ namespace Ppgz.Services
                 var row = result.Rows[0];
                 int paresScale = Int32.Parse(row["Pares"].ToString());
 
+                DateTime fechaFactura = DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture);
+                
+
                 SapOrdenCompraManager ConsultaSap = new SapOrdenCompraManager();
-                var totalParesSAP = ConsultaSap.GetCantidadValidacionSAP("2017", "1001", refe);
+                var totalParesSAP = ConsultaSap.GetCantidadValidacionSAP(fechaFactura.Year.ToString(), proveedor.Sociedad, refe);
+                //var totalParesSAP = ConsultaSap.GetCantidadValidacionSAP("2017", "1000", "9549");
 
                 if (paresScale == totalParesSAP)
                 {
@@ -333,8 +337,10 @@ namespace Ppgz.Services
                 var row = result.Rows[0];
                 int paresScale = Int32.Parse(row["Pares"].ToString());
 
+                DateTime fechaFactura = DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture);
+
                 SapOrdenCompraManager ConsultaSap = new SapOrdenCompraManager();
-                var totalParesSAP=ConsultaSap.GetCantidadValidacionSAP("2017", "1001", refe);
+                var totalParesSAP = ConsultaSap.GetCantidadValidacionSAP(fechaFactura.Year.ToString(), proveedor.Sociedad, refe);
 
                 if (paresScale == totalParesSAP)
                 {
