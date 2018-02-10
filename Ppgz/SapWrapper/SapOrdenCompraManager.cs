@@ -34,14 +34,15 @@ namespace SapWrapper
             }
         }
 
-        public int GetCantidadValidacionSAP(string ano, string sociedad, string referencia)
+        public int GetCantidadValidacionSAP(string ano, string sociedad, string referencia, string numeroProveedor)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZMF_PARES_ACUMULADO");
             function.SetValue("PI_MJAHR", ano);
-            function.SetValue("PI_KOKRS", sociedad);
+            function.SetValue("PI_BUKRS",  sociedad);
             function.SetValue("PI_XBLNR", referencia);
+            function.SetValue("PI_LIFNR", numeroProveedor);
 
 
             function.Invoke(rfcDestinationManager);

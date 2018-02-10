@@ -65,6 +65,8 @@ namespace Ppgz.Services
                     else
                     {
                         itemFactura.NumeroGenerado = resultado.FacturaNumero;
+                        itemFactura.Comentario = "Factura Procesada";
+                   
                     }
                     _db.SaveChanges();
                 }
@@ -133,7 +135,7 @@ namespace Ppgz.Services
                 
 
                 SapOrdenCompraManager ConsultaSap = new SapOrdenCompraManager();
-                var totalParesSAP = ConsultaSap.GetCantidadValidacionSAP(fechaFactura.Year.ToString(), proveedor.Sociedad, refe);
+                var totalParesSAP = ConsultaSap.GetCantidadValidacionSAP(fechaFactura.Year.ToString(), proveedor.Sociedad, refe, proveedor.NumeroProveedor);
                 //var totalParesSAP = ConsultaSap.GetCantidadValidacionSAP("2017", "1000", "9549");
 
                 if (paresScale == totalParesSAP)
@@ -167,6 +169,13 @@ namespace Ppgz.Services
                         cantidad.ToString(CultureInfo.InvariantCulture),
                          comprobante.Complemento.TimbreFiscalDigital.UUID,
                          RFC);
+
+                    if (facturaSap.Estatus == "S" || facturaSap.Estatus == "H")
+                    {
+                        DateTime myDateTime = DateTime.Now;
+
+                        DbScale.Update("UPDATE GNZN_Cifras_Control_CR_Facturas SET Fecha_CXP = '" + myDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "' WHERE Proveedor = '" + proveedor.NumeroProveedor + "' AND Factura='" + refe + "';");
+                    }
 
                     return facturaSap;
                 }
@@ -340,7 +349,7 @@ namespace Ppgz.Services
                 DateTime fechaFactura = DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture);
 
                 SapOrdenCompraManager ConsultaSap = new SapOrdenCompraManager();
-                var totalParesSAP = ConsultaSap.GetCantidadValidacionSAP(fechaFactura.Year.ToString(), proveedor.Sociedad, refe);
+                var totalParesSAP = ConsultaSap.GetCantidadValidacionSAP(fechaFactura.Year.ToString(), proveedor.Sociedad, refe, proveedor.NumeroProveedor);
 
                 if (paresScale == totalParesSAP)
                 {
@@ -398,8 +407,12 @@ namespace Ppgz.Services
                     }
                     else
                     {
+                        DateTime myDateTime = DateTime.Now;
+
                         factura.NumeroGenerado = facturaSap.FacturaNumero;
+                        DbScale.Update("UPDATE GNZN_Cifras_Control_CR_Facturas SET Fecha_CXP = '" + myDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "' WHERE Proveedor = '" + proveedor.NumeroProveedor + "' AND Factura='" + refe + "';");
                     }
+
 
                     _db.facturas.Add(factura);
 

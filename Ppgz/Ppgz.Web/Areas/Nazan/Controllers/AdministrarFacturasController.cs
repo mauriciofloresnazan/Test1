@@ -4,15 +4,19 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using Ppgz.Repository;
+using Ppgz.Services;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
     public class AdministrarFacturasController : Controller
     {
+        private readonly FacturaManager _facturaManager = new FacturaManager();
+
+
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARFACTURAS")]
         public ActionResult Index(string fecha = null)
         {
-
+            _facturaManager.ProcesarFacturasAtoradas();
             var fechaInicio = DateTime.Today.AddMonths(-3);
 
             if (!string.IsNullOrWhiteSpace(fecha))
