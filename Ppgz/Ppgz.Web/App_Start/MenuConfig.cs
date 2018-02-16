@@ -109,6 +109,7 @@ namespace Ppgz.Web
                 "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores|Index|AdministrarProveedores|fa fa-address-book-o|Nazan",
                 "NIVELSERVICIO|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan",
                 "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
+                "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
                 "CONFIGNEG|Configuración de Negocio|Index|Configneg|fa fa-cogs|Nazan",
@@ -289,6 +290,14 @@ namespace Ppgz.Web
                         "VISTAPROVEEDOR|Comprobantes de Recibo|ComprobantesDeRecibo|VistaProveedor|fa fa-file-o|Nazan",
                         "VISTAPROVEEDOR|Impresión de Etiquetas|ImpresionDeEtiquetas|VistaProveedor|fa fa-ticket|Nazan",
                         "VISTAPROVEEDOR|Reportes Proveedores|ReporteProveedores|VistaProveedor|fa fa-bar-chart|Nazan"
+                    };
+                    break;
+                case "Penalizaciones":
+                    menu = new List<string>
+                    {
+                        "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
+                        "VISTAPROVEEDOR|Pagos|Pagos|VistaProveedor|fa fa-calculator|Nazan"
+                       
                     };
                     break;
                 case "AdministrarCitas":

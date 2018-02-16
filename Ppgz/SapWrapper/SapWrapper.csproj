@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BwRfcConfigParam.cs" />
+    <Compile Include="SapPenalizacionesManager.cs" />
     <Compile Include="CommonRfcConfigParam.cs" />
     <Compile Include="SapEtiquetasManager.cs" />
     <Compile Include="SapFacturaManager.cs" />
