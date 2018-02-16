@@ -4,6 +4,7 @@ using System.Web;
 using System.Web.Mvc;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
+using ScaleWrapper;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -19,10 +20,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public ActionResult Index()
         {
-
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
             ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
+
+            _facturaManager.ProcesarFacturasAtoradas();
 
             return View();
         }
@@ -144,14 +146,16 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             ViewBag.Proveedor = proveedor;
 
-
             if (!ModelState.IsValid) return View(model);
 
             var tempXmlPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".xml");
             var tempPdfPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".pdf");
+
+            
             try
             {
 
+                
                 if (Request.Files.Count == 0)
                 {
                     ModelState.AddModelError(string.Empty, "Archivos incorrectos");

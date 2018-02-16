@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ScaleWrapper
 {
-    class DbScale
+    public class DbScale
     {
 
         private static readonly DbProviderFactory Factory = DbProviderFactories.GetFactory("System.Data.SqlClient");

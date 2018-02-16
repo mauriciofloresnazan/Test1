@@ -32,10 +32,32 @@ namespace SapWrapper
             {
                 return new DataTable();
             }
-
-
-
         }
+
+        public int GetCantidadValidacionSAP(string ano, string sociedad, string referencia, string numeroProveedor)
+        {
+            var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
+            var rfcRepository = rfcDestinationManager.Repository;
+            var function = rfcRepository.CreateFunction("ZMF_PARES_ACUMULADO");
+            function.SetValue("PI_MJAHR", ano);
+            function.SetValue("PI_BUKRS",  sociedad);
+            function.SetValue("PI_XBLNR", referencia);
+            function.SetValue("PI_LIFNR", numeroProveedor);
+
+
+            function.Invoke(rfcDestinationManager);
+            try
+            {
+                var result = function.GetValue("PE_ERFMG");
+                return int.Parse(result.ToString());
+            }
+            catch
+            {
+                return 0;
+            }
+            
+        }
+
         public DataTable GetOrdenesDeCompraHeader(string numeroDocumento, string numeroProveedor, string organizacionCompras)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
@@ -60,6 +82,7 @@ namespace SapWrapper
                 return new DataTable();
             }
         }
+
         public DataTable GetOrdenDeCompraDetalle(string documento, string numeroProveedor, string organizacionCompras)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
