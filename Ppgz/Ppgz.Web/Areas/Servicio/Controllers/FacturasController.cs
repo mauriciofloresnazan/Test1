@@ -158,7 +158,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 pdfFile.SaveAs(tempPdfPath);
 
 
-                _facturaManager.CargarFactura(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
+                _facturaManager.CargarFacturaServicio(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
 
 
 
