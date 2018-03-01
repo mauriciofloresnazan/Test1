@@ -67,24 +67,23 @@
                                 </td>
                                 <td class="text-center vert-align">
                                     <div class="btn-group btn-group-justified">
-                                        @if (cita.FechaCita >= DateTime.Today)
-                                        {
-                                            <a class="btn btn-warning btn-xs" href="@Url.Action("Enroque", "AdministrarCitas", new {@fecha = @cita.FechaCita.ToString("dd/MM/yyyy")})" title="Enroque">
-                                                <i class="fa fa-random" aria-hidden="true"></i>
-                                            </a>
-                                            <a class="btn btn-info btn-xs" href="#" onclick="javascript:ShowModalCambiarFecha(@cita.Id);" title="Cambio de fecha">
-                                                <i class="fa fa-calendar-times-o" aria-hidden="true"></i>
-                                            </a>
-                                            <a class="btn btn-xs btn-default" href="#" onclick="javascript:ShowModalReEnvio(@cita.Id);" title="ReEnvio de ASN">
-                                                <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                        @if (cita.FechaCita < DateTime.Today)
-                                        {
-                                            <a class="btn btn-danger btn-xs" href="#" onclick="javascript:ShowModalPenalizar(@cita.Id);" title="Penalizar">
-                                                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
-                                            </a>
-                                        }
+                                       
+                                            @if (cita.estatuscita == null)
+                                            {
+                                                <a class="btn btn-danger btn-xs" href="#" onclick="javascript:ShowModalPenalizar(@cita.Id);" title="Penalizar">
+                                                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <a class="btn btn-default btn-xs" href="#" title="Cita Penalizada">
+                                                    <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                                </a>
+                                            }
+
+
+
+
                                     </div>
                                 </td>
                             </tr>

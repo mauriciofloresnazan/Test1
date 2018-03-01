@@ -86,7 +86,7 @@
                                         }
                                         @if (cita.FechaCita < DateTime.Today)
                                         {
-                                            <a class="btn btn-danger btn-xs" href="#" onclick="javascript:ShowModalPenalizar(@cita.Id);" title="Penalizar">
+                                            <a class="btn btn-danger btn-xs" href="@Url.Action("Index","Penalizaciones")" title="Penalizar">
                                                 <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
                                             </a>
                                         }

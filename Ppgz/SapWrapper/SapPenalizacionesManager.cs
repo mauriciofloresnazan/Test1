@@ -18,12 +18,15 @@ namespace SapWrapper
 
             //Numero de proveedorc
             function.SetValue("PI_NEWKO", numeroProveedor);
+            //function.SetValue("PI_NEWKO", "1351");
 
             //Monto de la penalidad
             function.SetValue("PI_WRBTR", monto);
+            //function.SetValue("PI_WRBTR", "1500");
 
             //Descripcion
             function.SetValue("PI_SGTXT", descrip);
+            //function.SetValue("PI_SGTXT", "Falta de mercancía");
 
             function.Invoke(rfcDestinationManager);
 

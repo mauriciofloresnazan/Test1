@@ -271,5 +271,69 @@ namespace Ppgz.Web.Infrastructure
             
         }
 
+
+        public void SendNotificacionP(string subject, string body, string toEmail)
+        {
+           
+
+            var db = new Entities();
+            var senderMailAddress = new MailAddress(
+                db.configuraciones
+                    .Single(c => c.Clave == "mail.main.address").Valor
+            );
+
+            var senderMailPassword = db.configuraciones
+                .Single(c => c.Clave == "mail.main.password").Valor;
+
+            var senderSmtpServer = db.configuraciones
+
+                .Single(c => c.Clave == "mail.main.smtp.host").Valor;
+
+            var senderSmtpPort = int.Parse(db.configuraciones
+
+                .Single(c => c.Clave == "mail.main.smtp.port").Valor);
+
+            var enableSsl = (db.configuraciones
+
+                .Single(c => c.Clave == "mail.main.smtp.enablessl").Valor == "1");
+            
+/*
+            var senderMailAddress = new MailAddress("impuls.ppgz@gmail.com");
+            var senderMailPassword = "Venezuela2017";
+            var senderSmtpPort = 587;
+            var senderSmtpServer = "smtp.gmail.com";
+            var enableSsl = true;
+  */          
+            /*var senderMailAddress = new MailAddress("impuls@servicioshorizonte.com.ve");
+            var senderMailPassword = "impmsh123$$";
+            var senderSmtpPort = 25;
+            var senderSmtpServer = "mail.servicioshorizonte.com.ve";*/
+
+            var mailMessage = new MailMessage(
+                senderMailAddress.Address,
+                toEmail,
+                subject,
+                body)
+            {
+                Sender = senderMailAddress,
+                IsBodyHtml = true
+            };
+
+            using (var smtp = new SmtpClient(senderSmtpServer)
+            {
+                Credentials = new NetworkCredential(
+                    senderMailAddress.Address,
+                    senderMailPassword),
+                EnableSsl = enableSsl,
+                Port = senderSmtpPort
+            })
+            {
+                
+                smtp.Send(mailMessage);
+                
+            }
+            
+        }
+
 	}
 }

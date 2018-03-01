@@ -296,8 +296,8 @@ namespace Ppgz.Web
                     menu = new List<string>
                     {
                         "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
-                        "VISTAPROVEEDOR|Pagos|Pagos|VistaProveedor|fa fa-calculator|Nazan"
-                       
+                        "PENALIZACIONES|Lista de Penalizaciones|Editar|Penalizaciones|fa fa-calculator|Nazan"
+
                     };
                     break;
                 case "AdministrarCitas":

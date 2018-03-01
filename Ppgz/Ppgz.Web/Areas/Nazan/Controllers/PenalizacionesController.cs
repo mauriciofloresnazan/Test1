@@ -8,15 +8,16 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using MySql.Data.MySqlClient;
 using Ppgz.CitaWrapper;
-using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
 using SapWrapper;
+using Ppgz.Repository;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
+
     public class PenalizacionesController : Controller
     {
-        
+        private readonly Entities _db = new Entities();
         readonly SapPenalizacionesManager _penalizacionesManager = new SapPenalizacionesManager();
 
         // GET: Nazan/Penalizaciones
@@ -34,7 +35,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
-        //[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
         public ActionResult Editar()
         {
             var db = new Entities();
@@ -61,19 +62,96 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
             var estatus = db.estatuscitas.FirstOrDefault(e => e.Id == estatusId);
 
-            _penalizacionesManager.aplicarPenalizacion(cita.proveedore.NumeroProveedor, estatus.Monto, estatus.Nombre);
+            var result = _penalizacionesManager.aplicarPenalizacion(cita.proveedore.NumeroProveedor, estatus.Monto, estatus.Nombre);
+
+            if (result[0] == "")
+            {
+                TempData["FlashError"] = "Error al aplicar la penalizacion";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                cita.EstatusCitaId = estatus.Id;
+
+
+                db.Entry(cita).State = EntityState.Modified;
+                db.SaveChanges();
+
+
+                var commonManager = new CommonManager();
+                try
+                {
+                    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Cita penalizada", "La Cita con ID "+ cita.Id +" ha sido Penalizada con el motivo "+ estatus.Nombre+" por el monto de "+estatus.Monto+" pesos, generando el documento contable N° "+ result[0] + " ", "rainer.ramirez@wsp.com.mx");
+                }
+                catch (Exception ex)
+                {
+                    TempData["FlashError"] = "Error enviando correo con la notificacion de la penalizacion";
+                }
+
+                TempData["FlashSuccess"] = "Penalización aplicada exitosamente, documento generado N° "+ result[0];
+                return RedirectToAction("Index");
+            }
+
+        }
+
+        
 
 
 
-            cita.EstatusCitaId = estatus.Id;
-           
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult Modificar(int Id, string Codigo, string Nombre, string Monto)
+        {
+            var db = new Entities();
 
-            db.Entry(cita).State = EntityState.Modified;
+
+            var penalizacion = db.estatuscitas.FirstOrDefault(c => c.Id == Id);
+
+            if (penalizacion == null)
+            {
+                TempData["FlashError"] = "Penalizacion incorrecta";
+                return RedirectToAction("Editar");
+            }
+
+            penalizacion.Codigo = Codigo;
+            penalizacion.Nombre = Nombre;
+            penalizacion.Monto = Monto;
+
+            db.Entry(penalizacion).State = EntityState.Modified;
             db.SaveChanges();
 
 
-            TempData["FlashSuccess"] = "Penalización aplicada exitosamente";
-            return RedirectToAction("Index");
+            TempData["FlashSuccess"] = "Penalización modificada exitosamente";
+            return RedirectToAction("Editar");
+        }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult Crear(string Codigo, string Nombre, string Monto)
+        {
+            var db = new Entities();
+
+
+            var penalizacion = new estatuscita();
+
+            if (penalizacion == null)
+            {
+                TempData["FlashError"] = "Penalizacion incorrecta";
+                return RedirectToAction("Editar");
+            }
+
+            penalizacion.Codigo = Codigo;
+            penalizacion.Nombre = Nombre;
+            penalizacion.Monto = Monto;
+
+            db.estatuscitas.Add(penalizacion);
+            db.SaveChanges();
+
+
+            TempData["FlashSuccess"] = "Penalización creada exitosamente";
+            return RedirectToAction("Editar");
         }
     }
 }
