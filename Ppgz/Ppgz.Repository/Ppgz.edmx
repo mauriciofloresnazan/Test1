@@ -195,6 +195,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Codigo" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Monto" Type="varchar" MaxLength="45" Nullable="false" />
         </EntityType>
         <EntityType Name="facturas">
           <Key>
@@ -1129,7 +1130,9 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Codigo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Nombre" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Monto" Type="String" Nullable="false" FixedLength="false" MaxLength="45" Unicode="false" />
           <NavigationProperty Name="citas" Relationship="Self.fk_citas_estatus" FromRole="estatuscitas" ToRole="citas" />
+          
         </EntityType>
         <EntityType Name="factura">
           <Key>
@@ -1979,6 +1982,7 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Monto" ColumnName="Monto" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

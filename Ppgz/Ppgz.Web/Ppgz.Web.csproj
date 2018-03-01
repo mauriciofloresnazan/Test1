@@ -21,6 +21,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -222,6 +223,7 @@
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\CuentasPagarController.cs" />
+    <Compile Include="Areas\Nazan\Controllers\PenalizacionesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\VistaProveedorController.cs" />
     <Compile Include="Areas\Nazan\Controllers\ConfignegController.cs" />
     <Compile Include="Areas\Servicio\Controllers\CuentasPagarController.cs" />
@@ -1906,6 +1908,9 @@
     <Content Include="Areas\Nazan\Views\VistaProveedor\GenerarEtiquetas.cshtml" />
     <Content Include="Areas\Nazan\Views\VistaProveedor\Reportes.cshtml" />
     <Content Include="Areas\Nazan\Views\VistaProveedor\ReporteProveedores.cshtml" />
+    <Content Include="Areas\Nazan\Views\Penalizaciones\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\Penalizaciones\Editar.cshtml" />
+    <Content Include="Areas\Nazan\Views\Penalizaciones\View.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
