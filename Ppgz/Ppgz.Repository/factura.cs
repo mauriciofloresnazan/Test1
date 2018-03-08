@@ -1,4 +1,7 @@
 
+namespace Ppgz.Repository
+{
+
     public partial class factura
     {
         public int Id { get; set; }
@@ -16,5 +19,6 @@
         public bool Procesado { get; set; }
         public string numeroProveedor { get; set; }
 
-    public virtual proveedore proveedore { get; set; }
+        public virtual proveedore proveedore { get; set; }
     }
+}
