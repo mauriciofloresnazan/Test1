@@ -81,7 +81,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 var commonManager = new CommonManager();
                 try
                 {
-                    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Cita penalizada", "La Cita con ID "+ cita.Id +" ha sido Penalizada con el motivo "+ estatus.Nombre+" por el monto de "+estatus.Monto+" pesos, generando el documento contable N° "+ result[0] + " ", "rainer.ramirez@wsp.com.mx");
+                    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Cita penalizada", "La Cita con ID "+ cita.Id +" ha sido Penalizada con el motivo "+ estatus.Nombre+" por el monto de "+estatus.Monto+" pesos, generando el documento contable N° "+ result[0] + " ", cita.proveedore.Correo);
                 }
                 catch (Exception ex)
                 {
