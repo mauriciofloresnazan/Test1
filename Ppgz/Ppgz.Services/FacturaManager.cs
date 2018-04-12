@@ -259,24 +259,35 @@ namespace Ppgz.Services
 
             if (factura.Estatus != "S" && factura.Estatus != "H")
             {
-                factura.Comentario = string.Format
+                
+
+                string errorsap = facturaSap.ErrorTable.Rows[0]["MESSAGE"].ToString();
+
+                if (errorsap.Contains("Referencia y/o Factura ya aplicada en el Sistema") || errorsap.Contains("No existen datos con el Num. Ref"))
+                {
+                    File.Delete(newXmlPath);
+                    File.Delete(newPdfPath);
+                    throw new BusinessException(errorsap);
+                }
+                else
+                {
+                    factura.Comentario = string.Format
                     ("Tipo:{1} {0}Mensaje:{2}",
                     Environment.NewLine,
                     facturaSap.ErrorTable.Rows[0]["TYPE"],
                     facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
+
+                    _db.facturas.Add(factura);
+                    _db.SaveChanges();
+                }
             }
             else
             {
-                DateTime myDateTime = DateTime.Now;
-
-                factura.NumeroGenerado = facturaSap.FacturaNumero;
-                DbScale.Update("UPDATE GNZN_Cifras_Control_CR_Facturas SET Fecha_CXP = '" + myDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "' WHERE Proveedor = '" + proveedor.NumeroProveedor + "' AND Factura='" + refe + "';");
+                _db.facturas.Add(factura);
+                _db.SaveChanges();
             }
 
-
-            _db.facturas.Add(factura);
-
-            _db.SaveChanges();
+           
 
         }
 
