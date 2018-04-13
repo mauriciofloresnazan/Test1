@@ -35,6 +35,37 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
+        
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        public ActionResult Reporte(string fechaDesde = null, string fechaHasta = null)
+        {
+
+            var dateFechaDesde = DateTime.Today.AddMonths(-3);
+            if (!string.IsNullOrWhiteSpace(fechaDesde))
+            {
+                dateFechaDesde = DateTime.ParseExact(fechaDesde, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+
+            var dateFechaHasta = DateTime.Today;
+            if (!string.IsNullOrWhiteSpace(fechaHasta))
+            {
+                dateFechaHasta = DateTime.ParseExact(fechaHasta, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            }
+
+            var db = new Entities();
+
+            ///var fecha = DateTime.Today.AddMonths(-3);
+
+            ViewBag.Citas = db.citas.Where(c => c.FechaCita > dateFechaDesde & c.FechaCita < dateFechaHasta & c.estatuscita != null).OrderByDescending(c => c.FechaCita).ToList();
+
+            ViewBag.EstatusCita = db.estatuscitas.ToList();
+            ViewBag.FechaDesde = dateFechaDesde;
+
+            ViewBag.FechaHasta = dateFechaHasta;
+
+            return View();
+        }
+
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
         public ActionResult Editar()
         {
