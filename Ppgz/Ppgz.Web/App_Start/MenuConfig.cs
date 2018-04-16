@@ -306,7 +306,7 @@ namespace Ppgz.Web
                     {
                         "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
                         "ADMINISTRARCITAS|Vista Diaria|Enroque|AdministrarCitas|fa fa-calendar|Nazan",
-                        "ADMINISTRARCITAS|Reporte de Penalizaciones|Penalizaciones|AdministrarCitas|fa fa-line-chart|Nazan",
+                        "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
                         "ADMINISTRARCITAS|Bloquear Rieles|DisponibilidadRieles|AdministrarCitas|fa fa-ban|Nazan",
 
                     };
