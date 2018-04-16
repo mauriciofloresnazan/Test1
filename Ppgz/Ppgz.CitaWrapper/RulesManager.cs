@@ -158,48 +158,6 @@ namespace Ppgz.CitaWrapper
 
             return fechasPermitidas;
 
-
-            /*var fechasPermitidas = new List<DateTime>();
-
-            // Dias de semana permitidos de acuerdo a a las reglas del negocio 
-            var diasPermitidos = GetDiasDeSemana();
-
-
-            // Se calcula el numero de la semana del año
-            var semana = System.Globalization.CultureInfo
-                .GetCultureInfo("es-MX")
-                .Calendar
-                .GetWeekOfYear(sapFechaEntrega, System.Globalization.CalendarWeekRule.FirstDay, sapFechaEntrega.DayOfWeek);
-
-            // TODO MEJORAR
-            // Se agregan los días del rango entre 2 semanas antes y 2 semanas despues de la fecha de entrega
-            var day = sapFechaEntrega.AddDays(-30);
-
-            while (day < sapFechaEntrega.AddDays(30))
-            {
-                if (diasPermitidos.Contains(day.DayOfWeek))
-                {
-
-                    var semana2 = System.Globalization.CultureInfo
-                        .GetCultureInfo("es-MX")
-                        .Calendar
-                        .GetWeekOfYear(day, System.Globalization.CalendarWeekRule.FirstDay, day.DayOfWeek);
-
-                    if (semana2 >= semana - 2 && semana2 <= semana + 2)
-                    {
-
-                        if (EsFechaValida(day, esProveedorEspecial))
-                        {
-                            fechasPermitidas.Add(day);
-                        }
-
-                    }
-                }
-                day = day.AddDays(1);
-            }
-
-
-            return fechasPermitidas;*/
         }
 
         /// <summary>
