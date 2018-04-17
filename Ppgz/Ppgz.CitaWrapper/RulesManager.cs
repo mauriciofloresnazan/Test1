@@ -90,7 +90,7 @@ namespace Ppgz.CitaWrapper
             if (esAutorizada)
             {
                 var fechactual = DateTime.Today;
-                var fechafutura = fechactual.AddDays(30);
+                var fechafutura = fechactual.AddDays(37);
 
                 while (fechactual < fechafutura)
                 {
@@ -314,31 +314,31 @@ namespace Ppgz.CitaWrapper
             {
 
                 case DayOfWeek.Monday:
-                    FechaHaciaAdelante=FechaHaciaAdelante.AddDays(20);
+                    FechaHaciaAdelante=FechaHaciaAdelante.AddDays(27);
                     break;
 
                 case DayOfWeek.Tuesday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(19);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(26);
                     break;
 
                 case DayOfWeek.Wednesday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(18);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(25);
                     break;
 
                 case DayOfWeek.Thursday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(17);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(24);
                     break;
 
                 case DayOfWeek.Friday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(16);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(23);
                     break;
 
                 case DayOfWeek.Saturday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(15);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(22);
                     break;
 
                 case DayOfWeek.Sunday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(14);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(21);
                     break;
             }
 
