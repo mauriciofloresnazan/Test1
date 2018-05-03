@@ -45,27 +45,39 @@
             <input type="hidden" name="proveedorId" value="@proveedor.Id" />
 
             <div class="form-group">
-                
                 <label class="col-sm-3 control-label">Tipo de Etiqueta</label>
+                <div style="display:flex">
+                    <div style="width:50%">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="nazan" id="nazanTipo" value="true" checked>
+                                Nazan
+                            </label>
+                        </div>
+                    </div>
+                    <div style="width:50%">
+                        <label class="col-sm-3 control-label">Cadenas Comerciales</label>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="nazan" id="precioTipo" value="false">
+                                Etiqueta de Caja
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="nazan" id="zapatoTipo" value="false">
+                                Etiqueta Colgante
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="col-sm-7">
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="nazan" id="nazanTipo" value="true" checked>
-                            Nazan
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="nazan" id="precioTipo" value="false">
-                            Etiqueta de Caja
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="nazan" id="zapatoTipo" value="false">
-                            Etiqueta Colgante
-                        </label>
-                    </div>
+                    
+
+
+
+                    
 
                     
 

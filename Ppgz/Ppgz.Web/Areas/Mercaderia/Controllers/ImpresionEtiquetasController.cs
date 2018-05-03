@@ -141,12 +141,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             string etiquetasPrint = "";
 
             int i = 1;
-            int totaletiquetas = 0;
-
-            foreach (DataRow row in dt.Rows)
-            {
-                totaletiquetas = totaletiquetas + Int32.Parse(row["pares"].ToString());
-            }
 
 
                 if (nazan == true)
@@ -155,8 +149,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 foreach (DataRow row in dt.Rows)
                 {
                     
-                    for (int xx = 0; xx < Int32.Parse(row["pares"].ToString()); xx++)
-                    {
+                    //for (int xx = 0; xx < Int32.Parse(row["pares"].ToString()); xx++)
+                    //{
 
                     
 
@@ -197,11 +191,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^FO5.50,237.50^A0N,20.40,25.00^FD" + row["Pedido"].ToString().Trim() + @"^FS
 ^FO5.50,262.50^A0N,20.15,26.50^FD" + row["No_Prov"].ToString().Trim() + @"^FS
 ^FO510.00,348.00^A0N,20.35,42.00^FD" + row["IR"].ToString().Trim() + @"^FS
-^FO15.50,10.00^A0N,13.50,25.00^FD" + i + @" / " + totaletiquetas + @"^FS
 ^ISLABEL001,N,^FS
 ^XZ
 ^XA^JZN^PR9
-^PQ1,0,1,Y
+^PQ" + row["pares"].ToString().Trim() + @",0,1,Y
 ^ILLABEL001^FS
 ^FO262.00,161.50^AFN,15.00,22.50^FD" + row["talla"].ToString().Trim() + @"^FS
 ^FO180.00,295.00^BY2.00,.8^BAN,47.00,N,N,N^FD" + row["Ean_Nazan"].ToString().Trim() + @"^FS
@@ -210,7 +203,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^XZ
 ^EG
 ^XZ");
-                  i++;  }
+                  //i++;  }
 
                 }
 
@@ -223,8 +216,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     //Etiquetas Colgantes
                     foreach (DataRow row in dt.Rows)
                     {
-                        for (int xx = 0; xx < Int32.Parse(row["pares"].ToString()); xx++)
-                        { 
+                        //for (int xx = 0; xx < Int32.Parse(row["pares"].ToString()); xx++)
+                        //{ 
                             etiquetas.Add(@"^XA
 ^SZ2^JMA
 ^MCY^PMN
@@ -250,7 +243,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^ISLABEL001,N,^FS
 ^XZ
 ^XA^JZN^PR9
-^PQ1,0,1,Y
+^PQ" + row["pares"].ToString().Trim() + @",0,1,Y
 ^ILLABEL001^FS
 ^FO95.00,185.50^AFN,10.00,18.50^FD" + row["talla"].ToString().Trim() + @"^FS
 ^FO10.00,295.00^BY2,.12^BEN,55.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS
@@ -258,8 +251,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^XZ
 ^EG 
 ^XZ");
-                            i++;
-                        }
+                            //i++;
+                        //}
 
                     }
 
@@ -271,8 +264,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     //Etiquetas De Precio cadena
                     foreach (DataRow row in dt.Rows)
                     {
-                        for (int xx = 0; xx < Int32.Parse(row["pares"].ToString()); xx++)
-                        {
+                        //for (int xx = 0; xx < Int32.Parse(row["pares"].ToString()); xx++)
+                        //{
                             var barras = "";
                             if (row["Centro"].ToString().Trim() != "CD04")
                             {
@@ -315,19 +308,18 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^FO30.50,235.50^A0N,20.50,25.00^FD" + row["Pedido"].ToString().Trim() + @"^FS
 ^FO30.00,342.50^A0N,30.20,30.50^FD" + row["No_Prov"].ToString().Trim() + @"^FS
 ^FO30.50,400.00^A0N,10.50,15.00^FDWeb 1^FS
-^FO30.50,9.00^A0N,18.50,30.00^FD" + i + @" / " + dt.Rows.Count + @"^FS
 ^ISLABEL001,N,^FS
 ^XZ
 ^XA^JZN^PR9
-^PQ1,0,1,Y
+^PQ" + row["pares"].ToString().Trim() + @",0,1,Y
 ^ILLABEL001^FS
 ^FO318.00,157.50^AFN,7.00,32.50^FD" + row["talla"].ToString().Trim() + @"^FS
 " + barras + @"
 ^XZ
 ^XA
 ^JZN");
-                            i++;
-                        }
+                            //i++;
+                        //}
 
                     }
                     
