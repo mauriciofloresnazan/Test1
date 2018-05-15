@@ -34,17 +34,17 @@ namespace ScaleWrapper
                     continue;
                 }
 
-                var id = InsertarHeader(cita, almacenScale.Scale, numeroDocumento, orden.TiendaOrigen, orden.Tienda, orden.NumeroOrdenSurtido, orden.InOut, i);
+                var id = InsertarHeader(cita, almacenScale.Scale, numeroDocumento, orden.TiendaOrigen, orden.Tienda, orden.NumeroOrdenSurtido, orden.InOut, i, cita.Id);
 
                 var asns = cita.asns.Where(asn => asn.OrdenNumeroDocumento == numeroDocumento).ToList();
 
-                InsertarDetails(id, almacenScale.Scale, asns);
+                InsertarDetails(id, almacenScale.Scale, asns, cita.Id);
                 i++;
             }
         }
 
         internal string InsertarHeader(cita cita, string almacenScale, string numeroOrden,
-            string tiendaOrigen, string tiendaDestino, string numeroOrdenSurtido, string inOut, int i)
+            string tiendaOrigen, string tiendaDestino, string numeroOrdenSurtido, string inOut, int i, int citaId)
         {
 
             var proveedor = cita.proveedore;
@@ -52,6 +52,51 @@ namespace ScaleWrapper
             
 
             var id = string.Format("{0}{1}{2}", DateTime.Now.ToString("yyyyMMddHHmmss"), cita.Id, i);
+            var sourcename=string.Format("{0} {1} {2} {3}",
+                                                proveedor.Nombre1,
+                                                proveedor.Nombre2,
+                                                proveedor.Nombre3,
+                                                proveedor.Nombre4);
+
+
+            /*/
+             * 
+             * Agregar horario de cita mediante escaneo de los horarios de los rieles
+             * */
+            var horarios = cita.horariorieles;
+            foreach (horarioriele hor in horarios)
+            {
+                Char delimiter = ':';
+                String[] substrings = hor.horario.HoraDesde.Split(delimiter);
+                String[] substrings2 = substrings[1].Split(null);
+
+                var horacitascale = Int32.Parse(substrings[0].ToString());
+
+                if (substrings2[1].ToString() == "pm")
+                {
+                    horacitascale = horacitascale + 12;
+                }
+
+                if (cita.FechaCita.Hour == 0)
+                {
+
+                    cita.FechaCita = cita.FechaCita.AddHours(horacitascale);
+                    cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(substrings2[0].ToString()));
+
+                }
+                else if(cita.FechaCita.Hour > horacitascale) {
+                    var restar = 0-cita.FechaCita.Hour;
+                    cita.FechaCita = cita.FechaCita.AddHours(restar);
+                    cita.FechaCita = cita.FechaCita.AddMinutes(-cita.FechaCita.Minute);
+                    cita.FechaCita = cita.FechaCita.AddHours(horacitascale);
+                    cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(substrings2[0].ToString()));
+
+                }
+
+                
+
+            }
+            //Fin
 
             var parameters = new List<SqlParameter>
             {
@@ -75,24 +120,12 @@ namespace ScaleWrapper
                     new SqlParameter("@SHIP_FROM_STATE", proveedor.EstadoNombre),
                     new SqlParameter("@SHIP_FROM_COUNTRY", "MEXICO"),
                     new SqlParameter("@SHIP_FROM_POSTAL_CODE", proveedor.CodigoPostal),
-                    new SqlParameter("@SHIP_FROM_NAME",
-                        string.Format(
-                            "{0} {1} {2} {3}",
-                            proveedor.Nombre1,
-                            proveedor.Nombre2,
-                            proveedor.Nombre3,
-                            proveedor.Nombre4)),
+                    new SqlParameter("@SHIP_FROM_NAME", sourcename.Substring(0, Math.Min(sourcename.Length, 50))),
                     new SqlParameter("@SHIP_FROM_EMAIL_ADDRESS", proveedor.Correo),
                     new SqlParameter("@SHIP_FROM_PHONE_NUM", proveedor.NumeroTelefono),
                     new SqlParameter("@SHIP_FROM_FAX_NUM", ""),
                     new SqlParameter("@Source_id",proveedor.NumeroProveedor),
-                    new SqlParameter("@Source_name",
-                                            string.Format(
-                                                "{0} {1} {2} {3}",
-                                                proveedor.Nombre1,
-                                                proveedor.Nombre2,
-                                                proveedor.Nombre3,
-                                                proveedor.Nombre4)),
+                    new SqlParameter("@Source_name", sourcename.Substring(0, Math.Min(sourcename.Length, 50))),
                     new SqlParameter("@SOURCE_ADDRESS1", proveedor.Calle),
                     new SqlParameter("@SOURCE_ADDRESS2", proveedor.Direccion),
                     new SqlParameter("@Source_City", proveedor.Poblacion),
@@ -219,12 +252,20 @@ namespace ScaleWrapper
 
                                 ");
 
-            DbScale.Insert(sql, parameters);
+            
+            try
+            {
+                DbScale.Insert(sql, parameters);
+            }
+            catch (SqlException exception)
+            {
+                ErrorAppLog.Error(string.Format("Error insertando header en Scale Cita # {0}. {1}", citaId, exception.ToString()));
+            }
 
             return id;
         }
 
-        internal void InsertarDetails(string interfaceLinkId, string almacenScale, List<asn> asns)
+        internal void InsertarDetails(string interfaceLinkId, string almacenScale, List<asn> asns, int citaId)
         {
             var sql = new StringBuilder();
 
@@ -322,7 +363,15 @@ namespace ScaleWrapper
                     GETDATE())");
             }
 
-            DbScale.Insert(sql.ToString(), parameters);
+            try
+            {
+                DbScale.Insert(sql.ToString(), parameters);
+            }
+            catch (SqlException exception)
+            {
+                ErrorAppLog.Error(string.Format("Error insertando detalle en Scale Cita # {0}. Mensaje: {1} ## Source: {2} ## Data: {3}", citaId, exception.ToString()));
+            }
+            
         }
 
         public void Cancelar(int citaId)
