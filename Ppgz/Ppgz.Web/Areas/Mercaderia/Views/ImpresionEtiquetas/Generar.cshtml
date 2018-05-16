@@ -68,6 +68,17 @@
                                 <input type="radio" name="nazan" id="zapatoTipo" value="false">
                                 Etiqueta Colgante
                             </label>
+                            <div id="radioImpre" style="display:none"><br />
+                                <strong> Seleccione la impresora adecuada:</strong><br />
+                                <label>
+                                    <input type="radio" name="tipoimpre" id="imptoshiba" value="false">
+                                    Impresora Toshiba
+                                </label>
+                                <label>
+                                    <input type="radio" name="tipoimpre" id="impzebra" value="false" checked>
+                                    Impresora Zebra
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -209,7 +220,20 @@
                                 $('#form').append(input);
                             }
                             var input = $("<input>").attr({ "type": "hidden", "name": "ordenesy" }).val(ordenes);
+
+                            var input2 = "";
+
+                            if ($("#impzebra").prop("checked")) {
+                                input2 = $("<input>").attr({ "type": "hidden", "name": "tipoimpresora" }).val('Zebra');
+                            } else {
+                                input2 = $("<input>").attr({ "type": "hidden", "name": "tipoimpresora" }).val('Toshiba');
+                            }
+                            
+
                             $('#form').append(input);
+
+                            $('#form').append(input2);
+
                             $('#form').submit();
                         }
 
@@ -221,6 +245,17 @@
                     }
 
                     $(document).ready(function () {
+
+                        
+
+
+                        $('input[type=radio][name=nazan]').change(function () {
+                            if ($("#zapatoTipo").prop("checked")) {
+                                $('#radioImpre').show();
+                            } else {
+                                $('#radioImpre').hide();
+                            }
+                        });
 
                         table = $('#ordenesimprimir').DataTable({
                             dom: 'Bfrtip',

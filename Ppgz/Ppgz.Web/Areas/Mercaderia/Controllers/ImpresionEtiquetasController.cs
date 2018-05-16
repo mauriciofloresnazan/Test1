@@ -58,7 +58,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-IMPRESIONETIQUETAS")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Generar(int proveedorId, bool nazan, string ordenesy, bool zapato)
+        public ActionResult Generar(int proveedorId, bool nazan, string ordenesy, bool zapato, string tipoimpresora)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
@@ -71,6 +71,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
             TempData["nazan"] = nazan;
             TempData["zapato"] = zapato;
+            TempData["impresora"] = tipoimpresora;
 
             if (nazan==false && zapato==false)
             {
@@ -216,8 +217,13 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     //Etiquetas Colgantes
                     foreach (DataRow row in dt.Rows)
                     {
-                        //for (int xx = 0; xx < Int32.Parse(row["pares"].ToString()); xx++)
-                        //{ 
+                     
+                        /**
+                         *
+                         *Se selecciona entre plantilla para Toshiba o Zebra
+                         */
+                        if (TempData["impresora"].ToString() == "Toshiba")
+                        {
                             etiquetas.Add(@"^XA
 ^SZ2^JMA
 ^MCY^PMN
@@ -251,10 +257,35 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^XZ
 ^EG 
 ^XZ");
-                            //i++;
-                        //}
+                        }
+                        else
+                        {
+                            etiquetas.Add(@"^XA^JZN^
+^FO60.50,312.50^AFN,5.00,12.50^FDSKU:^FS
+^FO125.50,313.00^A0N,25.50,25.00^FD" + row["Sku_cadena"].ToString().Trim() + @"^FS
+^FO50.50,235.50^AFN,5.50,12.00^FDTalla:^FS
+^FO55.00,95.00^A0N,35.00,30.50^FD" + row["Marca"].ToString().Trim() + @"^FS
+^FO100.00,135.50^A0N,35.00,35.50^FD" + row["estilo"].ToString().Trim() + @"^FS
+^FO98.00,175.50^AFN,3.00,8.50^FD" + row["color"].ToString().Trim() + @"^FS
+^FO77.50,210.50^A0N,20.50,30.00^FD" + row["Desc_familia"].ToString().Trim() + @"^FS
+^FO60.50,270.50^A0N,35.50,40.00^FD$^FS 
+^FO105.50,270.50^A0N,40.60,35.00^FD" + row["Entero_prec"].ToString().Trim() + @"^FS
+^FO160.50,265.50^A0N,19.30,29.00^FD" + row["Dec_prec"].ToString().Trim() + @"^FS
+^ISLABEL001,N,^FS
+^XZ
+^XA^JZN^PR9
+^PQ" + row["pares"].ToString().Trim() + @",0,1,Y
+^ILLABEL001^FS
+^FO145.00,235.50^AFN,10.00,18.50^FD" + row["talla"].ToString().Trim() + @"^FS
+^FO40.00,340.00^BY2,.10^BEN,60.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS
+^XZ
+^XZ
+^EG 
+^XZ");
+                        }
 
-                    }
+                    //Fin Seleccion
+                }
 
                     
 
