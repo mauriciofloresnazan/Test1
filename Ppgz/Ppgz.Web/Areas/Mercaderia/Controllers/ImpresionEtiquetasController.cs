@@ -143,6 +143,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             int i = 1;
 
+            var totalEtiquetas = dt.Rows[0]["tot_etiq"].ToString().Trim();
+
 
                 if (nazan == true)
             {
@@ -252,7 +254,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^PQ" + row["pares"].ToString().Trim() + @",0,1,Y
 ^ILLABEL001^FS
 ^FO95.00,185.50^AFN,10.00,18.50^FD" + row["talla"].ToString().Trim() + @"^FS
-^FO10.00,295.00^BY2,.12^BEN,55.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS
+^FO10.00,295.00^BY2,.12^BEN,55.00,Y,N^FD" + row["Ean_Nazan"].ToString().Trim() + @"^FS
 ^XZ
 ^XZ
 ^EG 
@@ -277,7 +279,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^PQ" + row["pares"].ToString().Trim() + @",0,1,Y
 ^ILLABEL001^FS
 ^FO145.00,235.50^AFN,10.00,18.50^FD" + row["talla"].ToString().Trim() + @"^FS
-^FO40.00,340.00^BY2,.10^BEN,60.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS
+^FO40.00,340.00^BY2,.10^BEN,60.00,Y,N^FD" + row["Ean_Nazan"].ToString().Trim() + @"^FS
 ^XZ
 ^XZ
 ^EG 
@@ -366,6 +368,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             ViewBag.etiquetas = etiquetas;
             ViewBag.etiquetasPrint = etiquetasPrint;
+            ViewBag.totalEtiquetas = totalEtiquetas;
             return View();
         }
 
