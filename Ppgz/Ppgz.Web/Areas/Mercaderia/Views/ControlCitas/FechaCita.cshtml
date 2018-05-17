@@ -1,9 +1,10 @@
 ﻿@using Ppgz.Repository
 @using Ppgz.Web.Areas.Mercaderia
+@using System.Web.Script.Serialization;
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     var fechas = (List<DateTime>)ViewBag.Fechas;
-    
+
     var proveedor = (proveedore)ViewBag.proveedor;
 
     var currentCita = (CurrentCita) ViewBag.CurrentCita;
@@ -11,6 +12,10 @@
 
     ViewBag.Title = "Registrar Cita";
     ViewBag.Descripcion = "Paso 2.1 - Seleccione la fecha de la Cita";
+
+    var jsonSerialiser = new JavaScriptSerializer();
+    var Fechasjson = jsonSerialiser.Serialize(fechas);
+
 }
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
@@ -53,12 +58,13 @@
     <div class="panel-heading">Fecha de la Cita</div>
     <div class="panel-body">
 
-        @using (Html.BeginForm("AgregarPrimeraOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id="formu"}))
+        @using (Html.BeginForm("VisualizarDisponibilidad", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id="formu"}))
         {
             @Html.AntiForgeryToken()
 
             @Html.ValidationSummary(true)
-            @Html.Hidden("proveedorId",@proveedor.Id)
+            @Html.Hidden("proveedorId", @proveedor.Id)
+            @Html.Hidden("fechaspermitidas", @Fechasjson)
             @Html.Hidden("numeroDocumento", (string)@ViewBag.NumeroDocumento)
             <div class="form-group">
                 <label class="col-sm-3 control-label"> Fecha de la Cita</label>
