@@ -83,9 +83,9 @@
             @if (puedeDescargar)
             {
                 <dt>Se imprimiran</dt>
-                <dd>@etiquetas.Count() etiquetas</dd>
+                <dd>@ViewBag.totalEtiquetas etiquetas</dd>
                 <dt>Archivo</dt>
-                <dd><a class="btn btn-primary" href="@Url.Action("DescargarEtiquetas","VistaProveedor")"><i class="fa fa-download"></i> Descargar</a><a class="btn btn-primary" href="#" onclick="printZpl($('#impeti').val())"><i class="fa fa-print"></i> Imprimir</a> Use <img src="https://www.mozilla.org/media/img/logos/firefox/logo-wordmark-large.f1831564f64e.png" style="height: 40px;"> para imprimir etiquetas</dd>
+                <dd><a class="btn btn-primary" href="@Url.Action("DescargarEtiquetas","VistaProveedor")"><i class="fa fa-download"></i> Descargar</a><a class="btn btn-primary" href="#" onclick="printZpl($('#impeti').val())"><i class="fa fa-print"></i> Imprimir</a> Use <img src="~/assets/img/Firefox_Logo.png" style="height: 40px;"> para imprimir etiquetas</dd>
             } 
         </dl>
         <a class="btn btn-default" href="@Url.Action("ImpresionDeEtiquetas", "VistaProveedor")"><i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>

@@ -45,78 +45,102 @@
             <input type="hidden" name="proveedorId" value="@proveedor.Id" />
 
             <div class="form-group">
-                
                 <label class="col-sm-3 control-label">Tipo de Etiqueta</label>
-                <div class="col-sm-7">
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="nazan" id="nazanTipo" value="true" checked>
-                            Nazan
-                        </label>
+                <div style="display:flex">
+                    <div style="width:50%">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="nazan" id="nazanTipo" value="true" checked>
+                                Nazan
+                            </label>
+                        </div>
                     </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="nazan" id="precioTipo" value="false">
-                            Etiqueta de Caja
-                        </label>
+                    <div style="width:50%">
+                        <label class="col-sm-3 control-label">Cadenas Comerciales</label>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="nazan" id="precioTipo" value="false">
+                                Etiqueta de Caja
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="nazan" id="zapatoTipo" value="false">
+                                Etiqueta Colgante
+                            </label>
+                            <div id="radioImpre" style="display:none">
+                                <br />
+                                <strong> Seleccione la impresora adecuada:</strong><br />
+                                <label>
+                                    <input type="radio" name="tipoimpre" id="imptoshiba" value="false">
+                                    Impresora Toshiba
+                                </label>
+                                <label>
+                                    <input type="radio" name="tipoimpre" id="impzebra" value="false" checked>
+                                    Impresora Zebra
+                                </label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="nazan" id="zapatoTipo" value="false">
-                            Etiqueta Colgante
-                        </label>
-                    </div>
+                </div>
 
-                    
+                <div class="col-sm-7">
+
+
+
+
+
+
+
 
                 </div>
             </div>
-            <p class="form-legend" style="">
-                <i></i>
-            </p>
-          
-                    <table cellspacing="5" cellpadding="5" border="0">
-                        <tbody>
+                <p class="form-legend" style="">
+                    <i></i>
+                </p>
+
+                <table cellspacing="5" cellpadding="5" border="0">
+                    <tbody>
+                        <tr>
+                            <td><label>Orden Inicial: <input class="form-control input-sm" id="min" name="min" type="text"></label> </td>
+                            <td> <label>Orden Final: <input class="form-control input-sm" id="max" name="max" type="text"></label></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-striped table-condensed" id="ordenesimprimir">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Ordenes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (ordencompra ordendeCompra in ordenes)
+                        {
+
+
                             <tr>
-                                <td><label>Orden Inicial: <input class="form-control input-sm" id="min" name="min" type="text"></label> </td>
-                                <td> <label>Orden Final: <input class="form-control input-sm" id="max" name="max" type="text"></label></td>
+                                <td class="text-center">@ordendeCompra.NumeroDocumento</td>
+
                             </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-striped table-condensed" id="ordenesimprimir">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Ordenes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (ordencompra ordendeCompra in ordenes)
-                            {
 
-
-                                <tr>
-                                    <td class="text-center">@ordendeCompra.NumeroDocumento</td>
-
-                                </tr>
-
-                            }
-                        </tbody>
-                    </table>
-               
+                        }
+                    </tbody>
+                </table>
 
 
 
 
 
 
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-7">
-                            <button type="button" onclick="envio()" class="btn btn-primary"><i class="fa fa-play" aria-hidden="true"></i> Generar</button>
-                            <a class="btn btn-default" href="@Url.Action("ImpresionDeEtiquetas", "VistaProveedor")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
-                        </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-3 col-sm-7">
+                        <button type="button" onclick="envio()" class="btn btn-primary"><i class="fa fa-play" aria-hidden="true"></i> Generar</button>
+                        <a class="btn btn-default" href="@Url.Action("ImpresionDeEtiquetas", "VistaProveedor")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
                     </div>
-        }
-    </div>
+                </div>
+                }
+            </div>
 
             </div>
 
@@ -197,7 +221,19 @@
                                 $('#form').append(input);
                             }
                             var input = $("<input>").attr({ "type": "hidden", "name": "ordenesy" }).val(ordenes);
+                            var input2 = "";
+
+                            if ($("#impzebra").prop("checked")) {
+                                input2 = $("<input>").attr({ "type": "hidden", "name": "tipoimpresora" }).val('Zebra');
+                            } else {
+                                input2 = $("<input>").attr({ "type": "hidden", "name": "tipoimpresora" }).val('Toshiba');
+                            }
+
+
                             $('#form').append(input);
+
+                            $('#form').append(input2);
+
                             $('#form').submit();
                         }
 
@@ -209,6 +245,14 @@
                     }
 
                     $(document).ready(function () {
+
+                        $('input[type=radio][name=nazan]').change(function () {
+                            if ($("#zapatoTipo").prop("checked")) {
+                                $('#radioImpre').show();
+                            } else {
+                                $('#radioImpre').hide();
+                            }
+                        });
 
                         table = $('#ordenesimprimir').DataTable({
                             dom: 'Bfrtip',
