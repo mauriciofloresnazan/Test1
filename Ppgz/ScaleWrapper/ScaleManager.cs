@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -11,39 +12,85 @@ namespace ScaleWrapper
     public class ScaleManager
     {
         public readonly ILog ErrorAppLog = LogManager.GetLogger(@"ErrorAppLog");
-
+        private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["Scale"].ConnectionString;
 
         public void Registrar(cita cita)
         {
             var entities = new Entities();
             var numerosDocumentos = cita.asns.Select(asn => asn.OrdenNumeroDocumento).Distinct();
 
-            int i = 1;
-            foreach (var numeroDocumento in numerosDocumentos)
+
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
-                var documento = numeroDocumento;
+                connection.Open();
 
-                var orden = cita.asns
-                    .FirstOrDefault(asn => asn.OrdenNumeroDocumento == documento);
+                SqlCommand command = connection.CreateCommand();
+                SqlTransaction transaction;
 
-                var almacenScale = entities.ScaleAlmacens.FirstOrDefault(sa => sa.Sap == orden.Centro);
+                // Start a local transaction.
+                transaction = connection.BeginTransaction("Insertar cita en Scale");
 
-                if (almacenScale == null)
+                // Must assign both transaction object and connection
+                // to Command object for a pending local transaction
+                command.Connection = connection;
+                command.Transaction = transaction;
+
+                try
                 {
-                    ErrorAppLog.Error(string.Format("El Almacén {0} no está configurado para Scale. Error en la Cita # {1},  Órden {2}", orden.Centro, cita.Id, orden.OrdenNumeroDocumento));
-                    continue;
+                    int i = 1;
+                    foreach (var numeroDocumento in numerosDocumentos)
+                    {
+                        var documento = numeroDocumento;
+
+                        var orden = cita.asns
+                            .FirstOrDefault(asn => asn.OrdenNumeroDocumento == documento);
+
+                        var almacenScale = entities.ScaleAlmacens.FirstOrDefault(sa => sa.Sap == orden.Centro);
+
+                        if (almacenScale == null)
+                        {
+                            ErrorAppLog.Error(string.Format("El Almacén {0} no está configurado para Scale. Error en la Cita # {1},  Órden {2}", orden.Centro, cita.Id, orden.OrdenNumeroDocumento));
+                            continue;
+                        }
+
+                        var id = InsertarHeader(command, cita, almacenScale.Scale, numeroDocumento, orden.TiendaOrigen, orden.Tienda, orden.NumeroOrdenSurtido, orden.InOut, i, cita.Id);
+
+                        var asns = cita.asns.Where(asn => asn.OrdenNumeroDocumento == numeroDocumento).ToList();
+
+                        InsertarDetails(command, id, almacenScale.Scale, asns, cita.Id);
+                        i++;
+                    }
+
+                    // Attempt to commit the transaction.
+                    transaction.Commit();
                 }
+                catch (Exception ex)
+                {
+                    ErrorAppLog.Error(string.Format("Commit Exception Type: {0}", ex.GetType()));
+                    ErrorAppLog.Error(string.Format("  Message: {0}", ex.Message));
 
-                var id = InsertarHeader(cita, almacenScale.Scale, numeroDocumento, orden.TiendaOrigen, orden.Tienda, orden.NumeroOrdenSurtido, orden.InOut, i, cita.Id);
-
-                var asns = cita.asns.Where(asn => asn.OrdenNumeroDocumento == numeroDocumento).ToList();
-
-                InsertarDetails(id, almacenScale.Scale, asns, cita.Id);
-                i++;
+                    // Attempt to roll back the transaction.
+                    try
+                    {
+                        transaction.Rollback();
+                    }
+                    catch (Exception ex2)
+                    {
+                        // This catch block will handle any errors that may have occurred
+                        // on the server that would cause the rollback to fail, such as
+                        // a closed connection.
+                        ErrorAppLog.Error(string.Format("Rollback Exception Type: {0}", ex2.GetType()));
+                        ErrorAppLog.Error(string.Format("  Message: {0}", ex2.Message));
+                    }
+                }
+                var exito = "";
             }
+
+
+               
         }
 
-        internal string InsertarHeader(cita cita, string almacenScale, string numeroOrden,
+        internal string InsertarHeader(SqlCommand command, cita cita, string almacenScale, string numeroOrden,
             string tiendaOrigen, string tiendaDestino, string numeroOrdenSurtido, string inOut, int i, int citaId)
         {
 
@@ -252,20 +299,32 @@ namespace ScaleWrapper
 
                                 ");
 
-            
-            try
+
+            /*try
+             {
+                 DbScale.Insert(sql, parameters);
+             }
+             catch (SqlException exception)
+             {
+                 ErrorAppLog.Error(string.Format("Error insertando header en Scale Cita # {0}. {1}", citaId, exception.ToString()));
+             }*/
+
+            command.CommandText = sql;
+
+            // Si los parametros nos son null los recorremos
+            if (parameters != null)
             {
-                DbScale.Insert(sql, parameters);
+                foreach (SqlParameter param in parameters)
+                {
+                    command.Parameters.Add(param);
+                }
             }
-            catch (SqlException exception)
-            {
-                ErrorAppLog.Error(string.Format("Error insertando header en Scale Cita # {0}. {1}", citaId, exception.ToString()));
-            }
+            command.ExecuteNonQuery();
 
             return id;
         }
 
-        internal void InsertarDetails(string interfaceLinkId, string almacenScale, List<asn> asns, int citaId)
+        internal void InsertarDetails(SqlCommand command, string interfaceLinkId, string almacenScale, List<asn> asns, int citaId)
         {
             var sql = new StringBuilder();
 
@@ -363,15 +422,27 @@ namespace ScaleWrapper
                     GETDATE())");
             }
 
-            try
+            /*try
             {
                 DbScale.Insert(sql.ToString(), parameters);
             }
             catch (SqlException exception)
             {
                 ErrorAppLog.Error(string.Format("Error insertando detalle en Scale Cita # {0}. Mensaje: {1} ## Source: {2} ## Data: {3}", citaId, exception.ToString()));
+            }*/
+
+            command.CommandText = sql.ToString();
+
+            // Si los parametros nos son null los recorremos
+            if (parameters != null)
+            {
+                foreach (SqlParameter param in parameters)
+                {
+                    command.Parameters.Add(param);
+                }
             }
-            
+            command.ExecuteNonQuery();
+
         }
 
         public void Cancelar(int citaId)
