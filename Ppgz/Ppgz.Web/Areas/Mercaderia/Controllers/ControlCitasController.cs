@@ -13,6 +13,7 @@ using Ppgz.CitaWrapper;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
+using System.Web.Script.Serialization;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -222,8 +223,65 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			ViewBag.CurrentCita = CurrentCita;
 			return View();
 		}
-		
-		[ValidateAntiForgeryToken]
+
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+        public ActionResult VisualizarDisponibilidad(string numeroDocumento, string fecha, string fechaspermitidas)
+        {
+
+            /*
+             * 
+             * Se valida que los horarios de los riales de la fecha seleccionada esten habilitados y se consultan
+             * 
+             * */
+
+            var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var FechasPermitidas = new JavaScriptSerializer().Deserialize<List<DateTime>>(fechaspermitidas);
+
+            try
+            {
+                var parameters = new List<MySqlParameter>()
+                {
+                    new MySqlParameter
+                    {
+                        ParameterName = "pTotal",
+                        Direction = ParameterDirection.Output,
+                        MySqlDbType = MySqlDbType.VarChar
+                    },
+                    new MySqlParameter("pFecha", date)
+                };
+
+                Db.ExecuteProcedureOut(parameters, "config_appointment");
+            }
+            catch (Exception exception)
+            {
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("ListaDeOrdenes");
+            }
+            var db = new Entities();
+
+            var horarioRieles = db.horariorieles.Where(h => h.Fecha == date.Date).ToList();
+
+            ViewBag.HorarioRieles = horarioRieles;
+            ViewBag.date = date;
+            ViewBag.numeroDocumento = numeroDocumento;
+            ViewBag.CurrentCita = CurrentCita;
+            ViewBag.Fechas = FechasPermitidas;
+
+            //fin
+
+
+
+
+            return View();
+        }
+
+
+
+
+        [ValidateAntiForgeryToken]
 		[HttpPost]
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult AgregarPrimeraOrden(string numeroDocumento, string fecha)
