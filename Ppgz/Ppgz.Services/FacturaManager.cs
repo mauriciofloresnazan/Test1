@@ -277,6 +277,8 @@ namespace Ppgz.Services
                     facturaSap.ErrorTable.Rows[0]["TYPE"],
                     facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
 
+                    factura.NumeroGenerado = facturaSap.FacturaNumero;
+
                     _db.facturas.Add(factura);
                     _db.SaveChanges();
                 }
