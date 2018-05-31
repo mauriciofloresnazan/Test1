@@ -420,6 +420,12 @@ namespace Ppgz.CitaWrapper
                 scaleManager.ActualizarCantidad(asnIds);
             });
         }
+
+        public static void EliminarAsnScale(asn asnAborrar)
+        {
+                var scaleManager = new ScaleManager();
+                scaleManager.EliminarAsn(asnAborrar);
+        }
     }
 }
 

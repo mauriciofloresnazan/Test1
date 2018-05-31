@@ -847,7 +847,17 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					}
 					else
 					{
-						db.Entry(asn).State = EntityState.Deleted;
+
+                        //Cuando el valor de la ASN llega a Cero se envia a Scale para su elimicacion
+                        try
+                        {
+                            CitaManager.EliminarAsnScale(asn);
+                        }
+                        finally
+                        {
+                            db.Entry(asn).State = EntityState.Deleted;
+                        }
+                       
 					}
 				}
 				if (element.ToString().IndexOf("horarioriel", StringComparison.Ordinal) == 0)

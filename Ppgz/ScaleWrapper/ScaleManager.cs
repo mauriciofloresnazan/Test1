@@ -583,10 +583,45 @@ namespace ScaleWrapper
             }
 
 
-
-
-
-
         }
+
+
+        public void EliminarAsn (asn asnAeliminar)
+        {
+
+            const string sql = @"
+
+                UPDATE DOWNLOAD_RECEIPT_DETAIL
+                SET    TOTAL_QTY = @cantidad,
+	                   INTERFACE_CONDITION = 'Delete'
+                WHERE  INTERFACE_LINK_ID IN(SELECT INTERFACE_RECORD_ID FROM DOWNLOAD_RECEIPT_HEADER WHERE USER_DEF8 = @CitaId AND ERP_ORDER_NUM = @ERP_ORDER_NUM)
+                AND    item = @item 
+                AND    ERP_ORDER_LINE_NUM = CAST (@ERP_ORDER_LINE_NUM AS NUMERIC)
+
+                UPDATE DOWNLOAD_RECEIPT_HEADER
+                SET    INTERFACE_CONDITION = 'Delete'
+                WHERE  USER_DEF8 = @CitaId
+                AND    ERP_ORDER_NUM = @ERP_ORDER_NUM";
+
+            var parameters = new List<SqlParameter>
+                {
+                    new SqlParameter("@CitaId", asnAeliminar.cita.Id),
+                    new SqlParameter("@cantidad", asnAeliminar.Cantidad),
+                    new SqlParameter("@ERP_ORDER_LINE_NUM", asnAeliminar.NumeroPosicion),
+                    new SqlParameter("@item", asnAeliminar.NumeroMaterial2),
+                    new SqlParameter("@ERP_ORDER_NUM", asnAeliminar.OrdenNumeroDocumento),
+                };
+
+            try
+            {
+                DbScale.Insert(sql, parameters);
+            }
+            catch (Exception exception)
+            {
+                ErrorAppLog.Error(string.Format("Elimiacion Asn # {0} CitaId= {3} :. {1}", asnAeliminar.Id, exception.Message, asnAeliminar.cita.Id));
+            }
+        }
+
+
     }
 }
