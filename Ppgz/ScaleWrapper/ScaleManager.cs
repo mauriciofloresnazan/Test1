@@ -147,50 +147,49 @@ namespace ScaleWrapper
 
             var parameters = new List<SqlParameter>
             {
-                new SqlParameter(
-                   "@INTERFACE_RECORD_ID" + numeroOrden ,id),
-                    new SqlParameter("@INTERFACE_ACTION_CODE" + numeroOrden, "Save"),
-                    new SqlParameter("@INTERFACE_CONDITION" + numeroOrden, "Ready"),
-                    new SqlParameter("@warehouse" + numeroOrden, almacenScale),
-                    new SqlParameter("@ERP_ORDER_NUM" + numeroOrden, numeroOrden),
-                    new SqlParameter("@IDCITA" + numeroOrden, cita.Id),
-                    //new SqlParameter("@RECEIPT_ID", string.Format("{0}-{1}", numeroOrden, cita.Id)),
+                //new SqlParameter("@INTERFACE_RECORD_ID" + numeroOrden ,id),
+                //    new SqlParameter("@INTERFACE_ACTION_CODE" + numeroOrden, "Save"),
+                //    new SqlParameter("@INTERFACE_CONDITION" + numeroOrden, "Ready"),
+                //    new SqlParameter("@warehouse" + numeroOrden, almacenScale),
+                //    new SqlParameter("@ERP_ORDER_NUM" + numeroOrden, numeroOrden),
+                //    new SqlParameter("@IDCITA" + numeroOrden, cita.Id),
+                //    //new SqlParameter("@RECEIPT_ID", string.Format("{0}-{1}", numeroOrden, cita.Id)),
 
-                    new SqlParameter("@RECEIPT_ID_TYPE" + numeroOrden, cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra"),
-                    new SqlParameter("@RECEIPT_TYPE" + numeroOrden, cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra"),
+                //    new SqlParameter("@RECEIPT_ID_TYPE" + numeroOrden, cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra"),
+                //    new SqlParameter("@RECEIPT_TYPE" + numeroOrden, cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra"),
 
-                    new SqlParameter("@RECEIPT_DATE" + numeroOrden, cita.FechaCita),
-                    new SqlParameter("@Ship_From" + numeroOrden, proveedor.NumeroProveedor),
-                    new SqlParameter("@SHIP_FROM_ADDRESS1" + numeroOrden, proveedor.Calle),
-                    new SqlParameter("@SHIP_FROM_ADDRESS2" + numeroOrden, proveedor.Direccion),
-                    new SqlParameter("@Ship_From_city" + numeroOrden, proveedor.Poblacion),
-                    new SqlParameter("@SHIP_FROM_STATE" + numeroOrden, proveedor.EstadoNombre),
-                    new SqlParameter("@SHIP_FROM_COUNTRY" + numeroOrden, "MEXICO"),
-                    new SqlParameter("@SHIP_FROM_POSTAL_CODE" + numeroOrden, proveedor.CodigoPostal),
-                    new SqlParameter("@SHIP_FROM_NAME" + numeroOrden, sourcename.Substring(0, Math.Min(sourcename.Length, 50))),
-                    new SqlParameter("@SHIP_FROM_EMAIL_ADDRESS" + numeroOrden, proveedor.Correo),
-                    new SqlParameter("@SHIP_FROM_PHONE_NUM" + numeroOrden, proveedor.NumeroTelefono),
-                    new SqlParameter("@SHIP_FROM_FAX_NUM" + numeroOrden, ""),
-                    new SqlParameter("@Source_id" + numeroOrden,proveedor.NumeroProveedor),
-                    new SqlParameter("@Source_name" + numeroOrden, sourcename.Substring(0, Math.Min(sourcename.Length, 50))),
-                    new SqlParameter("@SOURCE_ADDRESS1" + numeroOrden, proveedor.Calle),
-                    new SqlParameter("@SOURCE_ADDRESS2" + numeroOrden, proveedor.Direccion),
-                    new SqlParameter("@Source_City" + numeroOrden, proveedor.Poblacion),
-                    new SqlParameter("@Source_State" + numeroOrden, proveedor.EstadoNombre),
-                    new SqlParameter("@SOURCE_POSTAL_CODE" + numeroOrden, proveedor.CodigoPostal),
-                    new SqlParameter("@SOURCE_COUNTRY" + numeroOrden,"MEXICO"),
-                    new SqlParameter("@SOURCE_PHONE_NUM" + numeroOrden, proveedor.NumeroTelefono),
-                    new SqlParameter("@SOURCE_FAX_NUM" + numeroOrden, ""),
-                    new SqlParameter("@SOURCE_EMAIL_ADDRESS" + numeroOrden, proveedor.Correo),
-                    new SqlParameter("@user_def1" + numeroOrden, cita.FechaCita.ToString("yyyyMMdd")),
-                    new SqlParameter("@user_def2" + numeroOrden, proveedor.OrganizacionCompra),
-                    new SqlParameter("@user_def3" + numeroOrden, tiendaOrigen),
-                    //new SqlParameter("@user_def5","foo"),
-                    new SqlParameter("@user_def7" + numeroOrden, inOut == "1" ? 1 : 0),
-                    new SqlParameter("@user_def8" + numeroOrden, cita.Id),
-                    //new SqlParameter("@DATE_TIME_STAMP","GETDATE()"),
-                    new SqlParameter("@ARRIVED_DATE_TIME" + numeroOrden,cita.FechaCita),
-                    new SqlParameter("@user_stamp" + numeroOrden,cita.CantidadTotal),
+                //    new SqlParameter("@RECEIPT_DATE" + numeroOrden, cita.FechaCita),
+                //    new SqlParameter("@Ship_From" + numeroOrden, proveedor.NumeroProveedor),
+                //    new SqlParameter("@SHIP_FROM_ADDRESS1" + numeroOrden, proveedor.Calle),
+                //    new SqlParameter("@SHIP_FROM_ADDRESS2" + numeroOrden, proveedor.Direccion),
+                //    new SqlParameter("@Ship_From_city" + numeroOrden, proveedor.Poblacion),
+                //    new SqlParameter("@SHIP_FROM_STATE" + numeroOrden, proveedor.EstadoNombre),
+                //    new SqlParameter("@SHIP_FROM_COUNTRY" + numeroOrden, "MEXICO"),
+                //    new SqlParameter("@SHIP_FROM_POSTAL_CODE" + numeroOrden, proveedor.CodigoPostal),
+                //    new SqlParameter("@SHIP_FROM_NAME" + numeroOrden, sourcename.Substring(0, Math.Min(sourcename.Length, 50))),
+                //    new SqlParameter("@SHIP_FROM_EMAIL_ADDRESS" + numeroOrden, proveedor.Correo),
+                //    new SqlParameter("@SHIP_FROM_PHONE_NUM" + numeroOrden, proveedor.NumeroTelefono),
+                //    new SqlParameter("@SHIP_FROM_FAX_NUM" + numeroOrden, ""),
+                //    new SqlParameter("@Source_id" + numeroOrden,proveedor.NumeroProveedor),
+                //    new SqlParameter("@Source_name" + numeroOrden, sourcename.Substring(0, Math.Min(sourcename.Length, 50))),
+                //    new SqlParameter("@SOURCE_ADDRESS1" + numeroOrden, proveedor.Calle),
+                //    new SqlParameter("@SOURCE_ADDRESS2" + numeroOrden, proveedor.Direccion),
+                //    new SqlParameter("@Source_City" + numeroOrden, proveedor.Poblacion),
+                //    new SqlParameter("@Source_State" + numeroOrden, proveedor.EstadoNombre),
+                //    new SqlParameter("@SOURCE_POSTAL_CODE" + numeroOrden, proveedor.CodigoPostal),
+                //    new SqlParameter("@SOURCE_COUNTRY" + numeroOrden,"MEXICO"),
+                //    new SqlParameter("@SOURCE_PHONE_NUM" + numeroOrden, proveedor.NumeroTelefono),
+                //    new SqlParameter("@SOURCE_FAX_NUM" + numeroOrden, ""),
+                //    new SqlParameter("@SOURCE_EMAIL_ADDRESS" + numeroOrden, proveedor.Correo),
+                //    new SqlParameter("@user_def1" + numeroOrden, cita.FechaCita.ToString("yyyyMMdd")),
+                //    new SqlParameter("@user_def2" + numeroOrden, proveedor.OrganizacionCompra),
+                //    new SqlParameter("@user_def3" + numeroOrden, tiendaOrigen),
+                //    //new SqlParameter("@user_def5","foo"),
+                //    new SqlParameter("@user_def7" + numeroOrden, inOut == "1" ? 1 : 0),
+                //    new SqlParameter("@user_def8" + numeroOrden, cita.Id),
+                //    //new SqlParameter("@DATE_TIME_STAMP","GETDATE()"),
+                //    new SqlParameter("@ARRIVED_DATE_TIME" + numeroOrden,cita.FechaCita),
+                //    new SqlParameter("@user_stamp" + numeroOrden,cita.CantidadTotal),
 
 
             };
@@ -207,6 +206,9 @@ namespace ScaleWrapper
                 parameters.Add(new SqlParameter("@user_def6" + numeroOrden, DBNull.Value));
 
             }
+            
+            int insd = inOut == "1" ? 1 : 0;
+            string ordencomprastring = cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra";
 
             var sql = string.Format(@"
 
@@ -246,58 +248,53 @@ namespace ScaleWrapper
                              user_def2, 
                              user_def3, 
                              user_def4, 
-                             --user_def5, 
                              user_def6, 
                              user_def7, 
                              user_def8,
                              user_stamp,
                              date_time_stamp, 
                              arrived_date_time) 
-                VALUES      (@INTERFACE_RECORD_ID" + id + @", 
-                             @INTERFACE_ACTION_CODE" + numeroOrden + @", 
-                             @INTERFACE_CONDITION" + numeroOrden + @", 
-                             @warehouse" + numeroOrden + @", 
-                             @ERP_ORDER_NUM" + numeroOrden + @", 
-                             --@RECEIPT_ID" + numeroOrden + @",  
-                             dbo.GNZN_Fn_Folio_Recibo(@ERP_ORDER_NUM" + numeroOrden + @", @IDCITA" + numeroOrden + @"),
-                             @RECEIPT_ID_TYPE" + numeroOrden + @",  
-                             @RECEIPT_TYPE" + numeroOrden + @",  
-                             @RECEIPT_DATE" + numeroOrden + @",  
-                             @Ship_From" + numeroOrden + @",  
-                             @SHIP_FROM_ADDRESS1" + numeroOrden + @",  
-                             @SHIP_FROM_ADDRESS2" + numeroOrden + @",  
-                             @Ship_From_city" + numeroOrden + @",  
-                             @SHIP_FROM_STATE" + numeroOrden + @",  
-                             @SHIP_FROM_COUNTRY" + numeroOrden + @", 
-                             @SHIP_FROM_POSTAL_CODE" + numeroOrden + @", 
-                             @SHIP_FROM_NAME" + numeroOrden + @",  
-                             @SHIP_FROM_EMAIL_ADDRESS" + numeroOrden + @",  
-                             @SHIP_FROM_PHONE_NUM" + numeroOrden + @",  
-                             @SHIP_FROM_FAX_NUM" + numeroOrden + @", 
-                             @Source_id" + numeroOrden + @",  
-                             @Source_name" + numeroOrden + @",  
-                             @SOURCE_ADDRESS1" + numeroOrden + @",  
-                             @SOURCE_ADDRESS2" + numeroOrden + @",  
-                             @Source_City" + numeroOrden + @",  
-                             @Source_State" + numeroOrden + @",  
-                             @SOURCE_POSTAL_CODE" + numeroOrden + @",  
-                             @SOURCE_COUNTRY" + numeroOrden + @",  
-                             @SOURCE_PHONE_NUM" + numeroOrden + @",  
-                             @SOURCE_FAX_NUM" + numeroOrden + @",  
-                             @SOURCE_EMAIL_ADDRESS" + numeroOrden + @",  
-                             @user_def1" + numeroOrden + @",  
-                             @user_def2" + numeroOrden + @",  
-                             @user_def3" + numeroOrden + @",  
-                             @user_def4" + numeroOrden + @",  
-                             --@user_def5" + numeroOrden + @",  
+                VALUES      ('" + id + @"', 
+                             'Save', 
+                             'Ready', 
+                             '" + almacenScale + @"', 
+                             '" + numeroOrden + @"',  
+                             dbo.GNZN_Fn_Folio_Recibo('" + numeroOrden + @"', '" + cita.Id + @"'),
+                             '" + ordencomprastring + @"',  
+                             '" + ordencomprastring + @"',
+                             '" + cita.FechaCita.ToString("yyyy-MM-ddTHH:mm:ss") + @"',  
+                             '" + proveedor.NumeroProveedor + @"',  
+                             '" + proveedor.Calle + @"',  
+                             '" + proveedor.Direccion + @"',  
+                             '" + proveedor.Poblacion + @"',  
+                             '" + proveedor.EstadoNombre + @"',  
+                             'MEXICO', 
+                             '" + proveedor.CodigoPostal + @"', 
+                             '" + sourcename.Substring(0, Math.Min(sourcename.Length, 50)) + @"',  
+                             '" + proveedor.Correo + @"',  
+                             '" + proveedor.NumeroTelefono + @"',  
+                             '', 
+                             '" + proveedor.NumeroProveedor + @"',  
+                             '" + sourcename.Substring(0, Math.Min(sourcename.Length, 50)) + @"',
+                             '" + proveedor.Calle + @"',  
+                             '" + proveedor.Direccion + @"',  
+                             '" + proveedor.Poblacion + @"',  
+                             '" + proveedor.EstadoNombre + @"',
+                             '" + proveedor.CodigoPostal + @"',   
+                             'MEXICO', 
+                             '" + proveedor.NumeroTelefono + @"',  
+                             '', 
+                             '" + proveedor.Correo + @"',
+                             '" + cita.FechaCita.ToString("yyyyMMdd") + @"',  
+                             '" + proveedor.OrganizacionCompra + @"',  
+                             '" + tiendaOrigen + @"',  
+                             @user_def4" + numeroOrden + @",   
                              @user_def6" + numeroOrden + @",  
-                             @user_def7" + numeroOrden + @",  
-                             @user_def8" + numeroOrden + @", 
-                             @user_stamp" + numeroOrden + @", 
+                             " + insd + @",  
+                             '" + cita.Id + @"', 
+                             '" + cita.CantidadTotal + @"', 
                              GETDATE(), 
-                             @ARRIVED_DATE_TIME" + numeroOrden + @");
-
-                                ");
+                             '" + cita.FechaCita.ToString("yyyy-MM-ddTHH:mm:ss") + @"');");
 
 
             /*try
@@ -387,16 +384,16 @@ namespace ScaleWrapper
                 var asn = asns[index];
                 var id = string.Format("{0}{1}{2}", DateTime.Now.ToString("yyyyMMddHHmmssfff"), asn.cita.Id, index);
 
-                parameters.Add(new SqlParameter("@INTERFACE_RECORD_ID" + index + asn.OrdenNumeroDocumento, id));
-                parameters.Add(new SqlParameter("@Interface_link_id" + index + asn.OrdenNumeroDocumento, interfaceLinkId));
-                parameters.Add(new SqlParameter("@warehouse" + index + asn.OrdenNumeroDocumento, almacenScale));
-                parameters.Add(new SqlParameter("@INTERFACE_ACTION_CODE" + index + asn.OrdenNumeroDocumento, "Save"));
-                parameters.Add(new SqlParameter("@INTERFACE_CONDITION" + index + asn.OrdenNumeroDocumento, "Ready"));
-                parameters.Add(new SqlParameter("@ERP_ORDER_LINE_NUM" + index + asn.OrdenNumeroDocumento, asn.NumeroPosicion));
-                parameters.Add(new SqlParameter("@item" + index + asn.OrdenNumeroDocumento, asn.NumeroMaterial2));
-                parameters.Add(new SqlParameter("@ITEM_NET_PRICE" + index + asn.OrdenNumeroDocumento, asn.Precio));
-                parameters.Add(new SqlParameter("@user_def5" + index + asn.OrdenNumeroDocumento, asn.cita.FechaCita.ToString("yyyyMMdd")));
-                parameters.Add(new SqlParameter("@TOTAL_QTY" + index + asn.OrdenNumeroDocumento, asn.Cantidad));
+                //parameters.Add(new SqlParameter("@INTERFACE_RECORD_ID" + index + asn.OrdenNumeroDocumento, id));
+                //parameters.Add(new SqlParameter("@Interface_link_id" + index + asn.OrdenNumeroDocumento, interfaceLinkId));
+                //parameters.Add(new SqlParameter("@warehouse" + index + asn.OrdenNumeroDocumento, almacenScale));
+                //parameters.Add(new SqlParameter("@INTERFACE_ACTION_CODE" + index + asn.OrdenNumeroDocumento, "Save"));
+                //parameters.Add(new SqlParameter("@INTERFACE_CONDITION" + index + asn.OrdenNumeroDocumento, "Ready"));
+                //parameters.Add(new SqlParameter("@ERP_ORDER_LINE_NUM" + index + asn.OrdenNumeroDocumento, asn.NumeroPosicion));
+                //parameters.Add(new SqlParameter("@item" + index + asn.OrdenNumeroDocumento, asn.NumeroMaterial2));
+                //parameters.Add(new SqlParameter("@ITEM_NET_PRICE" + index + asn.OrdenNumeroDocumento, asn.Precio));
+                //parameters.Add(new SqlParameter("@user_def5" + index + asn.OrdenNumeroDocumento, asn.cita.FechaCita.ToString("yyyyMMdd")));
+                //parameters.Add(new SqlParameter("@TOTAL_QTY" + index + asn.OrdenNumeroDocumento, asn.Cantidad));
 
                 if (asn.UnidadMedida == "ST")
                 {
@@ -408,18 +405,7 @@ namespace ScaleWrapper
                 }
 
 
-                sql.AppendLine(@"(@INTERFACE_RECORD_ID" + index + asn.OrdenNumeroDocumento + @",
-                    @Interface_link_id" + index + asn.OrdenNumeroDocumento + @",
-                    @warehouse" + index + asn.OrdenNumeroDocumento + @",
-                    @INTERFACE_ACTION_CODE" + index + asn.OrdenNumeroDocumento + @",
-                    @INTERFACE_CONDITION" + index + asn.OrdenNumeroDocumento + @",
-                    @ERP_ORDER_LINE_NUM" + index + asn.OrdenNumeroDocumento + @",
-                    @item" + index + asn.OrdenNumeroDocumento + @",
-                    @ITEM_NET_PRICE" + index + asn.OrdenNumeroDocumento + @",
-                    @user_def5" + index + asn.OrdenNumeroDocumento + @",
-                    @TOTAL_QTY" + index + asn.OrdenNumeroDocumento + @",
-                    @QUANTITY_UM" + index + asn.OrdenNumeroDocumento + @",
-                    GETDATE())");
+                sql.AppendLine("('"+ id + "', '" + interfaceLinkId + "', '" + almacenScale + "', 'Save', 'Ready', '" + asn.NumeroPosicion + "', '" + asn.NumeroMaterial2 + "', '" + asn.Precio + "', '" + asn.cita.FechaCita.ToString("yyyyMMdd") + "', '" + asn.Cantidad + "', @QUANTITY_UM" + index + asn.OrdenNumeroDocumento + ", GETDATE())");
             }
 
             /*try
