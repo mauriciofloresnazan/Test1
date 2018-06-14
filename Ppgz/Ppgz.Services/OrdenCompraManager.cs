@@ -119,7 +119,7 @@ namespace Ppgz.Services
 
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(proveedorId , organizacionCompras);
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraEtiquetas(proveedorId , organizacionCompras);
             var detalle = new List<ordencompra>();
 
             if (result.Rows.Count <= 0) return detalle;
