@@ -441,11 +441,15 @@ namespace ScaleWrapper
             }
 
             const string sql = @"
+                
+                DELETE FROM DOWNLOAD_RECEIPT_DETAIL WHERE INTERFACE_LINK_ID IN(SELECT INTERFACE_RECORD_ID FROM DOWNLOAD_RECEIPT_HEADER WHERE USER_DEF8 = @CitaId)
+                AND    INTERFACE_ACTION_CODE = 'Delete'
 
                 UPDATE DOWNLOAD_RECEIPT_DETAIL
                 SET    INTERFACE_CONDITION = 'Ready',
                        INTERFACE_ACTION_CODE = 'Delete'
                 WHERE  INTERFACE_LINK_ID IN(SELECT INTERFACE_RECORD_ID FROM DOWNLOAD_RECEIPT_HEADER WHERE USER_DEF8 = @CitaId)
+                AND    INTERFACE_ACTION_CODE <> 'Delete'
 
                 UPDATE DOWNLOAD_RECEIPT_HEADER
                 SET    INTERFACE_CONDITION = 'Ready',
@@ -578,14 +582,14 @@ namespace ScaleWrapper
             const string sql = @"
 
                 UPDATE DOWNLOAD_RECEIPT_DETAIL
-                SET    TOTAL_QTY = @cantidad,
-	                   INTERFACE_CONDITION = 'Delete'
+                SET    INTERFACE_CONDITION = 'Ready',
+                       INTERFACE_ACTION_CODE = 'Delete'
                 WHERE  INTERFACE_LINK_ID IN(SELECT INTERFACE_RECORD_ID FROM DOWNLOAD_RECEIPT_HEADER WHERE USER_DEF8 = @CitaId AND ERP_ORDER_NUM = @ERP_ORDER_NUM)
                 AND    item = @item 
                 AND    ERP_ORDER_LINE_NUM = CAST (@ERP_ORDER_LINE_NUM AS NUMERIC)
 
                 UPDATE DOWNLOAD_RECEIPT_HEADER
-                SET    INTERFACE_CONDITION = 'Delete'
+                SET    INTERFACE_CONDITION = 'Ready'
                 WHERE  USER_DEF8 = @CitaId
                 AND    ERP_ORDER_NUM = @ERP_ORDER_NUM";
 
