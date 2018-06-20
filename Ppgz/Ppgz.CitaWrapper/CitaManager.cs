@@ -274,6 +274,10 @@ namespace Ppgz.CitaWrapper
                 db.SaveChanges();
             }
 
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+
+            sapOrdenCompraManager.SetOrdenesDeCompraCita(cita.asns);
+
             Task.Factory.StartNew(() =>
             {
                 var scaleManager = new ScaleManager();

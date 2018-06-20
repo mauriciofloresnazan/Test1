@@ -2,6 +2,7 @@
 using System.Data;
 using System.Linq;
 using SAP.Middleware.Connector;
+using Ppgz.Repository;
 
 namespace SapWrapper
 {
@@ -233,6 +234,48 @@ namespace SapWrapper
                 }
             }
             return result.Any() ? result[0] : null;
+        }
+
+
+        public DataTable SetOrdenesDeCompraCita(ICollection<asn> asns)
+        {
+            var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
+            var rfcRepository = rfcDestinationManager.Repository;
+            var function = rfcRepository.CreateFunction("ZFM_EKPO_CITAS");
+
+
+            IRfcTable IM_CITAS = function.GetTable("IM_CITAS");
+
+            //Add select option values to MATNRSELECTION table
+            foreach ( asn asn in asns)
+            {
+
+                RfcStructureMetadata am = rfcRepository.GetStructureMetadata("ZTY_EKPO_CITAS");
+                IRfcStructure articol = am.CreateStructure();
+                
+
+                //Populate current MATNRSELECTION row with data from list
+                articol.SetValue("EBELN", asn.OrdenNumeroDocumento);
+                articol.SetValue("EBELP", asn.NumeroPosicion);
+                articol.SetValue("ZZCITAS", "X");
+                IM_CITAS.Append(articol);
+
+            }
+
+            function.SetValue("IM_CITAS", IM_CITAS);
+
+
+            try
+            {
+                function.Invoke(rfcDestinationManager);
+                var result = function.GetTable("ET_RETORNO");
+                var nose= result.ToDataTable("ET_RETORNO");
+                return result.ToDataTable("ET_RETORNO");
+            }
+            catch
+            {
+                return new DataTable();
+            }
         }
 
     }

@@ -828,7 +828,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				if (element.ToString().IndexOf("asnid-", StringComparison.Ordinal) == 0)
 				{
 					var asnId = int.Parse(element.ToString().Replace("asnid-", string.Empty));
-                    asnIds.Add(asnId);
+                    
 
 					var cantidad = int.Parse(collection[element.ToString()]);
 
@@ -842,7 +842,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					}
 					if (cantidad > 0)
 					{
-						asn.Cantidad = cantidad;
+                        asnIds.Add(asnId);
+                        asn.Cantidad = cantidad;
 						db.Entry(asn).State = EntityState.Modified;
 					}
 					else
