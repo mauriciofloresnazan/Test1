@@ -849,14 +849,21 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					else
 					{
 
-                        //Cuando el valor de la ASN llega a Cero se envia a Scale para su elimicacion
+                        //Cuando el valor de la ASN llega a Cero se envia a Scale para su elimicacion y a Sap para desmarcar
                         try
                         {
                             CitaManager.EliminarAsnScale(asn);
+                            
                         }
                         finally
                         {
+                            var asnAborrar = new asn();
+                            asnAborrar.OrdenNumeroDocumento = asn.OrdenNumeroDocumento;
+                            asnAborrar.NumeroPosicion = asn.NumeroPosicion;
+
                             db.Entry(asn).State = EntityState.Deleted;
+
+                            CitaManager.DesmarcarEnActualizacion(asnAborrar);
                         }
                        
 					}

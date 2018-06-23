@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Ppgz.Repository;
 using SapWrapper;
 using ScaleWrapper;
+using System.Collections.Generic;
 
 namespace Ppgz.CitaWrapper
 {
@@ -392,7 +393,20 @@ namespace Ppgz.CitaWrapper
                 db.Entry(horarioRiel).State = EntityState.Modified;
             }
 
+            List<asn> asnantesdeborrar = new List<asn>();
+
+            cita.asns.ToList().ForEach(delegate(asn asnd){
+
+                asn asnnew = new asn();
+                asnnew.OrdenNumeroDocumento = asnd.OrdenNumeroDocumento;
+                asnnew.NumeroPosicion = asnd.NumeroPosicion;
+                asnantesdeborrar.Add(asnnew);
+
+            });
+
             cita.asns.ToList().ForEach(asn => db.asns.Remove(asn));
+
+            
 
             cita.crs.ToList().ForEach(cr => db.crs.Remove(cr));
 
@@ -405,9 +419,45 @@ namespace Ppgz.CitaWrapper
                 scaleManager.Cancelar(citaId);
             });
 
+
+            //Descarmar Ordenes de compra
+            ICollection<asn> ordenesAcancelar = new List<asn>();
+            foreach (var asn in asnantesdeborrar)
+            {
+                if (db.asns.FirstOrDefault(a => a.OrdenNumeroDocumento == asn.OrdenNumeroDocumento && a.NumeroPosicion == asn.NumeroPosicion)==null)
+                {
+                    ordenesAcancelar.Add(asn);
+                } 
+            }
+                
+
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+            sapOrdenCompraManager.UnsetOrdenesDeCompraCita(ordenesAcancelar);
+
+            //fin
+
+
         }
 
-        public static void ActualizarFechaScale(int citaId)
+
+        public static void DesmarcarEnActualizacion(asn asnDes)
+        {
+            var db = new Entities();
+
+            ICollection<asn> ordenesAcancelar = new List<asn>();
+            ordenesAcancelar.Add(asnDes);
+
+            if (db.asns.FirstOrDefault(a => a.OrdenNumeroDocumento == asnDes.OrdenNumeroDocumento && a.NumeroPosicion == asnDes.NumeroPosicion) == null)
+            {
+                var sapOrdenCompraManager = new SapOrdenCompraManager();
+                sapOrdenCompraManager.UnsetOrdenesDeCompraCita(ordenesAcancelar);
+            }
+
+            
+        }
+
+
+            public static void ActualizarFechaScale(int citaId)
         {
             Task.Factory.StartNew(() =>
             {
