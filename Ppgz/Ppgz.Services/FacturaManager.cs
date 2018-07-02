@@ -285,6 +285,7 @@ namespace Ppgz.Services
             }
             else
             {
+                factura.NumeroGenerado = facturaSap.FacturaNumero;
                 _db.facturas.Add(factura);
                 _db.SaveChanges();
             }
