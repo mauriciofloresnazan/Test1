@@ -121,7 +121,11 @@ namespace ScaleWrapper
 
                 if (substrings2[1].ToString() == "pm")
                 {
-                    horacitascale = horacitascale + 12;
+                    if (horacitascale != 12)
+                    {
+                        horacitascale = horacitascale + 12;
+                    }
+
                 }
 
                 if (cita.FechaCita.Hour == 0)
@@ -131,16 +135,17 @@ namespace ScaleWrapper
                     cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(substrings2[0].ToString()));
 
                 }
-                else if(cita.FechaCita.Hour > horacitascale) {
-                    var restar = 0-cita.FechaCita.Hour;
-                    cita.FechaCita = cita.FechaCita.AddHours(restar);
-                    cita.FechaCita = cita.FechaCita.AddMinutes(-cita.FechaCita.Minute);
+                else if (cita.FechaCita.Hour > horacitascale)
+                {
+                    var restar = 0 - cita.FechaCita.Hour;
+                    var fecha = new DateTime(cita.FechaCita.Year, cita.FechaCita.Month, cita.FechaCita.Day);
+                    cita.FechaCita = fecha;
                     cita.FechaCita = cita.FechaCita.AddHours(horacitascale);
                     cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(substrings2[0].ToString()));
 
                 }
 
-                
+
 
             }
             //Fin
