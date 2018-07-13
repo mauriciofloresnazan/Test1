@@ -23,7 +23,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         public ActionResult Index(string fecha = null)
         {
             
-            var fechaInicio = DateTime.Today.AddMonths(-3);
+            var fechaInicio = DateTime.Today.AddMonths(-1);
 
             if (!string.IsNullOrWhiteSpace(fecha))
             {
@@ -32,7 +32,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 
 
-            var fechaFin = fechaInicio.AddMonths(3);
+            var fechaFin = fechaInicio.AddMonths(1);
 
             var db = new Entities();
 
