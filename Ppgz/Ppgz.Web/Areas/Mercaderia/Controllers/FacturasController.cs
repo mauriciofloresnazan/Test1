@@ -24,7 +24,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
 
-            _facturaManager.ProcesarFacturasAtoradas();
+            //_facturaManager.ProcesarFacturasAtoradas();
 
             return View();
         }
