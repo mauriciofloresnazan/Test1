@@ -1913,6 +1913,7 @@
     <Content Include="Areas\Nazan\Views\Penalizaciones\View.cshtml" />
     <Content Include="Areas\Nazan\Views\Penalizaciones\Reporte.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitas\VisualizarDisponibilidad.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarFacturas\ProcesarFacturas.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

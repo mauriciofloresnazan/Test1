@@ -12,12 +12,18 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
     {
         private readonly FacturaManager _facturaManager = new FacturaManager();
 
+        public ActionResult ProcesarFacturas()
+        {
+            _facturaManager.ProcesarFacturasAtoradas();
+
+            return View();
+        }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARFACTURAS")]
         public ActionResult Index(string fecha = null)
         {
-            _facturaManager.ProcesarFacturasAtoradas();
-            var fechaInicio = DateTime.Today.AddMonths(-3);
+            
+            var fechaInicio = DateTime.Today.AddMonths(-1);
 
             if (!string.IsNullOrWhiteSpace(fecha))
             {
@@ -26,7 +32,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 
 
-            var fechaFin = fechaInicio.AddMonths(3);
+            var fechaFin = fechaInicio.AddMonths(1);
 
             var db = new Entities();
 
