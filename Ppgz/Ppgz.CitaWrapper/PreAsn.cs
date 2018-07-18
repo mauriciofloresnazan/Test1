@@ -32,7 +32,7 @@ namespace Ppgz.CitaWrapper
         {
             get
             {
-                return Detalles == null ? 0 : Detalles.AsEnumerable().Sum(x => x.CantidadPermitida);
+                return Detalles == null ? 0 : Detalles.AsEnumerable().Sum(x => x.CantidadPermitida > 0 ? x.CantidadPermitida : 0 );
             }
         }
 
@@ -40,7 +40,7 @@ namespace Ppgz.CitaWrapper
         {
             get
             {
-                return Detalles.AsEnumerable().Sum(x => x.Cantidad);
+                return Detalles.AsEnumerable().Sum(x => x.Cantidad > 0 ? x.Cantidad : 0);
             }
         }
 
