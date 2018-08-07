@@ -233,7 +233,7 @@ namespace Ppgz.Services
 
             var sapFacturaManager = new SapFacturaManager();
 
-            var facturaSap = sapFacturaManager.CrearFactura(
+            var facturaSap = sapFacturaManager.CrearFacturaServicio(
                 proveedor.NumeroProveedor,
                 refe,
                 DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
@@ -259,29 +259,13 @@ namespace Ppgz.Services
 
             if (factura.Estatus != "S" && factura.Estatus != "H")
             {
-                
 
                 string errorsap = facturaSap.ErrorTable.Rows[0]["MESSAGE"].ToString();
 
-                if (errorsap.Contains("Referencia y/o Factura ya aplicada en el Sistema") || errorsap.Contains("No existen datos con el Num. Ref"))
-                {
-                    File.Delete(newXmlPath);
-                    File.Delete(newPdfPath);
-                    throw new BusinessException(errorsap);
-                }
-                else
-                {
-                    factura.Comentario = string.Format
-                    ("Tipo:{1} {0}Mensaje:{2}",
-                    Environment.NewLine,
-                    facturaSap.ErrorTable.Rows[0]["TYPE"],
-                    facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
+                File.Delete(newXmlPath);
+                File.Delete(newPdfPath);
+                throw new BusinessException(errorsap);
 
-                    factura.NumeroGenerado = facturaSap.FacturaNumero;
-
-                    _db.facturas.Add(factura);
-                    _db.SaveChanges();
-                }
             }
             else
             {
@@ -608,7 +592,7 @@ namespace Ppgz.Services
                     var factura = new factura
                     {
                         Serie = Serie ?? string.Empty,
-                        Folio = Folio,
+                        Folio = Folio ?? string.Empty,
                         Fecha = fecha,
                         Total = decimal.Parse(Total, CultureInfo.InvariantCulture),
                         proveedor_id = proveedor.Id,
@@ -677,7 +661,7 @@ namespace Ppgz.Services
                 var factura = new factura
                 {
                     Serie = Serie ?? string.Empty,
-                    Folio = Folio,
+                    Folio = Folio ?? string.Empty,
                     Fecha = fecha,
                     Total = decimal.Parse(Total, CultureInfo.InvariantCulture),
                     proveedor_id = proveedor.Id,
