@@ -21,7 +21,16 @@
 
         public int CantidadPermitida
         {
-            get { return CantidadPermitidaSap - CantidadCitasFuturas; }
+            get {
+                if (CantidadPermitidaSap - CantidadCitasFuturas < 0) {
+                    return 0;
+                }
+                else
+                {
+                    return CantidadPermitidaSap - CantidadCitasFuturas;
+                }
+                
+            }
         }
 
         public int Cantidad { get; set; }
