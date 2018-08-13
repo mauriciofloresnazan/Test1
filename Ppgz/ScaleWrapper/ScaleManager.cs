@@ -198,17 +198,25 @@ namespace ScaleWrapper
 
 
             };
+            var user_def4 ="";
+            var user_def6 ="";
 
             if (cita.Almacen.ToUpper() == "CROSS DOCK")
             {
-                parameters.Add(new SqlParameter("@user_def4" + numeroOrden, tiendaDestino));
-                parameters.Add(new SqlParameter("@user_def6" + numeroOrden, numeroOrdenSurtido));
+
+                user_def4 = tiendaDestino;
+                user_def6 = numeroOrdenSurtido;
+                //parameters.Add(new SqlParameter("@user_def4" + numeroOrden, tiendaDestino));
+                //parameters.Add(new SqlParameter("@user_def6" + numeroOrden, numeroOrdenSurtido));
 
             }
             else
             {
-                parameters.Add(new SqlParameter("@user_def4" + numeroOrden, DBNull.Value));
-                parameters.Add(new SqlParameter("@user_def6" + numeroOrden, DBNull.Value));
+
+                user_def4 = "NULL";
+                user_def6 = "NULL";
+                //parameters.Add(new SqlParameter("@user_def4" + numeroOrden, DBNull.Value));
+                //parameters.Add(new SqlParameter("@user_def6" + numeroOrden, DBNull.Value));
 
             }
             
@@ -293,8 +301,8 @@ namespace ScaleWrapper
                              '" + cita.FechaCita.ToString("yyyyMMdd") + @"',  
                              '" + proveedor.OrganizacionCompra + @"',  
                              '" + tiendaOrigen + @"',  
-                             @user_def4" + numeroOrden + @",   
-                             @user_def6" + numeroOrden + @",  
+                             '" + user_def4 + @"',   
+                             '" + user_def6 + @"',  
                              " + insd + @",  
                              '" + cita.Id + @"', 
                              '" + cita.CantidadTotal + @"', 
@@ -400,17 +408,22 @@ namespace ScaleWrapper
                 //parameters.Add(new SqlParameter("@user_def5" + index + asn.OrdenNumeroDocumento, asn.cita.FechaCita.ToString("yyyyMMdd")));
                 //parameters.Add(new SqlParameter("@TOTAL_QTY" + index + asn.OrdenNumeroDocumento, asn.Cantidad));
 
+                var QUANTITY_UM = "";
+
                 if (asn.UnidadMedida == "ST")
                 {
-                    parameters.Add(new SqlParameter("@QUANTITY_UM" + index + asn.OrdenNumeroDocumento, "Par"));
+                    QUANTITY_UM = "Par";
+                    //parameters.Add(new SqlParameter("@QUANTITY_UM" + index + asn.OrdenNumeroDocumento, "Par"));
                 }
                 else
                 {
-                    parameters.Add(new SqlParameter("@QUANTITY_UM" + index + asn.OrdenNumeroDocumento, asn.UnidadMedida.Substring(0, 3)));
+                    QUANTITY_UM = asn.UnidadMedida.Substring(0, 3);
+
+                    //parameters.Add(new SqlParameter("@QUANTITY_UM" + index + asn.OrdenNumeroDocumento, asn.UnidadMedida.Substring(0, 3)));
                 }
 
 
-                sql.AppendLine("('"+ id + "', '" + interfaceLinkId + "', '" + almacenScale + "', 'Save', 'Ready', '" + asn.NumeroPosicion + "', '" + asn.NumeroMaterial2 + "', '" + asn.Precio + "', '" + asn.cita.FechaCita.ToString("yyyyMMdd") + "', '" + asn.Cantidad + "', @QUANTITY_UM" + index + asn.OrdenNumeroDocumento + ", GETDATE())");
+                sql.AppendLine("('"+ id + "', '" + interfaceLinkId + "', '" + almacenScale + "', 'Save', 'Ready', '" + asn.NumeroPosicion + "', '" + asn.NumeroMaterial2 + "', '" + asn.Precio + "', '" + asn.cita.FechaCita.ToString("yyyyMMdd") + "', '" + asn.Cantidad + "', '" + QUANTITY_UM + "', GETDATE())");
             }
 
             /*try
