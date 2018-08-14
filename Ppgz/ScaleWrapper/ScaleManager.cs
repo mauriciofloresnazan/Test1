@@ -156,8 +156,8 @@ namespace ScaleWrapper
 
             if (cita.Almacen.ToUpper() == "CROSS DOCK")
             {
-                user_def4 = tiendaDestino;
-                user_def6 = numeroOrdenSurtido;
+                user_def4 = "'" + tiendaDestino + "'";
+                user_def6 = "'" + numeroOrdenSurtido + "'";
             }
             else
             {
@@ -247,8 +247,8 @@ namespace ScaleWrapper
                              '" + cita.FechaCita.ToString("yyyyMMdd") + @"',  
                              '" + proveedor.OrganizacionCompra + @"',  
                              '" + tiendaOrigen + @"',  
-                             '" + user_def4 + @"',   
-                             '" + user_def6 + @"',  
+                             " + user_def4 + @",   
+                             " + user_def6 + @",  
                              " + insd + @",  
                              '" + cita.Id + @"', 
                              '" + cita.CantidadTotal + @"', 
