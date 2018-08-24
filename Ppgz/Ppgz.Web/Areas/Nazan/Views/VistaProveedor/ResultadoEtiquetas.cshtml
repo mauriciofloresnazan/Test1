@@ -85,7 +85,7 @@
                 <dt>Se imprimiran</dt>
                 <dd>@ViewBag.totalEtiquetas etiquetas</dd>
                 <dt>Archivo</dt>
-                <dd><a class="btn btn-primary" href="@Url.Action("DescargarEtiquetas","VistaProveedor")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¡Advertencia!" data-content=" NO abrir el archivo con Excel porque daña el código de barras."><i class="fa fa-download"></i> Descargar</a><a class="btn btn-primary" href="@Url.Action("ImpresionEtiquetas","VistaProveedor")" @*onclick="printZpl($('#impeti').val())"*@><i class="fa fa-print"></i> Imprimir</a> Use <img src="~/assets/img/Firefox_Logo.png" style="height: 40px;"> para imprimir etiquetas</dd>
+                <dd><a class="btn btn-primary" href="@Url.Action("DescargarEtiquetas","VistaProveedor")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¡Advertencia!" data-content=" NO abrir el archivo con Excel porque daña el código de barras."><i class="fa fa-download"></i> Descargar</a><a class="btn btn-primary" href="@Url.Action("ImpresionEtiquetas","VistaProveedor")" id="btnImprimir" onclick="disablePrint(this)" @*onclick="printZpl($('#impeti').val())"*@><i class="fa fa-print"></i> Imprimir</a> Use <img src="~/assets/img/Firefox_Logo.png" style="height: 40px;"> para imprimir etiquetas</dd>
             } 
         </dl>
         <a class="btn btn-default" href="@Url.Action("ImpresionDeEtiquetas", "VistaProveedor")"><i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
@@ -129,6 +129,12 @@
             printWindow.focus();
             printWindow.print();
             printWindow.close();
+        }
+
+        function disablePrint(link) {            
+            link.onclick = function (event) {
+                event.preventDefault();
+            }
         }
     </script>
 
