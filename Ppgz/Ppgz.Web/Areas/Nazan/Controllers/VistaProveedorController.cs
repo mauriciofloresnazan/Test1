@@ -16,7 +16,6 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 {
     public class VistaProveedorController : Controller
     {
-
         private readonly Entities _db = new Entities();
 
         readonly ProveedorManager _proveedorManager = new ProveedorManager();
@@ -780,6 +779,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             ViewBag.etiquetas = etiquetas;
             ViewBag.etiquetasPrint = etiquetasPrint;
+            TempData["texto"] = etiquetasPrint;
             ViewBag.totalEtiquetas = totalEtiquetas;
             return View();
         }
@@ -790,6 +790,21 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var csv = System.Web.HttpContext.Current.Session["etiqueta_csv"].ToString();
 
             return File(new UTF8Encoding().GetBytes(csv), "text/csv", "etiquetas.csv");
+        }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-IMPRESIONETIQUETAS")]
+        public FileContentResult ImpresionEtiquetas()
+        {
+            var texto = TempData["texto"].ToString();
+
+            return File(TextToByte(texto), System.Net.Mime.MediaTypeNames.Application.Octet, "Impresion Etiquetas.txt");
+        }
+
+        public static byte[] TextToByte(string texto)
+        {
+            // convert string to stream
+            byte[] byteArray = Encoding.ASCII.GetBytes(texto);
+            return byteArray;
         }
         //////////////////////////
         /////////////////////////

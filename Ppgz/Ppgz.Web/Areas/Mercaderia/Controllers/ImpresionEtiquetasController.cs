@@ -15,7 +15,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     [TerminosCondiciones]
     public class ImpresionEtiquetasController : Controller
     {
-
         private readonly CommonManager _commonManager = new CommonManager();
         private readonly ProveedorManager _proveedorManager = new ProveedorManager();
         private readonly EtiquetasManager _etiquetasManager = new EtiquetasManager();
@@ -368,6 +367,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             ViewBag.etiquetas = etiquetas;
             ViewBag.etiquetasPrint = etiquetasPrint;
+            TempData["texto"] = etiquetasPrint;
             ViewBag.totalEtiquetas = totalEtiquetas;
             return View();
         }
@@ -378,6 +378,21 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var csv = System.Web.HttpContext.Current.Session["etiqueta_csv"].ToString();
 
             return File(new UTF8Encoding().GetBytes(csv), "text/csv", "etiquetas.csv");
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-IMPRESIONETIQUETAS")]
+        public FileContentResult ImpresionEtiquetas()
+        {
+            var texto = TempData["texto"].ToString();
+                        
+            return File(TextToByte(texto), System.Net.Mime.MediaTypeNames.Application.Octet, "Impresion Etiquetas.txt");
+        }
+
+        public static byte[] TextToByte(string texto)
+        {
+            // convert string to stream
+            byte[] byteArray = Encoding.ASCII.GetBytes(texto);
+            return byteArray;
         }
 
     }
