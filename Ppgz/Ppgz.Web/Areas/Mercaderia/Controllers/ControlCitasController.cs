@@ -546,12 +546,26 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			TempData["FlashSuccess"] = "Archivo cargado exitosamente";
 			return RedirectToAction("Asn", new { numeroDocumento });
 		}
-		
 
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public ActionResult SeleccionarRieles()
-		{
-			if (CurrentCita == null)
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+        public ActionResult SeleccionarRieles()
+        {
+            //Validacion de cantidad mínima
+            //const string sql = @"SELECT Clave, Valor FROM configuraciones WHERE Clave = 'warehouse.min-pairs.per-meet' AND Habilitado = 1";
+            var result = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
+            //var result = Db.GetDataTable(sql);
+
+            if (String.IsNullOrEmpty(result.Valor))
+            {
+                ViewBag.CantidadMinimaCita = 270;
+            }
+            else
+            {
+                ViewBag.CantidadMinimaCita = Convert.ToInt32(result.Valor);
+            }
+            
+            if (CurrentCita == null)
 			{
 				return RedirectToAction("Index");
 			}
