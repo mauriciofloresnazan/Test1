@@ -34,19 +34,41 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
-        public ActionResult Index()
+        public ActionResult Index(string fechaFrom, string fechaTo)
         {
             var db = new Entities();
-
-            var fecha = DateTime.Today.AddMonths(-3);
-
-            ViewBag.Citas = db.citas.Where(c => c.FechaCita > fecha).ToList();
+            if (!String.IsNullOrEmpty(fechaFrom) && !String.IsNullOrEmpty(fechaTo))
+            {
+                var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat).ToList();
+            }
+            else
+            {
+                var fecha = DateTime.Today.AddMonths(-3);
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita > fecha).ToList();
+            }            
 
             ViewBag.EstatusCita = db.estatuscitas.ToList();
 
             return View();
         }
+        
+        //[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        //public List<cita> Filtrar(string fechaFrom, string fechaTo)
+        //{
+        //    var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+        //    var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
+        //    var db = new Entities();         
+
+
+        //    List<cita> citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat).ToList();
+        //    ViewBag.EstatusCita = db.estatuscitas.ToList();
+
+        //    //return Json(db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat).ToList());
+        //    return (citas);
+        //}
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         public ActionResult Enroque(string fecha = null)
