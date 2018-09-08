@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using Ppgz.Repository;
+using System.Globalization;
 
 namespace Ppgz.BatchFileProcessor
 {
@@ -55,11 +56,22 @@ namespace Ppgz.BatchFileProcessor
                     return;
                 }
 
-                var citaId = Convert.ToInt32(archivoSinExtension.Split('_')[1]);
-                var fecha = DateTime.Now;
-
+                var split = archivoSinExtension.Split('_');
+                var datenow = DateTime.Now;
                 Console.WriteLine("Archivo: {0}, Actividad: {1}", e.Name, e.ChangeType);
-                MoverCr(e.FullPath, fecha, citaId);
+
+                if (split.Length < 3)
+                {
+                    var citaId = Convert.ToInt32(archivoSinExtension.Split('_')[1]);                                        
+                    MoverCr(e.FullPath, datenow, citaId);
+                }
+                else
+                {
+                    var proveedor = split[1];
+                    var fecha = split[2];                    
+
+                    MoverCrForaneo(e.FullPath, proveedor, fecha);
+                }
             }
             catch (Exception exception)
             {
@@ -67,7 +79,6 @@ namespace Ppgz.BatchFileProcessor
                 MoverError(e.FullPath);
             }
         }
-
         
         static void MoverError(string path)
         {
@@ -156,6 +167,54 @@ namespace Ppgz.BatchFileProcessor
             Db.SaveChanges();
 
 
+        }
+
+        static void MoverCrForaneo(string path, string proveedor, string fechapath)
+        {
+            string day = fechapath.Substring(0, 2);
+            string month = fechapath.Substring(2, 2);
+            string year = fechapath.Substring(4, 4);
+
+            if (!File.Exists(path)) return;
+
+            var fileName = Path.GetFileName(path);
+
+            if (fileName == null) return;
+
+            var crRottPath = new DirectoryInfo(_crPath);
+
+            var yearPath = crRottPath.GetDirectories(year).Length == 0 ?
+                crRottPath.CreateSubdirectory(year) :
+                crRottPath.GetDirectories(year)[0];
+
+            var monthPath = yearPath.GetDirectories(month).Length == 0 ?
+                yearPath.CreateSubdirectory(month) :
+                yearPath.GetDirectories(month)[0];
+
+
+            var newPath = Path.Combine
+                (monthPath.FullName, fileName);
+
+            if (File.Exists(newPath))
+            {
+                File.Delete(newPath);
+                Thread.Sleep(100);
+            }
+
+            WaitForFile(path);
+            File.Move(path, newPath);
+
+            string sfecha = day + "/" + month + "/" + year;
+            DateTime fecha = DateTime.ParseExact(sfecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            
+            var crf = new crforaneo{                
+                Fecha = fecha,
+                ArchivoCR = newPath,
+                Proveedor = proveedor
+            };
+
+            Db.Entry(crf).State = EntityState.Added;
+            Db.SaveChanges();
         }
 
         // TODO

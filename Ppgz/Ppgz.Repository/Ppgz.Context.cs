@@ -50,6 +50,8 @@ public partial class Entities : DbContext
 
     public virtual DbSet<cr> crs { get; set; }
 
+    public virtual DbSet<crforaneo> crsforaneos { get; set; }
+
     public virtual DbSet<cuentaproveedore> cuentaproveedores { get; set; }
 
     public virtual DbSet<cuenta> cuentas { get; set; }

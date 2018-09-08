@@ -137,6 +137,15 @@
           <Property Name="Fecha" Type="datetime" Precision="0" />
           <Property Name="CitaId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="crsforaneos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Proveedor" Type="varchar" MaxLength="20" />
+          <Property Name="ArchivoCR" Type="varchar" MaxLength="1000" />
+          <Property Name="Fecha" Type="datetime" Precision="0" />
+        </EntityType>
         <EntityType Name="cuentaproveedores">
           <Key>
             <PropertyRef Name="NumeroProveedor" />
@@ -780,6 +789,7 @@
           <EntitySet Name="citas" EntityType="Self.citas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="configuraciones" EntityType="Self.configuraciones" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="crs" EntityType="Self.crs" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="crsforaneos" EntityType="Self.crsforaneos" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedores" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="cuentas" EntityType="Self.cuentas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensajes" Schema="impuls_portal" store:Type="Tables" />
@@ -1069,6 +1079,15 @@
           <Property Name="Fecha" Type="DateTime" />
           <Property Name="CitaId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="cita" Relationship="Self.fk_crs_cita" FromRole="crs" ToRole="citas" />
+        </EntityType>
+        <EntityType Name="crforaneo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Proveedor" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ArchivoCR" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" />
         </EntityType>
         <EntityType Name="cuentaproveedore">
           <Key>
@@ -1669,6 +1688,7 @@
           <EntitySet Name="citas" EntityType="Self.cita" />
           <EntitySet Name="configuraciones" EntityType="Self.configuracione" />
           <EntitySet Name="crs" EntityType="Self.cr" />
+          <EntitySet Name="crsforaneos" EntityType="Self.crforaneo" />
           <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedore" />
           <EntitySet Name="cuentas" EntityType="Self.cuenta" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensaje" />
@@ -1928,6 +1948,16 @@
                 <ScalarProperty Name="ArchivoCR" ColumnName="ArchivoCR" />
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />
                 <ScalarProperty Name="CitaId" ColumnName="CitaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="crsforaneos">
+            <EntityTypeMapping TypeName="impuls_portalModel.crforaneo">
+              <MappingFragment StoreEntitySet="crsforaneos">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Proveedor" ColumnName="Proveedor" />
+                <ScalarProperty Name="ArchivoCR" ColumnName="ArchivoCR" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -14,6 +14,7 @@
         <EntityTypeShape EntityType="impuls_portalModel.cita" Width="1.5" PointX="9.75" PointY="24.375" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.configuracione" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.cr" Width="1.5" PointX="12" PointY="32.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.crforaneo" Width="1.5" PointX="12" PointY="32.25" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.cuentaproveedore" Width="1.5" PointX="3" PointY="15.25" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.cuenta" Width="1.5" PointX="0.75" PointY="23.625" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.cuentasmensaje" Width="1.5" PointX="12" PointY="28.25" IsExpanded="true" />
