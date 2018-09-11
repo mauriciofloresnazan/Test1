@@ -66,6 +66,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             CrearRieles(date);
 
             var db = new Entities();
+
             var horarioRieles = db.horariorieles.Where(h => h.Fecha == date).ToList();
             var capacidadRiel = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
 

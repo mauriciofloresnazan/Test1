@@ -7,7 +7,7 @@
 
     var horarios = horarioRieles.Select(hr => new
     {
-        hr.horario 
+        hr.horario
     }).Distinct().ToList().OrderBy(h => h.horario.Id);
 
     var andenes = horarioRieles.Select(hr => new
@@ -18,6 +18,11 @@
     var citas = horarioRieles.Where(hr => hr.CitaId != null).Select(hr=> hr.cita).Distinct().ToList();
 
     var totalCantidad = citas.Sum(c => c.CantidadTotal);
+
+    var horariobase = horarios.FirstOrDefault().horario;
+    var numrieles = horarioRieles.Where(hr => hr.HorarioId == horariobase.Id).ToList();
+    var capacidadmax = ViewBag.CapacidadRiel * horarios.Count() * numrieles.Count();
+    var cantidadBloqueada = 0;
 }
 <style>
     .body-content {
@@ -42,17 +47,20 @@
             @Html.ValidationSummary(true)
 
             <div class="">
-                <label class="col-sm-2 control-label"> Fecha</label>
-                <div class="col-sm-3">
+                <label class="col-lg-1 col-sm-1 control-label"> Fecha</label>
+                <div class="col-lg-2 col-sm-2">
                     <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
                 </div>
-                <label class="col-sm-2 control-label"> Cantidad a Descargar</label>
-                <div class="col-sm-3">
-                    <h3 style="margin-top: 4px;">@totalCantidad</h3>
+                <label class="col-lg-2 col-sm-2 control-label"> Cantidad a Descargar</label>
+                <div class="col-lg-2 col-sm-1">
+                    <h3 style="margin-top: 4px;" id="hDescargar"></h3>
                 </div>
-                <div class="col-sm-2">
+                <label class="col-lg-2 col-sm-3 control-label">Porcentaje de ocupación:</label>
+                <div class="col-lg-2 col-sm-2">
+                    <h3 style="margin-top: 4px;" id="hPorcentaje"></h3>
+                </div>
+                <div class="col-lg-1 col-sm-1">
                     <a class="btn btn-default pull-right" href="@Url.Action("Index", "AdministrarCitas")"> <i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
-
                 </div>
             </div>
 
@@ -136,26 +144,47 @@
                                     var tiendas = riel.cita.asns.Select(asn => asn.Tienda).Distinct().ToArray();
                                     tiendasAlmacen = "Tiendas: " + String.Join("-", tiendas);
                                 }
-                                
+
                                 btnText = string.Format(
                                     @"<div style='font-weight: 1.5em'>Cita #{0} {1}</div>
                                       <hr style='margin:0; margin-top: 2px;'>
                                     <div style='word-wrap: break-word;white-space: normal;' class=''>{2}</div>
                                     <div style='word-wrap: break-word;white-space: normal;background: #407b40;color:#fff; padding: 5px;'>{3}
                                     </div>
-                                    <div>Total: {4} Pares</div>", 
+                                    <div>Total: {4} Pares</div>",
                                     riel.cita.Id, crossDockLabel,
                                     string.Format("{0} {1} {2} {3}",riel.cita.proveedore.Nombre1, riel.cita.proveedore.Nombre2,
                                     riel.cita.proveedore.Nombre3, riel.cita.proveedore.Nombre4),
                                     tiendasAlmacen, riel.cita.CantidadTotal);
-                                
+
                                 btnClass = "btn-success";
                             }
                             else
                             {
                                 btnClass = "btn-danger";
 
-                                btnText = riel.ComentarioBloqueo != null ? string.Format("<p style='word-wrap: break-word;white-space: normal;'>{0}</p><hr style='margin:0'><strong>BLOQUEADO</strong>", riel.ComentarioBloqueo) : string.Format("<strong>BLOQUEADO</strong>");
+                                if (riel.ComentarioBloqueo != null)
+                                {
+                                    int bloqueo = 0;
+                                    string[] split = riel.ComentarioBloqueo.Split(new Char[] { '#' });
+                                    if (split.Length > 2)
+                                    {
+                                        split[1] = split[1].Replace(",", "");
+                                        split[1] = split[1].Replace(" ", "");
+                                        if (String.IsNullOrEmpty(split[1]) || String.IsNullOrWhiteSpace(split[1]))
+                                        {
+                                            split[1] = "0";
+                                        }
+                                        int.TryParse(split[1], out bloqueo);
+                                    }
+
+                                    cantidadBloqueada += bloqueo;
+                                    btnText = string.Format("<p style='word-wrap: break-word;white-space: normal;'>{0}</p><hr style='margin:0'><strong>BLOQUEADO</strong>", riel.ComentarioBloqueo);
+                                }
+                                else
+                                {
+                                    btnText = string.Format("<strong>BLOQUEADO</strong>");
+                                }
                             }
                         }
 
@@ -212,8 +241,12 @@
         var url = "@Url.Action("Enroque", "AdministrarCitas")";
         var rielesSeleccionados = [];
 
-
-        $(document).ready(function() {
+        $(document).ready(function () {
+            var descargar = @totalCantidad + @cantidadBloqueada;
+            var per = ( descargar * 100) / @capacidadmax;
+            var text = per.toFixed(2) + " %";
+            $('#hPorcentaje').text(text);
+            $('#hDescargar').text(descargar);
 
             $('#fecha').datetimepicker({
                 locale: 'es',
@@ -224,7 +257,7 @@
             $("#fecha").on("dp.change", function () {
                 $("#form-fecha").submit();
             });
-            
+
             $(".btn-riel").each(function () {
                 var btn = $(this);
                 var td = $(btn.parent());
@@ -283,7 +316,7 @@
 
                        // $("#modal-enroque .aplicar-enroque-button ").attr("href", url + "?horarioRielId1=" + rielesSeleccionados[0] + "&horarioRielId2=" + rielesSeleccionados[1]);
                         $("#modal-enroque").modal('show');
-                        
+
                     }
                 }
             });
@@ -292,7 +325,7 @@
                 LimpiarSelecciones();
             });
 
-            
+
         });
 
         function LimpiarSelecciones() {
