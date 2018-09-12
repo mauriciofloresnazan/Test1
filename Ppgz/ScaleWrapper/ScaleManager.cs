@@ -92,11 +92,8 @@ namespace ScaleWrapper
 
         internal string InsertarHeader(SqlCommand command, cita cita, string almacenScale, string numeroOrden,
             string tiendaOrigen, string tiendaDestino, string numeroOrdenSurtido, string inOut, int i, int citaId)
-        {
-
-            var proveedor = cita.proveedore;
-
-            
+        {            
+            var proveedor = cita.proveedore;            
 
             var id = string.Format("{0}{1}{2}", DateTime.Now.ToString("yyyyMMddHHmmss"), cita.Id, i);
             var sourcename=string.Format("{0} {1} {2} {3}",
@@ -104,12 +101,11 @@ namespace ScaleWrapper
                                                 proveedor.Nombre2,
                                                 proveedor.Nombre3,
                                                 proveedor.Nombre4);
-
-
             /*/
              * 
              * Agregar horario de cita mediante escaneo de los horarios de los rieles
              * */
+            DateTime dt_finalcita = cita.FechaCita;
             var horarios = cita.horariorieles;
             foreach (horarioriele hor in horarios)
             {
@@ -125,15 +121,12 @@ namespace ScaleWrapper
                     {
                         horacitascale = horacitascale + 12;
                     }
-
                 }
 
                 if (cita.FechaCita.Hour == 0)
                 {
-
                     cita.FechaCita = cita.FechaCita.AddHours(horacitascale);
                     cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(substrings2[0].ToString()));
-
                 }
                 else if (cita.FechaCita.Hour > horacitascale)
                 {
@@ -142,15 +135,24 @@ namespace ScaleWrapper
                     cita.FechaCita = fecha;
                     cita.FechaCita = cita.FechaCita.AddHours(horacitascale);
                     cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(substrings2[0].ToString()));
-
                 }
 
-
-
+                //BEGIN horario final de cita
+                if (dt_finalcita.Hour == 0)
+                {
+                    dt_finalcita = dt_finalcita.AddHours(horacitascale);
+                    dt_finalcita = dt_finalcita.AddMinutes(Int32.Parse(substrings2[0].ToString()) + 30);
+                }
+                else if (dt_finalcita.Hour <= horacitascale)
+                {
+                    dt_finalcita = dt_finalcita.AddHours(-dt_finalcita.Hour).AddHours(horacitascale);
+                    dt_finalcita = dt_finalcita.AddMinutes(-dt_finalcita.Minute).AddMinutes(Int32.Parse(substrings2[0].ToString())+30);
+                }
+                //END horario final de cita 
             }
             //Fin
+            string s_finalcita = dt_finalcita.ToString("HH:mm");
 
-           
             var user_def4 ="";
             var user_def6 ="";
 
@@ -212,7 +214,8 @@ namespace ScaleWrapper
                              user_def8,
                              user_stamp,
                              date_time_stamp, 
-                             arrived_date_time) 
+                             arrived_date_time,
+                             SHIP_FROM_ADDRESS3) 
                 VALUES      ('" + id + @"', 
                              'Save', 
                              'Ready', 
@@ -253,7 +256,8 @@ namespace ScaleWrapper
                              '" + cita.Id + @"', 
                              '" + cita.CantidadTotal + @"', 
                              GETDATE(), 
-                             '" + cita.FechaCita.ToString("yyyy-MM-ddTHH:mm:ss") + @"');");
+                             '" + cita.FechaCita.ToString("yyyy-MM-ddTHH:mm:ss") + @"',
+                             '" + s_finalcita + @"');");
 
             command.CommandText = sql;
 
