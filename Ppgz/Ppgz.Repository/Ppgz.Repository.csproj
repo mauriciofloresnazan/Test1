@@ -83,6 +83,9 @@
     <Compile Include="cr.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="crforaneo.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="cuenta.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
