@@ -80,6 +80,9 @@
     <Compile Include="configuracione.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="configuracionfactoraje.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="cr.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -97,10 +100,19 @@
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="Db.cs" />
+    <Compile Include="descuentofactoraje.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="estatuscita.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="estatusfactoraje.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
     <Compile Include="factura.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="facturasfactoraje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="horario.cs">
@@ -110,6 +122,9 @@
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="impuls_logs.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="logfactoraje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="mensaje.cs">
@@ -143,13 +158,24 @@
       <DependentUpon>Ppgz.edmx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="proveedore.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="proveedorfactoraje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="riele.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="ScaleAlmacen.cs">
+      <DependentUpon>Ppgz.tt</DependentUpon>
+    </Compile>
+    <Compile Include="solicitudesfactoraje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
   </ItemGroup>
@@ -169,6 +195,7 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Ppgz.edmx</DependentUpon>
       <LastGenOutput>Ppgz.Context.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Ppgz.edmx.diagram">
       <DependentUpon>Ppgz.edmx</DependentUpon>
@@ -177,6 +204,10 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Ppgz.edmx</DependentUpon>
       <LastGenOutput>Ppgz.cs</LastGenOutput>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

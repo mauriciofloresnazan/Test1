@@ -117,6 +117,14 @@
           <Property Name="EstatusCitaId" Type="int" />
           <Property Name="Penalizado" Type="bool" Nullable="false" />
         </EntityType>
+        <EntityType Name="configuracionfactoraje">
+          <Key>
+            <PropertyRef Name="idConfigoracionFactoraje" />
+          </Key>
+          <Property Name="idConfigoracionFactoraje" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="key" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="value" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
         <EntityType Name="configuraciones">
           <Key>
             <PropertyRef Name="Id" />
@@ -197,6 +205,20 @@
           <Property Name="UsuarioId" Type="varchar" MaxLength="128" Nullable="false" />
           <Property Name="CuentaId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="descuentosfactoraje">
+          <Key>
+            <PropertyRef Name="idDescuentosFactoraje" />
+            <PropertyRef Name="idSolicitudesFactoraje" />
+            <PropertyRef Name="EstatusFactoraje" />
+            <PropertyRef Name="NumeroDocumento" />
+          </Key>
+          <Property Name="idDescuentosFactoraje" Type="int" Nullable="false" />
+          <Property Name="idSolicitudesFactoraje" Type="int" Nullable="false" />
+          <Property Name="EstatusFactoraje" Type="int" Nullable="false" />
+          <Property Name="NumeroDocumento" Type="int" Nullable="false" />
+          <Property Name="Monto" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="150" Nullable="false" />
+        </EntityType>
         <EntityType Name="estatuscitas">
           <Key>
             <PropertyRef Name="Id" />
@@ -205,6 +227,15 @@
           <Property Name="Codigo" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Nombre" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Monto" Type="varchar" MaxLength="45" Nullable="false" />
+        </EntityType>
+        <EntityType Name="estatusfactoraje">
+          <Key>
+            <PropertyRef Name="idEstatusFactoraje" />
+          </Key>
+          <Property Name="idEstatusFactoraje" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Activo" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="facturas">
           <Key>
@@ -224,6 +255,22 @@
           <Property Name="NumeroGenerado" Type="varchar" MaxLength="1000" />
           <Property Name="Procesado" Type="bool" Nullable="false" />
           <Property Name="numeroProveedor" Type="varchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="facturasfactoraje">
+          <Key>
+            <PropertyRef Name="idFacturasFactoraje" />
+          </Key>
+          <Property Name="idFacturasFactoraje" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NumeroDocumento" Type="int" Nullable="false" />
+          <Property Name="Monto" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="uuid" Type="varchar" MaxLength="50" Nullable="true" />
+          <Property Name="IdProveedor" Type="int" Nullable="false" />
+          <Property Name="Porcentaje"  Type="int" Nullable="false" />
+          <Property Name="Referencia"  Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="FechaFactura"  Type="date" Nullable="false" />
+          <Property Name="FechaSolicitud"  Type="datetime" Nullable="false" />
+          <Property Name="idSolicitudesFactoraje" Type="int" Nullable="false" />
+          <Property Name="FacturaEstatus" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="horariorieles">
           <Key>
@@ -252,6 +299,18 @@
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="log" Type="varchar" MaxLength="255" />
           <Property Name="fecha" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
+        <EntityType Name="logfactoraje">
+          <Key>
+            <PropertyRef Name="idLogFactoraje" />
+          </Key>
+          <Property Name="idLogFactoraje" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Fecha" Type="datetime" Nullable="false" />
+          <Property Name="Operacion" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="IdObjeto" Type="int" Nullable="false" />
+          <Property Name="TipoObjeto" Type="int" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="200" Nullable="true" />
+          <Property Name="Usuario" Type="varchar" MaxLength="45" Nullable="true" />
         </EntityType>
         <EntityType Name="mensajes">
           <Key>
@@ -397,6 +456,14 @@
           <Property Name="Borrado" Type="bool" Nullable="false" />
           <Property Name="EstadoNombre" Type="varchar" MaxLength="200" />
         </EntityType>
+        <EntityType Name="proveedoresfactoraje">
+          <Key>
+            <PropertyRef Name="idProveedore" />
+          </Key>
+          <Property Name="idProveedore" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Porcentaje" Type="int" Nullable="false" />
+          <Property Name="DiaDePago" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="rieles">
           <Key>
             <PropertyRef Name="Id" />
@@ -413,6 +480,25 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Sap" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="Scale" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="solicitudesfactoraje">
+          <Key>
+            <PropertyRef Name="idSolicitudesFactoraje" />
+            <PropertyRef Name="EstatusFactoraje" />
+          </Key>
+          <Property Name="idSolicitudesFactoraje" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdProveedor" Type="int" Nullable="false" />
+          <Property Name="FechaSolicitud" Type="datetime" Nullable="false" />
+          <Property Name="EstatusFactoraje" Type="int" Nullable="false" />
+          <Property Name="Comentario" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="xml" Type="varchar" MaxLength="400" Nullable="false" />
+          <Property Name="pdf" Type="varchar" MaxLength="400" Nullable="false" />
+          <Property Name="MontoOriginal" Type="int" Nullable="false" />
+          <Property Name="MontoAFacturar" Type="int" Nullable="false" />
+          <Property Name="Descuento" Type="int" Nullable="false" />
+          <Property Name="NumeroGenerado" Type="int" Nullable="true" />
+          <Property Name="EstatusOperacionSAP" Type="varchar" MaxLength="500" Nullable="true" />
+          <Property Name="DiaDePago" Type="int" Nullable="true" />
         </EntityType>
         <Association Name="ApplicationUser_Claims">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
@@ -778,6 +864,42 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <!--<Association Name="fk_SolicitudesFactoraje_EstatusFactoraje_idx">
+          <End Role="estatusfactoraje" Type="Self.estatusfactoraje" Multiplicity="1" />
+          <End Role="solicitudesfactoraje" Type="Self.solicitudesfactoraje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estatusfactoraje">
+              <PropertyRef Name="idEstatusFactoraje" />
+            </Principal>
+            <Dependent Role="solicitudesfactoraje">
+              <PropertyRef Name="EstatusFactoraje" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_DescuentosFactoraje_SolicitudesFactoraje1_idx">
+          <End Role="solicitudesfactoraje" Type="Self.solicitudesfactoraje" Multiplicity="1" />
+          <End Role="descuentosfactoraje" Type="Self.descuentosfactoraje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="solicitudesfactoraje">
+              <PropertyRef Name="idSolicitudesFactoraje" />
+            </Principal>
+            <Dependent Role="descuentosfactoraje">
+              <PropertyRef Name="idSolicitudesFactoraje" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_FacturasFactoraje_SolicitudesFactoraje1_idx">
+          <End Role="solicitudesfactoraje" Type="Self.solicitudesfactoraje" Multiplicity="1" />
+          <End Role="facturasfactoraje" Type="Self.facturasfactoraje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="solicitudesfactoraje">
+              <PropertyRef Name="idSolicitudesFactoraje" />
+            </Principal>
+            <Dependent Role="facturasfactoraje">
+              <PropertyRef Name="idSolicitudesFactoraje" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>-->
         <EntityContainer Name="impuls_portalModelStoreContainer">
           <EntitySet Name="andenes" EntityType="Self.andenes" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="asn" EntityType="Self.asn" Schema="impuls_portal" store:Type="Tables" />
@@ -788,17 +910,22 @@
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="citas" EntityType="Self.citas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="configuraciones" EntityType="Self.configuraciones" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="configuracionfactoraje" EntityType="Self.configuracionfactoraje" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="crs" EntityType="Self.crs" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="crsforaneos" EntityType="Self.crsforaneos" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedores" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="cuentas" EntityType="Self.cuentas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensajes" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="cuentasusuarios" EntityType="Self.cuentasusuarios" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="descuentosfactoraje" EntityType="Self.descuentosfactoraje" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="estatuscitas" EntityType="Self.estatuscitas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="estatusfactoraje" EntityType="Self.estatusfactoraje" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="facturas" EntityType="Self.facturas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="facturasfactoraje" EntityType="Self.facturasfactoraje" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="horariorieles" EntityType="Self.horariorieles" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="horarios" EntityType="Self.horarios" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="impuls_logs" EntityType="Self.impuls_logs" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="logfactoraje" EntityType="Self.logfactoraje" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="mensajes" EntityType="Self.mensajes" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="niveleseervicio" EntityType="Self.niveleseervicio" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="ordencompra" EntityType="Self.ordencompra" Schema="impuls_portal" store:Type="Tables" />
@@ -806,8 +933,10 @@
           <EntitySet Name="perfiles" EntityType="Self.perfiles" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="perfilesroles" EntityType="Self.perfilesroles" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="proveedores" EntityType="Self.proveedores" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="proveedoresfactoraje" EntityType="Self.proveedoresfactoraje" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="rieles" EntityType="Self.rieles" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="ScaleAlmacen" EntityType="Self.ScaleAlmacen" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="solicitudesfactoraje" EntityType="Self.solicitudesfactoraje" Schema="impuls_portal" store:Type="Tables" />
           <AssociationSet Name="ApplicationUser_Claims" Association="Self.ApplicationUser_Claims">
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="AspNetUserClaims" EntitySet="AspNetUserClaims" />
@@ -928,7 +1057,7 @@
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
             <End Role="cuentasusuarios" EntitySet="cuentasusuarios" />
           </AssociationSet>
-        </EntityContainer>
+        </EntityContainer>        
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
@@ -1059,6 +1188,14 @@
           <NavigationProperty Name="crs" Relationship="Self.fk_crs_cita" FromRole="citas" ToRole="crs" />
           <NavigationProperty Name="horariorieles" Relationship="Self.fk_horariorieles_citas" FromRole="citas" ToRole="horariorieles" />
         </EntityType>
+        <EntityType Name="configuracionfactoraje">
+          <Key>
+            <PropertyRef Name="idConfigoracionFactoraje" />
+          </Key>
+          <Property Name="idConfigoracionFactoraje" Type="Int32" annotation:StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="key" Type="String" MaxLength="45" Nullable="false" FixedLength="false" Unicode="false"/>
+          <Property Name="value" Type="String" MaxLength="45" Nullable="false" FixedLength="false" Unicode="false"/>
+        </EntityType>
         <EntityType Name="configuracione">
           <Key>
             <PropertyRef Name="Id" />
@@ -1142,6 +1279,20 @@
           <NavigationProperty Name="cuenta" Relationship="Self.fk_cuentasmensajes_cuenta" FromRole="cuentasmensajes" ToRole="cuentas" />
           <NavigationProperty Name="mensaje" Relationship="Self.fk_cuentasmensajes_mensaje" FromRole="cuentasmensajes" ToRole="mensajes" />
         </EntityType>
+        <EntityType Name="descuentofactoraje">
+          <Key>
+            <PropertyRef Name="idDescuentosFactoraje" />
+            <PropertyRef Name="idSolicitudesFactoraje" />
+            <PropertyRef Name="EstatusFactoraje" />
+            <PropertyRef Name="NumeroDocumento" />
+          </Key>
+          <Property Name="idDescuentosFactoraje" Type="Int32" Nullable="false" />
+          <Property Name="idSolicitudesFactoraje" Type="Int32" Nullable="false" />
+          <Property Name="EstatusFactoraje" Type="Int32" Nullable="false" />
+          <Property Name="NumeroDocumento" Type="Int32" Nullable="false" />
+          <Property Name="Monto" Type="String" MaxLength="45" Nullable="false" FixedLength="false" Unicode="false"/>
+          <Property Name="Descripcion" Type="String" MaxLength="150" Nullable="false" FixedLength="false" Unicode="false"/>
+        </EntityType>
         <EntityType Name="estatuscita">
           <Key>
             <PropertyRef Name="Id" />
@@ -1151,7 +1302,16 @@
           <Property Name="Nombre" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Monto" Type="String" Nullable="false" FixedLength="false" MaxLength="45" Unicode="false" />
           <NavigationProperty Name="citas" Relationship="Self.fk_citas_estatus" FromRole="estatuscitas" ToRole="citas" />
-          
+
+        </EntityType>
+        <EntityType Name="estatusfactoraje">
+          <Key>
+            <PropertyRef Name="idEstatusFactoraje" />
+          </Key>
+          <Property Name="idEstatusFactoraje" Type="Int32" annotation:StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="20" Nullable="false" FixedLength="false" Unicode="false"/>
+          <Property Name="Descripcion" Type="String" MaxLength="200" Nullable="false" FixedLength="false" Unicode="false"/>
+          <Property Name="Activo" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="factura">
           <Key>
@@ -1172,6 +1332,22 @@
           <Property Name="Procesado" Type="Boolean" Nullable="false" />
           <Property Name="numeroProveedor" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="proveedore" Relationship="Self.fk_facturas_proveedores" FromRole="facturas" ToRole="proveedores" />
+        </EntityType>
+        <EntityType Name="facturasfactoraje">
+          <Key>
+            <PropertyRef Name="idFacturasFactoraje" />
+          </Key>
+          <Property Name="idFacturasFactoraje" Type="Int32" annotation:StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NumeroDocumento" Type="Int32" Nullable="false" />
+          <Property Name="Monto" Type="String" FixedLength="false" Unicode="false" MaxLength="45" Nullable="false" />
+          <Property Name="uuid" Type="String" FixedLength="false" Unicode="false" MaxLength="50" Nullable="true" />
+          <Property Name="IdProveedor" Type="Int32" Nullable="false" />
+          <Property Name="Porcentaje" Type="Int32" Nullable="false" />
+          <Property Name="Referencia" Type="String" FixedLength="false" Unicode="false" MaxLength="45" Nullable="false" />
+          <Property Name="FechaFactura" Type="DateTime" Nullable="false" />
+          <Property Name="FechaSolicitud" Type="DateTime" Nullable="false" />
+          <Property Name="idSolicitudesFactoraje" Type="Int32" Nullable="false" />
+          <Property Name="FacturaEstatus" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="horarioriele">
           <Key>
@@ -1204,6 +1380,18 @@
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="log" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="fecha" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="logfactoraje">
+          <Key>
+            <PropertyRef Name="idLogFactoraje" />
+          </Key>
+          <Property Name="idLogFactoraje" Type="Int32" annotation:StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" />
+          <Property Name="Operacion" Type="String" FixedLength="false" Unicode="false" MaxLength="45" Nullable="false" />
+          <Property Name="IdObjeto" Type="Int32" Nullable="false" />
+          <Property Name="TipoObjeto" Type="Int32" Nullable="false" />
+          <Property Name="Descripcion" Type="String" FixedLength="false" Unicode="false" MaxLength="200" Nullable="true" />
+          <Property Name="Usuario" Type="String" FixedLength="false" Unicode="false" MaxLength="45" Nullable="true" />
         </EntityType>
         <EntityType Name="mensaje">
           <Key>
@@ -1355,6 +1543,14 @@
           <NavigationProperty Name="niveleseervicios" Relationship="Self.fk_nivelservicio_proveedor" FromRole="proveedores" ToRole="niveleseervicio" />
           <NavigationProperty Name="ordencompras" Relationship="Self.fk_ordencompra_proveedor" FromRole="proveedores" ToRole="ordencompra" />
         </EntityType>
+        <EntityType Name="proveedorfactoraje">
+          <Key>
+            <PropertyRef Name="idProveedore" />
+          </Key>
+          <Property Name="idProveedore" Type="Int32" annotation:StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Porcentaje" Type="Int32" Nullable="false" />
+          <Property Name="DiaDePago" Type="Int32" Nullable="false"/>
+        </EntityType>
         <EntityType Name="riele">
           <Key>
             <PropertyRef Name="Id" />
@@ -1373,6 +1569,25 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Sap" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Scale" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="solicitudesfactoraje">
+          <Key>
+            <PropertyRef Name="idSolicitudesFactoraje" />
+            <PropertyRef Name="EstatusFactoraje" />
+          </Key>
+          <Property Name="idSolicitudesFactoraje" Type="Int32" annotation:StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdProveedor" Type="Int32" Nullable="false" />
+          <Property Name="FechaSolicitud" Type="DateTime" Nullable="false" />
+          <Property Name="EstatusFactoraje" Type="Int32" Nullable="false" />
+          <Property Name="Comentario" Type="String" FixedLength="false" Unicode="false" MaxLength="200" Nullable="false" />
+          <Property Name="xml" Type="String" FixedLength="false" Unicode="false" MaxLength="400" Nullable="false" />
+          <Property Name="pdf" Type="String" FixedLength="false" Unicode="false" MaxLength="400" Nullable="false" />
+          <Property Name="MontoOriginal" Type="Int32" Nullable="false" />
+          <Property Name="MontoAFacturar" Type="Int32" Nullable="false" />
+          <Property Name="Descuento" Type="Int32" Nullable="false" />
+          <Property Name="NumeroGenerado" Type="Int32" Nullable="true" />
+          <Property Name="EstatusOperacionSAP" Type="String" FixedLength="false" Unicode="false" MaxLength="500" Nullable="true" />
+          <Property Name="DiaDePago" Type="Int32" Nullable="true" />
         </EntityType>
         <Association Name="fk_rieles_anden">
           <End Role="andenes" Type="Self.andene" Multiplicity="1" />
@@ -1678,6 +1893,26 @@
           <End Role="perfiles" Type="Self.perfile" Multiplicity="*" />
           <End Role="AspNetRoles" Type="Self.AspNetRole" Multiplicity="*" />
         </Association>
+        <!--<Association Name="fk_DescuentosFactoraje_SolicitudesFactoraje1_idx">
+          <End Role="solicitudesfactoraje" Type="Self.solicitudesfactoraje" Multiplicity="1" />
+          <End Role="descuentosfactoraje" Type="Self.descuentofactoraje" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_FacturasFactoraje_SolicitudesFactoraje1_idx">
+          <End Role="solicitudesfactoraje" Type="Self.solicitudesfactoraje" Multiplicity="1" />
+          <End Role="facturasfactoraje" Type="Self.facturasfactoraje" Multiplicity="*" />
+        </Association>
+        <Association Name="fk_SolicitudesFactoraje_EstatusFactoraje_idx">
+          <End Role="estatusfactoraje" Type="Self.estatusfactoraje" Multiplicity="1" />
+          <End Role="solicitudesfactoraje" Type="Self.solicitudesfactoraje" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="estatusfactoraje">
+              <PropertyRef Name="idEstatusFactoraje" />
+            </Principal>
+            <Dependent Role="solicitudesfactoraje">
+              <PropertyRef Name="EstatusFactoraje" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>-->
         <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="andenes" EntityType="Self.andene" />
           <EntitySet Name="asns" EntityType="Self.asn" />
@@ -1686,25 +1921,32 @@
           <EntitySet Name="AspNetUserLogins" EntityType="Self.AspNetUserLogin" />
           <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
           <EntitySet Name="citas" EntityType="Self.cita" />
+          <EntitySet Name="configuracionfactoraje" EntityType="Self.configuracionfactoraje" />
           <EntitySet Name="configuraciones" EntityType="Self.configuracione" />
           <EntitySet Name="crs" EntityType="Self.cr" />
           <EntitySet Name="crsforaneos" EntityType="Self.crforaneo" />
           <EntitySet Name="cuentaproveedores" EntityType="Self.cuentaproveedore" />
           <EntitySet Name="cuentas" EntityType="Self.cuenta" />
           <EntitySet Name="cuentasmensajes" EntityType="Self.cuentasmensaje" />
+          <EntitySet Name="descuentosfactoraje" EntityType="Self.descuentofactoraje" />
           <EntitySet Name="estatuscitas" EntityType="Self.estatuscita" />
+          <EntitySet Name="estatusfactoraje" EntityType="Self.estatusfactoraje" />
           <EntitySet Name="facturas" EntityType="Self.factura" />
+          <EntitySet Name="facturasfactoraje" EntityType="Self.facturasfactoraje" />
           <EntitySet Name="horariorieles" EntityType="Self.horarioriele" />
           <EntitySet Name="horarios" EntityType="Self.horario" />
           <EntitySet Name="impuls_logs" EntityType="Self.impuls_logs" />
+          <EntitySet Name="logfactoraje" EntityType="Self.logfactoraje" />
           <EntitySet Name="mensajes" EntityType="Self.mensaje" />
           <EntitySet Name="niveleseervicios" EntityType="Self.niveleseervicio" />
           <EntitySet Name="ordencompras" EntityType="Self.ordencompra" />
           <EntitySet Name="ordencompradetalles" EntityType="Self.ordencompradetalle" />
           <EntitySet Name="perfiles" EntityType="Self.perfile" />
           <EntitySet Name="proveedores" EntityType="Self.proveedore" />
+          <EntitySet Name="proveedoresfactoraje" EntityType="Self.proveedorfactoraje" />
           <EntitySet Name="rieles" EntityType="Self.riele" />
           <EntitySet Name="ScaleAlmacens" EntityType="Self.ScaleAlmacen" />
+          <EntitySet Name="solicitudesfactoraje" EntityType="Self.solicitudesfactoraje" />
           <AssociationSet Name="fk_rieles_anden" Association="Self.fk_rieles_anden">
             <End Role="andenes" EntitySet="andenes" />
             <End Role="rieles" EntitySet="rieles" />
@@ -1813,6 +2055,18 @@
             <End Role="perfiles" EntitySet="perfiles" />
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
           </AssociationSet>
+          <!--<AssociationSet Name="fk_DescuentosFactoraje_SolicitudesFactoraje1_idx" Association="Self.fk_DescuentosFactoraje_SolicitudesFactoraje1_idx">
+            <End Role="solicitudesfactoraje" EntitySet="solicitudesfactoraje"/>
+            <End Role="descuentosfactoraje" EntitySet="descuentosfactoraje"/>
+          </AssociationSet>
+          <AssociationSet Name="fk_FacturasFactoraje_SolicitudesFactoraje1_idx" Association="Self.fk_FacturasFactoraje_SolicitudesFactoraje1_idx">
+            <End Role="solicitudesfactoraje" EntitySet="solicitudesfactoraje"/>
+            <End Role="facturasfactoraje" EntitySet="facturasfactoraje"/>
+          </AssociationSet>
+          <AssociationSet Name="fk_SolicitudesFactoraje_EstatusFactoraje_idx" Association="Self.fk_SolicitudesFactoraje_EstatusFactoraje_idx">
+            <End Role="estatusfactoraje" EntitySet="estatusfactoraje"/>
+            <End Role="solicitudesfactoraje" EntitySet="solicitudesfactoraje" />
+          </AssociationSet>-->
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
@@ -1929,6 +2183,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="configuracionfactoraje">
+            <EntityTypeMapping TypeName="impuls_portalModel.configuracionfactoraje">
+              <MappingFragment StoreEntitySet="configuracionfactoraje">
+                <ScalarProperty Name="idConfigoracionFactoraje" ColumnName="idConfigoracionFactoraje" />
+                <ScalarProperty Name="key" ColumnName="key" />
+                <ScalarProperty Name="value" ColumnName="value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="configuraciones">
             <EntityTypeMapping TypeName="impuls_portalModel.configuracione">
               <MappingFragment StoreEntitySet="configuraciones">
@@ -2006,6 +2269,18 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="descuentosfactoraje">
+            <EntityTypeMapping TypeName="impuls_portalModel.descuentofactoraje">
+              <MappingFragment StoreEntitySet="descuentosfactoraje">
+                <ScalarProperty Name="idDescuentosFactoraje" ColumnName="idDescuentosFactoraje" />
+                <ScalarProperty Name="idSolicitudesFactoraje" ColumnName="idSolicitudesFactoraje" />
+                <ScalarProperty Name="EstatusFactoraje" ColumnName="EstatusFactoraje" />
+                <ScalarProperty Name="NumeroDocumento" ColumnName="NumeroDocumento" />
+                <ScalarProperty Name="Monto" ColumnName="Monto" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="estatuscitas">
             <EntityTypeMapping TypeName="impuls_portalModel.estatuscita">
               <MappingFragment StoreEntitySet="estatuscitas">
@@ -2013,6 +2288,16 @@
                 <ScalarProperty Name="Codigo" ColumnName="Codigo" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Monto" ColumnName="Monto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="estatusfactoraje">
+            <EntityTypeMapping TypeName="impuls_portalModel.estatusfactoraje">
+              <MappingFragment StoreEntitySet="estatusfactoraje">
+                <ScalarProperty Name="idEstatusFactoraje" ColumnName="idEstatusFactoraje" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2033,6 +2318,23 @@
                 <ScalarProperty Name="NumeroGenerado" ColumnName="NumeroGenerado" />
                 <ScalarProperty Name="Procesado" ColumnName="Procesado" />
                 <ScalarProperty Name="numeroProveedor" ColumnName="numeroProveedor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="facturasfactoraje">
+            <EntityTypeMapping TypeName="impuls_portalModel.facturasfactoraje">
+              <MappingFragment StoreEntitySet="facturasfactoraje">
+                <ScalarProperty Name="idFacturasFactoraje" ColumnName="idFacturasFactoraje" />
+                <ScalarProperty Name="NumeroDocumento" ColumnName="NumeroDocumento" />
+                <ScalarProperty Name="Monto" ColumnName="Monto" />
+                <ScalarProperty Name="uuid" ColumnName="uuid" />
+                <ScalarProperty Name="IdProveedor" ColumnName="IdProveedor" />
+                <ScalarProperty Name="Porcentaje" ColumnName="Porcentaje" />
+                <ScalarProperty Name="Referencia" ColumnName="Referencia" />
+                <ScalarProperty Name="FechaFactura" ColumnName="FechaFactura" />
+                <ScalarProperty Name="FechaSolicitud" ColumnName="FechaSolicitud" />
+                <ScalarProperty Name="idSolicitudesFactoraje" ColumnName="idSolicitudesFactoraje" />
+                <ScalarProperty Name="FacturaEstatus" ColumnName="FacturaEstatus" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2064,6 +2366,19 @@
                 <ScalarProperty Name="id" ColumnName="id" />
                 <ScalarProperty Name="log" ColumnName="log" />
                 <ScalarProperty Name="fecha" ColumnName="fecha" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="logfactoraje">
+            <EntityTypeMapping TypeName="impuls_portalModel.logfactoraje">
+              <MappingFragment StoreEntitySet="logfactoraje">
+                <ScalarProperty Name="idLogFactoraje" ColumnName="idLogFactoraje" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Operacion" ColumnName="Operacion" />
+                <ScalarProperty Name="IdObjeto" ColumnName="IdObjeto"/>
+                <ScalarProperty Name="TipoObjeto" ColumnName="TipoObjeto"/>
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion"/>
+                <ScalarProperty Name="Usuario" ColumnName="Usuario"/>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2209,6 +2524,15 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="proveedoresfactoraje">
+            <EntityTypeMapping TypeName="impuls_portalModel.proveedorfactoraje">
+              <MappingFragment StoreEntitySet="proveedoresfactoraje">
+                <ScalarProperty Name="idProveedore" ColumnName="idProveedore" />
+                <ScalarProperty Name="Porcentaje" ColumnName="Porcentaje" />
+                <ScalarProperty Name="DiaDePago" ColumnName="DiaDePago"/>
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="rieles">
             <EntityTypeMapping TypeName="impuls_portalModel.riele">
               <MappingFragment StoreEntitySet="rieles">
@@ -2225,6 +2549,25 @@
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Sap" ColumnName="Sap" />
                 <ScalarProperty Name="Scale" ColumnName="Scale" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="solicitudesfactoraje">
+            <EntityTypeMapping TypeName="impuls_portalModel.solicitudesfactoraje">
+              <MappingFragment StoreEntitySet="solicitudesfactoraje">
+                <ScalarProperty Name="idSolicitudesFactoraje" ColumnName="idSolicitudesFactoraje"/>
+                <ScalarProperty Name="IdProveedor" ColumnName="IdProveedor"/>
+                <ScalarProperty Name="FechaSolicitud" ColumnName="FechaSolicitud"/>
+                <ScalarProperty Name="EstatusFactoraje" ColumnName="EstatusFactoraje"/>
+                <ScalarProperty Name="Comentario" ColumnName="Comentario"/>
+                <ScalarProperty Name="xml" ColumnName="xml"/>
+                <ScalarProperty Name="pdf" ColumnName="pdf"/>
+                <ScalarProperty Name="MontoOriginal" ColumnName="MontoOriginal"/>
+                <ScalarProperty Name="MontoAFacturar" ColumnName="MontoAFacturar"/>
+                <ScalarProperty Name="Descuento" ColumnName="Descuento"/>
+                <ScalarProperty Name="NumeroGenerado" ColumnName="NumeroGenerado"/>
+                <ScalarProperty Name="EstatusOperacionSAP" ColumnName="EstatusOperacionSAP"/>
+                <ScalarProperty Name="DiaDePago" ColumnName="DiaDePago"/>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

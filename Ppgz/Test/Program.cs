@@ -412,12 +412,12 @@ namespace Test
             var cuentaManager = new CuentaManager();
             try
             {
-                cuentaManager.Crear(
-                    CuentaManager.Tipo.Mercaderia,
-                    "Nombre del Proveedor",
-                    "test_x1", "Nombre del Responsable", "Apellido del Responsable",
-                    "Responsable Cargo", "juan.godoy@test.com", "04145555555",
-                    "123456", true);
+                //cuentaManager.Crear(
+                //    CuentaManager.Tipo.Mercaderia,
+                //    "Nombre del Proveedor",
+                //    "test_x1", "Nombre del Responsable", "Apellido del Responsable",
+                //    "Responsable Cargo", "juan.godoy@test.com", "04145555555",
+                //    "123456", true);
 
             }
             catch (Exception ex)
