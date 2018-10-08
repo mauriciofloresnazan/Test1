@@ -48,6 +48,8 @@ public partial class cuenta
 
     public bool SinASN { get; set; }
 
+    public bool Factoraje { get; set; }
+
     public bool Activo { get; set; }
 
     public bool Borrado { get; set; }

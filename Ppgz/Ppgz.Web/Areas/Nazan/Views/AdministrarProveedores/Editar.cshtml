@@ -64,6 +64,22 @@
                     <input type="checkbox" @checkSin name="SinASN-check" id="SinASN-check" data-toggle="toggle" data-size="small" data-on="SI" data-off="NO" />
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-4">
+                    <strong>Factoraje</strong>
+                </div>
+                <div class="col-sm-4">
+                    @{
+                        var checkFac = "";
+                        if (@cuenta.Factoraje)
+                        {
+                            checkFac = "checked";
+                        }
+
+                    }
+                    <input type="checkbox" @checkFac name="Factoraje-check" id="Factoraje-check" data-toggle="toggle" data-size="small" data-on="SI" data-off="NO" />
+                </div>
+            </div>
 
             <hr/>
             <div class="row">
@@ -344,6 +360,7 @@
 
         var urlEstablecerCuentaEspecial = "@Url.Action("EstablecerCuentaEspecial", "AdministrarProveedores")";
         var urlEstablecerCuentaSinASN = "@Url.Action("EstablecerCuentaSinASN", "AdministrarProveedores")";
+        var urlEstablecerCuentaFactoraje = "@Url.Action("EstablecerCuentaFactoraje", "AdministrarProveedores")";
 
         $("#especial-check").change(function () {
 
@@ -418,6 +435,60 @@
             $.ajax({
                 type: "POST",
                 url: urlEstablecerCuentaSinASN,
+                data: data,
+                cache: false
+            }).done(function (result) {
+
+                if (result.error) {
+                    alert(result.error);
+                    return;
+                }
+
+                var alerta = $("#alerta");
+                if (alerta) {
+                    alerta.remove();
+                }
+
+
+                var contenido = $('body .body-content');
+                contenido.prepend(
+                    '<div id="alerta" class="alert alert-success alert-dismissible" role="alert"> \
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>\
+                        Actualización realizada correctamente. \
+                    </div>' );
+
+
+
+            }).fail(function (result) {
+                alert(result.error);
+
+            }).always(function () {
+                $.unblockUI();
+            });
+
+        });
+
+
+        $("#Factoraje-check").change(function () {
+
+            var checked;
+            var checkbox = document.getElementById('Factoraje-check');
+            if (checkbox.checked) {
+                checked = true;
+            } else {
+                checked = false;
+            }
+
+            var data = {
+                cuentaid: cuentaId,
+                Factoraje: checked
+            };
+
+            $.blockUI({ message: '<h2>Actualizando la Cuenta</h2><h2>Por favor espere...</h2>' });
+
+            $.ajax({
+                type: "POST",
+                url: urlEstablecerCuentaFactoraje,
                 data: data,
                 cache: false
             }).done(function (result) {

@@ -11,6 +11,9 @@ namespace Ppgz.Web.Areas.Nazan.Models
         [Display(Name = "Sin ASN")]
         public bool SinASN { get; set; }
 
+        [Display(Name = "Factoraje")]
+        public bool Factoraje { get; set; }
+
         [Required(ErrorMessage = "El campo es obligatorio.")]
         [Display(Name = "Tipo de Proveedor")]
         public string TipoCuenta { get; set; }

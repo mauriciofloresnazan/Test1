@@ -35,12 +35,16 @@
             <div class="form-group">
                
                 <div class="col-sm-offset-3 col-sm-3">
-                    @Html.CheckBoxFor(m => m.Especial, new { @class = "" }) ¿Es Pronto Pago?
+                    @Html.CheckBoxFor(m => m.Especial, new { @class = "" }) ¿Es Pronto Pago? Logistica
                     @Html.ValidationMessageFor(m => m.Especial)
                 </div>
                 <div class="col-sm-3">
                     @Html.CheckBoxFor(m => m.SinASN, new { @class = "" }) ¿Sin ASN?
                     @Html.ValidationMessageFor(m => m.SinASN)
+                </div>
+                <div class="col-sm-3">
+                    @Html.CheckBoxFor(m => m.Factoraje, new { @class = "" }) ¿Acceso a Factoraje?
+                    @Html.ValidationMessageFor(m => m.Factoraje)
                 </div>
             </div>
             <div class="form-group">
