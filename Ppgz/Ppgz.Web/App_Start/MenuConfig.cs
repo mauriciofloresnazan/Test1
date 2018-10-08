@@ -113,7 +113,8 @@ namespace Ppgz.Web
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
                 "CONFIGNEG|Configuración de Negocio|Index|Configneg|fa fa-cogs|Nazan",
-                "VISTAPROVEEDOR|Vista de Proveedor|Index|VistaProveedor|fa fa-binoculars|Nazan"
+                "VISTAPROVEEDOR|Vista de Proveedor|Index|VistaProveedor|fa fa-binoculars|Nazan",
+                "PRONTOPAGO|Pronto Pago|Index|ProntoPago|fa fa-binoculars|Nazan"
             };
             return menuLista;
         }
@@ -311,7 +312,17 @@ namespace Ppgz.Web
 
                     };
                     break;
-                 default:
+                case "ProntoPago":
+                    menu = new List<string>
+                    {
+                        "PRONTOPAGO|Dashboard|Index|ProntoPago|fa fa-calendar|Nazan",
+                        "PRONTOPAGO|Listado Solicitudes|Solicitudes|ProntoPago|fa fa-calendar|Nazan",
+                        "PRONTOPAGO|Listado Proveedores|Proveedores|ProntoPago|fa fa-exclamation-circle|Nazan",
+                        "PRONTOPAGO|Configuraciones|Configuraciones|ProntoPago|fa fa-ban|Nazan",
+                        "PRONTOPAGO|Logs|Logs|ProntoPago|fa fa-ban|Nazan"
+                    };
+                    break;
+                default:
                     string menuDefault = "";
                     menuDefault = NombreXController(nombreControllerActual, "NAZAN");
                     menu = new List<string>

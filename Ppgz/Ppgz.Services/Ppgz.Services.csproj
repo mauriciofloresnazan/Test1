@@ -84,8 +84,10 @@
     <Compile Include="PartidasManager.cs" />
     <Compile Include="PerfilManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProveedorFManager.cs" />
     <Compile Include="ProveedorManager.cs" />
     <Compile Include="ReporteProveedorManager.cs" />
+    <Compile Include="SolicitudFManager.cs" />
     <Compile Include="UsuarioManager.cs" />
   </ItemGroup>
   <ItemGroup>

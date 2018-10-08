@@ -19,13 +19,15 @@ namespace Ppgz.Repository
         public System.DateTime FechaSolicitud { get; set; }
         public int EstatusFactoraje { get; set; }
         public string Comentario { get; set; }
+        public int DiasPP { get; set; }
+        public int NDocumentos { get; set; }
         public string xml { get; set; }
         public string pdf { get; set; }
         public int MontoOriginal { get; set; }
         public int MontoAFacturar { get; set; }
-        public int Descuento { get; set; }
+        public int Descuentos { get; set; }
+        public int DescuentoPP { get; set; }
         public Nullable<int> NumeroGenerado { get; set; }
         public string EstatusOperacionSAP { get; set; }
-        public Nullable<int> DiaDePago { get; set; }
     }
 }

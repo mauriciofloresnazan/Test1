@@ -21,6 +21,7 @@ namespace Ppgz.Repository
         public int IdProveedor { get; set; }
         public int Porcentaje { get; set; }
         public string Referencia { get; set; }
+        public int DiasPP { get; set; }
         public System.DateTime FechaFactura { get; set; }
         public System.DateTime FechaSolicitud { get; set; }
         public int idSolicitudesFactoraje { get; set; }

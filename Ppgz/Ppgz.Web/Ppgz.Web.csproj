@@ -224,6 +224,7 @@
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\CuentasPagarController.cs" />
     <Compile Include="Areas\Nazan\Controllers\PenalizacionesController.cs" />
+    <Compile Include="Areas\Nazan\Controllers\ProntoPagoController.cs" />
     <Compile Include="Areas\Nazan\Controllers\VistaProveedorController.cs" />
     <Compile Include="Areas\Nazan\Controllers\ConfignegController.cs" />
     <Compile Include="Areas\Servicio\Controllers\CuentasPagarController.cs" />
@@ -1914,6 +1915,12 @@
     <Content Include="Areas\Nazan\Views\Penalizaciones\Reporte.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitas\VisualizarDisponibilidad.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarFacturas\ProcesarFacturas.cshtml" />
+    <Content Include="Areas\Nazan\Views\ProntoPago\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\ProntoPago\Proveedores.cshtml" />
+    <Content Include="Areas\Nazan\Views\ProntoPago\Solicitudes.cshtml" />
+    <Content Include="Areas\Nazan\Views\ProntoPago\Configuraciones.cshtml" />
+    <Content Include="Areas\Nazan\Views\ProntoPago\Logs.cshtml" />
+    <Content Include="Areas\Nazan\Views\ProntoPago\SolicitudDetalle.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

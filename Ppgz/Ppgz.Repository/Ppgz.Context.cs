@@ -43,6 +43,7 @@ namespace Ppgz.Repository
         public virtual DbSet<estatuscita> estatuscitas { get; set; }
         public virtual DbSet<estatusfactoraje> estatusfactoraje { get; set; }
         public virtual DbSet<factura> facturas { get; set; }
+        public virtual DbSet<facturasfactoraje> facturasfactoraje { get; set; }
         public virtual DbSet<horarioriele> horariorieles { get; set; }
         public virtual DbSet<horario> horarios { get; set; }
         public virtual DbSet<impuls_logs> impuls_logs { get; set; }
@@ -56,5 +57,6 @@ namespace Ppgz.Repository
         public virtual DbSet<proveedorfactoraje> proveedoresfactoraje { get; set; }
         public virtual DbSet<riele> rieles { get; set; }
         public virtual DbSet<ScaleAlmacen> ScaleAlmacens { get; set; }
+        public virtual DbSet<solicitudesfactoraje> solicitudesfactoraje { get; set; }
     }
 }

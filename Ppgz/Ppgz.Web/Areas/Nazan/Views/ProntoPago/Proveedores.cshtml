@@ -1,0 +1,160 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<div class="container body-content">
+    <h2 class="form-signin-heading">Pronto Pago</h2>
+    <p class="page-description-title">
+        <i class="fa fa-calculator" aria-hidden="true"></i>
+        <i>Seleccione una Razón Social.</i>
+    </p>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">Razones Sociales</div>
+        <div class="panel-body">
+
+            <div class="col-md-12">
+                <table id="proveedoresf" class="table table-striped table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Número Proveedor</th>
+                            <th class="text-center">RFC</th>
+                            <th class="text-center">Razón Social</th>
+                            <th class="text-center">Porcentaje</th>
+                            <th class="text-center">Día de pago</th>
+                            <th class="text-center">Porcentaje</th>
+                            <th class="text-center">Día de pago</th>
+                            <th class="text-center"></th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in (ViewBag.ProveedoresF))
+                        {
+                            string diapago = " ";
+                            string s = item.DiaDePago.ToString();
+                            switch (s)
+                            {
+                                case "1":
+                                    diapago = "LUNES";
+                                    break;
+
+                                case "2":
+                                    diapago = "MARTES";
+                                    break;
+
+                                case "3":
+                                    diapago = "MIERCOLES";
+                                    break;
+
+                                case "4":
+                                    diapago = "JUEVES";
+                                    break;
+
+                                case "5":
+                                    diapago = "VIERNES";
+                                    break;
+                                case "6":
+                                    diapago = "SABADO";
+                                    break;
+                                default:
+                                    diapago = "DOMINGO";
+                                    break;
+                            }
+                            <tr>
+                                <td class="text-center vert-align">@item.Numero</td>
+                                <td class="text-center vert-align">@item.Rfc</td>
+                                <td class="text-center vert-align">@item.Nombre</td>
+                                <td class="text-center vert-align">@item.Porcentaje %</td>
+                                <td class="text-center vert-align">@diapago</td>
+
+                                <td class="text-center vert-align">3%</td>
+                                <td class="text-center vert-align">JUEVES</td>
+                                <td class="text-center">
+                                    <a class="btn btn-primary btn-sm btn-editar" href="#" data-id="@item.IdProveedor" data-numero="@item.Numero" data-rfc="@item.Rfc" data-nombre="@item.Nombre" data-porcentaje="@item.Porcentaje" data-diadepago="@item.DiaDePago">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Editar
+                                    </a>
+                                </td>
+                                <td class="text-center">
+                                    <a class="btn btn-warning btn-sm" href="@Url.Action("EliminarProveedor", "ProntoPago", new { @id = item.IdProveedor})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="El proveedor será eliminado de Pronto Pago">
+                                        <i class="fa fa-check" aria-hidden="true"></i> Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <hr />
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalEditarProveedor" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        @using (Html.BeginForm("ActualizarProveedor", "ProntoPago", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Detalle de descuentos</h4>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <input type="hidden" id="mdlId" value="" name="id" class="form-control" />
+                        de pago: <select class="form-control input-sm" id="mdlDia" name="diadepago">
+                            <option value="1">Lunes</option>
+                            <option value="2">Martes</option>
+                            <option value="3">Miercoles</option>
+                            <option value="4">Jueves</option>
+                            <option value="5">Viernes </option>
+                            <option value="6">Sabado</option>
+                            <option value="7">Domingo</option>
+                        </select>
+                    </div><br />
+                    <div>Porcentaje de Descuento:<input class="form-control input-sm" placeholder="" value="" type="number" id="mdlPorcentaje" name="porcentaje" required></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="mdlGuardar" class="btn btn-default">Guardar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $('#proveedoresf').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+
+            $("#proveedoresf .btn-editar").click(function () {
+                var id = $(this).data("id");
+                var diapago = $(this).data("diadepago");
+                var porcentaje = $(this).data("porcentaje");
+
+                $("#mdlId").val(id);
+                $("#mdlDia").val(diapago);
+                $("#mdlPorcentaje").val(porcentaje);
+
+                $("#modalEditarProveedor").modal('show');
+            });
+
+            $("#mdlPorcentaje").change(function () {
+                var porcentaje = $("#mdlPorcentaje").val();
+                if (porcentaje < 0 || porcentaje > 100) {
+                    $("#mdlPorcentaje").val("");
+                }
+            });
+        });
+    </script>
+}

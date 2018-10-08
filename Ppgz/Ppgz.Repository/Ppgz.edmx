@@ -267,6 +267,7 @@
           <Property Name="IdProveedor" Type="int" Nullable="false" />
           <Property Name="Porcentaje"  Type="int" Nullable="false" />
           <Property Name="Referencia"  Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="DiasPP" Type="int" Nullable="false" />
           <Property Name="FechaFactura"  Type="date" Nullable="false" />
           <Property Name="FechaSolicitud"  Type="datetime" Nullable="false" />
           <Property Name="idSolicitudesFactoraje" Type="int" Nullable="false" />
@@ -491,14 +492,16 @@
           <Property Name="FechaSolicitud" Type="datetime" Nullable="false" />
           <Property Name="EstatusFactoraje" Type="int" Nullable="false" />
           <Property Name="Comentario" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="DiasPP" Type="int" Nullable="false" />
+          <Property Name="NDocumentos" Type="int" Nullable="false" />
           <Property Name="xml" Type="varchar" MaxLength="400" Nullable="false" />
           <Property Name="pdf" Type="varchar" MaxLength="400" Nullable="false" />
           <Property Name="MontoOriginal" Type="int" Nullable="false" />
           <Property Name="MontoAFacturar" Type="int" Nullable="false" />
-          <Property Name="Descuento" Type="int" Nullable="false" />
+          <Property Name="Descuentos" Type="int" Nullable="false" />
+          <Property Name="DescuentoPP" Type="int" Nullable="false" />
           <Property Name="NumeroGenerado" Type="int" Nullable="true" />
           <Property Name="EstatusOperacionSAP" Type="varchar" MaxLength="500" Nullable="true" />
-          <Property Name="DiaDePago" Type="int" Nullable="true" />
         </EntityType>
         <Association Name="ApplicationUser_Claims">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
@@ -1344,6 +1347,7 @@
           <Property Name="IdProveedor" Type="Int32" Nullable="false" />
           <Property Name="Porcentaje" Type="Int32" Nullable="false" />
           <Property Name="Referencia" Type="String" FixedLength="false" Unicode="false" MaxLength="45" Nullable="false" />
+          <Property Name="DiasPP" Type="Int32" Nullable="false" />
           <Property Name="FechaFactura" Type="DateTime" Nullable="false" />
           <Property Name="FechaSolicitud" Type="DateTime" Nullable="false" />
           <Property Name="idSolicitudesFactoraje" Type="Int32" Nullable="false" />
@@ -1580,14 +1584,16 @@
           <Property Name="FechaSolicitud" Type="DateTime" Nullable="false" />
           <Property Name="EstatusFactoraje" Type="Int32" Nullable="false" />
           <Property Name="Comentario" Type="String" FixedLength="false" Unicode="false" MaxLength="200" Nullable="false" />
+          <Property Name="DiasPP" Type="Int32" Nullable="false" />
+          <Property Name="NDocumentos" Type="Int32" Nullable="false" />
           <Property Name="xml" Type="String" FixedLength="false" Unicode="false" MaxLength="400" Nullable="false" />
           <Property Name="pdf" Type="String" FixedLength="false" Unicode="false" MaxLength="400" Nullable="false" />
           <Property Name="MontoOriginal" Type="Int32" Nullable="false" />
           <Property Name="MontoAFacturar" Type="Int32" Nullable="false" />
-          <Property Name="Descuento" Type="Int32" Nullable="false" />
+          <Property Name="Descuentos" Type="Int32" Nullable="false" />
+          <Property Name="DescuentoPP" Type="Int32" Nullable="false" />
           <Property Name="NumeroGenerado" Type="Int32" Nullable="true" />
           <Property Name="EstatusOperacionSAP" Type="String" FixedLength="false" Unicode="false" MaxLength="500" Nullable="true" />
-          <Property Name="DiaDePago" Type="Int32" Nullable="true" />
         </EntityType>
         <Association Name="fk_rieles_anden">
           <End Role="andenes" Type="Self.andene" Multiplicity="1" />
@@ -2331,6 +2337,7 @@
                 <ScalarProperty Name="IdProveedor" ColumnName="IdProveedor" />
                 <ScalarProperty Name="Porcentaje" ColumnName="Porcentaje" />
                 <ScalarProperty Name="Referencia" ColumnName="Referencia" />
+                <ScalarProperty Name="DiasPP" ColumnName="DiasPP" />
                 <ScalarProperty Name="FechaFactura" ColumnName="FechaFactura" />
                 <ScalarProperty Name="FechaSolicitud" ColumnName="FechaSolicitud" />
                 <ScalarProperty Name="idSolicitudesFactoraje" ColumnName="idSolicitudesFactoraje" />
@@ -2560,14 +2567,16 @@
                 <ScalarProperty Name="FechaSolicitud" ColumnName="FechaSolicitud"/>
                 <ScalarProperty Name="EstatusFactoraje" ColumnName="EstatusFactoraje"/>
                 <ScalarProperty Name="Comentario" ColumnName="Comentario"/>
+                <ScalarProperty Name="DiasPP" ColumnName="DiasPP"/>
+                <ScalarProperty Name="NDocumentos" ColumnName="NDocumentos"/>
                 <ScalarProperty Name="xml" ColumnName="xml"/>
                 <ScalarProperty Name="pdf" ColumnName="pdf"/>
                 <ScalarProperty Name="MontoOriginal" ColumnName="MontoOriginal"/>
                 <ScalarProperty Name="MontoAFacturar" ColumnName="MontoAFacturar"/>
-                <ScalarProperty Name="Descuento" ColumnName="Descuento"/>
+                <ScalarProperty Name="Descuentos" ColumnName="Descuentos"/>
+                <ScalarProperty Name="DescuentoPP" ColumnName="DescuentoPP"/>
                 <ScalarProperty Name="NumeroGenerado" ColumnName="NumeroGenerado"/>
                 <ScalarProperty Name="EstatusOperacionSAP" ColumnName="EstatusOperacionSAP"/>
-                <ScalarProperty Name="DiaDePago" ColumnName="DiaDePago"/>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
