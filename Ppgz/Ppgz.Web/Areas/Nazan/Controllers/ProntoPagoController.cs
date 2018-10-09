@@ -148,6 +148,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
             result = updatecuenta ? _proveedorFManager.DeleteProveedorFactoraje(idProveedor) : false;
             */
+            result = _proveedorFManager.DeleteProveedorFactoraje(idProveedor);
 
             if (result)
                 TempData["FlashSuccess"] = "Eliminado correctamente.";
