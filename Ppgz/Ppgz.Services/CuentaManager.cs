@@ -66,6 +66,11 @@ namespace Ppgz.Services
             return _db.cuentas.Where(c=> c.Borrado == false).ToList();
         }
 
+        public List<cuenta> FindAllFactoraje()
+        {
+            return _db.cuentas.Where(c => c.Borrado == false && c.Factoraje == true).ToList();
+        }
+
         public List<CuentaConUsuarioMaestro> FindAllWithUsuarioMaestro()
         {
             var query = (from c in _db.cuentas

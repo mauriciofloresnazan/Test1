@@ -462,7 +462,7 @@
           <Key>
             <PropertyRef Name="idProveedore" />
           </Key>
-          <Property Name="idProveedore" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idProveedore" Type="int" StoreGeneratedPattern="None" Nullable="false" />
           <Property Name="Porcentaje" Type="int" Nullable="false" />
           <Property Name="DiaDePago" Type="int" Nullable="false" />
         </EntityType>
@@ -1553,7 +1553,7 @@
           <Key>
             <PropertyRef Name="idProveedore" />
           </Key>
-          <Property Name="idProveedore" Type="Int32" annotation:StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idProveedore" Type="Int32" annotation:StoreGeneratedPattern="None" Nullable="false" />
           <Property Name="Porcentaje" Type="Int32" Nullable="false" />
           <Property Name="DiaDePago" Type="Int32" Nullable="false"/>
         </EntityType>

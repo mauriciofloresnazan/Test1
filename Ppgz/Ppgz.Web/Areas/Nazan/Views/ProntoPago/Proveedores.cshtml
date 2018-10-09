@@ -1,6 +1,8 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    var defaultdiapago =     ViewBag.DiaDePago;
+    var defaultporcentaje =  ViewBag.Porcentaje;
 }
 
 <div class="container body-content">
@@ -58,26 +60,35 @@
                                 case "6":
                                     diapago = "SABADO";
                                     break;
-                                default:
+                                case "7":
                                     diapago = "DOMINGO";
+                                    break;
+                                default:
+                                    diapago = " ";
                                     break;
                             }
                             <tr>
                                 <td class="text-center vert-align">@item.Numero</td>
                                 <td class="text-center vert-align">@item.Rfc</td>
                                 <td class="text-center vert-align">@item.Nombre</td>
+                                <td class="text-center vert-align">@defaultporcentaje %</td>
+                                <td class="text-center vert-align">@defaultdiapago</td>
+                                @if (item.Porcentaje != 0)
+                                {
                                 <td class="text-center vert-align">@item.Porcentaje %</td>
+                                }
+                                else
+                                {
+                                    <td class="text-center vert-align"> </td>
+                                }
                                 <td class="text-center vert-align">@diapago</td>
-
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">JUEVES</td>
                                 <td class="text-center">
-                                    <a class="btn btn-primary btn-sm btn-editar" href="#" data-id="@item.IdProveedor" data-numero="@item.Numero" data-rfc="@item.Rfc" data-nombre="@item.Nombre" data-porcentaje="@item.Porcentaje" data-diadepago="@item.DiaDePago">
+                                    <a class="btn btn-primary btn-sm btn-editar" href="#" data-cuenta="@item.CuentaId" data-id="@item.IdProveedor" data-numero="@item.Numero" data-rfc="@item.Rfc" data-nombre="@item.Nombre" data-porcentaje="@item.Porcentaje" data-diadepago="@item.DiaDePago">
                                         <i class="fa fa-check" aria-hidden="true"></i> Editar
                                     </a>
                                 </td>
                                 <td class="text-center">
-                                    <a class="btn btn-warning btn-sm" href="@Url.Action("EliminarProveedor", "ProntoPago", new { @id = item.IdProveedor})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="El proveedor será eliminado de Pronto Pago">
+                                    <a class="btn btn-warning btn-sm" href="@Url.Action("EliminarProveedor", "ProntoPago", new { @idProveedor = item.IdProveedor, @idCuenta = item.CuentaId})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="El proveedor será eliminado de Pronto Pago">
                                         <i class="fa fa-check" aria-hidden="true"></i> Eliminar
                                     </a>
                                 </td>
@@ -103,7 +114,8 @@
                 </div>
                 <div class="modal-body">
                     <div>
-                        <input type="hidden" id="mdlId" value="" name="id" class="form-control" />
+                        <input type="hidden" id="mdlIdCuenta" value="" name="idCuenta" class="form-control" />
+                        <input type="hidden" id="mdlId" value="" name="idProveedor" class="form-control" />
                         de pago: <select class="form-control input-sm" id="mdlDia" name="diadepago">
                             <option value="1">Lunes</option>
                             <option value="2">Martes</option>
@@ -139,10 +151,13 @@
 
             $("#proveedoresf .btn-editar").click(function () {
                 var id = $(this).data("id");
+                var idCuenta = $(this).data("cuenta");
                 var diapago = $(this).data("diadepago");
                 var porcentaje = $(this).data("porcentaje");
 
+
                 $("#mdlId").val(id);
+                $("#mdlIdCuenta").val(idCuenta);
                 $("#mdlDia").val(diapago);
                 $("#mdlPorcentaje").val(porcentaje);
 

@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using Ppgz.Repository;
 using SapWrapper;
+using System;
 
 namespace Ppgz.Services
 {
@@ -41,18 +42,37 @@ namespace Ppgz.Services
         {
             bool result = false;
 
-            var proveedorf = GetProveedorById(id);
-            if (proveedorf != null)
+            try
             {
-                proveedorf.DiaDePago = diadepago;
-                proveedorf.Porcentaje = porcentaje;
-                
-                _db.Entry(proveedorf).State = EntityState.Modified;
-                _db.SaveChanges();
+                var proveedorf = GetProveedorById(id);
+                if (proveedorf != null)
+                {
+                    proveedorf.DiaDePago = diadepago;
+                    proveedorf.Porcentaje = porcentaje;
+
+                    _db.Entry(proveedorf).State = EntityState.Modified;
+                    _db.SaveChanges();
+                }
+                else
+                {
+                    proveedorfactoraje pf = new proveedorfactoraje()
+                    {
+                        idProveedore = id,
+                        DiaDePago = diadepago,
+                        Porcentaje = porcentaje
+                    };
+                    _db.proveedoresfactoraje.Add(pf);
+                    _db.SaveChanges();
+                }
                 result = true;
+            }
+            catch(Exception ex)
+            {
+                return result;
             }
 
             return result;
+            
         }
 
         public bool DeleteProveedorFactoraje(int id)

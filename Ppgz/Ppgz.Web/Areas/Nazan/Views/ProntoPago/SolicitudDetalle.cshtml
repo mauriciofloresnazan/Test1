@@ -1,5 +1,8 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var proveedor = ViewBag.Proveedor;
+    var descPP = 0;
 }
 
 <div class="container body-content">
@@ -14,18 +17,18 @@
             <div class="row">
                 <label class="col-sm-1 control-label">RFC</label>
                 <div class="col-sm-2">
-                    <div>DFL8009138B9</div>
+                    <div>@proveedor.Rfc</div>
                 </div>
                 <label class="col-sm-1 control-label">Auxiliar</label>
                 <div class="col-sm-2">
-                    <div>0000000006</div>
+                    <div>@proveedor.NumeroProveedor</div>
                 </div>
                 <label class="col-sm-1 control-label">Nombre</label>
                 <div class="col-sm-3">
-                    <div>DISTRIBUIDORA FLEXI SA DE CV</div>
+                    <div>@proveedor.Nombre1</div>
                 </div>
                 <div class="col-sm-2">
-                    <a href="1.html" class="btn btn-warning btn-xs">
+                    <a href="@Url.Action("Solicitudes", "ProntoPago")" class="btn btn-warning btn-xs">
                         <i class="fa fa-refresh" aria-hidden="true"></i> Regresar
                     </a>
                 </div>
@@ -54,149 +57,29 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="text-center vert-align">A129</td>
-                                <td class="text-center vert-align">01/01/2018</td>
-                                <td class="text-center vert-align">+50,000</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">1,500</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A130</td>
-                                <td class="text-center vert-align">12/12/2018</td>
-                                <td class="text-center vert-align">+50,000</td>
-                                <td class="text-center vert-align">31/12/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">1,500</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A131</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">+68,000</td>
-                                <td class="text-center vert-align">01/03/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">6,800</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A131</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">+68,000</td>
-                                <td class="text-center vert-align">01/03/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">6,800</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A131</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">+68,000</td>
-                                <td class="text-center vert-align">01/03/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">6,800</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A131</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">+68,000</td>
-                                <td class="text-center vert-align">01/03/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">6,800</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A131</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">+68,000</td>
-                                <td class="text-center vert-align">01/03/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">6,800</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A131</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">+68,000</td>
-                                <td class="text-center vert-align">01/03/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">6,800</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A131</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">+68,000</td>
-                                <td class="text-center vert-align">01/03/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">6,800</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A131</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">+68,000</td>
-                                <td class="text-center vert-align">01/03/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">6,800</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A131</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">+68,000</td>
-                                <td class="text-center vert-align">01/03/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">6,800</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A131</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">+68,000</td>
-                                <td class="text-center vert-align">01/03/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">6,800</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="text-center vert-align">A131</td>
-                                <td class="text-center vert-align">01/02/2018</td>
-                                <td class="text-center vert-align">+68,000</td>
-                                <td class="text-center vert-align">01/03/2018</td>
-                                <td class="text-center vert-align">3%</td>
-                                <td class="text-center vert-align">6,800</td>
-                                <td class="text-center vert-align">
-                                    <input type="checkbox" checked />
-                                </td>
-                            </tr>
+                            @foreach (var item in (ViewBag.Facturas))
+                            {
+                                Int32.TryParse(item.Monto, out descPP);
+                                descPP = descPP * item.Porcentaje;
+                                <tr>
+                                    <td class="text-center vert-align">@item.NumeroDocumento</td>
+                                    <td class="text-center vert-align">@item.FechaSolicitud</td>
+                                    <td class="text-center vert-align">@item.Monto</td>
+                                    <td class="text-center vert-align">@item.FechaFactura</td>
+                                    <td class="text-center vert-align">@item.Porcentaje</td>
+                                    <td class="text-center vert-align">@descPP</td>
+                                    <td class="text-center vert-align">
+                                        @if (item.EstatusFactura)
+                                        {
+                                            <input type="checkbox" checked />
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" />
+                                        }
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>

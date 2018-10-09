@@ -1,0 +1,97 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container body-content">
+    <h2>Configuraciones de Pronto Pago</h2>
+    <link href="../assets/css/build.css" rel="stylesheet" />
+    <p class="page-description-title">
+        <i class="fa fa-calendar" aria-hidden="true"></i>
+        <i>Par&#225;metros de Configuraci&#243;n de Pronto Pago</i>
+    </p>
+    <div class="panel panel-default">
+        <div class="panel-heading">Datos de Configuración</div>
+        <div class="panel-body">
+            @using (Html.BeginForm("UpdateConfiguracion", "ProntoPago", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                <input type="hidden" id="idConfig" value="" name="id" class="form-control" />
+                <div class="row">
+                    <div class="col-sm-4">
+                        <label class="control-label">Clave</label>
+                        <div>
+                            <input type="text" class="form-control" id="txtClave" name="key" maxlength="45" required/>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label class="control-label">Valor</label>
+                        <div>
+                            <input type="text" class="form-control" id="txtValor" name="value" maxlength="45" required/>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="pull-right">
+                            <input type="submit" class="btn btn-primary btn-sm" value="Guardar" id="cmdGuardar" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Configuraciones Registradas</div>
+        <div class="panel-body">
+            <table class="table table-striped table-condensed" id="configtable">
+                <thead>
+                    <tr>
+                        <th class="text-center">Clave</th>
+                        <th class="text-center">Valor</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in (ViewBag.Configuraciones))
+                    {
+                        <tr>
+                            <td class="text-center">@item.key</td>
+                            <td class="text-center">@item.value</td>
+                            <td class="text-center">
+                                <a href="javascript:;" onclick="getValores('@item.idConfigoracionFactoraje','@item.key','@item.value')"
+                                   class=" btn btn-primary btn-sm">
+                                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp;Editar
+                                </a>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr />
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        function getValores(id, clave, valor) {
+            $('#idConfig').val(id);
+            $('#txtClave').val(clave);
+            $('#txtValor').val(valor);
+        }
+
+        $(document).ready(function () {
+            $('#configtable').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+
+    </script>
+}

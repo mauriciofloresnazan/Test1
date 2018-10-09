@@ -52,6 +52,13 @@ namespace Ppgz.Services
             }
             return result;
         }
+        
+        public solicitudesfactoraje GetSolicitudById(int id)
+        {
+            var result = _db.solicitudesfactoraje.Where(s => s.idSolicitudesFactoraje == id).FirstOrDefault();
+
+            return result;
+        }
 
         public class localsolicitud
         {
