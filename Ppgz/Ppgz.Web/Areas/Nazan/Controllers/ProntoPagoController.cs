@@ -37,7 +37,17 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
         public ActionResult Solicitudes()
         {
-            ViewBag.SolicitudesF = _solicitudFManager.GetSolicitudesFactoraje();
+            var solicitudesF = _solicitudFManager.GetSolicitudesFactoraje();
+
+            Int32.TryParse(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor, out int p);
+            foreach(var item in solicitudesF)
+            {
+                var index = solicitudesF.FindIndex(c => c.Id == item.Id);
+                solicitudesF[index].Tasa = (item.Tasa == 0 ) ?  p : item.Tasa;                
+            }
+
+            ViewBag.SolicitudesF = solicitudesF;
+            
             return View();
         }
 
@@ -188,6 +198,22 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             TempData["FlashSuccess"] = result ? "Configuracion guardad correctamente." : "Ocurrio un error al guardar la configuracion";
             return RedirectToAction("Configuraciones");
+        }
+
+        public ActionResult SolicitudesEnviarPropuestas(string selectedlist)
+        {
+            var listpropuestas = new List<solicitudesfactoraje>();
+            string[] split = selectedlist.Split(',');
+            foreach (string element in split)
+            {
+                Int32.TryParse(element, out int id);
+                var propuesta = _solicitudFManager.GetSolicitudById(id);
+                listpropuestas.Add(propuesta);
+            }
+
+            TempData["FlashError"] = "Error al enviar solicitudes";
+            TempData["FlashSuccess"] = "Solicitudes enviadas con exito";
+            return RedirectToAction("Solicitudes");
         }
 
         public class localPF
