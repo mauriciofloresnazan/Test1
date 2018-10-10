@@ -1,0 +1,253 @@
+﻿@model List<Ppgz.Web.Models.ProntoPago.FacturaView>
+
+@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+	ViewBag.Title = "Gestión de Pagos Pendientes - Detalle";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+
+	var proveedor = (proveedore)ViewBag.Proveedor;
+
+	var pagosPendientes = (DataTable)ViewBag.PagosPendientes;
+	var importeTotal = pagosPendientes.Rows.Cast<DataRow>()
+	 .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
+
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+	<i class="fa fa-calculator" aria-hidden="true"></i>
+	<i>En esta sección podrán gestionar los pagos pendientes</i>
+</p>
+@using (Html.BeginForm("RegistraSolicitud", "ProntoPago", FormMethod.Post, new { @id = "RegistraSolicitud", enctype = "multipart/form-data" }))
+{
+	<div class="panel panel-default">
+		<div class="panel-heading">Proveedor Seleccionado</div>
+		<div class="panel-body">
+			<div class="row">
+				<label class="col-sm-2 control-label">RFC</label>
+				<div class="col-sm-3">
+					<div>@proveedor.Rfc</div>
+				</div>
+				<label class="col-sm-2 control-label">Nombre</label>
+				<div class="col-sm-3">
+					<div>@proveedor.Nombre1</div>
+				</div>
+				<div class="col-sm-2">
+					<a href="@Url.Action("Index", "ProntoPago")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">Detalle de Pagos</div>
+		<div class="panel-body">
+			<div class="col-md-12">
+				<div class="col-sm-6">
+
+				</div>
+				<hr />
+				<table id="detallePago" class="table table-striped table-condensed table-bordered">
+					<thead>
+						<tr>
+							<th class="text-center">Referencia</th>
+							<th class="text-center">Importe</th>
+							<th class="text-center">Ml</th>
+							<th class="text-center">Vencimiento</th>
+							<th class="text-center">Tipo de Movimiento</th>
+							<th class="text-center">Fecha de Documento</th>
+							<th class="text-center">Descripción</th>
+							<th class="text-center">Agregar</th>
+						</tr>
+					</thead>
+					<tbody>
+						@for (int i = 0; i < pagosPendientes.Rows.Count; i++)
+						{
+
+							//hiden values
+							
+
+							var fecha = DateTime.ParseExact(
+							Model[i].vencimiento,
+							"yyyyMMdd",
+							CultureInfo.InvariantCulture);
+							var fechaDocumento = DateTime.ParseExact(Model[i].fechaDocumento, "yyyyMMdd",
+							CultureInfo.InvariantCulture);
+
+							<tr>
+
+								@{
+									var tipo = "";
+									switch (@Model[i].tipoMovimiento)
+									{
+										case "04":
+											tipo = "Factura a proveedor";
+											break;
+										case "10":
+											tipo = "Factura a proveedor";
+											break;
+										case "21":
+											tipo = "Factura a proveedor";
+											break;
+										case "23":
+											tipo = "Nota de Cargo";
+											break;
+										case "AB":
+											tipo = "Cargo a proveedor";
+											break;
+										case "DA":
+											tipo = "Cargo a proveedor";
+											break;
+										case "DG":
+											tipo = "Cargo a proveedor";
+											break;
+										case "DZ":
+											tipo = "Pago de proveedor";
+											break;
+										case "KA":
+											tipo = "Cargo a proveedor";
+											break;
+										case "KG":
+											tipo = "Cargo a proveedor";
+											break;
+										case "KR":
+											tipo = "Devolución";
+											break;
+										case "KZ":
+											tipo = "Cargo a proveedor";
+											break;
+										case "RE":
+
+											if ((decimal)Model[i].importe > 0)
+											{
+												tipo = "Factura de mercancia";
+												break;
+
+											}
+											tipo = "Devolucion de mercancia";
+											break;
+
+										case "RV":
+											tipo = "Cargo a proveedor";
+											break;
+										case "SA":
+											tipo = "Cargo a proveedor";
+											break;
+										case "ZN":
+											tipo = "Anulación de documento";
+											break;
+										case "ZP":
+											tipo = "Pago";
+											break;
+
+
+									}
+
+								}
+								<td class="text-center">@Model[i].referencia</td>
+								<td class="text-right">@Model[i].importe.ToString("C")</td>
+								<td class="text-center">@Model[i].ml</td>
+								<td class="text-center">@fecha.ToString("dd/MM/yyyyy")</td>
+								<td class="text-center">@tipo</td>
+
+
+								<td class="text-center">@fechaDocumento.ToString("dd/MM/yyyyy")</td>
+								<td class="text-center">@Model[i].descripcion</td>
+								<td class="text-center">
+									<div class="checkbox">
+										<label>
+											@if (Model[i].pagar)
+											{
+												@Html.CheckBoxFor(x => Model[i].pagar, new { @class = "icheck", @data_checkbox = "icheckbox_square-blue", @disabled = "disabled" })
+											}
+											else
+											{
+												@Html.CheckBoxFor(x => Model[i].pagar, new { @class = "icheck", @data_checkbox = "icheckbox_square-blue" })
+											}
+											
+										</label>
+									</div>
+								</td>
+								@Html.HiddenFor(x => Model[i].numeroDocumento)
+								@Html.HiddenFor(x => Model[i].referencia)
+								@Html.HiddenFor(x => Model[i].importe)
+								@Html.HiddenFor(x => Model[i].ml)
+								@Html.HiddenFor(x => Model[i].vencimiento)
+								@Html.HiddenFor(x => Model[i].tipoMovimiento)
+								@Html.HiddenFor(x => Model[i].fechaDocumento)
+								@Html.HiddenFor(x => Model[i].descripcion)
+								@Html.HiddenFor(x => Model[i].idProveedor)
+							</tr>
+									}
+					</tbody>
+				</table>
+				<b>Total: </b> @string.Format("{0:N}", importeTotal)
+			</div>
+		</div>
+	</div>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">Pronto Pago</div>
+		<div class="panel-body form-horizontal">
+
+			<form action="../Account/CambiarPassword" class="form-horizontal" method="post"
+				  role="form">
+				<input name="__RequestVerificationToken" type="hidden" value="9C6b4dms2fgALzG7fOszXnKKFtKCEjCskzBYkkiDdlmaPfZjl2NzsUIH9m8yYQMit5xSsbJOiIcqKdATRXg4E-PX0XyI2ABuIvCCDW6gg9NZKFt1uKE6tE5Bm4iQ77JjCcw8I6pC1PqvHgo30KB00Q2" />
+				<span style="margin: 0;">
+					<i>Por favor verifique su solicitud.</i>
+				</span>
+				<hr style="margin-top: 0;" />
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="montoOriginal">Monto Original</label>
+					<div class="col-sm-6">
+						<input class="form-control" id="montoOriginal" value="$50,000.00" type="text" readonly />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="montoOriginal">Descuentos</label>
+					<div class="col-sm-6">
+						<input class="form-control" id="montoOriginal" value="$5,000.00" type="text" readonly />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="montoOriginal">Porcentaje</label>
+					<div class="col-sm-6">
+						<input class="form-control" id="montoOriginal" value="10%" type="text" readonly />
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-4 control-label" for="montoOriginal">Total</label>
+					<div class="col-sm-6">
+						<input class="form-control" id="montoOriginal" value="$45,000.00" type="text" readonly />
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-md-6 col-md-offset-4">
+						<button type="submit" class="btn btn-primary">
+							<i class="fa fa-ticket" aria-hidden="true"></i> Enviar
+						</button>
+						<a href="#" class="btn btn-default">
+							<i class="fa fa-undo"></i> Cancelar
+						</a>
+
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+}
+
+@section Scripts {
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#detallePago').DataTable({
+				"language": {
+					"url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+				},
+				"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+			});
+		});
+	</script>
+}

@@ -113,8 +113,7 @@ namespace Ppgz.Web
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
                 "CONFIGNEG|Configuración de Negocio|Index|Configneg|fa fa-cogs|Nazan",
-                "VISTAPROVEEDOR|Vista de Proveedor|Index|VistaProveedor|fa fa-binoculars|Nazan",
-                "PRONTOPAGO|Pronto Pago|Index|ProntoPago|fa fa-binoculars|Nazan"
+                "VISTAPROVEEDOR|Vista de Proveedor|Index|VistaProveedor|fa fa-binoculars|Nazan"
             };
             return menuLista;
         }
@@ -134,8 +133,9 @@ namespace Ppgz.Web
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
                 "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Mercaderia",
                 "REPORTESPROVEEDORES|Reportes Proveedores|Index|ReporteProveedores|fa fa-bar-chart|Mercaderia",
+				"PRONTOPAGO|Pronto pago|Index|ProntoPago|fa fa-bar-chart|Mercaderia",
 
-            };
+			};
             return menuLista;
         }
         public static string[] MenuServicio()
@@ -222,7 +222,14 @@ namespace Ppgz.Web
                         "CUENTASPAGAR|Devoluciones|Devoluciones?proveedorId=" + parametros["proveedorId"] + "|CuentasPagar|fa fa-calculator|Mercaderia"
                     };
                     break;
-                default:
+				case "ProntoPago":
+					menu = new List<string>
+					{
+						"PRONTOPAGO|Nueva Solicitud|Index|ProntoPago|fa fa-calculator|Mercaderia",
+						"PRONTOPAGO|Ver Solicitudes|VerSolicitudes?proveedorId=" + parametros["proveedorId"] + "|ProntoPago|fa fa-calculator|Mercaderia"
+					};
+					break;
+				default:
                     string menuDefault = "";
                     menuDefault = NombreXController(nombreControllerActual, "MERCADERIA");
                     menu = new List<string>
@@ -388,3 +395,7 @@ namespace Ppgz.Web
         }
     }
 }
+                "CONFIGNEG|Configuración de Negocio|Index|Configneg|fa fa-cogs|Nazan",
+                "VISTAPROVEEDOR|Vista de Proveedor|Index|VistaProveedor|fa fa-binoculars|Nazan",
+                "PRONTOPAGO|Pronto Pago|Index|ProntoPago|fa fa-binoculars|Nazan"
+            };
