@@ -113,8 +113,9 @@ namespace Ppgz.Web
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
                 "CONFIGNEG|Configuración de Negocio|Index|Configneg|fa fa-cogs|Nazan",
-                "VISTAPROVEEDOR|Vista de Proveedor|Index|VistaProveedor|fa fa-binoculars|Nazan"
-            };
+                "VISTAPROVEEDOR|Vista de Proveedor|Index|VistaProveedor|fa fa-binoculars|Nazan",
+				"PRONTOPAGO|Pronto Pago|Index|ProntoPago|fa fa-binoculars|Nazan"
+			};
             return menuLista;
         }
         public static string[] MenuMercaderia()
@@ -395,7 +396,4 @@ namespace Ppgz.Web
         }
     }
 }
-                "CONFIGNEG|Configuración de Negocio|Index|Configneg|fa fa-cogs|Nazan",
-                "VISTAPROVEEDOR|Vista de Proveedor|Index|VistaProveedor|fa fa-binoculars|Nazan",
-                "PRONTOPAGO|Pronto Pago|Index|ProntoPago|fa fa-binoculars|Nazan"
-            };
+                
