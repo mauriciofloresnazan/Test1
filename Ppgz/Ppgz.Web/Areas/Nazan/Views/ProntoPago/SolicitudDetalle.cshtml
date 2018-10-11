@@ -1,6 +1,9 @@
-﻿@{
+﻿@using Ppgz.Repository;
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    List<facturasfactoraje> facturaslist = (ViewBag.Facturas);
+    List<descuentofactoraje> descuentoslist = (ViewBag.Descuentos);
     var proveedor = ViewBag.Proveedor;
     var descPP = 0;
 }
@@ -57,19 +60,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in (ViewBag.Facturas))
+                            @foreach (var item in facturaslist)
                             {
                                 Int32.TryParse(item.Monto, out descPP);
-                                descPP = descPP * item.Porcentaje;
+                                descPP = (descPP/100) * item.Porcentaje;
                                 <tr>
                                     <td class="text-center vert-align">@item.NumeroDocumento</td>
-                                    <td class="text-center vert-align">@item.FechaSolicitud</td>
+                                    <td class="text-center vert-align">@item.FechaSolicitud.ToString().Substring(0,10)</td>
                                     <td class="text-center vert-align">@item.Monto</td>
-                                    <td class="text-center vert-align">@item.FechaFactura</td>
+                                    <td class="text-center vert-align">@item.FechaSolicitud.AddDays(item.DiasPP).ToString().Substring(0,10)</td>
                                     <td class="text-center vert-align">@item.Porcentaje</td>
                                     <td class="text-center vert-align">@descPP</td>
                                     <td class="text-center vert-align">
-                                        @if (item.EstatusFactura)
+                                        @if (item.FacturaEstatus == 1)
                                         {
                                             <input type="checkbox" checked />
                                         }
@@ -102,16 +105,14 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach (var d in descuentoslist)
+                                {
                                 <tr>
-                                    <td class="text-center vert-align">1234567890</td>
-                                    <td class="text-center vert-align">-50,000</td>
-                                    <td class="text-center vert-align">Esta es una Descripcion</td>
+                                    <td class="text-center vert-align">@d.NumeroDocumento</td>
+                                    <td class="text-center vert-align">@d.Monto</td>
+                                    <td class="text-center vert-align">@d.Descripcion</td>
                                 </tr>
-                                <tr>
-                                    <td class="text-center vert-align">1234567890</td>
-                                    <td class="text-center vert-align">-50,000</td>
-                                    <td class="text-center vert-align">Esta es una descripion</td>
-                                </tr>
+                                }
                             </tbody>
                         </table>
                     </div>
@@ -190,3 +191,28 @@
     <hr />
 
 </div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#pagos').DataTable({
+
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+
+
+        });
+
+    </script>
+    <style>
+        #table-scroll {
+            height: 150px;
+            overflow: auto;
+            overflow-x: hidden;
+        }
+    </style>
+
+}

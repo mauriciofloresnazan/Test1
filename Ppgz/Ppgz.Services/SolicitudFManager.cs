@@ -49,15 +49,27 @@ namespace Ppgz.Services
             foreach(var item in ls)
             {
                 string s = estatus.Where(e => e.idEstatusFactoraje == item.EstatusFactoraje && e.Activo == 1).FirstOrDefault().Nombre.ToString();
-                proveedorfactoraje pf = proveedoresfactoraje.Find(x => x.idProveedore == item.IdProveedor);
-                int Porcentaje = (pf != null) ? pf.Porcentaje : 0;
+                //proveedorfactoraje pf = proveedoresfactoraje.Find(x => x.idProveedore == item.IdProveedor);
+                //int Porcentaje = (pf != null) ? pf.Porcentaje : 0;
+                float Tasa = 0;
+
+                var fmanager = new FacturaFManager();
+                List<facturasfactoraje> lfacturas = fmanager.GetFacturasBySolicitud(item.idSolicitudesFactoraje);
+                if (lfacturas.Count() > 0)
+                {
+                    foreach(var f in lfacturas)
+                    {
+                        Tasa += f.Porcentaje;
+                    }
+                    Tasa = Tasa / lfacturas.Count();
+                }
 
                 localsolicitud element = new localsolicitud
                 {
                     Id = item.idSolicitudesFactoraje,
                     Numero = item.NumeroProveedor,
                     Proveedor = item.Nombre1,
-                    Tasa = Porcentaje,
+                    Tasa = Tasa,
                     NoDocumentos = item.NDocumentos,
                     DescuentoPP = item.DescuentoPP,
                     Descuentos = item.Descuentos,
@@ -81,7 +93,7 @@ namespace Ppgz.Services
         public int Id { get; set; }
         public string Numero { get; set; }
         public string Proveedor { get; set; }
-        public int Tasa { get; set; }
+        public float Tasa { get; set; }
         public int NoDocumentos { get; set; }
         public int DescuentoPP { get; set; }
         public int Descuentos { get; set; }

@@ -74,6 +74,7 @@
     <Compile Include="ConfiguracionesFManager.cs" />
     <Compile Include="ConfiguracionesManager.cs" />
     <Compile Include="CuentaManager.cs" />
+    <Compile Include="DescuentoFManager.cs" />
     <Compile Include="EtiquetasManager.cs" />
     <Compile Include="FacturaManager.cs" />
     <Compile Include="FacturaFManager.cs" />

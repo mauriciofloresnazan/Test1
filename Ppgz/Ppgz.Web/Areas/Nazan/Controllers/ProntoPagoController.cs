@@ -23,6 +23,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         
         readonly CuentaManager _cuentaManager = new CuentaManager();
         readonly ConfiguracionesFManager _configuracionesFManager = new ConfiguracionesFManager();
+        readonly DescuentoFManager _descuentoFManager = new DescuentoFManager();
         readonly FacturaFManager _facturaFManager = new FacturaFManager();
         readonly ProveedorManager _proveedorManager = new ProveedorManager();
         readonly ProveedorFManager _proveedorFManager = new ProveedorFManager();
@@ -39,12 +40,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         {
             var solicitudesF = _solicitudFManager.GetSolicitudesFactoraje();
 
-            Int32.TryParse(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor, out int p);
-            foreach(var item in solicitudesF)
-            {
-                var index = solicitudesF.FindIndex(c => c.Id == item.Id);
-                solicitudesF[index].Tasa = (item.Tasa == 0 ) ?  p : item.Tasa;                
-            }
+            //Int32.TryParse(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor, out int p);
+            //foreach(var item in solicitudesF)
+            //{
+            //    var index = solicitudesF.FindIndex(c => c.Id == item.Id);
+            //    solicitudesF[index].Tasa = (item.Tasa == 0 ) ?  p : item.Tasa;                
+            //}
 
             ViewBag.SolicitudesF = solicitudesF;
             
@@ -114,12 +115,14 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
         public ActionResult SolicitudDetalle(int id)
         {
-            var solicitud = _solicitudFManager.GetSolicitudById(id);
-            var proveedor = _proveedorManager.Find(solicitud.IdProveedor);
-            var facturas = _facturaFManager.GetFacturasBySolicitud(id);
+            var solicitud =  _solicitudFManager.GetSolicitudById(id);
+            var proveedor =  _proveedorManager.Find(solicitud.IdProveedor);
+            var facturas =   _facturaFManager.GetFacturasBySolicitud(id);
+            var descuentos = _descuentoFManager.GetDescuentosBySolicitud(id);
 
             ViewBag.Proveedor = proveedor;
             ViewBag.Facturas = facturas;
+            ViewBag.Descuentos = descuentos;
 
             return View();
         }
