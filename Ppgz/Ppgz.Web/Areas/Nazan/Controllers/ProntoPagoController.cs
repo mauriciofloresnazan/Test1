@@ -29,40 +29,48 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         readonly ProveedorFManager _proveedorFManager = new ProveedorFManager();
         readonly SolicitudFManager _solicitudFManager = new SolicitudFManager();
 
+        /*-------------BEGIN DASHBOARD SECTION--------------*/
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
         public ActionResult Index()
         {
+            var lse = GetSolicitudEstatus();
+            ViewBag.SolicitudesEstatus = lse;
+            ViewBag.ParaEnviar = lse.Where(x => x.EstatusNombre == "Lista Para Propuesta").FirstOrDefault().Cantidad.ToString();
+
             return View();
         }
 
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
-        public ActionResult Solicitudes()
+        public ActionResult DashboardEnviarPropuestas()
         {
-            var solicitudesF = _solicitudFManager.GetSolicitudesFactoraje();
+            var listpropuestas = new List<solicitudesfactoraje>();
+            int idestatus = _db.estatusfactoraje.Where(x => x.Nombre == "Lista Para Propuesta" && x.Activo == 1).FirstOrDefault().idEstatusFactoraje;
+            listpropuestas = _solicitudFManager.GetSolicitudesByEstatus(idestatus);
 
-            //Int32.TryParse(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor, out int p);
-            //foreach(var item in solicitudesF)
-            //{
-            //    var index = solicitudesF.FindIndex(c => c.Id == item.Id);
-            //    solicitudesF[index].Tasa = (item.Tasa == 0 ) ?  p : item.Tasa;                
-            //}
-
-            ViewBag.SolicitudesF = solicitudesF;
-            
-            return View();
+            TempData["FlashError"] = "Error al enviar solicitudes";
+            TempData["FlashSuccess"] = "Solicitudes enviadas con exito";
+            return RedirectToAction("Index");
         }
 
+        public JsonResult GetPieChartData()
+        {
+            var result = GetSolicitudEstatus();
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        /*--------------END DASHBOARD SECTION---------------*/
+
+        /*-------------BEGIN PROVEEDORES SECTION--------------*/
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
         public ActionResult Proveedores()
         {
             var cuentas = _cuentaManager.FindAllFactoraje();
             List<localPF> lproveedores = new List<localPF>();
 
-            foreach(var cuenta in cuentas)
+            foreach (var cuenta in cuentas)
             {
-                foreach(var proveedor in cuenta.proveedores)
+                foreach (var proveedor in cuenta.proveedores)
                 {
-                    localPF p = new localPF{
+                    localPF p = new localPF
+                    {
                         CuentaId = cuenta.Id,
                         IdProveedor = proveedor.Id,
                         Nombre = proveedor.Nombre1,
@@ -74,10 +82,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 }
             }
 
-            foreach(var item in lproveedores)
+            foreach (var item in lproveedores)
             {
                 proveedorfactoraje _pf = _proveedorFManager.GetProveedorById(item.IdProveedor);
-                if(_pf != null)
+                if (_pf != null)
                 {
                     var index = lproveedores.FindIndex(c => c.IdProveedor == item.IdProveedor);
                     lproveedores[index].DiaDePago = _pf.DiaDePago;
@@ -91,39 +99,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 }
             }
 
-            ViewBag.DiaDePago = CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.day").Valor; 
+            ViewBag.DiaDePago = CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.day").Valor;
             ViewBag.Porcentaje = CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor;
             ViewBag.ProveedoresF = lproveedores;
-            return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
-        public ActionResult Configuraciones()
-        {
-            var configuraciones = _configuracionesFManager.GetConfiguraciones();
-            ViewBag.Configuraciones = configuraciones;
-
-            return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
-        public ActionResult Logs()
-        {
-            return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
-        public ActionResult SolicitudDetalle(int id)
-        {
-            var solicitud =  _solicitudFManager.GetSolicitudById(id);
-            var proveedor =  _proveedorManager.Find(solicitud.IdProveedor);
-            var facturas =   _facturaFManager.GetFacturasBySolicitud(id);
-            var descuentos = _descuentoFManager.GetDescuentosBySolicitud(id);
-
-            ViewBag.Proveedor = proveedor;
-            ViewBag.Facturas = facturas;
-            ViewBag.Descuentos = descuentos;
-
             return View();
         }
 
@@ -131,7 +109,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         {
             bool result = false;
 
-            if ((diadepago >0 && diadepago < 8) || (porcentaje >= 0 && porcentaje <=100))
+            if ((diadepago > 0 && diadepago < 8) || (porcentaje >= 0 && porcentaje <= 100))
             {
                 result = _proveedorFManager.UpdateProveedorFactoraje(idProveedor, diadepago, porcentaje);
             }
@@ -139,7 +117,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             if (result)
                 TempData["FlashSuccess"] = "Actualización realizada correctamente.";
             else
-                TempData["FlashError"] = "Datos incorrectos";           
+                TempData["FlashError"] = "Datos incorrectos";
 
             return RedirectToAction("Proveedores");
         }
@@ -169,7 +147,93 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 TempData["FlashError"] = "Ocurrio un error al eliminar";
 
             return RedirectToAction("Proveedores");
-        }        
+        }
+        /*--------------END PROVEEDORES SECTION---------------*/
+
+        /*-------------BEGIN SOLICITUDES SECTION--------------*/
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
+        public ActionResult Solicitudes()
+        {
+            var solicitudesF = _solicitudFManager.GetSolicitudesFactoraje();
+
+            //Int32.TryParse(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor, out int p);
+            //foreach(var item in solicitudesF)
+            //{
+            //    var index = solicitudesF.FindIndex(c => c.Id == item.Id);
+            //    solicitudesF[index].Tasa = (item.Tasa == 0 ) ?  p : item.Tasa;                
+            //}
+
+            ViewBag.SolicitudesF = solicitudesF;
+            
+            return View();
+        }
+
+        public ActionResult SolicitudesEnviarPropuestas(string selectedlist)
+        {
+            var listpropuestas = new List<solicitudesfactoraje>();
+            string[] split = selectedlist.Split(',');
+            foreach (string element in split)
+            {
+                Int32.TryParse(element, out int id);
+                var propuesta = _solicitudFManager.GetSolicitudById(id);
+                listpropuestas.Add(propuesta);
+            }
+
+            TempData["FlashError"] = "Error al enviar solicitudes";
+            TempData["FlashSuccess"] = "Solicitudes enviadas con exito";
+            return RedirectToAction("Solicitudes");
+        }
+
+        public List<KeyValueCustom> GetSolicitudEstatus()
+        {
+            var lsolicitudesf = _solicitudFManager.GetSolicitudesFactoraje();
+            var lestatus = _db.estatusfactoraje.ToList();
+            var estatusSolicitudes = new List<KeyValueCustom>();
+
+            foreach (var item in lestatus)
+            {
+                int count = 0;
+                count = lsolicitudesf.Where(x => x.EstatusNombre == item.Nombre).Count();
+                var element = new KeyValueCustom(item.Nombre, count);
+                estatusSolicitudes.Add(element);
+            }
+            estatusSolicitudes.Add(new KeyValueCustom("Total", lsolicitudesf.Count()));
+            var lse = estatusSolicitudes.OrderByDescending(x => x.Cantidad).ToList();
+            return lse;
+        }
+        /*--------------END SOLICITUDES SECTION---------------*/
+
+        /*-------------BEGIN SOLICITUD DETALLE SECTION--------------*/
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
+        public ActionResult SolicitudDetalle(int id)
+        {
+            var solicitud = _solicitudFManager.GetSolicitudById(id);
+            var proveedor = _proveedorManager.Find(solicitud.IdProveedor);
+            var facturas = _facturaFManager.GetFacturasBySolicitud(id);
+            var descuentos = _descuentoFManager.GetDescuentosBySolicitud(id);
+
+            ViewBag.Proveedor = proveedor;
+            ViewBag.Facturas = facturas;
+            ViewBag.Descuentos = descuentos;
+
+            return View();
+        }
+        /*--------------END SOLICITUD DETALLE SECTION---------------*/
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
+        public ActionResult Configuraciones()
+        {
+            var configuraciones = _configuracionesFManager.GetConfiguraciones();
+            ViewBag.Configuraciones = configuraciones;
+
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
+        public ActionResult Logs()
+        {
+            return View();
+        }              
 
         public ActionResult UpdateConfiguracion(int id, string key, string value)
         {
@@ -201,23 +265,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             TempData["FlashSuccess"] = result ? "Configuracion guardad correctamente." : "Ocurrio un error al guardar la configuracion";
             return RedirectToAction("Configuraciones");
-        }
-
-        public ActionResult SolicitudesEnviarPropuestas(string selectedlist)
-        {
-            var listpropuestas = new List<solicitudesfactoraje>();
-            string[] split = selectedlist.Split(',');
-            foreach (string element in split)
-            {
-                Int32.TryParse(element, out int id);
-                var propuesta = _solicitudFManager.GetSolicitudById(id);
-                listpropuestas.Add(propuesta);
-            }
-
-            TempData["FlashError"] = "Error al enviar solicitudes";
-            TempData["FlashSuccess"] = "Solicitudes enviadas con exito";
-            return RedirectToAction("Solicitudes");
-        }
+        }        
 
         public class localPF
         {
@@ -228,6 +276,18 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             public string Numero { get; set; }
             public int Porcentaje { get; set; }
             public string Rfc { get; set; }
+        }
+
+        public class KeyValueCustom
+        {
+            public string EstatusNombre { get; set; }
+            public int Cantidad { get; set; }
+
+            public KeyValueCustom(string EstatusNombre, int cantidad)
+            {
+                this.EstatusNombre = EstatusNombre;
+                this.Cantidad = cantidad;
+            }
         }
     }    
 }

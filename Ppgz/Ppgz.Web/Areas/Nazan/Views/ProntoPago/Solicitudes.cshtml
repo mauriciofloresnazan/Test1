@@ -36,24 +36,27 @@
                                 </thead>
                                 <tbody>
                                     @foreach (var item in list)
-                        {
-                            string style = " ";
-                            string s = item.Estatus.ToString();
-                            switch (s)
-                            {
-                                case "1":
-                                    style = "color:rgb(0, 0, 255)";
-                                    break;
-                                case "2":
-                                    style = "color:rgb(0, 255, 0)";
-                                    break;
-                                case "4":
-                                    style = "color: rgb(57, 202, 147)";
-                                    break;
-                                default:
-                                    style = "color:rgb(255, 0, 0)";
-                                    break;
-                            }
+                                    {
+                                        string style = " ";
+                                        string s = item.Estatus.ToString();
+                                        switch (s)
+                                        {
+                                            case "1":
+                                                style = "color:rgb(0, 0, 255)";
+                                                break;
+                                            case "2":
+                                                style = "color:rgb(0, 255, 0)";
+                                                break;
+                                            case "4":
+                                                style = "color: rgb(57, 202, 147)";
+                                                break;
+                                            case "5":
+                                                style = "color:rgb(145, 160, 12)";
+                                                break;
+                                            default:
+                                                style = "color:rgb(255, 0, 0)";
+                                                break;
+                                        }
                                         <tr>
                                             <td class="text-center vert-align">@item.Id</td>
                                             <td class="text-center vert-align">@item.Numero</td>

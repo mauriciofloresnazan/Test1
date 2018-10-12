@@ -87,6 +87,12 @@ namespace Ppgz.Services
             var result = _db.solicitudesfactoraje.Where(s => s.idSolicitudesFactoraje == id).FirstOrDefault();
             return result;
         }       
+
+        public List<solicitudesfactoraje> GetSolicitudesByEstatus(int id)
+        {
+            var result = _db.solicitudesfactoraje.Where(s => s.EstatusFactoraje == id).ToList();
+            return result;
+        }
     }
     public class localsolicitud
     {

@@ -1,6 +1,152 @@
-﻿@{
+﻿@using System.Linq;
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var list = (ViewBag.SolicitudesEstatus);
+    string penviar = ViewBag.ParaEnviar;
 }
 
+@section headjs
+{
+    <script>
+        var chart = null;
+        var dataPoints = [];
 
-<h1>Index</h1>
+        window.onload = function () {
+            var chart2 = new CanvasJS.Chart("chartContainer2", {
+                animationEnabled: true,
+                title: {
+                    text: ""
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 240,
+                    yValueFormatString: "##0.00'%'",
+                    indexLabel: "{label} {y}",
+                    dataPoints: dataPoints
+                }]
+            });
+
+            $.getJSON("@Url.Action("GetPieChartData","ProntoPago")", callback);
+            function callback(data) {
+                console.log("dataPoints {0}", dataPoints);
+                for (var i = 1; i < data.length ; i++) {
+                    dataPoints.push({
+                        label: data[i].EstatusNombre,
+                        y: (data[i].Cantidad * 100) / data[0].Cantidad
+                    });
+                }
+                chart2.render();
+            }
+        }
+    </script>
+}
+
+<div class="container body-content">
+    <h3>Dashboard</h3>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Panel title</h3>
+        </div>
+        <div class="panel-body">
+            <div class="row tile_count">
+                @foreach (var item in list)
+                {
+                    string style;
+                    string s = item.EstatusNombre.ToString();
+                    switch (s)
+                    {
+                        case "Por Aprobacion":
+                            style = "color:rgb(7, 125, 194)";
+                            break;
+                        case "Rechazada":
+                            style = "color:rgb(255, 0, 0)";
+                            break;
+                        case "En Propuesta de Pago":
+                            style = "color:rgb(37, 148, 3))";
+                            break;
+                        case "Lista Para Propuesta":
+                            style = "color:rgb(57, 202, 147)";
+                            break;
+                        case "Por Nota de Credito":
+                            style = "color:rgb(145, 160, 12)";
+                            break;
+                        default:
+                            style = " ";
+                            break;
+
+                    }
+                    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+                        <span class="count_top">@item.EstatusNombre</span>
+                        <div class="count" style="@style">@item.Cantidad</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Solicitudes</div>
+                <div class="panel-body">
+                    <div id="chartContainer2" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Gestion </div>
+                <div class="panel-body">
+                    <div style="text-align: center;">
+                        <img src="../assets/img/gauge.png" />
+                    </div>
+                    <div style="text-align: center;">
+                        <a href="@Url.Action("Solicitudes","ProntoPago")" class="btn btn-default" style="margin-top: 10px;">
+                            <i class="fa fa-refresh" aria-hidden="true"></i> Ver Listado
+                        </a>
+
+                    </div>
+
+                    <div class="panel-body">
+                        <div style="text-align: center;margin-top: 10px;">
+                            <span style="font-size: 15px;"><b>Para enviar a Propuesta</b></span>
+                            <div class="count" style="color:rgb(57, 202, 147); font-size: 40px;">@penviar</div>
+                        </div>
+                        <div style="text-align: center;">
+                            <a href="@Url.Action("Solicitudes","ProntoPago")" class="btn btn-default" style="margin-top: 10px;">
+                                <i class="fa fa-refresh" aria-hidden="true"></i> Enviar Propuestas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/assets/canvas/canvasjs.min.js"></script>
+
+    <style>
+        .tile_count .tile_stats_count::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            height: 65px;
+            border-left: 2px solid #ADB2B5;
+            margin-top: 10px;
+        }
+
+        .tile_count .tile_stats_count .count {
+            font-size: 40px;
+        }
+
+        .tile_count .tile_stats_count .count {
+            font-size: 30px;
+            line-height: 47px;
+            font-weight: 600;
+        }
+    </style>
+
+}

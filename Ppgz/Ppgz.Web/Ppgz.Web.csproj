@@ -259,6 +259,11 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Content Include="App_Data\ConfiguracionInicial.sql" />
+    <Content Include="assets\canvas\canvasjs.min.js" />
+    <Content Include="assets\canvas\canvasjs.react.js" />
+    <Content Include="assets\canvas\instruction.txt" />
+    <Content Include="assets\canvas\jquery.canvasjs.min.js" />
+    <Content Include="assets\canvas\license.txt" />
     <Content Include="Areas\Nazan\Views\AdministrarPerfilesNazan\Editar.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarUsuariosNazan\Editar.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarUsuariosNazan\Crear.cshtml" />
