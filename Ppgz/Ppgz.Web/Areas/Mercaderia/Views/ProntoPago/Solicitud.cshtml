@@ -1,0 +1,199 @@
+﻿
+@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+	//ViewBag.Title = "Listado de  solicitudes";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+
+	var proveedor = (proveedore)ViewBag.Proveedor;
+	var facturas = (List<Ppgz.Web.Models.ProntoPago.FacturaView>)ViewBag.Facturas;
+	var descuentos = (List<Ppgz.Web.Models.ProntoPago.FacturaView>)ViewBag.Descuentos;
+	//var pagosPendientes = (DataTable)ViewBag.PagosPendientes;
+	//var importeTotal = pagosPendientes.Rows.Cast<DataRow>()
+	// .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
+
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+	<i class="fa fa-calculator" aria-hidden="true"></i>
+	<i>@ViewBag.SubTitle</i>
+</p>
+<div class="container body-content">
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">Proveedor Seleccionado</div>
+				<div class="panel-body">
+					<div class="row">
+						<label class="col-sm-2 control-label">RFC</label>
+						<div class="col-sm-3">
+							<div>@proveedor.Rfc</div>
+						</div>
+						<label class="col-sm-2 control-label">Nombre</label>
+						<div class="col-sm-3">
+							<div>@proveedor.Nombre1</div>
+						</div>
+						<div class="col-sm-2">
+							<a href="@Url.Action("Index", "ProntoPago")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Pagos relacionados</div>
+				<div class="panel-body">
+					<div class="col-md-12">
+						<table id="facturas" class="table table-striped table-condensed table-bordered">
+							<thead>
+								<tr>
+									<th class="text-center">Numero Documento</th>
+									<th class="text-center">Fecha Base</th>
+									<th class="text-center">Monto</th>
+									<th class="text-center">Vencimiento</th>
+									<th class="text-center">Porcentaje</th>
+									<th class="text-center">Desc. P.P.</th>
+									<th class="text-center">
+										<input name="select_all" value="1" id="example-select-all" type="checkbox" />
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in facturas)
+								{
+									
+									<tr>
+										<td class="text-center align-vert">@item.numeroDocumento</td>
+										<td class="text-center align-vert">@item.fechaDocumento</td>
+										<td class="text-center align-vert">@item.importe.ToString("C")</td>
+										<td class="text-center align-vert">@item.vencimiento</td>
+										<td class="text-center align-vert">@item.porcentaje%</td>
+										<td class="text-center align-vert">@item.descripcion</td>
+										<td class="text-center align-vert"><input type="checkbox" value="@item.numeroDocumento"></td>
+									</tr>
+								}
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-lg-7">
+			<div class="panel panel-default">
+				<div class="panel-heading">Descuentos</div>
+				<div class="panel-body">
+					<div class="col-md-12">
+						<table id="descuentos" class="table table-striped table-condensed table-bordered">
+							<thead>
+								<tr>
+									<th class="text-center">Num Descuento</th>
+									<th class="text-center">Monto</th>
+									<th class="text-center">Descripcion</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in descuentos)
+								{
+									<tr>
+										<td class="text-center align-vert">@item.numeroDocumento</td>
+										<td class="text-center align-vert">@item.importe.ToString("C")</td>
+										<td class="text-center align-vert">@item.descripcion</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+					<div style="text-align: center">
+						<button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal">
+							<i class="fa " aria-hidden="true"></i> Ver
+						</button>
+					</div>
+				</div>
+				<div class="panel-heading" style="text-align: center">Usted tiene un prestamo por: $567,890</div>
+			</div>
+		</div>
+		<div class="col-lg-5">
+			<div id="TotalProntoPagoResult">
+				@Html.Partial("_totalProntoPago")
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="form-group" style="text-align: right">
+			<div class="col-md-10 col-md-offset-2">
+				<a href="1.1.html" class="btn btn-primary">
+					<i class="fa fa-ticket" aria-hidden="true"></i> Enviar
+				</a>
+				<a href="1.html" class="btn btn-default">
+					<i class="fa fa-undo"></i> Cancelar
+				</a>
+			</div>
+		</div>
+	</div>
+
+
+</div>
+@section Scripts {
+	<script type="text/javascript">
+		var table = $('#facturas').DataTable({
+			"language": {
+				"url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+			},
+			'columnDefs': [{
+				'targets': 6,
+				'searchable': false,
+				'orderable': false,
+				'className': 'dt-body-center'
+			}],
+			"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+		});
+
+		$(document).ready(function () {
+			//Evento para cachar todos los checked
+			$('input[type=checkbox]').on('change', function () {
+				var facturas = '';
+				var facturaPost = {};
+				//Obtenemos los marcados
+				var rows = table.rows({ 'search': 'applied' }).nodes();
+				console.log($('input[type="checkbox"]:checked', rows));
+
+				$('input[type="checkbox"]:checked', rows).each(function () {
+					facturas = facturas + "," + $(this).val();
+				});
+
+				//Vamos al servidor a hacer el calculo
+				$.ajax({
+					type: "POST",
+					url: "@Url.RouteUrl("Default", new { controller = "Mercaderia/ProntoPago", action = "ObtenerTotalFactoraje"})" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id",
+					//data: JSON.stringify({ 'facturas': facturaPost }),
+					dataType: "html",
+					success: function (data) {
+						$('#TotalProntoPagoResult').html(data);
+					},
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						//DesbloquearForma('GiftCardFilter');
+					}
+			});
+
+			});
+		});
+
+		$('#example-select-all').on('click', function () {
+			// Check/uncheck all checkboxes in the table
+			var rows = table.rows({ 'search': 'applied' }).nodes();
+			$('input[type="checkbox"]', rows).prop('checked', this.checked);
+		});
+
+		loadTotalProntoPago = function () {
+			
+		}
+	</script>
+}

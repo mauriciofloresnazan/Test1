@@ -18,6 +18,8 @@ namespace Ppgz.Web.Models.ProntoPago
 		public string numeroDocumento { get; set; }
 		public string idProveedor { get; set; }
 		public bool pagar { get; set; }
+		public int porcentaje { get; set; }
+		public List<string> facturas { get; set; }
 		
 	}
 }

@@ -3,10 +3,10 @@
 @using System.Globalization
 @using Ppgz.Repository
 @{
-	ViewBag.Title = "Gestión de Pagos Pendientes - Detalle";
+	ViewBag.Title = "Listado de  solicitudes";
 	Layout = "~/Views/Shared/_Layout.cshtml";
 
-	//var proveedor = (proveedore)ViewBag.Proveedor;
+	var proveedor = (proveedore)ViewBag.Proveedor;
 
 	//var pagosPendientes = (DataTable)ViewBag.PagosPendientes;
 	//var importeTotal = pagosPendientes.Rows.Cast<DataRow>()
@@ -21,26 +21,23 @@
 </p>
 <div class="container body-content">
 	<h3>
-		Listado de solicitudes</h1>
+		Listado de solicitudes</h3>
 		<div class="row">
 			<div class="col-md-12">
-
 				<div class="panel panel-default">
 					<div class="panel-heading">Proveedor Seleccionado</div>
 					<div class="panel-body">
 						<div class="row">
 							<label class="col-sm-2 control-label">RFC</label>
 							<div class="col-sm-3">
-								<div>DFL8009138B9</div>
+								<div>@proveedor.Rfc</div>
 							</div>
 							<label class="col-sm-2 control-label">Nombre</label>
 							<div class="col-sm-3">
-								<div>DISTRIBUIDORA FLEXI SA DE CV </div>
+								<div>@proveedor.Nombre1</div>
 							</div>
 							<div class="col-sm-2">
-								<a href="/PortalProveedores/Mercaderia/Facturas" class="btn btn-warning btn-xs">
-									<i class="fa fa-refresh" aria-hidden="true"></i> Cambiar
-								</a>
+								<a href="@Url.Action("Index", "ProntoPago")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
 							</div>
 						</div>
 
@@ -51,11 +48,15 @@
 					<div class="panel-heading">Facturas</div>
 					<div class="panel-body">
 						<div class="form-group">
-							<label class="col-md-1 control-label" for="Buscar">Buscar:</label>
+
 							<div class="col-md-2">
-								<input class="form-control" id="Buscar" type="search" />
+								<a class="form-control btn btn-warning" href="@Url.Action("NuevaSolicitud", "ProntoPago", new { @proveedorId = @proveedor.Id })">
+									Nueva Solicitud
+								</a>
 							</div>
 						</div>
+
+						
 						<br />
 						<br />
 						<div class="col-md-12">
@@ -72,18 +73,18 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr>
-										<td class="text-center align-vert">918274</td>
-										<td class="text-center align-vert">00110020</td>
-										<td class="text-center align-vert">$45,000</td>
-										<td class="text-center align-vert">12/12/2018</td>
-										<td class="text-center align-vert">Aceptado</td>
-										<td class="text-center align-vert">$123,123</td>
-										<td class="text-center align-vert">
-											<input type="button" class="btn btn-warning" value="Editar" />
-											<input type="button" class="btn btn-primary" value="Cargar nota" />
-										</td>
-									</tr>
+									@*<tr>
+						<td class="text-center align-vert">918274</td>
+						<td class="text-center align-vert">00110020</td>
+						<td class="text-center align-vert">$45,000</td>
+						<td class="text-center align-vert">12/12/2018</td>
+						<td class="text-center align-vert">Aceptado</td>
+						<td class="text-center align-vert">$123,123</td>
+						<td class="text-center align-vert">
+							<input type="button" class="btn btn-warning" value="Editar" />
+							<input type="button" class="btn btn-primary" value="Cargar nota" />
+						</td>
+					</tr>*@
 								</tbody>
 							</table>
 						</div>
@@ -95,13 +96,12 @@
 		</div>
 
 
-		<hr />
 
 </div>
 @section Scripts {
 	<script type="text/javascript">
 		$(document).ready(function () {
-			$('#detallePago').DataTable({
+			$('#facturas').DataTable({
 				"language": {
 					"url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
 				},
