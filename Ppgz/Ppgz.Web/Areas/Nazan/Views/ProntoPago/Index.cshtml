@@ -8,6 +8,7 @@
 
 @section headjs
 {
+    <link href="~/assets/c3/css/c3.css" rel="stylesheet" type="text/css">
     <script>
         var chart = null;
         var dataPoints = [];
@@ -53,32 +54,39 @@
                 @foreach (var item in list)
                 {
                     string style;
+                    string id = "";
                     string s = item.EstatusNombre.ToString();
                     switch (s)
                     {
                         case "Por Aprobacion":
+                            id = "PorAprobacion";
                             style = "color:rgb(7, 125, 194)";
                             break;
                         case "Rechazada":
+                            id = "Rechazada";
                             style = "color:rgb(255, 0, 0)";
                             break;
                         case "En Propuesta de Pago":
+                            id = "EnPropuestaDePago";
                             style = "color:rgb(37, 148, 3))";
                             break;
                         case "Lista Para Propuesta":
+                            id = "ListaParaPropuesta";
                             style = "color:rgb(57, 202, 147)";
                             break;
                         case "Por Nota de Credito":
+                            id = "PorNotadeCredito";
                             style = "color:rgb(145, 160, 12)";
                             break;
                         default:
+                            id = "SolTotal";
                             style = " ";
                             break;
 
                     }
                     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
                         <span class="count_top">@item.EstatusNombre</span>
-                        <div class="count" style="@style">@item.Cantidad</div>
+                        <div class="count" style="@style" id="@id">@item.Cantidad</div>
                     </div>
                 }
             </div>
@@ -98,7 +106,9 @@
                 <div class="panel-heading">Gestion </div>
                 <div class="panel-body">
                     <div style="text-align: center;">
-                        <img src="../assets/img/gauge.png" />
+                        <div class='chG'>
+                            <div id='chart'></div>
+                        </div>
                     </div>
                     <div style="text-align: center;">
                         <a href="@Url.Action("Solicitudes","ProntoPago")" class="btn btn-default" style="margin-top: 10px;">
@@ -126,8 +136,38 @@
 </div>
 
 @section Scripts {
+    <script src="~/assets/c3/js/d3-5.4.0.min.js" charset="utf-8"></script>
     <script src="~/assets/canvas/canvasjs.min.js"></script>
+    <script src="~/assets/c3/js/c3.js"></script>
 
+    <script>
+        var dv = $("#PorAprobacion").text();
+        var total = $("#SolTotal").text();
+        var pchart = (dv * 100) / total ;
+        console.log("PorAprobacion: {0}",  dv);
+        var chart = c3.generate({
+            data: {
+                columns: [
+                    ['Solicitudes', pchart]
+                ],
+                type: 'gauge'
+            },
+            gauge: {
+            },
+            color: {
+                pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+                threshold: {
+                    //            unit: 'value', // percentage is default
+                    //            max: 200, // 100 is default
+                    values: [30, 60, 90, 100]
+                }
+            },
+            size: {
+                height: 180
+            },
+            bindto: '#chart'
+        });
+    </script>
     <style>
         .tile_count .tile_stats_count::before {
             content: "";

@@ -67,9 +67,9 @@
                                             <td class="text-center vert-align">@item.Descuentos</td>
                                             <td class="text-center vert-align" style="@style;">@item.EstatusNombre</td>
                                             @if (@item.Estatus == 4)
-                        {
+                                            {
                                                 <td class="text-center vert-align">
-                                                    @Html.CheckBox("cb", item.Selected, new { @class = "solready", @id=item.Id })
+                                                    @Html.CheckBox("cb", item.Selected, new { @class = "solready", @id = item.Id })
                                                     @*<input  class="solready" type="checkbox" name="cb"/>*@
                                                 </td>
                                             }
