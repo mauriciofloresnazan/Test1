@@ -15,7 +15,7 @@ namespace Ppgz.Repository
     public partial class facturasfactoraje
     {
         public int idFacturasFactoraje { get; set; }
-        public string NumeroDocumento { get; set; }
+        public int NumeroDocumento { get; set; }
         public string Monto { get; set; }
         public string uuid { get; set; }
         public int IdProveedor { get; set; }
