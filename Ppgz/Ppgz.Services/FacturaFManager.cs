@@ -15,5 +15,12 @@ namespace Ppgz.Services
         {
             return _db.facturasfactoraje.Where(ff => ff.idSolicitudesFactoraje == id).ToList();
         }
+		public int InsFacturaFactoraje(facturasfactoraje model)
+		{
+			var result = _db.facturasfactoraje.Add(model);
+			_db.SaveChanges();
+
+			return model.idFacturasFactoraje;
+		}
     }
 }

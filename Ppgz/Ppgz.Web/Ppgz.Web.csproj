@@ -383,6 +383,7 @@
     <Compile Include="Models\Nazan\PerfilViewModel.cs" />
     <Compile Include="Models\Nazan\UsuarioViewModel.cs" />
     <Compile Include="Models\ProntoPago\FacturaView.cs" />
+    <Compile Include="Models\ProntoPago\TotalView.cs" />
     <Compile Include="Models\ProveedorUsuarioViewModel.cs" />
     <Compile Include="Infrastructure\MySqlIdentity\MySqlConfiguration.cs" />
     <Compile Include="Infrastructure\MySqlIdentity\MySqlHistoryContext.cs" />

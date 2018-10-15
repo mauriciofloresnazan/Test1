@@ -129,7 +129,7 @@
 	<div class="row">
 		<div class="form-group" style="text-align: right">
 			<div class="col-md-10 col-md-offset-2">
-				<a href="1.1.html" class="btn btn-primary">
+				<a href="1.1.html" class="btn btn-primary" id="btnEnviar">
 					<i class="fa fa-ticket" aria-hidden="true"></i> Enviar
 				</a>
 				<a href="1.html" class="btn btn-default">
@@ -170,6 +170,7 @@
 				});
 
 				//Vamos al servidor a hacer el calculo
+				$("#btnEnviar").attr("href", "@Url.RouteUrl("Default", new { controller = "Mercaderia/ProntoPago", action = "GuardarSolicitud" })" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id")
 				$.ajax({
 					type: "POST",
 					url: "@Url.RouteUrl("Default", new { controller = "Mercaderia/ProntoPago", action = "ObtenerTotalFactoraje"})" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id",

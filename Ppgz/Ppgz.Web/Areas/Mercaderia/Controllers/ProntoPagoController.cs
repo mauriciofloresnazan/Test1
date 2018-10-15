@@ -1,6 +1,7 @@
 ﻿using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
+using Ppgz.Web.Models.ProntoPago;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -34,6 +35,43 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		}
 
 		//**********CU002-Seleccion razon social*****************
+		public ActionResult GuardarSolicitud(string facturas, int proveedorId)
+		{
+			string[] facturasList = facturas.Split(',');
+
+			var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+			var partidasManager = new PartidasManager();
+			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+
+			var proveedorFManager = new ProveedorFManager();
+			ProveedorFManager.localPF provedorFactoraje = proveedorFManager.GetProveedoresFactoraje().Where(x => x.IdProveedor == proveedorId).FirstOrDefault();
+			int porcentaje = 0;
+			if (provedorFactoraje != null)
+			{
+				porcentaje = provedorFactoraje.Porcentaje;
+			}
+			else
+			{
+				porcentaje = Convert.ToInt32(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor);
+			}
+
+			TotalView totalView = new TotalView(dsPagosPendientes, porcentaje, proveedorId, facturasList);
+			SolicitudFManager solicitudFManager = new SolicitudFManager();
+			FacturaFManager facturaFManager = new FacturaFManager();
+
+			//Insertamos la solicitud factoraje
+			int SolicitudId = solicitudFManager.InsSolicitud(totalView.SolicitudFactoraje);
+
+			//Insertamos las facturas del factoraje
+			foreach(facturasfactoraje item in totalView.FacturasFactoraje)
+			{
+				item.idSolicitudesFactoraje = SolicitudId;
+				facturaFManager.InsFacturaFactoraje(item);
+			}
+
+			return RedirectToAction("VerSolicitudes", new { proveedorId = proveedorId });
+		}
+
 		public ActionResult ObtenerTotalFactoraje(string facturas, int proveedorId)
 		{
 			string[] facturasList = facturas.Split(',');
@@ -54,11 +92,69 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				porcentaje = Convert.ToInt32(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor);
 			}
 
-			double MontoOriginal = 0;
-			double Descuentos = 0;
-			double DescuentoProntoPago = 0;
+			TotalView totalView = new TotalView(dsPagosPendientes, porcentaje, proveedorId, facturasList);
+			//int dias = 0;
+			ViewBag.MontoOriginal = totalView.MontoOriginal.ToString("C");
+			ViewBag.DescuentosTotal = totalView.DescuentosTotal.ToString("C");
+			ViewBag.DescuentoProntoPago = totalView.Interes.ToString("C");
+			ViewBag.TotalSolicitado = totalView.TotalSolicitado.ToString("C");
+
+			return PartialView("_totalProntoPago");
+		}
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
+		public ActionResult VerSolicitud(int proveedorId, int idSolicitudesFactoraje)
+		{
+			SolicitudFManager solicitudFManager = new SolicitudFManager();
+			FacturaFManager facturaFManager = new FacturaFManager();
+			//Traemos la solicitud
+			solicitudesfactoraje solicitud = solicitudFManager.GetSolicitudById(idSolicitudesFactoraje);
+			List<facturasfactoraje> facturas = facturaFManager.GetFacturasBySolicitud(solicitud.idSolicitudesFactoraje);
+
+			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+			var proveedor = _proveedorManager.Find(proveedorId, cuenta.Id);
+
+			if (proveedor == null)
+			{
+				// TODO pasar a recurso
+				TempData["FlashError"] = "Proveedor incorrecto";
+				return RedirectToAction("Index");
+			}
+
+			ProveedorCxp = proveedor;
+
+
+			//Traemos los pagos pendientes
+			var partidasManager = new PartidasManager();
+			var proveedorFManager = new ProveedorFManager();
+
+			var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+
+			//Se obtiene porcentaje de factoraje por proveedor.
+			ProveedorFManager.localPF provedorFactoraje = proveedorFManager.GetProveedoresFactoraje().Where(x => x.IdProveedor == proveedorId).FirstOrDefault();
+			int porcentaje = 0;
+			if (provedorFactoraje != null)
+			{
+				porcentaje = provedorFactoraje.Porcentaje;
+			}
+			else
+			{
+				porcentaje = Convert.ToInt32(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor);
+			}
+
+
+			//Armamos la lista con las cuentas por pagas es decir mayores a cero 
+			List<Web.Models.ProntoPago.FacturaView> _list = new List<Web.Models.ProntoPago.FacturaView>();
+			List<Web.Models.ProntoPago.FacturaView> _listDescuentos = new List<Web.Models.ProntoPago.FacturaView>();
+
 			for (int i = 0; i < dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows.Count; i++)
 			{
+
+				bool pagar = true;
+
+				
+
 				Web.Models.ProntoPago.FacturaView item = new Web.Models.ProntoPago.FacturaView()
 				{
 					referencia = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["XBLNR"].ToString(),
@@ -68,40 +164,44 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					tipoMovimiento = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["BLART"].ToString(),
 					fechaDocumento = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["BLDAT"].ToString(),
 					descripcion = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["SGTXT"].ToString(),
-					pagar = false,
+					pagar = pagar,
 					idProveedor = ProveedorCxp.Id.ToString(),
 					numeroDocumento = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["BELNR"].ToString(),
 					porcentaje = porcentaje
 				};
 
-				//Acumulamos el monto original
+				//if(facturas.Where(x=>x.NumeroDocumento == item.numeroDocumento))
+				//{
+
+				//}
 
 
-				
-				if(item.importe < 0)
-					Descuentos = Descuentos + item.importe;
-
-				//si la factura esta en la lista
-				if (facturasList.Contains(dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["BELNR"].ToString()))
+				if (item.importe < 0)
 				{
-					//Acumulamos el monto original y los descuentos
-					if (item.importe > 0)
-					{
-						MontoOriginal = MontoOriginal + item.importe;
-						DescuentoProntoPago = DescuentoProntoPago + (item.importe * (Convert.ToDouble(item.porcentaje) / 100));
-					}
+					item.pagar = true;
 				}
+				if (item.importe > 0)
+					_list.Add(item);
+				else
+					_listDescuentos.Add(item);
 			}
-			Descuentos = Descuentos * -1;
-			ViewBag.MontoOriginal = MontoOriginal;
-			ViewBag.Descuentos = Descuentos;
-			ViewBag.DescuentoProntoPago = DescuentoProntoPago;
-			ViewBag.TotalSolicitado = MontoOriginal - Descuentos - DescuentoProntoPago;
 
-			return PartialView("_totalProntoPago");
+			ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
+			ViewBag.Proveedor = proveedor;
+			ViewBag.Title = "Nueva solicitud";
+			ViewBag.SubTitle = "En esta sección podrán crear una solicitud.";
+			ViewBag.Facturas = _list;
+			ViewBag.Descuentos = _listDescuentos;
+
+			//
+			
+			ViewBag.MontoOriginal = solicitud.MontoOriginal.ToString("C");
+			ViewBag.DescuentosTotal = solicitud.Descuentos.ToString("C");
+			ViewBag.DescuentoProntoPago = solicitud.DescuentoPP.ToString("C");
+			ViewBag.TotalSolicitado = solicitud.MontoAFacturar.ToString("C");
+
+			return View("Solicitud");
 		}
-
-		
 
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
 		public ActionResult NuevaSolicitud(int proveedorId)
@@ -123,11 +223,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			//Traemos los pagos pendientes
 			var partidasManager = new PartidasManager();
 			var proveedorFManager = new ProveedorFManager();
-			
-			/*
-			 ViewBag.DiaDePago = CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.day").Valor;
-            ViewBag.Porcentaje = CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor;
-			 */
 
 			var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
 			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
@@ -143,10 +238,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			{
 				porcentaje =Convert.ToInt32(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor);
 			}
-
-			//.Porcentaje ?? CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor				;
-
-
+			
 
 			//Armamos la lista con las cuentas por pagas es decir mayores a cero 
 			List<Web.Models.ProntoPago.FacturaView> _list = new List<Web.Models.ProntoPago.FacturaView>();
@@ -204,7 +296,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			ProveedorCxp = proveedor;
 			ViewBag.Proveedor = proveedor;
-			return View();
+
+			//Obtenemos las solicitudes del proveedor
+			SolicitudFManager solicitudFManager = new SolicitudFManager();
+			List<localsolicitud> solicitudesList = solicitudFManager.GetSolicitudesFactoraje();
+			solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId).ToList();
+			return View(solicitudesList);
 		}
 
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]

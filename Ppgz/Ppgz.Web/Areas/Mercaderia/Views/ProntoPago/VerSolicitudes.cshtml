@@ -1,4 +1,4 @@
-﻿
+﻿@model List<Ppgz.Services.localsolicitud>
 @using System.Data
 @using System.Globalization
 @using Ppgz.Repository
@@ -73,18 +73,22 @@
 									</tr>
 								</thead>
 								<tbody>
-									@*<tr>
-						<td class="text-center align-vert">918274</td>
-						<td class="text-center align-vert">00110020</td>
-						<td class="text-center align-vert">$45,000</td>
-						<td class="text-center align-vert">12/12/2018</td>
-						<td class="text-center align-vert">Aceptado</td>
-						<td class="text-center align-vert">$123,123</td>
-						<td class="text-center align-vert">
-							<input type="button" class="btn btn-warning" value="Editar" />
-							<input type="button" class="btn btn-primary" value="Cargar nota" />
-						</td>
-					</tr>*@
+									@foreach(var item in Model)
+									{
+										<tr>
+											<td class="text-center align-vert">@item.Proveedor</td>
+											<td class="text-center align-vert">@item.Numero</td>
+											<td class="text-center align-vert">@item.Monto.ToString("C")</td>
+											<td class="text-center align-vert">@item.Fecha</td>
+											<td class="text-center align-vert">@item.EstatusNombre</td>
+											<td class="text-center align-vert">@item.Total.ToString("C")</td>
+											<td class="text-center align-vert">
+												<a class="btn btn-warning" href="@Url.Action("VerSolicitud", "ProntoPago", new { @proveedorId = item.IdProveedor, @idSolicitudesFactoraje = item.Id })">Editar</a>
+												<a class="btn btn-primary">Cargar Nota</a>
+											</td>
+										</tr>
+									}
+									
 								</tbody>
 							</table>
 						</div>

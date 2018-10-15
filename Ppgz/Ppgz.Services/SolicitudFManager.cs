@@ -1,6 +1,7 @@
 ﻿using Ppgz.Repository;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,7 +27,10 @@ namespace Ppgz.Services
                                                             sf.NDocumentos,
                                                             sf.DescuentoPP,
                                                             sf.Descuentos,
-                                                            sf.EstatusFactoraje
+                                                            sf.EstatusFactoraje,
+															sf.MontoAFacturar,
+															sf.MontoOriginal,
+															sf.FechaSolicitud
                                                         }).ToList();                                                        
                                                         /*.Join(_db.proveedoresfactoraje,
                                                                 n => n.sf.IdProveedor,
@@ -75,7 +79,11 @@ namespace Ppgz.Services
                     Descuentos = item.Descuentos,
                     Estatus = item.EstatusFactoraje,
                     EstatusNombre = s,
-                    Selected = false
+                    Selected = false,
+					Monto = item.MontoOriginal,
+					Total = item.MontoAFacturar,
+					Fecha = item.FechaSolicitud,
+					IdProveedor = item.IdProveedor
                 };
                 result.Add(element);
             }
@@ -93,12 +101,20 @@ namespace Ppgz.Services
             var result = _db.solicitudesfactoraje.Where(s => s.EstatusFactoraje == id).ToList();
             return result;
         }
+		public int InsSolicitud(solicitudesfactoraje model)
+		{
+			var result = _db.solicitudesfactoraje.Add(model);
+			_db.SaveChanges();
+
+			return model.idSolicitudesFactoraje;
+		}
     }
     public class localsolicitud
     {
         public int Id { get; set; }
         public string Numero { get; set; }
         public string Proveedor { get; set; }
+		public int IdProveedor { get; set; }
         public float Tasa { get; set; }
         public int NoDocumentos { get; set; }
         public int DescuentoPP { get; set; }
@@ -106,5 +122,8 @@ namespace Ppgz.Services
         public int Estatus { get; set; }
         public string EstatusNombre { get; set; }
         public bool Selected { get; set; }
+		public int Monto { get; set; }
+		public DateTime Fecha { get; set; }
+		public int Total { get; set; }
     }
 }
