@@ -73,7 +73,16 @@
 										<td class="text-center align-vert">@item.vencimiento</td>
 										<td class="text-center align-vert">@item.porcentaje%</td>
 										<td class="text-center align-vert">@item.descripcion</td>
-										<td class="text-center align-vert"><input type="checkbox" value="@item.numeroDocumento"></td>
+										<td class="text-center align-vert">
+											@if (item.pagar)
+											{
+												<input type="checkbox" value="@item.numeroDocumento" checked>
+											}
+											else
+											{
+												<input type="checkbox" value="@item.numeroDocumento">
+											}
+										</td>
 									</tr>
 								}
 
@@ -157,34 +166,41 @@
 		});
 
 		$(document).ready(function () {
-			//Evento para cachar todos los checked
-			$('input[type=checkbox]').on('change', function () {
-				var facturas = '';
-				var facturaPost = {};
-				//Obtenemos los marcados
-				var rows = table.rows({ 'search': 'applied' }).nodes();
-				console.log($('input[type="checkbox"]:checked', rows));
+			if (@ViewBag.DisableItems == 1) {
+				$('input[type=checkbox]').attr("disabled", true);
+				$('#btnEnviar').removeAttr("href");
+			}
+			else {
+				//Evento para cachar todos los checked
+				$('input[type=checkbox]').on('change', function () {
+					var facturas = '';
+					var facturaPost = {};
+					//Obtenemos los marcados
+					var rows = table.rows({ 'search': 'applied' }).nodes();
+					console.log($('input[type="checkbox"]:checked', rows));
 
-				$('input[type="checkbox"]:checked', rows).each(function () {
-					facturas = facturas + "," + $(this).val();
+					$('input[type="checkbox"]:checked', rows).each(function () {
+						facturas = facturas + "," + $(this).val();
+					});
+
+					//Vamos al servidor a hacer el calculo
+					$("#btnEnviar").attr("href", "@Url.RouteUrl("Default", new { controller = "Mercaderia/ProntoPago", action = "GuardarSolicitud" })" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id")
+					$.ajax({
+						type: "POST",
+						url: "@Url.RouteUrl("Default", new { controller = "Mercaderia/ProntoPago", action = "ObtenerTotalFactoraje"})" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id",
+						//data: JSON.stringify({ 'facturas': facturaPost }),
+						dataType: "html",
+						success: function (data) {
+							$('#TotalProntoPagoResult').html(data);
+						},
+						error: function (XMLHttpRequest, textStatus, errorThrown) {
+							//DesbloquearForma('GiftCardFilter');
+						}
+					});
+
 				});
-
-				//Vamos al servidor a hacer el calculo
-				$("#btnEnviar").attr("href", "@Url.RouteUrl("Default", new { controller = "Mercaderia/ProntoPago", action = "GuardarSolicitud" })" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id")
-				$.ajax({
-					type: "POST",
-					url: "@Url.RouteUrl("Default", new { controller = "Mercaderia/ProntoPago", action = "ObtenerTotalFactoraje"})" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id",
-					//data: JSON.stringify({ 'facturas': facturaPost }),
-					dataType: "html",
-					success: function (data) {
-						$('#TotalProntoPagoResult').html(data);
-					},
-					error: function (XMLHttpRequest, textStatus, errorThrown) {
-						//DesbloquearForma('GiftCardFilter');
-					}
-			});
-
-			});
+			}
+			
 		});
 
 		$('#example-select-all').on('click', function () {

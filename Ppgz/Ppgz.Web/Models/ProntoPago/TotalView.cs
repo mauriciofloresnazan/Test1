@@ -1,4 +1,5 @@
 ﻿using Ppgz.Repository;
+using Ppgz.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -17,6 +18,7 @@ namespace Ppgz.Web.Models.ProntoPago
 		public double TotalSolicitado { get; set; }
 		public solicitudesfactoraje SolicitudFactoraje { get; set; }
 		public List<facturasfactoraje> FacturasFactoraje { get; set; }
+		public List<descuentofactoraje> DescuentosFactoraje { get; set; }
 		public TotalView(DataSet dsPagosPendientes, int porcentaje, int idProveedor, string[] facturasList)
 		{
 			MontoOriginal = 0;
@@ -26,6 +28,7 @@ namespace Ppgz.Web.Models.ProntoPago
 			double Descuentos = 0;
 
 			FacturasFactoraje = new List<facturasfactoraje>();
+			DescuentosFactoraje = new List<descuentofactoraje>();
 
 			for (int i = 0; i < dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows.Count; i++)
 			{
@@ -47,11 +50,21 @@ namespace Ppgz.Web.Models.ProntoPago
 					porcentaje = porcentaje
 				};
 
-				
+
 
 				//Acumulamos el monto original
 				if (item.importe < 0)
+				{
+					//Agregamos la factura a los descuentos
+					DescuentosFactoraje.Add(new descuentofactoraje()
+					{
+						Monto = item.importe.ToString(),
+						Descripcion = item.descripcion,
+						EstatusFactoraje = 1,
+						NumeroDocumento = item.numeroDocumento
+					});
 					Descuentos = Descuentos + item.importe;
+				}
 
 				//si la factura esta en la lista
 				if (facturasList.Contains(dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["BELNR"].ToString()))
@@ -77,7 +90,7 @@ namespace Ppgz.Web.Models.ProntoPago
 						FechaSolicitud = DateTime.Now,
 						IdProveedor = idProveedor,
 						Monto = item.importe.ToString(),
-						NumeroDocumento = Convert.ToInt32("123"),
+						NumeroDocumento = item.numeroDocumento,
 						Porcentaje = porcentaje,
 						Referencia = item.referencia,
 						uuid = "uuid",
@@ -86,6 +99,7 @@ namespace Ppgz.Web.Models.ProntoPago
 
 				
 				Descuentos = Descuentos * -1;
+
 				MontoOriginal = MontoOriginal;
 				DescuentosTotal = Descuentos;
 				DescuentoProntoPago = Interes;
@@ -98,19 +112,66 @@ namespace Ppgz.Web.Models.ProntoPago
 					IdProveedor = idProveedor,
 					FechaSolicitud = DateTime.Now,
 					EstatusFactoraje = 1,
-					Comentario = "",
-					xml = "",
-					pdf = "",
+					Comentario = "Recien creada",
 					MontoOriginal = (int)MontoOriginal,
 					MontoAFacturar = (int)TotalSolicitado,
 					Descuentos = (int)DescuentosTotal,
 					DescuentoPP =(int)Interes,
-					DiasPP = 1,
+					DiasPP = 11,//FacturasFactoraje.Sum(x=>x.DiasPP)/FacturasFactoraje.Count, //promedio de los dias
+					NDocumentos = FacturasFactoraje.Count + DescuentosFactoraje.Count,
 					EstatusOperacionSAP = "",
-					NDocumentos = 0,
+					xml = "",
+					pdf = "",
 					NumeroGenerado = 0
 				};
 			}
+		}
+		public TotalView(int idSolicitud, int[] facturas, int[] descuentos)
+		{
+			MontoOriginal = 0;
+			DescuentosTotal = 0;
+			DescuentoProntoPago = 0;
+			Interes = 0;
+			double Descuentos = 0;
+
+			FacturasFactoraje = new List<facturasfactoraje>();
+			DescuentosFactoraje = new List<descuentofactoraje>();
+
+			SolicitudFManager solicitudFManager = new SolicitudFManager();
+			FacturaFManager facturaFManager = new FacturaFManager();
+			DescuentoFManager descuentoFManager = new DescuentoFManager();
+
+			//SolicitudFactoraje = solicitudFManager.GetSolicitudById(idSolicitud);
+			FacturasFactoraje = facturaFManager.GetFacturasBySolicitud(idSolicitud);
+			DescuentosFactoraje = descuentoFManager.GetDescuentosBySolicitud(idSolicitud);
+
+			//Calculamos los descuentos
+			foreach(descuentofactoraje item in DescuentosFactoraje)
+			{
+				//Validamos si el descuento esta marcado
+				if (descuentos.Contains(item.idDescuentosFactoraje))
+				{
+					Descuentos = Descuentos + Convert.ToDouble(item.Monto);
+				}
+			}
+
+			foreach(facturasfactoraje item in FacturasFactoraje)
+			{
+				//Validamos si la factura esta marcada
+				if (facturas.Contains(item.idFacturasFactoraje))
+				{
+					double porcentaje = (Convert.ToDouble(item.Porcentaje) / 100);
+					MontoOriginal = MontoOriginal + Convert.ToDouble(item.Monto);
+					//Calculamos el interes
+					Interes = Interes + (Convert.ToDouble(item.Monto) * ((porcentaje) / 30) * item.DiasPP);
+				}
+			}
+			
+			Descuentos = Descuentos * -1;
+			MontoOriginal = MontoOriginal;
+			DescuentosTotal = Descuentos;
+			DescuentoProntoPago = Interes;
+			TotalSolicitado = (MontoOriginal - Descuentos - Interes);
 		}
 	}
 }

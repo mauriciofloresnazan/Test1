@@ -58,6 +58,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			TotalView totalView = new TotalView(dsPagosPendientes, porcentaje, proveedorId, facturasList);
 			SolicitudFManager solicitudFManager = new SolicitudFManager();
 			FacturaFManager facturaFManager = new FacturaFManager();
+			DescuentoFManager descuentoFManager = new DescuentoFManager();
 
 			//Insertamos la solicitud factoraje
 			int SolicitudId = solicitudFManager.InsSolicitud(totalView.SolicitudFactoraje);
@@ -67,6 +68,13 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			{
 				item.idSolicitudesFactoraje = SolicitudId;
 				facturaFManager.InsFacturaFactoraje(item);
+			}
+
+			//Insertamos los descuentos del factoraje
+			foreach (descuentofactoraje item in totalView.DescuentosFactoraje)
+			{
+				item.idSolicitudesFactoraje = SolicitudId;
+				descuentoFManager.InsDescuentoFactoraje(item);
 			}
 
 			return RedirectToAction("VerSolicitudes", new { proveedorId = proveedorId });
@@ -164,22 +172,22 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					tipoMovimiento = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["BLART"].ToString(),
 					fechaDocumento = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["BLDAT"].ToString(),
 					descripcion = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["SGTXT"].ToString(),
-					pagar = pagar,
+					pagar = false,
 					idProveedor = ProveedorCxp.Id.ToString(),
 					numeroDocumento = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["BELNR"].ToString(),
 					porcentaje = porcentaje
 				};
 
-				//if(facturas.Where(x=>x.NumeroDocumento == item.numeroDocumento))
-				//{
-
-				//}
-
-
-				if (item.importe < 0)
+				if (facturas.Where(x => x.NumeroDocumento == item.numeroDocumento).FirstOrDefault() != null)
 				{
 					item.pagar = true;
 				}
+
+
+				//if (item.importe < 0)
+				//{
+				//	item.pagar = true;
+				//}
 				if (item.importe > 0)
 					_list.Add(item);
 				else
@@ -199,7 +207,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			ViewBag.DescuentosTotal = solicitud.Descuentos.ToString("C");
 			ViewBag.DescuentoProntoPago = solicitud.DescuentoPP.ToString("C");
 			ViewBag.TotalSolicitado = solicitud.MontoAFacturar.ToString("C");
-
+			ViewBag.DisableItems = 1;
 			return View("Solicitud");
 		}
 
@@ -276,6 +284,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			ViewBag.SubTitle = "En esta sección podrán crear una solicitud.";
 			ViewBag.Facturas = _list;
 			ViewBag.Descuentos = _listDescuentos;
+			ViewBag.DisableItems = 0;
 
 			return View("Solicitud");
 		}

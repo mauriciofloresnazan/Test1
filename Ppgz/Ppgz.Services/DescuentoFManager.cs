@@ -15,5 +15,12 @@ namespace Ppgz.Services
         {
             return _db.descuentosfactoraje.Where(df => df.idSolicitudesFactoraje == SolicitudId).ToList();
         }
-    }
+		public int InsDescuentoFactoraje(descuentofactoraje model)
+		{
+			var result = _db.descuentosfactoraje.Add(model);
+			_db.SaveChanges();
+
+			return model.idDescuentosFactoraje;
+		}
+	}
 }
