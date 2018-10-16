@@ -15,6 +15,8 @@ using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 using System.Web.Script.Serialization;
 
+using Ppgz.Web.Models.ProntoPago;
+
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
     public class ProntoPagoController : Controller
@@ -212,11 +214,43 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var facturas = _facturaFManager.GetFacturasBySolicitud(id);
             var descuentos = _descuentoFManager.GetDescuentosBySolicitud(id);
 
+            ViewBag.Solicitud = solicitud;
             ViewBag.Proveedor = proveedor;
             ViewBag.Facturas = facturas;
             ViewBag.Descuentos = descuentos;
 
             return View();
+        }
+
+        public ActionResult ObtenerTotalFactoraje(string facturas, int proveedorId)
+        {
+            var oProveedor = _proveedorManager.Find(proveedorId);
+            string[] facturasList = facturas.Split(',');
+
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var partidasManager = new PartidasManager();
+            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(oProveedor.NumeroProveedor, sociedad, DateTime.Today);
+
+            var proveedorFManager = new ProveedorFManager();
+            ProveedorFManager.localPF provedorFactoraje = proveedorFManager.GetProveedoresFactoraje().Where(x => x.IdProveedor == proveedorId).FirstOrDefault();
+            int porcentaje = 0;
+            if (provedorFactoraje != null)
+            {
+                porcentaje = provedorFactoraje.Porcentaje;
+            }
+            else
+            {
+                porcentaje = Convert.ToInt32(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor);
+            }
+
+            TotalView totalView = new TotalView(dsPagosPendientes, porcentaje, proveedorId, facturasList);
+            //int dias = 0;
+            ViewBag.MontoOriginal = totalView.MontoOriginal.ToString("C");
+            ViewBag.DescuentosTotal = totalView.DescuentosTotal.ToString("C");
+            ViewBag.DescuentoProntoPago = totalView.Interes.ToString("C");
+            ViewBag.TotalSolicitado = totalView.TotalSolicitado.ToString("C");
+
+            return PartialView("_totalProntoPago");
         }
         /*--------------END SOLICITUD DETALLE SECTION---------------*/
 

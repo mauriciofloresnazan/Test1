@@ -5,6 +5,7 @@
     List<facturasfactoraje> facturaslist = (ViewBag.Facturas);
     List<descuentofactoraje> descuentoslist = (ViewBag.Descuentos);
     var proveedor = ViewBag.Proveedor;
+    var solicitud = (ViewBag.Solicitud);
     var descPP = 0;
     int diaspp = 0;
 }
@@ -65,15 +66,15 @@
                             {
                                 Int32.TryParse(item.Monto, out descPP);
                                 Int32.TryParse(item.DiasPP.ToString(), out diaspp);
-                                float dp = 0; 
-                                float m = 
-                                dp = (descPP) * (item.Porcentaje/30) * diaspp;
+                                float dp = 0;
+                                float m =
+                                dp = (descPP) * (item.Porcentaje / 30) * diaspp;
                                 <tr>
                                     <td class="text-center vert-align">@item.NumeroDocumento</td>
                                     <td class="text-center vert-align">@item.FechaSolicitud.ToString().Substring(0, 10)</td>
                                     <td class="text-center vert-align monto">@item.Monto</td>
                                     <td class="text-center vert-align">@item.FechaSolicitud.AddDays(item.DiasPP).ToString().Substring(0, 10)</td>
-                                    <td class="text-center vert-align">@item.Porcentaje</td>
+                                    <td class="text-center vert-align">@item.Porcentaje %</td>
                                     <td class="text-center vert-align">@dp</td>
                                     <td class="text-center vert-align">
                                         @if (item.FacturaEstatus == 1)
@@ -82,7 +83,7 @@
                                         }
                                         else
                                         {
-                                            <input type="checkbox" class="cbPagos"/>
+                                            <input type="checkbox" class="cbPagos" />
                                         }
                                     </td>
                                 </tr>
@@ -130,42 +131,8 @@
             </div>
         </div>
         <div class="col-lg-5">
-            <div class="panel panel-default">
-                <div class="panel-heading">Pronto Pago</div>
-                <div class="panel-body">
-
-                    <form action="../Account/CambiarPassword" class="form-horizontal" method="post" role="form">
-                        <input name="__RequestVerificationToken" type="hidden" value="9C6b4dms2fgALzG7fOszXnKKFtKCEjCskzBYkkiDdlmaPfZjl2NzsUIH9m8yYQMit5xSsbJOiIcqKdATRXg4E-PX0XyI2ABuIvCCDW6gg9NZKFt1uKE6tE5Bm4iQ77JjCcw8I6pC1PqvHgo30KB00Q2" />
-                        <span style="margin: 0;">
-                            <i>Por favor verifique su solicitud.</i>
-                        </span>
-                        <hr style="margin-top: 0;" />
-                        <div class="form-group">
-                            <label class="col-sm-6 control-label" for="montoOriginal">Monto Original</label>
-                            <div class="col-sm-4">
-                                <input class="form-control" id="montoOriginal" value="" type="text" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-6 control-label" for="montoOriginal">Descuentos por pronto pago</label>
-                            <div class="col-sm-4">
-                                <input class="form-control" id="montoOriginal" value="" type="text" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-6 control-label" for="montoOriginal">Otros descuentos</label>
-                            <div class="col-sm-4">
-                                <input class="form-control" id="montoOriginal" value="" type="text" readonly />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-6 control-label" for="montoOriginal">Total Solicitado</label>
-                            <div class="col-sm-4">
-                                <input class="form-control" id="montoOriginal" value="" type="text" readonly />
-                            </div>
-                        </div>
-                    </form>
-                </div>
+            <div id="TotalProntoPagoResult">
+                @Html.Partial("_totalProntoPago")
             </div>
         </div>
     </div>
@@ -210,7 +177,7 @@
                             <th class="text-center">Num Descuento</th>
                             <th class="text-center">Monto</th>
                             <th class="text-center">Descripcion</th>
-                            <th class="text-center"><input type="checkbox" id="cbHeader"/></th>
+                            <th class="text-center"><input type="checkbox" id="cbHeader" /></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -240,13 +207,13 @@
 @section Scripts {
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#pagos').DataTable({
+            var tablef = $('#pagos').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
                 },
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
             });
-
+            
             $('#cbHeader').click(function () {
                 $('.solready').prop('checked', this.checked);
             });
@@ -262,18 +229,35 @@
                 $('.cbPagos').prop('checked', this.checked);
             });
 
-            calcularMontoOriginal();
-        });   
+            //Evento para cachar todos los checked
+			$('input[type=checkbox]').on('change', function () {
+				var facturas = '';
+				var facturaPost = {};
+                //Obtenemos los marcados
+                var rows = tablef.rows({ 'search': 'applied' }).nodes();
+				console.log($('input[type="checkbox"]:checked', rows));
 
-        function calcularMontoOriginal() {
-            $('#pagos > tbody  > tr').each(function () {
-                var monto = 0.00;
-                if ($(this).find(".cbPagos").prop('checked')) {
-                    monto = monto + $(this).find(".monto").val();
-                }       
-                $("#montoOriginal").val(monto);
-            });
-        }
+				$('input[type="checkbox"]:checked', rows).each(function () {
+					facturas = facturas + "," + $(this).val();
+				});
+
+				//Vamos al servidor a hacer el calculo
+				$("#btnEnviar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "GuardarSolicitud" })" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id")
+				$.ajax({
+					type: "POST",
+					url: "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "ObtenerTotalFactoraje"})" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id",
+					//data: JSON.stringify({ 'facturas': facturaPost }),
+					dataType: "html",
+					success: function (data) {
+						$('#TotalProntoPagoResult').html(data);
+					},
+					error: function (XMLHttpRequest, textStatus, errorThrown) {
+						//DesbloquearForma('GiftCardFilter');
+					}
+			    });
+
+			});            
+        });        
     </script>
     <style>
         #table-scroll {

@@ -262,7 +262,7 @@
             <PropertyRef Name="idFacturasFactoraje" />
           </Key>
           <Property Name="idFacturasFactoraje" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NumeroDocumento" Type="int" Nullable="false" />
+          <Property Name="NumeroDocumento" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Monto" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="uuid" Type="varchar" MaxLength="50" Nullable="true" />
           <Property Name="IdProveedor" Type="int" Nullable="false" />
@@ -1343,7 +1343,7 @@
             <PropertyRef Name="idFacturasFactoraje" />
           </Key>
           <Property Name="idFacturasFactoraje" Type="Int32" annotation:StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="NumeroDocumento" Type="Int32" Nullable="false" />
+          <Property Name="NumeroDocumento" Type="String" MaxLength="50" Nullable="false" />
           <Property Name="Monto" Type="String" FixedLength="false" Unicode="false" MaxLength="45" Nullable="false" />
           <Property Name="uuid" Type="String" FixedLength="false" Unicode="false" MaxLength="50" Nullable="true" />
           <Property Name="IdProveedor" Type="Int32" Nullable="false" />
