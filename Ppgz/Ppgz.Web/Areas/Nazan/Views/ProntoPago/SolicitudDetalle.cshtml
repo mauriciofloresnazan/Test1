@@ -76,11 +76,11 @@
                                     <td class="text-center vert-align">
                                         @if (item.FacturaEstatus == 1)
                                         {
-                                            <input type="checkbox" class="cbPagos" value="@item.NumeroDocumento" checked />
+                                            <input type="checkbox" class="cbPagos" value="@item.idFacturasFactoraje" checked />
                                         }
                                         else
                                         {
-                                            <input type="checkbox" class="cbPagos" value="@item.NumeroDocumento"/>
+                                            <input type="checkbox" class="cbPagos" value="@item.idFacturasFactoraje"/>
                                         }
                                     </td>
                                 </tr>

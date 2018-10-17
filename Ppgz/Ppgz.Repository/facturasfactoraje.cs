@@ -26,5 +26,6 @@ namespace Ppgz.Repository
         public System.DateTime FechaSolicitud { get; set; }
         public int idSolicitudesFactoraje { get; set; }
         public int FacturaEstatus { get; set; }
+        public double interes { get; set; }
     }
 }

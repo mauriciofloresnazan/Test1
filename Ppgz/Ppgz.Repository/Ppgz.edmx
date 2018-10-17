@@ -273,6 +273,7 @@
           <Property Name="FechaSolicitud"  Type="datetime" Nullable="false" />
           <Property Name="idSolicitudesFactoraje" Type="int" Nullable="false" />
           <Property Name="FacturaEstatus" Type="int" Nullable="false" />
+          <Property Name="interes" Type="double" Nullable="false" />
         </EntityType>
         <EntityType Name="horariorieles">
           <Key>
@@ -1354,6 +1355,7 @@
           <Property Name="FechaSolicitud" Type="DateTime" Nullable="false" />
           <Property Name="idSolicitudesFactoraje" Type="Int32" Nullable="false" />
           <Property Name="FacturaEstatus" Type="Int32" Nullable="false" />
+          <Property Name="interes" Type="Double" Nullable="false" />
         </EntityType>
         <EntityType Name="horarioriele">
           <Key>
@@ -2345,6 +2347,7 @@
                 <ScalarProperty Name="FechaSolicitud" ColumnName="FechaSolicitud" />
                 <ScalarProperty Name="idSolicitudesFactoraje" ColumnName="idSolicitudesFactoraje" />
                 <ScalarProperty Name="FacturaEstatus" ColumnName="FacturaEstatus" />
+                <ScalarProperty Name="interes" ColumnName="interes" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
