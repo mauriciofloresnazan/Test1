@@ -83,8 +83,18 @@
 											<td class="text-center align-vert">@item.EstatusNombre</td>
 											<td class="text-center align-vert">@item.Total.ToString("C")</td>
 											<td class="text-center align-vert">
+
 												<a class="btn btn-warning" href="@Url.Action("VerSolicitud", "ProntoPago", new { @proveedorId = item.IdProveedor, @idSolicitudesFactoraje = item.Id })">Editar</a>
-												<a class="btn btn-primary">Cargar Nota</a>
+												@if (item.Estatus != 5)
+												{
+													<button class="btn btn-primary" disabled>Cargar Nota</button>
+													
+												}
+												else
+												{
+													<a class="btn btn-primary" href="@Url.Action("CargarNotaCredito", "ProntoPago", new { @proveedorId = item.IdProveedor,@idSolicitudesFactoraje = item.Id })">Cargar Nota</a>
+												}
+
 											</td>
 										</tr>
 									}

@@ -1,0 +1,119 @@
+﻿@model solicitudesfactoraje
+@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+	ViewBag.Title = "Listado de  solicitudes";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+
+	var proveedor = (proveedore)ViewBag.Proveedor;
+
+	//var pagosPendientes = (DataTable)ViewBag.PagosPendientes;
+	//var importeTotal = pagosPendientes.Rows.Cast<DataRow>()
+	// .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
+
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+	<i class="fa fa-calculator" aria-hidden="true"></i>
+	<i>En esta sección podrán gestionar los pagos pendientes</i>
+</p>
+<div class="container body-content">
+	<h3>
+		Listado de solicitudes
+	</h3>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">Proveedor Seleccionado</div>
+				<div class="panel-body">
+					<div class="row">
+						<label class="col-sm-2 control-label">RFC</label>
+						<div class="col-sm-3">
+							<div>@proveedor.Rfc</div>
+						</div>
+						<label class="col-sm-2 control-label">Nombre</label>
+						<div class="col-sm-3">
+							<div>@proveedor.Nombre1</div>
+						</div>
+						<div class="col-sm-2">
+							<a href="@Url.Action("Index", "ProntoPago")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Solicitud de pronto pago</div>
+				<div class="panel-body">
+					@using (Html.BeginForm("CargarNotaCredito", "ProntoPago", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form", enctype = "multipart/form-data" }))
+					{
+						@*<input name="__RequestVerificationToken" type="hidden" value="9C6b4dms2fgALzG7fOszXnKKFtKCEjCskzBYkkiDdlmaPfZjl2NzsUIH9m8yYQMit5xSsbJOiIcqKdATRXg4E-PX0XyI2ABuIvCCDW6gg9NZKFt1uKE6tE5Bm4iQ77JjCcw8I6pC1PqvHgo30KB00Q2" />*@
+						<input type="hidden" name="proveedorId" value="@proveedor.Id" />
+						<input type="hidden" name="idSolicitudesFactoraje" value="@ViewBag.idSolicitudesFactoraje" />
+
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="montoOriginal">Subtotal</label>
+							<div class="col-sm-6">
+								<input class="form-control" id="montoOriginal" value="$40,000.00" type="text" readonly />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="montoOriginal">IVA</label>
+							<div class="col-sm-6">
+								<input class="form-control" id="montoOriginal" value="$5,000.00" type="text" readonly />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="montoOriginal">Total</label>
+							<div class="col-sm-6">
+								<input class="form-control" id="montoOriginal" value="$45,000.00" type="text" readonly />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="notaCredito">XML: </label>
+							<div class="col-sm-6">
+								<input class="form-control" id="notaCredito" type="file" name="notaCreditoXml" />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label" for="notaCredito">PDF: </label>
+							<div class="col-sm-6">
+								<input class="form-control" id="notaCredito" type="file" name="notaCreditoPdf" />
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-md-6 col-md-offset-4">
+								<button class="btn btn-primary">
+									<i class="fa fa-ticket" aria-hidden="true"></i> Cargar
+								</button>
+								<a href="@Url.Action("VerSolicitudes", "ProntoPago", new { @proveedorId = proveedor.Id})" class="btn btn-default">
+									<i class="fa fa-undo"></i> Cancelar
+								</a>
+							</div>
+						</div>
+					}
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+
+
+
+</div>
+@section Scripts {
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#facturas').DataTable({
+				"language": {
+					"url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+				},
+				"lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+			});
+		});
+	</script>
+}

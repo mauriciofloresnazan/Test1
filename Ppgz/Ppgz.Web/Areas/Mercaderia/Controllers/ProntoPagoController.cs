@@ -5,6 +5,7 @@ using Ppgz.Web.Models.ProntoPago;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -17,6 +18,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 	{
 		readonly CommonManager _commonManager = new CommonManager();
 		readonly ProveedorManager _proveedorManager = new ProveedorManager();
+		readonly FacturaManager _facturaManager = new FacturaManager();
 
 		internal proveedore ProveedorCxp
 		{
@@ -35,6 +37,150 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		}
 
 		//**********CU002-Seleccion razon social*****************
+		public ActionResult CargarNotaCredito(int idSolicitudesFactoraje, int proveedorId)
+		{
+			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+			var proveedor = _proveedorManager.Find(proveedorId, cuenta.Id);
+			ViewBag.Proveedor = proveedor;
+			ViewBag.idSolicitudesFactoraje = idSolicitudesFactoraje;
+			return View();
+		}
+		[HttpPost]
+		public ActionResult CargarNotaCredito(NotaCreditoView notaCreditoView)
+		{
+			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+			var proveedor = _proveedorManager.Find(notaCreditoView.proveedorId, cuenta.Id);
+			ViewBag.Proveedor = proveedor;
+			ViewBag.idSolicitudesFactoraje = notaCreditoView.idSolicitudesFactoraje;
+
+			if (proveedor == null)
+			{
+				// TODO pasar a recurso
+				TempData["FlashError"] = "Proveedor incorrecto";
+				return RedirectToAction("Index");
+			}
+
+			//Iniciamos proceso de archivos
+			if (!ModelState.IsValid) return View();
+
+			var tempXmlPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".xml");
+			var tempPdfPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".pdf");
+
+			try
+			{
+				if (notaCreditoView.notaCreditoPdf == null)
+				{
+					ModelState.AddModelError(string.Empty, "Archivos incorrectos");
+					return View();
+				}
+
+				if (notaCreditoView.notaCreditoXml == null)
+				{
+					ModelState.AddModelError(string.Empty, "Archivos incorrectos");
+					return View();
+				}
+
+				//Validamos el xml
+				var xmlFile = notaCreditoView.notaCreditoXml;
+				ValidarXml(xmlFile);
+				xmlFile.SaveAs(tempXmlPath);
+
+				//Validamos el pdf
+				var pdfFile = notaCreditoView.notaCreditoPdf;
+				ValidarPdf(pdfFile);
+				pdfFile.SaveAs(tempPdfPath);
+
+				//_facturaManager.CargarFactura(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
+				TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente";
+				return RedirectToAction("VerSolicitudes", new { proveedorId = proveedor.Id });
+			}
+			catch (BusinessException businessEx)
+			{
+
+				ModelState.AddModelError(string.Empty, businessEx.Message);
+				TempData["FlashError"] = businessEx.Message;
+				return View();
+			}
+			catch (Exception e)
+			{
+				var log = CommonManager.BuildMessageLog(
+					TipoMensaje.Error,
+					ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+					ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+					e.ToString(), Request);
+
+				CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+				ModelState.AddModelError(string.Empty, e.Message);
+				TempData["FlashError"] = e.Message;
+				return View();
+			}
+			finally
+			{
+
+				if (System.IO.File.Exists(tempPdfPath))
+					System.IO.File.Delete(tempPdfPath);
+
+				if (System.IO.File.Exists(tempXmlPath))
+					System.IO.File.Delete(tempXmlPath);
+			}
+
+
+			return View();
+		}
+		internal void ValidarPdf(HttpPostedFileBase file)
+		{
+			if (file != null && file.ContentType != "application/pdf")
+			{
+				throw new BusinessException("Pdf Invalido");
+			}
+
+			if (file == null)
+			{
+				throw new BusinessException("Pdf Invalido");
+			}
+			/*
+            var fileName = Path.GetFileName(file.FileName);
+
+            if (fileName == null)
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_PdfInvalido);
+            }
+
+            var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+
+            file.SaveAs(path);
+
+            return "~/Uploads/" + fileName;*/
+		}
+		internal void ValidarXml(HttpPostedFileBase file)
+		{
+			if (file != null && file.ContentType != "text/xml")
+			{
+				throw new BusinessException("El archivo no puede ser procesado");
+			}
+
+			if (file == null)
+			{
+				throw new BusinessException("El archivo no puede ser procesado");
+			}
+
+			_facturaManager.ValidarFactura(file.InputStream);
+
+			/*
+            var fileName = Path.GetFileName(file.FileName);
+
+            if (fileName == null)
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_PdfInvalido);
+            }
+
+            var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+
+            file.SaveAs(path);
+
+            return "~/Uploads/" + fileName;*/
+		}
 		public ActionResult GuardarSolicitud(string facturas, int proveedorId)
 		{
 			string[] facturasList = facturas.Split(',');

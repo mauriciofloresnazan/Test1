@@ -383,6 +383,7 @@
     <Compile Include="Models\Nazan\PerfilViewModel.cs" />
     <Compile Include="Models\Nazan\UsuarioViewModel.cs" />
     <Compile Include="Models\ProntoPago\FacturaView.cs" />
+    <Compile Include="Models\ProntoPago\NotaCreditoView.cs" />
     <Compile Include="Models\ProntoPago\TotalView.cs" />
     <Compile Include="Models\ProveedorUsuarioViewModel.cs" />
     <Compile Include="Infrastructure\MySqlIdentity\MySqlConfiguration.cs" />
@@ -1958,6 +1959,7 @@
     <Content Include="Areas\Mercaderia\Views\ProntoPago\_totalProntoPago.cshtml" />
     <Content Include="assets\c3\js\jquery-1.11.0.min.map" />
     <Content Include="Areas\Nazan\Views\ProntoPago\_totalProntoPago.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ProntoPago\CargarNotaCredito.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
