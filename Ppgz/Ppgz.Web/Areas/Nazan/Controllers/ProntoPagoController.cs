@@ -222,7 +222,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
-        public ActionResult ObtenerTotalFactoraje(string facturas, int proveedorId)
+        public ActionResult ObtenerTotalFactoraje(string facturas, string descuentos, int proveedorId)
         {
             var oProveedor = _proveedorManager.Find(proveedorId);
             string[] facturasList = facturas.Split(',');

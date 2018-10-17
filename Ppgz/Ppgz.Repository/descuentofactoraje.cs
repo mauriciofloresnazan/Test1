@@ -17,7 +17,7 @@ namespace Ppgz.Repository
         public int idDescuentosFactoraje { get; set; }
         public int idSolicitudesFactoraje { get; set; }
         public int EstatusFactoraje { get; set; }
-        public int NumeroDocumento { get; set; }
+        public string NumeroDocumento { get; set; }
         public string Monto { get; set; }
         public string Descripcion { get; set; }
     }

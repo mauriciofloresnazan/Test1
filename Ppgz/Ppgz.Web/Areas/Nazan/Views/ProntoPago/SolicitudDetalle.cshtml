@@ -6,8 +6,6 @@
     List<descuentofactoraje> descuentoslist = (ViewBag.Descuentos);
     var proveedor = ViewBag.Proveedor;
     var solicitud = (ViewBag.Solicitud);
-    var descPP = 0;
-    int diaspp = 0;
 }
 
 <div class="container body-content">
@@ -64,26 +62,25 @@
                         <tbody>
                             @foreach (var item in facturaslist)
                             {
-                                Int32.TryParse(item.Monto, out descPP);
-                                Int32.TryParse(item.DiasPP.ToString(), out diaspp);
-                                float dp = 0;
-                                float m =
-                                dp = (descPP) * (item.Porcentaje / 30) * diaspp;
+                                double monto = Convert.ToDouble(item.Monto);
+                                double diaspp = Convert.ToDouble(item.DiasPP);
+                                double dp = 0;
+                                dp = (monto) * (item.Porcentaje / 30) * diaspp;
                                 <tr>
                                     <td class="text-center vert-align">@item.NumeroDocumento</td>
                                     <td class="text-center vert-align">@item.FechaSolicitud.ToString().Substring(0, 10)</td>
-                                    <td class="text-center vert-align monto">@item.Monto</td>
+                                    <td class="text-center vert-align">@item.Monto</td>
                                     <td class="text-center vert-align">@item.FechaSolicitud.AddDays(item.DiasPP).ToString().Substring(0, 10)</td>
                                     <td class="text-center vert-align">@item.Porcentaje %</td>
                                     <td class="text-center vert-align">@dp</td>
                                     <td class="text-center vert-align">
                                         @if (item.FacturaEstatus == 1)
                                         {
-                                            <input type="checkbox" class="cbPagos" checked />
+                                            <input type="checkbox" class="cbPagos" value="@item.NumeroDocumento" checked />
                                         }
                                         else
                                         {
-                                            <input type="checkbox" class="cbPagos" />
+                                            <input type="checkbox" class="cbPagos" value="@item.NumeroDocumento"/>
                                         }
                                     </td>
                                 </tr>
@@ -171,7 +168,7 @@
                 <h4 class="modal-title" id="myModalLabel">Detalle de descuentos</h4>
             </div>
             <div class="modal-body">
-                <table id="descuentos" class="table table-striped table-condensed table-bordered">
+                <table id="descuentosModal" class="table table-striped table-condensed table-bordered">
                     <thead>
                         <tr>
                             <th class="text-center">Num Descuento</th>
@@ -188,13 +185,12 @@
                                 <td class="text-center vert-align">@d.Monto</td>
                                 <td class="text-center vert-align">@d.Descripcion</td>
                                 <td class="text-center vert-align">
-                                    <input class="solready" type="checkbox" name="cb" />
+                                    <input class="solready" type="checkbox" name="cb" value="@d.idDescuentosFactoraje" checked/>
                                 </td>
                             </tr>
                         }
                     </tbody>
                 </table>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -213,16 +209,23 @@
                 },
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
             });
-            
-            $('#cbHeader').click(function () {
-                $('.solready').prop('checked', this.checked);
-            });
 
             $('#descuentos').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
                 },
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });           
+
+            var tableD = $('#descuentosModal').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+
+            $('#cbHeader').click(function () {
+                $('.solready').prop('checked', this.checked);
             });
 
             $('#cbHeaderPagos').click(function () {
@@ -232,20 +235,28 @@
             //Evento para cachar todos los checked
 			$('input[type=checkbox]').on('change', function () {
 				var facturas = '';
-				var facturaPost = {};
+                var facturaPost = {};
+                var descuentos = '';
+                var descuentosPost = {};
                 //Obtenemos los marcados
                 var rows = tablef.rows({ 'search': 'applied' }).nodes();
+                var rowsD = tableD.rows({ 'search': 'applied' }).nodes();
+                
 				console.log($('input[type="checkbox"]:checked', rows));
 
 				$('input[type="checkbox"]:checked', rows).each(function () {
 					facturas = facturas + "," + $(this).val();
-				});
+                });
+                $('input[type="checkbox"]:checked', rowsD).each(function () {
+                    descuentos = descuentos + "," + $(this).val();
+                });
+
 
 				//Vamos al servidor a hacer el calculo
 				$("#btnEnviar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "GuardarSolicitud" })" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id")
 				$.ajax({
-					type: "POST",
-					url: "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "ObtenerTotalFactoraje"})" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id",
+                    type: "POST",
+                    url: "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "ObtenerTotalFactoraje"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&proveedorId=@proveedor.Id",
 					//data: JSON.stringify({ 'facturas': facturaPost }),
 					dataType: "html",
 					success: function (data) {

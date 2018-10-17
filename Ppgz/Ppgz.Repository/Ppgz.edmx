@@ -216,7 +216,7 @@
           <Property Name="idDescuentosFactoraje" Type="int" Nullable="false" />
           <Property Name="idSolicitudesFactoraje" Type="int" Nullable="false" />
           <Property Name="EstatusFactoraje" Type="int" Nullable="false" />
-          <Property Name="NumeroDocumento" Type="int" Nullable="false" />
+          <Property Name="NumeroDocumento" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Monto" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="Descripcion" Type="varchar" MaxLength="150" Nullable="false" />
         </EntityType>
@@ -1294,7 +1294,7 @@
           <Property Name="idDescuentosFactoraje" Type="Int32" Nullable="false" />
           <Property Name="idSolicitudesFactoraje" Type="Int32" Nullable="false" />
           <Property Name="EstatusFactoraje" Type="Int32" Nullable="false" />
-          <Property Name="NumeroDocumento" Type="Int32" Nullable="false" />
+          <Property Name="NumeroDocumento" Type="String" MaxLength="50" Nullable="false" />
           <Property Name="Monto" Type="String" MaxLength="45" Nullable="false" FixedLength="false" Unicode="false"/>
           <Property Name="Descripcion" Type="String" MaxLength="150" Nullable="false" FixedLength="false" Unicode="false"/>
         </EntityType>
