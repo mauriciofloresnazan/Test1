@@ -22,5 +22,35 @@ namespace Ppgz.Services
 
 			return model.idDescuentosFactoraje;
 		}
+
+        public bool DeleteDescuentos(string [] descuentosList, int solid)
+        {
+            bool result = false;
+            try
+            {
+                List<int> ids = new List<int>();
+                foreach(var item in descuentosList)
+                {
+                    if (!String.IsNullOrEmpty(item))
+                    {
+                        int i = Convert.ToInt32(item);
+                        ids.Add(i);
+                    }
+                }
+
+                List<descuentofactoraje> df = _db.descuentosfactoraje.Where(d => !ids.Contains(d.idDescuentosFactoraje) && d.idSolicitudesFactoraje == solid).ToList();
+                foreach(var item in df)
+                {
+                    _db.descuentosfactoraje.Remove(item);
+                    _db.SaveChanges();
+                }
+                result = true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+            return result;
+        }
 	}
 }

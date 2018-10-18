@@ -101,14 +101,80 @@ namespace Ppgz.Services
             var result = _db.solicitudesfactoraje.Where(s => s.EstatusFactoraje == id).ToList();
             return result;
         }
-		public int InsSolicitud(solicitudesfactoraje model)
+
+        public int InsSolicitud(solicitudesfactoraje model)
 		{
 			var result = _db.solicitudesfactoraje.Add(model);
 			_db.SaveChanges();
 
 			return model.idSolicitudesFactoraje;
 		}
+
+        public int UpdateSolicitud(solicitudesfactoraje model)
+        {
+            var result = GetSolicitudById(model.idSolicitudesFactoraje);
+            if(result != null)
+            {
+                result.DescuentoPP = model.DescuentoPP;
+                result.Descuentos = model.Descuentos;
+                result.MontoAFacturar = model.MontoAFacturar;
+                result.MontoOriginal = model.MontoOriginal;
+
+                _db.Entry(result).State = EntityState.Modified;
+                _db.SaveChanges();
+                return result.idSolicitudesFactoraje;
+            }
+            else
+            {
+                return 0;
+            }            
+        }
+
+        public bool UpdateEstatusSolicitud(int solicitudId, int estatus)
+        {
+            bool result = false;
+            try
+            {
+                var solicitudfactoraje = _db.solicitudesfactoraje.Where(sf => sf.idSolicitudesFactoraje == solicitudId).FirstOrDefault();
+                if (solicitudfactoraje != null)
+                {
+                    int solEstatus = solicitudfactoraje.EstatusFactoraje;
+                    solicitudfactoraje.EstatusFactoraje = estatus;
+                    _db.Entry(solicitudfactoraje).State = EntityState.Modified;
+                    _db.SaveChanges();
+
+                    var descuentos = _db.descuentosfactoraje.Where(df => df.idSolicitudesFactoraje == solicitudfactoraje.idSolicitudesFactoraje && df.EstatusFactoraje == solEstatus).ToList();
+                    foreach(var item in descuentos)
+                    {
+                        item.EstatusFactoraje = estatus;
+                        _db.Entry(item).State = EntityState.Modified;
+                        _db.SaveChanges();
+                    }
+
+                    var facturas = _db.facturasfactoraje.Where(ff => ff.idSolicitudesFactoraje == solicitudfactoraje.idSolicitudesFactoraje && ff.FacturaEstatus == solEstatus).ToList();
+                    foreach (var item in facturas)
+                    {
+                        item.FacturaEstatus = estatus;
+                        _db.Entry(item).State = EntityState.Modified;
+                        _db.SaveChanges();
+                    }
+
+                    
+                    result = true;
+                }
+                else
+                {
+                    result = false;
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            return result;
+        }
     }
+
     public class localsolicitud
     {
         public int Id { get; set; }

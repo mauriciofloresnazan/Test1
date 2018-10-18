@@ -62,26 +62,15 @@
                         <tbody>
                             @foreach (var item in facturaslist)
                             {
-                                double monto = Convert.ToDouble(item.Monto);
-                                double diaspp = Convert.ToDouble(item.DiasPP);
-                                double dp = 0;
-                                dp = (monto) * (item.Porcentaje / 30) * diaspp;
                                 <tr>
                                     <td class="text-center vert-align">@item.NumeroDocumento</td>
                                     <td class="text-center vert-align">@item.FechaSolicitud.ToString().Substring(0, 10)</td>
                                     <td class="text-center vert-align">@item.Monto</td>
                                     <td class="text-center vert-align">@item.FechaSolicitud.AddDays(item.DiasPP).ToString().Substring(0, 10)</td>
                                     <td class="text-center vert-align">@item.Porcentaje %</td>
-                                    <td class="text-center vert-align">@dp</td>
+                                    <td class="text-center vert-align">@item.interes</td>
                                     <td class="text-center vert-align">
-                                        @if (item.FacturaEstatus == 1)
-                                        {
-                                            <input type="checkbox" class="cbPagos" value="@item.idFacturasFactoraje" checked />
-                                        }
-                                        else
-                                        {
-                                            <input type="checkbox" class="cbPagos" value="@item.idFacturasFactoraje"/>
-                                        }
+                                        <input type="checkbox" class="cbPagos" value="@item.idFacturasFactoraje" checked />
                                     </td>
                                 </tr>
                             }
@@ -136,21 +125,19 @@
     <div class="row">
         <div class="form-group" style="text-align: right">
             <div class="col-md-10 col-md-offset-2">
-
-
-                <a href="1.html" class="btn btn-default">
+                <a href="@Url.Action("Solicitudes","ProntoPago")" class="btn btn-default">
                     Volver
                 </a>
 
-                <a href="1.html" class="btn btn-warning">
+                <a href=" " id="btnGuardar" class="btn btn-warning">
                     Guardar
                 </a>
 
-                <a href="1.html" class="btn btn-success">
+                <a href=" " id="btnAprobar" class="btn btn-success">
                     Aprobar
                 </a>
 
-                <a href="1.html" class="btn btn-danger">
+                <a href="@Url.Action("RechazarSolicitud", "ProntoPago", new { @solicitudId = solicitud.idSolicitudesFactoraje })" class="btn btn-danger">
                     Rechazar
                 </a>
             </div>
@@ -185,7 +172,7 @@
                                 <td class="text-center vert-align">@d.Monto</td>
                                 <td class="text-center vert-align">@d.Descripcion</td>
                                 <td class="text-center vert-align">
-                                    <input class="solready" type="checkbox" name="cb" value="@d.idDescuentosFactoraje" checked/>
+                                    <input class="solready" type="checkbox" name="cb" value="@d.idDescuentosFactoraje" checked />
                                 </td>
                             </tr>
                         }
@@ -215,7 +202,7 @@
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
                 },
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
-            });           
+            });
 
             var tableD = $('#descuentosModal').DataTable({
                 "language": {
@@ -241,7 +228,7 @@
                 //Obtenemos los marcados
                 var rows = tablef.rows({ 'search': 'applied' }).nodes();
                 var rowsD = tableD.rows({ 'search': 'applied' }).nodes();
-                
+
 				console.log($('input[type="checkbox"]:checked', rows));
 
 				$('input[type="checkbox"]:checked', rows).each(function () {
@@ -253,10 +240,11 @@
 
 
 				//Vamos al servidor a hacer el calculo
-				$("#btnEnviar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "GuardarSolicitud" })" + "?facturas=" + facturas + "&proveedorId=@proveedor.Id")
+                $("#btnAprobar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + 5)
+
 				$.ajax({
                     type: "POST",
-                    url: "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "ObtenerTotalFactoraje"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&proveedorId=@proveedor.Id",
+                    url: "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "ObtenerTotalFactoraje"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje",
 					//data: JSON.stringify({ 'facturas': facturaPost }),
 					dataType: "html",
 					success: function (data) {
@@ -267,8 +255,27 @@
 					}
 			    });
 
-			});            
-        });        
+            });
+
+            var _facturas = '';
+            var _descuentos = '';
+
+            //Obtenemos los marcados
+            var rows = tablef.rows({ 'search': 'applied' }).nodes();
+            var rowsD = tableD.rows({ 'search': 'applied' }).nodes();
+
+			console.log($('input[type="checkbox"]:checked', rows));
+
+			$('input[type="checkbox"]:checked', rows).each(function () {
+				_facturas = _facturas + "," + $(this).val();
+            });
+            $('input[type="checkbox"]:checked', rowsD).each(function () {
+                _descuentos = _descuentos + "," + $(this).val();
+            });
+
+            $("#btnAprobar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + _facturas + "&descuentos=" + _descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + 5);
+            $("#btnGuardar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + _facturas + "&descuentos=" + _descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + @solicitud.EstatusFactoraje);
+        });
     </script>
     <style>
         #table-scroll {
