@@ -236,6 +236,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			var proveedorFManager = new ProveedorFManager();
 			ProveedorFManager.localPF provedorFactoraje = proveedorFManager.GetProveedoresFactoraje().Where(x => x.IdProveedor == proveedorId).FirstOrDefault();
+
+			var configuracionesFManager = new ConfiguracionesFManager();
+			//configuracionesFManager.GetConfiguracionById();
+
 			int porcentaje = 0;
 			if (provedorFactoraje != null)
 			{

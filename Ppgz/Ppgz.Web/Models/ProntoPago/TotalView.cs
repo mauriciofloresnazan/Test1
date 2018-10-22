@@ -1,5 +1,6 @@
 ﻿using Ppgz.Repository;
 using Ppgz.Services;
+using Ppgz.Web.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -29,6 +30,35 @@ namespace Ppgz.Web.Models.ProntoPago
 
 			FacturasFactoraje = new List<facturasfactoraje>();
 			DescuentosFactoraje = new List<descuentofactoraje>();
+
+			string DiaPago = CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.day").Valor;
+			DateTime FechaPago = DateTime.Now;
+
+			switch (DiaPago)
+			{
+				case "LUNES":
+					FechaPago = GetFechaPago(DayOfWeek.Monday);
+					break;
+				case "MARTES":
+					FechaPago = GetFechaPago(DayOfWeek.Tuesday);
+					break;
+				case "MIERCOLES":
+					FechaPago = GetFechaPago(DayOfWeek.Wednesday);
+					break;
+				case "JUEVES":
+					FechaPago = GetFechaPago(DayOfWeek.Thursday);
+					break;
+				case "VIERNES":
+					FechaPago = GetFechaPago(DayOfWeek.Friday);
+					break;
+				case "SABADO":
+					FechaPago = GetFechaPago(DayOfWeek.Saturday);
+					break;
+				case "DOMINGO":
+					FechaPago = GetFechaPago(DayOfWeek.Sunday);
+					break;
+			}
+			FechaPago = new DateTime(2018, 9, 21);
 
 			for (int i = 0; i < dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows.Count; i++)
 			{
@@ -77,7 +107,7 @@ namespace Ppgz.Web.Models.ProntoPago
 						//Dias de diferencia de la fecha de documento a la fecha de pago
 						DateTime fechaDocumento = DateTime.ParseExact(item.fechaDocumento, "yyyyMMdd", CultureInfo.InvariantCulture);
 						DateTime vencimiento = DateTime.ParseExact(item.vencimiento, "yyyyMMdd", CultureInfo.InvariantCulture);
-						dias = (int)(vencimiento - fechaDocumento).TotalDays;
+						dias = (int)(vencimiento - FechaPago).TotalDays;
 						double porcentajeAux = (Convert.ToDouble(item.porcentaje) / 100);
 						Interes = Interes + (item.importe * ((porcentajeAux) / 30) * dias);
 					}
@@ -172,6 +202,13 @@ namespace Ppgz.Web.Models.ProntoPago
 			DescuentosTotal = Descuentos;
 			DescuentoProntoPago = Interes;
 			TotalSolicitado = (MontoOriginal - Descuentos - Interes);
+		}
+		public DateTime GetFechaPago(DayOfWeek day)
+		{
+			DateTime result = DateTime.Now.AddDays(1);
+			while (result.DayOfWeek != day)
+				result = result.AddDays(1);
+			return result;
 		}
 	}
 }
