@@ -67,7 +67,7 @@
                                     <td class="text-center vert-align">@item.FechaSolicitud.ToString().Substring(0, 10)</td>
                                     <td class="text-center vert-align">@item.Monto</td>
                                     <td class="text-center vert-align">@item.FechaSolicitud.AddDays(item.DiasPP).ToString().Substring(0, 10)</td>
-                                    <td class="text-center vert-align">@item.Porcentaje %</td>
+                                    <td class="text-center vert-align" onclick="mdlPorcentaje(@item.idFacturasFactoraje, @item.Porcentaje, @solicitud.idSolicitudesFactoraje)" style="cursor: pointer;">@item.Porcentaje %</td>
                                     <td class="text-center vert-align">@item.interes</td>
                                     <td class="text-center vert-align">
                                         <input type="checkbox" class="cbPagos" value="@item.idFacturasFactoraje" checked />
@@ -186,6 +186,29 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="modalEditarPorcentaje" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <form action="@Url.Action("ActualizarPorcentaje","ProntoPago")" method="POST" id="fUpdatePorcentaje">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Porcentaje de factura</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="mdlSolid" value="" name="solid" class="form-control" />
+                    <input type="hidden" id="mdlId" value="" name="idFactura" class="form-control" />
+                    <div>Porcentaje de Descuento:<input class="form-control input-sm" placeholder="" value="" type="number" min="1" max="99" id="mdlPorcentaje" name="porcentaje" required></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="mdlGuardar" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 @section Scripts {
     <script type="text/javascript">
@@ -276,6 +299,43 @@
             $("#btnAprobar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + _facturas + "&descuentos=" + _descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + 5);
             $("#btnGuardar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + _facturas + "&descuentos=" + _descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + @solicitud.EstatusFactoraje);
         });
+
+        function mdlPorcentaje(_id, _porcentaje, _solid) {
+            $("#mdlPorcentaje").val(_porcentaje);
+            $("#mdlId").val(_id);
+            $("#mdlSolid").val(_solid);
+
+            $("#modalEditarPorcentaje").modal('show');
+        };
+
+        $(function () {
+            $('fUpdatePorcentaje').submit(function (evt) {
+                //prevent the browsers default function
+                evt.preventDefault();
+                //grab the form and wrap it with jQuery
+                var $form = $(this);
+                //if client side validation fails, don't do anything
+                if (!$form.valid()) return;
+                //send your ajax request
+                $.ajax({
+                    type: $form.prop('method'),
+                    url: $form.prop('action'),
+                    data: $form.serialize(),
+                    dataType: "json",
+                    //traditional: true,
+                    //success: function (response) {
+                    //    alert(response);
+                    //}
+                });
+            });
+        });
+
+        //$("#mdlPorcentaje").change(function () {
+        //    var porcentaje = $("#mdlPorcentaje").val();
+        //    if (porcentaje < 0 || porcentaje > 100) {
+        //        $("#mdlPorcentaje").val("");
+        //    }
+        //});
     </script>
     <style>
         #table-scroll {

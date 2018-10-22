@@ -242,6 +242,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
+        public ActionResult ActualizarPorcentaje(int idFactura, int porcentaje, int solid)
+        {
+            var result = _facturaFManager.ActualizarPorcentaje(idFactura, porcentaje);
+
+            return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solid }); 
+        }
+
         public ActionResult ObtenerTotalFactoraje(string facturas, string descuentos, int solicitudId)
         {
             //Se obtienen las facturas y descuentos con check

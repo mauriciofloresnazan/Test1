@@ -52,6 +52,23 @@ namespace Ppgz.Services
             }
 
             return result;
-        } 
+        }
+
+        public int ActualizarPorcentaje(int idFactura, int porcentaje)
+        {
+            var facturafactoraje = _db.facturasfactoraje.Where(ff => ff.idFacturasFactoraje == idFactura).FirstOrDefault();
+
+            if(facturafactoraje != null)
+            {
+                facturafactoraje.Porcentaje = porcentaje;
+                _db.Entry(facturafactoraje).State = System.Data.Entity.EntityState.Modified;
+                _db.SaveChanges();
+                return facturafactoraje.idFacturasFactoraje;
+            }
+            else
+            {
+                return 0;
+            }
+        }
     }
 }
