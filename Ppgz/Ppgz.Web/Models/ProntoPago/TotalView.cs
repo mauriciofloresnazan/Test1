@@ -212,7 +212,6 @@ namespace Ppgz.Web.Models.ProntoPago
 				result = result.AddDays(1);
 			return result;
 		}
-	}
 
         public TotalView(int idSolicitud)
         {
