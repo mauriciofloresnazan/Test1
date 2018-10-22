@@ -20,6 +20,7 @@ namespace Ppgz.Web.Models.ProntoPago
 		public bool pagar { get; set; }
 		public int porcentaje { get; set; }
 		public List<string> facturas { get; set; }
+        public double interes { get; set; }
 		
 	}
 }

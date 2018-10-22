@@ -487,7 +487,6 @@
         <EntityType Name="solicitudesfactoraje">
           <Key>
             <PropertyRef Name="idSolicitudesFactoraje" />
-            <PropertyRef Name="EstatusFactoraje" />
           </Key>
           <Property Name="idSolicitudesFactoraje" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdProveedor" Type="int" Nullable="false" />
@@ -1581,7 +1580,6 @@
         <EntityType Name="solicitudesfactoraje">
           <Key>
             <PropertyRef Name="idSolicitudesFactoraje" />
-            <PropertyRef Name="EstatusFactoraje" />
           </Key>
           <Property Name="idSolicitudesFactoraje" Type="Int32" annotation:StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="IdProveedor" Type="Int32" Nullable="false" />

@@ -109,7 +109,8 @@ namespace Ppgz.Web.Models.ProntoPago
 						DateTime vencimiento = DateTime.ParseExact(item.vencimiento, "yyyyMMdd", CultureInfo.InvariantCulture);
 						dias = (int)(vencimiento - FechaPago).TotalDays;
 						double porcentajeAux = (Convert.ToDouble(item.porcentaje) / 100);
-						Interes = Interes + (item.importe * ((porcentajeAux) / 30) * dias);
+                        item.interes = (item.importe * ((porcentajeAux) / 30) * dias);
+                        Interes = Interes + item.interes;
 					}
 					//Guardamos la factura factoraje
 					FacturasFactoraje.Add(new facturasfactoraje()
@@ -122,7 +123,8 @@ namespace Ppgz.Web.Models.ProntoPago
 						Monto = item.importe.ToString(),
 						NumeroDocumento = item.numeroDocumento,
 						Porcentaje = porcentaje,
-						Referencia = item.referencia,
+						Referencia = item.referencia, 
+                        interes = item.interes,
 						uuid = "uuid",
 					});
 				}
@@ -156,7 +158,7 @@ namespace Ppgz.Web.Models.ProntoPago
 				};
 			}
 		}
-		public TotalView(int idSolicitud, int[] facturas, int[] descuentos)
+		public TotalView(int idSolicitud, string[] facturas, string[] descuentos)
 		{
 			MontoOriginal = 0;
 			DescuentosTotal = 0;
@@ -179,7 +181,7 @@ namespace Ppgz.Web.Models.ProntoPago
 			foreach(descuentofactoraje item in DescuentosFactoraje)
 			{
 				//Validamos si el descuento esta marcado
-				if (descuentos.Contains(item.idDescuentosFactoraje))
+				if (descuentos.Contains(item.idDescuentosFactoraje.ToString()))
 				{
 					Descuentos = Descuentos + Convert.ToDouble(item.Monto);
 				}
@@ -188,12 +190,12 @@ namespace Ppgz.Web.Models.ProntoPago
 			foreach(facturasfactoraje item in FacturasFactoraje)
 			{
 				//Validamos si la factura esta marcada
-				if (facturas.Contains(item.idFacturasFactoraje))
+				if (facturas.Contains(item.idFacturasFactoraje.ToString()))
 				{
 					double porcentaje = (Convert.ToDouble(item.Porcentaje) / 100);
 					MontoOriginal = MontoOriginal + Convert.ToDouble(item.Monto);
 					//Calculamos el interes
-					Interes = Interes + (Convert.ToDouble(item.Monto) * ((porcentaje) / 30) * item.DiasPP);
+					Interes = Interes + item.interes;
 				}
 			}
 			
@@ -211,4 +213,47 @@ namespace Ppgz.Web.Models.ProntoPago
 			return result;
 		}
 	}
+
+        public TotalView(int idSolicitud)
+        {
+            MontoOriginal = 0;
+            DescuentosTotal = 0;
+            DescuentoProntoPago = 0;
+            Interes = 0;
+            double Descuentos = 0;
+
+            FacturasFactoraje = new List<facturasfactoraje>();
+            DescuentosFactoraje = new List<descuentofactoraje>();
+
+            SolicitudFManager solicitudFManager = new SolicitudFManager();
+            FacturaFManager facturaFManager = new FacturaFManager();
+            DescuentoFManager descuentoFManager = new DescuentoFManager();
+
+            //SolicitudFactoraje = solicitudFManager.GetSolicitudById(idSolicitud);
+            FacturasFactoraje = facturaFManager.GetFacturasBySolicitud(idSolicitud);
+            DescuentosFactoraje = descuentoFManager.GetDescuentosBySolicitud(idSolicitud);
+
+            //Calculamos los descuentos
+            foreach (descuentofactoraje item in DescuentosFactoraje)
+            {
+                //Validamos si el descuento esta marcado
+                Descuentos = Descuentos + Convert.ToDouble(item.Monto);
+            }
+
+            foreach (facturasfactoraje item in FacturasFactoraje)
+            {
+                //Validamos si la factura esta marcada
+                double porcentaje = (Convert.ToDouble(item.Porcentaje) / 100);
+                MontoOriginal = MontoOriginal + Convert.ToDouble(item.Monto);
+                //Calculamos el interes
+                Interes = Interes + item.interes;
+            }
+
+            Descuentos = Descuentos * -1;
+            MontoOriginal = MontoOriginal;
+            DescuentosTotal = Descuentos;
+            DescuentoProntoPago = Interes;
+            TotalSolicitado = (MontoOriginal - Descuentos - Interes);
+        }
+    }
 }

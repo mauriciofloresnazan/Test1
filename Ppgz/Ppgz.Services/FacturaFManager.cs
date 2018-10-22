@@ -21,6 +21,54 @@ namespace Ppgz.Services
 			_db.SaveChanges();
 
 			return model.idFacturasFactoraje;
-		}
+		}     
+        
+        public bool DeleteFacturas(string [] facturaList, int solid)
+        {
+            bool result = false;
+            try
+            {
+                List<int> ids = new List<int>();
+                foreach(var item in facturaList)
+                {
+                    if (!String.IsNullOrEmpty(item))
+                    {
+                        int idfactura = Convert.ToInt32(item);
+                        ids.Add(idfactura);
+                    }
+                }
+                List<facturasfactoraje> lfacturasfactoraje = _db.facturasfactoraje.Where(ff => !ids.Contains(ff.idFacturasFactoraje) && ff.idSolicitudesFactoraje == solid).ToList();
+
+                foreach (var item in lfacturasfactoraje)
+                {
+                    _db.facturasfactoraje.Remove(item);
+                    _db.SaveChanges();
+                }
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+
+            return result;
+        }
+
+        public int ActualizarPorcentaje(int idFactura, int porcentaje)
+        {
+            var facturafactoraje = _db.facturasfactoraje.Where(ff => ff.idFacturasFactoraje == idFactura).FirstOrDefault();
+
+            if(facturafactoraje != null)
+            {
+                facturafactoraje.Porcentaje = porcentaje;
+                _db.Entry(facturafactoraje).State = System.Data.Entity.EntityState.Modified;
+                _db.SaveChanges();
+                return facturafactoraje.idFacturasFactoraje;
+            }
+            else
+            {
+                return 0;
+            }
+        }
     }
 }
