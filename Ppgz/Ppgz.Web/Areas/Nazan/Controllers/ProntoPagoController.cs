@@ -61,6 +61,30 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var result = GetSolicitudEstatus();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
+        public List<KeyValueCustom> GetSolicitudEstatus()
+        {
+            //Obtenemos una lista de los estatusfactoraje contabilizados 
+            var lsolicitudesf = _solicitudFManager.GetSolicitudesFactoraje();
+            var lestatus = _db.estatusfactoraje.ToList();
+            var estatusSolicitudes = new List<KeyValueCustom>();
+
+            foreach (var item in lestatus)
+            {
+                int count = 0;
+                count = lsolicitudesf.Where(x => x.EstatusNombre == item.Nombre).Count();
+                var element = new KeyValueCustom(item.Nombre, count);
+                estatusSolicitudes.Add(element);
+            }
+            KeyValueCustom aespecial =  estatusSolicitudes.Find(x => x.EstatusNombre == "Aprobacion Especial");
+            KeyValueCustom poraprobacion = estatusSolicitudes.Find(x => x.EstatusNombre == "Por Aprobacion");
+            poraprobacion.Cantidad = poraprobacion.Cantidad + aespecial.Cantidad;
+
+            estatusSolicitudes.Remove(aespecial);
+            estatusSolicitudes.Add(new KeyValueCustom("Total", lsolicitudesf.Count()));
+            var lse = estatusSolicitudes.OrderByDescending(x => x.Cantidad).ToList();
+            return lse;
+        }
         /*--------------END DASHBOARD SECTION---------------*/
 
         /*-------------BEGIN PROVEEDORES SECTION--------------*/
@@ -194,26 +218,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             TempData["FlashError"] = "Error al enviar solicitudes";
             TempData["FlashSuccess"] = "Solicitudes enviadas con exito";
             return RedirectToAction("Solicitudes");
-        }
-
-        public List<KeyValueCustom> GetSolicitudEstatus()
-        {
-            //Obtenemos una lista de los estatusfactoraje contabilizados 
-            var lsolicitudesf = _solicitudFManager.GetSolicitudesFactoraje();
-            var lestatus = _db.estatusfactoraje.ToList();
-            var estatusSolicitudes = new List<KeyValueCustom>();
-
-            foreach (var item in lestatus)
-            {
-                int count = 0;
-                count = lsolicitudesf.Where(x => x.EstatusNombre == item.Nombre).Count();
-                var element = new KeyValueCustom(item.Nombre, count);
-                estatusSolicitudes.Add(element);
-            }
-            estatusSolicitudes.Add(new KeyValueCustom("Total", lsolicitudesf.Count()));
-            var lse = estatusSolicitudes.OrderByDescending(x => x.Cantidad).ToList();
-            return lse;
-        }
+        }        
         /*--------------END SOLICITUDES SECTION---------------*/
 
         /*-------------BEGIN SOLICITUD DETALLE SECTION--------------*/
@@ -245,6 +250,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         public ActionResult ActualizarPorcentaje(int idFactura, int porcentaje, int solid)
         {
             var result = _facturaFManager.ActualizarPorcentaje(idFactura, porcentaje);
+            var solicitufactoraje = _solicitudFManager.UpdateEstatusSolicitud(solid, 6);
 
             return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solid }); 
         }

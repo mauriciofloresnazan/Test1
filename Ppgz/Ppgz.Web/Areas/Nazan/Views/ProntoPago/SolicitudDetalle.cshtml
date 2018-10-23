@@ -252,18 +252,32 @@
                 var rows = tablef.rows({ 'search': 'applied' }).nodes();
                 var rowsD = tableD.rows({ 'search': 'applied' }).nodes();
 
+
+                var numchecked = 0;
 				console.log($('input[type="checkbox"]:checked', rows));
 
 				$('input[type="checkbox"]:checked', rows).each(function () {
-					facturas = facturas + "," + $(this).val();
+                    facturas = facturas + "," + $(this).val();
+                    numchecked = numchecked + 1;
                 });
                 $('input[type="checkbox"]:checked', rowsD).each(function () {
                     descuentos = descuentos + "," + $(this).val();
+                    numchecked = numchecked + 1;
                 });
 
 
 				//Vamos al servidor a hacer el calculo
-                $("#btnAprobar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + 5)
+                //$("#btnAprobar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + 5)
+                var numfacturas = @facturaslist.Count() + @descuentoslist.Count();
+                if (numchecked < numfacturas) {
+                    $("#btnAprobar").addClass("not-active");
+                    $("#btnGuardar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + 6);
+                }
+                else {
+                    $("#btnAprobar").removeClass("not-active");
+                    $("#btnAprobar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + 5);
+                    $("#btnGuardar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + @solicitud.EstatusFactoraje);
+                }
 
 				$.ajax({
                     type: "POST",
@@ -342,6 +356,12 @@
             height: 150px;
             overflow: auto;
             overflow-x: hidden;
+        }
+
+        .not-active {
+            pointer-events: none;
+            cursor: no-drop;
+            text-decoration: none;
         }
     </style>
 
