@@ -209,9 +209,6 @@
         <EntityType Name="descuentosfactoraje">
           <Key>
             <PropertyRef Name="idDescuentosFactoraje" />
-            <PropertyRef Name="idSolicitudesFactoraje" />
-            <PropertyRef Name="EstatusFactoraje" />
-            <PropertyRef Name="NumeroDocumento" />
           </Key>
           <Property Name="idDescuentosFactoraje" Type="int" Nullable="false" />
           <Property Name="idSolicitudesFactoraje" Type="int" Nullable="false" />
@@ -1287,9 +1284,6 @@
         <EntityType Name="descuentofactoraje">
           <Key>
             <PropertyRef Name="idDescuentosFactoraje" />
-            <PropertyRef Name="idSolicitudesFactoraje" />
-            <PropertyRef Name="EstatusFactoraje" />
-            <PropertyRef Name="NumeroDocumento" />
           </Key>
           <Property Name="idDescuentosFactoraje" Type="Int32" Nullable="false" />
           <Property Name="idSolicitudesFactoraje" Type="Int32" Nullable="false" />
