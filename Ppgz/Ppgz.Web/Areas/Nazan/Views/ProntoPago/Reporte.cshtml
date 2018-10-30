@@ -1,0 +1,126 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<Ppgz.Services.localsolicitud> solicitudes = (ViewBag.Solicitudes);
+}
+
+<div class="container body-content">
+    <h3>Reporte</h3>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Solicitudes</div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <div class="form-inline" style="text-align:right">
+                            <div class="form-group">
+                                <label for="fecha">Desde</label>
+                                <input type="text" class="form-control fecha" id="fechaFrom" placeholder="Fecha">
+                            </div>
+                            <div class="form-group">
+                                <label for="fechaTo">Hasta</label>
+                                <input type="text" class="form-control fecha" id="fechaTo" placeholder="Fecha">
+                            </div>
+                            <div class="form-group">
+                                <input type="button" class="btn btn-primary" id="btnFiltrar" value="Filtrar" onclick="javascript: Filtrar();">
+                            </div>
+                        </div>
+                        <br />
+                        <div id="table-scroll">
+                            <table id="pagos" class="table table-striped table-condensed table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">N° de Solicitud</th>
+                                        <th class="text-center">Auxiliar</th>
+                                        <th class="text-center">Proveedor</th>
+                                        <th class="text-center">Tasa</th>
+                                        <th class="text-center">Dias</th>
+                                        <th class="text-center">Documentos</th>
+                                        <th class="text-center">Facturas</th>
+                                        <th class="text-center">Desc. P.P.</th>
+                                        <th class="text-center">Otros Descuentos</th>
+                                        <th class="text-center">A Pagar</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in solicitudes)
+                                    {
+                                        <tr>
+                                            <td class="text-center vert-align">@item.Id</td>
+                                            <td class="text-center vert-align">@item.IdProveedor</td>
+                                            <td class="text-center vert-align">@item.Proveedor</td>
+                                            <td class="text-center vert-align">@item.Tasa %</td>
+                                            <td class="text-center vert-align">@item.DiasPP</td>
+                                            <td class="text-center vert-align">@item.NoDocumentos</td>
+                                            <td class="text-center vert-align">@item.Monto.ToString("C")</td>
+                                            <td class="text-center vert-align">@item.DescuentoPP.ToString("C")</td>
+                                            <td class="text-center vert-align">@item.Descuentos.ToString("C")</td>
+                                            <td class="text-center vert-align">@item.Total.ToString("C")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<hr />
+
+
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#tblLogs').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+
+            $('#fecha').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+
+            $('#fechaFrom').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+
+            $('#fechaTo').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+        });
+
+        $("#fechaTo").focusout(function () {
+            var fechaTo = $("#fechaTo").val();
+            var fechaFrom = $("#fechaFrom").val();
+            var t = todate(fechaTo);
+            var f = todate(fechaFrom);
+            var datenow = new Date();
+            if (f > t) {
+                console.log("true");
+                $("#fechaTo").val(GetFormattedDate(datenow));
+            }
+        });
+
+        function Filtrar() {
+            var fechaf = $("#fechaFrom").val();
+            var fechat = $("#fechaTo").val();
+
+            var url = "@Url.Action("Reporte", "ProntoPago")";
+            var fecha = $('#fecha').val();
+            url = url + "?fechaFrom=" + fechaf + "&fechaTo=" + fechat;
+            location.href = url;
+        }
+    </script>
+}

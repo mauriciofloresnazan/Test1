@@ -30,7 +30,8 @@ namespace Ppgz.Services
                                                             sf.EstatusFactoraje,
 															sf.MontoAFacturar,
 															sf.MontoOriginal,
-															sf.FechaSolicitud
+															sf.FechaSolicitud,
+                                                            sf.DiasPP
                                                         }).ToList();                                                        
                                                         /*.Join(_db.proveedoresfactoraje,
                                                                 n => n.sf.IdProveedor,
@@ -83,7 +84,8 @@ namespace Ppgz.Services
 					Monto = item.MontoOriginal,
 					Total = item.MontoAFacturar,
 					Fecha = item.FechaSolicitud,
-					IdProveedor = item.IdProveedor
+					IdProveedor = item.IdProveedor,
+                    DiasPP = item.DiasPP
                 };
                 result.Add(element);
             }
@@ -191,5 +193,6 @@ namespace Ppgz.Services
 		public int Monto { get; set; }
 		public DateTime Fecha { get; set; }
 		public int Total { get; set; }
+        public int DiasPP { get; set; }
     }
 }

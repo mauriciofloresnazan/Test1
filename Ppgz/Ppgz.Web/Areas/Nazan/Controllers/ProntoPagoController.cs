@@ -542,7 +542,25 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 
             return View();
-        }              
+        }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
+        public ActionResult Reporte(string fechaFrom, string fechaTo)
+        {
+            if (!String.IsNullOrEmpty(fechaFrom) && !String.IsNullOrEmpty(fechaTo))
+            {
+                var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                ViewBag.Solicitudes = _solicitudFManager.GetSolicitudesFactoraje().Where(c => c.Fecha >= fechaf && c.Fecha <= fechat).ToList();
+            }
+            else
+            {
+                var fecha = DateTime.Today.AddMonths(-3);
+                ViewBag.Solicitudes = _solicitudFManager.GetSolicitudesFactoraje().Where(c => c.Fecha > fecha).ToList();
+            }
+
+            return View();
+        }
 
         public ActionResult UpdateConfiguracion(int id, string key, string value)
         {
