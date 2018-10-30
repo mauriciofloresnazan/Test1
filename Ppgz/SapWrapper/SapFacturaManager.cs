@@ -54,7 +54,59 @@ namespace SapWrapper
 
         }
 
-        public Resultado CrearFacturaServicio(string numeroProveedor, string numeroDocumentoReferencia, DateTime fechaFactura,
+		public Resultado CrearNotaCredito(
+			string numeroProveedor, 
+			DateTime fechaFactura,
+			string importe, 
+			string cabecera, 
+			string posicion, 
+			string folio //Serie+Folio
+			)
+		{
+			var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
+			var rfcRepository = rfcDestinationManager.Repository;
+			var function = rfcRepository.CreateFunction("ZFM_NOTA_CRED");
+			function.SetValue("IM_ACREEDOR", numeroProveedor);
+			function.SetValue("IM_FECHA", fechaFactura.ToString("yyyyMMdd"));
+			function.SetValue("IM_REF", folio);
+			function.SetValue("IM_IMPORTE", importe);
+
+			function.SetValue("IM_TEXTO_H", cabecera);
+			function.SetValue("IM_TEXTO_P", posicion);
+			
+			function.Invoke(rfcDestinationManager);
+
+
+			//function.GetValue("E_STATUS");
+
+			var result = function.GetTable("ET_RETORNO");
+
+			Resultado resultado = new Resultado();
+			try
+			{
+				resultado = new Resultado
+				{
+					ErrorTable = result.ToDataTable("T_RETURN"),
+					Estatus = "1",
+					FacturaNumero = function.GetValue("EX_OBJ_KEY").ToString().Substring(0, 10)
+				};
+			}
+			catch(Exception ioe)
+			{
+				resultado = new Resultado
+				{
+					ErrorTable = result.ToDataTable("T_RETURN"),
+					Estatus = "0",
+					FacturaNumero = ""
+				};
+			}
+
+
+			return resultado;
+
+		}
+
+		public Resultado CrearFacturaServicio(string numeroProveedor, string numeroDocumentoReferencia, DateTime fechaFactura,
             string importe, string importeConTaxas, string cantidad, string uuid, string rfc)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);

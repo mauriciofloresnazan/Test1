@@ -70,5 +70,21 @@ namespace Ppgz.Services
                 return 0;
             }
         }
-    }
+		public int ActualizarNumeroDocumento(int idFactura, string numeroDocumento)
+		{
+			var facturafactoraje = _db.facturasfactoraje.Where(ff => ff.idFacturasFactoraje == idFactura).FirstOrDefault();
+
+			if (facturafactoraje != null)
+			{
+				facturafactoraje.NumeroDocumento = numeroDocumento;
+				_db.Entry(facturafactoraje).State = System.Data.Entity.EntityState.Modified;
+				_db.SaveChanges();
+				return facturafactoraje.idFacturasFactoraje;
+			}
+			else
+			{
+				return 0;
+			}
+		}
+	}
 }

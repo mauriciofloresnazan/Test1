@@ -2,6 +2,7 @@
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Models.ProntoPago;
+using SapWrapper;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using static SapWrapper.SapFacturaManager;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -41,13 +43,36 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		{
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 			var proveedor = _proveedorManager.Find(proveedorId, cuenta.Id);
+
+			SolicitudFManager solicitudFManager = new SolicitudFManager();
+			solicitudesfactoraje solicitud = solicitudFManager.GetSolicitudById(idSolicitudesFactoraje);
+
+
+			
+			
+			double iva = (solicitud.MontoAFacturar * .16);
+			iva = Math.Round(iva, 2);
+
+			double subtotal = solicitud.MontoAFacturar - iva;
+			ViewBag.Iva = iva;
+			ViewBag.Total = solicitud.MontoAFacturar;
+			ViewBag.SubTotal = Math.Round(subtotal,2);
+
 			ViewBag.Proveedor = proveedor;
 			ViewBag.idSolicitudesFactoraje = idSolicitudesFactoraje;
+			ViewBag.Solicitud = solicitud;
+
+
 			return View();
 		}
 		[HttpPost]
 		public ActionResult CargarNotaCredito(NotaCreditoView notaCreditoView)
 		{
+			SapFacturaManager sapFacturaManager = new SapFacturaManager();
+			ProveedorManager proveedorManager = new ProveedorManager();
+			SolicitudFManager solicitudFManager = new SolicitudFManager();
+
+
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 			var proveedor = _proveedorManager.Find(notaCreditoView.proveedorId, cuenta.Id);
 			ViewBag.Proveedor = proveedor;
@@ -59,6 +84,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				TempData["FlashError"] = "Proveedor incorrecto";
 				return RedirectToAction("Index");
 			}
+
+
 
 			//Iniciamos proceso de archivos
 			if (!ModelState.IsValid) return View();
@@ -90,8 +117,43 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				ValidarPdf(pdfFile);
 				pdfFile.SaveAs(tempPdfPath);
 
-				//_facturaManager.CargarFactura(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
-				TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente";
+				try{
+
+					//Paso 1: Validamos la factura
+					factura facturaModel = _facturaManager.CargarFacturaFactoraje(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
+
+					string numeroProveedor = proveedor.NumeroProveedor;
+					DateTime fechaFactura = facturaModel.Fecha;
+					string importe = facturaModel.Total.ToString();
+					string cabecera = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.proveedor_id.ToString();
+					string posicion = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.proveedor_id.ToString();
+					string folio = facturaModel.Serie.ToString() + facturaModel.Folio.ToString();
+
+
+					//Paso 2: Ejecutamos la funcion de SAP
+					Resultado cargarNotaCredito = sapFacturaManager.CrearNotaCredito(numeroProveedor, fechaFactura, importe, cabecera, posicion, folio);
+					
+					if(cargarNotaCredito.Estatus == "1")
+					{
+						//Paso 3: Guardamos la factura en la bd
+						facturaModel.NumeroGenerado = cargarNotaCredito.FacturaNumero;
+						_facturaManager.GuardaFacturaFactoraje(facturaModel);
+
+						//Paso 4: Actualizamos el estatus de la solicitud
+						solicitudFManager.UpdateEstatusSolicitud(notaCreditoView.idSolicitudesFactoraje, 7);
+
+						TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente";
+					}
+					else
+					{
+						TempData["FlashError"] = "Error al cargar la nota de credito en SAP";
+					}
+				}
+				catch(Exception ioe)
+				{
+					TempData["FlashError"] = "Error al cargar la nota de credito en SAP";
+				}
+
 				return RedirectToAction("VerSolicitudes", new { proveedorId = proveedor.Id });
 			}
 			catch (BusinessException businessEx)

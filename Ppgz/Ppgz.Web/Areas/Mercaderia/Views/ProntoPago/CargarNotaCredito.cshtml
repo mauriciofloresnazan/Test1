@@ -57,19 +57,19 @@
 						<div class="form-group">
 							<label class="col-sm-4 control-label" for="montoOriginal">Subtotal</label>
 							<div class="col-sm-6">
-								<input class="form-control" id="montoOriginal" value="$40,000.00" type="text" readonly />
+								<input class="form-control" id="montoOriginal" value="@ViewBag.SubTotal.ToString("C")" type="text" readonly />
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-4 control-label" for="montoOriginal">IVA</label>
 							<div class="col-sm-6">
-								<input class="form-control" id="montoOriginal" value="$5,000.00" type="text" readonly />
+								<input class="form-control" id="montoOriginal" value="@ViewBag.Iva.ToString("C")" type="text" readonly />
 							</div>
 						</div>
 						<div class="form-group">
 							<label class="col-sm-4 control-label" for="montoOriginal">Total</label>
 							<div class="col-sm-6">
-								<input class="form-control" id="montoOriginal" value="$45,000.00" type="text" readonly />
+								<input class="form-control" id="montoOriginal" value="@ViewBag.Total.ToString("C")" type="text" readonly />
 							</div>
 						</div>
 						<div class="form-group">
