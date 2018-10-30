@@ -538,10 +538,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             else
             {
                 var fecha = DateTime.Today.AddMonths(-3);
-                ViewBag.Citas = _db.logfactoraje.Where(c => c.Fecha > fecha).ToList();
+                ViewBag.Logs = _db.logfactoraje.Where(c => c.Fecha > fecha).ToList();
             }
-
-            ViewBag.Logs = _db.logfactoraje.ToList();
 
             return View();
         }              
