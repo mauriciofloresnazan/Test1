@@ -33,7 +33,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         readonly SolicitudFManager _solicitudFManager = new SolicitudFManager();
 
         /*-------------BEGIN DASHBOARD SECTION--------------*/
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult Index()
         {
             //Se contabilizan los estatusfactoraje <estatus, cantudad>
@@ -88,7 +88,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         /*--------------END DASHBOARD SECTION---------------*/
 
         /*-------------BEGIN PROVEEDORES SECTION--------------*/
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult Proveedores()
         {
             //Buscamos los proveedores que aplican Pronto Pago
@@ -186,7 +186,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         /*--------------END PROVEEDORES SECTION---------------*/
 
         /*-------------BEGIN SOLICITUDES SECTION--------------*/
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult Solicitudes()
         {
             //Obtenemos todas las solicitudes de pronto pago
@@ -222,14 +222,35 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         /*--------------END SOLICITUDES SECTION---------------*/
 
         /*-------------BEGIN SOLICITUD DETALLE SECTION--------------*/
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult SolicitudDetalle(int id)
         {
             //Obtenemos las facturas, descuentos por solicitud
             var solicitud = _solicitudFManager.GetSolicitudById(id);
             var proveedor = _proveedorManager.Find(solicitud.IdProveedor);
             var facturas = _facturaFManager.GetFacturasBySolicitud(id);
-            var descuentos = _descuentoFManager.GetDescuentosBySolicitud(id);            
+            List<descuentofactoraje> descuentos = _descuentoFManager.GetDescuentosBySolicitud(id);            
+
+            List<FacturaView> descuentosSAP = GetDescuentosByProveedor(proveedor.Id);
+            int i = 0;
+            foreach(var item in descuentosSAP)
+            {
+                var df = descuentos.Where(d => d.NumeroDocumento.Contains(item.numeroDocumento)).FirstOrDefault();
+                if (df == null)
+                {
+                    i -= 1;
+                    descuentofactoraje element = new descuentofactoraje()
+                    {
+                        idDescuentosFactoraje = i,
+                        idSolicitudesFactoraje = solicitud.idSolicitudesFactoraje,
+                        NumeroDocumento = item.numeroDocumento,
+                        Monto = item.importe.ToString(),
+                        EstatusFactoraje = solicitud.EstatusFactoraje,
+                        Descripcion = item.descripcion
+                    };
+                    descuentos.Add(element);
+                }
+            }
 
             //Se obtienen los calculos iniciales 
             TotalView totalView = new TotalView(id);
@@ -272,14 +293,45 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return PartialView("_totalProntoPago");
         }
 
-        public ActionResult AprobarSolicitud(string facturas, string descuentos, int solicitudId, int estatus)
+        public ActionResult AprobarSolicitud(string facturas, string descuentos, int solicitudId, int _proveedorid)
         {
+            var estatusSS = _solicitudFManager.GetSolicitudById(solicitudId);
+            if(estatusSS.EstatusFactoraje == 6 && !this.User.IsInRole("NAZAN-PRONTOPAGO-APROBADOR"))
+            {
+                TempData["FlashError"] = "No se pudo aprobar solicitud.";
+                return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solicitudId });
+            }
+
             string[] facturasList = facturas.Split(',');
             string[] descuentosList = descuentos.Split(',');
 
+            //Traemos los descuentos guardados a eliminar
+            List<descuentofactoraje> descuentosguardados = _descuentoFManager.GetDescuentosBySolicitud(solicitudId).Where(x => descuentosList.Contains(x.NumeroDocumento)).ToList();
+            List<string> arrdescuentos = descuentosguardados.Select(x => x.idDescuentosFactoraje.ToString()).ToList();
+
             //ELIMINA FACTURAS Y DESCUENTOS SIN CHECK
             _facturaFManager.DeleteFacturas(facturasList, solicitudId);
-            _descuentoFManager.DeleteDescuentos(descuentosList, solicitudId);
+            _descuentoFManager.DeleteDescuentos(arrdescuentos.ToArray(), solicitudId);
+
+            //Sacamos los descuentos que vienen de SAP y tienen check
+            List<FacturaView> descuentosSAP = GetDescuentosByProveedor(_proveedorid);
+            foreach (var item in descuentosSAP)
+            {
+                var df = descuentosList.Where(d => d.Contains(item.numeroDocumento)).FirstOrDefault();
+                if (df != null)
+                {
+                    descuentofactoraje element = new descuentofactoraje()
+                    {
+                        idSolicitudesFactoraje = solicitudId,
+                        NumeroDocumento = item.numeroDocumento,
+                        Monto = item.importe.ToString(),
+                        EstatusFactoraje = estatusSS.EstatusFactoraje,
+                        Descripcion = item.descripcion
+                    };
+                    _descuentoFManager.InsDescuentoFactoraje(element);
+                    descuentosguardados.Add(element);
+                }
+            }
 
             //Se obtienen los calculos de las facturas y descuentos con check para actualizar la solicitud
             TotalView totalView = new TotalView(solicitudId, facturasList, descuentosList);
@@ -298,7 +350,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var result = _solicitudFManager.UpdateSolicitud(nuevaSolicitud);
             if (result == nuevaSolicitud.idSolicitudesFactoraje)
             {
-                _solicitudFManager.UpdateEstatusSolicitud(nuevaSolicitud.idSolicitudesFactoraje, estatus);
+                _solicitudFManager.UpdateEstatusSolicitud(nuevaSolicitud.idSolicitudesFactoraje, 5);
             }
 
             return RedirectToAction("Solicitudes");
@@ -311,9 +363,161 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             return RedirectToAction("Solicitudes");
         }
+
+        public List<FacturaView> GetDescuentosByProveedor(int proveedorId)
+        {
+            var proveedor = _proveedorManager.Find(proveedorId);
+
+            if (proveedor == null)
+            {
+                TempData["FlashError"] = "Ocurrio un error.";
+                List<FacturaView> _descuentos = null;
+                return _descuentos;
+            }
+            
+            //Traemos los pagos pendientes
+            var partidasManager = new PartidasManager();
+            var proveedorFManager = new ProveedorFManager();
+
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(proveedor.NumeroProveedor, sociedad, DateTime.Today);
+
+            //Armamos la lista con las cuentas por pagas es decir mayores a cero 
+            List<Web.Models.ProntoPago.FacturaView> _listDescuentos = new List<Web.Models.ProntoPago.FacturaView>();
+
+            for (int i = 0; i < dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows.Count; i++)
+            {
+                Web.Models.ProntoPago.FacturaView item = new Web.Models.ProntoPago.FacturaView()
+                {
+                    referencia = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["XBLNR"].ToString(),
+                    importe = Convert.ToDouble(dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["DMBTR"].ToString()),
+                    ml = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["WAERS"].ToString(),
+                    vencimiento = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["FECHA_PAGO"].ToString(),
+                    tipoMovimiento = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["BLART"].ToString(),
+                    fechaDocumento = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["BLDAT"].ToString(),
+                    descripcion = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["SGTXT"].ToString(),
+                    pagar = false,
+                    idProveedor = proveedor.Id.ToString(),
+                    numeroDocumento = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows[i]["BELNR"].ToString()
+                };
+                if (item.importe < 0)
+                {
+                    item.pagar = true;
+                }
+                if (item.importe < 0)
+                    _listDescuentos.Add(item);
+            }
+                        
+            return _listDescuentos;
+        }
+
+        public JsonResult InsDescuentoFactoraje(descuentofactoraje model)
+        {
+            int result = _descuentoFManager.InsDescuentoFactoraje(model);
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetTotal(string facturas, string descuentos, int solicitudId, int _proveedorid)
+        {
+            List<descuentofactoraje> _ldescuentos = _descuentoFManager.GetDescuentosBySolicitud(solicitudId);
+
+            List<FacturaView> descuentosSAP = GetDescuentosByProveedor(_proveedorid);
+            int i = 0;
+            foreach (var item in descuentosSAP)
+            {
+                var df = _ldescuentos.Where(d => d.NumeroDocumento.Contains(item.numeroDocumento)).FirstOrDefault();
+                if (df == null)
+                {
+                    i -= 1;
+                    descuentofactoraje element = new descuentofactoraje()
+                    {
+                        idDescuentosFactoraje = i,
+                        idSolicitudesFactoraje = solicitudId,
+                        NumeroDocumento = item.numeroDocumento,
+                        Monto = item.importe.ToString(),
+                        //EstatusFactoraje = solicitud.EstatusFactoraje,
+                        Descripcion = item.descripcion
+                    };
+                    _ldescuentos.Add(element);
+                }
+            }
+
+            //Se obtienen las facturas y descuentos (numerodocumento) con check
+            string[] facturasList = facturas.Split(',');
+            string[] descuentosList = descuentos.Split(',');
+
+            //Se obtienen los calculos segun las facturas y descuentos con check
+            TotalView totalView = new TotalView(solicitudId, facturasList, descuentosList, _ldescuentos);
+            //int dias = 0;
+            ViewBag.MontoOriginal = totalView.MontoOriginal.ToString("C");
+            ViewBag.DescuentosTotal = totalView.DescuentosTotal.ToString("C");
+            ViewBag.DescuentoProntoPago = totalView.Interes.ToString("C");
+            ViewBag.TotalSolicitado = totalView.TotalSolicitado.ToString("C");
+
+            return PartialView("_totalProntoPago");
+        }
+
+        public ActionResult GuardarSolicitudM(string facturas, string descuentos, int solicitudId, int _proveedorid, int _estatus)
+        {
+            int estatusactual = _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje;
+            string[] facturasList = facturas.Split(',');
+            string[] descuentosList = descuentos.Split(',');
+
+            //Traemos los descuentos guardados a eliminar
+            List<descuentofactoraje> descuentosguardados = _descuentoFManager.GetDescuentosBySolicitud(solicitudId).Where(x => descuentosList.Contains(x.NumeroDocumento)).ToList();
+            List<string> arrdescuentos = descuentosguardados.Select(x => x.idDescuentosFactoraje.ToString()).ToList();
+            
+            //ELIMINA FACTURAS Y DESCUENTOSFACTORAJE SIN CHECK
+            _facturaFManager.DeleteFacturas(facturasList, solicitudId);
+            _descuentoFManager.DeleteDescuentos(arrdescuentos.ToArray(), solicitudId);
+                       
+            //Sacamos los descuentos que vienen de SAP y tienen check
+            List<FacturaView> descuentosSAP = GetDescuentosByProveedor(_proveedorid);
+            foreach (var item in descuentosSAP)
+            {
+                var df = descuentosList.Where(d => d.Contains(item.numeroDocumento)).FirstOrDefault();
+                if (df != null)
+                {
+                    descuentofactoraje element = new descuentofactoraje()
+                    {
+                        idSolicitudesFactoraje = solicitudId,
+                        NumeroDocumento = item.numeroDocumento,
+                        Monto = item.importe.ToString(),
+                        EstatusFactoraje = estatusactual,
+                        Descripcion = item.descripcion
+                    };
+                    _descuentoFManager.InsDescuentoFactoraje(element);
+                    descuentosguardados.Add(element);
+                }
+            }
+
+            TotalView totalView = new TotalView(solicitudId, facturasList, descuentosList, descuentosguardados);
+
+            //Se crea la solicitud actualizada
+            var nuevaSolicitud = new solicitudesfactoraje()
+            {
+                idSolicitudesFactoraje = solicitudId,
+                DescuentoPP = Convert.ToInt32(totalView.DescuentoProntoPago),
+                Descuentos = Convert.ToInt32(totalView.DescuentosTotal),
+                MontoOriginal = Convert.ToInt32(totalView.MontoOriginal),
+                MontoAFacturar = Convert.ToInt32(totalView.TotalSolicitado),
+            };
+
+            //Se actualiza la solicitud de pronto pago 
+            var result = _solicitudFManager.UpdateSolicitud(nuevaSolicitud);
+            if (result == nuevaSolicitud.idSolicitudesFactoraje)
+            {
+                _solicitudFManager.UpdateEstatusSolicitud(nuevaSolicitud.idSolicitudesFactoraje, _estatus);
+            }
+
+            return RedirectToAction("Solicitudes");
+        }
+        
         /*--------------END SOLICITUD DETALLE SECTION---------------*/
 
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult Configuraciones()
         {
             var configuraciones = _configuracionesFManager.GetConfiguraciones();
@@ -322,9 +526,23 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO")]
-        public ActionResult Logs()
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
+        public ActionResult Logs(string fechaFrom, string fechaTo)
         {
+            if (!String.IsNullOrEmpty(fechaFrom) && !String.IsNullOrEmpty(fechaTo))
+            {
+                var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                ViewBag.Logs = _db.logfactoraje.Where(c => c.Fecha >= fechaf && c.Fecha <= fechat).ToList();
+            }
+            else
+            {
+                var fecha = DateTime.Today.AddMonths(-3);
+                ViewBag.Citas = _db.logfactoraje.Where(c => c.Fecha > fecha).ToList();
+            }
+
+            ViewBag.Logs = _db.logfactoraje.ToList();
+
             return View();
         }              
 

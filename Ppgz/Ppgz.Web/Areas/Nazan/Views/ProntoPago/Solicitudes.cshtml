@@ -63,8 +63,8 @@
                                             <td class="text-center vert-align">@item.Proveedor</td>
                                             <td class="text-center vert-align">@item.Tasa</td>
                                             <td class="text-center vert-align">@item.NoDocumentos</td>
-                                            <td class="text-center vert-align">@item.DescuentoPP</td>
-                                            <td class="text-center vert-align">@item.Descuentos</td>
+                                            <td class="text-center vert-align">@item.DescuentoPP.ToString("C")</td>
+                                            <td class="text-center vert-align">@item.Descuentos.ToString("C")</td>
                                             <td class="text-center vert-align" style="@style;">@item.EstatusNombre</td>
                                             @if (@item.Estatus == 4)
                                             {

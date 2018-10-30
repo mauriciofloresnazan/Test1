@@ -65,10 +65,10 @@
                                 <tr>
                                     <td class="text-center vert-align">@item.NumeroDocumento</td>
                                     <td class="text-center vert-align">@item.FechaSolicitud.ToString().Substring(0, 10)</td>
-                                    <td class="text-center vert-align">@item.Monto</td>
+                                    <td class="text-center vert-align">@Convert.ToDouble(item.Monto).ToString("C")</td>
                                     <td class="text-center vert-align">@item.FechaSolicitud.AddDays(item.DiasPP).ToString().Substring(0, 10)</td>
                                     <td class="text-center vert-align" onclick="mdlPorcentaje(@item.idFacturasFactoraje, @item.Porcentaje, @solicitud.idSolicitudesFactoraje)" style="cursor: pointer;">@item.Porcentaje %</td>
-                                    <td class="text-center vert-align">@item.interes</td>
+                                    <td class="text-center vert-align">@item.interes.ToString("C")</td>
                                     <td class="text-center vert-align">
                                         <input type="checkbox" class="cbPagos" value="@item.idFacturasFactoraje" checked />
                                     </td>
@@ -100,7 +100,7 @@
                                 {
                                     <tr>
                                         <td class="text-center vert-align">@d.NumeroDocumento</td>
-                                        <td class="text-center vert-align">@d.Monto</td>
+                                        <td class="text-center vert-align">@Convert.ToDouble(d.Monto).ToString("C")</td>
                                         <td class="text-center vert-align">@d.Descripcion</td>
                                     </tr>
                                 }
@@ -129,7 +129,7 @@
                     Volver
                 </a>
 
-                <a href=" " id="btnGuardar" class="btn btn-warning">
+                <a href=" " id="btnGuardar" val=" " class="btn btn-warning">
                     Guardar
                 </a>
 
@@ -161,7 +161,7 @@
                             <th class="text-center">Num Descuento</th>
                             <th class="text-center">Monto</th>
                             <th class="text-center">Descripcion</th>
-                            <th class="text-center"><input type="checkbox" id="cbHeader" /></th>
+                            <th class="text-center">@*<input type="checkbox" id="cbHeader" />*@</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -169,11 +169,20 @@
                         {
                             <tr>
                                 <td class="text-center vert-align">@d.NumeroDocumento</td>
-                                <td class="text-center vert-align">@d.Monto</td>
+                                <td class="text-center vert-align">@Convert.ToDouble(d.Monto).ToString("C")</td>
                                 <td class="text-center vert-align">@d.Descripcion</td>
-                                <td class="text-center vert-align">
-                                    <input class="solready" type="checkbox" name="cb" value="@d.idDescuentosFactoraje" checked />
-                                </td>
+                                @if (d.idDescuentosFactoraje > 0)
+                                {
+                                    <td class="text-center vert-align">
+                                        <input class="solready" type="checkbox" name="cb" value="@d.idDescuentosFactoraje" checked />
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-center vert-align">
+                                        <input class="solready" type="checkbox" name="cb" value="@d.idDescuentosFactoraje" data-numero="@d.NumeroDocumento" data-monto="@d.Monto" data-descripcion="@d.Descripcion" />
+                                    </td>
+                                }
                             </tr>
                         }
                     </tbody>
@@ -243,7 +252,7 @@
             });
 
             //Evento para cachar todos los checked
-			$('input[type=checkbox]').on('change', function () {
+            $('input[type=checkbox]').on('change', function () {
 				var facturas = '';
                 var facturaPost = {};
                 var descuentos = '';
@@ -251,7 +260,6 @@
                 //Obtenemos los marcados
                 var rows = tablef.rows({ 'search': 'applied' }).nodes();
                 var rowsD = tableD.rows({ 'search': 'applied' }).nodes();
-
 
                 var numchecked = 0;
 				console.log($('input[type="checkbox"]:checked', rows));
@@ -261,57 +269,78 @@
                     numchecked = numchecked + 1;
                 });
                 $('input[type="checkbox"]:checked', rowsD).each(function () {
-                    descuentos = descuentos + "," + $(this).val();
+                    descuentos = descuentos + "," + $(this).data("numero");
                     numchecked = numchecked + 1;
                 });
 
+                $("#btnGuardar").val("modificado");
 
-				//Vamos al servidor a hacer el calculo
-                //$("#btnAprobar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + 5)
-                var numfacturas = @facturaslist.Count() + @descuentoslist.Count();
-                if (numchecked < numfacturas) {
-                    $("#btnAprobar").addClass("not-active");
-                    $("#btnGuardar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + 6);
-                }
-                else {
-                    $("#btnAprobar").removeClass("not-active");
-                    $("#btnAprobar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + 5);
-                    $("#btnGuardar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + @solicitud.EstatusFactoraje);
-                }
-
-				$.ajax({
+                //Vamos al servidor a hacer el calculo
+                $.ajax({
                     type: "POST",
-                    url: "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "ObtenerTotalFactoraje"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje",
+                    url: "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "GetTotal"})" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&_proveedorid=@proveedor.Id",
 					//data: JSON.stringify({ 'facturas': facturaPost }),
 					dataType: "html",
-					success: function (data) {
-						$('#TotalProntoPagoResult').html(data);
-					},
-					error: function (XMLHttpRequest, textStatus, errorThrown) {
-						//DesbloquearForma('GiftCardFilter');
-					}
-			    });
+                    success: function (data) {
+                        $('#TotalProntoPagoResult').html(data);
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        //DesbloquearForma('GiftCardFilter');
+                    }
+                });
 
+                $("#btnAprobar").addClass("not-active");
             });
 
-            var _facturas = '';
-            var _descuentos = '';
+            $("#btnGuardar").click(function () {
+                var _estatus;
+                var facturas = '';
+                var descuentos = '';
+                //Obtenemos los marcados
+                var rows = tablef.rows({ 'search': 'applied' }).nodes();
+                var rowsD = tableD.rows({ 'search': 'applied' }).nodes();
 
-            //Obtenemos los marcados
-            var rows = tablef.rows({ 'search': 'applied' }).nodes();
-            var rowsD = tableD.rows({ 'search': 'applied' }).nodes();
+                var numchecked = 0;
+                console.log($('input[type="checkbox"]:checked', rows));
 
-			console.log($('input[type="checkbox"]:checked', rows));
+                $('input[type="checkbox"]:checked', rows).each(function () {
+                    facturas = facturas + "," + $(this).val();
+                });
+                $('input[type="checkbox"]:checked', rowsD).each(function () {
+                    descuentos = descuentos + "," + $(this).data("numero");
+                });
 
-			$('input[type="checkbox"]:checked', rows).each(function () {
-				_facturas = _facturas + "," + $(this).val();
+                if ($(this).val() == "modificado") {
+                    _estatus = 6;
+                    $(this).attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "GuardarSolicitudM" })" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&_proveedorid=@proveedor.Id" + "&_estatus=" + _estatus);
+                }
+                else {
+                    $(this).attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "Solicitudes"})");
+                }
             });
-            $('input[type="checkbox"]:checked', rowsD).each(function () {
-                _descuentos = _descuentos + "," + $(this).val();
-            });
 
-            $("#btnAprobar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + _facturas + "&descuentos=" + _descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + 5);
-            $("#btnGuardar").attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud"})" + "?facturas=" + _facturas + "&descuentos=" + _descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&estatus=" + @solicitud.EstatusFactoraje);
+            $("#btnAprobar").click(function () {
+                var facturas = '';
+                var descuentos = '';
+                //Obtenemos los marcados
+                var rows = tablef.rows({ 'search': 'applied' }).nodes();
+                var rowsD = tableD.rows({ 'search': 'applied' }).nodes();
+
+                var numchecked = 0;
+                console.log($('input[type="checkbox"]:checked', rows));
+
+                $('input[type="checkbox"]:checked', rows).each(function () {
+                    facturas = facturas + "," + $(this).val();
+                });
+                $('input[type="checkbox"]:checked', rowsD).each(function () {
+                    descuentos = descuentos + "," + $(this).data("numero");
+                });
+
+                //if ($("#btnGuardar").val() == "modificado") {
+                //    return;
+                //}
+                $(this).attr("href", "@Url.RouteUrl("Default", new { controller = "Nazan/ProntoPago", action = "AprobarSolicitud" })" + "?facturas=" + facturas + "&descuentos=" + descuentos + "&solicitudId=@solicitud.idSolicitudesFactoraje" + "&_proveedorid=@proveedor.Id");                
+            });
         });
 
         function mdlPorcentaje(_id, _porcentaje, _solid) {

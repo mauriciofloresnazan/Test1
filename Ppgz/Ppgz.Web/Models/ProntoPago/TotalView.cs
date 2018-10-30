@@ -254,5 +254,53 @@ namespace Ppgz.Web.Models.ProntoPago
             DescuentoProntoPago = Interes;
             TotalSolicitado = (MontoOriginal - Descuentos - Interes);
         }
+
+        public TotalView(int idSolicitud, string[] facturas, string[] descuentos, List<descuentofactoraje> listdescuentos)
+        {
+            MontoOriginal = 0;
+            DescuentosTotal = 0;
+            DescuentoProntoPago = 0;
+            Interes = 0;
+            double Descuentos = 0;
+
+            FacturasFactoraje = new List<facturasfactoraje>();
+            DescuentosFactoraje = new List<descuentofactoraje>();
+
+            SolicitudFManager solicitudFManager = new SolicitudFManager();
+            FacturaFManager facturaFManager = new FacturaFManager();
+            DescuentoFManager descuentoFManager = new DescuentoFManager();
+
+            //SolicitudFactoraje = solicitudFManager.GetSolicitudById(idSolicitud);
+            FacturasFactoraje = facturaFManager.GetFacturasBySolicitud(idSolicitud);
+            DescuentosFactoraje = listdescuentos;
+
+            //Calculamos los descuentos
+            foreach (descuentofactoraje item in DescuentosFactoraje)
+            {
+                //Validamos si el descuento esta marcado
+                if (descuentos.Contains(item.NumeroDocumento.ToString()))
+                {
+                    Descuentos = Descuentos + Convert.ToDouble(item.Monto);
+                }
+            }
+
+            foreach (facturasfactoraje item in FacturasFactoraje)
+            {
+                //Validamos si la factura esta marcada
+                if (facturas.Contains(item.idFacturasFactoraje.ToString()))
+                {
+                    double porcentaje = (Convert.ToDouble(item.Porcentaje) / 100);
+                    MontoOriginal = MontoOriginal + Convert.ToDouble(item.Monto);
+                    //Calculamos el interes
+                    Interes = Interes + item.interes;
+                }
+            }
+
+            Descuentos = Descuentos * -1;
+            MontoOriginal = MontoOriginal;
+            DescuentosTotal = Descuentos;
+            DescuentoProntoPago = Interes;
+            TotalSolicitado = (MontoOriginal - Descuentos - Interes);
+        }
     }
 }
