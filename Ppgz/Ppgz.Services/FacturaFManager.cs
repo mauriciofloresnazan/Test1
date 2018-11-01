@@ -61,6 +61,8 @@ namespace Ppgz.Services
             if(facturafactoraje != null)
             {
                 facturafactoraje.Porcentaje = porcentaje;
+                double porcentajeAux = (Convert.ToDouble(porcentaje) / 100);
+                facturafactoraje.interes = (Convert.ToDouble(facturafactoraje.Monto) * ((porcentajeAux) / 30) * facturafactoraje.DiasPP);
                 _db.Entry(facturafactoraje).State = System.Data.Entity.EntityState.Modified;
                 _db.SaveChanges();
                 return facturafactoraje.idFacturasFactoraje;

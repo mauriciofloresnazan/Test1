@@ -6,6 +6,7 @@
     List<descuentofactoraje> descuentoslist = (ViewBag.Descuentos);
     var proveedor = ViewBag.Proveedor;
     var solicitud = (ViewBag.Solicitud);
+    int count = 3;
 }
 
 <div class="container body-content">
@@ -96,12 +97,17 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var d in descuentoslist)
+                                
+                                @if (descuentoslist.Count() < 3)
+                                {
+                                    count = descuentoslist.Count();
+                                }
+                                @for (int i = 0; i < count; i++)
                                 {
                                     <tr>
-                                        <td class="text-center vert-align">@d.NumeroDocumento</td>
-                                        <td class="text-center vert-align">@Convert.ToDouble(d.Monto).ToString("C")</td>
-                                        <td class="text-center vert-align">@d.Descripcion</td>
+                                        <td class="text-center vert-align">@descuentoslist[i].NumeroDocumento</td>
+                                        <td class="text-center vert-align">@Convert.ToDouble(descuentoslist[i].Monto).ToString("C")</td>
+                                        <td class="text-center vert-align">@descuentoslist[i].Descripcion</td>
                                     </tr>
                                 }
                             </tbody>
@@ -207,7 +213,7 @@
                 <div class="modal-body">
                     <input type="hidden" id="mdlSolid" value="" name="solid" class="form-control" />
                     <input type="hidden" id="mdlId" value="" name="idFactura" class="form-control" />
-                    <div>Porcentaje de Descuento:<input class="form-control input-sm" placeholder="" value="" type="number" min="1" max="99" id="mdlPorcentaje" name="porcentaje" required></div>
+                    <div>Porcentaje de Descuento:<input class="form-control input-sm" placeholder="" value="" type="number" min="0" max="100" id="mdlPorcentaje" name="porcentaje" required></div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="mdlGuardar" class="btn btn-primary">Guardar</button>

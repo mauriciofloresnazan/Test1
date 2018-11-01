@@ -73,7 +73,7 @@
                                 <td class="text-center vert-align">@item.Nombre</td>
                                 <td class="text-center vert-align">@defaultporcentaje %</td>
                                 <td class="text-center vert-align">@defaultdiapago</td>
-                                @if (item.Porcentaje != 0)
+                                @if (!String.IsNullOrWhiteSpace(diapago))
                                 {
                                 <td class="text-center vert-align">@item.Porcentaje %</td>
                                 }
@@ -117,7 +117,7 @@
                         <input type="hidden" id="mdlIdCuenta" value="" name="idCuenta" class="form-control" />
                         <input type="hidden" id="mdlId" value="" name="idProveedor" class="form-control" />
                         de pago: <select class="form-control input-sm" id="mdlDia" name="diadepago">
-                            <option value="1">Lunes</option>
+                            <option value="1" selected>Lunes</option>
                             <option value="2">Martes</option>
                             <option value="3">Miercoles</option>
                             <option value="4">Jueves</option>
@@ -126,7 +126,7 @@
                             <option value="7">Domingo</option>
                         </select>
                     </div><br />
-                    <div>Porcentaje de Descuento:<input class="form-control input-sm" placeholder="" value="" type="number" id="mdlPorcentaje" name="porcentaje" required></div>
+                    <div>Porcentaje de Descuento:<input class="form-control input-sm" placeholder="" value="" type="number" min="0" max="100" id="mdlPorcentaje" name="porcentaje" required></div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="mdlGuardar" class="btn btn-default">Guardar</button>
@@ -155,21 +155,24 @@
                 var diapago = $(this).data("diadepago");
                 var porcentaje = $(this).data("porcentaje");
 
+                if (diapago) {
+                    $("#mdlDia").val(diapago);
+                }
 
                 $("#mdlId").val(id);
                 $("#mdlIdCuenta").val(idCuenta);
-                $("#mdlDia").val(diapago);
+                
                 $("#mdlPorcentaje").val(porcentaje);
 
                 $("#modalEditarProveedor").modal('show');
             });
 
-            $("#mdlPorcentaje").change(function () {
-                var porcentaje = $("#mdlPorcentaje").val();
-                if (porcentaje < 0 || porcentaje > 100) {
-                    $("#mdlPorcentaje").val("");
-                }
-            });
+            //$("#mdlPorcentaje").change(function () {
+            //    var porcentaje = $("#mdlPorcentaje").val();
+            //    if (porcentaje < 0) {
+            //        $("#mdlPorcentaje").val("");
+            //    }
+            //});
         });
     </script>
 }

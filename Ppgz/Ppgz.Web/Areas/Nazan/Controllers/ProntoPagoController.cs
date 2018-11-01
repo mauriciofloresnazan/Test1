@@ -44,6 +44,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult DashboardEnviarPropuestas()
         {
             var listpropuestas = new List<solicitudesfactoraje>();
@@ -81,8 +82,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             poraprobacion.Cantidad = poraprobacion.Cantidad + aespecial.Cantidad;
 
             estatusSolicitudes.Remove(aespecial);
-            estatusSolicitudes.Add(new KeyValueCustom("Total", lsolicitudesf.Count()));
+            estatusSolicitudes.Add(new KeyValueCustom("Total", lsolicitudesf.Count()+1));
             var lse = estatusSolicitudes.OrderByDescending(x => x.Cantidad).ToList();
+            lse.Where(x => x.EstatusNombre == "Total").FirstOrDefault().Cantidad = lsolicitudesf.Count();
             return lse;
         }
         /*--------------END DASHBOARD SECTION---------------*/
@@ -137,12 +139,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult ActualizarProveedor(int idCuenta, int idProveedor, int diadepago, int porcentaje)
         {
             bool result = false;
 
             //Validamos el rango de los datos y cambiamos los valores en servicio
-            if ((diadepago > 0 && diadepago < 8) || (porcentaje >= 0 && porcentaje <= 100))
+            if ((diadepago > 0 && diadepago < 8) || (porcentaje >= 0))
             {
                 result = _proveedorFManager.UpdateProveedorFactoraje(idProveedor, diadepago, porcentaje);
             }
@@ -155,6 +158,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return RedirectToAction("Proveedores");
         }
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult EliminarProveedor(int idProveedor, int idCuenta)
         {
             bool result = false;
@@ -204,6 +208,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult SolicitudesEnviarPropuestas(string selectedlist)
         {
             var listpropuestas = new List<solicitudesfactoraje>();
@@ -268,6 +273,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult ActualizarPorcentaje(int idFactura, int porcentaje, int solid)
         {
             var result = _facturaFManager.ActualizarPorcentaje(idFactura, porcentaje);
@@ -276,6 +282,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solid }); 
         }
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult ObtenerTotalFactoraje(string facturas, string descuentos, int solicitudId)
         {
             //Se obtienen las facturas y descuentos con check
@@ -293,7 +300,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return PartialView("_totalProntoPago");
         }
 
-        public ActionResult AprobarSolicitud(string facturas, string descuentos, int solicitudId, int _proveedorid)
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")] public ActionResult AprobarSolicitud(string facturas, string descuentos, int solicitudId, int _proveedorid)
         {
             var estatusSS = _solicitudFManager.GetSolicitudById(solicitudId);
             if(estatusSS.EstatusFactoraje == 6 && !this.User.IsInRole("NAZAN-PRONTOPAGO-APROBADOR"))
@@ -356,6 +363,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return RedirectToAction("Solicitudes");
         }
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult RechazarSolicitud(int solicitudId)
         {
             //Cambia el estatus en solicitudes, facturas y descuentos por rechazada
@@ -418,6 +426,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult GetTotal(string facturas, string descuentos, int solicitudId, int _proveedorid)
         {
             List<descuentofactoraje> _ldescuentos = _descuentoFManager.GetDescuentosBySolicitud(solicitudId);
@@ -458,6 +467,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return PartialView("_totalProntoPago");
         }
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult GuardarSolicitudM(string facturas, string descuentos, int solicitudId, int _proveedorid, int _estatus)
         {
             int estatusactual = _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje;
@@ -515,8 +525,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
         
         /*--------------END SOLICITUD DETALLE SECTION---------------*/
-
-
+        
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult Configuraciones()
         {
@@ -525,7 +534,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             return View();
         }
-
+        
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult Logs(string fechaFrom, string fechaTo)
         {
@@ -543,7 +552,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             return View();
         }
-
+        
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult Reporte(string fechaFrom, string fechaTo)
         {
@@ -562,6 +571,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult UpdateConfiguracion(int id, string key, string value)
         {
             bool result = false;

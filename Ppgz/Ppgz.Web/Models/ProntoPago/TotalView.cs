@@ -93,7 +93,7 @@ namespace Ppgz.Web.Models.ProntoPago
 						EstatusFactoraje = 1,
 						NumeroDocumento = item.numeroDocumento
 					});
-					Descuentos = Descuentos + item.importe;
+					Descuentos = (Descuentos > 0) ? Descuentos*-1 + item.importe: Descuentos + item.importe ;
 				}
 
 				//si la factura esta en la lista
