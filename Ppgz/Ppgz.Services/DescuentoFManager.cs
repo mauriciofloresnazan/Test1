@@ -17,9 +17,12 @@ namespace Ppgz.Services
         }
 		public int InsDescuentoFactoraje(descuentofactoraje model)
 		{
-			var result = _db.descuentosfactoraje.Add(model);
+            var df = _db.descuentosfactoraje.OrderByDescending(x => x.idDescuentosFactoraje).FirstOrDefault();
+            model.idDescuentosFactoraje = (df != null)? df.idDescuentosFactoraje +1 : 0;
+            var result = _db.descuentosfactoraje.Add(model);
 			_db.SaveChanges();
 
+            
 			return model.idDescuentosFactoraje;
 		}
 
