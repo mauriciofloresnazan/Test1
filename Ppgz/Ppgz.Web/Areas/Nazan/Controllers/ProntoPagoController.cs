@@ -1,21 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Net;
 using System.Web.Mvc;
-using ClosedXML.Excel;
-using MySql.Data.MySqlClient;
-using Ppgz.CitaWrapper;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
-using System.Web.Script.Serialization;
-
 using Ppgz.Web.Models.ProntoPago;
+using SapWrapper;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
@@ -217,25 +210,74 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult SolicitudesEnviarPropuestas(string selectedlist)
         {
-            var listpropuestas = new List<solicitudesfactoraje>();
-            string[] split = selectedlist.Split(',');
-            foreach (string element in split)
-            {
-                Int32.TryParse(element, out int id);
-                var propuesta = _solicitudFManager.GetSolicitudById(id);
-                if(propuesta!=null)
-                    listpropuestas.Add(propuesta);
-            }
+            List<string> split = selectedlist.Split(',').ToList();
+
+            //Sacamos las solicitudes seleccionadas
+            var listpropuestas = _db.solicitudesfactoraje.Where(x => split.Contains(x.idSolicitudesFactoraje.ToString())).ToList();
 
             if (listpropuestas.Count() > 0)
             {
-                TempData["FlashSuccess"] = "Solicitudes enviadas con exito";
+                foreach (var item in listpropuestas)
+                {
+                    //Obtenemos los parametros de F110
+                    var numeroProveedor = _proveedorManager.Find(item.IdProveedor).NumeroProveedor;
+                    var facturasSolicitud = _facturaFManager.GetFacturasBySolicitud(item.idSolicitudesFactoraje);
+                    string[] facturasList = facturasSolicitud.Select(x => x.NumeroDocumento).ToArray();
+                    DateTime[] fechasList = facturasSolicitud.Select(x => x.FechaFactura).ToArray();
+
+                    //Obtenemos el día prontopago configurado
+                    var pf = _proveedorFManager.GetProveedorById(item.IdProveedor);
+                    int DiaPago;
+                    if (pf != null)
+                    {
+                        DiaPago = pf.DiaDePago;
+                    }
+                    else
+                    {
+                        string dp = CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.day").Valor.ToUpper();
+                        switch (dp)
+                        {
+                            case "LUNES":
+                                DiaPago = 1;
+                                break;
+                            case "MARTES":
+                                DiaPago = 2;
+                                break;
+                            case "MIERCOLES":
+                                DiaPago = 3;
+                                break;
+                            case "JUEVES":
+                                DiaPago = 4;
+                                break;
+                            case "VIERNES":
+                                DiaPago = 5;
+                                break;
+                            case "SABADO":
+                                DiaPago = 6;
+                                break;
+                            default:
+                                DiaPago = 0;
+                                break;
+                        }
+                    }
+
+                    //Obtenemos la fecha del dia de pago configurado
+                    DateTime fechaDiaPago = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
+                    fechaDiaPago = fechaDiaPago.AddDays(DiaPago);
+
+                    SapProntoPagoManager spp = new SapProntoPagoManager();
+                    DataTable dt = spp.EnviarPropuesta(fechaDiaPago, numeroProveedor, facturasList, fechasList);
+                    if (dt != null)
+                    {
+                        _solicitudFManager.UpdateEstatusSolicitud(item.idSolicitudesFactoraje, 7);
+                    }
+                }
             }
             else
             {
-                TempData["FlashError"] = "Error al enviar solicitudes";
-            }           
-            
+                TempData["FlashError"] = "Debes seleccionar una solicitud";
+            }
+
             return RedirectToAction("Solicitudes");
         }        
         /*--------------END SOLICITUDES SECTION---------------*/
@@ -273,7 +315,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             //Se obtienen los calculos iniciales 
             TotalView totalView = new TotalView(id);
-            //int dias = 0;
+
+            //Traemos el prestamo del proveedor
+            SapProveedorManager sapProveedorManager = new SapProveedorManager();
+            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor);
+
             ViewBag.MontoOriginal = totalView.MontoOriginal.ToString("C");
             ViewBag.DescuentosTotal = totalView.DescuentosTotal.ToString("C");
             ViewBag.DescuentoProntoPago = totalView.Interes.ToString("C");
@@ -283,6 +329,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             ViewBag.Proveedor = proveedor;
             ViewBag.Facturas = facturas;
             ViewBag.Descuentos = descuentos;
+            ViewBag.Prestamo = prestamo;
 
             return View();
         }
@@ -290,7 +337,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult ActualizarPorcentaje(int idFactura, int porcentaje, int solid)
         {
-            if (_solicitudFManager.GetSolicitudById(solid).EstatusFactoraje == 3) {
+            if (_solicitudFManager.GetSolicitudById(solid).EstatusFactoraje == 3 ||
+                _solicitudFManager.GetSolicitudById(solid).EstatusFactoraje == 7)
+            {
                 TempData["FlashError"] = "La solicitud no puede ser modificada";
                 return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solid });
             }
@@ -321,7 +370,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult AprobarSolicitud(string facturas, string descuentos, int solicitudId, int _proveedorid)
         {
-            if (_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 3)
+            if (_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 3 ||
+                _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 7 )
             {
                 TempData["FlashError"] = "La solicitud no puede ser modificada";
                 return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solicitudId });
@@ -495,7 +545,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult GuardarSolicitudM(string facturas, string descuentos, int solicitudId, int _proveedorid, int _estatus)
         {
-            if (_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 3)
+            if (_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 3 ||
+                _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 7)
             {
                 TempData["FlashError"] = "La solicitud no puede ser modificada";
                 return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solicitudId });

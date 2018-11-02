@@ -7,6 +7,7 @@
     var proveedor = ViewBag.Proveedor;
     var solicitud = (ViewBag.Solicitud);
     int count = 3;
+    double prestamo = (ViewBag.Prestamo);
 }
 
 <div class="container body-content">
@@ -119,7 +120,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="panel-heading" style="text-align: center">Usted tiene un prestamo por: $567,890</div>
+                <div class="panel-heading" style="text-align: center">Usted tiene un prestamo por: @prestamo.ToString("C")</div>
             </div>
         </div>
         <div class="col-lg-5">

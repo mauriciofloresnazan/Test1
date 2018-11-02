@@ -31,5 +31,36 @@ namespace SapWrapper
             return dt.Rows[0];
         }
 
+        public double GetPrestamo(string numeroProveedor)
+        {
+            if (String.IsNullOrWhiteSpace(numeroProveedor.Trim()))
+            {
+                //TODO
+                throw new Exception("Número de proveedor incorrecto");
+            }
+
+            double prestamo = -1;
+                        
+            var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
+            var rfcRepository = rfcDestinationManager.Repository;
+
+            try
+            {
+                var function = rfcRepository.CreateFunction("ZFM_PRESTAMOS_PORTAL");
+
+                function.SetValue("IM_ACREEDOR", numeroProveedor);
+                function.Invoke(rfcDestinationManager);
+
+
+                prestamo = Convert.ToDouble(function.GetValue("EX_IMPORTE")) + Convert.ToDouble(function.GetValue("EX_IVA")) + Convert.ToDouble(function.GetValue("EX_TOTAL"));
+                return prestamo;
+            }
+            catch 
+            {
+                return prestamo;
+            }
+            return prestamo;
+        }
+
     }
 }
