@@ -140,7 +140,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 						_facturaManager.GuardaFacturaFactoraje(facturaModel);
 
 						//Paso 4: Actualizamos el estatus de la solicitud
-						solicitudFManager.UpdateEstatusSolicitud(notaCreditoView.idSolicitudesFactoraje, 7);
+						solicitudFManager.UpdateEstatusSolicitud(notaCreditoView.idSolicitudesFactoraje, 4);
 
 						TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente";
 					}
@@ -245,9 +245,27 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		}
 		public ActionResult GuardarSolicitud(string facturas, int proveedorId)
 		{
-			string[] facturasList = facturas.Split(',');
+            string[] facturasList = facturas.Split(',');
 
-			var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            if (facturas == "," || facturas == "")
+            {
+                TempData["FlashError"] = "No se ha seleccionado ninguna factura.";
+                return RedirectToAction("NuevaSolicitud", new { proveedorId = proveedorId });
+            }
+
+            SolicitudFManager solicitudFManager = new SolicitudFManager();
+            //Validamos que no se tenga abierta una solicitud
+            List<localsolicitud> solicitudesList = solicitudFManager.GetSolicitudesFactoraje();
+            solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId && x.Estatus != 3).ToList();
+
+            //Si hay alguna solicitud en estatus diferente de 3, se le informa al usuario
+            if (solicitudesList != null && solicitudesList.Count > 0)
+            {
+                TempData["FlashError"] = "Solo se puede tener una solicitud abierta.";
+                return RedirectToAction("NuevaSolicitud", new { proveedorId = proveedorId });
+            }
+
+            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
 			var partidasManager = new PartidasManager();
 			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
@@ -264,7 +282,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 
 			TotalView totalView = new TotalView(dsPagosPendientes, porcentaje, proveedorId, facturasList);
-			SolicitudFManager solicitudFManager = new SolicitudFManager();
+			//SolicitudFManager solicitudFManager = new SolicitudFManager();
 			FacturaFManager facturaFManager = new FacturaFManager();
 			DescuentoFManager descuentoFManager = new DescuentoFManager();
 
@@ -420,7 +438,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			ViewBag.DescuentoProntoPago = solicitud.DescuentoPP.ToString("C");
 			ViewBag.TotalSolicitado = solicitud.MontoAFacturar.ToString("C");
 			ViewBag.DisableItems = 1;
-			return View("Solicitud");
+            ViewBag.SoloLectura = 1;
+            return View("Solicitud");
 		}
 
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
@@ -605,7 +624,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		}
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
 		public ActionResult RegistraSolicitud(List<Web.Models.ProntoPago.FacturaView> model) {
-			foreach(var item in model)
+
+            foreach (var item in model)
 			{
 				if (item.importe < 0)
 				{

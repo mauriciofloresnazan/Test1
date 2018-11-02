@@ -151,10 +151,13 @@
     <div class="row">
         <div class="form-group" style="text-align: right">
             <div class="col-md-10 col-md-offset-2">
-                <a href="1.1.html" class="btn btn-primary" id="btnEnviar">
-                    <i class="fa fa-ticket" aria-hidden="true"></i> Enviar
-                </a>
-                <a href="@Url.Action("VerSolicitudes", "ProntoPago", new { proveedorId = proveedor.Id })" class="btn btn-default">
+                @if (ViewBag.SoloLectura == null)
+                {
+                    <a href="1.1.html" class="btn btn-primary" id="btnEnviar">
+                        <i class="fa fa-ticket" aria-hidden="true"></i> Enviar
+                    </a>
+                }
+                <a href="1.html" class="btn btn-default" id="btnCancelar">
                     <i class="fa fa-undo"></i> Cancelar
                 </a>
             </div>
@@ -222,7 +225,10 @@
             "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
         });
 
-		$(document).ready(function () {
+        $(document).ready(function () {
+            var factura = "";
+            $("#btnEnviar").attr("href", "@Url.RouteUrl("Default", new { controller = "Mercaderia/ProntoPago", action = "GuardarSolicitud" })" + "?facturas=" + factura + "&proveedorId=@proveedor.Id");
+            $("#btnCancelar").attr("href", "@Url.RouteUrl("Default", new { controller = "Mercaderia/ProntoPago", action = "VerSolicitudes" })" + "?proveedorId=@proveedor.Id");
 			if (@ViewBag.DisableItems == 1) {
 				$('input[type=checkbox]').attr("disabled", true);
 				$('#btnEnviar').removeAttr("href");
@@ -257,7 +263,7 @@
 
 				});
 			}
-			
+
 		});
 
 		$('#example-select-all').on('click', function () {

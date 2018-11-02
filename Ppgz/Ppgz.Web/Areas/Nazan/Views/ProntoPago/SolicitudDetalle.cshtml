@@ -180,7 +180,7 @@
                                 @if (d.idDescuentosFactoraje > 0)
                                 {
                                     <td class="text-center vert-align">
-                                        <input class="solready" type="checkbox" name="cb" value="@d.idDescuentosFactoraje" checked />
+                                        <input class="solready" type="checkbox" name="cb" value="@d.idDescuentosFactoraje" data-numero="@d.NumeroDocumento" data-monto="@d.Monto" data-descripcion="@d.Descripcion" checked />
                                     </td>
                                 }
                                 else

@@ -65,8 +65,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
         public List<KeyValueCustom> GetSolicitudEstatus()
         {
-            //Obtenemos una lista de los estatusfactoraje contabilizados 
+            //Obtenemos una lista de las SolicitudesFactoraje de la semana actual
             var lsolicitudesf = _solicitudFManager.GetSolicitudesFactoraje();
+            DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
+            lsolicitudesf = lsolicitudesf.Where(x => x.Fecha > startOfWeek).ToList();
+
+            //Obtenemos una lista de los estatusfactoraje contabilizados 
             var lestatus = _db.estatusfactoraje.ToList();
             var estatusSolicitudes = new List<KeyValueCustom>();
 
@@ -195,6 +199,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         {
             //Obtenemos todas las solicitudes de pronto pago
             var solicitudesF = _solicitudFManager.GetSolicitudesFactoraje();
+            DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
+            solicitudesF = solicitudesF.Where(x => x.Fecha > startOfWeek).ToList();
 
             //Int32.TryParse(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor, out int p);
             //foreach(var item in solicitudesF)
@@ -217,11 +223,19 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 Int32.TryParse(element, out int id);
                 var propuesta = _solicitudFManager.GetSolicitudById(id);
-                listpropuestas.Add(propuesta);
+                if(propuesta!=null)
+                    listpropuestas.Add(propuesta);
             }
 
-            TempData["FlashError"] = "Error al enviar solicitudes";
-            TempData["FlashSuccess"] = "Solicitudes enviadas con exito";
+            if (listpropuestas.Count() > 0)
+            {
+                TempData["FlashSuccess"] = "Solicitudes enviadas con exito";
+            }
+            else
+            {
+                TempData["FlashError"] = "Error al enviar solicitudes";
+            }           
+            
             return RedirectToAction("Solicitudes");
         }        
         /*--------------END SOLICITUDES SECTION---------------*/
@@ -276,6 +290,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult ActualizarPorcentaje(int idFactura, int porcentaje, int solid)
         {
+            if (_solicitudFManager.GetSolicitudById(solid).EstatusFactoraje == 3) {
+                TempData["FlashError"] = "La solicitud no puede ser modificada";
+                return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solid });
+            }
             var result = _facturaFManager.ActualizarPorcentaje(idFactura, porcentaje);
             var solicitufactoraje = _solicitudFManager.UpdateEstatusSolicitud(solid, 6);
 
@@ -300,8 +318,15 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return PartialView("_totalProntoPago");
         }
 
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")] public ActionResult AprobarSolicitud(string facturas, string descuentos, int solicitudId, int _proveedorid)
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
+        public ActionResult AprobarSolicitud(string facturas, string descuentos, int solicitudId, int _proveedorid)
         {
+            if (_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 3)
+            {
+                TempData["FlashError"] = "La solicitud no puede ser modificada";
+                return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solicitudId });
+            }
+
             var estatusSS = _solicitudFManager.GetSolicitudById(solicitudId);
             if(estatusSS.EstatusFactoraje == 6 && !this.User.IsInRole("NAZAN-PRONTOPAGO-APROBADOR"))
             {
@@ -470,6 +495,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult GuardarSolicitudM(string facturas, string descuentos, int solicitudId, int _proveedorid, int _estatus)
         {
+            if (_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 3)
+            {
+                TempData["FlashError"] = "La solicitud no puede ser modificada";
+                return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solicitudId });
+            }
+
             int estatusactual = _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje;
             string[] facturasList = facturas.Split(',');
             string[] descuentosList = descuentos.Split(',');
@@ -487,7 +518,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             foreach (var item in descuentosSAP)
             {
                 var df = descuentosList.Where(d => d.Contains(item.numeroDocumento)).FirstOrDefault();
-                if (df != null)
+                var dg = descuentosguardados.Where(x => x.NumeroDocumento == df).FirstOrDefault();
+                if (df != null && dg==null)
                 {
                     descuentofactoraje element = new descuentofactoraje()
                     {
