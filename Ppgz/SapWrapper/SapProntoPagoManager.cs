@@ -35,7 +35,7 @@ namespace SapWrapper
 
                 function.Invoke(rfcDestinationManager);
 
-                //var resultDocs = function.GetTable("IT_DOCS");
+                var resultDocs = function.GetTable("IT_DOCS");
                 var resultReturn = function.GetTable("ET_RETORNO");
 
                 if (resultReturn.Count <= 0) return null;

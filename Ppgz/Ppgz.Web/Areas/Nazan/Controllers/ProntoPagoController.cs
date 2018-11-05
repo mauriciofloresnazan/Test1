@@ -270,6 +270,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     if (dt != null)
                     {
                         _solicitudFManager.UpdateEstatusSolicitud(item.idSolicitudesFactoraje, 7);
+                        TempData["FlashSuccess"] = "Enviadas con exito";
                     }
                 }
             }

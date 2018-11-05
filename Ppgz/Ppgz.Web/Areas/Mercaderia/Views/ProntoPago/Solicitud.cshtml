@@ -14,6 +14,8 @@
     // .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
     int count = 3;
 
+    double prestamo = (ViewBag.Prestamo);
+
 }
 
 <h2>@ViewBag.Title</h2>
@@ -139,7 +141,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="panel-heading" style="text-align: center">Usted tiene un prestamo por: $567,890</div>
+                <div class="panel-heading" style="text-align: center">Usted tiene un prestamo por: @prestamo.ToString("C")</div>
             </div>
         </div>
         <div class="col-lg-5">

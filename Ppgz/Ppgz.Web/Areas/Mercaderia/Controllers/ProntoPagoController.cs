@@ -256,7 +256,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             SolicitudFManager solicitudFManager = new SolicitudFManager();
             //Validamos que no se tenga abierta una solicitud
             List<localsolicitud> solicitudesList = solicitudFManager.GetSolicitudesFactoraje();
-            solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId && x.Estatus != 3).ToList();
+            solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId && (x.Estatus != 3 && x.Estatus != 7)).ToList();
 
             //Si hay alguna solicitud en estatus diferente de 3, se le informa al usuario
             if (solicitudesList != null && solicitudesList.Count > 0)
@@ -424,7 +424,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					_listDescuentos.Add(item);
 			}
 
-			ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
+            //Traemos el prestamo del proveedor
+            SapProveedorManager sapProveedorManager = new SapProveedorManager();
+            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor);
+            ViewBag.Prestamo = prestamo;
+
+            ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
 			ViewBag.Proveedor = proveedor;
 			ViewBag.Title = "Nueva solicitud";
 			ViewBag.SubTitle = "En esta sección podrán crear una solicitud.";
@@ -509,7 +514,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					_listDescuentos.Add(item);
 			}
 
-			ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
+            //Traemos el prestamo del proveedor
+            SapProveedorManager sapProveedorManager = new SapProveedorManager();
+            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor);
+            ViewBag.Prestamo = prestamo;
+
+            ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
 			ViewBag.Proveedor = proveedor;
 			ViewBag.Title = "Nueva solicitud";
 			ViewBag.SubTitle = "En esta sección podrán crear una solicitud.";
