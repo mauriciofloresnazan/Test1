@@ -49,7 +49,13 @@ namespace Ppgz.Web
                 {
                     if ((t == "MERCADERIA" || t == "NAZAN") && cuenta.Factoraje == false)
                     {
-                        menulist = menulist.Take(menulist.Count() - 1).ToArray();
+                        foreach(var item in menulist)
+                        {
+                            if(item.Substring(0,10)=="PRONTOPAGO")
+                                menulist = menulist.Where(w => w != item).ToArray();
+                            //menulist = menulist.Take(menulist.Count() - 1).ToArray();
+                        }
+                        
                     }
                 }
 
