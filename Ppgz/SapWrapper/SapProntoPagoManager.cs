@@ -39,8 +39,11 @@ namespace SapWrapper
                 var resultReturn = function.GetTable("ET_RETORNO");
 
                 if (resultReturn.Count <= 0) return null;
-
+                var dtdocs = resultDocs.ToDataTable("IT_DOCS");
                 var dt = resultReturn.ToDataTable("ET_RETORNO");
+
+                string msg = dt.Rows[0][3].ToString();
+                if (msg.Substring(0, 5).ToLower() == "error") return null;
 
                 return dt;
             }

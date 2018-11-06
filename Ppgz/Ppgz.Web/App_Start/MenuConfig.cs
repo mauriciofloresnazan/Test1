@@ -20,6 +20,9 @@ namespace Ppgz.Web
         }
         public static List<string> GetMenuFuncionalidad(this IPrincipal user)
         {
+            Infrastructure.CommonManager _commonManager = new Infrastructure.CommonManager();
+            var cuenta =  _commonManager.GetCuentaUsuarioAutenticado();
+
             List<string> resultMenu = new List<string>();
             string[] tipos = TiposLista();
             foreach (var t in tipos)
@@ -40,6 +43,14 @@ namespace Ppgz.Web
                     default:
                         menulist = MenuNazan();
                         break;
+                }
+
+                if (cuenta != null)
+                {
+                    if ((t == "MERCADERIA" || t == "NAZAN") && cuenta.Factoraje == false)
+                    {
+                        menulist = menulist.Take(menulist.Count() - 1).ToArray();
+                    }
                 }
 
                 foreach (var role in rolesDelUsuario)

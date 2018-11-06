@@ -272,6 +272,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         _solicitudFManager.UpdateEstatusSolicitud(item.idSolicitudesFactoraje, 7);
                         TempData["FlashSuccess"] = "Enviadas con exito";
                     }
+                    {
+                        TempData["FlashError"] = "Error al enviar propuesta de pago";
+                    }
                 }
             }
             else
