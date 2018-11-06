@@ -12,7 +12,7 @@ namespace SapWrapper
     {
         private readonly CommonRfcConfigParam _rfc = new CommonRfcConfigParam();
 
-        public DataTable EnviarPropuesta(DateTime fechasolictud, string numeroProveedor, string[] facturasList, DateTime[] fechaList)
+        public DataTable[] EnviarPropuesta(DateTime fechasolictud, string numeroProveedor, string[] facturasList, DateTime[] fechaList)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
@@ -38,12 +38,8 @@ namespace SapWrapper
                 var resultDocs = function.GetTable("IT_DOCS");
                 var resultReturn = function.GetTable("ET_RETORNO");
 
-                if (resultReturn.Count <= 0) return null;
-                var dtdocs = resultDocs.ToDataTable("IT_DOCS");
-                var dt = resultReturn.ToDataTable("ET_RETORNO");
-
-                string msg = dt.Rows[0][3].ToString();
-                if (msg.Substring(0, 5).ToLower() == "error") return null;
+                DataTable [] dt = { resultReturn.ToDataTable("ET_RETORNO"), resultDocs.ToDataTable("IT_DOCS") };
+                
 
                 return dt;
             }
