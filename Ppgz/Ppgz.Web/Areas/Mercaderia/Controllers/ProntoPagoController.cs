@@ -254,8 +254,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
 
             SolicitudFManager solicitudFManager = new SolicitudFManager();
-            //Validamos que no se tenga abierta una solicitud
             List<localsolicitud> solicitudesList = solicitudFManager.GetSolicitudesFactoraje();
+            //Filtramos las solicitudes de la semana actual
+            DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
+            solicitudesList = solicitudesList.Where(x => x.Fecha > startOfWeek).ToList();
+            //Validamos que no se tenga abierta una solicitud
             solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId && (x.Estatus != 3 && x.Estatus != 7)).ToList();
 
             //Si hay alguna solicitud en estatus diferente de 3, se le informa al usuario
@@ -551,7 +554,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			SolicitudFManager solicitudFManager = new SolicitudFManager();
 			List<localsolicitud> solicitudesList = solicitudFManager.GetSolicitudesFactoraje();
 			solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId).ToList();
-			return View(solicitudesList);
+            //Filtramos solicitudes por semana actual
+            DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
+            solicitudesList = solicitudesList.Where(x => x.Fecha > startOfWeek).ToList();
+            return View(solicitudesList);
 		}
 
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
