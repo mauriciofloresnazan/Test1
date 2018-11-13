@@ -58,7 +58,6 @@ namespace Ppgz.Web.Models.ProntoPago
 					FechaPago = GetFechaPago(DayOfWeek.Sunday);
 					break;
 			}
-			FechaPago = new DateTime(2018, 9, 21);
 
 			for (int i = 0; i < dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows.Count; i++)
 			{
@@ -130,7 +129,7 @@ namespace Ppgz.Web.Models.ProntoPago
 				}
 
 				
-				Descuentos = Descuentos * -1;
+				Descuentos = (Descuentos>0)? Descuentos : Descuentos * -1;
 
 				MontoOriginal = MontoOriginal;
 				DescuentosTotal = Descuentos;
