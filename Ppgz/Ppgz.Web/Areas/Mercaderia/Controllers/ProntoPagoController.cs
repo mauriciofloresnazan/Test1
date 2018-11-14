@@ -125,13 +125,22 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					string numeroProveedor = proveedor.NumeroProveedor;
 					DateTime fechaFactura = facturaModel.Fecha;
 					string importe = facturaModel.Total.ToString();
-					string cabecera = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.proveedor_id.ToString();
-					string posicion = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.proveedor_id.ToString();
+					string cabecera = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.numeroProveedor.ToString();
+					string posicion = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.numeroProveedor.ToString();
 					string folio = facturaModel.Serie.ToString() + facturaModel.Folio.ToString();
 
+                    //Validamos que el importe de la factura 
+                    int MontoFacturar = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje).MontoAFacturar;
+                    double diferencia = Convert.ToDouble(MontoFacturar - facturaModel.Total);
 
-					//Paso 2: Ejecutamos la funcion de SAP
-					Resultado cargarNotaCredito = sapFacturaManager.CrearNotaCredito(numeroProveedor, fechaFactura, importe, cabecera, posicion, folio);
+                    if (diferencia > .5 || diferencia < -.5)
+                    {
+                        TempData["FlashError"] = "El monto de la factura no coincide con el monto a pagar.";
+                        return RedirectToAction("VerSolicitudes", new { proveedorId = proveedor.Id });
+                    }
+
+                    //Paso 2: Ejecutamos la funcion de SAP
+                    Resultado cargarNotaCredito = sapFacturaManager.CrearNotaCredito(numeroProveedor, fechaFactura, importe, cabecera, posicion, folio);
 					
 					if(cargarNotaCredito.Estatus == "1")
 					{
