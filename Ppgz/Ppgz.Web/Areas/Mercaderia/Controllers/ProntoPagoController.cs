@@ -547,10 +547,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				{
 					item.pagar = true;
 				}
-				if(item.importe > 0 && DateTime.ParseExact(item.vencimiento, "yyyyMMdd", CultureInfo.InvariantCulture) >= FechaPago)
-					_list.Add(item);
-				else
-					_listDescuentos.Add(item);
+                if (item.importe > 0 && DateTime.ParseExact(item.vencimiento, "yyyyMMdd", CultureInfo.InvariantCulture) >= FechaPago)
+                {
+                    _list.Add(item);
+                }
+                else
+                {
+                    if (DateTime.ParseExact(item.vencimiento, "yyyyMMdd", CultureInfo.InvariantCulture) >= FechaPago)
+                        _listDescuentos.Add(item);
+                }
 			}
 
             //Traemos el prestamo del proveedor
