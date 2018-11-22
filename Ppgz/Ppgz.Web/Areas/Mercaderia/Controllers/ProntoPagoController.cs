@@ -57,7 +57,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			ViewBag.Iva = iva;
 			ViewBag.Total = solicitud.MontoAFacturar;
 			ViewBag.SubTotal = Math.Round(subtotal,2);
-            ViewBag.MontoNota = solicitud.MontoOriginal - solicitud.MontoAFacturar;
+            ViewBag.MontoNota = solicitud.DescuentoPP;
 
 
             ViewBag.Proveedor = proveedor;
@@ -133,7 +133,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                     //Validamos que el importe de la factura 
                     var Solicitud = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje);
-                    double MontoFacturar = Solicitud.MontoOriginal - Solicitud.MontoAFacturar;
+                    double MontoFacturar = Solicitud.DescuentoPP;
                     double diferencia = MontoFacturar - Convert.ToDouble(facturaModel.Total);
 
                     if (diferencia > .5 || diferencia < -.5)
@@ -154,17 +154,19 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 						//Paso 4: Actualizamos el estatus de la solicitud
 						solicitudFManager.UpdateEstatusSolicitud(notaCreditoView.idSolicitudesFactoraje, 4);
 
-						TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente";
+						TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente.";
 					}
 					else
 					{
-						TempData["FlashError"] = "Error al cargar la nota de credito en SAP";
-					}
+						TempData["FlashError"] = "Error al cargar la nota de credito en SAP. "+ cargarNotaCredito.ErrorTable.ToString();
+
+                    }
 				}
 				catch(Exception ioe)
 				{
-					TempData["FlashError"] = "Error al cargar la nota de credito en SAP";
-				}
+					TempData["FlashError"] = "Error al cargar la nota de credito en SAP. "+ ioe.Message.ToString();
+
+                }
 
 				return RedirectToAction("VerSolicitudes", new { proveedorId = proveedor.Id });
 			}
@@ -556,8 +558,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 }
                 else
                 {
-                    if (DateTime.ParseExact(item.vencimiento, "yyyyMMdd", CultureInfo.InvariantCulture) >= FechaPago)
+                    //if (DateTime.ParseExact(item.vencimiento, "yyyyMMdd", CultureInfo.InvariantCulture) >= FechaPago)
+                    if (item.importe < 0) {
                         _listDescuentos.Add(item);
+                    }
+                        
                 }
 			}
 
