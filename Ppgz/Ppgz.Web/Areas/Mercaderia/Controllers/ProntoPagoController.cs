@@ -401,6 +401,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			List<Web.Models.ProntoPago.FacturaView> _list = new List<Web.Models.ProntoPago.FacturaView>();
 			List<Web.Models.ProntoPago.FacturaView> _listDescuentos = new List<Web.Models.ProntoPago.FacturaView>();
 
+            //Traemos los descuentos seleccionados (descuentosfactoraje)
+            var descuentosmanager = new DescuentoFManager();
+            List<descuentofactoraje> _df = descuentosmanager.GetDescuentosBySolicitud(idSolicitudesFactoraje);
+
 			for (int i = 0; i < dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows.Count; i++)
 			{
 
@@ -429,14 +433,19 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				}
 
 
-				//if (item.importe < 0)
-				//{
-				//	item.pagar = true;
-				//}
-				if (item.importe > 0)
-					_list.Add(item);
-				else
-					_listDescuentos.Add(item);
+                //if (item.importe < 0)
+                //{
+                //	item.pagar = true;
+                //}
+                if (item.importe > 0) {
+                    _list.Add(item);
+                }
+                else {
+                    descuentofactoraje descuentoresult = _df.Where(d => d.NumeroDocumento.Contains(item.numeroDocumento)).FirstOrDefault();
+                    if (descuentoresult!=null) {
+                        _listDescuentos.Add(item);
+                    }
+                }
 			}
 
             //Traemos el prestamo del proveedor
