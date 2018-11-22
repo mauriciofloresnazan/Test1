@@ -22,7 +22,7 @@ namespace SapWrapper
                 var function = rfcRepository.CreateFunction("ZFM_PAGOS_PORTAL");
 
                 //Parametros Fecha y Table
-                function.SetValue("IM_FECHA_PAGO", fechasolictud);
+                function.SetValue("IM_FECHA_PAGO", fechasolictud.ToString("yyyyMMdd"));
 
                 var tablep = function.GetTable("IT_DOCS");
                 for (int i = 0; i < facturasList.Count(); i++)
@@ -30,7 +30,7 @@ namespace SapWrapper
                     tablep.Append();
                     tablep.SetValue("IM_BELNR", facturasList[i]);
                     tablep.SetValue("IM_LIFNR", numeroProveedor);
-                    tablep.SetValue("IM_BLDAT", fechaList[i]);
+                    tablep.SetValue("IM_BLDAT", fechaList[i].ToString("yyyyMMdd"));
                 }
 
                 function.Invoke(rfcDestinationManager);
