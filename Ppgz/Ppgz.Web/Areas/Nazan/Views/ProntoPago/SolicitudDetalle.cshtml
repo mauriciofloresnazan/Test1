@@ -258,6 +258,9 @@
                 $('.cbPagos').prop('checked', this.checked);
             });
 
+            //Desactivar boton guardar mientras no haya cambios
+            $("btnGuardar").addClass("not-active");
+
             //Evento para cachar todos los checked
             $('input[type=checkbox]').on('change', function () {
 				var facturas = '';
@@ -281,6 +284,8 @@
                 });
 
                 $("#btnGuardar").val("modificado");
+                //Activa el boton ya que tuvo modificación
+                $("#btnGuardar").removeClass("not-active");
 
                 //Vamos al servidor a hacer el calculo
                 $.ajax({
