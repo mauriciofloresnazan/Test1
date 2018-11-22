@@ -449,10 +449,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var nuevaSolicitud = new solicitudesfactoraje()
             {
                 idSolicitudesFactoraje = solicitudId,
-                DescuentoPP = Convert.ToInt32(totalView.DescuentoProntoPago),
-                Descuentos = Convert.ToInt32(totalView.DescuentosTotal),
-                MontoOriginal = Convert.ToInt32(totalView.MontoOriginal),
-                MontoAFacturar = Convert.ToInt32(totalView.TotalSolicitado),
+                DescuentoPP =    totalView.DescuentoProntoPago,
+                Descuentos =     totalView.DescuentosTotal,
+                MontoOriginal =  totalView.MontoOriginal,
+                MontoAFacturar = totalView.TotalSolicitado,
             };
 
             //Se actualiza la solicitud de pronto pago 
