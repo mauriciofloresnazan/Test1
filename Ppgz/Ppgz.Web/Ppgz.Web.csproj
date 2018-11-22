@@ -317,10 +317,8 @@
     <Content Include="assets\dt\buttons.html5.min.js" />
     <Content Include="assets\dt\dataTables.buttons.min.js" />
     <Content Include="assets\dt\jquery-3.3.1.js" />
-    <Content Include="assets\dt\jquery.dataTables.min.js" />
     <Content Include="assets\dt\jszip.min.js" />
     <Content Include="assets\dt\pdfmake.min.js" />
-    <Content Include="assets\dt\vfs_fonts.js" />
     <Content Include="assets\img\logo-black.png" />
     <Content Include="assets\img\logo-default.png" />
     <Content Include="assets\img\marcas-black.png" />
