@@ -16,7 +16,7 @@ namespace Ppgz.Repository
     {
         public int idFacturasFactoraje { get; set; }
         public string NumeroDocumento { get; set; }
-        public string Monto { get; set; }
+        public double Monto { get; set; }
         public string uuid { get; set; }
         public int IdProveedor { get; set; }
         public int Porcentaje { get; set; }

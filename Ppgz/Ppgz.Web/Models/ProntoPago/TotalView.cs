@@ -87,7 +87,7 @@ namespace Ppgz.Web.Models.ProntoPago
 					//Agregamos la factura a los descuentos
 					DescuentosFactoraje.Add(new descuentofactoraje()
 					{
-						Monto = item.importe.ToString(),
+						Monto = item.importe,
 						Descripcion = item.descripcion,
 						EstatusFactoraje = 1,
 						NumeroDocumento = item.numeroDocumento
@@ -119,7 +119,7 @@ namespace Ppgz.Web.Models.ProntoPago
 						FechaFactura = DateTime.ParseExact(item.fechaDocumento, "yyyyMMdd", CultureInfo.InvariantCulture),
 						FechaSolicitud = DateTime.Now,
 						IdProveedor = idProveedor,
-						Monto = item.importe.ToString(),
+						Monto = item.importe,
 						NumeroDocumento = item.numeroDocumento,
 						Porcentaje = porcentaje,
 						Referencia = item.referencia, 

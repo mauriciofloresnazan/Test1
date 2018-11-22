@@ -332,7 +332,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         idDescuentosFactoraje = i,
                         idSolicitudesFactoraje = solicitud.idSolicitudesFactoraje,
                         NumeroDocumento = item.numeroDocumento,
-                        Monto = item.importe.ToString(),
+                        Monto = item.importe,
                         EstatusFactoraje = solicitud.EstatusFactoraje,
                         Descripcion = item.descripcion
                     };
@@ -433,7 +433,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     {
                         idSolicitudesFactoraje = solicitudId,
                         NumeroDocumento = item.numeroDocumento,
-                        Monto = item.importe.ToString(),
+                        Monto = item.importe,
                         EstatusFactoraje = estatusSS.EstatusFactoraje,
                         Descripcion = item.descripcion
                     };
@@ -546,7 +546,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         idDescuentosFactoraje = i,
                         idSolicitudesFactoraje = solicitudId,
                         NumeroDocumento = item.numeroDocumento,
-                        Monto = item.importe.ToString(),
+                        Monto = item.importe,
                         //EstatusFactoraje = solicitud.EstatusFactoraje,
                         Descripcion = item.descripcion
                     };
@@ -603,7 +603,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     {
                         idSolicitudesFactoraje = solicitudId,
                         NumeroDocumento = item.numeroDocumento,
-                        Monto = item.importe.ToString(),
+                        Monto = item.importe,
                         EstatusFactoraje = estatusactual,
                         Descripcion = item.descripcion
                     };

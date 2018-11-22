@@ -130,8 +130,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					string folio = facturaModel.Serie.ToString() + facturaModel.Folio.ToString();
 
                     //Validamos que el importe de la factura 
-                    int MontoFacturar = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje).MontoAFacturar;
-                    double diferencia = Convert.ToDouble(MontoFacturar - facturaModel.Total);
+                    double MontoFacturar = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje).MontoAFacturar;
+                    double diferencia = MontoFacturar - Convert.ToDouble(facturaModel.Total);
 
                     if (diferencia > .5 || diferencia < -.5)
                     {

@@ -23,10 +23,10 @@ namespace Ppgz.Repository
         public int NDocumentos { get; set; }
         public string xml { get; set; }
         public string pdf { get; set; }
-        public int MontoOriginal { get; set; }
-        public int MontoAFacturar { get; set; }
-        public int Descuentos { get; set; }
-        public int DescuentoPP { get; set; }
+        public double MontoOriginal { get; set; }
+        public double MontoAFacturar { get; set; }
+        public double Descuentos { get; set; }
+        public double DescuentoPP { get; set; }
         public Nullable<int> NumeroGenerado { get; set; }
         public string EstatusOperacionSAP { get; set; }
     }

@@ -186,14 +186,14 @@ namespace Ppgz.Services
 		public int IdProveedor { get; set; }
         public float Tasa { get; set; }
         public int NoDocumentos { get; set; }
-        public int DescuentoPP { get; set; }
-        public int Descuentos { get; set; }
+        public double DescuentoPP { get; set; }
+        public double Descuentos { get; set; }
         public int Estatus { get; set; }
         public string EstatusNombre { get; set; }
         public bool Selected { get; set; }
-		public int Monto { get; set; }
+		public double Monto { get; set; }
 		public DateTime Fecha { get; set; }
-		public int Total { get; set; }
+		public double Total { get; set; }
         public int DiasPP { get; set; }
     }
 }
