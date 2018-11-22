@@ -57,8 +57,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			ViewBag.Iva = iva;
 			ViewBag.Total = solicitud.MontoAFacturar;
 			ViewBag.SubTotal = Math.Round(subtotal,2);
+            ViewBag.MontoNota = solicitud.MontoOriginal - solicitud.MontoAFacturar;
 
-			ViewBag.Proveedor = proveedor;
+
+            ViewBag.Proveedor = proveedor;
 			ViewBag.idSolicitudesFactoraje = idSolicitudesFactoraje;
 			ViewBag.Solicitud = solicitud;
 
@@ -130,7 +132,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 					string folio = facturaModel.Serie.ToString() + facturaModel.Folio.ToString();
 
                     //Validamos que el importe de la factura 
-                    int MontoFacturar = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje).MontoAFacturar;
+                    var Solicitud = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje);
+                    decimal MontoFacturar = Solicitud.MontoOriginal - Solicitud.MontoAFacturar;
                     double diferencia = Convert.ToDouble(MontoFacturar - facturaModel.Total);
 
                     if (diferencia > .5 || diferencia < -.5)
