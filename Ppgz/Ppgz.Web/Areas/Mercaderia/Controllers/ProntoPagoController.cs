@@ -133,8 +133,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                     //Validamos que el importe de la factura 
                     var Solicitud = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje);
-                    decimal MontoFacturar = Solicitud.MontoOriginal - Solicitud.MontoAFacturar;
-                    double diferencia = Convert.ToDouble(MontoFacturar - facturaModel.Total);
+                    double MontoFacturar = Solicitud.MontoOriginal - Solicitud.MontoAFacturar;
+                    double diferencia = MontoFacturar - Convert.ToDouble(facturaModel.Total);
 
                     if (diferencia > .5 || diferencia < -.5)
                     {
