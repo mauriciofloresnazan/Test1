@@ -268,35 +268,41 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     SapProntoPagoManager spp = new SapProntoPagoManager();
                     DataTable[] dt = spp.EnviarPropuesta(fechaDiaPago, numeroProveedor, facturasList, fechasList);
 
-                    if (dt[0].Rows.Count > 0)
+                    if (dt != null && dt[0].Rows.Count > 0)
                     {
                         //dt[0].Rows[0][3].ToString().ToLower().Substring(0, 5) == "error"
                         TempData["FlashError"] = dt[0].Rows[0][3].ToString();
                         return RedirectToAction("Solicitudes");
                     }
-
-                    string errorlist;
-                    if (dt != null)
-                    {
-                        bool err = false;
-                        for(int i = 0; i < facturasList.Count(); i++)
-                        {
-                            if (String.IsNullOrEmpty(dt[1].Rows[i][3].ToString()))
-                            {
-                                errorlist = facturasList[i] + ", ";
-                                err = true;
-                            }
-                        }
-
-                        if (!err)
-                        {
-                            _solicitudFManager.UpdateEstatusSolicitud(item.idSolicitudesFactoraje, 7);
-                            TempData["FlashSuccess"] = "Enviadas con exito";
-                        }
-                    }
                     else
                     {
-                        TempData["FlashError"] = "Error al enviar propuesta de pago";
+                        string errorlist = "ERROR: ";
+                        if (dt != null)
+                        {
+                            bool err = false;
+                            for (int i = 0; i < facturasList.Count(); i++)
+                            {
+                                if (String.IsNullOrEmpty(dt[1].Rows[i][3].ToString()))
+                                {
+                                    errorlist = facturasList[i] + ", ";
+                                    err = true;
+                                }
+                            }
+
+                            if (!err)
+                            {
+                                _solicitudFManager.UpdateEstatusSolicitud(item.idSolicitudesFactoraje, 7);
+                                TempData["FlashSuccess"] = "Enviadas con exito";
+                            }
+                            else
+                            {
+                                TempData["FlashError"] = errorlist;
+                            }
+                        }
+                        else
+                        {
+                            TempData["FlashError"] = "Error al enviar propuesta de pago";
+                        }
                     }
                 }
             }

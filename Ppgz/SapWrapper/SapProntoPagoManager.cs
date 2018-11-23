@@ -43,9 +43,11 @@ namespace SapWrapper
 
                 return dt;
             }
-            catch 
+            catch(Exception ex)
             {
-                return null;
+                DataTable[] dt = { new DataTable("ET_RETORNO"), new DataTable("IT_DOCS") };
+                dt[0].Rows[0][3] = "Catch Ex" + ex.Message.ToString();
+                return dt;
             }
         }
     }
