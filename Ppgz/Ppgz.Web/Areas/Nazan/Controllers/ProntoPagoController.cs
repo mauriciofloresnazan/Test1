@@ -222,9 +222,14 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     //Obtenemos los parametros de F110
                     var numeroProveedor = _proveedorManager.Find(item.IdProveedor).NumeroProveedor;
                     var facturasSolicitud = _facturaFManager.GetFacturasBySolicitud(item.idSolicitudesFactoraje);
-                    string[] facturasList = facturasSolicitud.Select(x => x.NumeroDocumento).ToArray();
-                    DateTime[] fechasList = facturasSolicitud.Select(x => x.FechaFactura).ToArray();
+                    var descuentosSolicitud = _descuentoFManager.GetDescuentosBySolicitud(item.idSolicitudesFactoraje);
 
+                    string[] facturasList = facturasSolicitud.Select(x => x.NumeroDocumento).ToArray();
+                    string[] descuentosList = descuentosSolicitud.Select(x => x.NumeroDocumento).ToArray();
+                    string[] docs = facturasList.Concat(descuentosList).ToArray();
+
+                    DateTime[] fechasList = facturasSolicitud.Select(x => x.FechaFactura).ToArray().Concat(descuentosSolicitud.Select(x => x.FechaDescuento)).ToArray();
+                    
                     //Obtenemos el día prontopago configurado
                     var pf = _proveedorFManager.GetProveedorById(item.IdProveedor);
                     int DiaPago;
@@ -266,12 +271,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     fechaDiaPago = fechaDiaPago.AddDays(DiaPago);
 
                     SapProntoPagoManager spp = new SapProntoPagoManager();
-                    DataTable[] dt = spp.EnviarPropuesta(fechaDiaPago, numeroProveedor, facturasList, fechasList);
+                    DataTable[] dt = spp.EnviarPropuesta(fechaDiaPago, numeroProveedor, docs, fechasList);
 
                     if (dt != null && dt[0].Rows.Count > 0)
                     {
                         //dt[0].Rows[0][3].ToString().ToLower().Substring(0, 5) == "error"
-                        TempData["FlashError"] = dt[0].Rows[0][3].ToString();
+                        TempData["FlashError"] = "Error SAP: "+ dt[0].Rows[0][3].ToString();
                         return RedirectToAction("Solicitudes");
                     }
                     else
@@ -296,7 +301,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             }
                             else
                             {
-                                TempData["FlashError"] = errorlist;
+                                TempData["FlashError"] = "Error con facturas: " + errorlist;
                             }
                         }
                         else
@@ -611,7 +616,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         NumeroDocumento = item.numeroDocumento,
                         Monto = item.importe,
                         EstatusFactoraje = estatusactual,
-                        Descripcion = item.descripcion
+                        Descripcion = item.descripcion,
+                        FechaDescuento = DateTime.ParseExact(item.fechaDocumento, "yyyyMMdd", CultureInfo.InvariantCulture)
                     };
                     _descuentoFManager.InsDescuentoFactoraje(element);
                     descuentosguardados.Add(element);

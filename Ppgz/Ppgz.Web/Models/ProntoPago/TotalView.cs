@@ -90,8 +90,9 @@ namespace Ppgz.Web.Models.ProntoPago
 						Monto = item.importe,
 						Descripcion = item.descripcion,
 						EstatusFactoraje = 1,
-						NumeroDocumento = item.numeroDocumento
-					});
+						NumeroDocumento = item.numeroDocumento,
+                        FechaDescuento = DateTime.ParseExact(item.fechaDocumento, "yyyyMMdd", CultureInfo.InvariantCulture)
+                    });
 					Descuentos = (Descuentos > 0) ? Descuentos*-1 + item.importe: Descuentos + item.importe ;
 				}
 

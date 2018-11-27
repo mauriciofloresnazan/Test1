@@ -20,5 +20,6 @@ namespace Ppgz.Repository
         public string NumeroDocumento { get; set; }
         public double Monto { get; set; }
         public string Descripcion { get; set; }
+        public System.DateTime FechaDescuento { get; set; }
     }
 }
