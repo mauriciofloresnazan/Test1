@@ -107,7 +107,7 @@ namespace Ppgz.Web.Models.ProntoPago
 						//Dias de diferencia de la fecha de documento a la fecha de pago
 						DateTime fechaDocumento = DateTime.ParseExact(item.fechaDocumento, "yyyyMMdd", CultureInfo.InvariantCulture);
 						DateTime vencimiento = DateTime.ParseExact(item.vencimiento, "yyyyMMdd", CultureInfo.InvariantCulture);
-						dias = (int)(vencimiento - FechaPago).TotalDays;
+						dias = (int)(vencimiento - FechaPago.Date).TotalDays;
 						double porcentajeAux = (Convert.ToDouble(item.porcentaje) / 100);
                         item.interes = (item.importe * ((porcentajeAux) / 30) * dias);
                         Interes = Interes + item.interes;
