@@ -450,6 +450,21 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 }
 			}
 
+            foreach(var item in _df)
+            {
+                FacturaView descuentoresult = _listDescuentos.Where(d => d.numeroDocumento.Contains(item.NumeroDocumento)).FirstOrDefault();
+
+                if (descuentoresult == null)
+                {
+                    FacturaView d = new FacturaView()
+                    {
+                        numeroDocumento = item.NumeroDocumento,
+                        descripcion = item.Descripcion,
+                        importe = item.Monto
+                    };
+                    _listDescuentos.Add(d);
+                }
+            }
             //Traemos el prestamo del proveedor
             SapProveedorManager sapProveedorManager = new SapProveedorManager();
             double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor);

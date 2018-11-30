@@ -117,7 +117,8 @@
                         <input type="hidden" id="mdlIdCuenta" value="" name="idCuenta" class="form-control" />
                         <input type="hidden" id="mdlId" value="" name="idProveedor" class="form-control" />
                         de pago: <select class="form-control input-sm" id="mdlDia" name="diadepago">
-                            <option value="1" selected>Lunes</option>
+                            @*<option value="0" selected disabled hidden>@defaultdiapago</option>*@
+                            <option value="1">Lunes</option>
                             <option value="2">Martes</option>
                             <option value="3">Miercoles</option>
                             <option value="4">Jueves</option>
@@ -155,15 +156,45 @@
                 var diapago = $(this).data("diadepago");
                 var porcentaje = $(this).data("porcentaje");
 
+                if (diapago == 0 && porcentaje == 0) {
+                    var d = "@defaultdiapago" 
+                    switch (d) {
+                        case "LUNES":
+                            diapago = 1;
+                            break;
+                        case "MARTES":
+                            diapago = 2;
+                            break;
+                        case "MIERCOLES":
+                            diapago = 3;
+                            break;
+                        case "JUEVES":
+                            diapago = 4;
+                            break;
+                        case "VIERNES":
+                            diapago = 5;
+                            break;
+                        case "SABADO":
+                            diapago = 6;
+                            break;
+                        case "DOMINGO":
+                            diapago = 7;
+                            break;
+                        default:
+                            diapago = 0;
+                            break;
+                    }
+                    porcentaje = @defaultporcentaje;
+                }
+
                 if (diapago) {
                     $("#mdlDia").val(diapago);
                 }
-
+                $("#mdlPorcentaje").val(porcentaje);
+                
                 $("#mdlId").val(id);
                 $("#mdlIdCuenta").val(idCuenta);
                 
-                $("#mdlPorcentaje").val(porcentaje);
-
                 $("#modalEditarProveedor").modal('show');
             });
 

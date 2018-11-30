@@ -376,6 +376,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         public ActionResult ActualizarPorcentaje(int idFactura, int porcentaje, int solid)
         {
             if (_solicitudFManager.GetSolicitudById(solid).EstatusFactoraje == 3 ||
+                _solicitudFManager.GetSolicitudById(solid).EstatusFactoraje == 4 ||
                 _solicitudFManager.GetSolicitudById(solid).EstatusFactoraje == 7)
             {
                 TempData["FlashError"] = "La solicitud no puede ser modificada";
@@ -409,6 +410,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         public ActionResult AprobarSolicitud(string facturas, string descuentos, int solicitudId, int _proveedorid)
         {
             if (_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 3 ||
+                _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 4 ||
                 _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 7 )
             {
                 TempData["FlashError"] = "La solicitud no puede ser modificada";
@@ -479,10 +481,20 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult RechazarSolicitud(int solicitudId)
         {
-            //Cambia el estatus en solicitudes, facturas y descuentos por rechazada
-            var result = _solicitudFManager.UpdateEstatusSolicitud(solicitudId, 3);
-
-            return RedirectToAction("Solicitudes");
+            if (_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 3 ||
+                //_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 4 ||
+                _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 7)
+            {
+                TempData["FlashError"] = "La solicitud no puede ser rechazada";
+                return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solicitudId });
+            }
+            else
+            {
+                //Cambia el estatus en solicitudes, facturas y descuentos por rechazada
+                var result = _solicitudFManager.UpdateEstatusSolicitud(solicitudId, 3);
+                TempData["FlashSuccess"] = "Solicitud rechazada";
+                return RedirectToAction("Solicitudes");
+            }
         }
 
         public List<FacturaView> GetDescuentosByProveedor(int proveedorId)
@@ -584,6 +596,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         public ActionResult GuardarSolicitudM(string facturas, string descuentos, int solicitudId, int _proveedorid, int _estatus)
         {
             if (_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 3 ||
+                _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 4 ||
                 _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 7)
             {
                 TempData["FlashError"] = "La solicitud no puede ser modificada";
