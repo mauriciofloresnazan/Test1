@@ -402,9 +402,36 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				porcentaje = Convert.ToInt32(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor);
 			}
 
+            string DiaPago = CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.day").Valor;
+            DateTime FechaPago = DateTime.Now;
 
-			//Armamos la lista con las cuentas por pagas es decir mayores a cero 
-			List<Web.Models.ProntoPago.FacturaView> _list = new List<Web.Models.ProntoPago.FacturaView>();
+            switch (DiaPago)
+            {
+                case "LUNES":
+                    FechaPago = GetFechaPago(DayOfWeek.Monday);
+                    break;
+                case "MARTES":
+                    FechaPago = GetFechaPago(DayOfWeek.Tuesday);
+                    break;
+                case "MIERCOLES":
+                    FechaPago = GetFechaPago(DayOfWeek.Wednesday);
+                    break;
+                case "JUEVES":
+                    FechaPago = GetFechaPago(DayOfWeek.Thursday);
+                    break;
+                case "VIERNES":
+                    FechaPago = GetFechaPago(DayOfWeek.Friday);
+                    break;
+                case "SABADO":
+                    FechaPago = GetFechaPago(DayOfWeek.Saturday);
+                    break;
+                case "DOMINGO":
+                    FechaPago = GetFechaPago(DayOfWeek.Sunday);
+                    break;
+            }
+
+            //Armamos la lista con las cuentas por pagas es decir mayores a cero 
+            List<Web.Models.ProntoPago.FacturaView> _list = new List<Web.Models.ProntoPago.FacturaView>();
 			List<Web.Models.ProntoPago.FacturaView> _listDescuentos = new List<Web.Models.ProntoPago.FacturaView>();
 
             //Traemos los descuentos seleccionados (descuentosfactoraje)
@@ -443,7 +470,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 //{
                 //	item.pagar = true;
                 //}
-                if (item.importe > 0) {
+                if (item.importe > 0 && DateTime.ParseExact(item.vencimiento, "yyyyMMdd", CultureInfo.InvariantCulture) >= FechaPago) {
                     _list.Add(item);
                 }
                 else {
