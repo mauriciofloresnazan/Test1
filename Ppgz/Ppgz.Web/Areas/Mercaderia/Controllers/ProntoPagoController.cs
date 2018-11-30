@@ -154,6 +154,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 						//Paso 4: Actualizamos el estatus de la solicitud
 						solicitudFManager.UpdateEstatusSolicitud(notaCreditoView.idSolicitudesFactoraje, 4);
 
+                        solicitudesfactoraje sf = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje);
+                        sf.NumeroGenerado = Convert.ToInt32(facturaModel.NumeroGenerado);
+                        solicitudFManager.UpdateSolicitud(sf);
+
 						TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente.";
 					}
 					else

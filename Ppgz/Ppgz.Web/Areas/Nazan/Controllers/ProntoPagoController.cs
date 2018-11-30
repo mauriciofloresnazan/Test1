@@ -227,9 +227,19 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     string[] facturasList = facturasSolicitud.Select(x => x.NumeroDocumento).ToArray();
                     string[] descuentosList = descuentosSolicitud.Select(x => x.NumeroDocumento).ToArray();
                     string[] docs = facturasList.Concat(descuentosList).ToArray();
+                    
 
                     DateTime[] fechasList = facturasSolicitud.Select(x => x.FechaFactura).ToArray().Concat(descuentosSolicitud.Select(x => x.FechaDescuento)).ToArray();
-                    
+
+                    //Agregamos la nota de credito al final 
+                    List<string> d = docs.ToList();
+                    d.Add(item.NumeroGenerado.ToString());
+                    docs = d.ToArray();
+
+                    List<DateTime> f = fechasList.ToList();
+                    f.Add(item.FechaSolicitud);
+                    fechasList = f.ToArray();
+
                     //Obtenemos el día prontopago configurado
                     var pf = _proveedorFManager.GetProveedorById(item.IdProveedor);
                     int DiaPago;
@@ -358,6 +368,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             SapProveedorManager sapProveedorManager = new SapProveedorManager();
             double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor);
 
+            //Quitamos la nota de credito de los descuentos
+            int notadecredito = (int)_solicitudFManager.GetSolicitudById(id).NumeroGenerado;
+            var nc = descuentos.Where(x => x.NumeroDocumento == notadecredito.ToString() && x.idSolicitudesFactoraje == id).FirstOrDefault();
+            descuentos.Remove(nc);
+
             ViewBag.MontoOriginal = totalView.MontoOriginal.ToString("C");
             ViewBag.DescuentosTotal = totalView.DescuentosTotal.ToString("C");
             ViewBag.DescuentoProntoPago = totalView.Interes.ToString("C");
@@ -437,21 +452,26 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             //Sacamos los descuentos que vienen de SAP y tienen check
             List<FacturaView> descuentosSAP = GetDescuentosByProveedor(_proveedorid);
+            var dg = _descuentoFManager.GetDescuentosBySolicitud(solicitudId);
             foreach (var item in descuentosSAP)
             {
                 var df = descuentosList.Where(d => d.Contains(item.numeroDocumento)).FirstOrDefault();
                 if (df != null)
                 {
-                    descuentofactoraje element = new descuentofactoraje()
+                    var dgresult = dg.Where(d => d.NumeroDocumento == item.numeroDocumento).FirstOrDefault();
+                    if (dgresult == null)
                     {
-                        idSolicitudesFactoraje = solicitudId,
-                        NumeroDocumento = item.numeroDocumento,
-                        Monto = item.importe,
-                        EstatusFactoraje = estatusSS.EstatusFactoraje,
-                        Descripcion = item.descripcion
-                    };
-                    _descuentoFManager.InsDescuentoFactoraje(element);
-                    descuentosguardados.Add(element);
+                        descuentofactoraje element = new descuentofactoraje()
+                        {
+                            idSolicitudesFactoraje = solicitudId,
+                            NumeroDocumento = item.numeroDocumento,
+                            Monto = item.importe,
+                            EstatusFactoraje = estatusSS.EstatusFactoraje,
+                            Descripcion = item.descripcion
+                        };
+                        _descuentoFManager.InsDescuentoFactoraje(element);
+                        descuentosguardados.Add(element);
+                    }
                 }
             }
 

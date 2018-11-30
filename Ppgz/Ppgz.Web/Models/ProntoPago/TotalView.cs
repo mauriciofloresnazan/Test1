@@ -185,7 +185,7 @@ namespace Ppgz.Web.Models.ProntoPago
 			foreach(descuentofactoraje item in DescuentosFactoraje)
 			{
 				//Validamos si el descuento esta marcado
-				if (descuentos.Contains(item.idDescuentosFactoraje.ToString()))
+				if (descuentos.Contains(item.NumeroDocumento.ToString()))
 				{
 					Descuentos = Descuentos + Convert.ToDouble(item.Monto);
 				}
