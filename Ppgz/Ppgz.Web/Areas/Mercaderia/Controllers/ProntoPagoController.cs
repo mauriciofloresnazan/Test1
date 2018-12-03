@@ -21,8 +21,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		readonly CommonManager _commonManager = new CommonManager();
 		readonly ProveedorManager _proveedorManager = new ProveedorManager();
 		readonly FacturaManager _facturaManager = new FacturaManager();
+        readonly LogsFactoraje _logsFactoraje = new LogsFactoraje();
 
-		internal proveedore ProveedorCxp
+        internal proveedore ProveedorCxp
 		{
 			get
 			{
@@ -158,7 +159,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         sf.NumeroGenerado = Convert.ToInt32(facturaModel.NumeroGenerado);
                         solicitudFManager.UpdateSolicitud(sf);
 
-						TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente.";
+                        _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Carga Nota Credito", notaCreditoView.idSolicitudesFactoraje, "Carga nota de credito");
+
+                        TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente.";
 					}
 					else
 					{
@@ -317,14 +320,19 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				facturaFManager.InsFacturaFactoraje(item);
 			}
 
-			//Insertamos los descuentos del factoraje
-			foreach (descuentofactoraje item in totalView.DescuentosFactoraje)
+            string dfs = "";
+            //Insertamos los descuentos del factoraje
+            foreach (descuentofactoraje item in totalView.DescuentosFactoraje)
 			{
 				item.idSolicitudesFactoraje = SolicitudId;
 				descuentoFManager.InsDescuentoFactoraje(item);
+                dfs = dfs + item.NumeroDocumento + ", "; 
 			}
 
-			return RedirectToAction("VerSolicitudes", new { proveedorId = proveedorId });
+            
+            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Crea Solicitud", SolicitudId, "Crea solicitud proveedor: " + proveedorId + " con facturas: " + facturas + ". Descuentos: " + dfs);
+
+            return RedirectToAction("VerSolicitudes", new { proveedorId = proveedorId });
 		}
 
 		public ActionResult ObtenerTotalFactoraje(string facturas, int proveedorId)

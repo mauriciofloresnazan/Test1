@@ -78,6 +78,7 @@
     <Compile Include="EtiquetasManager.cs" />
     <Compile Include="FacturaManager.cs" />
     <Compile Include="FacturaFManager.cs" />
+    <Compile Include="LogsFactoraje.cs" />
     <Compile Include="MensajesResource.Designer.cs">
       <DependentUpon>MensajesResource.resx</DependentUpon>
       <AutoGen>True</AutoGen>

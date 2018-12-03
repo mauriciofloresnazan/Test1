@@ -24,6 +24,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         readonly ProveedorManager _proveedorManager = new ProveedorManager();
         readonly ProveedorFManager _proveedorFManager = new ProveedorFManager();
         readonly SolicitudFManager _solicitudFManager = new SolicitudFManager();
+        readonly LogsFactoraje _logsFactoraje = new LogsFactoraje();
 
         /*-------------BEGIN DASHBOARD SECTION--------------*/
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
@@ -148,7 +149,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 
             if (result)
-                TempData["FlashSuccess"] = "Actualización realizada correctamente.";
+            {
+                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Actualizar Proveedor", idProveedor, "Actualizacion de proveedor " + idProveedor + ": porcentaje " + porcentaje + "%, dia de pago " + diadepago);
+                TempData["FlashSuccess"] = "Actualización realizada correctamente.";                
+            }
             else
                 TempData["FlashError"] = "Datos incorrectos";
 
@@ -178,7 +182,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             result = _proveedorFManager.DeleteProveedorFactoraje(idProveedor);
 
             if (result)
-                TempData["FlashSuccess"] = "Eliminado correctamente.";
+            {
+                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Eliminar configuracion", idProveedor, "Eliminar configuracion de proveedor " + idProveedor);
+                TempData["FlashSuccess"] = "Eliminado correctamente.";                
+            }
             else
                 TempData["FlashError"] = "Ocurrio un error al eliminar";
 
@@ -307,7 +314,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             if (!err)
                             {
                                 _solicitudFManager.UpdateEstatusSolicitud(item.idSolicitudesFactoraje, 7);
-                                TempData["FlashSuccess"] = "Enviadas con exito";
+                                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuesta", item.idSolicitudesFactoraje, "Envia propuesta con documentos: " + docs + ". ");
+                                TempData["FlashSuccess"] = "Enviadas con exito";                                
                             }
                             else
                             {
@@ -399,6 +407,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
             var result = _facturaFManager.ActualizarPorcentaje(idFactura, porcentaje);
             var solicitufactoraje = _solicitudFManager.UpdateEstatusSolicitud(solid, 6);
+
+            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Actualiza Porcentaje", solid, "Porcentaje de factura" + idFactura);
 
             return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solid }); 
         }
@@ -495,6 +505,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 _solicitudFManager.UpdateEstatusSolicitud(nuevaSolicitud.idSolicitudesFactoraje, 5);
             }
 
+            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Aprobación de solicitud", nuevaSolicitud.idSolicitudesFactoraje, "Aprobación de solicitud con facturas: " + facturas + ". Descuentos: " + descuentos);
             return RedirectToAction("Solicitudes");
         }
 
@@ -512,7 +523,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 //Cambia el estatus en solicitudes, facturas y descuentos por rechazada
                 var result = _solicitudFManager.UpdateEstatusSolicitud(solicitudId, 3);
-                TempData["FlashSuccess"] = "Solicitud rechazada";
+                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Rechazar Solicitud", solicitudId, "Cambio a estatus Rechazada");
+                TempData["FlashSuccess"] = "Solicitud rechazada";                
                 return RedirectToAction("Solicitudes");
             }
         }
@@ -676,6 +688,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 _solicitudFManager.UpdateEstatusSolicitud(nuevaSolicitud.idSolicitudesFactoraje, _estatus);
             }
 
+            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Guarda Solicitud", solicitudId, "Cambio a estatus Aprobacion Especial. Con las facturas: " + facturas + "y Descuentos: " + descuentos);
             return RedirectToAction("Solicitudes");
         }
         
