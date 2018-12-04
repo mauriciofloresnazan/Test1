@@ -12,7 +12,7 @@ namespace SapWrapper
     {
         private readonly CommonRfcConfigParam _rfc = new CommonRfcConfigParam();
 
-        public DataTable[] EnviarPropuesta(DateTime fechasolictud, string numeroProveedor, string[] facturasList, DateTime[] fechaList)
+        public DataTable[] EnviarPropuesta(DateTime fechasolictud, string[] numerosProveedor, string[] facturasList, DateTime[] fechaList)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
@@ -29,7 +29,7 @@ namespace SapWrapper
                 {
                     tablep.Append();
                     tablep.SetValue("IM_BELNR", facturasList[i]);
-                    tablep.SetValue("IM_LIFNR", numeroProveedor);
+                    tablep.SetValue("IM_LIFNR", numerosProveedor[i]);
                     tablep.SetValue("IM_BLDAT", fechaList[i].ToString("yyyyMMdd"));
                 }
 

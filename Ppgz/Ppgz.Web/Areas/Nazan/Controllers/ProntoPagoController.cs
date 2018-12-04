@@ -224,113 +224,142 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             if (listpropuestas.Count() > 0)
             {
+                List<string> docs = new List<string>();
+                List<DateTime> fechasDocs = new List<DateTime>();                
+
                 foreach (var item in listpropuestas)
                 {
                     //Obtenemos los parametros de F110
                     var numeroProveedor = _proveedorManager.Find(item.IdProveedor).NumeroProveedor;
                     var facturasSolicitud = _facturaFManager.GetFacturasBySolicitud(item.idSolicitudesFactoraje);
                     var descuentosSolicitud = _descuentoFManager.GetDescuentosBySolicitud(item.idSolicitudesFactoraje);
-
-                    string[] facturasList = facturasSolicitud.Select(x => x.NumeroDocumento).ToArray();
-                    string[] descuentosList = descuentosSolicitud.Select(x => x.NumeroDocumento).ToArray();
-                    string[] docs = facturasList.Concat(descuentosList).ToArray();
-                    
-
-                    DateTime[] fechasList = facturasSolicitud.Select(x => x.FechaFactura).ToArray().Concat(descuentosSolicitud.Select(x => x.FechaDescuento)).ToArray();
-
+                                        
+                    List<string> documentosSolicitud =     facturasSolicitud.Select(x => x.NumeroDocumento).ToList();
+                    List<string> descuentosList = descuentosSolicitud.Select(x => x.NumeroDocumento).ToList();
+                    documentosSolicitud.AddRange(descuentosList);
                     //Agregamos la nota de credito al final 
-                    List<string> d = docs.ToList();
-                    d.Add(item.NumeroGenerado.ToString());
-                    docs = d.ToArray();
+                    documentosSolicitud.Add(item.NumeroGenerado.ToString());
 
-                    List<DateTime> f = fechasList.ToList();
-                    f.Add(item.FechaSolicitud);
-                    fechasList = f.ToArray();
+                    docs.AddRange(documentosSolicitud);
 
-                    //Obtenemos el día prontopago configurado
-                    var pf = _proveedorFManager.GetProveedorById(item.IdProveedor);
-                    int DiaPago;
-                    if (pf != null)
+                    List<DateTime> fechasList = facturasSolicitud.Select(x => x.FechaFactura).ToList();
+                    List<DateTime> descuentosFechasList = descuentosSolicitud.Select(x => x.FechaDescuento).ToList();
+                    fechasList.AddRange(descuentosFechasList);
+                    fechasList.Add(item.FechaSolicitud);
+
+                    fechasDocs.AddRange(fechasList);   
+                }
+                
+                int DiaPago;
+                string dp = CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.day").Valor.ToUpper();
+                switch (dp)
+                {
+                    case "LUNES":
+                        DiaPago = 1;
+                        break;
+                    case "MARTES":
+                        DiaPago = 2;
+                        break;
+                    case "MIERCOLES":
+                        DiaPago = 3;
+                        break;
+                    case "JUEVES":
+                        DiaPago = 4;
+                        break;
+                    case "VIERNES":
+                        DiaPago = 5;
+                        break;
+                    case "SABADO":
+                        DiaPago = 6;
+                        break;
+                    default:
+                        DiaPago = 0;
+                        break;
+                }
+
+                //Obtenemos la fecha del dia de pago configurado
+                DateTime fechaDiaPago = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
+                fechaDiaPago = fechaDiaPago.AddDays(DiaPago);
+
+                string[] paramdocs = docs.ToArray();
+
+                //Obtenemos los numeros de proveedor
+                List<string> numerosProveedor = new List<string>();
+                foreach (var doc in paramdocs)
+                {
+                    int idSolicitud;
+                    var factura = _db.facturasfactoraje.Where(f => f.NumeroDocumento == doc && f.FacturaEstatus == 4).FirstOrDefault();
+                    var descuento = _db.descuentosfactoraje.Where(d => d.NumeroDocumento == doc && d.EstatusFactoraje == 4).FirstOrDefault();
+                    var solicitud = _db.solicitudesfactoraje.Where(s => s.NumeroGenerado == Convert.ToInt32(doc) && s.EstatusFactoraje == 4).FirstOrDefault();
+
+                    if (factura != null)
                     {
-                        DiaPago = pf.DiaDePago;
+                        idSolicitud = factura.idSolicitudesFactoraje;
+                    }
+                    else if(descuento!=null)
+                    {
+                        idSolicitud = descuento.idSolicitudesFactoraje;
                     }
                     else
                     {
-                        string dp = CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.day").Valor.ToUpper();
-                        switch (dp)
+                        idSolicitud = solicitud.IdProveedor;
+                    }
+
+                    string nProveedor = _proveedorManager.Find(_solicitudFManager.GetSolicitudById(idSolicitud).IdProveedor).NumeroProveedor;
+
+                    if (!String.IsNullOrEmpty(nProveedor))
+                        numerosProveedor.Add(nProveedor);
+                }
+                
+                DateTime[] paramdates = fechasDocs.ToArray();
+                string[] proveedores = numerosProveedor.ToArray();
+
+                SapProntoPagoManager spp = new SapProntoPagoManager();
+                DataTable[] dt = spp.EnviarPropuesta(fechaDiaPago, proveedores, paramdocs, paramdates);
+
+                if (dt != null && dt[0].Rows.Count > 0)
+                {
+                    //dt[0].Rows[0][3].ToString().ToLower().Substring(0, 5) == "error"
+                    TempData["FlashError"] = "Error SAP: "+ dt[0].Rows[0][3].ToString();
+                    return RedirectToAction("Solicitudes");
+                }
+                else
+                {
+                    string errorlist = "ERROR: ";
+                    if (dt != null)
+                    {
+                        bool err = false;
+                        for (int i = 0; i < paramdocs.Count(); i++)
                         {
-                            case "LUNES":
-                                DiaPago = 1;
-                                break;
-                            case "MARTES":
-                                DiaPago = 2;
-                                break;
-                            case "MIERCOLES":
-                                DiaPago = 3;
-                                break;
-                            case "JUEVES":
-                                DiaPago = 4;
-                                break;
-                            case "VIERNES":
-                                DiaPago = 5;
-                                break;
-                            case "SABADO":
-                                DiaPago = 6;
-                                break;
-                            default:
-                                DiaPago = 0;
-                                break;
+                            if (String.IsNullOrEmpty(dt[1].Rows[i][3].ToString()))
+                            {
+                                errorlist = paramdocs[i] + ", ";
+                                err = true;
+                            }
                         }
-                    }
 
-                    //Obtenemos la fecha del dia de pago configurado
-                    DateTime fechaDiaPago = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
-                    fechaDiaPago = fechaDiaPago.AddDays(DiaPago);
-
-                    SapProntoPagoManager spp = new SapProntoPagoManager();
-                    DataTable[] dt = spp.EnviarPropuesta(fechaDiaPago, numeroProveedor, docs, fechasList);
-
-                    if (dt != null && dt[0].Rows.Count > 0)
-                    {
-                        //dt[0].Rows[0][3].ToString().ToLower().Substring(0, 5) == "error"
-                        TempData["FlashError"] = "Error SAP: "+ dt[0].Rows[0][3].ToString();
-                        return RedirectToAction("Solicitudes");
-                    }
-                    else
-                    {
-                        string errorlist = "ERROR: ";
-                        if (dt != null)
+                        if (!err)
                         {
-                            bool err = false;
-                            for (int i = 0; i < facturasList.Count(); i++)
+                            foreach (var propuesta in listpropuestas)
                             {
-                                if (String.IsNullOrEmpty(dt[1].Rows[i][3].ToString()))
-                                {
-                                    errorlist = facturasList[i] + ", ";
-                                    err = true;
-                                }
+                                _solicitudFManager.UpdateEstatusSolicitud(propuesta.idSolicitudesFactoraje, 7);
                             }
-
-                            if (!err)
+                            string documentos = "";
+                            for(int i=0; i< paramdocs.Count(); i++)
                             {
-                                _solicitudFManager.UpdateEstatusSolicitud(item.idSolicitudesFactoraje, 7);
-                                string documentos = "";
-                                for(int i=0; i< docs.Count(); i++)
-                                {
-                                    documentos = documentos + ", " + docs[i] ;
-                                }
-                                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuesta", item.idSolicitudesFactoraje, "Envia propuesta con documentos: " + documentos + ". ");
-                                TempData["FlashSuccess"] = "Enviadas con exito";                                
+                                documentos = documentos + ", " + paramdocs[i] ;
                             }
-                            else
-                            {
-                                TempData["FlashError"] = "Error con facturas: " + errorlist;
-                            }
+                            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
+                            TempData["FlashSuccess"] = "Enviadas con exito";                                
                         }
                         else
                         {
-                            TempData["FlashError"] = "Error al enviar propuesta de pago";
+                            TempData["FlashError"] = "Error con facturas: " + errorlist;
                         }
+                    }
+                    else
+                    {
+                        TempData["FlashError"] = "Error al enviar propuesta de pago";
                     }
                 }
             }
