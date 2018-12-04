@@ -310,7 +310,7 @@
           <Property Name="Operacion" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="IdObjeto" Type="int" Nullable="false" />
           <Property Name="TipoObjeto" Type="int" Nullable="false" />
-          <Property Name="Descripcion" Type="varchar" MaxLength="200" Nullable="true" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="1000" Nullable="true" />
           <Property Name="Usuario" Type="varchar" MaxLength="45" Nullable="true" />
         </EntityType>
         <EntityType Name="mensajes">
@@ -1393,7 +1393,7 @@
           <Property Name="Operacion" Type="String" FixedLength="false" Unicode="false" MaxLength="45" Nullable="false" />
           <Property Name="IdObjeto" Type="Int32" Nullable="false" />
           <Property Name="TipoObjeto" Type="Int32" Nullable="false" />
-          <Property Name="Descripcion" Type="String" FixedLength="false" Unicode="false" MaxLength="200" Nullable="true" />
+          <Property Name="Descripcion" Type="String" FixedLength="false" Unicode="false" MaxLength="1000" Nullable="true" />
           <Property Name="Usuario" Type="String" FixedLength="false" Unicode="false" MaxLength="45" Nullable="true" />
         </EntityType>
         <EntityType Name="mensaje">

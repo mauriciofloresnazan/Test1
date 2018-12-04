@@ -314,7 +314,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             if (!err)
                             {
                                 _solicitudFManager.UpdateEstatusSolicitud(item.idSolicitudesFactoraje, 7);
-                                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuesta", item.idSolicitudesFactoraje, "Envia propuesta con documentos: " + docs + ". ");
+                                string documentos = "";
+                                for(int i=0; i< docs.Count(); i++)
+                                {
+                                    documentos = documentos + ", " + docs[i] ;
+                                }
+                                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuesta", item.idSolicitudesFactoraje, "Envia propuesta con documentos: " + documentos + ". ");
                                 TempData["FlashSuccess"] = "Enviadas con exito";                                
                             }
                             else
