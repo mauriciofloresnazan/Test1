@@ -225,7 +225,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             if (listpropuestas.Count() > 0)
             {
                 List<string> docs = new List<string>();
-                List<DateTime> fechasDocs = new List<DateTime>();                
+                List<DateTime> fechasDocs = new List<DateTime>();
+                List<string> numerosProveedor = new List<string>();
 
                 foreach (var item in listpropuestas)
                 {
@@ -248,6 +249,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     fechasList.Add(item.FechaSolicitud);
 
                     fechasDocs.AddRange(fechasList);   
+
+                    foreach(var element in documentosSolicitud)
+                    {
+                        numerosProveedor.Add(numeroProveedor);
+                    }
                 }
                 
                 int DiaPago;
@@ -281,36 +287,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 DateTime fechaDiaPago = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
                 fechaDiaPago = fechaDiaPago.AddDays(DiaPago);
 
-                string[] paramdocs = docs.ToArray();
-
-                //Obtenemos los numeros de proveedor
-                List<string> numerosProveedor = new List<string>();
-                foreach (var doc in paramdocs)
-                {
-                    int idSolicitud;
-                    var factura = _db.facturasfactoraje.Where(f => f.NumeroDocumento == doc && f.FacturaEstatus == 4).FirstOrDefault();
-                    var descuento = _db.descuentosfactoraje.Where(d => d.NumeroDocumento == doc && d.EstatusFactoraje == 4).FirstOrDefault();
-                    var solicitud = _db.solicitudesfactoraje.Where(s => s.NumeroGenerado == Convert.ToInt32(doc) && s.EstatusFactoraje == 4).FirstOrDefault();
-
-                    if (factura != null)
-                    {
-                        idSolicitud = factura.idSolicitudesFactoraje;
-                    }
-                    else if(descuento!=null)
-                    {
-                        idSolicitud = descuento.idSolicitudesFactoraje;
-                    }
-                    else
-                    {
-                        idSolicitud = solicitud.IdProveedor;
-                    }
-
-                    string nProveedor = _proveedorManager.Find(_solicitudFManager.GetSolicitudById(idSolicitud).IdProveedor).NumeroProveedor;
-
-                    if (!String.IsNullOrEmpty(nProveedor))
-                        numerosProveedor.Add(nProveedor);
-                }
-                
+                string[] paramdocs = docs.ToArray();                                                
                 DateTime[] paramdates = fechasDocs.ToArray();
                 string[] proveedores = numerosProveedor.ToArray();
 
