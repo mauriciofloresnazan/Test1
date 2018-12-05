@@ -294,9 +294,16 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 SapProntoPagoManager spp = new SapProntoPagoManager();
                 DataTable[] dt = spp.EnviarPropuesta(fechaDiaPago, proveedores, paramdocs, paramdates);
 
+                string documentos = "";
+                for (int i = 0; i < paramdocs.Count(); i++)
+                {
+                    documentos = documentos + ", " + paramdocs[i];
+                }
+
                 if (dt != null && dt[0].Rows.Count > 0)
                 {
                     //dt[0].Rows[0][3].ToString().ToLower().Substring(0, 5) == "error"
+                    _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
                     TempData["FlashError"] = "Error SAP: "+ dt[0].Rows[0][3].ToString();
                     return RedirectToAction("Solicitudes");
                 }
@@ -321,21 +328,19 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             {
                                 _solicitudFManager.UpdateEstatusSolicitud(propuesta.idSolicitudesFactoraje, 7);
                             }
-                            string documentos = "";
-                            for(int i=0; i< paramdocs.Count(); i++)
-                            {
-                                documentos = documentos + ", " + paramdocs[i] ;
-                            }
+                            
                             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
                             TempData["FlashSuccess"] = "Enviadas con exito";                                
                         }
                         else
                         {
+                            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
                             TempData["FlashError"] = "Error con facturas: " + errorlist;
                         }
                     }
                     else
                     {
+                        _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
                         TempData["FlashError"] = "Error al enviar propuesta de pago";
                     }
                 }
