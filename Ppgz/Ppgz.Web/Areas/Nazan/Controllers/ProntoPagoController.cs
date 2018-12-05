@@ -468,6 +468,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             string[] facturasList = facturas.Split(',');
             string[] descuentosList = descuentos.Split(',');
 
+            TotalView totalView1 = new TotalView(solicitudId, facturasList, descuentosList);
+            if (totalView1.TotalSolicitado <0)
+            {
+                TempData["FlashError"] = "No se pudo aprobar solicitud, el total solicitado es negativo";
+                return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solicitudId });
+            }
+
             //Traemos los descuentos guardados a eliminar
             List<descuentofactoraje> descuentosguardados = _descuentoFManager.GetDescuentosBySolicitud(solicitudId).Where(x => descuentosList.Contains(x.NumeroDocumento)).ToList();
             List<string> arrdescuentos = descuentosguardados.Select(x => x.idDescuentosFactoraje.ToString()).ToList();
