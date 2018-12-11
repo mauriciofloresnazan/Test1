@@ -187,7 +187,7 @@ namespace Ppgz.Web.Models.ProntoPago
 				//Validamos si el descuento esta marcado
 				if (descuentos.Contains(item.NumeroDocumento.ToString()))
 				{
-					Descuentos = Descuentos + Convert.ToDouble(item.Monto);
+					Descuentos = Descuentos + item.Monto;
 				}
 			}
 
@@ -197,7 +197,7 @@ namespace Ppgz.Web.Models.ProntoPago
 				if (facturas.Contains(item.idFacturasFactoraje.ToString()))
 				{
 					double porcentaje = (Convert.ToDouble(item.Porcentaje) / 100);
-					MontoOriginal = MontoOriginal + Convert.ToDouble(item.Monto);
+					MontoOriginal = MontoOriginal + item.Monto;
 					//Calculamos el interes
 					Interes = Interes + item.interes;
 				}

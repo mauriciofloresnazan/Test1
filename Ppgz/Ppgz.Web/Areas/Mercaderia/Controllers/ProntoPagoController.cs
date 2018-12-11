@@ -113,12 +113,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				//Validamos el xml
 				var xmlFile = notaCreditoView.notaCreditoXml;
 				ValidarXml(xmlFile);
-				xmlFile.SaveAs(tempXmlPath);
 
 				//Validamos el pdf
 				var pdfFile = notaCreditoView.notaCreditoPdf;
 				ValidarPdf(pdfFile);
-				pdfFile.SaveAs(tempPdfPath);
+				
 
 				try{
 
@@ -162,7 +161,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Carga Nota Credito", notaCreditoView.idSolicitudesFactoraje, "Carga nota de credito");
 
                         TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente.";
-					}
+                        xmlFile.SaveAs(tempXmlPath);
+                        pdfFile.SaveAs(tempPdfPath);
+                    }
 					else
 					{
 						TempData["FlashError"] = "Error al cargar la nota de credito en SAP. "+ cargarNotaCredito.ErrorTable.ToString();

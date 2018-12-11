@@ -317,7 +317,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         {
                             if (String.IsNullOrEmpty(dt[1].Rows[i][3].ToString()))
                             {
-                                errorlist = paramdocs[i] + ", ";
+                                errorlist = dt[1].Rows[i][0].ToString() + ", ";
                                 err = true;
                             }
                         }
@@ -328,14 +328,19 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             {
                                 _solicitudFManager.UpdateEstatusSolicitud(propuesta.idSolicitudesFactoraje, 7);
                             }
-                            
-                            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
+
+                            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");                            
                             TempData["FlashSuccess"] = "Enviadas con exito";                                
                         }
                         else
                         {
-                            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
-                            TempData["FlashError"] = "Error con facturas: " + errorlist;
+                            foreach (var propuesta in listpropuestas)
+                            {
+                                _solicitudFManager.UpdateEstatusSolicitud(propuesta.idSolicitudesFactoraje, 7);
+                            }
+
+                            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuestas: " + selectedlist + ". Documentos: " + documentos + ". Revisar documentos: " + errorlist);
+                            TempData["FlashError"] = "Revisar facturas: " + errorlist;
                         }
                     }
                     else
@@ -536,7 +541,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         public ActionResult RechazarSolicitud(int solicitudId)
         {
             if (_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 3 ||
-                //_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 4 ||
+                _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 4 ||
                 _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 7)
             {
                 TempData["FlashError"] = "La solicitud no puede ser rechazada";
