@@ -22,6 +22,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		readonly ProveedorManager _proveedorManager = new ProveedorManager();
 		readonly FacturaManager _facturaManager = new FacturaManager();
         readonly LogsFactoraje _logsFactoraje = new LogsFactoraje();
+        readonly Entities _db = new Entities();
 
         internal proveedore ProveedorCxp
 		{
@@ -159,6 +160,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         solicitudFManager.UpdateSolicitud(sf);
 
                         _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Carga Nota Credito", notaCreditoView.idSolicitudesFactoraje, "Carga nota de credito");
+                        var commonManager = new CommonManager();
+                        if (proveedor != null)
+                            commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Nota de credito registrada", "La nota de credito ha sido cargada exitosamente para la solicitud con id " + Solicitud.idSolicitudesFactoraje + ".", "correo@nimetrix.com");
 
                         TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente.";
                         xmlFile.SaveAs(tempXmlPath);
@@ -332,6 +336,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             
             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Crea Solicitud", SolicitudId, "Crea solicitud proveedor: " + proveedorId + " con facturas: " + facturas + ". Descuentos: " + dfs);
+            var proveedor = _db.proveedores.Where(c => c.Id == proveedorId).FirstOrDefault();
+            var commonManager = new CommonManager();
+            if (proveedor != null)
+                commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Creada", "La solicitud con id " + SolicitudId + " ha sido creada.", "correo@nimetrix.com");
 
             return RedirectToAction("VerSolicitudes", new { proveedorId = proveedorId });
 		}
