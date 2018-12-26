@@ -340,9 +340,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             foreach (var propuesta in listpropuestas)
                             {
                                 _solicitudFManager.UpdateEstatusSolicitud(propuesta.idSolicitudesFactoraje, 7);
-                                var proveedor = _db.proveedores.Where(c => c.Id == _solicitudFManager.GetSolicitudById(propuesta.idSolicitudesFactoraje).IdProveedor).FirstOrDefault();
-                                if (proveedor != null)
-                                    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Procesada", "La solicitud con id " + propuesta.idSolicitudesFactoraje + " ha sido procesada.", "correo@nimetrix.com");
+                                //var proveedor = _db.proveedores.Where(c => c.Id == _solicitudFManager.GetSolicitudById(propuesta.idSolicitudesFactoraje).IdProveedor).FirstOrDefault();
+                                //if (proveedor != null)
+                                //    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Procesada", "La solicitud con id " + propuesta.idSolicitudesFactoraje + " ha sido procesada.", "correo@nimetrix.com");
                             }
 
                             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
@@ -428,6 +428,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             ViewBag.Facturas = facturas;
             ViewBag.Descuentos = descuentos;
             ViewBag.Prestamo = prestamo;
+            ViewBag.AprobarActivo = 1;
+            if (!this.User.IsInRole("NAZAN-PRONTOPAGO-APROBADOR") && solicitud.EstatusFactoraje == 6)
+            {
+                ViewBag.AprobarActivo = 0;
+            }
 
             return View();
         }
@@ -551,10 +556,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Aprobación de solicitud", nuevaSolicitud.idSolicitudesFactoraje, "Aprobación de solicitud con facturas: " + facturas + ". Descuentos: " + descuentos);
 
-            var proveedor = _db.proveedores.Where(c => c.Id == _proveedorid).FirstOrDefault();
-            var commonManager = new CommonManager();
-            if (proveedor!=null)
-                commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Aprobada", "La solicitud con id " + solicitudId + " ha sido aprobada y esta lista para cargar la nota de credito." , "correo@nimetrix.com");
+            //var proveedor = _db.proveedores.Where(c => c.Id == _proveedorid).FirstOrDefault();
+            //var commonManager = new CommonManager();
+            //if (proveedor!=null)
+            //    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Aprobada", "La solicitud con id " + solicitudId + " ha sido aprobada y esta lista para cargar la nota de credito." , "correo@nimetrix.com");
             return RedirectToAction("Solicitudes");
         }
 
@@ -575,10 +580,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
                 _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Rechazar Solicitud", solicitudId, "Cambio a estatus Rechazada");
                 
-                var proveedor = _db.proveedores.Where(c => c.Id == _solicitudFManager.GetSolicitudById(solicitudId).IdProveedor).FirstOrDefault();
-                var commonManager = new CommonManager();
-                if (proveedor != null)
-                    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Rechazada", "La solicitud con id " + solicitudId + " ha sido rechazada.", "correo@nimetrix.com");
+                //var proveedor = _db.proveedores.Where(c => c.Id == _solicitudFManager.GetSolicitudById(solicitudId).IdProveedor).FirstOrDefault();
+                //var commonManager = new CommonManager();
+                //if (proveedor != null)
+                //    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Rechazada", "La solicitud con id " + solicitudId + " ha sido rechazada.", "correo@nimetrix.com");
 
                 TempData["FlashSuccess"] = "Solicitud rechazada";                
                 return RedirectToAction("Solicitudes");

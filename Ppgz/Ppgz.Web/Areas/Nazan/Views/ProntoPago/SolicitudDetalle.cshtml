@@ -8,6 +8,7 @@
     var solicitud = (ViewBag.Solicitud);
     int count = 3;
     double prestamo = (ViewBag.Prestamo);
+    var aprobaractivo = (ViewBag.AprobarActivo);
 }
 
 <div class="container body-content">
@@ -258,8 +259,13 @@
                 $('.cbPagos').prop('checked', this.checked);
             });
 
+            //Desactivar boton aprobar mientras no sea aprobador especial con estatus 6
+            if (@aprobaractivo == 0) {
+                $("#btnAprobar").addClass("not-active");
+            }
+
             //Desactivar boton guardar mientras no haya cambios
-            $("btnGuardar").addClass("not-active");
+            $("#btnGuardar").addClass("not-active");
 
             //Evento para cachar todos los checked
             $('input[type=checkbox]').on('change', function () {
