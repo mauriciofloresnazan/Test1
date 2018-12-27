@@ -29,6 +29,7 @@
                                         <th class="text-center">N° de Documentos</th>
                                         <th class="text-center">Desc. P.P.</th>
                                         <th class="text-center">Otros Descuentos</th>
+                                        <th class="text-center">Total</th>
                                         <th class="text-center">Estatus</th>
                                         <th class="text-center"><input type="checkbox" id="cbHeader" /></th>
                                         <th class="text-center"></th>
@@ -65,6 +66,7 @@
                                             <td class="text-center vert-align">@item.NoDocumentos</td>
                                             <td class="text-center vert-align">@item.DescuentoPP.ToString("C")</td>
                                             <td class="text-center vert-align">@item.Descuentos.ToString("C")</td>
+                                            <td class="text-center vert-align">@item.Total.ToString("C")</td>
                                             <td class="text-center vert-align" style="@style;">@item.EstatusNombre</td>
                                             @if (@item.Estatus == 4)
                                             {

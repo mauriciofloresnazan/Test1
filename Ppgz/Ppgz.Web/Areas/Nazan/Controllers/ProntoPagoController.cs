@@ -566,9 +566,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult RechazarSolicitud(int solicitudId)
         {
-            if (_solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 3 ||
-                _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 4 ||
-                _solicitudFManager.GetSolicitudById(solicitudId).EstatusFactoraje == 7)
+            var SolicitudRechazada = _solicitudFManager.GetSolicitudById(solicitudId);
+
+            if (SolicitudRechazada.EstatusFactoraje == 3 ||
+                SolicitudRechazada.EstatusFactoraje == 4 ||
+                SolicitudRechazada.EstatusFactoraje == 7)
             {
                 TempData["FlashError"] = "La solicitud no puede ser rechazada";
                 return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solicitudId });
@@ -580,10 +582,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
                 _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Rechazar Solicitud", solicitudId, "Cambio a estatus Rechazada");
                 
-                //var proveedor = _db.proveedores.Where(c => c.Id == _solicitudFManager.GetSolicitudById(solicitudId).IdProveedor).FirstOrDefault();
-                //var commonManager = new CommonManager();
-                //if (proveedor != null)
-                //    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Rechazada", "La solicitud con id " + solicitudId + " ha sido rechazada.", "correo@nimetrix.com");
+                var proveedor = _db.proveedores.Where(c => c.Id == SolicitudRechazada.IdProveedor).FirstOrDefault();
+                var commonManager = new CommonManager();
+                if (proveedor != null)
+                    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Rechazada", "La solicitud con id " + solicitudId + " ha sido rechazada.", "correo@nimetrix.com");
 
                 TempData["FlashSuccess"] = "Solicitud rechazada";                
                 return RedirectToAction("Solicitudes");
