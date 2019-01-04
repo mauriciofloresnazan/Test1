@@ -156,26 +156,38 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
         public JsonResult EstablecerCuentaFactoraje(int cuentaId, bool Factoraje)
         {
-            try
-            {
-                _cuentaManager.EstablecerCuentaFactoraje(
-                    cuentaId, Factoraje);
 
-                return Json("success");
+            if (!this.User.IsInRole("NAZAN-PRONTOPAGO-APROBADOR"))
+            {
+               
+
+                return Json("No tiene permisos para realizar el cambio");
+            }
+            else
+            {
+                try
+                {
+                    _cuentaManager.EstablecerCuentaFactoraje(
+                        cuentaId, Factoraje);
+
+                    return Json("success");
+                }
+
+                catch (Exception e)
+                {
+                    var log = CommonManager.BuildMessageLog(
+                        TipoMensaje.Error,
+                        ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
+                        ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
+                        e.ToString(), Request);
+
+                    CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                    return Json(e.Message);
+                }
             }
 
-            catch (Exception e)
-            {
-                var log = CommonManager.BuildMessageLog(
-                    TipoMensaje.Error,
-                    ControllerContext.Controller.ValueProvider.GetValue("controller").RawValue.ToString(),
-                    ControllerContext.Controller.ValueProvider.GetValue("action").RawValue.ToString(),
-                    e.ToString(), Request);
-
-                CommonManager.WriteAppLog(log, TipoMensaje.Error);
-
-                return Json(e.Message);
-            }
+            
         }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
