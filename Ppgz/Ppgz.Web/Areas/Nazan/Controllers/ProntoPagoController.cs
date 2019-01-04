@@ -356,7 +356,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             }
 
                             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuestas: " + selectedlist + ". Documentos: " + documentos + ". Revisar documentos: " + errorlist);
-                            TempData["FlashError"] = "Revisar facturas: " + errorlist;
+                            TempData["FlashSuccess"] = "Revisar facturas: " + errorlist;
                         }
                     }
                     else
