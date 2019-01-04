@@ -36,7 +36,7 @@ namespace SatWrapper
                 foreach (XmlNode error in xDoc.GetElementsByTagName("ERROR").Cast<XmlNode>().Where(error => error.Attributes != null))
                 {
                     Debug.Assert(error.Attributes != null, "error.Attributes != null");
-                    errores.AppendLine(error.Attributes["codigo"].Value + " - " + error.Attributes["mensaje"].Value);
+                    errores.AppendLine("Error PAC: " + error.Attributes["codigo"].Value + " - " + error.Attributes["mensaje"].Value);
                 }
 
                 throw new Exception(errores.ToString());
