@@ -40,22 +40,27 @@
                                         <th class="text-center">Desc. P.P.</th>
                                         <th class="text-center">Otros Descuentos</th>
                                         <th class="text-center">A Pagar</th>
+                                        <th class="text-center">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var item in solicitudes)
                                     {
+                                        var tasaPro = item.DescuentoPP / item.Monto;
+                                        tasaPro = tasaPro * 100;
+
                                         <tr>
                                             <td class="text-center vert-align">@item.Id</td>
                                             <td class="text-center vert-align">@item.IdProveedor</td>
                                             <td class="text-center vert-align">@item.Proveedor</td>
-                                            <td class="text-center vert-align">@item.Tasa %</td>
+                                            <td class="text-center vert-align">@tasaPro.ToString("0.00") %</td>
                                             <td class="text-center vert-align">@item.DiasPP</td>
                                             <td class="text-center vert-align">@item.NoDocumentos</td>
                                             <td class="text-center vert-align">@item.Monto.ToString("C")</td>
                                             <td class="text-center vert-align">@item.DescuentoPP.ToString("C")</td>
                                             <td class="text-center vert-align">@item.Descuentos.ToString("C")</td>
                                             <td class="text-center vert-align">@item.Total.ToString("C")</td>
+                                            <td class="text-center vert-align">@item.EstatusNombre</td>
                                         </tr>
                                     }
                                 </tbody>
