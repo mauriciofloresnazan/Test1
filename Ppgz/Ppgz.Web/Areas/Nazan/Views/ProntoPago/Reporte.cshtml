@@ -2,6 +2,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     List<Ppgz.Services.localsolicitud> solicitudes = (ViewBag.Solicitudes);
+    var ff = (ViewBag.FechaFrom);
+    var ft = (ViewBag.FechaTo);
 }
 
 <div class="container body-content">
@@ -15,11 +17,11 @@
                         <div class="form-inline" style="text-align:right">
                             <div class="form-group">
                                 <label for="fecha">Desde</label>
-                                <input type="text" class="form-control fecha" id="fechaFrom" placeholder="Fecha">
+                                <input type="text" class="form-control fecha" id="fechaFrom" placeholder="Fecha" value="@ff">
                             </div>
                             <div class="form-group">
                                 <label for="fechaTo">Hasta</label>
-                                <input type="text" class="form-control fecha" id="fechaTo" placeholder="Fecha">
+                                <input type="text" class="form-control fecha" id="fechaTo" placeholder="Fecha" value="@ft">
                             </div>
                             <div class="form-group">
                                 <input type="button" class="btn btn-primary" id="btnFiltrar" value="Filtrar" onclick="javascript: Filtrar();">

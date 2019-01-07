@@ -791,13 +791,19 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                ViewBag.Solicitudes = _solicitudFManager.GetSolicitudesFactoraje().Where(c => c.Fecha >= fechaf && c.Fecha <= fechat).ToList();
+                ViewBag.Solicitudes = _solicitudFManager.GetSolicitudesFactoraje().Where(c => c.Fecha >= fechaf && c.Fecha <= fechat).ToList();                
             }
             else
             {
+                fechaFrom = DateTime.Now.ToString("dd/MM/yyyy");
+                fechaTo = DateTime.Today.AddMonths(-3).ToString("dd/MM/yyyy");
+
                 var fecha = DateTime.Today.AddMonths(-3);
                 ViewBag.Solicitudes = _solicitudFManager.GetSolicitudesFactoraje().Where(c => c.Fecha > fecha).ToList();
             }
+
+            ViewBag.FechaFrom = fechaFrom;
+            ViewBag.FechaTo = fechaTo;
 
             return View();
         }
