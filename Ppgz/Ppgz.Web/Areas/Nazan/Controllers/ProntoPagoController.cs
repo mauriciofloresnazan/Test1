@@ -795,8 +795,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
             else
             {
-                fechaFrom = DateTime.Now.ToString("dd/MM/yyyy");
-                fechaTo = DateTime.Today.AddMonths(-3).ToString("dd/MM/yyyy");
+                fechaTo = DateTime.Now.ToString("dd/MM/yyyy");
+                fechaFrom = DateTime.Today.AddMonths(-3).ToString("dd/MM/yyyy");
 
                 var fecha = DateTime.Today.AddMonths(-3);
                 ViewBag.Solicitudes = _solicitudFManager.GetSolicitudesFactoraje().Where(c => c.Fecha > fecha).ToList();
