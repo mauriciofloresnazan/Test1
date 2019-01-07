@@ -153,7 +153,7 @@ namespace Ppgz.Web.Models.ProntoPago
 					MontoAFacturar = TotalSolicitado,
 					Descuentos = DescuentosTotal,
 					DescuentoPP = Interes,
-					DiasPP = 11,//FacturasFactoraje.Sum(x=>x.DiasPP)/FacturasFactoraje.Count, //promedio de los dias
+					DiasPP = FacturasFactoraje.Sum(x=>x.DiasPP)/FacturasFactoraje.Count, //promedio de los dias
 					NDocumentos = FacturasFactoraje.Count /*+ DescuentosFactoraje.Count*/,
 					EstatusOperacionSAP = "",
 					xml = "",
