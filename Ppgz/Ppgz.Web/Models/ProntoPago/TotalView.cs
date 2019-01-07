@@ -139,29 +139,28 @@ namespace Ppgz.Web.Models.ProntoPago
 				MontoOriginal = MontoOriginal;
 				DescuentosTotal = Descuentos;
 				DescuentoProntoPago = Interes;
-				TotalSolicitado = (MontoOriginal - Descuentos - Interes);
-
-
-				//Creamos la solicitud
-				SolicitudFactoraje = new solicitudesfactoraje()
-				{
-					IdProveedor = idProveedor,
-					FechaSolicitud = DateTime.Now,
-					EstatusFactoraje = 1,
-					Comentario = "Recien creada",
-					MontoOriginal = MontoOriginal,
-					MontoAFacturar = TotalSolicitado,
-					Descuentos = DescuentosTotal,
-					DescuentoPP = Interes,
-					DiasPP = FacturasFactoraje.Sum(x=>x.DiasPP)/FacturasFactoraje.Count, //promedio de los dias
-					NDocumentos = FacturasFactoraje.Count /*+ DescuentosFactoraje.Count*/,
-					EstatusOperacionSAP = "",
-					xml = "",
-					pdf = "",
-					NumeroGenerado = 0
-				};
+				TotalSolicitado = (MontoOriginal - Descuentos - Interes);				
 			}
-		}
+
+            //Creamos la solicitud
+            SolicitudFactoraje = new solicitudesfactoraje()
+            {
+                IdProveedor = idProveedor,
+                FechaSolicitud = DateTime.Now,
+                EstatusFactoraje = 1,
+                Comentario = "Recien creada",
+                MontoOriginal = MontoOriginal,
+                MontoAFacturar = TotalSolicitado,
+                Descuentos = DescuentosTotal,
+                DescuentoPP = Interes,
+                DiasPP = FacturasFactoraje.Sum(x=>x.DiasPP)/FacturasFactoraje.Count, //promedio de los dias
+                NDocumentos = FacturasFactoraje.Count /*+ DescuentosFactoraje.Count*/,
+                EstatusOperacionSAP = "",
+                xml = "",
+                pdf = "",
+                NumeroGenerado = 0
+            };
+        }
 		public TotalView(int idSolicitud, string[] facturas, string[] descuentos)
 		{
 			MontoOriginal = 0;
