@@ -82,8 +82,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             foreach (var item in lestatus)
             {
                 int count = 0;
+                Double monto = 0;
+                monto = lsolicitudesf.Where(x => x.EstatusNombre == item.Nombre).Sum(x => x.Total);
                 count = lsolicitudesf.Where(x => x.EstatusNombre == item.Nombre).Count();
-                var element = new KeyValueCustom(item.Nombre, count);
+                var element = new KeyValueCustom(item.Nombre, count, monto);
                 estatusSolicitudes.Add(element);
             }
             KeyValueCustom aespecial =  estatusSolicitudes.Find(x => x.EstatusNombre == "Aprobacion Especial");
@@ -91,7 +93,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             poraprobacion.Cantidad = poraprobacion.Cantidad + aespecial.Cantidad;
 
             estatusSolicitudes.Remove(aespecial);
-            estatusSolicitudes.Add(new KeyValueCustom("Total", lsolicitudesf.Count()+1));
+            estatusSolicitudes.Add(new KeyValueCustom("Total", lsolicitudesf.Count()+1, lsolicitudesf.Sum(x => x.Total)));
             var lse = estatusSolicitudes.OrderByDescending(x => x.Cantidad).ToList();
             lse.Where(x => x.EstatusNombre == "Total").FirstOrDefault().Cantidad = lsolicitudesf.Count();
             return lse;
@@ -856,11 +858,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         {
             public string EstatusNombre { get; set; }
             public int Cantidad { get; set; }
+            public Double Monto { get; set; }
 
-            public KeyValueCustom(string EstatusNombre, int cantidad)
+            public KeyValueCustom(string EstatusNombre, int cantidad, Double monto)
             {
                 this.EstatusNombre = EstatusNombre;
                 this.Cantidad = cantidad;
+                this.Monto = monto;
             }
         }
     }    

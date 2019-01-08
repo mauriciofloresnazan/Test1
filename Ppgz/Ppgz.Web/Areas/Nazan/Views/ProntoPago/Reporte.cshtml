@@ -32,7 +32,8 @@
                             <table id="tblreport" class="table table-striped table-condensed table-bordered">
                                 <thead>
                                     <tr>
-                                        <th class="text-center">N° de Solicitud</th>
+                                        <th class="text-center">N°</th>
+                                        <th class="text-center">Fecha</th>
                                         <th class="text-center">Auxiliar</th>
                                         <th class="text-center">Proveedor</th>
                                         <th class="text-center">Tasa</th>
@@ -42,6 +43,7 @@
                                         <th class="text-center">Desc. P.P.</th>
                                         <th class="text-center">Otros Descuentos</th>
                                         <th class="text-center">A Pagar</th>
+                                        <th class="text-center">Numero Generado</th>
                                         <th class="text-center">Status</th>
                                     </tr>
                                 </thead>
@@ -53,6 +55,7 @@
 
                                         <tr>
                                             <td class="text-center vert-align">@item.Id</td>
+                                            <td class="text-center vert-align">@item.Fecha</td>
                                             <td class="text-center vert-align">@item.Numero</td>
                                             <td class="text-center vert-align">@item.Proveedor</td>
                                             <td class="text-center vert-align">@tasaPro.ToString("0.00") %</td>
@@ -62,6 +65,7 @@
                                             <td class="text-center vert-align">@item.DescuentoPP.ToString("C")</td>
                                             <td class="text-center vert-align">@item.Descuentos.ToString("C")</td>
                                             <td class="text-center vert-align">@item.Total.ToString("C")</td>
+                                            <td class="text-center vert-align">@item.NumeroGenerado</td>
                                             <td class="text-center vert-align">@item.EstatusNombre</td>
                                         </tr>
                                     }

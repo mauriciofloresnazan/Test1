@@ -12,6 +12,7 @@
     <script>
         var chart = null;
         var dataPoints = [];
+        var dataPoints2 = [];
 
         window.onload = function () {
             var chart2 = new CanvasJS.Chart("chartContainer2", {
@@ -28,6 +29,20 @@
                 }]
             });
 
+            var chart3 = new CanvasJS.Chart("chartContainer3", {
+                animationEnabled: true,
+                title: {
+                    text: ""
+                },
+                data: [{
+                    type: "pie",
+                    startAngle: 240,
+                    yValueFormatString: "'$'#,###.##",
+                    indexLabel: "{label} {y}",
+                    dataPoints: dataPoints2
+                }]
+            });
+
             $.getJSON("@Url.Action("GetPieChartData","ProntoPago")", callback);
             function callback(data) {
                 console.log("dataPoints {0}", dataPoints);
@@ -36,8 +51,13 @@
                         label: data[i].EstatusNombre,
                         y: (data[i].Cantidad * 100) / data[0].Cantidad
                     });
+                    dataPoints2.push({
+                        label: data[i].EstatusNombre,
+                        y: data[i].Monto 
+                    });
                 }
                 chart2.render();
+                chart3.render();
             }
         }
     </script>
@@ -99,6 +119,12 @@
                 <div class="panel-heading">Solicitudes</div>
                 <div class="panel-body">
                     <div id="chartContainer2" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">Montos</div>
+                <div class="panel-body">
+                    <div id="chartContainer3" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
                 </div>
             </div>
         </div>
