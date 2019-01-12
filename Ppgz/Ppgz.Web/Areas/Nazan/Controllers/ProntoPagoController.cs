@@ -233,7 +233,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             List<string> split = selectedlist.Split(',').ToList();
 
             //Sacamos las solicitudes seleccionadas
-            var listpropuestas = _db.solicitudesfactoraje.Where(x => split.Contains(x.idSolicitudesFactoraje.ToString())).ToList();
+            //var listpropuestas = _db.solicitudesfactoraje.Where(x => split.Contains(x.idSolicitudesFactoraje.ToString())).ToList();
+            var listpropuestas =  _solicitudFManager.GetSolicitudesFactoraje().Where(x => split.Contains(x.Id.ToString())).ToList();
 
             if (listpropuestas.Count() > 0)
             {
@@ -245,8 +246,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 {
                     //Obtenemos los parametros de F110
                     var numeroProveedor = _proveedorManager.Find(item.IdProveedor).NumeroProveedor;
-                    var facturasSolicitud = _facturaFManager.GetFacturasBySolicitud(item.idSolicitudesFactoraje);
-                    var descuentosSolicitud = _descuentoFManager.GetDescuentosBySolicitud(item.idSolicitudesFactoraje);
+                    var facturasSolicitud = _facturaFManager.GetFacturasBySolicitud(item.Id);
+                    var descuentosSolicitud = _descuentoFManager.GetDescuentosBySolicitud(item.Id);
                                         
                     List<string> documentosSolicitud =     facturasSolicitud.Select(x => x.NumeroDocumento).ToList();
                     List<string> descuentosList = descuentosSolicitud.Select(x => x.NumeroDocumento).ToList();
@@ -259,7 +260,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     List<DateTime> fechasList = facturasSolicitud.Select(x => x.FechaFactura).ToList();
                     List<DateTime> descuentosFechasList = descuentosSolicitud.Select(x => x.FechaDescuento).ToList();
                     fechasList.AddRange(descuentosFechasList);
-                    fechasList.Add(item.FechaSolicitud);
+                    fechasList.Add(item.Fecha);
 
                     fechasDocs.AddRange(fechasList);   
 
@@ -326,11 +327,14 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     if (dt != null)
                     {
                         bool err = false;
+                        List<string> numProErrs = new List<string>();
+
                         for (int i = 0; i < paramdocs.Count(); i++)
                         {
                             if (String.IsNullOrEmpty(dt[1].Rows[i][3].ToString()))
                             {
                                 errorlist = dt[1].Rows[i][0].ToString() + ", ";
+                                numProErrs.Add(dt[1].Rows[i][1].ToString());
                                 err = true;
                             }
                         }
@@ -341,7 +345,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             var commonManager = new CommonManager();                            
                             foreach (var propuesta in listpropuestas)
                             {
-                                _solicitudFManager.UpdateEstatusSolicitud(propuesta.idSolicitudesFactoraje, 7);
+                                _solicitudFManager.UpdateEstatusSolicitud(propuesta.Id, 7);
                                 //var proveedor = _db.proveedores.Where(c => c.Id == _solicitudFManager.GetSolicitudById(propuesta.idSolicitudesFactoraje).IdProveedor).FirstOrDefault();
                                 //if (proveedor != null)
                                 //    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Procesada", "La solicitud con id " + propuesta.idSolicitudesFactoraje + " ha sido procesada.", "correo@nimetrix.com");
@@ -354,7 +358,15 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         {
                             foreach (var propuesta in listpropuestas)
                             {
-                                _solicitudFManager.UpdateEstatusSolicitud(propuesta.idSolicitudesFactoraje, 7);
+                                if (numProErrs.Contains(propuesta.Numero.ToString()))
+                                {
+                                    _solicitudFManager.UpdateEstatusSolicitud(propuesta.Id, 8);
+                                }
+                                else
+                                {
+                                    _solicitudFManager.UpdateEstatusSolicitud(propuesta.Id, 7);
+                                }
+                                
                             }
 
                             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuestas: " + selectedlist + ". Documentos: " + documentos + ". Revisar documentos: " + errorlist);
