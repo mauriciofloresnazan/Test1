@@ -114,7 +114,7 @@ namespace Ppgz.Web
             {
                 var db = new Entities();
                 var demonio = db.configuraciones.Single(c => c.Clave == "batchfile.daemon").Valor;
-                //Process.Start(demonio);
+                Process.Start(demonio);
             }
         }
 
