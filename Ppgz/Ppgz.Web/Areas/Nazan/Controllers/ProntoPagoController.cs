@@ -323,7 +323,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 }
                 else
                 {
-                    string errorlist = "ERROR: ";
+                    string errorlist = " ";
                     if (dt != null)
                     {
                         bool err = false;
@@ -333,7 +333,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         {
                             if (String.IsNullOrEmpty(dt[1].Rows[i][3].ToString()))
                             {
-                                errorlist = dt[1].Rows[i][0].ToString() + ", ";
+                                errorlist = errorlist + dt[1].Rows[i][0].ToString() + ", ";
                                 numProErrs.Add(dt[1].Rows[i][1].ToString());
                                 err = true;
                             }
@@ -356,11 +356,42 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         }
                         else
                         {
+                            errorlist = errorlist.Replace(" ", "");
+                            List<string> spliterrorlist = errorlist.Split(',').ToList();
                             foreach (var propuesta in listpropuestas)
                             {
                                 if (numProErrs.Contains(propuesta.Numero.ToString()))
                                 {
-                                    _solicitudFManager.UpdateEstatusSolicitud(propuesta.Id, 8);
+                                    //Validamos facturas, descuentos, NC marcadas con error
+                                    var facturasfactoraje = _facturaFManager.GetFacturasBySolicitud(propuesta.Id);
+                                    var descuentosfactoraje = _descuentoFManager.GetDescuentosBySolicitud(propuesta.Id);
+                                    
+                                    List<string> documentosS = facturasfactoraje.Select(x => x.NumeroDocumento).ToList();
+                                    List<string> descuentosList = descuentosfactoraje.Select(x => x.NumeroDocumento).ToList();
+                                    documentosS.AddRange(descuentosList);
+                                    //Agregamos la nota de credito al final 
+                                    documentosS.Add(propuesta.NumeroGenerado.ToString());
+
+                                    int ndocs = documentosS.Count();
+
+                                    if (ndocs <= spliterrorlist.Count())
+                                    {
+                                        bool cambiarEstatus = false;
+                                        foreach(var document in documentosS)
+                                        {
+                                            if (!spliterrorlist.Contains(document))
+                                                cambiarEstatus = true;
+                                        }
+
+                                        if (cambiarEstatus)
+                                        {
+                                            _solicitudFManager.UpdateEstatusSolicitud(propuesta.Id, 8);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        _solicitudFManager.UpdateEstatusSolicitud(propuesta.Id, 8);
+                                    }
                                 }
                                 else
                                 {
