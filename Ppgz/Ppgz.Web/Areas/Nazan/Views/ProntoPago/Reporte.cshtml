@@ -53,13 +53,15 @@
                                         var tasaPro = item.DescuentoPP / item.Monto;
                                         tasaPro = tasaPro * 100;
 
+                                        var diasPro = 30 / item.Tasa * tasaPro;
+
                                         <tr>
                                             <td class="text-center vert-align">@item.Id</td>
                                             <td class="text-center vert-align">@item.Fecha</td>
                                             <td class="text-center vert-align">@item.Numero</td>
                                             <td class="text-center vert-align">@item.Proveedor</td>
                                             <td class="text-center vert-align">@tasaPro.ToString("0.00") %</td>
-                                            <td class="text-center vert-align">@item.DiasPP</td>
+                                            <td class="text-center vert-align">@diasPro.ToString("0.0")</td>
                                             <td class="text-center vert-align">@item.NoDocumentos</td>
                                             <td class="text-center vert-align">@item.Monto.ToString("C")</td>
                                             <td class="text-center vert-align">@item.DescuentoPP.ToString("C")</td>
