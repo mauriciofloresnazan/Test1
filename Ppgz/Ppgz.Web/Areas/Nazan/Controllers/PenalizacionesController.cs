@@ -93,7 +93,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
             var estatus = db.estatuscitas.FirstOrDefault(e => e.Id == estatusId);
 
-            var result = _penalizacionesManager.aplicarPenalizacion(cita.proveedore.NumeroProveedor, estatus.Monto, estatus.Nombre);
+            var result = _penalizacionesManager.aplicarPenalizacion(cita.proveedore.NumeroProveedor, estatus.Monto, estatus.Nombre + " cita: "+ cita.Id);
 
             if (result[0] == "")
             {

@@ -59,7 +59,7 @@
                         <tr>
                             <th class="text-center">Fecha de Recepción</th>
                             <th class="text-center">Proveedor</th>
-                            <th class="text-center">Archivo</th>
+                            <!--<th class="text-center">Archivo</th-->
                             <th class="text-center">Descargar</th>
                         </tr>
                     </thead>
@@ -71,7 +71,7 @@
                             <tr>
                                 <td class="text-center vert-align">@fecha.ToString("dd/MM/yyyy")</td>
                                 <td class="text-center vert-align">@cr.Proveedor</td>
-                                <td class="text-center vert-align">@cr.ArchivoCR</td>
+                                <!-- <td class="text-center vert-align">@cr.ArchivoCR</td> -->
                                 <td class="text-center vert-align">
                                     <a href="@Url.Action("DescargarForaneo", "ComprobantesRecibo", new { @id = @cr.Id })" class="btn btn-primary">
                                         <i class="fa fa-file-excel-o" aria-hidden="true"></i> Descargar

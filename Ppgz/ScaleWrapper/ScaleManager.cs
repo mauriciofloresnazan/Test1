@@ -87,7 +87,7 @@ namespace ScaleWrapper
             }
 
 
-               
+
         }
 
         internal string InsertarHeader(SqlCommand command, cita cita, string almacenScale, string numeroOrden,
@@ -96,10 +96,10 @@ namespace ScaleWrapper
 
             var proveedor = cita.proveedore;
 
-            
+
 
             var id = string.Format("{0}{1}{2}", DateTime.Now.ToString("yyyyMMddHHmmss"), cita.Id, i);
-            var sourcename=string.Format("{0} {1} {2} {3}",
+            var sourcename = string.Format("{0} {1} {2} {3}",
                                                 proveedor.Nombre1,
                                                 proveedor.Nombre2,
                                                 proveedor.Nombre3,
@@ -150,9 +150,9 @@ namespace ScaleWrapper
             }
             //Fin
 
-           
-            var user_def4 ="";
-            var user_def6 ="";
+
+            var user_def4 = "";
+            var user_def6 = "";
 
             if (cita.Almacen.ToUpper() == "CROSS DOCK")
             {
@@ -165,7 +165,7 @@ namespace ScaleWrapper
                 user_def6 = "NULL";
 
             }
-            
+
             int insd = inOut == "1" ? 1 : 0;
             string ordencomprastring = cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra";
 
@@ -287,37 +287,42 @@ namespace ScaleWrapper
 
             for (var index = 0; index < asns.Count; index++)
             {
-                // Si es multiplo de 100 
-                if (index % 100 == 0)
-                {
+                //// Si es multiplo de 100 
+                //if (index % 100 == 0)
+                //{
 
-                    // si tiene valores lo inserta
-                    if (parameters.Any())
-                    {
-                        DbScale.Insert(sql.ToString(), parameters);
-                    }
+                //    // si tiene valores lo inserta
+                //    if (parameters.Any())
+                //    {
+                //        DbScale.Insert(sql.ToString(), parameters);
+                //    }
 
-                    sql = new StringBuilder();
+                //    sql = new StringBuilder();
 
-                    sql.AppendLine(@"
+                //    sql.AppendLine(@"
 
-                    INSERT INTO DOWNLOAD_RECEIPT_DETAIL 
-                       (INTERFACE_RECORD_ID,
-                        Interface_link_id,
-                        warehouse,
-                        INTERFACE_ACTION_CODE,
-                        INTERFACE_CONDITION,
-                        ERP_ORDER_LINE_NUM,
-                        item,
-                        ITEM_NET_PRICE,
-                        user_def5,
-                        TOTAL_QTY,
-                        QUANTITY_UM,
-                        DATE_TIME_STAMP) 
-                    VALUES");
-                    parameters = new List<SqlParameter>();
-                }
-                else
+                //    INSERT INTO DOWNLOAD_RECEIPT_DETAIL 
+                //       (INTERFACE_RECORD_ID,
+                //        Interface_link_id,
+                //        warehouse,
+                //        INTERFACE_ACTION_CODE,
+                //        INTERFACE_CONDITION,
+                //        ERP_ORDER_LINE_NUM,
+                //        item,
+                //        ITEM_NET_PRICE,
+                //        user_def5,
+                //        TOTAL_QTY,
+                //        QUANTITY_UM,
+                //        DATE_TIME_STAMP) 
+                //    VALUES");
+                //    parameters = new List<SqlParameter>();
+                //}
+                //else
+                //{
+                //    sql.Append(",");
+                //}
+
+                if (index > 0)
                 {
                     sql.Append(",");
                 }
@@ -340,9 +345,9 @@ namespace ScaleWrapper
                 }
 
 
-                sql.AppendLine("('"+ id + "', '" + interfaceLinkId + "', '" + almacenScale + "', 'Save', 'Ready', '" + asn.NumeroPosicion + "', '" + asn.NumeroMaterial2 + "', '" + asn.Precio + "', '" + asn.cita.FechaCita.ToString("yyyyMMdd") + "', '" + asn.Cantidad + "', '" + QUANTITY_UM + "', GETDATE())");
+                sql.AppendLine("('" + id + "', '" + interfaceLinkId + "', '" + almacenScale + "', 'Save', 'Ready', '" + asn.NumeroPosicion + "', '" + asn.NumeroMaterial2 + "', '" + asn.Precio + "', '" + asn.cita.FechaCita.ToString("yyyyMMdd") + "', '" + asn.Cantidad + "', '" + QUANTITY_UM + "', GETDATE())");
             }
-            
+
 
             command.CommandText = sql.ToString();
 
@@ -503,7 +508,7 @@ namespace ScaleWrapper
         }
 
 
-        public void EliminarAsn (asn asnAeliminar)
+        public void EliminarAsn(asn asnAeliminar)
         {
 
             const string sql = @"
