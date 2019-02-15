@@ -45,8 +45,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
             else
             {
-                var fecha = DateTime.Today.AddMonths(-3);
-                ViewBag.Citas = db.citas.Where(c => c.FechaCita > fecha).ToList();
+                var fecha = DateTime.Today;
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita == fecha).ToList();
             }            
 
             ViewBag.EstatusCita = db.estatuscitas.ToList();
@@ -54,22 +54,6 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
         
-        //[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
-        //public List<cita> Filtrar(string fechaFrom, string fechaTo)
-        //{
-        //    var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-        //    var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-
-        //    var db = new Entities();         
-
-
-        //    List<cita> citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat).ToList();
-        //    ViewBag.EstatusCita = db.estatuscitas.ToList();
-
-        //    //return Json(db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat).ToList());
-        //    return (citas);
-        //}
-
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         public ActionResult Enroque(string fecha = null)
         {
@@ -77,16 +61,20 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 fecha = DateTime.Today.Date.ToString("dd/MM/yyyy");
             }
-            var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
+            var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             CrearRieles(date);
 
             var db = new Entities();
 
             var horarioRieles = db.horariorieles.Where(h => h.Fecha == date).ToList();
+            var capacidadRiel = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
 
+            int rielcap = 0;
+            int.TryParse(capacidadRiel.Valor, out rielcap);
+
+            ViewBag.CapacidadRiel = rielcap;
             ViewBag.HorarioRieles = horarioRieles;
-
             ViewBag.Fecha = date.ToString("yyyy/MM/dd");
 
             return View();

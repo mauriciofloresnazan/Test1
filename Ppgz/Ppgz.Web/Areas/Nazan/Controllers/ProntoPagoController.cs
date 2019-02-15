@@ -41,9 +41,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
             solicitudesAnteriores = solicitudesAnteriores.Where(x => x.Fecha < startOfWeek && x.Estatus != 3 && x.Estatus != 7).ToList();
 
-            foreach(var sa in solicitudesAnteriores)
+            if (solicitudesAnteriores.Count > 0)
             {
-                _solicitudFManager.UpdateEstatusSolicitud(sa.Id, 3);
+                foreach (var sa in solicitudesAnteriores)
+                {
+                    _solicitudFManager.UpdateEstatusSolicitud(sa.Id, 3);
+                }
             }
 
             return View();
@@ -836,6 +839,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                fechat = fechat.AddHours(11);
                 ViewBag.Solicitudes = _solicitudFManager.GetSolicitudesFactoraje().Where(c => c.Fecha >= fechaf && c.Fecha <= fechat).ToList();                
             }
             else
