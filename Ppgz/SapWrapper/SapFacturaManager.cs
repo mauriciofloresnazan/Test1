@@ -26,13 +26,13 @@ namespace SapWrapper
             function.SetValue("I_PROVEEDOR", numeroProveedor);
             function.SetValue("I_REF_DOC", numeroDocumentoReferencia);
             function.SetValue("I_FECHA_FACT", fechaFactura.ToString("yyyyMMdd"));
-            function.SetValue("I_IMPORTE", importe);
-            function.SetValue("I_IMPORTE_TAX", importeConTaxas);
+            function.SetValue("I_IMPORTE", importe.Trim());
+            function.SetValue("I_IMPORTE_TAX", importeConTaxas.Trim());
 
-            function.SetValue("I_CANTIDAD", cantidad);
+            function.SetValue("I_CANTIDAD", cantidad.Trim());
 
-            function.SetValue("I_UUID", uuid);
-            function.SetValue("I_RFC", rfc);
+            function.SetValue("I_UUID", uuid.Trim());
+            function.SetValue("I_RFC", rfc.Trim());
             
             function.Invoke(rfcDestinationManager);
 
