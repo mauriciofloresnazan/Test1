@@ -99,7 +99,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 return RedirectToAction("Index");
             }
 
-            factura.NumeroGenerado = numeroGenerado;
+            if (numeroGenerado != "" & numeroGenerado.Any(char.IsDigit))
+            {
+                factura.NumeroGenerado = numeroGenerado;
+                factura.Procesado = true;
+            }
+            
+
             factura.Estatus = estatus;
             factura.Comentario = comentario;
             db.Entry(factura).State = EntityState.Modified;

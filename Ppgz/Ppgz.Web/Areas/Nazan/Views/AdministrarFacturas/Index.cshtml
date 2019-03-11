@@ -55,7 +55,33 @@
                     <tbody>
                     @foreach (var factura in facturas)
                     {
-                        <tr>
+                        var estatusFactura = "";
+
+                        if (factura.NumeroGenerado != null) {
+                            if (factura.NumeroGenerado.Any(char.IsDigit) & factura.Procesado) {
+                                estatusFactura = "#3bbc80";
+                            }
+                            if (factura.Procesado & !factura.NumeroGenerado.Any(char.IsDigit))
+                            {
+                                estatusFactura = "#e90707";
+                            }
+                        }
+                        else
+                        {
+                            if (factura.Procesado)
+                            {
+                                estatusFactura = "#e90707";
+                            }
+                        }
+
+                        if (!factura.Procesado)
+                        {
+                            estatusFactura = "#e4f631";
+                        }
+
+                        <tr style="background-color: @estatusFactura;">
+
+                         
 
                             <td class="text-center vert-align">@factura.proveedore.Rfc</td>
                             <td class="text-center vert-align" style="white-space: inherit; font-size: .8em;">@factura.proveedore.Nombre1 @factura.proveedore.Nombre2 @factura.proveedore.Nombre3 @factura.proveedore.Nombre4</td>
