@@ -349,9 +349,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             foreach (var propuesta in listpropuestas)
                             {
                                 _solicitudFManager.UpdateEstatusSolicitud(propuesta.Id, 7);
-                                //var proveedor = _db.proveedores.Where(c => c.Id == _solicitudFManager.GetSolicitudById(propuesta.idSolicitudesFactoraje).IdProveedor).FirstOrDefault();
-                                //if (proveedor != null)
-                                //    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Procesada", "La solicitud con id " + propuesta.idSolicitudesFactoraje + " ha sido procesada.", "correo@nimetrix.com");
+                                var proveedor = _db.proveedores.Where(c => c.Id == _solicitudFManager.GetSolicitudById(propuesta.Id).IdProveedor).FirstOrDefault();
+                                if (proveedor != null)
+                                  commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Procesada", "La solicitud con id " + propuesta.Id + " ha sido procesada.", proveedor.Correo);
                             }
 
                             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
