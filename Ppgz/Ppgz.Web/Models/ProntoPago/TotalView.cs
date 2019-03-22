@@ -210,7 +210,7 @@ namespace Ppgz.Web.Models.ProntoPago
 		}
 		public DateTime GetFechaPago(DayOfWeek day)
 		{
-			DateTime result = DateTime.Now.AddDays(1);
+			DateTime result = DateTime.Now;
 			while (result.DayOfWeek != day)
 				result = result.AddDays(1);
 			return result;
