@@ -1,8 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
+using System.Dynamic;
 using System.Linq;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 using Ppgz.Repository;
 using SapWrapper;
+
 
 namespace Ppgz.Services
 {
@@ -12,7 +18,14 @@ namespace Ppgz.Services
 
         public List<proveedore> FindByCuentaId(int cuentaId)
         {
-            return _db.proveedores.Where(p => p.CuentaId == cuentaId).ToList();
+            var proveedores = _db.proveedores.Where(p => p.CuentaId == cuentaId).ToList();
+
+            foreach (proveedore proveedor in proveedores)
+            {
+                proveedor.Sociedades = JsonConvert.DeserializeObject<dynamic>(proveedor.Sociedad);
+            }
+
+            return proveedores;
         }
 
         public proveedore Find(int id)
@@ -35,44 +48,85 @@ namespace Ppgz.Services
 
             var sapproveedorManager = new SapProveedorManager();
             var result = sapproveedorManager.GetProveedor(numeroProveedor);
+            //var sociedades = "{\"Sociedades\":[1001,2000,2323]}";
+            //dynamic sociedadesObj = new ExpandoObject();
+            //SortedDictionary<string, string, string> sociedadesObj =  new SortedDictionary<string, bool>();
+
+
+            var db = new Entities();
+            var _configuraciones = db.configuraciones.ToList();
+
+            ArrayList sociedades = new ArrayList();
             if (result == null)
             {
                 throw new BusinessException(CommonMensajesResource.ERRO_Sap_ProveedorCodigo);
             }
+            else
+            {
+                
+                foreach (DataRow dtRow in result.Rows){
+                    SociedadesProv sociedad = new SociedadesProv();
+                    sociedad.Activa = false;
+                    try {
+                        sociedad.Nombre = _configuraciones.Single(c => c.Clave == "sociedades.nombre." + dtRow["BUKRS"].ToString()).Valor;
+                    }
+                    catch
+                    {
+                        sociedad.Nombre = "Nombre no configurado";
+                    }
+                    
+                    //sociedad.Nombre = "Nazan";
+                    sociedad.Sociedad = dtRow["BUKRS"].ToString();
+                    sociedades.Add(sociedad);
+                    //sociedadesObj[dtRow["BUKRS"].ToString()] = false;
+                    // Add some elements to the dictionary. 
+                    //sociedadesObj.Add(dtRow["BUKRS"].ToString(), false);
+                }
 
- 
+            }
+
+
+            // Serializing object to json data  
+            //JavaScriptSerializer js = new JavaScriptSerializer();
+            //string jsonData = js.Serialize(sociedades);
+            string jsonData = JsonConvert.SerializeObject(sociedades);
+
+
+
+
             var proveedor = new proveedore
             {
-                NumeroProveedor = result["LIFNR"].ToString(),
-                ClavePais = result["LAND1"].ToString(),
-                Nombre1 = result["NAME1"].ToString(),
-                Nombre2 = result["NAME2"].ToString(),
-                Nombre3 = result["NAME3"].ToString(),
-                Nombre4 = result["NAME4"].ToString(),
-                Poblacion = result["ORT01"].ToString(),
-                Distrito = result["ORT02"].ToString(),
-                Apartado = result["PFACH"].ToString(),
-                CodigoApartado = result["PSTL2"].ToString(),
-                CodigoPostal = result["PSTLZ"].ToString(),
-                Region = result["REGIO"].ToString(),
-                Calle = result["STRAS"].ToString(),
-                Direccion = result["ADRNR"].ToString(),
-                Sociedad = result["BUKRS"].ToString(),
-                OrganizacionCompra = result["EKORG"].ToString(),
-                ClaveMoned = result["WAERS"].ToString(),
-                VendedorResponsable = result["VERKF"].ToString(),
-                NumeroTelefono = result["TELF1"].ToString(),
-                CondicionPago = result["ZTERM"].ToString(),
-                IncoTerminos1 = result["INCO1"].ToString(),
-                IncoTerminos2 = result["INCO2"].ToString(),
-                GrupoCompras = result["EKGRP"].ToString(),
-                DenominacionGrupo = result["EKNAM"].ToString(),
-                TelefonoGrupoCompra = result["EKTEL"].ToString(),
-                TelefonoPrefijo = result["TEL_NUMER"].ToString(),
-                TelefonoExtension = result["TEL_EXTENS"].ToString(),
-                Correo = result["SMTP_ADDR"].ToString(),
-                Rfc = result["STCD1"].ToString(),
-                EstadoNombre = result["BEZEI"].ToString()
+                NumeroProveedor = result.Rows[0]["LIFNR"].ToString(),
+                ClavePais = result.Rows[0]["LAND1"].ToString(),
+                Nombre1 = result.Rows[0]["NAME1"].ToString(),
+                Nombre2 = result.Rows[0]["NAME2"].ToString(),
+                Nombre3 = result.Rows[0]["NAME3"].ToString(),
+                Nombre4 = result.Rows[0]["NAME4"].ToString(),
+                Poblacion = result.Rows[0]["ORT01"].ToString(),
+                Distrito = result.Rows[0]["ORT02"].ToString(),
+                Apartado = result.Rows[0]["PFACH"].ToString(),
+                CodigoApartado = result.Rows[0]["PSTL2"].ToString(),
+                CodigoPostal = result.Rows[0]["PSTLZ"].ToString(),
+                Region = result.Rows[0]["REGIO"].ToString(),
+                Calle = result.Rows[0]["STRAS"].ToString(),
+                Direccion = result.Rows[0]["ADRNR"].ToString(),
+                //Sociedad = result.Rows[0]["BUKRS"].ToString(),
+                Sociedad = jsonData, 
+                OrganizacionCompra = result.Rows[0]["EKORG"].ToString(),
+                ClaveMoned = result.Rows[0]["WAERS"].ToString(),
+                VendedorResponsable = result.Rows[0]["VERKF"].ToString(),
+                NumeroTelefono = result.Rows[0]["TELF1"].ToString(),
+                CondicionPago = result.Rows[0]["ZTERM"].ToString(),
+                IncoTerminos1 = result.Rows[0]["INCO1"].ToString(),
+                IncoTerminos2 = result.Rows[0]["INCO2"].ToString(),
+                GrupoCompras = result.Rows[0]["EKGRP"].ToString(),
+                DenominacionGrupo = result.Rows[0]["EKNAM"].ToString(),
+                TelefonoGrupoCompra = result.Rows[0]["EKTEL"].ToString(),
+                TelefonoPrefijo = result.Rows[0]["TEL_NUMER"].ToString(),
+                TelefonoExtension = result.Rows[0]["TEL_EXTENS"].ToString(),
+                Correo = result.Rows[0]["SMTP_ADDR"].ToString(),
+                Rfc = result.Rows[0]["STCD1"].ToString(),
+                EstadoNombre = result.Rows[0]["BEZEI"].ToString()
             };
 
             return proveedor;

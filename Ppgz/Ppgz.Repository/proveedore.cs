@@ -9,9 +9,10 @@
 
 namespace Ppgz.Repository
 {
-    using System;
+    using Newtonsoft.Json.Linq;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class proveedore
     {
         public proveedore()
@@ -58,11 +59,18 @@ namespace Ppgz.Repository
         public string Rfc { get; set; }
         public bool Borrado { get; set; }
         public string EstadoNombre { get; set; }
-    
+
+       
+
         public virtual ICollection<cita> citas { get; set; }
         public virtual cuenta cuenta { get; set; }
         public virtual ICollection<factura> facturas { get; set; }
         public virtual ICollection<niveleseervicio> niveleseervicios { get; set; }
         public virtual ICollection<ordencompra> ordencompras { get; set; }
+
+        [NotMapped]
+        public SociedadesProv[] Sociedades { get; set; }
+
+
     }
 }

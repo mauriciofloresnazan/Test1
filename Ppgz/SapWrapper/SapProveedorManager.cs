@@ -9,7 +9,7 @@ namespace SapWrapper
     {
         private readonly CommonRfcConfigParam _rfc = new CommonRfcConfigParam();
 
-        public DataRow GetProveedor(string numeroProveedor)
+        public DataTable GetProveedor(string numeroProveedor)
         {
             if (String.IsNullOrWhiteSpace(numeroProveedor.Trim()))
             {
@@ -28,7 +28,7 @@ namespace SapWrapper
             if (result.Count <= 0) return null;
 
             var dt = result.ToDataTable("T_PROV");
-            return dt.Rows[0];
+            return dt;
         }
 
         public double GetPrestamo(string numeroProveedor)

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Areas.Nazan.Models;
@@ -105,6 +106,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 				return RedirectToAction("Index");
 			}
 
+            foreach( proveedore proveedor in cuentaConUsuarioMaestro.Cuenta.proveedores)
+            {
+                proveedor.Sociedades = JsonConvert.DeserializeObject<SociedadesProv[]>(proveedor.Sociedad);
+            }
+
             ViewBag.cuentaConUsuarioMaestro = cuentaConUsuarioMaestro;
 
             var model = new CuentaViewModel
@@ -148,6 +154,37 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     e.ToString(), Request);
 
                 CommonManager.WriteAppLog(log, TipoMensaje.Error);
+
+                return Json(e.Message);
+            }
+        }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        public JsonResult SwichSociedad(int idProveedor, string sociedadAcambiar, bool Activa)
+        {
+            try
+            {
+                var db = new Entities();
+                var proveedor = db.proveedores.Single( p => p.Id == idProveedor);
+                SociedadesProv[] sociedades = JsonConvert.DeserializeObject<SociedadesProv[]>(proveedor.Sociedad);
+
+                foreach (SociedadesProv sociedad in sociedades)
+                {
+                    if (sociedad.Sociedad== sociedadAcambiar)
+                    {
+                        sociedad.Activa = Activa;
+                    }
+                }
+
+                proveedor.Sociedad = JsonConvert.SerializeObject(sociedades);
+                db.SaveChanges();
+
+                return Json("success");
+            }
+
+            catch (Exception e)
+            {
+                
 
                 return Json(e.Message);
             }
@@ -242,7 +279,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         proveedor.CodigoPostal,
                         Direccion = proveedor.Calle,
                         proveedor.EstadoNombre,
-		            });
+                        sociedades= proveedor.Sociedad
+                    });
 		    }
             catch (BusinessException businessEx)
             {

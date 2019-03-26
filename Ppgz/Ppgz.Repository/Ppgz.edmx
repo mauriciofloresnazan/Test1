@@ -435,7 +435,7 @@
           <Property Name="Region" Type="varchar" MaxLength="3" />
           <Property Name="Calle" Type="varchar" MaxLength="35" />
           <Property Name="Direccion" Type="varchar" MaxLength="10" />
-          <Property Name="Sociedad" Type="varchar" MaxLength="4" />
+          <Property Name="Sociedad" Type="varchar" MaxLength="400" />
           <Property Name="OrganizacionCompra" Type="varchar" MaxLength="4" />
           <Property Name="ClaveMoned" Type="varchar" MaxLength="10" />
           <Property Name="VendedorResponsable" Type="varchar" MaxLength="35" />
@@ -1519,7 +1519,7 @@
           <Property Name="Region" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="Calle" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
           <Property Name="Direccion" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Sociedad" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="Sociedad" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
           <Property Name="OrganizacionCompra" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
           <Property Name="ClaveMoned" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="VendedorResponsable" Type="String" MaxLength="35" FixedLength="false" Unicode="false" />
