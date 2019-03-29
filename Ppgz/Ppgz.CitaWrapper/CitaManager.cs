@@ -29,7 +29,7 @@ namespace Ppgz.CitaWrapper
 
             var proveedor = db.proveedores.Find(precita.ProveedorId);
 
-            var ordenes = sapOrdenCompraManager.GetActivasConDetalle(proveedor.NumeroProveedor, organizacionCompras).ToList();
+            var ordenes = sapOrdenCompraManager.GetActivasConDetalle(proveedor.NumeroProveedor, organizacionCompras, precita.Sociedad).ToList();
 
 
             var asnFuturos = db.asns.Where(asnf => asnf.cita.FechaCita > DateTime.Today && asnf.cita.ProveedorId == precita.ProveedorId).ToList();

@@ -23,9 +23,9 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             return View();
         }
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-ORDENESCOMPRA")]
-        public void Descargar(string numeroDocumento, int proveedorId)
+        public void Descargar(string numeroDocumento, int proveedorId, string sociedad)
         {
-            var orden = _ordenCompraManager.FindOrdenConDetalles(proveedorId, numeroDocumento);
+            var orden = _ordenCompraManager.FindOrdenConDetalles(proveedorId, numeroDocumento, sociedad);
 
 
             var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillaoc.xlsx"));

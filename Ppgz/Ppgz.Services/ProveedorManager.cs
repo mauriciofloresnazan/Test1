@@ -22,7 +22,7 @@ namespace Ppgz.Services
 
             foreach (proveedore proveedor in proveedores)
             {
-                proveedor.Sociedades = JsonConvert.DeserializeObject<dynamic>(proveedor.Sociedad);
+                proveedor.Sociedades = JsonConvert.DeserializeObject<SociedadesProv[]>(proveedor.Sociedad);
             }
 
             return proveedores;

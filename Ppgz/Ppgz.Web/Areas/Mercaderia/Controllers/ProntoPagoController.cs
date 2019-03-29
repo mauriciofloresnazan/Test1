@@ -38,9 +38,24 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				System.Web.HttpContext.Current.Session["proveedorcxp"] = value;
 			}
 		}
+        internal string SociedadActiva
+        {
+            get
+            {
+                if (System.Web.HttpContext.Current.Session["sociedadactiva"] != null)
+                {
+                    return (string)System.Web.HttpContext.Current.Session["sociedadactiva"];
+                }
+                return null;
+            }
+            set
+            {
+                System.Web.HttpContext.Current.Session["sociedadactiva"] = value;
+            }
+        }
 
-		//**********CU002-Seleccion razon social*****************
-		public ActionResult CargarNotaCredito(int idSolicitudesFactoraje, int proveedorId)
+        //**********CU002-Seleccion razon social*****************
+        public ActionResult CargarNotaCredito(int idSolicitudesFactoraje, int proveedorId)
 		{
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 			var proveedor = _proveedorManager.Find(proveedorId, cuenta.Id);
@@ -295,9 +310,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 return RedirectToAction("NuevaSolicitud", new { proveedorId = proveedorId });
             }
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-			var partidasManager = new PartidasManager();
-			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+
+            var partidasManager = new PartidasManager();
+			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, SociedadActiva, DateTime.Today);
 
 			var proveedorFManager = new ProveedorFManager();
 			ProveedorFManager.localPF provedorFactoraje = proveedorFManager.GetProveedoresFactoraje().Where(x => x.IdProveedor == proveedorId).FirstOrDefault();
@@ -345,9 +361,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		{
 			string[] facturasList = facturas.Split(',');
 
-			var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+			//var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
 			var partidasManager = new PartidasManager();
-			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, SociedadActiva, DateTime.Today);
 
 			var proveedorFManager = new ProveedorFManager();
 			ProveedorFManager.localPF provedorFactoraje = proveedorFManager.GetProveedoresFactoraje().Where(x => x.IdProveedor == proveedorId).FirstOrDefault();
@@ -401,8 +417,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			var partidasManager = new PartidasManager();
 			var proveedorFManager = new ProveedorFManager();
 
-			var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+			//var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, SociedadActiva, DateTime.Today);
 
 			//Se obtiene porcentaje de factoraje por proveedor.
 			ProveedorFManager.localPF provedorFactoraje = proveedorFManager.GetProveedoresFactoraje().Where(x => x.IdProveedor == proveedorId).FirstOrDefault();
@@ -554,8 +570,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			var partidasManager = new PartidasManager();
 			var proveedorFManager = new ProveedorFManager();
 
-			var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+			///var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, SociedadActiva, DateTime.Today);
 
 			//Se obtiene porcentaje de factoraje por proveedor.
 			ProveedorFManager.localPF provedorFactoraje = proveedorFManager.GetProveedoresFactoraje().Where(x => x.IdProveedor == proveedorId).FirstOrDefault();
@@ -652,7 +668,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		}
 
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-		public ActionResult VerSolicitudes(int proveedorId)
+		public ActionResult VerSolicitudes(int proveedorId, string sociedad)
 		{
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
@@ -666,7 +682,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 
 			ProveedorCxp = proveedor;
-			ViewBag.Proveedor = proveedor;
+            SociedadActiva = sociedad;
+            ViewBag.Proveedor = proveedor;
 
 			//Obtenemos las solicitudes del proveedor
 			SolicitudFManager solicitudFManager = new SolicitudFManager();
@@ -692,7 +709,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 		//**********CU003-Facturas pendientes de pago*****************
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-		public ActionResult SeleccionarProveedor(int proveedorId)
+		public ActionResult SeleccionarProveedor(int proveedorId, string sociedad)
 		{
 
 			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -707,7 +724,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 
 			ProveedorCxp = proveedor;
-			return RedirectToAction("Pagos");
+            SociedadActiva = sociedad;
+            return RedirectToAction("Pagos");
 		}
 
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
@@ -723,8 +741,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 			var partidasManager = new PartidasManager();
 
-			var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
+			//var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+			var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, SociedadActiva, DateTime.Today);
 
 			ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
 

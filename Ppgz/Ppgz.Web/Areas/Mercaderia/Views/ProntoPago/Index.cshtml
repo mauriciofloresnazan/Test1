@@ -16,7 +16,7 @@
 						<th class="text-center">Número Proveedor</th>
 						<th class="text-center">RFC</th>
 						<th class="text-center">Razón Social</th>
-						<th class="text-center"></th>
+						<th class="text-center">Sociedades</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -26,14 +26,20 @@
 							<td class="text-center">@proveedor.NumeroProveedor</td>
 							<td class="text-center">@proveedor.Rfc</td>
 							<td class="text-center vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
-							<td class="text-center">
-								@*<a id="btnProveedor" data-idproveedor="@proveedor.Id" href="#"><i class="fa fa-check" aria-hidden="true"></i> Ver Detalle</a>*@
+                            <td class="text-center">
+                                
+                                <div class="btn-group-vertical" role="group" aria-label="...">
+                                    @foreach (var sociedad in proveedor.Sociedades)
+                                    {
+                                        if (sociedad.Activa)
+                                        {
+                                            <a class="btn btn-primary btn-sm" href="@Url.Action("VerSolicitudes", "ProntoPago", new { @proveedorId = @proveedor.Id, @sociedad = @sociedad.Sociedad })"> @sociedad.Nombre</a>
+                                        }
 
-								<a class="btn btn-primary btn-sm" href="@Url.Action("VerSolicitudes", "ProntoPago", new { @proveedorId = @proveedor.Id })">
-									<i class="fa fa-check" aria-hidden="true"></i> Seleccionar
-								</a>
 
-							</td>
+                                    }
+                                </div>
+                            </td>
 						</tr>
 					}
 				</tbody>

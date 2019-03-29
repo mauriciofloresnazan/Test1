@@ -25,7 +25,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-IMPRESIONETIQUETAS")]
         public ActionResult Index()
         {
-            
+
 
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
@@ -37,7 +37,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-IMPRESIONETIQUETAS")]
-        public ActionResult Generar(int proveedorId)
+        public ActionResult Generar(int proveedorId, string sociedad)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
             var proveedor = _proveedorManager.Find(proveedorId, cuenta.Id);
@@ -48,7 +48,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
 
             ViewBag.Proveedor = proveedor;
-            ViewBag.Ordenes = _ordenesCompraManager.FindOrdenesDecompraImprimir(proveedor.NumeroProveedor);
+            ViewBag.Ordenes = _ordenesCompraManager.FindOrdenesDecompraImprimir(proveedor.NumeroProveedor, sociedad);
             return View();
         }
 

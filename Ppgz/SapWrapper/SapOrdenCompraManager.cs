@@ -10,39 +10,39 @@ namespace SapWrapper
     {
         private readonly CommonRfcConfigParam _rfc = new CommonRfcConfigParam();
 
-        public DataTable GetOrdenesDeCompraHeader(string numeroProveedor, string organizacionCompras)
+        public DataTable GetOrdenesDeCompraHeader(string numeroProveedor, string organizacionCompras, string sociedad)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
             function.SetValue("IM_LOEKZ", "A");
             function.SetValue("IM_LIFNR", numeroProveedor);
-
+            function.SetValue("IM_BUKRS", sociedad);
             function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_GET_DET", " ");
 
             function.SetValue("IM_AEDAT", "20150101");
 
-            try
-            {
+          //  try
+            //{
                 function.Invoke(rfcDestinationManager);
                 var result = function.GetTable("ET_HDR");
                 return result.ToDataTable("ET_HDR");
-            }
+            /*}
             catch
             {
                 return new DataTable();
-            }
+            }*/
         }
 
-        public DataTable GetOrdenesDeCompraEtiquetas(string numeroProveedor, string organizacionCompras)
+        public DataTable GetOrdenesDeCompraEtiquetas(string numeroProveedor, string organizacionCompras, string sociedad)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
             function.SetValue("IM_LOEKZ", "A");
             function.SetValue("IM_LIFNR", numeroProveedor);
-
+            function.SetValue("IM_BUKRS", sociedad);
             function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_GET_DET", " ");
             function.SetValue("IM_ETIQ", "X");
@@ -85,13 +85,14 @@ namespace SapWrapper
             
         }
 
-        public DataTable GetOrdenesDeCompraHeader(string numeroDocumento, string numeroProveedor, string organizacionCompras)
+        public DataTable GetOrdenesDeCompraHeader(string numeroDocumento, string numeroProveedor, string organizacionCompras, string sociedad)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
             var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
             function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_LOEKZ", "A");
+            function.SetValue("IM_BUKRS", sociedad);
             function.SetValue("IM_GET_DET", " ");
             function.SetValue("IM_EBELN", numeroDocumento);
             function.SetValue("IM_LIFNR", numeroProveedor);
@@ -110,7 +111,32 @@ namespace SapWrapper
             }
         }
 
-        public DataTable GetOrdenDeCompraDetalle(string documento, string numeroProveedor, string organizacionCompras)
+        public DataTable GetOrdenesDeCompraHeaderSociedad(string numeroProveedor, string organizacionCompras, string sociedad)
+        {
+            var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
+            var rfcRepository = rfcDestinationManager.Repository;
+            var function = rfcRepository.CreateFunction("ZFM_EKKO_PO");
+            function.SetValue("IM_EKORG", organizacionCompras);
+            function.SetValue("IM_LOEKZ", "A");
+            function.SetValue("IM_GET_DET", " ");
+            function.SetValue("IM_BUKRS", sociedad);
+            function.SetValue("IM_LIFNR", numeroProveedor);
+            function.SetValue("IM_AEDAT", "20150101");
+
+
+            try
+            {
+                function.Invoke(rfcDestinationManager);
+                var result = function.GetTable("ET_HDR");
+                return result.ToDataTable("ET_HDR");
+            }
+            catch
+            {
+                return new DataTable();
+            }
+        }
+
+        public DataTable GetOrdenDeCompraDetalle(string documento, string numeroProveedor, string organizacionCompras, string sociedad)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
@@ -118,6 +144,7 @@ namespace SapWrapper
             function.SetValue("IM_LIFNR", numeroProveedor);
             function.SetValue("IM_AEDAT", "20150101");
             function.SetValue("IM_EKORG", organizacionCompras);
+            function.SetValue("IM_BUKRS", sociedad);
             function.SetValue("IM_LOEKZ", "A");
             function.SetValue("IM_EBELN", documento);
             function.SetValue("IM_GET_DET", "X");
@@ -134,7 +161,7 @@ namespace SapWrapper
             }
         }
 
-        public List<SapOrdenCompra> GetActivasConDetalle(string numeroProveedor, string organizacionCompras)
+        public List<SapOrdenCompra> GetActivasConDetalle(string numeroProveedor, string organizacionCompras, string sociedad)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
@@ -143,6 +170,7 @@ namespace SapWrapper
             function.SetValue("IM_LIFNR", numeroProveedor);
             function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_LOEKZ", "A");
+            function.SetValue("IM_BUKRS", sociedad);
             function.SetValue("IM_AEDAT", "20150101");
             function.SetValue("IM_GET_DET", "X");
             var dtH = new DataTable();
@@ -186,7 +214,7 @@ namespace SapWrapper
             return result;
         }
 
-        public SapOrdenCompra GetOrdenConDetalle(string numeroProveedor, string organizacionCompras, string numeroDocumento)
+        public SapOrdenCompra GetOrdenConDetalle(string numeroProveedor, string organizacionCompras, string numeroDocumento, string sociedad)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
@@ -195,6 +223,7 @@ namespace SapWrapper
             function.SetValue("IM_LIFNR", numeroProveedor);
             function.SetValue("IM_EKORG", organizacionCompras);
             function.SetValue("IM_EBELN", numeroDocumento);
+            function.SetValue("IM_BUKRS", sociedad);
             function.SetValue("IM_LOEKZ", "A");
             function.SetValue("IM_AEDAT", "20150101");
             function.SetValue("IM_GET_DET", "X");

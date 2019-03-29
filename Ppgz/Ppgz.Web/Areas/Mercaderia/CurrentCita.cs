@@ -97,7 +97,7 @@ namespace Ppgz.Web.Areas.Mercaderia
                 ordenesActivasDisponibles.FirstOrDefault(oa => oa.NumeroDocumento == numeroDocumento);
         }
 
-        public CurrentCita(int cuentaId, int proveedorId, string centro)
+        public CurrentCita(int cuentaId, int proveedorId, string centro, string sociedad)
         {
             var proveedorManager = new ProveedorManager();
 
@@ -114,7 +114,7 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             var preAsnManager = new PreAsnManager();
 
-            var result = preAsnManager.GetOrdenesActivasConDetalle(proveedor.Id);
+            var result = preAsnManager.GetOrdenesActivasConDetalle(proveedor.Id, sociedad);
 
             if (String.Equals(centro, "CROSS DOCK", StringComparison.CurrentCultureIgnoreCase))
             {

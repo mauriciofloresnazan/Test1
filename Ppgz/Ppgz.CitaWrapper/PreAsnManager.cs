@@ -8,7 +8,7 @@ namespace Ppgz.CitaWrapper
     public class PreAsnManager
     {
 
-        public List<PreAsn> GetOrdenesActivasConDetalle(int proveedorId)
+        public List<PreAsn> GetOrdenesActivasConDetalle(int proveedorId, string sociedad)
         {
             var db = new Repository.Entities();
             var proveedor = db.proveedores.Single(p => p.Id == proveedorId);
@@ -16,7 +16,7 @@ namespace Ppgz.CitaWrapper
             var organizacionCompras = db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var ordenesSap = sapOrdenCompraManager.GetActivasConDetalle(proveedor.NumeroProveedor, organizacionCompras);
+            var ordenesSap = sapOrdenCompraManager.GetActivasConDetalle(proveedor.NumeroProveedor, organizacionCompras, sociedad);
 
             // TODO MEJORAR Limpieza de las ordenes de acuerdo a su fecha de entrega
             var ordenes = ordenesSap.Where(o => o.FechaEntrega > DateTime.Today.AddDays(-22) || o.Autorizada==true).ToList();

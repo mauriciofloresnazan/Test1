@@ -10,6 +10,8 @@ namespace Ppgz.CitaWrapper
 
          public string Centro;
 
+        public string Sociedad;
+
         public int Cantidad;
 
         public int ProveedorId;

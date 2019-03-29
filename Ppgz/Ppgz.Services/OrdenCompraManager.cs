@@ -49,7 +49,7 @@ namespace Ppgz.Services
 
         }
 
-        public List<ordencompra> FindOrdenesDecompraActivas(int proveedorId)
+        public List<ordencompra> FindOrdenesDecompraActivas(int proveedorId, string sociedad)
         {
             var proveedor = _db.proveedores.FirstOrDefault(p => p.Id == proveedorId);
             if (proveedor == null)
@@ -72,7 +72,7 @@ namespace Ppgz.Services
 
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(proveedor.NumeroProveedor, organizacionCompras);
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(proveedor.NumeroProveedor, organizacionCompras, sociedad);
             var detalle = new List<ordencompra>();
 
             if (result.Rows.Count <= 0) return detalle;
@@ -102,7 +102,7 @@ namespace Ppgz.Services
             return detalle;
         }
 
-        public List<ordencompra> FindOrdenesDecompraImprimir(string proveedorId)
+        public List<ordencompra> FindOrdenesDecompraImprimir(string proveedorId, string sociedad)
         {
             //var proveedor = _db.proveedores.FirstOrDefault(p => p.Id == proveedorId);
             //if (proveedor == null)
@@ -119,7 +119,7 @@ namespace Ppgz.Services
 
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenesDeCompraEtiquetas(proveedorId , organizacionCompras);
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraEtiquetas(proveedorId , organizacionCompras, sociedad);
             var detalle = new List<ordencompra>();
 
             if (result.Rows.Count <= 0) return detalle;
@@ -148,7 +148,7 @@ namespace Ppgz.Services
             
             foreach (var provedor in cuenta.proveedores)
             {
-                var proveedorOrdenes = FindOrdenesDecompraActivas(provedor.Id);
+                var proveedorOrdenes = FindOrdenesDecompraActivas(provedor.Id, "1001");
                 if (proveedorOrdenes.Any())
                 {
                     detalle.AddRange(proveedorOrdenes);
@@ -157,7 +157,7 @@ namespace Ppgz.Services
             return detalle;
         }
         
-        public void NotificarOrdenCompra(string numeroDocumento, int proveedorId)
+        public void NotificarOrdenCompra(string numeroDocumento, int proveedorId, string sociedad)
         {
             if (_db.ordencompras.FirstOrDefault(
              oc => oc.NumeroDocumento == numeroDocumento) != null) return;
@@ -182,7 +182,7 @@ namespace Ppgz.Services
 
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
-            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(numeroDocumento, proveedor.NumeroProveedor, organizacionCompras);
+            var result = sapOrdenCompraManager.GetOrdenesDeCompraHeader(numeroDocumento, proveedor.NumeroProveedor, organizacionCompras, sociedad);
             if (result.Rows.Count > 1)
             {
 
@@ -202,7 +202,7 @@ namespace Ppgz.Services
             _db.SaveChanges();
         }
   
-        public SapOrdenCompra FindOrdenConDetalles(int proveedorId,  string numeroDocumento)
+        public SapOrdenCompra FindOrdenConDetalles(int proveedorId,  string numeroDocumento, string sociedad)
         {
             var proveedor = _db.proveedores.Find(proveedorId);
             if (proveedor == null)
@@ -210,7 +210,7 @@ namespace Ppgz.Services
                 throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
             }
 
-            NotificarOrdenCompra(numeroDocumento, proveedorId);
+            NotificarOrdenCompra(numeroDocumento, proveedorId, sociedad);
 
             var organizacionCompras = string.Empty;
             if (proveedor.cuenta.Tipo == CuentaManager.Tipo.Mercaderia)
@@ -226,9 +226,9 @@ namespace Ppgz.Services
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
 
-            return  sapOrdenCompraManager.GetOrdenConDetalle(proveedor.NumeroProveedor, organizacionCompras, numeroDocumento);
+            return  sapOrdenCompraManager.GetOrdenConDetalle(proveedor.NumeroProveedor, organizacionCompras, numeroDocumento, sociedad);
         }
-        public SapOrdenCompra FindOrdenConDetallesSN(int proveedorId, string numeroDocumento)
+        public SapOrdenCompra FindOrdenConDetallesSN(int proveedorId, string numeroDocumento, string sociedad)
         {
             var proveedor = _db.proveedores.Find(proveedorId);
             if (proveedor == null)
@@ -250,7 +250,7 @@ namespace Ppgz.Services
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
 
-            return sapOrdenCompraManager.GetOrdenConDetalle(proveedor.NumeroProveedor, organizacionCompras, numeroDocumento);
+            return sapOrdenCompraManager.GetOrdenConDetalle(proveedor.NumeroProveedor, organizacionCompras, numeroDocumento, sociedad);
         }
 
     }

@@ -64,7 +64,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		}
 		
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-		public ActionResult SeleccionarProveedor(int proveedorId, string centro)
+		public ActionResult SeleccionarProveedor(int proveedorId, string centro, string sociedad)
 		{
 			if (CurrentCita != null)
 			{
@@ -74,7 +74,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			try
 			{
 				var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-				CurrentCita = new CurrentCita(cuenta.Id, proveedorId, centro);
+				CurrentCita = new CurrentCita(cuenta.Id, proveedorId, centro, sociedad);
 				return RedirectToAction("BuscarOrden");
 			}
 			catch (Exception exception)
@@ -553,7 +553,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         {
             //Validacion de cantidad mínima
             //const string sql = @"SELECT Clave, Valor FROM configuraciones WHERE Clave = 'warehouse.min-pairs.per-meet' AND Habilitado = 1";
-            var result = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
+                    var result = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
             //var result = Db.GetDataTable(sql);
 
             if (String.IsNullOrEmpty(result.Valor))

@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using ClosedXML.Excel;
+using Newtonsoft.Json;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
@@ -34,6 +35,22 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
         }
 
+        internal string SociedadActiva
+        {
+            get
+            {
+                if (System.Web.HttpContext.Current.Session["sociedadactiva"] != null)
+                {
+                    return (string)System.Web.HttpContext.Current.Session["sociedadactiva"];
+                }
+                return null;
+            }
+            set
+            {
+                System.Web.HttpContext.Current.Session["sociedadactiva"] = value;
+            }
+        }
+
         // GET: /Mercaderia/CuentasPagar/
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
         public ActionResult Index()
@@ -46,7 +63,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult SeleccionarProveedor(int proveedorId)
+        public ActionResult SeleccionarProveedor(int proveedorId, string sociedad)
         {
 
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -61,6 +78,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
 
             ProveedorCxp = proveedor;
+            SociedadActiva = sociedad;
+            //dynamic empObj = JsonConvert.DeserializeObject<dynamic>(proveedor.Sociedad);
+            //ProveedorCxp.Sociedades = empObj;
+            //var test = ProveedorCxp.Sociedades[0];
             return RedirectToAction("Pagos");
         }
 
@@ -85,8 +106,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var partidasManager = new PartidasManager();
 
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, fecha);
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, SociedadActiva, fecha);
 
             ViewBag.Pagos = dsPagos.Tables["T_LISTA_PAGOS"];
 
@@ -111,7 +132,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var sociedad = SociedadActiva;
             var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             ViewBag.Pago = dsPagos.Tables["T_LISTA_PAGOS"]
@@ -138,7 +160,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var sociedad = SociedadActiva;
             var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
 
@@ -262,7 +285,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var sociedad = SociedadActiva;
             var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             ViewBag.Devoluciones = dsDevoluciones.Tables["T_DEVOLUCIONES"];
@@ -284,7 +308,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var fecha = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var sociedad = SociedadActiva;
             var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             ViewBag.Devolucion = dsDevoluciones.Tables["T_DEVOLUCIONES"]
@@ -320,7 +345,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var fecha = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var sociedad = SociedadActiva;
 
 
             var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, fecha);
@@ -388,7 +414,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var sociedad = SociedadActiva;
             var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
@@ -410,7 +437,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var sociedad = SociedadActiva;
             var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
@@ -431,7 +459,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
+            var sociedad = SociedadActiva;
             var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             var dt = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];

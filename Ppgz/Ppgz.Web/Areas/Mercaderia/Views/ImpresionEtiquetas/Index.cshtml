@@ -33,9 +33,18 @@
                             <td class="text-center vert-align">@proveedor.Rfc</td>
                             <td class="text-center vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
                             <td class="text-center vert-align">
-                                <a class="btn btn-primary btn-sm" href="@Url.Action("Generar", "ImpresionEtiquetas", new { proveedorId = proveedor.Id })">
-                                    <i class="fa fa-check" aria-hidden="true"></i> Seleccionar
-                                </a>
+
+                                <div class="btn-group-vertical" role="group" aria-label="...">
+                                    @foreach (var sociedad in proveedor.Sociedades)
+                                    {
+                                        if (sociedad.Activa)
+                                        {
+                                            <a class="btn btn-primary btn-sm" href="@Url.Action("Generar", "ImpresionEtiquetas", new { @proveedorId = @proveedor.Id, @sociedad = @sociedad.Sociedad })"> @sociedad.Nombre</a>
+                                        }
+
+
+                                    }
+                                </div>
                             </td>
                         </tr>
                     }

@@ -320,9 +320,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ORDENESCOMPRA")]
-        public void DescargarOrdenes(string numeroDocumento, int proveedorId)
+        public void DescargarOrdenes(string numeroDocumento, int proveedorId, string sociedad)
         {
-            var orden = _ordenCompraManager.FindOrdenConDetallesSN(proveedorId, numeroDocumento);
+            var orden = _ordenCompraManager.FindOrdenConDetallesSN(proveedorId, numeroDocumento, sociedad);
 
 
             var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillaoc.xlsx"));
@@ -437,7 +437,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-IMPRESIONETIQUETAS")]
-        public ActionResult GenerarEtiquetas(int proveedorId)
+        public ActionResult GenerarEtiquetas(int proveedorId, string sociedad)
         {
             if (ProveedorActivo == null)
             {
@@ -456,7 +456,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 
             ViewBag.Proveedor = proveedor;
-            ViewBag.Ordenes = _ordenCompraManager.FindOrdenesDecompraImprimir(proveedor.NumeroProveedor);
+            ViewBag.Ordenes = _ordenCompraManager.FindOrdenesDecompraImprimir(proveedor.NumeroProveedor, sociedad);
             return View();
         }
 

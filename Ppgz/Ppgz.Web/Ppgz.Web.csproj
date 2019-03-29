@@ -1966,6 +1966,7 @@
     <Content Include="Areas\Nazan\Views\ProntoPago\_totalProntoPago.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ProntoPago\CargarNotaCredito.cshtml" />
     <Content Include="Areas\Nazan\Views\ProntoPago\Reporte.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\OrdenesCompra\ListaDeOrdenes.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

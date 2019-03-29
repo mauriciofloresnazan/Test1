@@ -13,23 +13,35 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     {
         private readonly OrdenCompraManager  _ordenCompraManager = new OrdenCompraManager();
         private readonly CommonManager _commonManager = new CommonManager();
+        readonly ProveedorManager _proveedorManager = new ProveedorManager();
 
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA")]
         public ActionResult Index()
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-    
-            ViewBag.data= _ordenCompraManager.FindOrdenesDecompraActivasByCuenta(cuenta.Id);
+
+            ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
+
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA")]
+        public ActionResult ListaDeOrdenes(string sociedad, int proveedorId)
+        {
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+            ViewBag.data = _ordenCompraManager.FindOrdenesDecompraActivas(proveedorId, sociedad);
+            ViewBag.sociedad = sociedad;
 
             return View();
         }
 
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ORDENESCOMPRA")]
-        public void Descargar(string numeroDocumento, int proveedorId)
+        public void Descargar(string numeroDocumento, int proveedorId, string sociedad)
         {
-            var orden = _ordenCompraManager.FindOrdenConDetalles(proveedorId, numeroDocumento);
+            var orden = _ordenCompraManager.FindOrdenConDetalles(proveedorId, numeroDocumento, sociedad);
         
 
             var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillaoc.xlsx"));
