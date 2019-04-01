@@ -40,9 +40,17 @@
                         <td class="text-center vert-align">@proveedor.Rfc</td>
                         <td class="text-center vert-align">@proveedor.Nombre1</td>
                         <td class="text-center vert-align">
-                            <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#centro-modal" data-proveedorid="@proveedor.Id">
-                                <i class="fa fa-check" aria-hidden="true"></i> Siguiente
-                            </a>
+                            <div class="btn-group-vertical" role="group" aria-label="...">
+                                @foreach (var sociedad in proveedor.Sociedades)
+                                {
+                                    if (sociedad.Activa)
+                                    {
+                                        <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#centro-modal" data-proveedorid="@proveedor.Id" data-sociedad="@sociedad.Sociedad">@sociedad.Nombre</a>
+                                    }
+
+
+                                }
+                            </div>
                         </td>
                     </tr>
                 }
@@ -89,11 +97,13 @@
         var url = "@Url.Action("SeleccionarProveedor", "ControlCitas")";
 
         var proveedorId;
+        var sociedad;
 
         $(document).ready(function () {
 
             $('#centro-modal').on('show.bs.modal', function (e) {
                 proveedorId = $(e.relatedTarget).data('proveedorid');
+                sociedad = $(e.relatedTarget).data('sociedad');
             });
 
             $("#centro-modal input[name=radio-almacen]:radio").change(function () {
@@ -102,7 +112,7 @@
                 
                 $.blockUI({ message: '<h2>Por favor espere...</h2>' });
 
-                location.href = url + "?proveedorId=" + proveedorId + "&centro=" + $(this).attr("id");
+                location.href = url + "?proveedorId=" + proveedorId + "&centro=" + $(this).attr("id") + "&sociedad=" + sociedad;
             });
 
             $('#proveedores').DataTable({

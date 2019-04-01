@@ -25,13 +25,18 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		readonly CommonManager _commonManager = new CommonManager();
 
 		private const string NombreVarSession = "controlCita";
-		internal void LimpiarCita()
+        private const string NombreVarSession2 = "SociedadCita";
+        internal void LimpiarCita()
 		{
 			if (System.Web.HttpContext.Current.Session[NombreVarSession] != null)
 			{
 				System.Web.HttpContext.Current.Session.Remove(NombreVarSession);
 			}
-		}
+            if (System.Web.HttpContext.Current.Session[NombreVarSession2] != null)
+            {
+                System.Web.HttpContext.Current.Session.Remove(NombreVarSession2);
+            }
+        }
 
 		internal CurrentCita CurrentCita
 		{
@@ -48,8 +53,23 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				System.Web.HttpContext.Current.Session[NombreVarSession] = value;
 			}
 		}
-		
-		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+
+        internal string SociedadCita
+        {
+            get
+            {
+                if (System.Web.HttpContext.Current.Session[NombreVarSession2] == null)
+                {
+                    return null;
+                }
+                return (string)System.Web.HttpContext.Current.Session[NombreVarSession2];
+            }
+            set
+            {
+                System.Web.HttpContext.Current.Session[NombreVarSession2] = value;
+            }
+        }
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		public ActionResult Index()
 		{
 			LimpiarCita();
@@ -75,7 +95,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			{
 				var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 				CurrentCita = new CurrentCita(cuenta.Id, proveedorId, centro, sociedad);
-				return RedirectToAction("BuscarOrden");
+                SociedadCita = sociedad;
+
+                return RedirectToAction("BuscarOrden");
 			}
 			catch (Exception exception)
 			{
@@ -642,16 +664,17 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				return RedirectToAction("Citas");
 			}
 
-			var preCita = new PreCita()
-			{
-				Cantidad = CurrentCita.Cantidad,
-				Centro = CurrentCita.Centro,
-				Fecha = (DateTime) CurrentCita.Fecha,
-				ProveedorId = CurrentCita.Proveedor.Id,
-				UsuarioId = _commonManager.GetUsuarioAutenticado().Id,
-				Asns = new List<Asn>(),
-				HorarioRielesIds = rielesIds.ToList()
-			};
+            var preCita = new PreCita()
+            {
+                Cantidad = CurrentCita.Cantidad,
+                Centro = CurrentCita.Centro,
+                Fecha = (DateTime)CurrentCita.Fecha,
+                ProveedorId = CurrentCita.Proveedor.Id,
+                UsuarioId = _commonManager.GetUsuarioAutenticado().Id,
+                Asns = new List<Asn>(),
+                HorarioRielesIds = rielesIds.ToList(),
+                Sociedad = SociedadCita
+            };
 
 			foreach (var preAsn in CurrentCita.GetPreAsns())
 			{
