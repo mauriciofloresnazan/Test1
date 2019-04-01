@@ -351,7 +351,16 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                                 _solicitudFManager.UpdateEstatusSolicitud(propuesta.Id, 7);
                                 var proveedor = _db.proveedores.Where(c => c.Id == _solicitudFManager.GetSolicitudById(propuesta.Id).IdProveedor).FirstOrDefault();
                                 if (proveedor != null)
-                                  commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Procesada", "La solicitud con id " + propuesta.Id + " ha sido procesada.", proveedor.Correo);
+                                {
+                                    try
+                                    {
+                                        commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Procesada", "La solicitud con id " + propuesta.Id + " ha sido procesada.", proveedor.Correo);
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        TempData["FlashError"] = "Error enviando correo";
+                                    }
+                                }
                             }
 
                             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
@@ -404,7 +413,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             }
 
                             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuestas: " + selectedlist + ". Documentos: " + documentos + ". Revisar documentos: " + errorlist);
-                            TempData["FlashSuccess"] = "Revisar facturas: " + errorlist;
+                            TempData["FlashError"] = "Revisar facturas: " + errorlist;
                         }
                     }
                     else
@@ -604,10 +613,20 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Aprobación de solicitud", nuevaSolicitud.idSolicitudesFactoraje, "Aprobación de solicitud con facturas: " + facturas + ". Descuentos: " + descuentos);
 
-            //var proveedor = _db.proveedores.Where(c => c.Id == _proveedorid).FirstOrDefault();
-            //var commonManager = new CommonManager();
-            //if (proveedor!=null)
-            //    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Aprobada", "La solicitud con id " + solicitudId + " ha sido aprobada y esta lista para cargar la nota de credito." , "correo@nimetrix.com");
+            var proveedor = _db.proveedores.Where(c => c.Id == _proveedorid).FirstOrDefault();
+            var commonManager = new CommonManager();
+            if (proveedor != null)
+            {
+                try
+                {
+                    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Aprobada", "La solicitud con id " + solicitudId + " ha sido aprobada y esta lista para cargar la nota de credito.", proveedor.Correo);
+                }
+                catch (Exception ex)
+                {
+                    TempData["FlashError"] = "Error enviando correo";
+                }
+            }
+
             return RedirectToAction("Solicitudes");
         }
 
@@ -633,8 +652,16 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 var proveedor = _db.proveedores.Where(c => c.Id == SolicitudRechazada.IdProveedor).FirstOrDefault();
                 var commonManager = new CommonManager();
                 if (proveedor != null)
-                    commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Rechazada", "La solicitud con id " + solicitudId + " ha sido rechazada.", "correo@nimetrix.com");
-
+                {
+                    try
+                    {
+                        commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Rechazada", "La solicitud con id " + solicitudId + " ha sido rechazada.", proveedor.Correo);
+                    }
+                    catch (Exception ex)
+                    {
+                        TempData["FlashError"] = "Error enviando correo";
+                    }
+                }
                 TempData["FlashSuccess"] = "Solicitud rechazada";                
                 return RedirectToAction("Solicitudes");
             }

@@ -301,7 +301,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
             solicitudesList = solicitudesList.Where(x => x.Fecha > startOfWeek).ToList();
             //Validamos que no se tenga abierta una solicitud
-            solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId && (x.Estatus != 3 && x.Estatus != 7)).ToList();
+            solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId && (x.Estatus != 3 && x.Estatus != 7 && x.Estatus != 8)).ToList();
 
             //Si hay alguna solicitud en estatus diferente de 3, se le informa al usuario
             if (solicitudesList != null && solicitudesList.Count > 0)
