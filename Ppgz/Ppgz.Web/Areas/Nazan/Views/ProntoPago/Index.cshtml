@@ -1,219 +1,61 @@
-﻿@using System.Linq;
-@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
-
-    var list = (ViewBag.SolicitudesEstatus);
-    string penviar = ViewBag.ParaEnviar;
+    string[,] soc = ViewBag.Sociedades;
 }
 
-@section headjs
-{
-    <link href="~/assets/c3/css/c3.css" rel="stylesheet" type="text/css">
-    <script>
-        var chart = null;
-        var dataPoints = [];
-        var dataPoints2 = [];
-
-        window.onload = function () {
-            var chart2 = new CanvasJS.Chart("chartContainer2", {
-                animationEnabled: true,
-                title: {
-                    text: ""
-                },
-                data: [{
-                    type: "pie",
-                    startAngle: 240,
-                    yValueFormatString: "##0.00'%'",
-                    indexLabel: "{label} {y}",
-                    dataPoints: dataPoints
-                }]
-            });
-
-            var chart3 = new CanvasJS.Chart("chartContainer3", {
-                animationEnabled: true,
-                title: {
-                    text: ""
-                },
-                data: [{
-                    type: "pie",
-                    startAngle: 240,
-                    yValueFormatString: "'$'#,###.##",
-                    indexLabel: "{label} {y}",
-                    dataPoints: dataPoints2
-                }]
-            });
-
-            $.getJSON("@Url.Action("GetPieChartData","ProntoPago")", callback);
-            function callback(data) {
-                console.log("dataPoints {0}", dataPoints);
-                for (var i = 1; i < data.length ; i++) {
-                    dataPoints.push({
-                        label: data[i].EstatusNombre,
-                        y: (data[i].Cantidad * 100) / data[0].Cantidad
-                    });
-                    dataPoints2.push({
-                        label: data[i].EstatusNombre,
-                        y: data[i].Monto 
-                    });
-                }
-                chart2.render();
-                chart3.render();
-            }
-        }
-    </script>
-}
 
 <div class="container body-content">
-    <h3>Dashboard</h3>
+    <h2 class="form-signin-heading">Pronto Pago</h2>
+    <p class="page-description-title">
+        <i class="fa fa-calculator" aria-hidden="true"></i>
+        <i>Seleccione </i>
+    </p>
+
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Panel title</h3>
-        </div>
+        <div class="panel-heading"> </div>
         <div class="panel-body">
-            <div class="row tile_count">
-                @foreach (var item in list)
-                {
-                    string style;
-                    string id = "";
-                    string s = item.EstatusNombre.ToString();
-                    switch (s)
-                    {
-                        case "Aprobacion Especial":
-                        case "Por Aprobacion":
-                            id = "PorAprobacion";
-                            style = "color:rgb(7, 125, 194)";
-                            break;
-                        case "Rechazada":
-                            id = "Rechazada";
-                            style = "color:rgb(255, 0, 0)";
-                            break;
-                        case "En Propuesta de Pago":
-                            id = "EnPropuestaDePago";
-                            style = "color:rgb(37, 148, 3))";
-                            break;
-                        case "Lista Para Propuesta":
-                            id = "ListaParaPropuesta";
-                            style = "color:rgb(57, 202, 147)";
-                            break;
-                        case "Por Nota de Credito":
-                            id = "PorNotadeCredito";
-                            style = "color:rgb(145, 160, 12)";
-                            break;
-                        default:
-                            id = "SolTotal";
-                            style = " ";
-                            break;
 
-                    }
-                    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-                        <span class="count_top">@item.EstatusNombre</span>
-                        <div class="count" style="@style" id="@id">@item.Cantidad</div>
-                    </div>
-                }
+            <div class="col-md-12">
+                <table id="proveedoresf" class="table table-striped table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Número</th>
+                            <th class="text-center">Nombre</th>
+                            <th class="text-center"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i< (soc.Length/2); i++)
+                        {
+                            string numero = soc[i, 0];
+                            string nombre = soc[i, 1];
+                            <tr>
+                                <td class="text-center vert-align">@numero</td>
+                                <td class="text-center vert-align">@nombre</td>
+                                <td class="text-center vert-align">
+                                    <a href="@Url.Action("Index2", "ProntoPago", new { @sociedad = numero})" class="btn btn-primary">
+                                        Seleccionar
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">Solicitudes</div>
-                <div class="panel-body">
-                    <div id="chartContainer2" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
-                </div>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">Montos</div>
-                <div class="panel-body">
-                    <div id="chartContainer3" style="height: 370px; max-width: 920px; margin: 0px auto;"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">Gestion </div>
-                <div class="panel-body">
-                    <div style="text-align: center;">
-                        <div class='chG'>
-                            <div id='chart'></div>
-                        </div>
-                    </div>
-                    <div style="text-align: center;">
-                        <a href="@Url.Action("Solicitudes","ProntoPago")" class="btn btn-default" style="margin-top: 10px;">
-                            <i class="fa fa-refresh" aria-hidden="true"></i> Ver Listado
-                        </a>
-
-                    </div>
-
-                    <div class="panel-body">
-                        <div style="text-align: center;margin-top: 10px;">
-                            <span style="font-size: 15px;"><b>Para enviar a Propuesta</b></span>
-                            <div class="count" style="color:rgb(57, 202, 147); font-size: 40px;">@penviar</div>
-                        </div>
-                        <div style="text-align: center;">
-                            <a href="@Url.Action("Solicitudes","ProntoPago")" class="btn btn-default" style="margin-top: 10px;">
-                                <i class="fa fa-refresh" aria-hidden="true"></i> Enviar Propuestas
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <hr />
-    </div>
+    <hr />
 </div>
 
 @section Scripts {
-    <script src="~/assets/c3/js/d3-5.4.0.min.js" charset="utf-8"></script>
-    <script src="~/assets/canvas/canvasjs.min.js"></script>
-    <script src="~/assets/c3/js/c3.js"></script>
-
-    <script>
-        var dv = $("#PorAprobacion").text();
-        var total = $("#SolTotal").text();
-        var pchart = (dv * 100) / total ;
-        console.log("PorAprobacion: {0}",  dv);
-        var chart = c3.generate({
-            data: {
-                columns: [
-                    ['Solicitudes', pchart]
-                ],
-                type: 'gauge'
-            },
-            gauge: {
-            },
-            color: {
-                pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
-                threshold: {
-                    //            unit: 'value', // percentage is default
-                    //            max: 200, // 100 is default
-                    values: [30, 60, 90, 100]
-                }
-            },
-            size: {
-                height: 180
-            },
-            bindto: '#chart'
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#proveedoresf').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });            
         });
     </script>
-    <style>
-        .tile_count .tile_stats_count::before {
-            content: "";
-            position: absolute;
-            left: 0;
-            height: 65px;
-            border-left: 2px solid #ADB2B5;
-            margin-top: 10px;
-        }
-
-        .tile_count .tile_stats_count .count {
-            font-size: 40px;
-        }
-
-        .tile_count .tile_stats_count .count {
-            font-size: 30px;
-            line-height: 47px;
-            font-weight: 600;
-        }
-    </style>
-
 }

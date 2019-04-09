@@ -38,7 +38,7 @@ namespace Ppgz.Services
             return _db.proveedoresfactoraje.FirstOrDefault(p => p.idProveedore == id);
         }
 
-        public bool UpdateProveedorFactoraje(int id, int diadepago, int porcentaje)
+        public bool UpdateProveedorFactoraje(int id, int diadepago, int porcentaje, string correo)
         {
             bool result = false;
 
@@ -49,6 +49,7 @@ namespace Ppgz.Services
                 {
                     proveedorf.DiaDePago = diadepago;
                     proveedorf.Porcentaje = porcentaje;
+                    proveedorf.Correo = correo;
 
                     _db.Entry(proveedorf).State = EntityState.Modified;
                     _db.SaveChanges();
@@ -59,7 +60,8 @@ namespace Ppgz.Services
                     {
                         idProveedore = id,
                         DiaDePago = diadepago,
-                        Porcentaje = porcentaje
+                        Porcentaje = porcentaje,
+                        Correo = correo
                     };
                     _db.proveedoresfactoraje.Add(pf);
                     _db.SaveChanges();

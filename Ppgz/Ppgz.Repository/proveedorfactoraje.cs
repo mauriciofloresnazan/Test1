@@ -17,5 +17,6 @@ namespace Ppgz.Repository
         public int idProveedore { get; set; }
         public int Porcentaje { get; set; }
         public int DiaDePago { get; set; }
+        public string Correo { get; set; }
     }
 }

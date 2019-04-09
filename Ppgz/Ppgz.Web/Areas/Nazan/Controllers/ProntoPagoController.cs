@@ -10,6 +10,7 @@ using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Models.ProntoPago;
 using SapWrapper;
 using System.Data.Entity;
+//using Data = System.Collections.Generic.KeyValuePair<string, string>;
 
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
@@ -27,10 +28,47 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         readonly SolicitudFManager _solicitudFManager = new SolicitudFManager();
         readonly LogsFactoraje _logsFactoraje = new LogsFactoraje();
 
+        internal string SociedadActiva
+        {
+            get
+            {
+                if (System.Web.HttpContext.Current.Session["sociedadactiva"] != null)
+                {
+                    return (string)System.Web.HttpContext.Current.Session["sociedadactiva"];
+                }
+                return null;
+            }
+            set
+            {
+                System.Web.HttpContext.Current.Session["sociedadactiva"] = value;
+            }
+        }
+
         /*-------------BEGIN DASHBOARD SECTION--------------*/
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
         public ActionResult Index()
+        {            
+            string listadoSociedades = CommonManager.GetConfiguraciones().Single(c => c.Clave == "sociedades.lista").Valor;
+            string[] lsociedad = listadoSociedades.Trim().Split(',').ToArray();
+            string[,] lSociedades = new string[lsociedad.Count(), 2];
+
+            for (int i = 0; i < lsociedad.Count(); i++)
+            {
+                lSociedades[i,0] = lsociedad[i];
+                lSociedades[i,1] = CommonManager.GetConfiguraciones().Single(c => c.Clave == "sociedades.nombre." + lsociedad[i]).Valor; ;
+            }
+
+            ViewBag.Sociedades = lSociedades;
+            return View();
+        }
+        /*-------------BEGIN DASHBOARD SECTION--------------*/
+
+        /*-------------BEGIN DASHBOARD SECTION--------------*/
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
+        public ActionResult Index2(string sociedad)
         {
+            SociedadActiva = sociedad;
+
             //Se contabilizan los estatusfactoraje <estatus, cantudad>
             var lse = GetSolicitudEstatus();
             ViewBag.SolicitudesEstatus = lse;
@@ -76,7 +114,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             //Obtenemos una lista de las SolicitudesFactoraje de la semana actual
             var lsolicitudesf = _solicitudFManager.GetSolicitudesFactoraje();
             DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
-            lsolicitudesf = lsolicitudesf.Where(x => x.Fecha > startOfWeek).ToList();
+            lsolicitudesf = lsolicitudesf.Where(x => x.Fecha > startOfWeek && x.Sociedad == SociedadActiva).ToList();
 
             //Obtenemos una lista de los estatusfactoraje contabilizados 
             var lestatus = _db.estatusfactoraje.ToList();
@@ -121,7 +159,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         IdProveedor = proveedor.Id,
                         Nombre = proveedor.Nombre1,
                         Numero = proveedor.NumeroProveedor,
-                        Rfc = proveedor.Rfc
+                        Rfc = proveedor.Rfc,
+                        Correo = proveedor.Correo
                     };
 
                     lproveedores.Add(p);
@@ -137,6 +176,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     var index = lproveedores.FindIndex(c => c.IdProveedor == item.IdProveedor);
                     lproveedores[index].DiaDePago = _pf.DiaDePago;
                     lproveedores[index].Porcentaje = _pf.Porcentaje;
+                    lproveedores[index].Correo = _pf.Correo;
                 }
                 else
                 {
@@ -154,19 +194,19 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PRONTOPAGO,NAZAN-PRONTOPAGO-APROBADOR")]
-        public ActionResult ActualizarProveedor(int idCuenta, int idProveedor, int diadepago, int porcentaje)
+        public ActionResult ActualizarProveedor(int idCuenta, int idProveedor, int diadepago, int porcentaje, string correo)
         {
             bool result = false;
 
             //Validamos el rango de los datos y cambiamos los valores en servicio
             if ((diadepago > 0 && diadepago < 8) || (porcentaje >= 0))
             {
-                result = _proveedorFManager.UpdateProveedorFactoraje(idProveedor, diadepago, porcentaje);
+                result = _proveedorFManager.UpdateProveedorFactoraje(idProveedor, diadepago, porcentaje, correo);
             }
 
             if (result)
             {
-                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Actualizar Proveedor", idProveedor, "Actualizacion de proveedor " + idProveedor + ": porcentaje " + porcentaje + "%, dia de pago " + diadepago);
+                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Actualizar Proveedor", idProveedor, "Actualizacion de proveedor " + idProveedor + ": porcentaje " + porcentaje + "%, dia de pago " + diadepago + ", correo electrónico " + correo);
                 TempData["FlashSuccess"] = "Actualización realizada correctamente.";                
             }
             else
@@ -216,7 +256,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             //Obtenemos todas las solicitudes de pronto pago
             var solicitudesF = _solicitudFManager.GetSolicitudesFactoraje();
             DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
-            solicitudesF = solicitudesF.Where(x => x.Fecha > startOfWeek).ToList();
+            solicitudesF = solicitudesF.Where(x => x.Fecha > startOfWeek && x.Sociedad == SociedadActiva).ToList();
 
             //Int32.TryParse(CommonManager.GetConfiguraciones().Single(c => c.Clave == "prontopago.default.percent").Valor, out int p);
             //foreach(var item in solicitudesF)
@@ -349,8 +389,28 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             foreach (var propuesta in listpropuestas)
                             {
                                 _solicitudFManager.UpdateEstatusSolicitud(propuesta.Id, 7);
+                                
+                                var proveedorFactoraje = _proveedorFManager.GetProveedorById(_solicitudFManager.GetSolicitudById(propuesta.Id).IdProveedor);
+                                bool enviado = false;
+                                if (proveedorFactoraje != null)
+                                {
+                                    if (!String.IsNullOrEmpty(proveedorFactoraje.Correo))
+                                    {
+                                        try
+                                        {
+                                            commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Procesada", "La solicitud con id " + propuesta.Id + " ha sido procesada.", proveedorFactoraje.Correo);
+                                            enviado = true;
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            enviado = false;
+                                            TempData["FlashError"] = "Error enviando correo factoraje";
+                                        }
+                                    }
+                                }
+
                                 var proveedor = _db.proveedores.Where(c => c.Id == _solicitudFManager.GetSolicitudById(propuesta.Id).IdProveedor).FirstOrDefault();
-                                if (proveedor != null)
+                                if (proveedor != null && enviado == false) 
                                 {
                                     try
                                     {
@@ -361,6 +421,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                                         TempData["FlashError"] = "Error enviando correo";
                                     }
                                 }
+                                   
                             }
 
                             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
@@ -613,9 +674,30 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Aprobación de solicitud", nuevaSolicitud.idSolicitudesFactoraje, "Aprobación de solicitud con facturas: " + facturas + ". Descuentos: " + descuentos);
 
-            var proveedor = _db.proveedores.Where(c => c.Id == _proveedorid).FirstOrDefault();
+            
             var commonManager = new CommonManager();
-            if (proveedor != null)
+
+            var proveedorFactoraje = _proveedorFManager.GetProveedorById(_proveedorid);
+            bool enviado = false;
+            if (proveedorFactoraje != null)
+            {
+                if (!String.IsNullOrEmpty(proveedorFactoraje.Correo))
+                {
+                    try
+                    {
+                        commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Aprobada", "La solicitud con id " + solicitudId + " ha sido aprobada y esta lista para cargar la nota de credito.", proveedorFactoraje.Correo);
+                        enviado = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        enviado = false;
+                        TempData["FlashError"] = "Error enviando correo factoraje";
+                    }
+                }
+            }
+
+            var proveedor = _db.proveedores.Where(c => c.Id == _proveedorid).FirstOrDefault();
+            if (proveedor != null && enviado==false)
             {
                 try
                 {
@@ -648,10 +730,30 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 var result = _solicitudFManager.UpdateEstatusSolicitud(solicitudId, 3);
 
                 _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Rechazar Solicitud", solicitudId, "Cambio a estatus Rechazada");
-                
-                var proveedor = _db.proveedores.Where(c => c.Id == SolicitudRechazada.IdProveedor).FirstOrDefault();
                 var commonManager = new CommonManager();
-                if (proveedor != null)
+
+                var proveedorFactoraje = _proveedorFManager.GetProveedorById(SolicitudRechazada.IdProveedor);
+                bool enviado = false;
+                if (proveedorFactoraje != null)
+                {
+                    if (!String.IsNullOrEmpty(proveedorFactoraje.Correo))
+                    {
+                        try
+                        {
+                            commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Rechazada", "La solicitud con id " + solicitudId + " ha sido rechazada.", proveedorFactoraje.Correo);
+                            enviado = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            enviado = false;
+                            TempData["FlashError"] = "Error enviando correo factoraje";
+                        }
+                    }
+                }
+
+
+                var proveedor = _db.proveedores.Where(c => c.Id == SolicitudRechazada.IdProveedor).FirstOrDefault();
+                if (proveedor != null && enviado == false)
                 {
                     try
                     {
@@ -926,6 +1028,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             public string Numero { get; set; }
             public int Porcentaje { get; set; }
             public string Rfc { get; set; }
+            public string Correo { get; set; }
         }
 
         public class KeyValueCustom

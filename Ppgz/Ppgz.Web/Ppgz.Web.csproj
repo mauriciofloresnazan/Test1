@@ -1951,7 +1951,7 @@
     <Content Include="Areas\Nazan\Views\Penalizaciones\Reporte.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitas\VisualizarDisponibilidad.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarFacturas\ProcesarFacturas.cshtml" />
-    <Content Include="Areas\Nazan\Views\ProntoPago\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\ProntoPago\Index2.cshtml" />
     <Content Include="Areas\Nazan\Views\ProntoPago\Proveedores.cshtml" />
     <Content Include="Areas\Nazan\Views\ProntoPago\Solicitudes.cshtml" />
     <Content Include="Areas\Nazan\Views\ProntoPago\Configuraciones.cshtml" />
@@ -1967,6 +1967,7 @@
     <Content Include="Areas\Mercaderia\Views\ProntoPago\CargarNotaCredito.cshtml" />
     <Content Include="Areas\Nazan\Views\ProntoPago\Reporte.cshtml" />
     <Content Include="Areas\Mercaderia\Views\OrdenesCompra\ListaDeOrdenes.cshtml" />
+    <Content Include="Areas\Nazan\Views\ProntoPago\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

@@ -29,5 +29,6 @@ namespace Ppgz.Repository
         public double DescuentoPP { get; set; }
         public Nullable<int> NumeroGenerado { get; set; }
         public string EstatusOperacionSAP { get; set; }
+        public string Sociedad { get; set; }
     }
 }

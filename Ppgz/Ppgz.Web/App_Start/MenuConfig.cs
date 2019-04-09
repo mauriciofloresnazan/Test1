@@ -340,7 +340,8 @@ namespace Ppgz.Web
                 case "ProntoPago":
                     menu = new List<string>
                     {
-                        "PRONTOPAGO|Dashboard|Index|ProntoPago|fa fa-calendar|Nazan",
+                        "PRONTOPAGO|Sociedades|Index|ProntoPago|fa fa-calendar|Nazan",
+                        "PRONTOPAGO|Dashboard|Index2|ProntoPago|fa fa-calendar|Nazan",
                         "PRONTOPAGO|Listado Solicitudes|Solicitudes|ProntoPago|fa fa-calendar|Nazan",
                         "PRONTOPAGO|Listado Proveedores|Proveedores|ProntoPago|fa fa-exclamation-circle|Nazan",
                         //"PRONTOPAGO|Configuraciones|Configuraciones|ProntoPago|fa fa-ban|Nazan",

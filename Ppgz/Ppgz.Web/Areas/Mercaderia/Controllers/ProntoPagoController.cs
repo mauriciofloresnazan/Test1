@@ -332,7 +332,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			FacturaFManager facturaFManager = new FacturaFManager();
 			DescuentoFManager descuentoFManager = new DescuentoFManager();
 
-			//Insertamos la solicitud factoraje
+            //Insertamos la solicitud factoraje
+            totalView.SolicitudFactoraje.Sociedad = SociedadActiva;
 			int SolicitudId = solicitudFManager.InsSolicitud(totalView.SolicitudFactoraje);
 
 			//Insertamos las facturas del factoraje
