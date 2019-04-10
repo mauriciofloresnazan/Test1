@@ -31,7 +31,7 @@ namespace SapWrapper
             return dt;
         }
 
-        public double GetPrestamo(string numeroProveedor)
+        public double GetPrestamo(string numeroProveedor, string sociedad)
         {
             if (String.IsNullOrWhiteSpace(numeroProveedor.Trim()))
             {
@@ -46,6 +46,7 @@ namespace SapWrapper
 
             var function = rfcRepository.CreateFunction("ZFM_PRESTAMOS_PORTAL");
 
+            function.SetValue("IM_BUKRS", sociedad);
             function.SetValue("IM_ACREEDOR", numeroProveedor);
             function.Invoke(rfcDestinationManager);
 

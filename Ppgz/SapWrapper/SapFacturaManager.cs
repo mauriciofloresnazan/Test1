@@ -60,7 +60,8 @@ namespace SapWrapper
 			string importe, 
 			string cabecera, 
 			string posicion, 
-			string folio //Serie+Folio
+			string folio, //Serie+Folio
+            string sociedad
 			)
 		{
 			var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
@@ -73,8 +74,10 @@ namespace SapWrapper
 
 			function.SetValue("IM_TEXTO_H", cabecera);
 			function.SetValue("IM_TEXTO_P", posicion);
-			
-			function.Invoke(rfcDestinationManager);
+
+            function.SetValue("IM_BUKRS", sociedad);
+
+            function.Invoke(rfcDestinationManager);
 
 
 			//function.GetValue("E_STATUS");

@@ -284,6 +284,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 List<string> docs = new List<string>();
                 List<DateTime> fechasDocs = new List<DateTime>();
                 List<string> numerosProveedor = new List<string>();
+                string sociedad = listpropuestas.FirstOrDefault().Sociedad.ToString();
 
                 foreach (var item in listpropuestas)
                 {
@@ -349,7 +350,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 string[] proveedores = numerosProveedor.ToArray();
 
                 SapProntoPagoManager spp = new SapProntoPagoManager();
-                DataTable[] dt = spp.EnviarPropuesta(fechaDiaPago, proveedores, paramdocs, paramdates);
+                DataTable[] dt = spp.EnviarPropuesta(fechaDiaPago, proveedores, paramdocs, paramdates, sociedad);
 
                 string documentos = "";
                 for (int i = 0; i < paramdocs.Count(); i++)
@@ -529,7 +530,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             //Traemos el prestamo del proveedor
             SapProveedorManager sapProveedorManager = new SapProveedorManager();
-            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor);
+            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor, SociedadActiva);
 
             //Quitamos la nota de credito de los descuentos
             int notadecredito = (int)_solicitudFManager.GetSolicitudById(id).NumeroGenerado;

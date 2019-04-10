@@ -162,7 +162,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     }
 
                     //Paso 2: Ejecutamos la funcion de SAP
-                    Resultado cargarNotaCredito = sapFacturaManager.CrearNotaCredito(numeroProveedor, fechaFactura, importe, cabecera, posicion, folio);
+                    Resultado cargarNotaCredito = sapFacturaManager.CrearNotaCredito(numeroProveedor, fechaFactura, importe, cabecera, posicion, folio, Solicitud.Sociedad);
 					
 					if(cargarNotaCredito.Estatus == "1")
 					{
@@ -529,7 +529,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
             //Traemos el prestamo del proveedor
             SapProveedorManager sapProveedorManager = new SapProveedorManager();
-            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor);
+            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor, SociedadActiva);
             ViewBag.Prestamo = prestamo;
 
             ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
@@ -654,7 +654,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             //Traemos el prestamo del proveedor
             SapProveedorManager sapProveedorManager = new SapProveedorManager();
-            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor);
+            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor, SociedadActiva);
             ViewBag.Prestamo = prestamo;
 
             ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
