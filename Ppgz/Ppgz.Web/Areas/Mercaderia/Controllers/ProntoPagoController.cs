@@ -177,7 +177,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         sf.NumeroGenerado = Convert.ToInt32(facturaModel.NumeroGenerado);
                         solicitudFManager.UpdateSolicitud(sf);
 
-                        _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Carga Nota Credito", notaCreditoView.idSolicitudesFactoraje, "Carga nota de credito");
+                        _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Carga Nota Credito", notaCreditoView.idSolicitudesFactoraje, "Carga nota de credito");
 
                         TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente.";
                         
@@ -306,8 +306,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             //Si hay alguna solicitud en estatus diferente de 3, se le informa al usuario
             if (solicitudesList != null && solicitudesList.Count > 0)
             {
-                TempData["FlashError"] = "Solo se puede tener una solicitud abierta.";
-                return RedirectToAction("NuevaSolicitud", new { proveedorId = proveedorId });
+                foreach (var item in solicitudesList)
+                {
+                    if (item.Sociedad == SociedadActiva)
+                    {
+                        TempData["FlashError"] = "Solo se puede tener una solicitud abierta.";
+                        return RedirectToAction("NuevaSolicitud", new { proveedorId = proveedorId });
+                    }
+                }                
             }
 
             //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
@@ -353,7 +359,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 
             
-            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Crea Solicitud", SolicitudId, "Crea solicitud proveedor: " + proveedorId + " con facturas: " + facturas + ". Descuentos: " + dfs);
+            _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Crea Solicitud", SolicitudId, "Crea solicitud proveedor: " + proveedorId + " con facturas: " + facturas + ". Descuentos: " + dfs);
 
             return RedirectToAction("VerSolicitudes", new { proveedorId = proveedorId });
 		}
@@ -689,7 +695,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			//Obtenemos las solicitudes del proveedor
 			SolicitudFManager solicitudFManager = new SolicitudFManager();
 			List<localsolicitud> solicitudesList = solicitudFManager.GetSolicitudesFactoraje();
-			solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId).ToList();
+			solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId && x.Sociedad == SociedadActiva).ToList();
             //Filtramos solicitudes por semana actual
             DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
             solicitudesList = solicitudesList.Where(x => x.Fecha > startOfWeek).ToList();

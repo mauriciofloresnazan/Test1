@@ -96,6 +96,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var listpropuestas = new List<solicitudesfactoraje>();
             int idestatus = _db.estatusfactoraje.Where(x => x.Nombre == "Lista Para Propuesta" && x.Activo == 1).FirstOrDefault().idEstatusFactoraje;
             listpropuestas = _solicitudFManager.GetSolicitudesByEstatus(idestatus);
+            listpropuestas = listpropuestas.Where(x => x.Sociedad == SociedadActiva).ToList();
 
             TempData["FlashError"] = "Error al enviar solicitudes";
             TempData["FlashSuccess"] = "Solicitudes enviadas con exito";
@@ -206,7 +207,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             if (result)
             {
-                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Actualizar Proveedor", idProveedor, "Actualizacion de proveedor " + idProveedor + ": porcentaje " + porcentaje + "%, dia de pago " + diadepago + ", correo electrónico " + correo);
+                _logsFactoraje.InsertLog(SociedadActiva, this.User.Identity.Name.ToString(), "Actualizar Proveedor", idProveedor, "Actualizacion de proveedor " + idProveedor + ": porcentaje " + porcentaje + "%, dia de pago " + diadepago + ", correo electrónico " + correo);
                 TempData["FlashSuccess"] = "Actualización realizada correctamente.";                
             }
             else
@@ -239,7 +240,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             if (result)
             {
-                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Eliminar configuracion", idProveedor, "Eliminar configuracion de proveedor " + idProveedor);
+                _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Eliminar configuracion", idProveedor, "Eliminar configuracion de proveedor " + idProveedor);
                 TempData["FlashSuccess"] = "Eliminado correctamente.";                
             }
             else
@@ -361,7 +362,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 if (dt != null && dt[0].Rows.Count > 0)
                 {
                     //dt[0].Rows[0][3].ToString().ToLower().Substring(0, 5) == "error"
-                    _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
+                    _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
                     TempData["FlashError"] = "Error SAP: "+ dt[0].Rows[0][3].ToString();
                     return RedirectToAction("Solicitudes");
                 }
@@ -425,7 +426,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                                    
                             }
 
-                            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
+                            _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
                             TempData["FlashSuccess"] = "Enviadas con exito";                                
                         }
                         else
@@ -474,13 +475,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                                 
                             }
 
-                            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuestas: " + selectedlist + ". Documentos: " + documentos + ". Revisar documentos: " + errorlist);
+                            _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuestas: " + selectedlist + ". Documentos: " + documentos + ". Revisar documentos: " + errorlist);
                             TempData["FlashError"] = "Revisar facturas: " + errorlist;
                         }
                     }
                     else
                     {
-                        _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
+                        _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
                         TempData["FlashError"] = "Error al enviar propuesta de pago";
                     }
                 }
@@ -569,7 +570,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var result = _facturaFManager.ActualizarPorcentaje(idFactura, porcentaje);
             var solicitufactoraje = _solicitudFManager.UpdateEstatusSolicitud(solid, 6);
 
-            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Actualiza Porcentaje", solid, "Porcentaje de factura" + idFactura);
+            _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Actualiza Porcentaje", solid, "Porcentaje de factura" + idFactura);
 
             return RedirectToAction("SolicitudDetalle", "ProntoPago", new { @id = solid }); 
         }
@@ -673,7 +674,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 _solicitudFManager.UpdateEstatusSolicitud(nuevaSolicitud.idSolicitudesFactoraje, 5);
             }
 
-            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Aprobación de solicitud", nuevaSolicitud.idSolicitudesFactoraje, "Aprobación de solicitud con facturas: " + facturas + ". Descuentos: " + descuentos);
+            _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Aprobación de solicitud", nuevaSolicitud.idSolicitudesFactoraje, "Aprobación de solicitud con facturas: " + facturas + ". Descuentos: " + descuentos);
 
             
             var commonManager = new CommonManager();
@@ -730,7 +731,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 //Cambia el estatus en solicitudes, facturas y descuentos por rechazada
                 var result = _solicitudFManager.UpdateEstatusSolicitud(solicitudId, 3);
 
-                _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Rechazar Solicitud", solicitudId, "Cambio a estatus Rechazada");
+                _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Rechazar Solicitud", solicitudId, "Cambio a estatus Rechazada");
                 var commonManager = new CommonManager();
 
                 var proveedorFactoraje = _proveedorFManager.GetProveedorById(SolicitudRechazada.IdProveedor);
@@ -929,7 +930,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 _solicitudFManager.UpdateEstatusSolicitud(nuevaSolicitud.idSolicitudesFactoraje, _estatus);
             }
 
-            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Guarda Solicitud", solicitudId, "Cambio a estatus Aprobacion Especial. Con las facturas: " + facturas + "y Descuentos: " + descuentos);
+            _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Guarda Solicitud", solicitudId, "Cambio a estatus Aprobacion Especial. Con las facturas: " + facturas + "y Descuentos: " + descuentos);
             return RedirectToAction("Solicitudes");
         }
         
@@ -951,12 +952,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                ViewBag.Logs = _db.logfactoraje.Where(c => c.Fecha >= fechaf && c.Fecha <= fechat).ToList();
+                ViewBag.Logs = _db.logfactoraje.Where(c => c.Fecha >= fechaf && c.Fecha <= fechat && c.TipoObjeto.ToString() == SociedadActiva).ToList();
             }
             else
             {
                 var fecha = DateTime.Today.AddMonths(-3);
-                ViewBag.Logs = _db.logfactoraje.Where(c => c.Fecha > fecha).ToList();
+                ViewBag.Logs = _db.logfactoraje.Where(c => c.Fecha > fecha && c.TipoObjeto.ToString() == SociedadActiva).ToList();
             }
 
             return View();
@@ -970,7 +971,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 fechat = fechat.AddHours(11);
-                ViewBag.Solicitudes = _solicitudFManager.GetSolicitudesFactoraje().Where(c => c.Fecha >= fechaf && c.Fecha <= fechat).ToList();                
+                ViewBag.Solicitudes = _solicitudFManager.GetSolicitudesFactoraje().Where(c => c.Fecha >= fechaf && c.Fecha <= fechat && c.Sociedad == SociedadActiva).ToList();                
             }
             else
             {
@@ -978,7 +979,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 fechaFrom = DateTime.Today.AddMonths(-3).ToString("dd/MM/yyyy");
 
                 var fecha = DateTime.Today.AddMonths(-3);
-                ViewBag.Solicitudes = _solicitudFManager.GetSolicitudesFactoraje().Where(c => c.Fecha > fecha).ToList();
+                ViewBag.Solicitudes = _solicitudFManager.GetSolicitudesFactoraje().Where(c => c.Fecha > fecha && c.Sociedad == SociedadActiva).ToList();
             }
 
             ViewBag.FechaFrom = fechaFrom;
