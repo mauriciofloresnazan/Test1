@@ -12,7 +12,7 @@ namespace SapWrapper
     {
         private readonly CommonRfcConfigParam _rfc = new CommonRfcConfigParam();
 
-        public DataTable[] EnviarPropuesta(DateTime fechasolictud, string[] numerosProveedor, string[] facturasList, DateTime[] fechaList)
+        public DataTable[] EnviarPropuesta(DateTime fechasolictud, string[] numerosProveedor, string[] facturasList, DateTime[] fechaList, string sociedad)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
@@ -22,6 +22,7 @@ namespace SapWrapper
                 var function = rfcRepository.CreateFunction("ZFM_PAGOS_PORTAL");
 
                 //Parametros Fecha y Table
+                function.SetValue("IM_BUKRS", sociedad);
                 function.SetValue("IM_FECHA_PAGO", fechasolictud.ToString("yyyyMMdd"));
 
                 var tablep = function.GetTable("IT_DOCS");

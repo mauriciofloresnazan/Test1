@@ -464,6 +464,7 @@
           <Property Name="idProveedore" Type="int" StoreGeneratedPattern="None" Nullable="false" />
           <Property Name="Porcentaje" Type="int" Nullable="false" />
           <Property Name="DiaDePago" Type="int" Nullable="false" />
+          <Property Name="Correo" Type="varchar" MaxLength="45" />
         </EntityType>
         <EntityType Name="rieles">
           <Key>
@@ -501,6 +502,7 @@
           <Property Name="DescuentoPP" Type="double" Nullable="false" />
           <Property Name="NumeroGenerado" Type="int" Nullable="true" />
           <Property Name="EstatusOperacionSAP" Type="varchar" MaxLength="500" Nullable="true" />
+          <Property Name="Sociedad" Type="varchar" MaxLength="45" Nullable="true" />
         </EntityType>
         <Association Name="ApplicationUser_Claims">
           <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
@@ -1553,6 +1555,7 @@
           <Property Name="idProveedore" Type="Int32" annotation:StoreGeneratedPattern="None" Nullable="false" />
           <Property Name="Porcentaje" Type="Int32" Nullable="false" />
           <Property Name="DiaDePago" Type="Int32" Nullable="false"/>
+          <Property Name="Correo" Type="String" Nullable="true"/>
         </EntityType>
         <EntityType Name="riele">
           <Key>
@@ -1592,6 +1595,7 @@
           <Property Name="DescuentoPP"    Type="Double" Nullable="false" />
           <Property Name="NumeroGenerado" Type="Int32" Nullable="true" />
           <Property Name="EstatusOperacionSAP" Type="String" FixedLength="false" Unicode="false" MaxLength="500" Nullable="true" />
+          <Property Name="Sociedad" Type="String" FixedLength="false" Unicode="false" MaxLength="45" Nullable="true" />
         </EntityType>
         <Association Name="fk_rieles_anden">
           <End Role="andenes" Type="Self.andene" Multiplicity="1" />
@@ -2538,6 +2542,7 @@
                 <ScalarProperty Name="idProveedore" ColumnName="idProveedore" />
                 <ScalarProperty Name="Porcentaje" ColumnName="Porcentaje" />
                 <ScalarProperty Name="DiaDePago" ColumnName="DiaDePago"/>
+                <ScalarProperty Name="Correo" ColumnName="Correo"/>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2578,6 +2583,7 @@
                 <ScalarProperty Name="DescuentoPP" ColumnName="DescuentoPP"/>
                 <ScalarProperty Name="NumeroGenerado" ColumnName="NumeroGenerado"/>
                 <ScalarProperty Name="EstatusOperacionSAP" ColumnName="EstatusOperacionSAP"/>
+                <ScalarProperty Name="Sociedad" ColumnName="Sociedad"/>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
