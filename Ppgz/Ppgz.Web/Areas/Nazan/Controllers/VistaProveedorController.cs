@@ -333,8 +333,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 
             var cuenta = CuentaActiva.Cuenta;
-            ViewBag.data = _ordenCompraManager.FindOrdenesDecompraActivasByCuenta(cuenta.Id, SociedadActiva);
-
+            ViewBag.data = _ordenCompraManager.FindOrdenesDecompraActivas(ProveedorActivo.Id, SociedadActiva);
+            ViewBag.Proveedor = ProveedorActivo;
             return View();
         }
 

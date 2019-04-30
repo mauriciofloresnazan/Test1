@@ -157,27 +157,6 @@ namespace Ppgz.Services
             return detalle;
         }
 
-        public List<ordencompra> FindOrdenesDecompraActivasByCuenta(int cuentaId, string sociedad)
-        {
-            var cuenta = _db.cuentas.Find(cuentaId);
-            if (cuenta == null)
-            {
-                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
-            }
-
-            var detalle = new List<ordencompra>();
-
-            foreach (var provedor in cuenta.proveedores)
-            {
-                var proveedorOrdenes = FindOrdenesDecompraActivas(provedor.Id, sociedad);
-                if (proveedorOrdenes.Any())
-                {
-                    detalle.AddRange(proveedorOrdenes);
-                }
-            }
-            return detalle;
-        }
-
         public void NotificarOrdenCompra(string numeroDocumento, int proveedorId, string sociedad)
         {
             if (_db.ordencompras.FirstOrDefault(

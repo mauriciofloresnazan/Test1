@@ -3,9 +3,32 @@
 @{
     ViewBag.Title = "Órdenes de Compra";
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var proveedor = ViewBag.Proveedor;
 }
 <h2 class="form-signin-heading">Gestión de Órdenes de Compra</h2>
 <p class="page-description-title"><i class="fa fa-address-book" aria-hidden="true"></i> <i>En esta sección se podrán gestionar las órdenes de compra que tiene asociadas en su cuenta.</i></p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "VistaProveedor")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <div class="panel panel-default">
     <div class="panel-heading">Órdenes de Compra</div>
     <div class="panel-body">
