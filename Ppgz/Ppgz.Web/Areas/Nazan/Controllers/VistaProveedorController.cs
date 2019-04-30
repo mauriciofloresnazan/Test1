@@ -59,6 +59,22 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
         }
 
+        internal string SociedadActiva
+        {
+            get
+            {
+                if (System.Web.HttpContext.Current.Session["sociedadactiva"] != null)
+                {
+                    return (string)System.Web.HttpContext.Current.Session["sociedadactiva"];
+                }
+                return null;
+            }
+            set
+            {
+                System.Web.HttpContext.Current.Session["sociedadactiva"] = value;
+            }
+        }
+
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTAPROVEEDOR")]
         public ActionResult Index()
@@ -82,14 +98,17 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             CuentaActiva = cuentaConUsuarioMaestro;
 
+
+            ViewBag.Proveedores = _proveedorManager.FindByCuentaId(cuentaConUsuarioMaestro.Cuenta.Id);
             ViewBag.cuentaConUsuarioMaestro = cuentaConUsuarioMaestro;
 
             return View();
         }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTAPROVEEDOR")]
-        public ActionResult Inicio(int proveedorId)
+        public ActionResult Inicio(int proveedorId, string sociedad)
         {
+            SociedadActiva = sociedad;
             var proveedor = _proveedorManager.Find(proveedorId);
 
             ProveedorActivo = proveedor;
@@ -97,6 +116,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             ViewBag.Proveedor = ProveedorActivo;
             ViewBag.cuentaConUsuarioMaestro = cuentaConUsuarioMaestro;
+            ViewBag.Sociedad = sociedad;
 
             var model = new CuentaViewModel
             {
@@ -138,7 +158,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
 
             var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-            var dsPagos = partidasManager.GetPagos(ProveedorActivo.NumeroProveedor, sociedad, fecha);
+            var dsPagos = partidasManager.GetPagos(ProveedorActivo.NumeroProveedor, SociedadActiva, fecha);
 
             ViewBag.Pagos = dsPagos.Tables["T_LISTA_PAGOS"];
 
@@ -192,7 +212,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var partidasManager = new PartidasManager();
 
             var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorActivo.NumeroProveedor, sociedad, DateTime.Today);
+            var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorActivo.NumeroProveedor, SociedadActiva, DateTime.Today);
 
             ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
 
@@ -243,7 +263,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var partidasManager = new PartidasManager();
 
             var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
-            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorActivo.NumeroProveedor, sociedad, fecha);
+            var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorActivo.NumeroProveedor, SociedadActiva, fecha);
 
             ViewBag.Devoluciones = dsDevoluciones.Tables["T_DEVOLUCIONES"];
 
@@ -313,7 +333,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 
             var cuenta = CuentaActiva.Cuenta;
-            ViewBag.data = _ordenCompraManager.FindOrdenesDecompraActivasByCuenta(cuenta.Id);
+            ViewBag.data = _ordenCompraManager.FindOrdenesDecompraActivasByCuenta(cuenta.Id, SociedadActiva);
 
             return View();
         }
