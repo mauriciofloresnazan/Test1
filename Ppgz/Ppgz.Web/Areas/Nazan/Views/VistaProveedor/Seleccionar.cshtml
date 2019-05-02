@@ -33,13 +33,12 @@
 
                     <th class="text-center vert-align">Código Postal</th>
                     <th class="text-center vert-align">Dirección</th>
-                    <th>
-                    </th>
+                    <th class="text-center">Sociedades</th>
 
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (proveedore proveedor in ViewBag.cuentaConUsuarioMaestro.Cuenta.proveedores)
+                @foreach (proveedore proveedor in ViewBag.Proveedores)
                 {
                     <tr>
                         <td class="vert-align">@proveedor.NumeroProveedor</td>
@@ -54,13 +53,24 @@
 
                         <td class="vert-align">@proveedor.CodigoPostal</td>
                         <td class ="vert-align">@proveedor.Calle</td>
-                        <td>
+                        <td class="text-center">
+                            <div class="btn-group-vertical" role="group" aria-label="...">
+                                @foreach (var sociedad in proveedor.Sociedades)
+                                {
+                                    if (sociedad.Activa)
+                                    {
+                                        <a class="btn btn-primary btn-sm" href="@Url.Action("Inicio", "VistaProveedor", new { proveedorId = @proveedor.Id, sociedad = @sociedad.Sociedad })"> @sociedad.Nombre</a>
+                                    }
+                                }
+                            </div>
+                        </td>
+                        @*<td>
                             <div class="btn-group-vertical">
                                 <a class="btn btn-default btn-xs" href="@Url.Action("Inicio", "VistaProveedor", new {proveedorId = @proveedor.Id})" >
                                     <i class="fa fa-check" aria-hidden="true"></i> Seleccionar
                                 </a>
                             </div>
-                        </td>
+                        </td>*@
                     </tr>
                 }
                 </tbody>
