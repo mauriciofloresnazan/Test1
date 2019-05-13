@@ -254,6 +254,8 @@
           <Property Name="NumeroGenerado" Type="varchar" MaxLength="1000" />
           <Property Name="Procesado" Type="bool" Nullable="false" />
           <Property Name="numeroProveedor" Type="varchar" MaxLength="15" />
+          <Property Name="EstatusOriginal" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="FechaPortal" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
         </EntityType>
         <EntityType Name="facturasfactoraje">
           <Key>
@@ -1332,6 +1334,8 @@
           <Property Name="NumeroGenerado" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Name="Procesado" Type="Boolean" Nullable="false" />
           <Property Name="numeroProveedor" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="EstatusOriginal" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaPortal" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="proveedore" Relationship="Self.fk_facturas_proveedores" FromRole="facturas" ToRole="proveedores" />
         </EntityType>
         <EntityType Name="facturasfactoraje">
@@ -2324,6 +2328,8 @@
                 <ScalarProperty Name="NumeroGenerado" ColumnName="NumeroGenerado" />
                 <ScalarProperty Name="Procesado" ColumnName="Procesado" />
                 <ScalarProperty Name="numeroProveedor" ColumnName="numeroProveedor" />
+                <ScalarProperty Name="EstatusOriginal" ColumnName="EstatusOriginal"/>
+                <ScalarProperty Name="FechaPortal" ColumnName="FechaPortal" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

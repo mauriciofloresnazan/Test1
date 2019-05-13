@@ -601,7 +601,9 @@ namespace Ppgz.Services
                         PdfRuta = newPdfPath,
                         Estatus = facturaSap.Estatus,
                         Procesado = true,
-                        numeroProveedor = proveedor.NumeroProveedor
+                        numeroProveedor = proveedor.NumeroProveedor,
+                         EstatusOriginal = facturaSap.Estatus,
+                        FechaPortal = fecha
                     };
 
                     if (factura.Estatus != "S" && factura.Estatus != "H")
@@ -643,7 +645,9 @@ namespace Ppgz.Services
                         Estatus = "P",
                         Procesado = false,
                         numeroProveedor = proveedor.NumeroProveedor,
-                        Comentario = "N° de pares en Scale y SAP son diferentes"
+                        Comentario = "N° de pares en Scale y SAP son diferentes",
+                        EstatusOriginal = "p",
+                        FechaPortal = fecha
 
                     };
 
@@ -671,7 +675,9 @@ namespace Ppgz.Services
                     Estatus = "P",
                     Procesado = false,
                     numeroProveedor = proveedor.NumeroProveedor,
-                    Comentario = "Factura no disponible en Scale"
+                    Comentario = "Factura no disponible en Scale",
+                    EstatusOriginal = "P",
+                    FechaPortal = fecha
 
                 };
 
@@ -830,8 +836,10 @@ namespace Ppgz.Services
 				Estatus = "S",
 				Procesado = true,
 				Comentario = "Nota de credito factoraje",
-				numeroProveedor = proveedor.NumeroProveedor
-			};
+				numeroProveedor = proveedor.NumeroProveedor,
+                EstatusOriginal = "S",
+                FechaPortal = fecha
+            };
 
 			return factura;
 			
