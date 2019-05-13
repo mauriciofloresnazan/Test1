@@ -162,7 +162,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     }
 
                     //Paso 2: Ejecutamos la funcion de SAP
-                    Resultado cargarNotaCredito = sapFacturaManager.CrearNotaCredito(numeroProveedor, fechaFactura, importe, cabecera, posicion, folio);
+                    Resultado cargarNotaCredito = sapFacturaManager.CrearNotaCredito(numeroProveedor, fechaFactura, importe, cabecera, posicion, folio, Solicitud.Sociedad);
 					
 					if(cargarNotaCredito.Estatus == "1")
 					{
@@ -177,7 +177,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         sf.NumeroGenerado = Convert.ToInt32(facturaModel.NumeroGenerado);
                         solicitudFManager.UpdateSolicitud(sf);
 
-                        _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Carga Nota Credito", notaCreditoView.idSolicitudesFactoraje, "Carga nota de credito");
+                        _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Carga Nota Credito", notaCreditoView.idSolicitudesFactoraje, "Carga nota de credito");
 
                         TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente.";
                         
@@ -306,8 +306,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             //Si hay alguna solicitud en estatus diferente de 3, se le informa al usuario
             if (solicitudesList != null && solicitudesList.Count > 0)
             {
-                TempData["FlashError"] = "Solo se puede tener una solicitud abierta.";
-                return RedirectToAction("NuevaSolicitud", new { proveedorId = proveedorId });
+                foreach (var item in solicitudesList)
+                {
+                    if (item.Sociedad == SociedadActiva)
+                    {
+                        TempData["FlashError"] = "Solo se puede tener una solicitud abierta.";
+                        return RedirectToAction("NuevaSolicitud", new { proveedorId = proveedorId });
+                    }
+                }                
             }
 
             //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
@@ -332,7 +338,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			FacturaFManager facturaFManager = new FacturaFManager();
 			DescuentoFManager descuentoFManager = new DescuentoFManager();
 
-			//Insertamos la solicitud factoraje
+            //Insertamos la solicitud factoraje
+            totalView.SolicitudFactoraje.Sociedad = SociedadActiva;
 			int SolicitudId = solicitudFManager.InsSolicitud(totalView.SolicitudFactoraje);
 
 			//Insertamos las facturas del factoraje
@@ -352,7 +359,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 
             
-            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Crea Solicitud", SolicitudId, "Crea solicitud proveedor: " + proveedorId + " con facturas: " + facturas + ". Descuentos: " + dfs);
+            _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Crea Solicitud", SolicitudId, "Crea solicitud proveedor: " + proveedorId + " con facturas: " + facturas + ". Descuentos: " + dfs);
 
             return RedirectToAction("VerSolicitudes", new { proveedorId = proveedorId });
 		}
@@ -528,7 +535,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
             //Traemos el prestamo del proveedor
             SapProveedorManager sapProveedorManager = new SapProveedorManager();
-            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor);
+            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor, SociedadActiva);
             ViewBag.Prestamo = prestamo;
 
             ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
@@ -653,7 +660,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             //Traemos el prestamo del proveedor
             SapProveedorManager sapProveedorManager = new SapProveedorManager();
-            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor);
+            double prestamo = sapProveedorManager.GetPrestamo(proveedor.NumeroProveedor, SociedadActiva);
             ViewBag.Prestamo = prestamo;
 
             ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
@@ -688,7 +695,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			//Obtenemos las solicitudes del proveedor
 			SolicitudFManager solicitudFManager = new SolicitudFManager();
 			List<localsolicitud> solicitudesList = solicitudFManager.GetSolicitudesFactoraje();
-			solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId).ToList();
+			solicitudesList = solicitudesList.Where(x => x.IdProveedor == proveedorId && x.Sociedad == SociedadActiva).ToList();
             //Filtramos solicitudes por semana actual
             DateTime startOfWeek = DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek));
             solicitudesList = solicitudesList.Where(x => x.Fecha > startOfWeek).ToList();

@@ -23,6 +23,7 @@
                             <th class="text-center">Número Proveedor</th>
                             <th class="text-center">RFC</th>
                             <th class="text-center">Razón Social</th>
+                            <th class="text-center">Correo</th>
                             <th class="text-center">Porcentaje</th>
                             <th class="text-center">Día de pago</th>
                             <th class="text-center">Porcentaje</th>
@@ -71,6 +72,7 @@
                                 <td class="text-center vert-align">@item.Numero</td>
                                 <td class="text-center vert-align">@item.Rfc</td>
                                 <td class="text-center vert-align">@item.Nombre</td>
+                                <td class="text-center vert-align">@item.Correo</td>
                                 <td class="text-center vert-align">@defaultporcentaje %</td>
                                 <td class="text-center vert-align">@defaultdiapago</td>
                                 @if (!String.IsNullOrWhiteSpace(diapago))
@@ -83,7 +85,7 @@
                                 }
                                 <td class="text-center vert-align">@diapago</td>
                                 <td class="text-center">
-                                    <a class="btn btn-primary btn-sm btn-editar" href="#" data-cuenta="@item.CuentaId" data-id="@item.IdProveedor" data-numero="@item.Numero" data-rfc="@item.Rfc" data-nombre="@item.Nombre" data-porcentaje="@item.Porcentaje" data-diadepago="@item.DiaDePago">
+                                    <a class="btn btn-primary btn-sm btn-editar" href="#" data-cuenta="@item.CuentaId" data-id="@item.IdProveedor" data-numero="@item.Numero" data-rfc="@item.Rfc" data-nombre="@item.Nombre" data-porcentaje="@item.Porcentaje" data-diadepago="@item.DiaDePago" data-correo="@item.Correo">
                                         <i class="fa fa-check" aria-hidden="true"></i> Editar
                                     </a>
                                 </td>
@@ -128,6 +130,7 @@
                         </select>
                     </div><br />
                     <div>Porcentaje de Descuento:<input class="form-control input-sm" placeholder="" value="" type="number" min="0" max="100" id="mdlPorcentaje" name="porcentaje" required></div>
+                    <div>Correo Electrónico:<input class="form-control input-sm" placeholder="" value="" type="email" id="mdlCorreo" name="correo" required></div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" id="mdlGuardar" class="btn btn-default">Guardar</button>
@@ -155,6 +158,7 @@
                 var idCuenta = $(this).data("cuenta");
                 var diapago = $(this).data("diadepago");
                 var porcentaje = $(this).data("porcentaje");
+                var correo = $(this).data("correo");
 
                 if (diapago == 0 && porcentaje == 0) {
                     var d = "@defaultdiapago" 
@@ -194,6 +198,7 @@
                 
                 $("#mdlId").val(id);
                 $("#mdlIdCuenta").val(idCuenta);
+                $("#mdlCorreo").val(correo);
                 
                 $("#modalEditarProveedor").modal('show');
             });

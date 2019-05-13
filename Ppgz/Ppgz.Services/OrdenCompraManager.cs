@@ -156,7 +156,7 @@ namespace Ppgz.Services
             }
             return detalle;
         }
-        
+
         public void NotificarOrdenCompra(string numeroDocumento, int proveedorId, string sociedad)
         {
             if (_db.ordencompras.FirstOrDefault(

@@ -11,7 +11,7 @@ namespace Ppgz.Services
     {
         private readonly Entities _db = new Entities();
 
-        public void InsertLog(string usuario, string operacion, int objeto, string descripcion)
+        public void InsertLog(string tipoObjeto/*sociedad*/, string usuario, string operacion, int objeto, string descripcion)
         {
             logfactoraje lf = new logfactoraje()
             {
@@ -19,7 +19,8 @@ namespace Ppgz.Services
                 Usuario = usuario,
                 Operacion = operacion,
                 IdObjeto = objeto,
-                Descripcion = descripcion
+                Descripcion = descripcion,
+                TipoObjeto = Convert.ToInt32(tipoObjeto)
             };
 
             _db.logfactoraje.Add(lf);
