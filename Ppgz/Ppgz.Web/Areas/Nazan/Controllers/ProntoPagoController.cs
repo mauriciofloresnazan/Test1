@@ -389,13 +389,14 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             
                             var commonManager = new CommonManager();
 
-                            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
+                            _logsFactoraje.InsertLog(SociedadActiva, this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
 
                             foreach (var propuesta in listpropuestas)
                             {
                                 _solicitudFManager.UpdateEstatusSolicitud(propuesta.Id, 7);
                                 
                                 var proveedorFactoraje = _proveedorFManager.GetProveedorById(_solicitudFManager.GetSolicitudById(propuesta.Id).IdProveedor);
+
                                 bool enviado = false;
                                 if (proveedorFactoraje != null)
                                 {
@@ -414,7 +415,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                                     }
                                 }
 
-                                var proveedor = _db.proveedores.Where(c => c.Id == _solicitudFManager.GetSolicitudById(propuesta.Id).IdProveedor).FirstOrDefault();
+                                var proveedor = _db.proveedores.Where(c => c.Id == propuesta.IdProveedor).FirstOrDefault();
                                 if (proveedor != null && enviado == false) 
                                 {
                                     try
@@ -429,7 +430,6 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                                    
                             }
 
-                            _logsFactoraje.InsertLog(SociedadActiva,this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
                             TempData["FlashSuccess"] = "Enviadas con exito";                                
                         }
                         else
