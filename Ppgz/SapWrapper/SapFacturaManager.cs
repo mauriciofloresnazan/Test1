@@ -71,8 +71,10 @@ namespace SapWrapper
 			function.SetValue("IM_FECHA", fechaFactura.ToString("yyyyMMdd"));
 			function.SetValue("IM_REF", folio);
 			function.SetValue("IM_IMPORTE", importe);
+            function.SetValue("IM_BUKRS", sociedad); 
 
-			function.SetValue("IM_TEXTO_H", cabecera);
+
+            function.SetValue("IM_TEXTO_H", cabecera);
 			function.SetValue("IM_TEXTO_P", posicion);
 
             function.SetValue("IM_BUKRS", sociedad);
