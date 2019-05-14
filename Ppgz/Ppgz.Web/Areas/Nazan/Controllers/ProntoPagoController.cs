@@ -387,7 +387,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         if (!err)
                         {
                             
-                            var commonManager = new CommonManager();                            
+                            var commonManager = new CommonManager();
+
+                            _logsFactoraje.InsertLog(this.User.Identity.Name.ToString(), "Enviar Propuestas", listpropuestas.Count(), "Envia propuesta con documentos: " + documentos + ". ");
+
                             foreach (var propuesta in listpropuestas)
                             {
                                 _solicitudFManager.UpdateEstatusSolicitud(propuesta.Id, 7);
