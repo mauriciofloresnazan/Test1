@@ -9,7 +9,12 @@
     var fechaInicio = (DateTime)ViewBag.FechaInicio;
     var fechaFin = fechaInicio.AddMonths(0);
 }
-
+<style type="text/css">
+    div#facturas_filter {
+        text-align: right;
+        display: none
+    }
+</style>
 <h2>Facturas Registradas</h2>
 <p class="page-description-title"><i class="fa fa-file-text-o" aria-hidden="true"></i> <i>Puede consultar los registros</i></p>
 
@@ -36,6 +41,7 @@
 
             <hr />
             <div class="table-responsive">
+
                 <table id="facturas" class="table table-striped table-condensed table-bordered">
                     <thead>
                         <tr>
@@ -207,7 +213,7 @@
         });
 
 
-        
+
 
         $(document).ready(function () {
 
