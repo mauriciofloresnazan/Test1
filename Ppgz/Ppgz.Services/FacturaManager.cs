@@ -254,7 +254,9 @@ namespace Ppgz.Services
                 PdfRuta = newPdfPath,
                 Estatus = facturaSap.Estatus,
                 Procesado = true,
-                numeroProveedor = proveedor.NumeroProveedor
+                numeroProveedor = proveedor.NumeroProveedor,
+                EstatusOriginal = facturaSap.Estatus,
+                FechaPortal = fecha
             };
 
             if (factura.Estatus != "S" && factura.Estatus != "H")
