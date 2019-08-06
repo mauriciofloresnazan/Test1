@@ -256,6 +256,7 @@
           <Property Name="numeroProveedor" Type="varchar" MaxLength="15" />
           <Property Name="EstatusOriginal" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="FechaPortal" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RFCReceptor" Type="varchar" MaxLength="40" Nullable="false" />
         </EntityType>
         <EntityType Name="facturasfactoraje">
           <Key>
@@ -1338,6 +1339,7 @@
           <Property Name="numeroProveedor" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="EstatusOriginal" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="FechaPortal" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RFCReceptor" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="proveedore" Relationship="Self.fk_facturas_proveedores" FromRole="facturas" ToRole="proveedores" />
         </EntityType>
         <EntityType Name="facturasfactoraje">
@@ -2334,6 +2336,7 @@
                 <ScalarProperty Name="numeroProveedor" ColumnName="numeroProveedor" />
                 <ScalarProperty Name="EstatusOriginal" ColumnName="EstatusOriginal"/>
                 <ScalarProperty Name="FechaPortal" ColumnName="FechaPortal" />
+                <ScalarProperty Name="RFCReceptor" ColumnName="RFCReceptor" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

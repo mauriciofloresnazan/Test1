@@ -47,9 +47,9 @@ namespace Ppgz.Services
         {
             List<factura> Facturas = _db.facturas.Where(f => f.Procesado == false).ToList();
 
-            foreach ( factura itemFactura in Facturas)
+            foreach (factura itemFactura in Facturas)
             {
-                var resultado=CargarFacturaAtorada(itemFactura.proveedor_id, itemFactura.XmlRuta);
+                var resultado = CargarFacturaAtorada(itemFactura.proveedor_id, itemFactura.XmlRuta);
                 if (resultado != null)
                 {
                     itemFactura.Estatus = resultado.Estatus;
@@ -66,7 +66,7 @@ namespace Ppgz.Services
                     {
                         itemFactura.NumeroGenerado = resultado.FacturaNumero;
                         itemFactura.Comentario = "Factura Procesada";
-                   
+
                     }
                     _db.SaveChanges();
                 }
@@ -256,7 +256,8 @@ namespace Ppgz.Services
                 Procesado = true,
                 numeroProveedor = proveedor.NumeroProveedor,
                 EstatusOriginal = facturaSap.Estatus,
-                FechaPortal = fecha
+                FechaPortal = fecha,
+                RFCReceptor = RFCReceptor ?? string.Empty
             };
 
             if (factura.Estatus != "S" && factura.Estatus != "H")
@@ -276,7 +277,7 @@ namespace Ppgz.Services
                 _db.SaveChanges();
             }
 
-           
+
 
         }
 
@@ -341,7 +342,7 @@ namespace Ppgz.Services
                 int paresScale = Int32.Parse(row["Pares"].ToString());
 
                 DateTime fechaFactura = DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture);
-                
+
 
                 SapOrdenCompraManager ConsultaSap = new SapOrdenCompraManager();
                 var totalParesSAP = ConsultaSap.GetCantidadValidacionSAP(fechaFactura.Year.ToString(), proveedor.Sociedad, refe, proveedor.NumeroProveedor);
@@ -396,11 +397,11 @@ namespace Ppgz.Services
             else
             {
                 return null;
-            }   
+            }
 
         }
 
-            public void CargarFactura(int proveedorId, int cuentaId, string xmlFilePath, string pdfFilePath)
+        public void CargarFactura(int proveedorId, int cuentaId, string xmlFilePath, string pdfFilePath)
         {
             // Validaciones de los archivos
             if (!File.Exists(xmlFilePath))
@@ -543,7 +544,7 @@ namespace Ppgz.Services
             ////////////////////////////////
             //Inicio de validacion Scale
             ////////////////////////////////
-            var result = DbScale.GetDataTable("SELECT * FROM GNZN_Cifras_Control_CR_Facturas  WHERE Proveedor = '"+ proveedor.NumeroProveedor + "' AND Factura='"+ refe +"';");
+            var result = DbScale.GetDataTable("SELECT * FROM GNZN_Cifras_Control_CR_Facturas  WHERE Proveedor = '" + proveedor.NumeroProveedor + "' AND Factura='" + refe + "';");
 
             ////////////////////////////////
             //Fin de validacion Scale
@@ -551,7 +552,7 @@ namespace Ppgz.Services
 
             if (result.Rows.Count == 1)
             {
-                
+
                 var row = result.Rows[0];
                 int paresScale = Int32.Parse(row["Pares"].ToString());
 
@@ -604,8 +605,9 @@ namespace Ppgz.Services
                         Estatus = facturaSap.Estatus,
                         Procesado = true,
                         numeroProveedor = proveedor.NumeroProveedor,
-                         EstatusOriginal = facturaSap.Estatus,
-                        FechaPortal = fecha
+                        EstatusOriginal = facturaSap.Estatus,
+                        FechaPortal = fecha,
+                        RFCReceptor = RFCReceptor ?? string.Empty
                     };
 
                     if (factura.Estatus != "S" && factura.Estatus != "H")
@@ -649,7 +651,8 @@ namespace Ppgz.Services
                         numeroProveedor = proveedor.NumeroProveedor,
                         Comentario = "N° de pares en Scale y SAP son diferentes",
                         EstatusOriginal = "p",
-                        FechaPortal = fecha
+                        FechaPortal = fecha,
+                        RFCReceptor = RFCReceptor ?? string.Empty
 
                     };
 
@@ -657,7 +660,7 @@ namespace Ppgz.Services
 
                     _db.SaveChanges();
                 }
-                
+
             }
             else
             {
@@ -679,7 +682,8 @@ namespace Ppgz.Services
                     numeroProveedor = proveedor.NumeroProveedor,
                     Comentario = "Factura no disponible en Scale",
                     EstatusOriginal = "P",
-                    FechaPortal = fecha
+                    FechaPortal = fecha,
+                    RFCReceptor = RFCReceptor ?? string.Empty
 
                 };
 
@@ -690,169 +694,170 @@ namespace Ppgz.Services
 
         }
 
-		public factura CargarFacturaFactoraje(int proveedorId, int cuentaId, string xmlFilePath, string pdfFilePath)
-		{
-			// Validaciones de los archivos
-			if (!File.Exists(xmlFilePath))
-			{
-				throw new BusinessException("Xml incorrecto");
-			}
-			if (Path.GetExtension(xmlFilePath).ToLower() != ".xml")
-			{
-				throw new BusinessException("Xml incorrecto");
-			}
-			if (!File.Exists(pdfFilePath))
-			{
-				throw new BusinessException("Pdf incorrecto");
-			}
-			if (Path.GetExtension(pdfFilePath).ToLower() != ".pdf")
-			{
-				throw new BusinessException("Pdf incorrecto");
-			}
+        public factura CargarFacturaFactoraje(int proveedorId, int cuentaId, string xmlFilePath, string pdfFilePath)
+        {
+            // Validaciones de los archivos
+            if (!File.Exists(xmlFilePath))
+            {
+                throw new BusinessException("Xml incorrecto");
+            }
+            if (Path.GetExtension(xmlFilePath).ToLower() != ".xml")
+            {
+                throw new BusinessException("Xml incorrecto");
+            }
+            if (!File.Exists(pdfFilePath))
+            {
+                throw new BusinessException("Pdf incorrecto");
+            }
+            if (Path.GetExtension(pdfFilePath).ToLower() != ".pdf")
+            {
+                throw new BusinessException("Pdf incorrecto");
+            }
 
-			// Validacion de la factura 
-			var serializer = new XmlSerializer(typeof(Comprobante));
+            // Validacion de la factura 
+            var serializer = new XmlSerializer(typeof(Comprobante));
 
-			var xmlFileStream = new FileStream(xmlFilePath, FileMode.Open);
-
-
-			var comprobante = (Comprobante)serializer.Deserialize(xmlFileStream);
-
-			var proveedor = new proveedore();
-			var RFC = "";
-			var RFCReceptor = "";
-			var Serie = "";
-			var Folio = "";
-			var SubTotal = "";
-			var Fecha = "";
-			var Total = "";
-
-			if (comprobante.Version33 == "3.3")
-			{
-				proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc33);
-				RFC = comprobante.Emisor.Rfc33;
-				RFCReceptor = comprobante.Receptor.Rfc33;
-				Serie = comprobante.Serie33;
-				Folio = comprobante.Folio33;
-				SubTotal = comprobante.SubTotal33;
-				Total = comprobante.Total33;
-				Fecha = comprobante.Fecha33;
-			}
-			else
-			{
-				proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc);
-				RFC = comprobante.Emisor.Rfc;
-				RFCReceptor = comprobante.Receptor.Rfc;
-				Serie = comprobante.Serie;
-				Folio = comprobante.Folio;
-				SubTotal = comprobante.SubTotal;
-				Total = comprobante.Total;
-				Fecha = comprobante.Fecha;
-			}
-
-			var refe = "";
-			if (comprobante.Serie == "")
-			{
-				refe = Folio;
-			}
-			else
-			{
-				refe = Serie + Folio;
-			}
-
-			if (proveedor == null)
-			{
-				xmlFileStream.Close();
-				xmlFileStream.Dispose();
-				throw new BusinessException("Proveedor incorrecto en la factura");
-			}
-
-			if (proveedor.Id != proveedorId)
-			{
-				xmlFileStream.Close();
-				xmlFileStream.Dispose();
-				throw new BusinessException("Proveedor incorrecto en la factura");
-			}
-
-			if (_db.facturas.FirstOrDefault(fa => fa.Uuid == comprobante.Complemento.TimbreFiscalDigital.UUID) != null)
-			{
-				xmlFileStream.Close();
-				xmlFileStream.Dispose();
-				throw new BusinessException("La nota de credito ya esta registrada en el sistema");
-			}
-			xmlFileStream.Close();
-			xmlFileStream.Dispose();
-
-			var contenido = File.ReadAllText(xmlFilePath);
-
-			// Validación ante el sat
-
-			var configuraciones = _db.configuraciones.ToList();
-			var cfdiToken = configuraciones.Single(c => c.Clave == "cfdi.token").Valor;
-			var cfdiPassword = configuraciones.Single(c => c.Clave == "cfdi.password").Valor;
-			var cfdiUser = configuraciones.Single(c => c.Clave == "cfdi.user").Valor;
-			var cfdiCuenta = configuraciones.Single(c => c.Clave == "cfdi.cuenta").Valor;
-			try
-			{
-				CfdiServiceConsulta.Validar(contenido, cfdiToken, cfdiPassword, cfdiUser, cfdiCuenta, RFCReceptor);
-			}
-			catch (Exception)
-			{
-				xmlFileStream.Close();
-				xmlFileStream.Dispose();
-				throw;
-			}
+            var xmlFileStream = new FileStream(xmlFilePath, FileMode.Open);
 
 
+            var comprobante = (Comprobante)serializer.Deserialize(xmlFileStream);
 
-			// Se crea el directorio de acuerdo a la fecha del comprobante
-			var fecha = DateTime.ParseExact(Fecha.Substring(0, 10), "yyyy-MM-dd",
-				CultureInfo.InvariantCulture);
-			var directory = GetFacturaDirectory(fecha);
+            var proveedor = new proveedore();
+            var RFC = "";
+            var RFCReceptor = "";
+            var Serie = "";
+            var Folio = "";
+            var SubTotal = "";
+            var Fecha = "";
+            var Total = "";
 
-			// Movemos el xml
-			var xmlFileName = comprobante.Complemento.TimbreFiscalDigital.UUID + ".xml";
-			var newXmlPath = Path.Combine(directory.FullName, xmlFileName);
-			File.Copy(xmlFilePath, newXmlPath);
+            if (comprobante.Version33 == "3.3")
+            {
+                proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc33);
+                RFC = comprobante.Emisor.Rfc33;
+                RFCReceptor = comprobante.Receptor.Rfc33;
+                Serie = comprobante.Serie33;
+                Folio = comprobante.Folio33;
+                SubTotal = comprobante.SubTotal33;
+                Total = comprobante.Total33;
+                Fecha = comprobante.Fecha33;
+            }
+            else
+            {
+                proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc);
+                RFC = comprobante.Emisor.Rfc;
+                RFCReceptor = comprobante.Receptor.Rfc;
+                Serie = comprobante.Serie;
+                Folio = comprobante.Folio;
+                SubTotal = comprobante.SubTotal;
+                Total = comprobante.Total;
+                Fecha = comprobante.Fecha;
+            }
 
-			// Movemos el pdf
-			var pdfFileName = comprobante.Complemento.TimbreFiscalDigital.UUID + ".pdf";
-			var newPdfPath = Path.Combine(directory.FullName, pdfFileName);
-			File.Copy(pdfFilePath, newPdfPath);
+            var refe = "";
+            if (comprobante.Serie == "")
+            {
+                refe = Folio;
+            }
+            else
+            {
+                refe = Serie + Folio;
+            }
 
-			//Se agrega llamado a la aplicacion de la nota de credito en SAP
+            if (proveedor == null)
+            {
+                xmlFileStream.Close();
+                xmlFileStream.Dispose();
+                throw new BusinessException("Proveedor incorrecto en la factura");
+            }
 
-			//[PENDIENTE]
+            if (proveedor.Id != proveedorId)
+            {
+                xmlFileStream.Close();
+                xmlFileStream.Dispose();
+                throw new BusinessException("Proveedor incorrecto en la factura");
+            }
 
-			//Se guarda en MySql la factura
-			factura factura = new factura
-			{
-				Serie = Serie ?? string.Empty,
-				Folio = Folio ?? string.Empty,
-				Fecha = fecha,
-				Total = decimal.Parse(Total, CultureInfo.InvariantCulture),
-				proveedor_id = proveedor.Id,
-				Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
-				XmlRuta = newXmlPath,
-				PdfRuta = newPdfPath,
-				Estatus = "S",
-				Procesado = true,
-				Comentario = "Nota de credito factoraje",
-				numeroProveedor = proveedor.NumeroProveedor,
+            if (_db.facturas.FirstOrDefault(fa => fa.Uuid == comprobante.Complemento.TimbreFiscalDigital.UUID) != null)
+            {
+                xmlFileStream.Close();
+                xmlFileStream.Dispose();
+                throw new BusinessException("La nota de credito ya esta registrada en el sistema");
+            }
+            xmlFileStream.Close();
+            xmlFileStream.Dispose();
+
+            var contenido = File.ReadAllText(xmlFilePath);
+
+            // Validación ante el sat
+
+            var configuraciones = _db.configuraciones.ToList();
+            var cfdiToken = configuraciones.Single(c => c.Clave == "cfdi.token").Valor;
+            var cfdiPassword = configuraciones.Single(c => c.Clave == "cfdi.password").Valor;
+            var cfdiUser = configuraciones.Single(c => c.Clave == "cfdi.user").Valor;
+            var cfdiCuenta = configuraciones.Single(c => c.Clave == "cfdi.cuenta").Valor;
+            try
+            {
+                CfdiServiceConsulta.Validar(contenido, cfdiToken, cfdiPassword, cfdiUser, cfdiCuenta, RFCReceptor);
+            }
+            catch (Exception)
+            {
+                xmlFileStream.Close();
+                xmlFileStream.Dispose();
+                throw;
+            }
+
+
+
+            // Se crea el directorio de acuerdo a la fecha del comprobante
+            var fecha = DateTime.ParseExact(Fecha.Substring(0, 10), "yyyy-MM-dd",
+                CultureInfo.InvariantCulture);
+            var directory = GetFacturaDirectory(fecha);
+
+            // Movemos el xml
+            var xmlFileName = comprobante.Complemento.TimbreFiscalDigital.UUID + ".xml";
+            var newXmlPath = Path.Combine(directory.FullName, xmlFileName);
+            File.Copy(xmlFilePath, newXmlPath);
+
+            // Movemos el pdf
+            var pdfFileName = comprobante.Complemento.TimbreFiscalDigital.UUID + ".pdf";
+            var newPdfPath = Path.Combine(directory.FullName, pdfFileName);
+            File.Copy(pdfFilePath, newPdfPath);
+
+            //Se agrega llamado a la aplicacion de la nota de credito en SAP
+
+            //[PENDIENTE]
+
+            //Se guarda en MySql la factura
+            factura factura = new factura
+            {
+                Serie = Serie ?? string.Empty,
+                Folio = Folio ?? string.Empty,
+                Fecha = fecha,
+                Total = decimal.Parse(Total, CultureInfo.InvariantCulture),
+                proveedor_id = proveedor.Id,
+                Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
+                XmlRuta = newXmlPath,
+                PdfRuta = newPdfPath,
+                Estatus = "S",
+                Procesado = true,
+                Comentario = "Nota de credito factoraje",
+                numeroProveedor = proveedor.NumeroProveedor,
                 EstatusOriginal = "S",
-                FechaPortal = fecha
+                FechaPortal = fecha,
+                RFCReceptor = RFCReceptor ?? string.Empty
             };
 
-			return factura;
-			
-		}
+            return factura;
 
-		public void GuardaFacturaFactoraje(factura model)
-		{
-			_db.facturas.Add(model);
-			_db.SaveChanges();
-		}
-		public DirectoryInfo GetFacturaDirectory(DateTime fecha)
+        }
+
+        public void GuardaFacturaFactoraje(factura model)
+        {
+            _db.facturas.Add(model);
+            _db.SaveChanges();
+        }
+        public DirectoryInfo GetFacturaDirectory(DateTime fecha)
         {
             var facturaRootDirectory = new DirectoryInfo(_db.configuraciones.Single(c => c.Clave == "facturas.rootdirectory").Valor);
 
