@@ -3,36 +3,97 @@
 @using Ppgz.Web.Infrastructure
 @if (Request.IsAuthenticated)
 {
-    var commonManager= new CommonManager();
+    var commonManager = new CommonManager();
     var cuenta = commonManager.GetCuentaUsuarioAutenticado();
-    
-    
-    
-    using (Html.BeginForm("LogOff", "Account",  new { area = "" },FormMethod.Post,  new { id = "logoutForm", @class = "navbar-right" }))
+
+
+
+    using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-    <ul class="nav navbar-nav navbar-right">
-        <li>
-            @Html.ActionLink("¡BIENVENIDO " + User.Identity.GetUserName().ToUpper() + "!", "Index", "Home", routeValues: null, htmlAttributes: new {title = "Manage"})
-        </li>
-        <li>
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i> Ayuda<span class="caret"></span></a>
-            <ul class="dropdown-menu">
-                <li><a href="@Url.Action("Ayuda","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual de Usuario</a></li>
-                <li><a href="@Url.Action("AyudaCedis","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual entrega de mercancía en CEDIS</a></li>
-            </ul>
-
-        </li>
-
-        @if (cuenta != null)
-        {
-            <li id="mensajes-notificador">
-                <a class="btn btn-link" href="@Url.Action("Index", "MensajesInstitucionales", new {area = @cuenta.Tipo})"><i class="fa fa-envelope" aria-hidden="true"></i> <span class="badge"></span></a>
+        <ul id="menuBar" class="nav navbar-nav navbar-right">
+            <li>
+                @Html.ActionLink("¡BIENVENIDO " + User.Identity.GetUserName().ToUpper() + "!", "Index", "Home", routeValues: null, htmlAttributes: new { title = "Manage" })
             </li>
+            <li>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i> Ayuda<span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.Action("Ayuda","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual de Usuario</a></li>
+                    <li><a href="@Url.Action("AyudaCedis","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual entrega de mercancía en CEDIS</a></li>
+                </ul>
+
+            </li>
+
+            @if (cuenta != null)
+            {
+                <li id="mensajes-notificador">
+                    <a class="btn btn-link" href="@Url.Action("Index", "MensajesInstitucionales", new {area = @cuenta.Tipo})"><i class="fa fa-envelope" aria-hidden="true"></i> <span class="badge"></span></a>
+                </li>
+            }
+            <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión</a></li>
+        </ul>
+    }
+    if (cuenta != null)
+    {
+
+        <script>
+    var cuentaPro = @cuenta.Id;
+            var mostrar = false;
+            var menuIni = '<li><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> <i class="fa fa-question-circle" aria-hidden="true"></i> Manuales Maquiladoras <span class="caret"></span></a><ul class="dropdown-menu">';
+            var menuInter = "";
+            var menuFin = '</ul></li>';
+
+
+    function manualesFunction(item, index) {
+
+        item.proveedores.forEach(element => {
+            if (cuentaPro == element) {
+                mostrar = true;
+                menuInter += '<li><a href="' + item.URL + '"><i class="fa fa-download" aria-hidden="true"></i>' + item.Nombre + '</a ></li >';
+            }
+        });
+
+            }
+
+            var manuales = [{ "Nombre": " MAMA LOLA MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/MAMALOLAMANUAL.pdf", "proveedores": [54, 15, 122] },
+                { "Nombre": " MIRACOL BY MAMA LOLA MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/MIRACOLBYMAMALOLAMANUAL.pdf", "proveedores": [280, 114, 4] },
+                { "Nombre": " HALOGEN BY MR SHU MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/HALOGENBYMRSHUMANUAL.pdf", "proveedores": [28, 36, 30, 32, 274, 172, 73, 66, 96] },
+                { "Nombre": " MEN AT WORK BY FORESTER MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/MENATWORKBYFORESTERMANUAL.pdf", "proveedores": [193, 63, 67] },
+                { "Nombre": " DOLCE COLLEZIONE BY GLAM GLAM MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/DOLCECOLLEZIONEBYGLAMGLAMMANUAL.pdf", "proveedores": [112, 113] },
+                { "Nombre": " COSMO PARIS BY BESER MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/COSMOPARISBYBESERMANUAL.pdf", "proveedores": [20, 73] },
+                { "Nombre": " MR SHU MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/MRSHUMANUAL.pdf", "proveedores": [28, 273] },
+                { "Nombre": " LILLIMIL BY SPRINKLES MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/LILLIMILBYSPRINKLESMANUAL.pdf", "proveedores": [114] },
+                { "Nombre": " AY DE PIÑA MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/AYDEPIÑAMANUAL.pdf", "proveedores": [54, 349, 8, 122] },
+                { "Nombre": " BESER MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/BESERMANUAL.pdf", "proveedores": [54, 208, 49, 55, 92, 20, 21, 72, 4, 172, 306, 128, 122] },
+                { "Nombre": " CHIFLADOS MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/CHIFLADOSMANUAL.pdf", "proveedores": [20, 71, 165, 72, 25, 61, 81, 101] },
+                { "Nombre": " COSMO PARIS MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/COSMOPARISMANUAL.pdf", "proveedores": [54, 20] },
+                { "Nombre": " DESTROYER MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/DESTROYERMANUAL.pdf", "proveedores": [52] },
+                { "Nombre": " EH! MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/EH!MANUAL.pdf", "proveedores": [21, 40] },
+                { "Nombre": " FORESTER MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/FORESTERMANUAL.pdf", "proveedores": [33, 278, 273, 107] },
+                { "Nombre": " GLAM GLAM MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/GLAMGLAMMANUAL.pdf", "proveedores": [146, 320, 92, 305, 86, 20, 129, 21, 72, 114, 15, 116, 73, 122] },
+                { "Nombre": " HEAD OVER HILLS MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/HEADOVERHILLSMANUAL.pdf", "proveedores": [146, 20, 114] },
+                { "Nombre": " LOGAN MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/LOGANMANUAL.pdf", "proveedores": [273] },
+                { "Nombre": " MANCHITAS MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/MANCHITASMANUAL.pdf", "proveedores": [305, 20, 71, 199, 29, 101] },
+                { "Nombre": " MIRACOL MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/MIRACOLMANUAL.pdf", "proveedores": [54, 55, 20, 204, 114, 4, 117] },
+                { "Nombre": " MOO MOO MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/MOOMOOMANUAL.pdf", "proveedores": [54, 20, 122] },
+                { "Nombre": "OVX MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/OVXMANUAL.pdf", "proveedores": [54, 172] },
+                { "Nombre": "REAL JUNGLE MANUAL.pdf", "URL": "https://proveedores.impuls.com.mx/Manuales/REALJUNGLEMANUAL.pdf", "proveedores": [54, 20, 4, 111, 144] },
+                { "Nombre": "SPRINKLES MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/SPRINKLESMANUAL.pdf", "proveedores": [54, 208, 134, 92, 305, 86, 20, 21, 72, 114, 61, 15, 85, 306] }
+            ];
+
+
+    (function () {
+        manuales.forEach(manualesFunction);
+
+        if (mostrar) {
+            document.getElementById("menuBar").innerHTML += menuIni + menuInter + menuFin;
         }
-        <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión</a></li>
-    </ul>
+
+    })();
+
+        </script>
+
     }
 }
 else
