@@ -28,9 +28,9 @@ namespace Ppgz.Repository
         public string NumeroGenerado { get; set; }
         public bool Procesado { get; set; }
         public string numeroProveedor { get; set; }
-        public String EstatusOriginal { get; set; }
+        public string EstatusOriginal { get; set; }
         public System.DateTime FechaPortal { get; set; }
-
+    
         public virtual proveedore proveedore { get; set; }
     }
 }
