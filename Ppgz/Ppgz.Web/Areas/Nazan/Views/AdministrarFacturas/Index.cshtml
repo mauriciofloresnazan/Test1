@@ -27,7 +27,7 @@
         </p>
         <div class="col-md-12">
 
-            <div class="form-inline">
+            <div class="form-inline  col-md-8">
                 <div class="form-group">
                     <label for="fecha">Mes Desde</label>
                     <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha">
@@ -38,7 +38,32 @@
                 </div>
                 <button id="btnExport" value="Export to Excel" /><img src="~/assets/img/excel.gif" class="botonExcel" />
             </div>
+            <div style="display:flex">
 
+                <div class="col-sm-8">
+                    <label class="col-sm-5 control-label"> Selecciona La Razon Social</label>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="nazan" id="Todas" value="false">
+                            Todas
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="nazan" id="Nazan" value="false">
+                            Nazan
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="nazan" id="Kafa" value="false">
+                            Kafa
+                        </label>
+
+                    </div>
+
+                </div>
+            </div>
             <hr />
             <div class="table-responsive">
 
@@ -58,6 +83,7 @@
                             <th class="text-center">Total</th>
                             <th class="text-center">Estatus</th>
                             <th class="text-center">Comentario</th>
+                            <th class="text-center ocultar ">RFC Receptor</th>
                             <th class="text-center">Opciones</th>
                         </tr>
                     </thead>
@@ -109,7 +135,7 @@
                                     @factura.Estatus
                                 </th>
                                 <td class="text-justify vert-align">@factura.Comentario</td>
-
+                                <td class="text-justify vert-align ocultar">@factura.RFCReceptor</td>
 
                                 <td class="text-center vert-align">
 
@@ -256,6 +282,27 @@
                 window.location.href = uri + base64(format(template, ctx))
             }
         })()
+
+
+
+
+        $('input[name=nazan]').change(function () {
+
+            if ($('input[name=nazan]:checked').attr('id') == "Nazan") {
+                $('#facturas').DataTable().search("NCC1011058I0").draw();
+
+            }
+            if ($('input[name=nazan]:checked').attr('id') == "Kafa") {
+                $('#facturas').DataTable().search("KSO1712181EA").draw();
+            }
+
+            if ($('input[name=nazan]:checked').attr('id') == "Todas") {
+                $('#facturas').DataTable().search("").draw();
+
+            }
+        });
+
+        $('#facturas').find('.ocultar').hide();
     </script>
 
 

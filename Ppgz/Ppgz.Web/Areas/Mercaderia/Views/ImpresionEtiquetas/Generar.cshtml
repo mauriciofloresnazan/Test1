@@ -6,7 +6,13 @@
     var proveedor = (proveedore)ViewBag.Proveedor;
     var ordenes = ViewBag.Ordenes;
 }
-
+<style type="text/css">
+    div#ordenesimprimir_filter {
+        text-align: right;
+        display: none
+    }
+    }
+</style>
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
     <i class="fa fa-ticket" aria-hidden="true"></i> <i>Generación del archivo de Etiquetas en formato csv.</i>
@@ -68,7 +74,8 @@
                                 <input type="radio" name="nazan" id="zapatoTipo" value="false">
                                 Etiqueta Colgante
                             </label>
-                            <div id="radioImpre" style="display:none"><br />
+                            <div id="radioImpre" style="display:none">
+                                <br />
                                 <strong> Seleccione la impresora adecuada:</strong><br />
                                 <label>
                                     <input type="radio" name="tipoimpre" id="imptoshiba" value="false">
@@ -82,66 +89,105 @@
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-sm-7">
-                    
 
 
-
-                    
-
-                    
-
-                </div>
             </div>
             <p class="form-legend" style="">
                 <i></i>
             </p>
-          
-                    <table cellspacing="5" cellpadding="5" border="0">
-                        <tbody>
-                            <tr>
-                                <td><label>Orden Inicial: <input class="form-control input-sm" id="min" name="min" type="text"></label> </td>
-                                <td> <label>Orden Final: <input class="form-control input-sm" id="max" name="max" type="text"></label></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <table class="table table-striped table-condensed" id="ordenesimprimir">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Ordenes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (ordencompra ordendeCompra in ordenes)
-                            {
+
+            <table cellspacing="5" cellpadding="5" border="0">
+                <tbody>
+                    <tr>
+                        <td><label>Orden Inicial: <input class="form-control input-sm" id="min" name="min" type="text"></label> </td>
+                        <td> <label>Orden Final: <input class="form-control input-sm" id="max" name="max" type="text"></label></td>
 
 
-                                <tr>
-                                    <td class="text-center">@ordendeCompra.NumeroDocumento</td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped table-condensed" id="ordenesimprimir">
 
-                                </tr>
+                <thead>
 
+                    <tr>
+                        <th class="text-center">Ordenes</th>
+                        <th class="text-center">Destino</th>
+                        <th class="text-center ocultar">Canal</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (ordencompra ordendeCompra in ordenes)
+                    {
+
+                        <tr>
+                            <td class="text-center">@ordendeCompra.NumeroDocumento</td>
+                            <td class="text-center">@ordendeCompra.Destino</td>
+                            <td class="text-center ocultar">
+                                @if (ordendeCompra.Destino == "1" || ordendeCompra.Destino == "2" || ordendeCompra.Destino == "3" || ordendeCompra.Destino == "4" || ordendeCompra.Destino == "5" || ordendeCompra.Destino == "6" || ordendeCompra.Destino == "7" || ordendeCompra.Destino == "8" || ordendeCompra.Destino == "9" || ordendeCompra.Destino == "10" || ordendeCompra.Destino == "11" || ordendeCompra.Destino == "12" || ordendeCompra.Destino == "13" || ordendeCompra.Destino == "14" || ordendeCompra.Destino == "15" || ordendeCompra.Destino == "16" || ordendeCompra.Destino == "17"
+                                    || ordendeCompra.Destino == "18" || ordendeCompra.Destino == "19" || ordendeCompra.Destino == "CD01" || ordendeCompra.Destino == "CD06" || ordendeCompra.Destino == "20" || ordendeCompra.Destino == "21" || ordendeCompra.Destino == "22" || ordendeCompra.Destino == "23" || ordendeCompra.Destino == "24" || ordendeCompra.Destino == "25" || ordendeCompra.Destino == "26" || ordendeCompra.Destino == "27" || ordendeCompra.Destino == "28" || ordendeCompra.Destino == "29" || ordendeCompra.Destino == "30" || ordendeCompra.Destino == "31"
+                                    || ordendeCompra.Destino == "32" || ordendeCompra.Destino == "33" || ordendeCompra.Destino == "34" || ordendeCompra.Destino == "35" || ordendeCompra.Destino == "36" || ordendeCompra.Destino == "37" || ordendeCompra.Destino == "38" || ordendeCompra.Destino == "39" || ordendeCompra.Destino == "40" || ordendeCompra.Destino == "41" || ordendeCompra.Destino == "42" || ordendeCompra.Destino == "43" || ordendeCompra.Destino == "44" || ordendeCompra.Destino == "45" || ordendeCompra.Destino == "46" || ordendeCompra.Destino == "47" || ordendeCompra.Destino == "48"
+                                    || ordendeCompra.Destino == "49" || ordendeCompra.Destino == "50" || ordendeCompra.Destino == "51" || ordendeCompra.Destino == "52" || ordendeCompra.Destino == "53" || ordendeCompra.Destino == "54" || ordendeCompra.Destino == "55" || ordendeCompra.Destino == "56" || ordendeCompra.Destino == "57" || ordendeCompra.Destino == "58" || ordendeCompra.Destino == "59" || ordendeCompra.Destino == "60" || ordendeCompra.Destino == "61" || ordendeCompra.Destino == "62" || ordendeCompra.Destino == "63" || ordendeCompra.Destino == "64"
+                                    || ordendeCompra.Destino == "65" || ordendeCompra.Destino == "66" || ordendeCompra.Destino == "67" || ordendeCompra.Destino == "68" || ordendeCompra.Destino == "69" || ordendeCompra.Destino == "CD01" || ordendeCompra.Destino == "70" || ordendeCompra.Destino == "71" || ordendeCompra.Destino == "72" || ordendeCompra.Destino == "73" || ordendeCompra.Destino == "74" || ordendeCompra.Destino == "75" || ordendeCompra.Destino == "76" || ordendeCompra.Destino == "77" || ordendeCompra.Destino == "78" || ordendeCompra.Destino == "79"
+                                    || ordendeCompra.Destino == "80" || ordendeCompra.Destino == "81" || ordendeCompra.Destino == "82" || ordendeCompra.Destino == "83" || ordendeCompra.Destino == "84" || ordendeCompra.Destino == "85" || ordendeCompra.Destino == "86" || ordendeCompra.Destino == "87" || ordendeCompra.Destino == "88" || ordendeCompra.Destino == "89" || ordendeCompra.Destino == "90" || ordendeCompra.Destino == "91" || ordendeCompra.Destino == "92" || ordendeCompra.Destino == "93" || ordendeCompra.Destino == "94" || ordendeCompra.Destino == "95"
+                                    || ordendeCompra.Destino == "96" || ordendeCompra.Destino == "97" || ordendeCompra.Destino == "98" || ordendeCompra.Destino == "99" || ordendeCompra.Destino == "100"
+                                    || ordendeCompra.Destino == "101" || ordendeCompra.Destino == "102" || ordendeCompra.Destino == "103" || ordendeCompra.Destino == "104" || ordendeCompra.Destino == "105" || ordendeCompra.Destino == "106" || ordendeCompra.Destino == "107" || ordendeCompra.Destino == "108" || ordendeCompra.Destino == "109" || ordendeCompra.Destino == "110" || ordendeCompra.Destino == "111" || ordendeCompra.Destino == "112" || ordendeCompra.Destino == "113" || ordendeCompra.Destino == "114" || ordendeCompra.Destino == "115" || ordendeCompra.Destino == "116" || ordendeCompra.Destino == "117"
+                                    || ordendeCompra.Destino == "118" || ordendeCompra.Destino == "119" || ordendeCompra.Destino == "120" || ordendeCompra.Destino == "121" || ordendeCompra.Destino == "122" || ordendeCompra.Destino == "123" || ordendeCompra.Destino == "124" || ordendeCompra.Destino == "125" || ordendeCompra.Destino == "126" || ordendeCompra.Destino == "127" || ordendeCompra.Destino == "128" || ordendeCompra.Destino == "129" || ordendeCompra.Destino == "130" || ordendeCompra.Destino == "131"
+                                    || ordendeCompra.Destino == "132" || ordendeCompra.Destino == "133" || ordendeCompra.Destino == "134" || ordendeCompra.Destino == "135" || ordendeCompra.Destino == "136" || ordendeCompra.Destino == "137" || ordendeCompra.Destino == "138" || ordendeCompra.Destino == "139" || ordendeCompra.Destino == "140" || ordendeCompra.Destino == "141" || ordendeCompra.Destino == "142" || ordendeCompra.Destino == "143" || ordendeCompra.Destino == "144" || ordendeCompra.Destino == "145" || ordendeCompra.Destino == "146" || ordendeCompra.Destino == "147" || ordendeCompra.Destino == "148"
+                                    || ordendeCompra.Destino == "149" || ordendeCompra.Destino == "150" || ordendeCompra.Destino == "151" || ordendeCompra.Destino == "152" || ordendeCompra.Destino == "153" || ordendeCompra.Destino == "154" || ordendeCompra.Destino == "155" || ordendeCompra.Destino == "156" || ordendeCompra.Destino == "157" || ordendeCompra.Destino == "158" || ordendeCompra.Destino == "159" || ordendeCompra.Destino == "160" || ordendeCompra.Destino == "161" || ordendeCompra.Destino == "162" || ordendeCompra.Destino == "163" || ordendeCompra.Destino == "164"
+                                    || ordendeCompra.Destino == "165" || ordendeCompra.Destino == "166" || ordendeCompra.Destino == "167" || ordendeCompra.Destino == "168" || ordendeCompra.Destino == "169" || ordendeCompra.Destino == "170" || ordendeCompra.Destino == "171" || ordendeCompra.Destino == "172" || ordendeCompra.Destino == "173" || ordendeCompra.Destino == "174" || ordendeCompra.Destino == "175" || ordendeCompra.Destino == "176" || ordendeCompra.Destino == "177" || ordendeCompra.Destino == "178" || ordendeCompra.Destino == "179"
+                                    || ordendeCompra.Destino == "180" || ordendeCompra.Destino == "181" || ordendeCompra.Destino == "182" || ordendeCompra.Destino == "183" || ordendeCompra.Destino == "184" || ordendeCompra.Destino == "185" || ordendeCompra.Destino == "186" || ordendeCompra.Destino == "187" || ordendeCompra.Destino == "188" || ordendeCompra.Destino == "189" || ordendeCompra.Destino == "190" || ordendeCompra.Destino == "191" || ordendeCompra.Destino == "192" || ordendeCompra.Destino == "193" || ordendeCompra.Destino == "194" || ordendeCompra.Destino == "195"
+                                    || ordendeCompra.Destino == "196" || ordendeCompra.Destino == "197" || ordendeCompra.Destino == "198" || ordendeCompra.Destino == "199" || ordendeCompra.Destino == "200"
+                                    || ordendeCompra.Destino == "201" || ordendeCompra.Destino == "202" || ordendeCompra.Destino == "203" || ordendeCompra.Destino == "204" || ordendeCompra.Destino == "205" || ordendeCompra.Destino == "206" || ordendeCompra.Destino == "207" || ordendeCompra.Destino == "208" || ordendeCompra.Destino == "209" || ordendeCompra.Destino == "210" || ordendeCompra.Destino == "211" || ordendeCompra.Destino == "212" || ordendeCompra.Destino == "213" || ordendeCompra.Destino == "214" || ordendeCompra.Destino == "215" || ordendeCompra.Destino == "216" || ordendeCompra.Destino == "217"
+                                    || ordendeCompra.Destino == "218" || ordendeCompra.Destino == "219" || ordendeCompra.Destino == "220" || ordendeCompra.Destino == "221" || ordendeCompra.Destino == "222" || ordendeCompra.Destino == "223" || ordendeCompra.Destino == "224" || ordendeCompra.Destino == "225" || ordendeCompra.Destino == "226" || ordendeCompra.Destino == "227" || ordendeCompra.Destino == "228" || ordendeCompra.Destino == "229" || ordendeCompra.Destino == "230" || ordendeCompra.Destino == "231"
+                                    || ordendeCompra.Destino == "232" || ordendeCompra.Destino == "233" || ordendeCompra.Destino == "234" || ordendeCompra.Destino == "235" || ordendeCompra.Destino == "236" || ordendeCompra.Destino == "237" || ordendeCompra.Destino == "238" || ordendeCompra.Destino == "239" || ordendeCompra.Destino == "240" || ordendeCompra.Destino == "241" || ordendeCompra.Destino == "242" || ordendeCompra.Destino == "243" || ordendeCompra.Destino == "244" || ordendeCompra.Destino == "245" || ordendeCompra.Destino == "246" || ordendeCompra.Destino == "247" || ordendeCompra.Destino == "248"
+                                    || ordendeCompra.Destino == "249" || ordendeCompra.Destino == "250" || ordendeCompra.Destino == "251" || ordendeCompra.Destino == "252" || ordendeCompra.Destino == "253" || ordendeCompra.Destino == "254" || ordendeCompra.Destino == "255" || ordendeCompra.Destino == "256" || ordendeCompra.Destino == "257" || ordendeCompra.Destino == "258" || ordendeCompra.Destino == "259" || ordendeCompra.Destino == "260" || ordendeCompra.Destino == "261" || ordendeCompra.Destino == "262" || ordendeCompra.Destino == "263" || ordendeCompra.Destino == "264"
+                                    || ordendeCompra.Destino == "265" || ordendeCompra.Destino == "266" || ordendeCompra.Destino == "267" || ordendeCompra.Destino == "268" || ordendeCompra.Destino == "269" || ordendeCompra.Destino == "270" || ordendeCompra.Destino == "271" || ordendeCompra.Destino == "272" || ordendeCompra.Destino == "273" || ordendeCompra.Destino == "274" || ordendeCompra.Destino == "275" || ordendeCompra.Destino == "276" || ordendeCompra.Destino == "277" || ordendeCompra.Destino == "278" || ordendeCompra.Destino == "279"
+                                    || ordendeCompra.Destino == "280" || ordendeCompra.Destino == "281" || ordendeCompra.Destino == "282" || ordendeCompra.Destino == "283" || ordendeCompra.Destino == "284" || ordendeCompra.Destino == "285" || ordendeCompra.Destino == "286" || ordendeCompra.Destino == "287" || ordendeCompra.Destino == "288" || ordendeCompra.Destino == "289" || ordendeCompra.Destino == "290" || ordendeCompra.Destino == "291" || ordendeCompra.Destino == "292" || ordendeCompra.Destino == "293" || ordendeCompra.Destino == "294" || ordendeCompra.Destino == "295"
+                                    || ordendeCompra.Destino == "296" || ordendeCompra.Destino == "297" || ordendeCompra.Destino == "298" || ordendeCompra.Destino == "299" || ordendeCompra.Destino == "300"
+                                    || ordendeCompra.Destino == "301" || ordendeCompra.Destino == "302" || ordendeCompra.Destino == "303" || ordendeCompra.Destino == "304" || ordendeCompra.Destino == "305" || ordendeCompra.Destino == "306" || ordendeCompra.Destino == "307" || ordendeCompra.Destino == "308" || ordendeCompra.Destino == "309" || ordendeCompra.Destino == "310" || ordendeCompra.Destino == "311" || ordendeCompra.Destino == "312" || ordendeCompra.Destino == "313" || ordendeCompra.Destino == "314" || ordendeCompra.Destino == "315" || ordendeCompra.Destino == "316" || ordendeCompra.Destino == "317"
+                                    || ordendeCompra.Destino == "318" || ordendeCompra.Destino == "319" || ordendeCompra.Destino == "320" || ordendeCompra.Destino == "321" || ordendeCompra.Destino == "322" || ordendeCompra.Destino == "323" || ordendeCompra.Destino == "324" || ordendeCompra.Destino == "325" || ordendeCompra.Destino == "326" || ordendeCompra.Destino == "327" || ordendeCompra.Destino == "328" || ordendeCompra.Destino == "329" || ordendeCompra.Destino == "330" || ordendeCompra.Destino == "331"
+                                    || ordendeCompra.Destino == "332" || ordendeCompra.Destino == "333" || ordendeCompra.Destino == "334" || ordendeCompra.Destino == "335" || ordendeCompra.Destino == "336" || ordendeCompra.Destino == "337" || ordendeCompra.Destino == "338" || ordendeCompra.Destino == "339" || ordendeCompra.Destino == "340" || ordendeCompra.Destino == "341" || ordendeCompra.Destino == "342" || ordendeCompra.Destino == "343" || ordendeCompra.Destino == "344" || ordendeCompra.Destino == "345" || ordendeCompra.Destino == "346" || ordendeCompra.Destino == "347" || ordendeCompra.Destino == "348"
+                                    || ordendeCompra.Destino == "349" || ordendeCompra.Destino == "350" || ordendeCompra.Destino == "351" || ordendeCompra.Destino == "352" || ordendeCompra.Destino == "353" || ordendeCompra.Destino == "354" || ordendeCompra.Destino == "355" || ordendeCompra.Destino == "356" || ordendeCompra.Destino == "357" || ordendeCompra.Destino == "358" || ordendeCompra.Destino == "359" || ordendeCompra.Destino == "360" || ordendeCompra.Destino == "361" || ordendeCompra.Destino == "362" || ordendeCompra.Destino == "363" || ordendeCompra.Destino == "364"
+                                    || ordendeCompra.Destino == "365" || ordendeCompra.Destino == "366" || ordendeCompra.Destino == "367" || ordendeCompra.Destino == "368" || ordendeCompra.Destino == "369" || ordendeCompra.Destino == "370" || ordendeCompra.Destino == "371" || ordendeCompra.Destino == "372" || ordendeCompra.Destino == "373" || ordendeCompra.Destino == "374" || ordendeCompra.Destino == "375" || ordendeCompra.Destino == "376" || ordendeCompra.Destino == "377" || ordendeCompra.Destino == "378" || ordendeCompra.Destino == "379"
+                                    || ordendeCompra.Destino == "380" || ordendeCompra.Destino == "381" || ordendeCompra.Destino == "382" || ordendeCompra.Destino == "383" || ordendeCompra.Destino == "384" || ordendeCompra.Destino == "385" || ordendeCompra.Destino == "386" || ordendeCompra.Destino == "387" || ordendeCompra.Destino == "388" || ordendeCompra.Destino == "389" || ordendeCompra.Destino == "390" || ordendeCompra.Destino == "391" || ordendeCompra.Destino == "392" || ordendeCompra.Destino == "393" || ordendeCompra.Destino == "394" || ordendeCompra.Destino == "395"
+                                    || ordendeCompra.Destino == "396" || ordendeCompra.Destino == "397" || ordendeCompra.Destino == "398" || ordendeCompra.Destino == "399" || ordendeCompra.Destino == "400"
+                                    )
+                                {
+                                    <text>Nazan</text>
+                                }
+                                else
+                                {<text>Cadena</text>
                             }
-                        </tbody>
-                    </table>
-               
+
+                            </td>
+
+                        </tr>
+
+                    }
 
 
+                </tbody>
+            </table>
 
 
-
-
-                    <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-7">
-                            <button type="button" onclick="envio()" class="btn btn-primary"><i class="fa fa-play" aria-hidden="true"></i> Generar</button>
-                            <a class="btn btn-default" href="@Url.Action("Index", "ImpresionEtiquetas")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
-                        </div>
-                    </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <button type="button" onclick="envio()" class="btn btn-primary"><i class="fa fa-play" aria-hidden="true"></i> Generar</button>
+                    <a class="btn btn-default" href="@Url.Action("Index", "ImpresionEtiquetas")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                </div>
+            </div>
         }
     </div>
 
-            </div>
+
+
+
+
+
+</div>
 
 
 <div class="modal" id="modal">
@@ -163,164 +209,172 @@
     </div>
 </div>
 
-            @section Scripts {
-                @Scripts.Render("~/bundles/jqueryval")
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
 
-                <script type="text/javascript">
+    <script type="text/javascript">
 
-                    var form = $("#form");
-                    var table;
+        var form = $("#form");
+        var table;
 
-                    $.fn.dataTable.ext.search.push(
+        $.fn.dataTable.ext.search.push(
 
-                        function (settings, data, dataIndex) {
-                            var min = parseInt($('#min').val(), 10);
-                            var max = parseInt($('#max').val(), 10);
-                            var Ordenes = parseFloat(data[0]) || 0; // use data for the age column
+            function (settings, data, dataIndex) {
+                var min = parseInt($('#min').val(), 10);
+                var max = parseInt($('#max').val(), 10);
+                var Ordenes = parseFloat(data[0]) || 0; // use data for the age column
 
-                            if ((isNaN(min) && isNaN(max)) ||
-                                (isNaN(min) && Ordenes <= max) ||
-                                (min <= Ordenes && isNaN(max)) ||
-                                (min <= Ordenes && Ordenes <= max)) {
-                                return true;
-                            }
-                            return false;
+                if ((isNaN(min) && isNaN(max)) ||
+                    (isNaN(min) && Ordenes <= max) ||
+                    (min <= Ordenes && isNaN(max)) ||
+                    (min <= Ordenes && Ordenes <= max)) {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+
+
+        function envio() {
+            var ordenes = '';
+            var contador = 0;
+            table.rows({ selected: true }).data().each(function (d) {
+                ///console.log('loop: ' + JSON.stringify(d));
+                if (contador == 0) {
+                    ordenes = d[0];
+                    contador = 1;
+                } else {
+                    ordenes = ordenes + ',' + d[0];
+                }
+
+            });
+
+            if (ordenes == '') {
+                ///alert('Debe seleccionar al menos una orden');
+                $('#modal').modal('show');
+            } else {
+                if ($("#nazanTipo").prop("checked")) {
+                    $('<input />').attr('type', 'hidden')
+                        .attr('nazan', "ordenes")
+                        .attr('value', true)
+                        .appendTo(form);
+                }
+                if ($("#zapatoTipo").prop("checked")) {
+                    var input = $("<input>").attr({ "type": "hidden", "name": "zapato" }).val(true);
+                    $('#form').append(input);
+                } else {
+                    var input = $("<input>").attr({ "type": "hidden", "name": "zapato" }).val(false);
+                    $('#form').append(input);
+                }
+                var input = $("<input>").attr({ "type": "hidden", "name": "ordenesy" }).val(ordenes);
+
+                var input2 = "";
+
+                if ($("#impzebra").prop("checked")) {
+                    input2 = $("<input>").attr({ "type": "hidden", "name": "tipoimpresora" }).val('Zebra');
+                } else {
+                    input2 = $("<input>").attr({ "type": "hidden", "name": "tipoimpresora" }).val('Toshiba');
+                }
+
+
+                $('#form').append(input);
+
+                $('#form').append(input2);
+
+                $('#form').submit();
+            }
+
+
+
+            //alert('selecionado: ' + JSON.stringify(ordenes));
+            ///console.log('selecionado: ' + JSON.stringify(ordenes));
+
+        }
+
+        $(document).ready(function () {
+
+
+            table = $('#ordenesimprimir').DataTable({
+                dom: 'Bfrtip',
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json",
+                },
+                select: {
+                    style: 'multi'
+                },
+                buttons: [
+                    'pageLength',
+                    {
+                        text: 'Seleccionar Todo',
+                        action: function () {
+                            table.rows().select();
                         }
-                    );
-
-                    function envio() {
-                        var ordenes = '';
-                        var contador = 0;
-                        table.rows({ selected: true }).data().each(function (d) {
-                            ///console.log('loop: ' + JSON.stringify(d));
-                            if (contador == 0) {
-                                ordenes = d[0];
-                                contador = 1;
-                            } else {
-                                ordenes = ordenes+ ',' + d[0];
-                            }
-                            
-                        });
-
-                        if (ordenes == '') {
-                            ///alert('Debe seleccionar al menos una orden');
-                            $('#modal').modal('show');
-                        } else {
-                            if ($("#nazanTipo").prop("checked")) {
-                                $('<input />').attr('type', 'hidden')
-                                    .attr('nazan', "ordenes")
-                                    .attr('value', true)
-                                    .appendTo(form);
-                            }
-                            if ($("#zapatoTipo").prop("checked")) {
-                                var input = $("<input>").attr({ "type": "hidden", "name": "zapato" }).val(true);
-                                $('#form').append(input);
-                            } else {
-                                var input = $("<input>").attr({ "type": "hidden", "name": "zapato" }).val(false);
-                                $('#form').append(input);
-                            }
-                            var input = $("<input>").attr({ "type": "hidden", "name": "ordenesy" }).val(ordenes);
-
-                            var input2 = "";
-
-                            if ($("#impzebra").prop("checked")) {
-                                input2 = $("<input>").attr({ "type": "hidden", "name": "tipoimpresora" }).val('Zebra');
-                            } else {
-                                input2 = $("<input>").attr({ "type": "hidden", "name": "tipoimpresora" }).val('Toshiba');
-                            }
-                            
-
-                            $('#form').append(input);
-
-                            $('#form').append(input2);
-
-                            $('#form').submit();
+                    },
+                    {
+                        text: 'Deseleccionar Todo',
+                        action: function () {
+                            table.rows().deselect();
                         }
-
-                        
-
-                       //alert('selecionado: ' + JSON.stringify(ordenes));
-                        ///console.log('selecionado: ' + JSON.stringify(ordenes));
-                       
+                    },
+                    {
+                        text: 'Ordenes por Rango',
+                        action: function () {
+                            table.rows({ search: 'applied' }).select();
+                        }
                     }
+                ],
 
-                    $(document).ready(function () {
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+            table.buttons(0, null).container().prependTo(
+                table.table().container()
+            );
 
-                        
+            $('#min, #max').keyup(function () {
+                table.draw();
+            });
+            //form.submit(function () {
+            //    alert('selecionado: ' + JSON.stringify(table.rows({ selected: true }).data()));
+            //    console.log('selecionado: ' + JSON.stringify(table.rows({ selected: true }).data()));
+            //   if ($("#nazanTipo").prop("checked")) {
+            //        $('<input />').attr('type', 'hidden')
+            //            .attr('nazan', "ordenes")
+            //            .attr('value', true)
+            //            .appendTo(form);
+            //    }
 
-
-                        $('input[type=radio][name=nazan]').change(function () {
-                            if ($("#zapatoTipo").prop("checked")) {
-                                $('#radioImpre').show();
-                            } else {
-                                $('#radioImpre').hide();
-                            }
-                        });
-
-                        table = $('#ordenesimprimir').DataTable({
-                            dom: 'Bfrtip',
-                            "language": {
-                                "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json",
-                            },
-                            select: {
-                                style: 'multi'
-                            },
-                            buttons: [
-                                'pageLength',
-                                {
-                                    text: 'Seleccionar Todo',
-                                    action: function () {
-                                        table.rows().select();
-                                    }
-                                },
-                                {
-                                    text: 'Deseleccionar Todo',
-                                    action: function () {
-                                        table.rows().deselect();
-                                    }
-                                },
-                                {
-                                    text: 'Ordenes por Rango',
-                                    action: function () {
-                                        table.rows({ search: 'applied' }).select();
-                                    }
-                                }
-                            ],
-                            
-                            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
-                        });
-                        table.buttons(0, null).container().prependTo(
-                            table.table().container()
-                        );
-
-                        $('#min, #max').keyup(function () {
-                            table.draw();
-                        });
-
-                        
-                        
+            //});
 
 
-                        //form.submit(function () {
-                        //    alert('selecionado: ' + JSON.stringify(table.rows({ selected: true }).data()));
-                        //    console.log('selecionado: ' + JSON.stringify(table.rows({ selected: true }).data()));
-                           
-
-                        //   if ($("#nazanTipo").prop("checked")) {
-                        //        $('<input />').attr('type', 'hidden')
-                        //            .attr('nazan', "ordenes")
-                        //            .attr('value', true)
-                        //            .appendTo(form);
-                        //    }
-
-                        //});
+        });
 
 
-                    });
+        $('input[name=nazan]').change(function () {
 
-
-
-                </script>
-
+            if ($('input[name=nazan]:checked').attr('id') == "nazanTipo") {
+                $('#ordenesimprimir').DataTable().search("Nazan").draw();
+            }
+            if ($('input[name=nazan]:checked').attr('id') == "precioTipo") {
+                $('#ordenesimprimir').DataTable().search("Cadena").draw();
 
             }
+            if ($('input[name=nazan]:checked').attr('id') == "zapatoTipo") {
+                $('#ordenesimprimir').DataTable().search("cadena").draw();
+            }
+        });
+
+        $('#ordenesimprimir').find('.ocultar').hide();
+
+
+
+
+
+
+
+
+    </script>
+
+
+}
+

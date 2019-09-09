@@ -469,51 +469,28 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult DisponibilidadRieles(int horarioRielId, string disponible, string comentario = null)
+        public ActionResult DisponibilidadRieles(int[] horarioRielId, string disponible, string comentario = null)
         {
+
 
             var db = new Entities();
 
-            var horarioRiel = db.horariorieles.Find(horarioRielId);
-
-
-            if (horarioRiel == null)
+            foreach (var riel in horarioRielId)
             {
-                TempData["FlashError"] = "Selección incorrecta";
-                return RedirectToAction("Index"); 
+                var horario = db.horariorieles.FirstOrDefault(hr => hr.Id == riel);
+                horario.Disponibilidad = false;
+                horario.ComentarioBloqueo = comentario;
+                db.Entry(horario).State = EntityState.Modified;
             }
-
-            if (horarioRiel.CitaId != null)
-            {
-                TempData["FlashError"] = "No puede modificar la disponiblidad del Riel porque esta reservado para una Cita";
-                return RedirectToAction("DisponibilidadRieles", new { fecha = horarioRiel.Fecha.ToString("dd/MM/yyyy") }); 
-                
-            }
-            
-            horarioRiel.Disponibilidad = disponible == "true";
-            if (!horarioRiel.Disponibilidad)
-            {
-                if (string.IsNullOrWhiteSpace(comentario))
-                {
-
-                    TempData["FlashError"] = "Por favor ingrese un comentario para el bloqueo";
-                    return RedirectToAction("DisponibilidadRieles", new { fecha = horarioRiel.Fecha.ToString("dd/MM/yyyy") }); 
-                }
-                horarioRiel.ComentarioBloqueo = comentario;
-            }
-            else
-            {
-                horarioRiel.ComentarioBloqueo = null;
-            }
-
-            db.Entry(horarioRiel).State = EntityState.Modified;
 
             db.SaveChanges();
-            
-            TempData["FlashSuccess"] = "Cambio de disponiblidad aplicado exitosamente";
-            return RedirectToAction("DisponibilidadRieles", new { fecha = horarioRiel.Fecha.ToString("dd/MM/yyyy") }); 
-        }
 
+
+
+            TempData["FlashSuccess"] = "Rieles Bloqueados Correctamente";
+            return RedirectToAction("DisponibilidadRieles");
+
+        }
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]

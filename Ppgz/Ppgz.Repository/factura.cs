@@ -11,7 +11,7 @@ namespace Ppgz.Repository
 {
     using System;
     using System.Collections.Generic;
-    
+
     public partial class factura
     {
         public int Id { get; set; }
@@ -30,7 +30,8 @@ namespace Ppgz.Repository
         public string numeroProveedor { get; set; }
         public string EstatusOriginal { get; set; }
         public System.DateTime FechaPortal { get; set; }
-    
+        public String RFCReceptor { get; set; }
+
         public virtual proveedore proveedore { get; set; }
     }
 }
