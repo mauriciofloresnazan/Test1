@@ -5,6 +5,9 @@
                                      .Select(Path.GetFileName)
                                      .ToArray();
 }
+<div id="alrt" style="background: #f0f0f0;font-weight:bold;font-size:20px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;"></div>
+<br>
+<br>
 
 <div>
     <h2 style="color: white"> </h2>
@@ -55,6 +58,7 @@
 
 @section Scripts {
     <script type="text/javascript">
-
+        document.getElementById('alrt').innerHTML = '<b>Descarguen el archivo manual revisión de calidad en cedis que se encuentra en la opcion de ayuda para que lo abran y vean cuales son los puntos de revisión que se tomaran en cuenta al momento de entregar</b>';
+        setTimeout(function () { document.getElementById('alrt').innerHTML = ''; }, 30000);
     </script>
 }
