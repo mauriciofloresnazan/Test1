@@ -72,12 +72,7 @@ h1, h2 {
     -ms-border-radius: 0;
     border-radius: 0;
 }
-.panelFacturas {
-    -ms-border-radius: 0;
-    border-radius: 0;
-    width: 111%;
-    margin-left: -7%;
-}
+
 .btn {
     -ms-border-radius: 0 !important;
     border-radius: 0 !important;

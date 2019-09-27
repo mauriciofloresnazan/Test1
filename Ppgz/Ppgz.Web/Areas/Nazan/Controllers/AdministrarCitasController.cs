@@ -491,6 +491,48 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return RedirectToAction("DisponibilidadRieles");
 
         }
+
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        public ActionResult DisponibilidadRieles1(string fecha = null)
+        {
+            if (fecha == null)
+            {
+                fecha = DateTime.Today.Date.ToString("dd/MM/yyyy");
+            }
+            var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            CrearRieles(date);
+
+            var db = new Entities();
+
+            var horarioRieles = db.horariorieles.Where(h => h.Fecha == date).ToList();
+
+            ViewBag.HorarioRieles = horarioRieles;
+
+            ViewBag.Fecha = date.ToString("yyyy/MM/dd");
+
+            return View();
+        }
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult DisponibilidadRieles1(int horarioRielId, string disponible, string comentario = null)
+        {
+
+            var db = new Entities();
+
+            var horarioRiel = db.horariorieles.Find(horarioRielId);
+            horarioRiel.Disponibilidad = disponible == "true";
+            db.Entry(horarioRiel).State = EntityState.Modified;
+            db.SaveChanges();
+            TempData["FlashSuccess"] = "Cambio de disponiblidad aplicado exitosamente";
+            return RedirectToAction("DisponibilidadRieles1", new { fecha = horarioRiel.Fecha.ToString("dd/MM/yyyy") });
+        }
+
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]

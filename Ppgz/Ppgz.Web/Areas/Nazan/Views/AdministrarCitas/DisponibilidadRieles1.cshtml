@@ -1,7 +1,7 @@
 ﻿@using Ppgz.Repository
 @{
     ViewBag.Title = "Administración de Citas - Disponibilidad de Rieles por Fecha";
-    ViewBag.Descripcion = "Puede Bloquear los Rieles que no esten reservados por una Cita.";
+    ViewBag.Descripcion = "Puede Liberar los Rieles que no esten reservados por una Cita.";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
 
@@ -54,7 +54,7 @@
     <div class="panel-heading">Seleccione la Fecha</div>
     <div class="panel-body">
 
-        @using (Html.BeginForm("DisponibilidadRieles", "AdministrarCitas", new { ViewBag.ReturnUrl }, FormMethod.Get, new { @id = "form-fecha", @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("DisponibilidadRieles1", "AdministrarCitas", new { ViewBag.ReturnUrl }, FormMethod.Get, new { @id = "form-fecha", @class = "form-horizontal", role = "form" }))
         {
 
             @Html.ValidationSummary(true)
@@ -170,10 +170,7 @@
                 }
             </tbody>
         </table>
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalComentario">
-            Guardar
-        </button>
-        @using (Html.BeginForm("DisponibilidadRieles", "AdministrarCitas", new { }, FormMethod.Post, new { id = "form-disponibilidad" }))
+        @using (Html.BeginForm("DisponibilidadRieles1", "AdministrarCitas", new { }, FormMethod.Post, new { id = "form-disponibilidad" }))
         {
             @Html.AntiForgeryToken()
 
@@ -188,29 +185,7 @@
 
 
 
-<div class="modal fade" id="modalComentario" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Comentario del Bloqueo</h4>
-            </div>
-            <div class="modal-body">
-                <div>
 
-                    <label>Debe ingresar un comentario para bloquear el Riel</label>
-                    <textarea class="form-control"></textarea>
-
-                </div>
-            </div>
-            <div class="modal-footer">
-                <a class="btn btn-primary btn-agendar">
-                    <i class="fa fa-check-square" aria-hidden="true"></i> Bloquear Rieles
-                </a>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 @section Scripts {
     @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
@@ -228,28 +203,6 @@
                 $("#form-fecha").submit();
             });
 
-            $('.btn-agendar').click(function () {
-
-                var comentario = $($("#modalComentario textarea")[0]).val();
-
-                if (comentario.length < 3) {
-
-                    msgError("Por favor ingrese un comentario válido");
-                    return;
-                }
-
-                $('<input>').attr({
-                    type: 'hidden',
-                    name: 'comentario',
-                    value: comentario
-                }).appendTo('#form-disponibilidad');
-
-
-                $("#form-disponibilidad").submit();
-
-
-            });
-
 
             $('.horarioriel').change(function () {
 
@@ -257,15 +210,36 @@
 
                 $("#bloqueo-horariorielid").val(horarioRielId);
 
-                $('<input>').attr({
+              /*  $('<input>').attr({
                     type: 'hidden',
                     name: 'horarioRielId',
                     value: horarioRielId
                 }).appendTo('#form-disponibilidad');
+                */
+                if ($(this).prop('checked') === false) {
+
+
+                    $("#bloqueo-disponible").val("true");
+
+                    $("#form-disponibilidad").submit();
+
+                    $('.horarioriel').bootstrapToggle('disable');
+
+                    /*$('<input>').attr({
+                        type: 'hidden',
+                        name: 'disponible',
+                        value: "false"
+                    }).appendTo('#form-disponibilidad');*/
+
+                } 
+                //
+
             });
 
-
         });
+
+
+
 
     </script>
 }

@@ -334,7 +334,7 @@ namespace Ppgz.Web
                         "ADMINISTRARCITAS|Vista Diaria|Enroque|AdministrarCitas|fa fa-calendar|Nazan",
                         "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
                         "ADMINISTRARCITAS|Bloquear Rieles|DisponibilidadRieles|AdministrarCitas|fa fa-ban|Nazan",
-
+                         "ADMINISTRARCITAS|Desbloquear Rieles|DisponibilidadRieles1|AdministrarCitas|fa fa-unlock|Nazan",
                     };
                     break;
                 case "ProntoPago":
