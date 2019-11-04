@@ -267,7 +267,7 @@
 
 @section Scripts {
 
-    <script type="text/javascript">
+<script type="text/javascript">
         var form = $("#form");
         var table;
 
@@ -307,7 +307,7 @@
                             table.rows().deselect();
                         }
                     },
-                 
+
                 ],
 
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
@@ -422,19 +422,21 @@
 
         function envio() {
             var ordenes = '';
+            var materiales = '';
+
             var contador = 0;
             table.rows({ selected: true }).data().each(function (d) {
                 ///console.log('loop: ' + JSON.stringify(d));
                 if (contador == 0) {
-                    ordenes = d[0];
+                    materiales = d[0];
                     contador = 1;
                 } else {
-                    ordenes = ordenes + ',' + d[0];
+                    materiales = materiales + ',' + d[0];
                 }
 
             });
 
-            if (ordenes == '') {
+            if (materiales == '') {
                 ///alert('Debe seleccionar al menos una orden');
                 $('#modal').modal('show');
             } else {
@@ -451,7 +453,9 @@
                     var input = $("<input>").attr({ "type": "hidden", "name": "zapato" }).val(false);
                     $('#form').append(input);
                 }
-                var input = $("<input>").attr({ "type": "hidden", "name": "ordenesy" }).val(ordenes);
+                var input = $("<input>").attr({ "type": "hidden", "name": "ordenesy" }).val(@preAsn.NumeroDocumento);
+
+                var input3 = $("<input>").attr({ "type": "hidden", "name": "materiales" }).val(materiales);
 
                 var input2 = "";
 
@@ -476,5 +480,5 @@
 
         }
 
-    </script>
+</script>
 }

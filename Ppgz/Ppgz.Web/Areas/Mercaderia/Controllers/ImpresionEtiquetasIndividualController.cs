@@ -42,6 +42,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			}
 		}
 
+
        
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ImpresionEtiquetaIndividual")]
 		public ActionResult Index()
@@ -180,8 +181,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ImpresionEtiquetaIndividual")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Generar(int proveedorId, bool nazan, string ordenesy, bool zapato, string tipoimpresora)
+        public ActionResult Generar(bool nazan, string ordenesy, bool zapato, string tipoimpresora)
+            // Agregar 2 parametros adicionales materiales y cantidades [000000342343,00000002342342]    [3,20]
+            // matener el parametro de orden de compra
         {
+            var proveedorId = CurrentCitaEtiqueta.Proveedor.Id;
+
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
             var proveedor = _proveedorManager.Find(proveedorId, cuenta.Id);
@@ -201,6 +206,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
 
             var resultado = _etiquetasManager.GetArchivoCsv(proveedorId, cuenta.Id, nazan, ordenesy.Split(','), zapato);
+
+
 
             TempData["resultado"] = resultado;
             TempData["proveedor"] = proveedor;
