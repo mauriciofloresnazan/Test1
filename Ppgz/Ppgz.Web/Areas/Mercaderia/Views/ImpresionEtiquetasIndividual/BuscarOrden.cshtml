@@ -1,0 +1,89 @@
+﻿@using Ppgz.Repository
+@using Ppgz.Web.Areas.Mercaderia
+@model Ppgz.Web.Areas.Mercaderia.Models.PefilProveedorViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var proveedor = (proveedore)ViewBag.proveedor;
+
+    var currentCitaEtiqueta = (CurrentCitaEtiqueta)ViewBag.CurrentCitaEtiqueta;
+
+
+    ViewBag.Title = "Etiqueta Individual";
+    ViewBag.Descripcion = "Paso 2 - Busque una Orden de Compra";
+
+
+}
+
+<h2>Impresion Etiqueta Individual</h2>
+<p class="page-description-title">
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Buscar Orden de Compra</div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("AgregarPrimeraOrden", "ImpresionEtiquetasIndividual", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true)
+
+
+
+            <div class="form-group">
+                <div class="alert alert-info text-center" role="alert">Seleccione una orden para Imprimir la etiqueta individual</div>
+                
+                <label class="col-sm-3 control-label"> Número de Documento</label>
+                <div class="col-sm-7">
+                    <input type="hidden" name="proveedorId" value="@proveedor.Id"/>
+                    <input type="text" id="numeroDocumento" autocomplete="off" class="form-control" name="numeroDocumento" placeholder="Número de Orden de Compra"/>
+                </div>
+            </div>
+
+
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-search" aria-hidden="true"></i> Buscar</button>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/assets/vendor/bootstrap3-typeahead.min.js")
+
+    
+    <script>
+        $(document).ready(function () {
+            $('#numeroDocumento').typeahead({
+                source: [
+                    @foreach (var orden in currentCitaEtiqueta.GetOrdenesActivasDisponibles())
+                    {<text>
+                         { id: "@orden.NumeroDocumento", name: "@orden.NumeroDocumento" },
+          
+                     
+                     </text>
+                    }
+                ],
+                autoSelect: true,
+                items: "all",
+                minLength: 0,
+                showHintOnFocus: true
+
+
+        });
+
+
+
+        });
+    </script>
+}

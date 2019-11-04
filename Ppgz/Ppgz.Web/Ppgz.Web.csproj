@@ -204,12 +204,14 @@
     <Compile Include="Areas\Mercaderia\Controllers\FacturasController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\GestionProveedoresController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ImpresionEtiquetasController.cs" />
+    <Compile Include="Areas\Mercaderia\Controllers\ImpresionEtiquetasIndividualController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\MensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ComprobantesReciboController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ProntoPagoController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ReporteProveedoresController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\OrdenesCompraController.cs" />
     <Compile Include="Areas\Mercaderia\CurrentCita.cs" />
+    <Compile Include="Areas\Mercaderia\CurrentCitaEtiqueta.cs" />
     <Compile Include="Areas\Mercaderia\MensajesResource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1969,6 +1971,10 @@
     <Content Include="Areas\Mercaderia\Views\OrdenesCompra\ListaDeOrdenes.cshtml" />
     <Content Include="Areas\Nazan\Views\ProntoPago\Index.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas\DisponibilidadRieles1.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetasIndividual\BuscarOrden.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetasIndividual\Generar.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetasIndividual\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetasIndividual\Resultado.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
