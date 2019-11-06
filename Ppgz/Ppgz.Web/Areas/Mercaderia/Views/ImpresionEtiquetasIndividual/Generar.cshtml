@@ -423,15 +423,18 @@
         function envio() {
             var ordenes = '';
             var materiales = '';
+            var cantidades = '';
 
             var contador = 0;
             table.rows({ selected: true }).data().each(function (d) {
                 ///console.log('loop: ' + JSON.stringify(d));
                 if (contador == 0) {
                     materiales = d[0];
+                    cantidades = d[5];
                     contador = 1;
                 } else {
                     materiales = materiales + ',' + d[0];
+                    cantidades = cantidades + ',' + d[5];
                 }
 
             });
@@ -457,6 +460,8 @@
 
                 var input3 = $("<input>").attr({ "type": "hidden", "name": "materiales" }).val(materiales);
 
+                var input4 = $("<input>").attr({ "type": "hidden", "name": "cantidades" }).val(cantidades);
+
                 var input2 = "";
 
                 if ($("#impzebra").prop("checked")) {
@@ -469,6 +474,8 @@
                 $('#form').append(input);
 
                 $('#form').append(input2);
+                $('#form').append(input3);
+                $('#form').append(input4);
 
                 $('#form').submit();
             }

@@ -176,14 +176,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			return View();
 		
 		}
-		
-        
+
+
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-ImpresionEtiquetaIndividual")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Generar(bool nazan, string ordenesy, bool zapato, string tipoimpresora)
-            // Agregar 2 parametros adicionales materiales y cantidades [000000342343,00000002342342]    [3,20]
-            // matener el parametro de orden de compra
+        public ActionResult Generar(bool nazan, string ordenesy, bool zapato, string tipoimpresora, string cantidades, string materiales)
+        // Agregar 2 parametros adicionales materiales y cantidades [000000342343,00000002342342]    [3,20]
+        // matener el parametro de orden de compra
         {
             var proveedorId = CurrentCitaEtiqueta.Proveedor.Id;
 
@@ -211,6 +211,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             TempData["resultado"] = resultado;
             TempData["proveedor"] = proveedor;
+            TempData["cantidades"] = cantidades.Split(',');
+            TempData["materiales"] = materiales.Split(',');
 
             return RedirectToAction("Resultado");
         }
@@ -226,6 +228,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var resultado = TempData["resultado"] as Hashtable;
             var proveedor = TempData["proveedor"] as proveedore;
+            var cantidadesS = TempData["cantidades"] as string[];
+            int[] cantidades = Array.ConvertAll(cantidadesS, int.Parse);
+            var materiales = TempData["materiales"] as string[];
             bool nazan = Convert.ToBoolean(TempData["nazan"]);
             bool zapato = Convert.ToBoolean(TempData["zapato"]);
 
@@ -270,10 +275,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             List<string> etiquetas = new List<string>();
             string etiquetasPrint = "";
 
-            int i = 1;
+            //int i = 0;
 
-            var totalEtiquetas = dt.Rows[0]["tot_etiq"].ToString().Trim();
+            var totalEtiquetas = cantidades.Sum();
 
+            for (int i = 0; i < materiales.Count(); i++)
+            {
+                
+            
 
             if (nazan == true)
             {
@@ -281,10 +290,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 foreach (DataRow row in dt.Rows)
                 {
 
-                    //for (int xx = 0; xx < Int32.Parse(row["pares"].ToString()); xx++)
-                    //{
+                    if (materiales[i] == row["ITEM"].ToString().Trim())
+                    {
 
-
+                    
 
                     etiquetas.Add(@"^XA
 ^SZ2^JMA
@@ -326,7 +335,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^ISLABEL001,N,^FS
 ^XZ
 ^XA^JZN^PR9
-^PQ" + row["pares"].ToString().Trim() + @",0,1,Y
+^PQ" + cantidades[i].ToString() + @",0,1,Y
 ^ILLABEL001^FS
 ^FO262.00,161.50^AFN,15.00,22.50^FD" + row["talla"].ToString().Trim() + @"^FS
 ^FO180.00,295.00^BY2.00,.8^BAN,47.00,N,N,N^FD" + row["Ean_Nazan"].ToString().Trim() + @"^FS
@@ -335,8 +344,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^XZ
 ^EG
 ^XZ");
-                    //i++;  }
-
+                        //i++;  }
+                    }
                 }
 
 
@@ -349,13 +358,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     foreach (DataRow row in dt.Rows)
                     {
 
-                        /**
-                         *
-                         *Se selecciona entre plantilla para Toshiba o Zebra
-                         */
-                        if (TempData["impresora"].ToString() == "Toshiba")
+                        if (materiales[i] == row["ITEM"].ToString().Trim())
                         {
-                            etiquetas.Add(@"^XA
+                            /**
+                             *
+                             *Se selecciona entre plantilla para Toshiba o Zebra
+                             */
+                            if (TempData["impresora"].ToString() == "Toshiba")
+                            {
+                                etiquetas.Add(@"^XA
 ^SZ2^JMA
 ^MCY^PMN
 ^PW220^MTT
@@ -380,7 +391,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^ISLABEL001,N,^FS
 ^XZ
 ^XA^JZN^PR9
-^PQ" + row["pares"].ToString().Trim() + @",0,1,Y
+^PQ" + cantidades[i].ToString() + @",0,1,Y
 ^ILLABEL001^FS
 ^FO95.00,185.50^AFN,10.00,18.50^FD" + row["talla"].ToString().Trim() + @"^FS
 ^FO10.00,295.00^BY2,.12^BEN,55.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS
@@ -388,10 +399,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^XZ
 ^EG 
 ^XZ");
-                        }
-                        else
-                        {
-                            etiquetas.Add(@"^XA^JZN^
+                            }
+                            else
+                            {
+                                etiquetas.Add(@"^XA^JZN^
 ^FO60.50,287.50^AFN,5.00,12.50^FDSKU:^FS
 ^FO125.50,288.00^A0N,25.50,25.00^FD" + row["Sku_cadena"].ToString().Trim() + @"^FS
 ^FO50.50,210.50^AFN,5.50,12.00^FDTalla:^FS
@@ -405,7 +416,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^ISLABEL001,N,^FS
 ^XZ
 ^XA^JZN^PR9
-^PQ" + row["pares"].ToString().Trim() + @",0,1,Y
+^PQ" + cantidades[i].ToString() + @",0,1,Y
 ^ILLABEL001^FS
 ^FO145.00,210.50^AFN,10.00,18.50^FD" + row["talla"].ToString().Trim() + @"^FS
 ^FO40.00,315.00^BY2,.10^BEN,60.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS
@@ -413,12 +424,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^XZ
 ^EG 
 ^XZ");
+                            }
+
+                            //Fin Seleccion
                         }
 
-                        //Fin Seleccion
                     }
-
-
 
                 }
                 else
@@ -426,19 +437,19 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     //Etiquetas De Precio cadena
                     foreach (DataRow row in dt.Rows)
                     {
-                        //for (int xx = 0; xx < Int32.Parse(row["pares"].ToString()); xx++)
-                        //{
-                        var barras = "";
-                        if (row["Centro"].ToString().Trim() != "CD04")
+                        if (materiales[i] == row["ITEM"].ToString().Trim())
                         {
-                            barras = @"^FO30,283.50^A0N,40.50,50.00^FD$^FS
+                            var barras = "";
+                            if (row["Centro"].ToString().Trim() != "CD04")
+                            {
+                                barras = @"^FO30,283.50^A0N,40.50,50.00^FD$^FS
 ^FO82.50,267.50^A0N,77.60,72.00^FD" + row["Entero_prec"].ToString().Trim() + @"^FS
 ^FO190.50,267.50^A0N,35.60,34.00^FD" + row["Dec_prec"].ToString().Trim() + @"^FS
 ^FO300.00,296.00^BY2.0.20,.20^BEN,48.00,Y,N^FD" + row["Ean_cadena"].ToString().Trim() + @"^FS";
 
-                        }
+                            }
 
-                        etiquetas.Add(@"^XA
+                            etiquetas.Add(@"^XA
 ^SZ2^JMA
 ^MCY^PMN
 ^PW580^MTT
@@ -473,22 +484,22 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^ISLABEL001,N,^FS
 ^XZ
 ^XA^JZN^PR9
-^PQ" + row["pares"].ToString().Trim() + @",0,1,Y
+^PQ" + cantidades[i].ToString() + @",0,1,Y
 ^ILLABEL001^FS
 ^FO318.00,157.50^AFN,7.00,32.50^FD" + row["talla"].ToString().Trim() + @"^FS
 " + barras + @"
 ^XZ
 ^XA
 ^JZN");
-                        //i++;
-                        //}
+                            //i++;
+                            //}
+
+                        }
 
                     }
-
                 }
-
             }
-
+            }
 
             foreach (string etiqueta in etiquetas)
             {
