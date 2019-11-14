@@ -364,8 +364,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                              *
                              *Se selecciona entre plantilla para Toshiba o Zebra
                              */
-                            if (TempData["impresora"].ToString() == "Toshiba")
-                            {
+                           
                                 etiquetas.Add(@"^XA
 ^SZ2^JMA
 ^MCY^PMN
@@ -431,7 +430,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                     }
 
-                }
                 else
                 {
                     //Etiquetas De Precio cadena

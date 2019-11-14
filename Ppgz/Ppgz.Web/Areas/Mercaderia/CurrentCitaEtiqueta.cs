@@ -137,7 +137,7 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             if (!_ordenesActivas.Any())
             {
-                throw new BusinessException("No hay Órdenes de Compras).");
+                throw new BusinessException("No hay Órdenes de Compras");
             }
 
             Centro = centro;

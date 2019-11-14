@@ -124,16 +124,7 @@
                     <span>@preAsn.NumeroDocumento</span>
 
                 </div>
-                <div style="line-height: 2em;" class="col-sm-3">
-                    <strong>Total. Pedido</strong>
-                    <span id="idProductosEnOrden" style="font-size: 1.5em; color: #22aaaa;">@preAsn.TotalPedido</span>
-
-                </div>
-                <div style="line-height: 2em;" class="col-sm-3">
-                    <strong>Total. Permitido</strong>
-                    <span id="idProductosEnOrden" style="font-size: 1.5em; color: orange;">@preAsn.TotalPermitido</span>
-
-                </div>
+        
            
             </div>
             <hr style="margin-top: 5px; margin-bottom: 5px;" />
@@ -145,8 +136,7 @@
                         <th class="text-center">Centro</th>
                         <th class="text-center">Almacén</th>
                         <th class="text-center">Descripción</th>
-                        <th class="text-center">Cant. Permitida</th>
-                        <th class="text-center">Cant.Impresiones</th>
+                        <th class="text-center">Cant.Etiquetas</th>
 
                     </tr>
                 </thead>
@@ -169,7 +159,6 @@
                                 <td class="text-center vert-align"> @detalle.Centro</td>
                                 <td class="text-center vert-align"> @detalle.Almacen</td>
                                 <td class="text-center vert-align"> @detalle.DescripcionMaterial</td>
-                                <td class="text-center vert-align" style="color: green;">@detalle.CantidadPermitida</td>
                                 <td class="text-center cantidad-entregar vert-align" style="font-weight: bold; cursor: pointer; color: @color;">@detalle.Cantidad</td>
                             </tr>
                         }
@@ -354,7 +343,8 @@
                     type: "POST",
                     url: "@Url.Action("AsnActualizarDetalle", "ImpresionEtiquetasIndividual")",
                     data: data,
-                    cache: false
+                    cache: false,
+                    window:location.reload(),
                 }).done(function (result) {
                     var td = $(tr.find(".cantidad-entregar")[0]);
                     td.text(cantidadNueva);
@@ -369,6 +359,8 @@
                     calcularTotalEntregar();
 
                     msgExito(result);
+                    
+
 
 
                 }).fail(function (response) {
@@ -430,11 +422,11 @@
                 ///console.log('loop: ' + JSON.stringify(d));
                 if (contador == 0) {
                     materiales = d[0];
-                    cantidades = d[5];
+                    cantidades = d[4];
                     contador = 1;
                 } else {
                     materiales = materiales + ',' + d[0];
-                    cantidades = cantidades + ',' + d[5];
+                    cantidades = cantidades + ',' + d[4];
                 }
 
             });
@@ -485,7 +477,9 @@
             //alert('selecionado: ' + JSON.stringify(ordenes));
             ///console.log('selecionado: ' + JSON.stringify(ordenes));
 
-        }
+    }
+
+
 
 </script>
 }
