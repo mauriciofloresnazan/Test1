@@ -77,5 +77,65 @@ namespace Ppgz.CitaWrapper
             return result.Any() ? result.Where(o => o.FechasPermitidas.Count > 0).ToList() : result;
         }
 
+
+        public List<PreAsn> GetOrdenesEtiquetasConDetalle(int proveedorId, string sociedad)
+        {
+            var db = new Repository.Entities();
+            var proveedor = db.proveedores.Single(p => p.Id == proveedorId);
+
+            var organizacionCompras = db.configuraciones.Single(c => c.Clave == "rfc.common.function.param.ekorg.mercaderia").Valor;
+
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+            var ordenesSap = sapOrdenCompraManager.GetActivasConDetalle(proveedor.NumeroProveedor, organizacionCompras, sociedad);
+
+            var ordenes = ordenesSap.ToList();
+
+          
+
+            var result = new List<PreAsn>();
+
+            foreach (var orden in ordenes)
+            {
+                var preAsn = new PreAsn
+                {
+                    FechaEntrega = orden.FechaEntrega,
+                    NumeroDocumento = orden.NumeroDocumento,
+                    NumeroProveedor = orden.NumeroProveedor,
+                    FechasPermitidas = RulesManager.GetFechasPermitidas(orden.FechaEntrega, proveedor.cuenta.EsEspecial, true),
+
+                    EsCrossDock = orden.CrossD.ToUpper() == "X",
+                    Tienda = orden.TiDest,
+                    TiendaOrigen = orden.TiOrig,
+                    InOut = orden.InOut,
+                    NumeroOrdenSurtido = orden.NumOs,
+                    Centro = orden.Centro
+
+                };
+
+                var detalles = orden.Detalles.Select(detalle => new PreAsnDetalle
+                {
+                    NumeroPosicion = detalle.NumeroPosicion,
+                    Centro = detalle.Centro,
+                    Almacen = detalle.Almacen,
+                    CantidadCitasFuturas = 0,
+                    CantidadPermitidaSap = detalle.CantidadPorEntregar,
+                    CantidadPedido = detalle.CantidadPedido,
+                    DescripcionMaterial = detalle.Descripcion,
+                    NumeroMaterial = detalle.NumeroMaterial,
+                    NumeroMaterial2 = detalle.NumeroMaterial2,
+                    Precio = detalle.ValorNeto,
+                    UnidadMedida = detalle.UnidadMedidaPedido,
+
+                    Cantidad = detalle.CantidadPorEntregar
+                }).ToList();
+
+                preAsn.Detalles = detalles;
+                result.Add(preAsn);
+            }
+
+
+            return result.Any() ? result.Where(o => o.FechasPermitidas.Count > 0).ToList() : result;
+        }
+
     }
 }

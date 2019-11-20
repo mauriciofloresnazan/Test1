@@ -114,7 +114,8 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             var preAsnManager = new PreAsnManager();
 
-            var result = preAsnManager.GetOrdenesActivasConDetalle(proveedor.Id, sociedad);
+            var result = preAsnManager.GetOrdenesEtiquetasConDetalle(proveedor.Id, sociedad);
+            //var result = preAsnManager.GetOrdenesEtiquetasConDetalle(proveedor.Id, sociedad);
 
             if (String.Equals(centro, "CROSS DOCK", StringComparison.CurrentCultureIgnoreCase))
             {
