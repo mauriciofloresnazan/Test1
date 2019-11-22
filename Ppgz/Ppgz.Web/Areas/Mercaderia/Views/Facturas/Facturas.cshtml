@@ -3,8 +3,9 @@
     ViewBag.Title = "Facturas";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var proveedor = (proveedore) ViewBag.Proveedor;
+    var proveedor = (proveedore)ViewBag.Proveedor;
 }
+<div id="alrt1" style="background: #f0f0f0;font-weight:bold;font-size:18px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;"></div>
 
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
@@ -58,15 +59,15 @@
                                 }
                                 else
                                 {
-                                
-                                @factura.NumeroGenerado
-                                } 
+
+                                    @factura.NumeroGenerado
+                                }
                             </td>
                             <td class="text-center vert-align">@factura.Uuid</td>
                             <td class="text-center vert-align">@factura.Fecha.ToString("dd/MM/yyyy")</td>
                             <td class="text-center vert-align">@factura.Total</td>
                             <td class="text-center vert-align">
-                                
+
                                 <div class="btn-group " role="group" aria-label="Archivos">
                                     <a class="btn btn-danger btn-xs" href="@Url.Action("DescargarXml", "Facturas", new { proveedorId = @proveedor.Id, facturaId = @factura.Id })"><i class="fa fa-file-code-o" aria-hidden="true"></i> XML </a>
                                     <a class="btn btn-warning btn-xs" href="@Url.Action("DescargarPdf", "Facturas", new { proveedorId = @proveedor.Id, facturaId = @factura.Id })"><i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF </a>
@@ -84,7 +85,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
 
-         
+
 
 
             $('#facturas').DataTable({
@@ -94,6 +95,8 @@
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
             });
         });
+        document.getElementById('alrt1').innerHTML = '<b>Estimado proveedor, favor de cargar todas las facturas correspondientes a citas de Noviembre y Diciembre el mismo día de entrega.<br>  El  último día de recepción de facturas será el Lunes 30 de DICIEMBRE posterior a esta fecha todo tendrá que facturarse con fecha del año 2020.</b>';
+        setTimeout(function () { document.getElementById('alrt1').innerHTML = ''; }, 20000);
     </script>
 }
 
