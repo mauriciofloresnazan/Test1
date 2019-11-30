@@ -160,10 +160,10 @@
                     <tr class="border-bottom">
 
                         @{
-                    var horario = result.horario;
-                    var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+                            var horario = result.horario;
+                            var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
 
-                    var rielPostition = 0;
+                            var rielPostition = 0;
                         }
 
                         <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
@@ -200,17 +200,17 @@
                         }
 
                         @*<td class="text-center" style="border-right: solid 1px #666">
-                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                            <td class="text-center" style="border-right: solid 1px #666">
-                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                            <td class="text-center" style="border-right: solid 1px #666">
-                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                            <td class="text-center" style="border-right: solid 1px #666">
-                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                            <td class="text-center" style="border-right: solid 1px #666">
-                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                            <td class="text-center">
-                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
                     </tr>
                 }
             </tbody>
@@ -218,8 +218,11 @@
         @using (Html.BeginForm("CambiarFecha", "AdministrarCitas", new { }, FormMethod.Post, new { id = "form-cambiar-fecha" }))
         {
             @Html.AntiForgeryToken()
-            <input type="hidden" name="fecha" value="@fechaCita.ToString("dd/MM/yyyy")"/>
-            <input type="hidden" name="citaId" value="@cita.Id"/>
+            DateTime fecha = DateTime.Now;
+            <input type="hidden" name="fecha" value="@fechaCita.ToString("dd/MM/yyyy")" />
+            <input type="hidden" name="citaId" value="@cita.Id" />
+            <input type="hidden" name="FechaCreacion" value="@fecha" />
+
 
         }
 

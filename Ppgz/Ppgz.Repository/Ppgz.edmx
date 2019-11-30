@@ -105,7 +105,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Codigo" Type="varchar" MaxLength="5" />
           <Property Name="FechaCita" Type="datetime" Precision="0" Nullable="false" />
-          <Property Name="FechaCreacion" Type="datetime" Precision="0" />
+         <Property Name="FechaCreacion" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Almacen" Type="varchar" MaxLength="45" />
           <Property Name="CantidadTotal" Type="int" />
           <Property Name="ProveedorId" Type="int" Nullable="false" />
@@ -116,6 +116,7 @@
           <Property Name="RielesOcupados" Type="tinyint" Nullable="false" />
           <Property Name="EstatusCitaId" Type="int" />
           <Property Name="Penalizado" Type="bool" Nullable="false" />
+          <Property Name="MovimientoCita" Type="datetime" Precision="0" />
         </EntityType>
         <EntityType Name="configuracionfactoraje">
           <Key>
@@ -1177,7 +1178,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Codigo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="FechaCita" Type="DateTime" Nullable="false" />
-          <Property Name="FechaCreacion" Type="DateTime" />
+          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Almacen" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="CantidadTotal" Type="Int32" />
           <Property Name="ProveedorId" Type="Int32" Nullable="false" />
@@ -1188,6 +1189,7 @@
           <Property Name="RielesOcupados" Type="SByte" Nullable="false" />
           <Property Name="EstatusCitaId" Type="Int32" />
           <Property Name="Penalizado" Type="Boolean" Nullable="false" />
+          <Property Name="MovimientoCita" Type="DateTime"/>
           <NavigationProperty Name="asns" Relationship="Self.fk_asn_cita" FromRole="citas" ToRole="asn" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_citas_usuario" FromRole="citas" ToRole="AspNetUsers" />
           <NavigationProperty Name="estatuscita" Relationship="Self.fk_citas_estatus" FromRole="citas" ToRole="estatuscitas" />
@@ -2194,6 +2196,7 @@
                 <ScalarProperty Name="RielesOcupados" ColumnName="RielesOcupados" />
                 <ScalarProperty Name="EstatusCitaId" ColumnName="EstatusCitaId" />
                 <ScalarProperty Name="Penalizado" ColumnName="Penalizado" />
+                <ScalarProperty Name="MovimientoCita" ColumnName="MovimientoCita" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -281,7 +281,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<ActionResult> CambiarFecha(int citaId, string fecha, int[] horarioRielesIds)
+        public async Task<ActionResult> CambiarFecha(int citaId, string fecha,DateTime FechaCreacion, int[] horarioRielesIds)
         {
             var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
@@ -341,6 +341,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 db.Entry(horarioRiel).State = EntityState.Modified;
             }
             cita.FechaCita = date;
+            cita.MovimientoCita = FechaCreacion;
             db.Entry(cita).State = EntityState.Modified;
             db.SaveChanges();
 
