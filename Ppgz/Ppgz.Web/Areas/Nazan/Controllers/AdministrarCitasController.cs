@@ -517,23 +517,29 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
-
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]
-        public ActionResult DisponibilidadRieles1(int horarioRielId, string disponible, string comentario = null)
+        public ActionResult DisponibilidadRieles1(int[] horarioRielId, string disponible, string comentario = null)
         {
-
             var db = new Entities();
 
-            var horarioRiel = db.horariorieles.Find(horarioRielId);
-            horarioRiel.Disponibilidad = disponible == "true";
-            db.Entry(horarioRiel).State = EntityState.Modified;
-            db.SaveChanges();
-            TempData["FlashSuccess"] = "Cambio de disponiblidad aplicado exitosamente";
-            return RedirectToAction("DisponibilidadRieles1", new { fecha = horarioRiel.Fecha.ToString("dd/MM/yyyy") });
-        }
+            foreach (var riel in horarioRielId)
+            {
+                var horario = db.horariorieles.FirstOrDefault(hr => hr.Id == riel);
+                horario.Disponibilidad = true;
+                horario.ComentarioBloqueo = null;
+                db.Entry(horario).State = EntityState.Modified;
+                db.SaveChanges();
 
+
+            }
+
+
+            TempData["FlashSuccess"] = "Rieles Desbloqueados Correctamente";
+            return RedirectToAction("DisponibilidadRieles1");
+
+        }
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         [ValidateAntiForgeryToken]
         [HttpPost]

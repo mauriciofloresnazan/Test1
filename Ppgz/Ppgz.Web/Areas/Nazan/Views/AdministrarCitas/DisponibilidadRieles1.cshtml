@@ -170,6 +170,9 @@
                 }
             </tbody>
         </table>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalComentario">
+            Guardar
+        </button>
         @using (Html.BeginForm("DisponibilidadRieles1", "AdministrarCitas", new { }, FormMethod.Post, new { id = "form-disponibilidad" }))
         {
             @Html.AntiForgeryToken()
@@ -182,8 +185,22 @@
 
     </div>
 </div>
+<div class="modal fade" id="modalComentario" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirmar desbloqueo de rieles</h4>
+            </div>
 
-
+            <div class="modal-footer">
+                <a class="btn btn-primary btn-agendar">
+                    <i class="fa fa-check-square" aria-hidden="true"></i> Si
+                </a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -204,41 +221,38 @@
             });
 
 
+            $('.btn-agendar').click(function () {
+
+                var comentario = $($("#modalComentario textarea")[0]).val();
+
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'comentario',
+                    value: comentario
+                }).appendTo('#form-disponibilidad');
+
+
+                $("#form-disponibilidad").submit();
+
+
+            });
+
+
             $('.horarioriel').change(function () {
 
                 var horarioRielId = $(this).attr("id");
 
                 $("#bloqueo-horariorielid").val(horarioRielId);
 
-              /*  $('<input>').attr({
+                $('<input>').attr({
                     type: 'hidden',
                     name: 'horarioRielId',
                     value: horarioRielId
                 }).appendTo('#form-disponibilidad');
-                */
-                if ($(this).prop('checked') === false) {
-
-
-                    $("#bloqueo-disponible").val("true");
-
-                    $("#form-disponibilidad").submit();
-
-                    $('.horarioriel').bootstrapToggle('disable');
-
-                    /*$('<input>').attr({
-                        type: 'hidden',
-                        name: 'disponible',
-                        value: "false"
-                    }).appendTo('#form-disponibilidad');*/
-
-                } 
-                //
-
             });
 
+
         });
-
-
 
 
     </script>
