@@ -127,9 +127,11 @@
     <div class="panel-heading">Rieles Disponibles</div>
     <div class="panel-body">
 
-        <p style="margin: 0;"><i>
-                Debe entergar <strong>@currentCita.Cantidad</strong> pares, por lo que debe seleccionar 
-            <strong>@rielesNecesarios</strong> rieles.</i> 
+        <p style="margin: 0;">
+            <i>
+                Debe entergar <strong>@currentCita.Cantidad</strong> pares, por lo que debe seleccionar
+                <strong>@rielesNecesarios</strong> rieles.
+            </i>
         </p>
         <p>
             <div>
@@ -178,10 +180,10 @@
                     <tr class="border-bottom">
 
                         @{
-                    var horario = result.horario;
-                    var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+                            var horario = result.horario;
+                            var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
 
-                    var rielPostition = 0;
+                            var rielPostition = 0;
                         }
 
                         <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
@@ -236,10 +238,11 @@
                 }
             </tbody>
         </table>
-        @using (Html.BeginForm("Agendar", "ControlCitas", new { }, FormMethod.Post, new { id="form-agendar" }))
+        @using (Html.BeginForm("Agendar", "ControlCitas", new { }, FormMethod.Post, new { id = "form-agendar" }))
         {
             @Html.AntiForgeryToken()
-            
+            DateTime fecha = DateTime.Now;
+            <input type="hidden" name="FechaCreacion" value="@fecha" />
         }
 
 

@@ -105,7 +105,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Codigo" Type="varchar" MaxLength="5" />
           <Property Name="FechaCita" Type="datetime" Precision="0" Nullable="false" />
-         <Property Name="FechaCreacion" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
+         <Property Name="FechaCreacion" Type="datetime" Precision="0" />
           <Property Name="Almacen" Type="varchar" MaxLength="45" />
           <Property Name="CantidadTotal" Type="int" />
           <Property Name="ProveedorId" Type="int" Nullable="false" />
@@ -1178,7 +1178,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Codigo" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="FechaCita" Type="DateTime" Nullable="false" />
-          <Property Name="FechaCreacion" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FechaCreacion" Type="DateTime" />
           <Property Name="Almacen" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="CantidadTotal" Type="Int32" />
           <Property Name="ProveedorId" Type="Int32" Nullable="false" />

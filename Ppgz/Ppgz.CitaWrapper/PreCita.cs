@@ -8,6 +8,8 @@ namespace Ppgz.CitaWrapper
     {
         public DateTime Fecha;
 
+        public DateTime FechaCreacion;
+
          public string Centro;
 
         public string Sociedad;
