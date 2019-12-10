@@ -1911,7 +1911,6 @@
     <Content Include="Areas\Mercaderia\Views\ControlCitasSA\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitasSA\ListaDeOrdenes.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitasSA\SeleccionarRieles.cshtml" />
-    <Content Include="App_Data\Manual-CEDIS.doc" />
     <Content Include="assets\vendor\DataTables-1.10.15\Contributing.md" />
     <Content Include="assets\vendor\DataTables-1.10.15\examples\resources\syntax\Syntax Highlighter license" />
     <Content Include="assets\vendor\DataTables-1.10.15\extensions\AutoFill\Readme.md" />
@@ -1975,6 +1974,7 @@
     <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetasIndividual\Generar.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetasIndividual\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetasIndividual\Resultado.cshtml" />
+    <Content Include="App_Data\manualEtiquetas.pdf" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

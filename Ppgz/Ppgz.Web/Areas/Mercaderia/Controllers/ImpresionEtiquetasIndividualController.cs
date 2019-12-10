@@ -359,13 +359,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     {
 
                         if (materiales[i] == row["ITEM"].ToString().Trim())
-                        {
-                            /**
-                             *
-                             *Se selecciona entre plantilla para Toshiba o Zebra
-                             */
-                           
-                                etiquetas.Add(@"^XA
+                            {
+                                if (TempData["impresora"].ToString() == "Toshiba")
+                                {
+                                    /**
+                                     *
+                                     *Se selecciona entre plantilla para Toshiba o Zebra
+                                     */
+
+                                    etiquetas.Add(@"^XA
 ^SZ2^JMA
 ^MCY^PMN
 ^PW220^MTT
@@ -398,6 +400,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^XZ
 ^EG 
 ^XZ");
+                                }
                             }
                             else
                             {

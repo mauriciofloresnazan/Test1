@@ -51,6 +51,15 @@ namespace Ppgz.Web.Controllers
 
             return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, "ManualInspeccioncalidad.pdf");
         }
+        public FileResult ManualEtiquetas()
+        {
+            var commonManager = new CommonManager();
+            var usuario = commonManager.GetUsuarioAutenticado();
+
+            var fileBytes = System.IO.File.ReadAllBytes(Server.MapPath(@"~/App_Data/manualEtiquetas.pdf"));
+
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Pdf, "ManualEtiquetasIndividual.pdf");
+        }
         [AllowAnonymous]
         public ActionResult Privacidad()
         {

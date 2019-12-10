@@ -293,6 +293,13 @@
         }
 
         $(document).ready(function () {
+            $('input[type=radio][name=nazan]').change(function () {
+                if ($("#zapatoTipo").prop("checked")) {
+                    $('#radioImpre').show();
+                } else {
+                    $('#radioImpre').hide();
+                }
+            });
 
 
             table = $('#ordenesimprimir').DataTable({

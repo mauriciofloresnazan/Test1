@@ -274,6 +274,14 @@
 
         $(document).ready(function () {
 
+
+            $('input[type=radio][name=nazan]').change(function () {
+                if ($("#zapatoTipo").prop("checked")) {
+                    $('#radioImpre').show();
+                } else {
+                    $('#radioImpre').hide();
+                }
+            });
             table = $('#asn').DataTable({
                 dom: 'Bfrtip',
                 "language": {
