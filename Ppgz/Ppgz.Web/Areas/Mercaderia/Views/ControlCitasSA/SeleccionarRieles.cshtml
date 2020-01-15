@@ -118,17 +118,16 @@
 <div class="panel panel-default">
     <div class="panel-heading">Rieles Disponibles</div>
     <div class="panel-body">
+        <p style="margin: 0;">
+            <i>
 
-        <p style="margin: 0;"><i>
-               
         </p>
         <p>
             <div>
                 <div class="col-md-7" style="padding: 0; margin-top: 10px;">.</div>
-                
+
             </div>
         </p>
-
 
         <table class="table-rieles" width="100%" id="tb-3" style="">
             <thead>
@@ -140,27 +139,27 @@
                     {
                         var anden = result.andene;
 
-                        if (anden.Anden=="1")
+                        if (anden.Anden == "1" || anden.Anden == "2" || anden.Anden == "3")
                         {
 
-                        
 
-                        var borderRight = "";
-                        if (int.Parse(anden.Anden) < andenes.Count())
-                        {
-                            borderRight = "solid 1px #666";
-                        }
-                        <th class="text-center" colspan="2" style="border-right: @borderRight">
-                            <i class="fa fa-truck fa-5x" aria-hidden="true"></i>
-                            ANDEN @anden.Anden
-                            <div class="row">
-                                @foreach (var riel in anden.rieles)
-                                {
-                                    <div class="col-xs-6">Riel @riel.Riel</div>
 
-                                }
-                            </div>
-                        </th>
+                            var borderRight = "";
+                            if (int.Parse(anden.Anden) < andenes.Count())
+                            {
+                                borderRight = "solid 1px #666";
+                            }
+                            <th class="text-center" colspan="2" style="border-right: @borderRight">
+                                <i class="fa fa-truck fa-5x" aria-hidden="true"></i>
+                                ANDEN @anden.Anden
+                                <div class="row">
+                                    @foreach (var riel in anden.rieles)
+                                    {
+                                        <div class="col-xs-6">Riel @riel.Riel</div>
+
+                                    }
+                                </div>
+                            </th>
                         }
                     }
                 </tr>
@@ -169,16 +168,13 @@
                 @foreach (var result in horarios)
                 {
                     <tr class="border-bottom">
-
                         @{
-                    var horario = result.horario;
-                    var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+                            var horario = result.horario;
+                            var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
 
-                    var rielPostition = 0;
+                            var rielPostition = 0;
                         }
-
                         <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
-
                         @foreach (var riel in rieles)
                         {
                             rielPostition++;
@@ -207,7 +203,7 @@
                             }
 
 
-                            if (riel.AlmacenRielId == 1 || riel.AlmacenRielId == 2)
+                            if (riel.AlmacenRielId == 1 || riel.AlmacenRielId == 2 || riel.AlmacenRielId == 3 || riel.AlmacenRielId == 4 || riel.AlmacenRielId == 5 || riel.AlmacenRielId == 6)
                             {
                                 <td class="text-center" style="border-right: @borderRight">
                                     <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
@@ -223,7 +219,6 @@
 
 
                         }
-
                         @*<td class="text-center" style="border-right: solid 1px #666">
                             <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
                         <td class="text-center" style="border-right: solid 1px #666">
@@ -240,12 +235,12 @@
                 }
             </tbody>
         </table>
-        @using (Html.BeginForm("Agendar", "ControlCitasSA", new { }, FormMethod.Post, new { id="form-agendar" }))
+        @using (Html.BeginForm("Agendar", "ControlCitasSA", new { }, FormMethod.Post, new { id = "form-agendar" }))
         {
             @Html.AntiForgeryToken()
-            
+            DateTime fecha = DateTime.Now;
+            <input type="hidden" name="FechaCreacion" value="@fecha" />
         }
-
 
     </div>
 </div>

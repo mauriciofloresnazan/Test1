@@ -5,12 +5,9 @@
                                      .Select(Path.GetFileName)
                                      .ToArray();
 }
-<div id="alrt" style="background: #f0f0f0;font-weight:bold;font-size:20px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;"></div><br />
 
-<div id="alrt1" style="background: #f0f0f0;font-weight:bold;font-size:20px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;"></div>
-<br>
-<br>
 
+<div id="alrt1" style="background: #f0f0f0;font-weight:bold;font-size:18px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;"></div>
 <div>
     <h2 style="color: white"> </h2>
     <hr>
@@ -56,9 +53,7 @@
 
 @section Scripts {
     <script type="text/javascript">
-        document.getElementById('alrt').innerHTML = '<b>Descarguen el archivo manual revisión de calidad en cedis que se encuentra en la opcion de ayuda para que lo abran y vean cuales son los puntos de revisión que se tomaran en cuenta al momento de entregar</b>';
-        setTimeout(function () { document.getElementById('alrt').innerHTML = ''; }, 30000);
-        document.getElementById('alrt1').innerHTML = '<b>Estimado proveedor, favor de Descargar el manual de impresion de etiqueta individual que se encuentra en la opcion de ayuda, si tienes alguna duda con el nuevo modulo de impresion de etiquetas individuales.</b>';
+        document.getElementById('alrt1').innerHTML = '<b>Estimado proveedor si tienes alguna duda con el modulo "impresion de etiquetas individual" favor de Descargar el manual que se encuentra en la opcion de ayuda.</b>';
         setTimeout(function () { document.getElementById('alrt1').innerHTML = ''; }, 30000);
     </script>
 }

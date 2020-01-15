@@ -324,6 +324,7 @@ namespace Ppgz.CitaWrapper
             var cita = new cita
             {
                 FechaCita = precita.Fecha,
+                FechaCreacion = precita.FechaCreacion,
                 UsuarioIdTx = precita.UsuarioId,
                 CantidadTotal = precita.Cantidad,
                 ProveedorId = precita.ProveedorId,

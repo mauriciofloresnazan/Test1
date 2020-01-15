@@ -169,7 +169,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
 		[ValidateAntiForgeryToken]
 		[HttpPost]
-		public ActionResult Agendar(int[] rielesIds)
+		public ActionResult Agendar(int[] rielesIds, DateTime FechaCreacion)
 		{
 			if (CurrentCita.Fecha == null)
 			{
@@ -184,8 +184,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				Fecha = (DateTime) CurrentCita.Fecha,
 				ProveedorId = CurrentCita.Proveedor.Id,
 				UsuarioId = _commonManager.GetUsuarioAutenticado().Id,
-				Asns = new List<Asn>(),
-				HorarioRielesIds = rielesIds.ToList()
+				Asns = new List<Asn>(),                                            
+                FechaCreacion = (DateTime)FechaCreacion,                                                                                           
+                HorarioRielesIds = rielesIds.ToList()
 			};
 
 			//foreach (var preAsn in CurrentCita.GetPreAsns())

@@ -5,7 +5,6 @@
 
     var proveedor = (proveedore)ViewBag.Proveedor;
 }
-<div id="alrt1" style="background: #f0f0f0;font-weight:bold;font-size:18px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;"></div>
 
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
@@ -95,8 +94,7 @@
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
             });
         });
-        document.getElementById('alrt1').innerHTML = '<b>Estimado proveedor, favor de cargar todas las facturas correspondientes a citas de Noviembre y Diciembre el mismo día de entrega.<br>  El  último día de recepción de facturas será el Lunes 30 de DICIEMBRE posterior a esta fecha todo tendrá que facturarse con fecha del año 2020.</b>';
-        setTimeout(function () { document.getElementById('alrt1').innerHTML = ''; }, 20000);
+        
     </script>
 }
 
