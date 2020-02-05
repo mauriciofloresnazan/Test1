@@ -219,6 +219,7 @@
     </Compile>
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
     <Compile Include="Areas\Mercaderia\Models\PefilProveedorViewModel.cs" />
+    <Compile Include="Areas\Nazan\Controllers\AdministrarCitas1Controller.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarCitasController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarFacturasController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarMensajesInstitucionalesController.cs" />
@@ -1975,6 +1976,7 @@
     <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetasIndividual\Index.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetasIndividual\Resultado.cshtml" />
     <Content Include="App_Data\manualEtiquetas.pdf" />
+    <Content Include="Areas\Nazan\Views\AdministrarCitas1\Enroque1.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
@@ -2000,7 +2002,9 @@
     <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
     <Content Include="Views\Account\Confirm.cshtml" />
     <Content Include="Uploads\formato_nivel_servicio.xlsx" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Areas\Nazan\Views\Configsys\Index.cshtml" />
     <Content Include="Views\Account\CambiarPassword.cshtml" />
     <Content Include="Views\Home\Privacidad.cshtml" />
