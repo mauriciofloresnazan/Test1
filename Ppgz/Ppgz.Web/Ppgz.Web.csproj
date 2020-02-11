@@ -1977,6 +1977,7 @@
     <Content Include="Areas\Mercaderia\Views\ImpresionEtiquetasIndividual\Resultado.cshtml" />
     <Content Include="App_Data\manualEtiquetas.pdf" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas1\Enroque1.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarCitas1\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

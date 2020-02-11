@@ -1,0 +1,288 @@
+﻿@using Ppgz.Repository
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    var citas = (List<cita>)ViewBag.Citas;
+    var estatusCita = (List<estatuscita>)ViewBag.EstatusCita;
+}
+
+<h2>Citas Registradas</h2>
+@*<p class="page-description-title"><i class="fa fa-calendar" aria-hidden="true"></i> <i>Registro desde hace 3 meses</i></p>*@
+
+<div class="panel panel-default">
+    <div class="panel-heading">Lista de Citas</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="form-inline" style="text-align:right">
+                <div class="form-group">
+                    <label for="fecha">Desde</label>
+                    <input type="text" class="form-control fecha" id="fechaFrom" placeholder="Fecha">
+                </div>
+                <div class="form-group">
+                    <label for="fechaTo">Hasta</label>
+                    <input type="text" class="form-control fecha" id="fechaTo" placeholder="Fecha">
+                </div>
+                <div class="form-group">
+                    <input type="button" class="btn btn-primary" id="btnFiltrar" value="Filtrar" onclick="javascript: Filtrar();">
+                </div>
+            </div>
+            <br />
+            <div class="table-responsive">                
+                <table class="table table-striped table-condensed table-bordered" id="citas">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Id</th>
+                            <th class="text-center">Fecha Creacion Cita</th>
+                            <th class="text-center">Fecha Cita</th>
+                            <th class="text-center">Hora de Inicio</th>
+                            <th class="text-center">Fecha Movimiento Cita</th>
+                            <th class="text-center">Rieles</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-center">RFC Proveedor</th>
+                            <th class="text-center">Nombre Proveedor</th>
+                            <th class="text-center">Tiene CR</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var cita in citas)
+                        {
+                            var horarioId = cita.horariorieles.Select(hr => hr.HorarioId).Min();
+                            var horarioRiel = cita.horariorieles.FirstOrDefault(hr => hr.HorarioId == horarioId);
+                        <tr>
+                            <td class="text-center vert-align">@cita.Id</td>
+                            <td class="text-center vert-align">@cita.FechaCreacion</td>
+                            <td class="text-center vert-align">@cita.FechaCita.ToString("dd/M/yyyy")</td>
+                            <td class="text-center vert-align">@horarioRiel.horario.HoraDesde</td>
+                            <td class="text-center vert-align">@cita.MovimientoCita</td>
+                            <td class="text-center vert-align">@cita.RielesOcupados</td>
+                            <td class="text-center vert-align">@cita.CantidadTotal</td>
+                            <td class="text-center vert-align">@cita.proveedore.Rfc</td>
+                            <td class="text-center vert-align">@cita.proveedore.Nombre1 @cita.proveedore.Nombre2 @cita.proveedore.Nombre3 @cita.proveedore.Nombre4</td>
+                            <td class="text-center vert-align">
+                                @if (cita.crs.Any())
+                                {
+                                    <text>SI</text>
+                                }
+                                else
+                                {
+                                    <text>NO</text>
+                                }
+                            </td>
+                            
+                        </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" id="modal-penalizar" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            @using (Html.BeginForm("Penalizar", "AdministrarCitas1", new { }, FormMethod.Post, new { id = "form-penalizar" }))
+            {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="citaId" />
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Penalizar</h4>
+            </div>
+            <div class="modal-body">
+                <label>Seleccione una opción</label>
+
+                <select class="form-control" name="estatusId">
+                    <option>Quitar penalización</option>
+                    @foreach (var estatus in estatusCita)
+                    {
+                        <option value="@estatus.Id">@estatus.Nombre</option>
+
+                    }
+                </select>
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                <button type="submit" class="aplicar-enroque-button btn btn-primary">Aplicar Selección</button>
+            </div>
+            }
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" tabindex="-1" id="modal-cambiar-fecha" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Cambiar fecha</h4>
+            </div>
+            <div class="modal-body">
+                <label>Seleccione la nueva fecha</label>
+
+
+                <input type="text" class="form-control fecha" name="fecha" id="fecha" placeholder="Fecha" />
+
+            </div>
+            <div class="modal-footer">
+                <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                <a class="btn btn-primary" onclick="javascript: CambiarFecha();">Cambiar Fecha</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="modal-reenvio" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("ReEnvioASN", "AdministrarCitas1", new { }, FormMethod.Post, new { id = "form-reenvio" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="idCita" />
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Reenvio ASN a Scale</h4>
+                </div>
+                <div class="modal-body">
+                    <label>¿Esta seguro de Reeviar la ASN a Scale?</label>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Reenviar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $('#citas').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+
+            $('#fecha').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+
+            $('#fechaFrom').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+
+            $('#fechaTo').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+        });
+
+        $("#fechaTo").focusout(function () {
+            var fechaTo = $("#fechaTo").val();
+            var fechaFrom = $("#fechaFrom").val();
+            var t = todate(fechaTo);
+            var f = todate(fechaFrom);
+            var datenow = new Date();
+            if (f > t) {
+                console.log("true");
+                $("#fechaTo").val(GetFormattedDate(datenow));
+            }
+        });
+
+        function todate(datestr) {
+            var parts = datestr.split("/")
+            return new Date(parts[2], parts[1] - 1, parts[0])
+        }
+
+        function GetFormattedDate(datenow) {
+            var month = datenow.getMonth() + 1;
+            var day = datenow.getDate();
+            var year = datenow.getFullYear();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            if (month < 10) {
+                month = "0" + month;
+            }
+
+            return day + "/" + month + "/" + year;
+        }
+
+        function ShowModalPenalizar(citaId) {
+            $('#form-penalizar > input[name="citaId"]').val(citaId);
+            $("#modal-penalizar").modal('show');
+        }
+
+        function ShowModalReEnvio(citaId) {
+            $('#form-reenvio > input[name="idCita"]').val(citaId);
+            $("#modal-reenvio").modal('show');
+        }
+
+        var citaIdCambiarFecha;
+
+        function ShowModalCambiarFecha(citaId) {
+            citaIdCambiarFecha = citaId;
+            $("#modal-cambiar-fecha").modal('show');
+        }
+
+        function CambiarFecha() {
+            var url = "@Url.Action("CambiarFecha", "AdministrarCitas1")";
+            var fecha = $('#fecha').val();
+            url = url + "?citaId=" + citaIdCambiarFecha + "&fecha=" + fecha;
+            location.href = url;
+        }
+
+        function Filtrar() {
+            var fechaf = $("#fechaFrom").val();
+            var fechat = $("#fechaTo").val();
+
+            var url = "@Url.Action("Index", "AdministrarCitas1")";
+            var fecha = $('#fecha').val();
+            url = url + "?fechaFrom=" + fechaf + "&fechaTo=" + fechat;
+            location.href = url;
+        }
+
+        //function Filtrar() {
+        //    var fechaf = $("#fechaFrom").val();
+        //    var fechat = $("#fechaTo").val();
+        //    var data = { "fechaFrom": fechaf, "fechaTo": fechat };
+
+        //    $.ajax({
+        //        url: 'AdministrarCitas/Filtrar',
+        //        type: 'POST',
+        //        data: data,
+        //        dataType: 'json',
+        //        contentType: 'application/json',
+        //        success: function (data) {
+        //            alert('Data: ' +data);
+        //        },
+        //        error: function (request, error) {
+        //            alert("Error: " + JSON.stringify(request));
+        //        }
+        //    });
+        //}
+
+    </script>
+
+
+
+}

@@ -126,7 +126,7 @@ namespace Ppgz.Web
                 "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores|Index|AdministrarProveedores|fa fa-address-book-o|Nazan",
                 "NIVELSERVICIO|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan",
                 "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
-                "VISTACITASCALIDAD|Informacion de citas para calidad|Enroque1|AdministrarCitas1|fa fa-calendar|Nazan",
+                "VISTACITASCALIDAD|Informacion de citas para calidad|Index|AdministrarCitas1|fa fa-calendar|Nazan",
                 "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
@@ -337,6 +337,14 @@ namespace Ppgz.Web
                         "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
                         "ADMINISTRARCITAS|Bloquear Rieles|DisponibilidadRieles|AdministrarCitas|fa fa-ban|Nazan",
                          "ADMINISTRARCITAS|Desbloquear Rieles|DisponibilidadRieles1|AdministrarCitas|fa fa-unlock|Nazan",
+                    };
+                    break;
+                case "AdministrarCitas1":
+                    menu = new List<string>
+                    {
+                        "VISTACITASCALIDAD|Administración de Citas|Index|AdministrarCitas1|fa fa-calendar|Nazan",
+                        "VISTACITASCALIDAD|Vista Diaria|Enroque1|AdministrarCitas1|fa fa-calendar|Nazan",
+                        
                     };
                     break;
                 case "ProntoPago":

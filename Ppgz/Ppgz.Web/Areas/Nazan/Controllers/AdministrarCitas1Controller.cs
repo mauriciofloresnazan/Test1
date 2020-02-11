@@ -33,7 +33,26 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             Db.ExecuteProcedureOut(parameters, "config_appointment");
         }
 
-        
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTACITASCALIDAD")]
+        public ActionResult Index(string fechaFrom, string fechaTo)
+        {
+            var db = new Entities();
+            if (!String.IsNullOrEmpty(fechaFrom) && !String.IsNullOrEmpty(fechaTo))
+            {
+                var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat).ToList();
+            }
+            else
+            {
+                var fecha = DateTime.Today;
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita == fecha).ToList();
+            }
+
+            ViewBag.EstatusCita = db.estatuscitas.ToList();
+
+            return View();
+        }
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTACITASCALIDAD")]
         public ActionResult Enroque1(string fecha = null)
         {
