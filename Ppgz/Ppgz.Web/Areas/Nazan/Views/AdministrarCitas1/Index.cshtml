@@ -43,6 +43,7 @@
                             <th class="text-center">RFC Proveedor</th>
                             <th class="text-center">Nombre Proveedor</th>
                             <th class="text-center">Tiene CR</th>
+                            <th class="text-center">Detalles Cita</th>
                             
                         </tr>
                     </thead>
@@ -71,7 +72,11 @@
                                     <text>NO</text>
                                 }
                             </td>
-                            
+                            <td class="text-center">
+                                <a class="btn btn-primary btn-sm" href="@Url.Action("CitaDetalle", "AdministrarCitas1", new {@citaId = @cita.Id})">
+                                    <i class="fa fa-check" aria-hidden="true"></i> Ver Detalle
+                                </a>
+                            </td>
                         </tr>
 
                         }

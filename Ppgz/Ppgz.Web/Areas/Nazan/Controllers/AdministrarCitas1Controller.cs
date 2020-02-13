@@ -11,12 +11,13 @@ using Ppgz.CitaWrapper;
 using Ppgz.Repository;
 using Ppgz.Web.Infrastructure;
 using ScaleWrapper;
-
+using Ppgz.Services;
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
     public class AdministrarCitas1Controller : Controller
     {
-
+        readonly ProveedorManager _proveedorManager = new ProveedorManager();
+        readonly CommonManager _commonManager = new CommonManager();
         internal void CrearRieles(DateTime date)
         {
             var parameters = new List<MySqlParameter>
@@ -50,6 +51,26 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 
             ViewBag.EstatusCita = db.estatuscitas.ToList();
+
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTACITASCALIDAD")]
+        public ActionResult CitaDetalle(int citaId)
+        {
+
+
+            var db = new Entities();
+            var cita = db.citas.FirstOrDefault(c => c.Id == citaId);
+
+            if (cita == null)
+            {
+                //TODO
+                TempData["FlashError"] = "Cita incorrecta";
+                return RedirectToAction("Citas");
+            }
+
+            ViewBag.Cita = cita;
 
             return View();
         }
