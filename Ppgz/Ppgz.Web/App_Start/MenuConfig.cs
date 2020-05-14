@@ -127,6 +127,7 @@ namespace Ppgz.Web
                 "NIVELSERVICIO|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan",
                 "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
                 "VISTACITASCALIDAD|Informacion de citas para calidad|Index|AdministrarCitas1|fa fa-calendar|Nazan",
+                "VISTACITASCOMPRADORES|Informacion de citas para Compradores|Index|AdministrarCitasCompradores|fa fa-calendar|Nazan",
                 "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
@@ -345,6 +346,14 @@ namespace Ppgz.Web
                         "VISTACITASCALIDAD|Administración de Citas|Index|AdministrarCitas1|fa fa-calendar|Nazan",
                         "VISTACITASCALIDAD|Vista Diaria|Enroque1|AdministrarCitas1|fa fa-calendar|Nazan",
                         
+                    };
+                    break;
+                case "AdministrarCitasCompradores":
+                    menu = new List<string>
+                    {
+                        "VISTACITASCOMPRADORES|Administración de Citas|Index|AdministrarCitasCompradores|fa fa-calendar|Nazan",
+                        "VISTACITASCOMPRADORES|Vista Diaria|Enroque1|AdministrarCitasCompradores|fa fa-calendar|Nazan",
+
                     };
                     break;
                 case "ProntoPago":

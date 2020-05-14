@@ -219,6 +219,7 @@
     </Compile>
     <Compile Include="Areas\Mercaderia\MercaderiaAreaRegistration.cs" />
     <Compile Include="Areas\Mercaderia\Models\PefilProveedorViewModel.cs" />
+    <Compile Include="Areas\Nazan\Controllers\AdministrarCitasCompradoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarCitas1Controller.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarCitasController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarFacturasController.cs" />
@@ -1979,6 +1980,8 @@
     <Content Include="Areas\Nazan\Views\AdministrarCitas1\Enroque1.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas1\Index.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas1\CitaDetalle.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarCitasCompradores\Enroque1.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarCitasCompradores\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
