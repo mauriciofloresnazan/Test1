@@ -26,7 +26,7 @@
                         <th class="text-center">Número de Proveedor</th>
                         <th class="text-center">RFC</th>
                         <th class="text-center">Nombre Proveedor</th>
-                        <th class="text-center">Opcion Sin ASN </th>
+                        <th class="text-center">Opcion Cita Regular </th>
                         <th class="text-center"></th>
                     </tr>
                 </thead>
@@ -38,7 +38,7 @@
                             <td class="text-center vert-align">@proveedor.Rfc</td>
                             <td class="text-center vert-align">@proveedor.Nombre1</td>
                             <td class="text-center vert-align">
-                                <a class="btn btn-default" onclick="return confirmar()" href="@Url.Action("Citas", "ControlCitas")"><i class="fa fa-times" aria-hidden="true"></i> NO</a>
+                                <a class="btn btn-default" onclick="return confirmar()" href="@Url.Action("Citas", "ControlCitas")"><i class="fa fa-check" aria-hidden="true"></i> SI</a>
                             </td>
                             <td class="text-center vert-align">
                                 <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#centro-modal" data-proveedorid="@proveedor.Id">
@@ -119,7 +119,7 @@
             });
         }
         function confirmar() {
-            if (confirm('¿Estas seguro de cambiar al modulo CON ASN?'))
+            if (confirm('¿Estas seguro de cambiar al modulo cita regular?'))
                 return true;
             else
                 return false;
