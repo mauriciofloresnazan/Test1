@@ -757,10 +757,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-            if (cuenta.SinASN)
-            {
-                return RedirectToAction("Citas", "ControlCitasSA");
-            }
+        
 
             var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
 			var db = new Entities();
