@@ -228,6 +228,7 @@
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\CuentasPagarController.cs" />
+    <Compile Include="Areas\Nazan\Controllers\PenalizacionesAuditorController.cs" />
     <Compile Include="Areas\Nazan\Controllers\PenalizacionesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\ProntoPagoController.cs" />
     <Compile Include="Areas\Nazan\Controllers\VistaProveedorController.cs" />
@@ -1982,6 +1983,10 @@
     <Content Include="Areas\Nazan\Views\AdministrarCitas1\CitaDetalle.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitasCompradores\Enroque1.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitasCompradores\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\PenalizacionesAuditor\Editar.cshtml" />
+    <Content Include="Areas\Nazan\Views\PenalizacionesAuditor\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\PenalizacionesAuditor\penalizaciones.cshtml" />
+    <Content Include="Areas\Nazan\Views\PenalizacionesAuditor\Reporte.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

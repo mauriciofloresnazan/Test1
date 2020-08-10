@@ -1,0 +1,97 @@
+﻿@using Ppgz.Repository
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var auditor = (List<audi>)ViewBag.EditarAuditor;
+}
+<h2>auditores Registrados</h2>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Lista de Auditores</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <a class="btn btn-info btn-xs" href="#" onclick="javascript:ShowModalCrear();" title="Agregar auditor">
+                Agregar auditor<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+            </a>
+                <div class="table-responsive">
+                    <table class="table table-striped table-condensed table-bordered" id="citas">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Id</th>
+                                <th class="text-center">Numero Empleado</th>
+                                <th class="text-center">Nombre Auditor</th>
+                                <th class="text-center" style="width: 100px">
+                                  Opcion  Eliminar 
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var audi in auditor)
+                            {
+                                <tr>
+                                    <td class="text-center vert-align">@audi.id</td>
+                                    <td class="text-center vert-align">@audi.NumeroEmpleado</td>
+                                    <td class="text-center vert-align">@audi.Nombreauditor</td>
+                                    <td class="text-center vert-align">
+                                        <div class="col-md-12">
+                                            <a class="btn btn-danger btn-sm" href="@Url.Action("Eliminar", "PenalizacionesAuditor", new {@audiid = audi.id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="El auditor será eliminado.">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Eliminar Auditor
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                </div>
+</div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="modal-crear" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("Crear", "PenalizacionesAuditor", new { }, FormMethod.Post, new { id = "form-crear" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar auditor</h4>
+                </div>
+                <div id="cuerpo" class="modal-body">
+                    <label>Numero Empleado</label>
+                    <input id="numero" name="numero" type="text" class="form-control" />
+                    <label>Nombre Auditor</label>
+                    <input id="nombre" name="nombre" type="text" class="form-control" />
+                    </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+
+
+        $(document).ready(function() {
+            $('#citas').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+
+
+        function ShowModalCrear() { 
+            $("#modal-crear").modal('show');
+        }
+
+    </script>
+
+}

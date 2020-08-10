@@ -1,0 +1,259 @@
+﻿@using Ppgz.Repository
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    var penalizacionAuditor = (List<Penalizacionauditor>)ViewBag.Penalizacion;
+    var fechaDesde = (DateTime)ViewBag.FechaDesde;
+    var fechaHasta = (DateTime)ViewBag.FechaHasta;
+
+}
+<link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
+<style type="text/css">
+</style>
+<h2>Penalizaciones Registradas</h2>
+<p class="page-description-title"><i class="fa fa-calendar" aria-hidden="true"></i> <i>Registro desde hace 3 meses</i></p>
+<div class="panel panel-default">
+    <div class="panel-heading">Seleccione la Fecha</div>
+    <div class="panel-body">
+
+        @using (Html.BeginForm("penalizaciones", "PenalizacionesAuditor", new { ViewBag.ReturnUrl }, FormMethod.Get, new { @id = "form-fecha", @class = "form-horizontal", role = "form" }))
+        {
+
+            @Html.ValidationSummary(true)
+
+            <div class="">
+                <label class="col-sm-2 control-label"> Fecha Desde</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="fechaDesde" id="fechaDesde" placeholder="Fecha" />
+                </div>
+                <label class="col-sm-2 control-label"> Fecha Hasta</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="fechaHasta" id="fechaHasta" placeholder="Fecha" />
+                </div>
+                <div class="col-sm-2">
+                    <button class="btn btn-primary pull-right" type="submit"> <i class="fa fa-filter" aria-hidden="true"></i> Filtrar</button>
+
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+<div class="panelpenalizacion panel-default">
+    <div class="panel-heading">Lista de penalizaciones audioria</div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Penalizar", "PenalizacionesAuditor", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" id="bloqueo-disponible" name="disponible">
+            
+            @Html.ValidationSummary(true)
+
+            <div class="col-md-12">
+                <div class="table-responsive">
+                    <table cellspacing="5" cellpadding="5" border="0">
+                        <tbody>
+                            <tr>
+                                <td><label>penalizacion Inicial: <input class="form-control input-sm" id="min" name="min" type="text"></label> </td>
+                                <td> <label>penalizacion Final: <input class="form-control input-sm" id="max" name="max" type="text"></label></td>
+
+
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="tablepenalizacion table-striped table-condensed table-bordered" id="penalizacion">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Id</th>
+                                <th class="text-center">Fecha Penalizacion</th>
+                                <th class="text-center">Numero Proveedor</th>
+                                <th class="text-center">Razon Social</th>
+                                <th class="text-center">Marca</th>
+                                <th class="text-center">Total Penalizacion</th>
+                                <th class="text-center">auditor</th>
+                                <th class="text-center">Penalizada</th>
+                                <th class="text-center">Penalizar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var penalizacion in penalizacionAuditor)
+                            {
+
+                                <tr>
+                                    <td>@penalizacion.id</td>
+                                    <td>@penalizacion.FechaPenalizacion</td>
+                                    <td>@penalizacion.NumeroProveedor</td>
+                                    <td>@penalizacion.RazonSocial</td>
+                                    <td>@penalizacion.Marca</td>
+                                    <td>@penalizacion.Total</td>
+                                    <td>@penalizacion.auditor</td>
+                                    <td>
+                                        @if (penalizacion.procesado == true)
+                                        {
+                                            <text>SI</text>
+                                        }
+                                        else
+                                        {<text>NO</text>
+                                    }
+                                    </td>
+                                    <td>
+
+                                        <input id="@penalizacion.id" class="penalizar" type="checkbox" data-toggle="toggle" data-on="SI" data-off="NO">
+
+                                    </td>
+
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalConfirmar">
+                        Guardar
+                    </button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="modal fade" id="modalConfirmar" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirmar Penalizaciones</h4>
+            </div>
+
+            <div class="modal-footer">
+                <a class="btn btn-primary btn-penalizar">
+                    <i class="fa fa-check-square" aria-hidden="true"></i> Si
+                </a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">NO</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
+    <script type="text/javascript">
+        var form = $("#form");
+        var table;
+
+
+        $(document).ready(function () {
+            table = $('#penalizacion').DataTable({
+                dom: 'Bfrtip',
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json",
+                },
+
+                buttons: [
+                    'pageLength',
+
+                ],
+
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+            table.buttons(0, null).container().prependTo(
+                table.table().container()
+            );
+
+            $('#min, #max').keyup(function () {
+                table.draw();
+            });
+            //form.submit(function () {
+            //    alert('selecionado: ' + JSON.stringify(table.rows({ selected: true }).data()));
+            //    console.log('selecionado: ' + JSON.stringify(table.rows({ selected: true }).data()));
+            //   if ($("#nazanTipo").prop("checked")) {
+            //        $('<input />').attr('type', 'hidden')
+            //            .attr('nazan', "ordenes")
+            //            .attr('value', true)
+            //            .appendTo(form);
+            //    }
+
+            //});
+
+
+        });
+
+        $.fn.dataTable.ext.search.push(
+
+            function (settings, data, dataIndex) {
+                var min = parseInt($('#min').val(), 10);
+                var max = parseInt($('#max').val(), 10);
+                var Id = parseFloat(data[0]) || 0; // use data for the age column
+
+                if ((isNaN(min) && isNaN(max)) ||
+                    (isNaN(min) && Id <= max) ||
+                    (min <= Id && isNaN(max)) ||
+                    (min <= Id && Id <= max)) {
+                    return true;
+                }
+                return false;
+            }
+        );
+        $('#min, #max').keyup(function () {
+            table.draw();
+        });
+         $('#fechaDesde').datetimepicker({
+            locale: 'es',
+            format: 'DD/MM/YYYY',
+            defaultDate: "@fechaDesde.ToString("yyyyMMdd")"
+        });
+        $('#fechaHasta').datetimepicker({
+            locale: 'es',
+            format: 'DD/MM/YYYY',
+            defaultDate: "@fechaHasta.ToString("yyyyMMdd")"
+                });
+
+        $('#fecha').datetimepicker({
+            locale: 'es',
+            format: 'DD/MM/YYYY',
+            defaultDate: new Date()
+        });
+        $('.btn-penalizar').click(function () {
+
+            var confirmar = $($("#modalConfirmar textarea")[0]).val();
+
+            $('<input>').attr({
+                type: 'hidden',
+                name: 'confirmar',
+                value: confirmar
+            }).appendTo('#form');
+
+
+            $("#form").submit();
+
+
+        });
+
+        $('.penalizar').change(function () {
+
+            var penalizarId = $(this).attr("id");
+
+            $("#bloqueo-penalizar").val(penalizarId);
+            if ($(this).prop('checked') === true) {
+                $("#bloqueo-disponible").val("true");
+                   $('<input>').attr({
+                     type: 'hidden',
+                     name: 'penalizarId',
+                     value: penalizarId
+                 }).appendTo('#form');  s
+            } else {
+                $("#bloqueo-disponible").val("false");
+               
+              /*  $('<input>').attr({
+                    type: 'hidden',
+                    name: 'disponible',
+                    value: "true"
+                }).appendTo('#form');*/
+
+            }
+        });
+        
+
+    </script>
+
+}

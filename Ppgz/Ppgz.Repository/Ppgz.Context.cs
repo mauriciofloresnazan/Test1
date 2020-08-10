@@ -37,6 +37,8 @@ namespace Ppgz.Repository
         public virtual DbSet<cr> crs { get; set; }
         public virtual DbSet<crforaneo> crsforaneos { get; set; }
         public virtual DbSet<cuentaproveedore> cuentaproveedores { get; set; }
+        public virtual DbSet<Penalizacionauditor> Penalizacionauditores { get; set; }
+        public virtual DbSet<audi> auditores { get; set; }
         public virtual DbSet<cuenta> cuentas { get; set; }
         public virtual DbSet<cuentasmensaje> cuentasmensajes { get; set; }
         public virtual DbSet<descuentofactoraje> descuentosfactoraje { get; set; }
