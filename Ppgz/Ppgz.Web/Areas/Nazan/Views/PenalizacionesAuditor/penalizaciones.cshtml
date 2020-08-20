@@ -87,7 +87,7 @@
                                     <td>@penalizacion.NumeroProveedor</td>
                                     <td>@penalizacion.RazonSocial</td>
                                     <td>@penalizacion.Marca</td>
-                                    <td>@penalizacion.Total</td>
+                                    <td>$@penalizacion.Total.00</td>
                                     <td>@penalizacion.auditor</td>
                                     <td>
                                         @if (penalizacion.procesado == true)
@@ -240,7 +240,7 @@
                      type: 'hidden',
                      name: 'penalizarId',
                      value: penalizarId
-                 }).appendTo('#form');  s
+                 }).appendTo('#form');  
             } else {
                 $("#bloqueo-disponible").val("false");
                

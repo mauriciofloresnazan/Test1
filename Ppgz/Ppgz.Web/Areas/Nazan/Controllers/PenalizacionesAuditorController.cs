@@ -56,7 +56,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
-        public ActionResult Registrar(int proveedorid,DateTime fecha, string proveedornumeroproveedor, string proveedornombre1, string proveedorcuenta, string Monto, string auditor)
+        public ActionResult Registrar(int proveedorid,DateTime fecha, string proveedornumeroproveedor, string proveedornombre1, string proveedorcuenta, string Monto, string auditor, string proveedorcorreo)
         {
             var db = new Entities();
             var penalizacion = new Penalizacionauditor();
@@ -66,6 +66,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             penalizacion.Marca = proveedorcuenta;
             penalizacion.Total = Monto;
             penalizacion.auditor = auditor;
+            penalizacion.Correo = proveedorcorreo;
             db.Penalizacionauditores.Add(penalizacion);
 
             db.SaveChanges();
@@ -97,14 +98,14 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     var commonManager = new CommonManager();
                     try
                     {
-                        commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Auditoria penalizada", "La Auditoria con ID " + pena.id + " ha sido Penalizada por el monto de " + pena.Total + " pesos, generando el documento contable N° " + result[0] + " ", pena.proveedore.Correo);
+                        commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Auditoria penalizada", "La Auditoria con ID " + pena.id + " ha sido Penalizada por el motivo  auditoria en fabrica por el monto de " + pena.Total + " pesos, generando el documento contable N° " + result[0] + " ", pena.Correo);
                     }
                     catch (Exception ex)
                     {
                         TempData["FlashError"] = "Error enviando correo con la notificacion de la penalizacion";
                     }
 
-                    TempData["FlashSuccess"] = "Penalización aplicada exitosamente, documento generado N° " + result[0];
+                    TempData["FlashSuccess"] = "Penalización aplicada exitosamente";
 
                 }
 
