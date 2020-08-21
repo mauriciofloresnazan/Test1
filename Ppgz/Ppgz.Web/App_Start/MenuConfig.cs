@@ -155,7 +155,8 @@ namespace Ppgz.Web
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
                 "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Mercaderia",
                 "REPORTESPROVEEDORES|Reportes Proveedores|Index|ReporteProveedores|fa fa-bar-chart|Mercaderia",
-				"PRONTOPAGO|Pronto pago|Index|ProntoPago|fa fa-bar-chart|Mercaderia",
+                "REPORTESAUDITORIA|Descuentos por Auditorias |Index|ReporteAuditoria|fa fa-line-chart|Mercaderia",
+                "PRONTOPAGO|Pronto pago|Index|ProntoPago|fa fa-bar-chart|Mercaderia",
 
 			};
             return menuLista;
