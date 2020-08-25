@@ -20,7 +20,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         readonly ProveedorManager _proveedorManager = new ProveedorManager();
         //
         // GET: /Nazan/AdministrarProveedores/
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
         public ActionResult Index()
         {
             var db = new Entities();
@@ -30,7 +30,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
         // GET: Nazan/Penalizaciones
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
         public ActionResult Penalizaciones(string fechaDesde = null, string fechaHasta = null)
         {
 
@@ -55,7 +55,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             ViewBag.penalizacion = db.Penalizacionauditores.Where(c => c.FechaPenalizacion > dateFechaDesde & c.FechaPenalizacion < dateFechaHasta & c.procesado==false).OrderByDescending(c => c.FechaPenalizacion).ToList();
             return View();
         }
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
         public ActionResult Registrar(int proveedorid,DateTime fecha, string proveedornumeroproveedor, string proveedornombre1, string proveedorcuenta, string Monto, string auditor, string proveedorcorreo)
         {
             var db = new Entities();
@@ -74,7 +74,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             TempData["FlashSuccess"] = "penalizacion Agregada correctamente.";
             return RedirectToAction("Index");
         }
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
         [ValidateAntiForgeryToken]
         [HttpPost]
         public ActionResult Penalizar(int[] penalizarId, string disponible)
@@ -83,11 +83,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             foreach (var riel in penalizarId)
             {
                 var pena = db.Penalizacionauditores.FirstOrDefault(c => c.id == riel);
-                var result = _penalizacionesManager.aplicarPenalizacionAuditoria(pena.NumeroProveedor, pena.Total, " penalizacion con Id: " + pena.id);
+                var result = _penalizacionesManager.aplicarPenalizacionAuditoria(pena.NumeroProveedor, pena.Total, "id" + pena.id + "Penalizado Por Auditoria");
 
                 if (result[0] == "")
                 {
-                    TempData["FlashError"] = "Error al aplicar la penalizacion";
+                   
                     
                 }
                 else
@@ -113,7 +113,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             return RedirectToAction("penalizaciones");
         }
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
         public ActionResult Reporte(string fechaDesde = null, string fechaHasta = null)
         {
 
@@ -142,7 +142,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             return View();
         }
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
         public ActionResult Editar()
         {
             var db = new Entities();
@@ -151,7 +151,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             return View();
         }
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
         public ActionResult Eliminar(int audiid)
         {
             var db = new Entities();
@@ -163,7 +163,19 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             TempData["FlashSuccess"] = "Auditor Eliminado Exitosamente";
             return RedirectToAction("Editar");
         }
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-PENALIZACIONES")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
+        public ActionResult Eliminarpenalizacion(int penalizacionid)
+        {
+            var db = new Entities();
+            var penalizacion = db.Penalizacionauditores.Find(@penalizacionid);
+            db.Entry(penalizacion).State = EntityState.Deleted;
+            db.SaveChanges();
+
+
+            TempData["FlashSuccess"] = "Penalizacion Eliminada Exitosamente";
+            return RedirectToAction("penalizaciones");
+        }
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
         public ActionResult Crear(string numero, string nombre)
         {
             var db = new Entities();

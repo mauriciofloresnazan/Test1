@@ -129,7 +129,7 @@ namespace Ppgz.Web
                 "VISTACITASCALIDAD|Informacion de citas para calidad|Index|AdministrarCitas1|fa fa-calendar|Nazan",
                 "VISTACITASCOMPRADORES|Informacion de citas para Compradores|Index|AdministrarCitasCompradores|fa fa-calendar|Nazan",
                 "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
-                "PENALIZACIONES|Administración de Penalizaciones Auditoria|Index|PenalizacionesAuditor|fa fa-exclamation-triangle|Nazan",
+                "AUDITORIA|Administración de Penalizaciones Auditoria|Index|PenalizacionesAuditor|fa fa-exclamation-triangle|Nazan",
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
                 "CONFIGNEG|Configuración de Negocio|Index|Configneg|fa fa-cogs|Nazan",
@@ -335,10 +335,10 @@ namespace Ppgz.Web
                 case "PenalizacionesAuditor":
                     menu = new List<string>
                     {
-                        "PENALIZACIONES|Agregar Penalizacion|Index|PenalizacionesAuditor|fa fa-exclamation-triangle|Nazan",
-                        "PENALIZACIONES|Lista de Penalizaciones|penalizaciones|PenalizacionesAuditor|fa fa-calculator|Nazan",
-                        "PENALIZACIONES|Agregar Auditior|Editar|PenalizacionesAuditor|fa fa-address-book-o|Nazan",
-                        "PENALIZACIONES|Reporte Penalizaciones|Reporte|PenalizacionesAuditor|fa fa-line-chart|Nazan",
+                        "AUDITORIA|Agregar Penalizacion|Index|PenalizacionesAuditor|fa fa-exclamation-triangle|Nazan",
+                        "AUDITORIA|Lista de Penalizaciones|penalizaciones|PenalizacionesAuditor|fa fa-calculator|Nazan",
+                        "AUDITORIA|Agregar Auditior|Editar|PenalizacionesAuditor|fa fa-address-book-o|Nazan",
+                        "AUDITORIA|Reporte Penalizaciones|Reporte|PenalizacionesAuditor|fa fa-line-chart|Nazan",
                     };
                     break;
                 case "AdministrarCitas":
