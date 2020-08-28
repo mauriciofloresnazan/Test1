@@ -53,10 +53,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             ViewBag.FechaDesde = dateFechaDesde;
             ViewBag.FechaHasta = dateFechaHasta;
             ViewBag.penalizacion = db.Penalizacionauditores.Where(c => c.FechaPenalizacion > dateFechaDesde & c.FechaPenalizacion < dateFechaHasta & c.procesado==false).OrderByDescending(c => c.FechaPenalizacion).ToList();
+            ViewBag.sum = db.Penalizacionauditores.Where(c => c.FechaPenalizacion > dateFechaDesde & c.FechaPenalizacion < dateFechaHasta & c.procesado == false).OrderByDescending(c => c.FechaPenalizacion).ToList().Sum(s => s.Totalsum);
             return View();
         }
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
-        public ActionResult Registrar(int proveedorid,DateTime fecha, string proveedornumeroproveedor, string proveedornombre1, string proveedorcuenta, string Monto, string auditor, string proveedorcorreo)
+        public ActionResult Registrar(int proveedorid,DateTime fecha, string proveedornumeroproveedor, string proveedornombre1, string proveedorcuenta, string Monto, decimal monto1, string auditor, string proveedorcorreo)
         {
             var db = new Entities();
             var penalizacion = new Penalizacionauditor();
@@ -67,6 +68,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             penalizacion.Total = Monto;
             penalizacion.auditor = auditor;
             penalizacion.Correo = proveedorcorreo;
+            penalizacion.Totalsum = monto1;
             db.Penalizacionauditores.Add(penalizacion);
 
             db.SaveChanges();

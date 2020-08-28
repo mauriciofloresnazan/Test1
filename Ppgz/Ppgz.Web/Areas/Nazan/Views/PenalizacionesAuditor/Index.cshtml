@@ -31,10 +31,10 @@
                         <td class="vert-align">@proveedor.cuenta.NombreCuenta</td>
                         <td class="vert-align">
                             <div class="col-md-12">
-                                <a class="btn btn-info btn-xs btn-agregar-penalizacion" data-proveedorid="@proveedor.Id" data-proveedorcorreo="@proveedor.Correo" data-proveedornumeroproveedor="@proveedor.NumeroProveedor" data-proveedornombre1="@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4"  data-proveedorcuenta="@proveedor.cuenta.NombreCuenta"><i class="fa fa-edit" aria-hidden="true"></i> Agregar Penalizacion </a>
+                                <a class="btn btn-info btn-xs btn-agregar-penalizacion" data-proveedorid="@proveedor.Id" data-proveedorcorreo="@proveedor.Correo" data-proveedornumeroproveedor="@proveedor.NumeroProveedor" data-proveedornombre1="@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4" data-proveedorcuenta="@proveedor.cuenta.NombreCuenta"><i class="fa fa-edit" aria-hidden="true"></i> Agregar Penalizacion </a>
                             </div>
                         </td>
-                        
+
                     </tr>
                 }
             </tbody>
@@ -54,6 +54,7 @@
                     @Html.AntiForgeryToken()
                     <input type="hidden" id="proveedorid" name="proveedorid" />
                     <input type="hidden" class="form-control" id="proveedorcorreo" name="proveedorcorreo" readonly />
+                    <input type="hidden" id="Monto1" name="Monto1" class="form-control" required oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" />
                     <label> Fecha Auditoria</label>
                     <input type="text" class="form-control" name="fecha" id="fecha" required />
                     <label>NumeroProveedor</label>
@@ -82,6 +83,7 @@
     </div>
 </div>
 @section Scripts {
+    <script src="http://code.jquery.com/jquery-1.0.4.js"></script>
     <script type="text/javascript">
 
 
@@ -91,6 +93,12 @@
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
                 },
                 "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+        $(document).ready(function () {
+            $("#Monto").keyup(function () {
+                var value = $(this).val();
+                $("#Monto1").val(value);
             });
         });
         $(".btn-agregar-penalizacion").click(function () {

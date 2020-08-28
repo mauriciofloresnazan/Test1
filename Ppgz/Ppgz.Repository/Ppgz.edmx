@@ -220,6 +220,7 @@
           <Property Name="auditor" Type="varchar" MaxLength="100"  Nullable="true"/>
           <Property Name="procesado" Type="bool" Nullable="false" />
           <Property Name="Correo" Type="varchar" MaxLength="241" />
+        <Property Name="Totalsum" Type="decimal" Precision="18" Scale="2" Nullable="true" />
         </EntityType>
         <EntityType Name="auditor">
           <Key>
@@ -1326,6 +1327,7 @@
           <Property Name="auditor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="procesado" Type="Boolean" Nullable="false" />
           <Property Name="Correo" Type="String" MaxLength="241" FixedLength="false" Unicode="false" />
+         <Property Name="Totalsum" Type="Decimal" Nullable="false" />
         </EntityType>
         <EntityType Name="audi">
           <Key>
@@ -2349,6 +2351,7 @@
                 <ScalarProperty Name="auditor" ColumnName="auditor"/>
                 <ScalarProperty Name="procesado" ColumnName="procesado"/>
                 <ScalarProperty Name="Correo" ColumnName="Correo"/>
+              <ScalarProperty Name="Totalsum" ColumnName="Totalsum"/>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

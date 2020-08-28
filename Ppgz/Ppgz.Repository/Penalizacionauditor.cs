@@ -20,6 +20,7 @@ namespace Ppgz.Repository
         public string auditor { get; set; }
         public bool procesado { get; set; }
         public string Correo { get; set; }
+        public decimal Totalsum { get; set; }
 
         public virtual proveedore proveedore { get; set; }
     }
