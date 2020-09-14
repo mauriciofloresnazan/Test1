@@ -1,0 +1,263 @@
+﻿@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Devoluciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var drDevolucion = (DataTable)ViewBag.Devolucion;
+    var dtDevoluciones = (DataTable)ViewBag.Devoluciones;
+    var importeTotal = dtDevoluciones.Rows.Cast<DataRow>()
+     .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
+
+    var drDevolucionDetalles = (DataTable)ViewBag.DevolucionDetalles;
+    var cantidadTotal = drDevolucionDetalles.Rows.Cast<DataRow>().Aggregate<DataRow, decimal>(0, (current, dr) => current + decimal.Parse(dr["MENGE"].ToString()));
+    var proveedor = (proveedore)ViewBag.Proveedor;
+    var fechaParam = (DateTime)ViewBag.Fecha;
+}
+<style type="text/css">
+    div#devoluciones_filter {
+        display: none
+    }
+    }
+</style>
+<h2>Devoluciones</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>Grafica De Devoluciones registradas</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "DevolucionesTienda")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Informacion De Devoluciones</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="row" style="display: none;">
+                <label class="col-sm-2">Fecha</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
+                </div>
+            </div>
+            <table id="devoluciones" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center ocultar">Descuento Total</th>
+                        <th class="text-center">Descuento Total</th>
+                        <th class="text-center">Pares Devueltos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="text-center ocultar">@string.Format("{0:N}", importeTotal)</td>
+                        <td class="text-center vert-align">@string.Format("{0:N}", importeTotal)</td>
+                        <td class="text-center vert-align">@string.Format("{0:N}", cantidadTotal)</td>
+
+                    </tr>
+                </tbody>
+            </table>
+            <div class="panel panel-default">
+                <div class="panel-heading"> Grafica De Devoluciones</div>
+                <div class="panel-body">
+                    <div id="chart"></div><br>
+                </div>
+                </div>
+                </div>
+                </div>
+            </div>
+
+
+<p style="text-align:center;">
+    <a class="btn btn-primary btn-info" href="@Url.Action("Devoluciones", "DevolucionesTienda")">
+        Ver Devoluciones
+    </a>
+</p>
+    @section Scripts {
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+        <script type="text/javascript">
+            let draw = false;
+
+            init();
+
+            /**
+             * FUNCTIONS
+             */
+
+            function init() {
+                // initialize DataTables
+                const table = $("#devoluciones").DataTable();
+                // get table data
+                const tableData = getTableData(table);
+                // create Highcharts
+                createHighcharts(tableData);
+                // table events
+                setTableEvents(table);
+            }
+
+            function getTableData(table) {
+                const dataArray = [],
+                    NdevArray = [],
+                    DescuentoArray = [],
+                    ParesArray = [];
+
+                // loop table rows
+                table.rows({ search: "applied" }).every(function () {
+                    const data = this.data();
+                    NdevArray.push(data[0]);
+                    DescuentoArray.push(parseInt(data[1].replace(/\,/g, "")));
+                    ParesArray.push(parseInt(data[2].replace(/\,/g, "")));
+                });
+
+                // store all data in dataArray
+                dataArray.push(NdevArray, DescuentoArray, ParesArray);
+
+                return dataArray;
+            }
+
+            function createHighcharts(data) {
+                Highcharts.setOptions({
+                    lang: {
+                        thousandsSep: ","
+                    }
+                });
+
+                Highcharts.chart("chart", {
+                    title: {
+                        text: "Informacion Devoluciones De Tiendas"
+                    },
+                    subtitle: {
+                        text: "NDEV"
+                    },
+                    xAxis: [
+                        {
+                            categories: ['Devoluciones De Tienda(NDEV)'],
+                            labels: {
+                                rotation: 8
+                            }
+                        }
+                    ],
+                    lang: {
+                 downloadCSV:' Descargar CSV',
+                 downloadJPEG: 'Descargar imagen JPEG ',
+                 downloadPDF: 'Descargar Documento PDF',
+                 downloadPNG: 'Descargar Imagen PNG',
+                 downloadSVG: 'Descargar imegen SVG ',
+                 viewFullscreen: "Ver en pantalla completa",
+                 printChart: "Imprimir Grafica",
+                  downloadXLS: 'Descargar XLS'
+                    },
+                    yAxis: [
+                        {
+                            // first yaxis
+                            title: {
+                                text: "Descuento en Pesos"
+                            }
+                        },
+                        {
+                            // secondary yaxis
+                            title: {
+                                text: "Pares Devueltos"
+                            },
+                            min: 0,
+                            opposite: true
+                        }
+                    ],
+                    exporting: {
+                        buttons: {
+                            contextButton: {
+                                menuItems: ["viewFullscreen", "printChart", "separator", "downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG", 'downloadCSV', 'downloadXLS'],
+                            },
+                        },
+                    },
+                    series: [
+                        {
+                            name: "Descuento en Pesos",
+                            color: "#0071A7",
+                            type: "column",
+                            data: data[1],
+                            tooltip: {
+                               
+                                valueSuffix: " pesos",
+                                valuePrefix: '$'
+                            }
+                        },
+                        {
+                            name: "Pares Devueltos ",
+                            color: "#FF404E",
+                            type: "column",
+                            data: data[2],
+                            yAxis: 1
+                        }
+                    ],
+                    chart: {
+                        type: 'column',
+                        options3d: {
+                            enabled: true,
+                            alpha: 10,
+                            beta: 25,
+                            depth: 70
+                        }
+                    },
+                    tooltip: {
+                        shared: true,
+                        
+                    },
+                    legend: {
+                        backgroundColor: "#ececec",
+                        shadow: true
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    noData: {
+                        style: {
+                            fontSize: "20px"
+                        }
+                    }
+                });
+            }
+
+            function setTableEvents(table) {
+                // listen for page clicks
+                table.on("page", () => {
+                    draw = true;
+                });
+
+                // listen for updates and adjust the chart accordingly
+                table.on("draw", () => {
+                    if (draw) {
+                        draw = true;
+                    } else {
+                        const tableData = getTableData(table);
+                        createHighcharts(tableData);
+                    }
+                });
+            }
+
+            $('#devoluciones').find('.ocultar').hide();
+        </script>
+    }
+
+

@@ -150,6 +150,7 @@ namespace Ppgz.Web
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas Individual|Index|ImpresionEtiquetasIndividual|fa fa-ticket|Mercaderia",
                 "FACTURAS|Administración de Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
+                "CUENTASPAGAR|Devoluciones de Tienda|Index|DevolucionesTienda|fa fa-motorcycle|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
                 "ADMINISTRARUSUARIOS|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
                 "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
@@ -221,6 +222,12 @@ namespace Ppgz.Web
                         "CUENTASPAGAR|Devoluciones|Devoluciones|CuentasPagar|fa fa-calculator|Servicio"
                     };
                     break;
+                case "DevolucionesTienda":
+                    menu = new List<string>
+                    {
+                        "CUENTASPAGAR|Devoluciones de Tienda|Devoluciones|DevolucionesTienda|fa fa-motorcycle|Servicio"
+                    };
+                    break;
                 default:
                     string menuDefault = "";
                     menuDefault = NombreXController(nombreControllerActual, "SERVICIO");
@@ -245,7 +252,13 @@ namespace Ppgz.Web
                         "CUENTASPAGAR|Devoluciones|Devoluciones?proveedorId=" + parametros["proveedorId"] + "|CuentasPagar|fa fa-calculator|Mercaderia"
                     };
                     break;
-				case "ProntoPago":
+                case "DevolucionesTienda":
+                    menu = new List<string>
+                    {
+                        "CUENTASPAGAR|Devoluciones de Tienda|Devoluciones|DevolucionesTienda|fa fa-motorcycle|Mercaderia"
+                    };
+                    break;
+                case "ProntoPago":
 					menu = new List<string>
 					{
 						"PRONTOPAGO|Nueva Solicitud|Index|ProntoPago|fa fa-calculator|Mercaderia",

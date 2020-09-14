@@ -1,0 +1,115 @@
+﻿@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Devoluciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var drDevolucion = (DataTable)ViewBag.Devolucion;
+    var dtDevoluciones = (DataTable)ViewBag.Devoluciones;
+    var importeTotal = dtDevoluciones.Rows.Cast<DataRow>()
+     .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
+
+    var drDevolucionDetalles = (DataTable)ViewBag.DevolucionDetalles;
+    var cantidadTotal = drDevolucionDetalles.Rows.Cast<DataRow>().Aggregate<DataRow, decimal>(0, (current, dr) => current + decimal.Parse(dr["MENGE"].ToString()));
+    var proveedor = (proveedore)ViewBag.Proveedor;
+    var fechaParam = (DateTime)ViewBag.Fecha;
+}
+
+<h2>Devoluciones</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>Devoluciones registradas</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "DevolucionesTienda")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Devoluciones</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="row" style="display: none;">
+                <label class="col-sm-2">Fecha</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
+                </div>
+            </div>
+            <table id="devoluciones" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Folio de referencia</th>
+                        <th class="text-center">Fecha</th>
+                        <th class="text-center">Importe</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow devolucion in dtDevoluciones.Rows)
+                    {
+
+                        var fecha = DateTime.ParseExact(
+                            devolucion["BLDAT"].ToString(),
+                            "yyyyMMdd",
+                            CultureInfo.InvariantCulture);
+
+                        <tr>
+                            <td class="text-center vert-align">@devolucion["XBLNR"]</td>
+                            <td class="text-center vert-align">@fecha.ToString("dd/MM/yyyy")</td>
+                            <td class="text-right vert-align">@string.Format("{0:N}", devolucion["DMBTR"])</td>
+                            <td class="text-center vert-align">
+                                <a class="btn btn-primary btn-xs" href="@Url.Action("DevolucionesDetalle", "DevolucionesTienda", new { @numeroDocumento = @devolucion["BELNR"], date = fechaParam.ToString("dd/MM/yyyy") })">
+                                    Ver Detalle
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+            <b>Descuento Por Devoluciones: </b> @string.Format("{0:N}", importeTotal)<br>
+            <b>Pares Devueltos: </b> @string.Format("{0:N}", cantidadTotal)
+
+        </div>
+    </div>
+</div>
+<div id="chart"></div>
+@section Scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+
+            $('#devoluciones').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+    </script>
+}
+
+
