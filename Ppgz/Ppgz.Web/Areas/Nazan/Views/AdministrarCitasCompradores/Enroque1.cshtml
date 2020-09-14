@@ -18,10 +18,10 @@
     var citas = horarioRieles.Where(hr => hr.CitaId != null).Select(hr => hr.cita).Distinct().ToList();
 
     var totalCantidad = citas.Sum(c => c.CantidadTotal);
-
     var horariobase = horarios.FirstOrDefault().horario;
-    var numrieles = horarioRieles.Where(hr => hr.HorarioId == horariobase.Id).ToList();
-    var capacidadmax = ViewBag.CapacidadRiel * horarios.Count() * numrieles.Count();
+    var numrieles = horarioRieles.Where(hr => hr.Disponibilidad == false).ToList();
+    var totalrieles = 272;
+    var capacidadmax = numrieles.Count();
     var cantidadBloqueada = 0;
 }
 <style>
@@ -216,7 +216,7 @@
 
         $(document).ready(function () {
             var descargar = @totalCantidad + @cantidadBloqueada;
-            var per = ( descargar * 100) / @capacidadmax;
+           var per = @capacidadmax /  @totalrieles *100;
             var text = per.toFixed(2) + " %";
             $('#hPorcentaje').text(text);
             $('#hDescargar').text(descargar);
