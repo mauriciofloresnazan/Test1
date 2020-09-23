@@ -1,0 +1,82 @@
+﻿@using Ppgz.Repository
+@model Ppgz.Web.Areas.Nazan.Models.CuentaViewModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var cuenta = (cuenta)@ViewBag.cuentaConUsuarioMaestro.Cuenta;
+    var usuarioMaestro = (AspNetUser)@ViewBag.cuentaConUsuarioMaestro.UsuarioMaestro;
+}
+<link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
+<h2 class="form-signin-heading">
+    Reporte Devoluciones De Tiendas
+    <a class="btn btn-default" href="@Url.Action("Index", "InformacionDevolucionesTienda")"><i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
+</h2>
+<p class="page-description-title"><i class="fa fa-info" aria-hidden="true"></i> <i>Listado de razones sociales, seleccione una para continuar</i></p>
+<div class="clearfix"></div>
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedores asociados a la cuenta</div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table id="devoluciones" class="table table-striped table-condensed table-bordered" style="font-size: .8em;">
+                <thead>
+                    <tr></tr>
+                    <tr>
+                        <th class="text-center vert-align">Número Proveedor</th>
+                        <th class="text-center vert-align">RFC</th>
+                        <th class="text-center vert-align">Nombre</th>
+                        <th class="text-center">Sociedades</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (proveedore proveedor in ViewBag.Proveedores)
+                    {
+                        <tr>
+                            <td class="vert-align">@proveedor.NumeroProveedor</td>
+                            <td class="vert-align">@proveedor.Rfc</td>
+                            <td class="vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
+                            <td class="text-center">
+                                <div class="btn-group-vertical" role="group" aria-label="...">
+                                    @foreach (var sociedad in proveedor.Sociedades)
+                                    {
+                                        if (sociedad.Activa)
+                                        {
+                                            <a class="btn btn-primary btn-sm" href="@Url.Action("Inicio", "InformacionDevolucionesTienda", new { proveedorId = @proveedor.Id, sociedad = @sociedad.Sociedad })"> @sociedad.Nombre</a>
+                                        }
+                                    }
+                                </div>
+                            </td>
+                            @*<td>
+                                    <div class="btn-group-vertical">
+                                        <a class="btn btn-default btn-xs" href="@Url.Action("Inicio", "VistaProveedor", new {proveedorId = @proveedor.Id})" >
+                                            <i class="fa fa-check" aria-hidden="true"></i> Seleccionar
+                                        </a>
+                                    </div>
+                                </td>*@
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
+    @Scripts.Render("~/Scripts/bootstrap-formhelpers-phone.en_US.js")
+    @Scripts.Render("~/Scripts/bootstrap-formhelpers-phone.js")
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+
+
+            $('#devoluciones').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+    </script>
+}

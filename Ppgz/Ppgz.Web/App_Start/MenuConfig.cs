@@ -128,6 +128,7 @@ namespace Ppgz.Web
                 "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
                 "VISTACITASCALIDAD|Informacion de citas para calidad|Index|AdministrarCitas1|fa fa-calendar|Nazan",
                 "VISTACITASCOMPRADORES|Informacion de citas para Compradores|Index|AdministrarCitasCompradores|fa fa-calendar|Nazan",
+                "VISTACITASCALIDAD|Reporte Devoluciones De tienda|Index|InformacionDevolucionesTienda|fa fa-area-chart|Nazan",
                 "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
                 "AUDITORIA|Administración de Penalizaciones Auditoria|Index|PenalizacionesAuditor|fa fa-exclamation-triangle|Nazan",
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",

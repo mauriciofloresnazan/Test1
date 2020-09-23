@@ -230,6 +230,7 @@
     <Compile Include="Areas\Nazan\Controllers\AdministrarProveedoresController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarUsuariosNazanController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\CuentasPagarController.cs" />
+    <Compile Include="Areas\Nazan\Controllers\InformacionDevolucionesTiendaController.cs" />
     <Compile Include="Areas\Nazan\Controllers\PenalizacionesAuditorController.cs" />
     <Compile Include="Areas\Nazan\Controllers\PenalizacionesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\ProntoPagoController.cs" />
@@ -1995,6 +1996,12 @@
     <Content Include="Areas\Mercaderia\Views\DevolucionesTienda\DevolucionesDetalle.cshtml" />
     <Content Include="Areas\Mercaderia\Views\DevolucionesTienda\Graficas.cshtml" />
     <Content Include="Areas\Mercaderia\Views\DevolucionesTienda\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\InformacionDevolucionesTienda\Devoluciones.cshtml" />
+    <Content Include="Areas\Nazan\Views\InformacionDevolucionesTienda\DevolucionesDetalle.cshtml" />
+    <Content Include="Areas\Nazan\Views\InformacionDevolucionesTienda\Graficas.cshtml" />
+    <Content Include="Areas\Nazan\Views\InformacionDevolucionesTienda\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\InformacionDevolucionesTienda\Inicio.cshtml" />
+    <Content Include="Areas\Nazan\Views\InformacionDevolucionesTienda\Seleccionar.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
