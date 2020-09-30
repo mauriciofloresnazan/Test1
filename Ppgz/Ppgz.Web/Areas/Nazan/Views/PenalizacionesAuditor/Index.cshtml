@@ -18,24 +18,34 @@
                     <th class="text-center vert-align">Número Proveedor</th>
                     <th class="text-center vert-align">Razon Social</th>
                     <th class="text-center vert-align">Marca</th>
+                    <th class="text-center vert-align">Sociedades</th>
                     <th class="text-center vert-align">Agregar Penalizacion</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var proveedor in Proveedores)
                 {
-                    <tr>
-                        <td class="vert-align">@proveedor.Id</td>
-                        <td class="vert-align">@proveedor.NumeroProveedor</td>
-                        <td class="vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
-                        <td class="vert-align">@proveedor.cuenta.NombreCuenta</td>
-                        <td class="vert-align">
-                            <div class="col-md-12">
-                                <a class="btn btn-info btn-xs btn-agregar-penalizacion" data-proveedorid="@proveedor.Id" data-proveedorcorreo="@proveedor.Correo" data-proveedornumeroproveedor="@proveedor.NumeroProveedor" data-proveedornombre1="@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4" data-proveedorcuenta="@proveedor.cuenta.NombreCuenta"><i class="fa fa-edit" aria-hidden="true"></i> Agregar Penalizacion </a>
-                            </div>
-                        </td>
+                <tr>
+                    <td class="vert-align">@proveedor.Id</td>
+                    <td class="vert-align">@proveedor.NumeroProveedor</td>
+                    <td class="vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
+                    <td class="vert-align">@proveedor.cuenta.NombreCuenta</td>
+                    <td class="text-center">
+                        @foreach (var sociedad in proveedor.Sociedades)
+                        {
+                            if (sociedad.Activa)
+                            {
+                                <p style="background-color:#5bc0de">@sociedad.Nombre</p>
+                            }
+                        }
+                    </td>
+                    <td class="vert-align">
+                        <div class="col-md-12">
+                            <a class="btn btn-info btn-xs btn-agregar-penalizacion" data-proveedorid="@proveedor.Id" data-proveedorcorreo="@proveedor.Correo" data-proveedornumeroproveedor="@proveedor.NumeroProveedor" data-proveedornombre1="@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4" data-proveedorcuenta="@proveedor.cuenta.NombreCuenta"><i class="fa fa-edit" aria-hidden="true"></i> Agregar Penalizacion </a>
+                        </div>
+                    </td>
 
-                    </tr>
+                </tr>
                 }
             </tbody>
         </table>

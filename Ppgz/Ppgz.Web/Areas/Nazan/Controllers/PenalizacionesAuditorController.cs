@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Ppgz.Web.Infrastructure;
 using SapWrapper;
 using Ppgz.Repository;
+using Newtonsoft.Json;
 using Ppgz.Services;
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
@@ -25,8 +26,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         public ActionResult Index()
         {
             var db = new Entities();
-            
-            ViewBag.Proveedores = db.proveedores.ToList();
+
+            var proveedores = db.proveedores.ToList();
+            foreach (proveedore proveedor in proveedores)
+            {
+                proveedor.Sociedades = JsonConvert.DeserializeObject<SociedadesProv[]>(proveedor.Sociedad);
+            }
+            ViewBag.Proveedores = proveedores;
             ViewBag.auditores = db.auditores.ToList();
             return View();
         }
