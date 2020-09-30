@@ -3,12 +3,39 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
+    var db = new Entities();
+    var dateFechaDesde = DateTime.Today.AddYears(-1);
+    var fechaFin = DateTime.Today;
 
+    var data = db.Penalizacionauditores.Where(p => p.procesado == true & p.FechaPenalizacion >= dateFechaDesde & p.FechaPenalizacion <= fechaFin).Select(k => new { k.FechaPenalizacion.Year, k.FechaPenalizacion.Month, k.Totalsum, k.id }).GroupBy(x => new { x.Year, x.Month }, (key, group) => new
+    {
+        yr = key.Year,
+        mnth = key.Month,
+        tCharge = group.Sum(k => k.Totalsum),
+        cargos = group.Select(k => k.id).Count()
+    }).ToList();
     var penalizacion = (List<Penalizacionauditor>)ViewBag.penalizacion;
     var fechaDesde = (DateTime)ViewBag.FechaDesde;
     var fechaHasta = (DateTime)ViewBag.FechaHasta;
 }
-<h2>Penalizaciones Registradas</h2>
+<style type="text/css">
+    div#graficas_filter {
+        display: none
+    }
+
+    div#graficas_length {
+        display: none
+    }
+
+    div#graficas_info {
+        display: none
+    }
+
+    div#graficas_paginate {
+        display: none
+    }
+</style>
+<h2>Auditorias Registradas</h2>
 <p class="page-description-title"><i class="fa fa-calendar" aria-hidden="true"></i> <i>Registro desde hace 3 meses</i></p>
 <div class="panel panel-default">
     <div class="panel-heading">Seleccione la Fecha</div>
@@ -38,7 +65,7 @@
     </div>
 </div>
 <div class="panel panel-default">
-    <div class="panel-heading">Lista de penalizaciones</div>
+    <div class="panel-heading">Lista de Auditorias</div>
     <div class="panel-body">
         <div class="col-md-12">
             <div class="table-responsive">
@@ -46,13 +73,13 @@
                     <thead>
                         <tr>
                             <th class="text-center">Id</th>
-                            <th class="text-center">Fecha Penalizacion</th>
+                            <th class="text-center">Fecha Auditoria</th>
                             <th class="text-center">Numero Proveedor</th>
                             <th class="text-center">Razon Social</th>
                             <th class="text-center">Marca</th>
-                            <th class="text-center">Total Penalizacion</th>
+                            <th class="text-center">Total Cargo</th>
                             <th class="text-center">auditor</th>
-                            <th class="text-center">Penalizada</th>
+                            <th class="text-center">Aplicada</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,22 +107,68 @@
                         }
                     </tbody>
                 </table>
-                
+                <div class="clearfix">
+                    <dl class="dl-horizontal pull-right">
+                        <dt>Total: </dt>
+                        <dd class="text-right">@ViewBag.sum</dd>
+                        <dt>Cargos Por Auditoria:</dt>
+                        <dd class="text-right">@ViewBag.count</dd>
+
+                    </dl>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">Grafica Cargos Por Auditoria</div>
+                    <div class="panel-body">
+                        <div id="chart"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+<div class="panel-body">
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <table style="visibility:hidden" class="table" id="graficas">
+                <thead>
+                    <tr>
+                        <th class="text-center">Fecha</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">Cargos</th>
 
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var penali in data)
+                    {
+                        <tr>
+                            <td>@penali.yr@penali.mnth</td>
+                            <td>@penali.tCharge</td>
+                            <td>@penali.cargos</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
 @section Scripts {
-<script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
-        
-        
-        <script type="text/javascript">
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+
+    <script type="text/javascript">
 
 
             $(document).ready(function () {
@@ -128,6 +201,182 @@
                 defaultDate: new Date()
             });
         });
-</script>
+
+
+
+
+        let draw = false;
+
+        init();
+
+        /**
+         * FUNCTIONS
+         */
+
+        function init() {
+            // initialize DataTables
+            const table = $("#graficas").DataTable();
+            // get table data
+            const tableData = getTableData(table);
+            // create Highcharts
+            createHighcharts(tableData);
+            // table events
+            setTableEvents(table);
+        }
+
+        function getTableData(table) {
+            const dataArray = [],
+                NdevArray = [],
+                DescuentoArray = [],
+                ParesArray = [];
+
+            // loop table rows
+            table.rows({ search: "applied" }).every(function () {
+                const data = this.data();
+                NdevArray.push(data[0]);
+                DescuentoArray.push(parseInt(data[1].replace(/\,/g, "")));
+                ParesArray.push(parseInt(data[2].replace(/\,/g, "")));
+            });
+
+            // store all data in dataArray
+            dataArray.push(NdevArray, DescuentoArray, ParesArray);
+
+            return dataArray;
+        }
+
+        function createHighcharts(data) {
+            Highcharts.setOptions({
+                lang: {
+                    thousandsSep: ","
+                }
+            });
+
+            Highcharts.chart("chart", {
+                title: {
+                    text: "Informacion Cargos Por Auditoria"
+                },
+
+                xAxis: [
+                    {
+                        categories: [
+
+                            'Julio',
+                            'Agosto',
+                            'Septiembre',
+                            'Octubre',
+                            'Noviembre',
+                            'Diciembre',
+                            'Enero',
+                            'Febrero',
+                            'Marzo',
+                            'Abril',
+                            'Mayo',
+                            'Junio'
+                        ],
+                        labels: {
+                            rotation: 8
+                        }
+                    }
+                ],
+                lang: {
+                    downloadCSV: ' Descargar CSV',
+                    downloadJPEG: 'Descargar imagen JPEG ',
+                    downloadPDF: 'Descargar Documento PDF',
+                    downloadPNG: 'Descargar Imagen PNG',
+                    downloadSVG: 'Descargar imegen SVG ',
+                    viewFullscreen: "Ver en pantalla completa",
+                    printChart: "Imprimir Grafica",
+                    downloadXLS: 'Descargar XLS'
+                },
+                yAxis: [
+                    {
+                        // first yaxis
+                        title: {
+                            text: "Descuento en Pesos",
+
+                        }
+
+                    },
+                    {
+                        // secondary yaxis
+                        title: {
+                            text: "Total de Cargos"
+                        },
+                        min: 0,
+                        opposite: true
+                    }
+                ],
+                exporting: {
+                    buttons: {
+                        contextButton: {
+                            menuItems: ["viewFullscreen", "printChart", "separator", "downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG", 'downloadCSV', 'downloadXLS'],
+                        },
+                    },
+                },
+                series: [
+                    {
+                        name: "Descuento en Pesos",
+                        color: "#0071A7",
+                        type: "column",
+                        data: data[1],
+                        tooltip: {
+
+                            valueSuffix: " pesos",
+                            valuePrefix: '$'
+                        }
+                    },
+                    {
+                        name: "Total de Cargos",
+                        color: "#FF404E",
+                        type: "column",
+                        data: data[2],
+                        yAxis: 1
+                    }
+                ],
+                chart: {
+                    type: 'column',
+                    options3d: {
+                        enabled: true,
+                        alpha: 10,
+                        beta: 25,
+                        depth: 70
+                    }
+                },
+                tooltip: {
+                    shared: true,
+
+                },
+                legend: {
+                    backgroundColor: "#ececec",
+                    shadow: true
+                },
+                credits: {
+                    enabled: false
+                },
+                noData: {
+                    style: {
+                        fontSize: "20px"
+                    }
+                }
+            });
+        }
+
+        function setTableEvents(table) {
+            // listen for page clicks
+            table.on("page", () => {
+                draw = true;
+            });
+
+            // listen for updates and adjust the chart accordingly
+            table.on("draw", () => {
+                if (draw) {
+                    draw = true;
+                } else {
+                    const tableData = getTableData(table);
+                    createHighcharts(tableData);
+                }
+            });
+        }
+    </script>
 
 }

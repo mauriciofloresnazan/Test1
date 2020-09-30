@@ -12,7 +12,7 @@
 <link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
 <style type="text/css">
 </style>
-<h2>Penalizaciones Registradas</h2>
+<h2>Auditorias Registradas</h2>
 <p class="page-description-title"><i class="fa fa-calendar" aria-hidden="true"></i> <i>Registro desde hace 3 meses</i></p>
 <div class="panel panel-default">
     <div class="panel-heading">Seleccione la Fecha</div>
@@ -42,7 +42,7 @@
     </div>
 </div>
 <div class="panelpenalizacion panel-default">
-    <div class="panel-heading">Lista de penalizaciones audioria</div>
+    <div class="panel-heading">Lista de Auditorias</div>
     <div class="panel-body">
         @using (Html.BeginForm("Penalizar", "PenalizacionesAuditor", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form" }))
         {
@@ -56,8 +56,8 @@
                     <table cellspacing="5" cellpadding="5" border="0">
                         <tbody>
                             <tr>
-                                <td><label>penalizacion Inicial: <input class="form-control input-sm" id="min" name="min" type="text"></label> </td>
-                                <td> <label>penalizacion Final: <input class="form-control input-sm" id="max" name="max" type="text"></label></td>
+                                <td><label>Auditoria Inicial: <input class="form-control input-sm" id="min" name="min" type="text"></label> </td>
+                                <td> <label>Auditoria Final: <input class="form-control input-sm" id="max" name="max" type="text"></label></td>
 
 
                             </tr>
@@ -67,14 +67,14 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Id</th>
-                                <th class="text-center">Fecha Penalizacion</th>
+                                <th class="text-center">Fecha Auditoria</th>
                                 <th class="text-center">Numero Proveedor</th>
                                 <th class="text-center">Razon Social</th>
                                 <th class="text-center">Marca</th>
-                                <th class="text-center">Total Penalizacion</th>
+                                <th class="text-center">Total Cargo</th>
                                 <th class="text-center">auditor</th>
-                                <th class="text-center">Penalizada</th>
-                                <th class="text-center">Penalizar</th>
+                                <th class="text-center">Aplicada</th>
+                                <th class="text-center">Aplicar</th>
                                 <th class="text-center" style="width: 100px">
                                     Opcion  Eliminar
                                 </th>
@@ -108,8 +108,8 @@
                                     </td>
                                     <td class="text-center vert-align">
                                         <div class="col-md-12">
-                                            <a class="btn btn-danger btn-sm" href="@Url.Action("Eliminarpenalizacion", "PenalizacionesAuditor", new {@penalizacionid =penalizacion.id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La Penalizacion será eliminada.">
-                                                <i class="fa fa-check" aria-hidden="true"></i> Eliminar Penalizacion
+                                            <a class="btn btn-danger btn-sm" href="@Url.Action("Eliminarpenalizacion", "PenalizacionesAuditor", new {@penalizacionid =penalizacion.id})" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La auditoria será eliminada.">
+                                                <i class="fa fa-check" aria-hidden="true"></i> Eliminar Auditoria
                                             </a>
                                         </div>
                                     </td>
@@ -120,7 +120,7 @@
                     </table>
                     <div class="clearfix">
                         <dl class="dl-horizontal pull-right">
-                            <dt>Total Penalizaciones: </dt>
+                            <dt>Total Auditoria: </dt>
                             <dd class="text-right"> <p>$ @ViewBag.sum</p></dd>
                             <dd class="text-right">
                                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalConfirmar">
@@ -140,7 +140,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Confirmar Penalizaciones</h4>
+                <h4 class="modal-title">Confirmar Cargo</h4>
             </div>
 
             <div class="modal-footer">

@@ -18,6 +18,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
         readonly CuentaManager _cuentaManager = new CuentaManager();
         readonly ProveedorManager _proveedorManager = new ProveedorManager();
+
         //
         // GET: /Nazan/AdministrarProveedores/
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
@@ -52,8 +53,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             
             ViewBag.FechaDesde = dateFechaDesde;
             ViewBag.FechaHasta = dateFechaHasta;
-            ViewBag.penalizacion = db.Penalizacionauditores.Where(c => c.FechaPenalizacion > dateFechaDesde & c.FechaPenalizacion < dateFechaHasta & c.procesado==false).OrderByDescending(c => c.FechaPenalizacion).ToList();
-            ViewBag.sum = db.Penalizacionauditores.Where(c => c.FechaPenalizacion > dateFechaDesde & c.FechaPenalizacion < dateFechaHasta & c.procesado == false).OrderByDescending(c => c.FechaPenalizacion).ToList().Sum(s => s.Totalsum);
+            ViewBag.penalizacion = db.Penalizacionauditores.Where(c => c.FechaPenalizacion >= dateFechaDesde & c.FechaPenalizacion <= dateFechaHasta & c.procesado==false).OrderByDescending(c => c.FechaPenalizacion).ToList();
+            ViewBag.sum = db.Penalizacionauditores.Where(c => c.FechaPenalizacion >= dateFechaDesde & c.FechaPenalizacion <= dateFechaHasta & c.procesado == false).OrderByDescending(c => c.FechaPenalizacion).ToList().Sum(s => s.Totalsum);
             return View();
         }
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-AUDITORIA")]
@@ -137,7 +138,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             ViewBag.penalizacion = db.Penalizacionauditores.Where(c => c.FechaPenalizacion > dateFechaDesde & c.FechaPenalizacion < dateFechaHasta & c.procesado ==true).OrderByDescending(c => c.FechaPenalizacion).ToList();
 
-           
+            ViewBag.sum = db.Penalizacionauditores.Where(c => c.FechaPenalizacion >= dateFechaDesde & c.FechaPenalizacion <= dateFechaHasta & c.procesado == true).OrderByDescending(c => c.FechaPenalizacion).ToList().Sum(s => s.Totalsum);
+            ViewBag.count = db.Penalizacionauditores.Where(c => c.FechaPenalizacion >= dateFechaDesde & c.FechaPenalizacion <= dateFechaHasta & c.procesado == true).OrderByDescending(c => c.FechaPenalizacion).ToList().Select(p => p.id).Count();
             ViewBag.FechaDesde = dateFechaDesde;
 
             ViewBag.FechaHasta = dateFechaHasta;
