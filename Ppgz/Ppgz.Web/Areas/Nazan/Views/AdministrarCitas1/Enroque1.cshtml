@@ -18,11 +18,13 @@
     var citas = horarioRieles.Where(hr => hr.CitaId != null).Select(hr=> hr.cita).Distinct().ToList();
 
     var totalCantidad = citas.Sum(c => c.CantidadTotal);
-
     var horariobase = horarios.FirstOrDefault().horario;
-    var numrieles = horarioRieles.Where(hr => hr.Disponibilidad == false).ToList();
-    var totalrieles = 272;
-    var capacidadmax = numrieles.Count();
+    var numrieles = horarioRieles.Where(hr => hr.CitaId != null).ToList();
+    var numrieles1 = horarioRieles.Where(hr => hr.ComentarioBloqueo != "bloqueado" && hr.ComentarioBloqueo != null && hr.ComentarioBloqueo != "BLOQUEADO").ToList();
+    var disponible = horarioRieles.Where(hr => hr.Disponibilidad == true).ToList();
+    var disponible1 = horarioRieles.Where(hr => hr.ComentarioBloqueo != "BLOQUEADO" & hr.ComentarioBloqueo != "bloqueado" & hr.Disponibilidad == false & hr.ComentarioBloqueo != null).ToList();
+    var totalrieles = numrieles.Count() + disponible.Count() + disponible1.Count();
+    var capacidadmax = numrieles.Count() + numrieles1.Count();
     var cantidadBloqueada = 0;
 }
 <style>
