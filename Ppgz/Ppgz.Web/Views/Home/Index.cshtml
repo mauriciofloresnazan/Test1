@@ -5,9 +5,20 @@
                                      .Select(Path.GetFileName)
                                      .ToArray();
 }
+<style>
 
-
-<div id="alrt1" style="background: #f0f0f0;font-weight:bold;font-size:18px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;"></div>
+    main > div {
+        display: none;
+    }
+</style>
+<main>
+    <div id="contenido">
+        <div id="content-text" style="background: #f0f0f0;font-weight:bold;font-size:18px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;">Estimado proveedor: favor de checar sus devoluciones de tiendas (NDEV) en el apartado devoluciones de tienda, si tienes alguna duda favor de mandar correo a fernado.moreno@impuls.com.mx  “y/o”  devoluciones_leon@impuls.com.mx</div>
+    </div>
+    <div id="contenido1">
+        <div id="content-text4" style="background: #f0f0f0;font-weight:bold;font-size:18px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;"><p style="text-align:center">Estimado proveedor: favor de cargar sus facturas al portal diariamente</p></div>
+    </div>
+</main>
 <div>
     <h2 style="color: white"> </h2>
     <hr>
@@ -53,7 +64,31 @@
 
 @section Scripts {
     <script type="text/javascript">
-        document.getElementById('alrt1').innerHTML = '<b>Estimado proveedor Favor de checar sus Devoluciones de tiendas (NDEV) en el apartado Devoluciones de tienda, si tienes alguna duda favor de mandar correo a fernado.moreno@impuls.com.mx  “y/o”  devoluciones_leon@impuls.com.mx</b>';
-        setTimeout(function () { document.getElementById('alrt1').innerHTML = ''; }, 30000);
+        window.onload = function () {
+            function mostrar(el, time, infi = false) {
+                let p = document.querySelectorAll(el);
+                let i = 0;
+                // ejecutamos un intervalo de tiempo para los elementos
+                let interval = setInterval(() => {
+                    // validamos que no sea el elemento 0 para aplicarle el none al anterior!
+                    if (i != 0) p[i - 1].style.display = "none";
+                    //validamos si es igual al lenght para finalizar el bucle
+                    if (i == p.length) {
+                        //retornamos i a 0
+                        i = 0;
+                        // limpiamos el intervalor para que no se ejecute mas si no es infinito
+                        if (!infi) clearInterval(interval)
+                        // retornamos para finalizar la funcion
+                        return;
+                    }
+                    // aplicamos el display block
+                    p[i].style.display = "block";
+                    // aumentamos i en 1
+                    i++;
+                }, time)
+            }
+
+            mostrar('main div[id^="contenido"]', 4000, true);
+        }
     </script>
 }

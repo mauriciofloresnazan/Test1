@@ -349,10 +349,10 @@ namespace Ppgz.Web
                 case "PenalizacionesAuditor":
                     menu = new List<string>
                     {
-                        "AUDITORIA|Agregar Penalizacion|Index|PenalizacionesAuditor|fa fa-exclamation-triangle|Nazan",
-                        "AUDITORIA|Lista de Penalizaciones|penalizaciones|PenalizacionesAuditor|fa fa-calculator|Nazan",
+                        "AUDITORIA|Agregar Auditoria|Index|PenalizacionesAuditor|fa fa-exclamation-triangle|Nazan",
+                        "AUDITORIA|Lista de Auditorias|penalizaciones|PenalizacionesAuditor|fa fa-calculator|Nazan",
                         "AUDITORIA|Agregar Auditior|Editar|PenalizacionesAuditor|fa fa-address-book-o|Nazan",
-                        "AUDITORIA|Reporte Penalizaciones|Reporte|PenalizacionesAuditor|fa fa-line-chart|Nazan",
+                        "AUDITORIA|Reporte de Auditorias|Reporte|PenalizacionesAuditor|fa fa-line-chart|Nazan",
                     };
                     break;
                 case "AdministrarCitas":
