@@ -209,6 +209,7 @@
     <Compile Include="Areas\Mercaderia\Controllers\MensajesInstitucionalesController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ComprobantesReciboController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ProntoPagoController.cs" />
+    <Compile Include="Areas\Mercaderia\Controllers\RechazosCedisController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ReporteAuditoriaController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ReporteProveedoresController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\OrdenesCompraController.cs" />
@@ -234,6 +235,7 @@
     <Compile Include="Areas\Nazan\Controllers\PenalizacionesAuditorController.cs" />
     <Compile Include="Areas\Nazan\Controllers\PenalizacionesController.cs" />
     <Compile Include="Areas\Nazan\Controllers\ProntoPagoController.cs" />
+    <Compile Include="Areas\Nazan\Controllers\ReporteRechazosCedisController.cs" />
     <Compile Include="Areas\Nazan\Controllers\VistaProveedorController.cs" />
     <Compile Include="Areas\Nazan\Controllers\ConfignegController.cs" />
     <Compile Include="Areas\Servicio\Controllers\CuentasPagarController.cs" />
@@ -2002,6 +2004,18 @@
     <Content Include="Areas\Nazan\Views\InformacionDevolucionesTienda\Index.cshtml" />
     <Content Include="Areas\Nazan\Views\InformacionDevolucionesTienda\Inicio.cshtml" />
     <Content Include="Areas\Nazan\Views\InformacionDevolucionesTienda\Seleccionar.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\RechazosCedis\Devoluciones.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\RechazosCedis\DevolucionesDetalle.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\RechazosCedis\Graficas.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\RechazosCedis\GraficasMotivos.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\RechazosCedis\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\ReporteRechazosCedis\Devoluciones.cshtml" />
+    <Content Include="Areas\Nazan\Views\ReporteRechazosCedis\DevolucionesDetalle.cshtml" />
+    <Content Include="Areas\Nazan\Views\ReporteRechazosCedis\Graficas.cshtml" />
+    <Content Include="Areas\Nazan\Views\ReporteRechazosCedis\GraficasMotivos.cshtml" />
+    <Content Include="Areas\Nazan\Views\ReporteRechazosCedis\Index.cshtml" />
+    <Content Include="Areas\Nazan\Views\ReporteRechazosCedis\Inicio.cshtml" />
+    <Content Include="Areas\Nazan\Views\ReporteRechazosCedis\Seleccionar.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

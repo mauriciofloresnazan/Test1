@@ -1,0 +1,263 @@
+﻿@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Rechazos Cedis";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var drDev = (DataTable)ViewBag.R;
+    var cantidad = drDev.Rows.Cast<DataRow>().Aggregate<DataRow, decimal>(0, (current, dr) => current + decimal.Parse(dr["SUMA_PARES"].ToString()));
+    var proveedor = (proveedore)ViewBag.Proveedor;
+
+}
+<style type="text/css">
+    div#devoluciones_filter {
+        display: none
+    }
+    }
+</style>
+<h2>Concentrado de rechazos por mes</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>Grafica De Rechazos registrados por mes</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "RechazosCedis")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading"><p style="text-align:center;font-weight:bold;font-size:18px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;">Total De Rechazos Por Mes</p></div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="row" style="display: none;">
+                <label class="col-sm-2">Fecha</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
+                </div>
+            </div>
+            <table id="rechazos1" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Mes</th>
+                        <th class="text-center">Pares</th>
+                        <th class="text-center ocultar">Año</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow devolucion in drDev.Rows)
+                    {
+
+
+
+                    <tr>
+                        <td class="text-center vert-align">@devolucion["MES"] @devolucion["AÑO"]</td>
+                        <td class="text-center vert-align">@devolucion["SUMA_PARES"]</td>
+                        <td class="text-center vert-align ocultar">@devolucion["AÑO"]</td>
+
+
+
+                    </tr>
+                    }
+                </tbody>
+
+            </table>
+
+            <div class="clearfix">
+                <dl class="dl-horizontal pull-right">
+                    <dt>Total Pares Rechazados: </dt>
+                    <dd class="text-right">@string.Format("{0:N}", @cantidad)</dd>
+                </dl>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"> Grafica De Rechazos En Cedis</div>
+                <div class="panel-body">
+                    <div id="chart"></div><br>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<p style="text-align:center;">
+    <a class="btn btn-primary btn-info" href="@Url.Action("Devoluciones", "RechazosCedis")">
+        Ver Rechazos
+    </a>
+</p>
+    @section Scripts {
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script src="https://code.highcharts.com/highcharts.js"></script>
+        <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+        <script src="https://code.highcharts.com/modules/exporting.js"></script>
+        <script src="https://code.highcharts.com/modules/export-data.js"></script>
+        <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+        <script type="text/javascript">
+            let draw = false;
+
+            init();
+
+            /**
+             * FUNCTIONS
+             */
+
+            function init() {
+                // initialize DataTables
+                const table = $("#rechazos1").DataTable();
+                // get table data
+                const tableData = getTableData(table);
+                // create Highcharts
+                createHighcharts(tableData);
+                // table events
+                setTableEvents(table);
+            }
+
+            function getTableData(table) {
+                const dataArray = [],
+                    NdevArray = [],
+                    DescuentoArray = [],
+                    ParesArray = [];
+
+                // loop table rows
+                table.rows({ search: "applied" }).every(function () {
+                    const data = this.data();
+                    NdevArray.push(data[0]);
+                    DescuentoArray.push(parseInt(data[1].replace(/\,/g, "")));
+                    ParesArray.push(parseInt(data[2].replace(/\,/g, "")));
+                });
+
+                // store all data in dataArray
+                dataArray.push(NdevArray, DescuentoArray, ParesArray);
+
+                return dataArray;
+            }
+
+            function createHighcharts(data) {
+                Highcharts.setOptions({
+                    lang: {
+                        thousandsSep: ","
+                    }
+                });
+
+                Highcharts.chart("chart", {
+                    title: {
+                        text: "Informacion Rechazos En Cedis Por Mes"
+                    },
+
+                    xAxis: [
+                        {
+                            categories: data[0],
+                            labels: {
+                                rotation: -18
+                            }
+                        }
+                    ],
+                    lang: {
+                        downloadCSV: ' Descargar CSV',
+                        downloadJPEG: 'Descargar imagen JPEG ',
+                        downloadPDF: 'Descargar Documento PDF',
+                        downloadPNG: 'Descargar Imagen PNG',
+                        downloadSVG: 'Descargar imegen SVG ',
+                        viewFullscreen: "Ver en pantalla completa",
+                        printChart: "Imprimir Grafica",
+                        downloadXLS: 'Descargar XLS'
+                    },
+                    yAxis: [
+
+                        {
+                            // secondary yaxis
+                            title: {
+                                text: "Pares Devueltos"
+                            },
+                            min: 0,
+                            opposite: true
+                        }
+                    ],
+                    exporting: {
+                        buttons: {
+                            contextButton: {
+                                menuItems: ["viewFullscreen", "printChart", "separator", "downloadPNG", "downloadJPEG", "downloadPDF", "downloadSVG", 'downloadCSV', 'downloadXLS'],
+                            },
+                        },
+                    },
+                    series: [
+                        {
+                            name: "Cantidad Rechazada",
+                            color: "#0071A7",
+                            type: "column",
+                            data: data[1],
+                            tooltip: {
+
+                                valueSuffix: " pares",
+
+                            }
+                        },
+
+                    ],
+                    chart: {
+                        type: 'column',
+                        options3d: {
+                            enabled: true,
+                            alpha: 10,
+                            beta: 25,
+                            depth: 70
+                        }
+                    },
+                    tooltip: {
+                        shared: true,
+
+                    },
+                    legend: {
+                        backgroundColor: "#ececec",
+                        shadow: true
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    noData: {
+                        style: {
+                            fontSize: "20px"
+                        }
+                    }
+                });
+            }
+
+            function setTableEvents(table) {
+                // listen for page clicks
+                table.on("page", () => {
+                    draw = true;
+                });
+
+                // listen for updates and adjust the chart accordingly
+                table.on("draw", () => {
+                    if (draw) {
+                        draw = true;
+                    } else {
+                        const tableData = getTableData(table);
+                        createHighcharts(tableData);
+                    }
+                });
+            }
+
+            $('#rechazos1').find('.ocultar').hide();
+        </script>
+    }
+
+

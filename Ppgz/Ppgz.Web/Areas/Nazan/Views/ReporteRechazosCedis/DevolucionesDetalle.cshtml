@@ -1,0 +1,108 @@
+﻿@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Detalle de Rechazos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var drDevolucion = (DataTable)ViewBag.Resulatdo;
+    var cantidadTotal = drDevolucion.Rows.Cast<DataRow>().Aggregate<DataRow, decimal>(0, (current, dr) => current + decimal.Parse(dr["prs"].ToString()));
+    var proveedor = (proveedore)ViewBag.Proveedor;
+
+
+}
+
+<h2>Gestión de Rechazos En Cedis</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>Detalles de los rechazos</i>
+</p>
+<a href="@Url.Action("Devoluciones", "ReporteRechazosCedis")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i> Ver Otro Rechazo</a>
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "ReporteRechazosCedis")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i> Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Gestión de Rechazos</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+
+            <hr style="margin-top: 0;" />
+            <table id="devolucionesDetalle" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Id Vale Salida</th>
+                        <th class="text-center">Numero Proveedor</th>
+                        <th class="text-center">Nombre</th>
+                        <th class="text-center">Generico</th>
+                        <th class="text-center">Descripcion</th>
+                        <th class="text-center">Fecha Del Rechazo</th>
+                        <th class="text-center">Pares</th>
+                        <th class="text-center">Razon</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow devolucion in drDevolucion.Rows)
+                    {
+                        <tr>
+
+                            <td class="text-center">@devolucion["id_vale_salida"]</td>
+                            <td class="text-center">@devolucion["id_proveedor"]</td>
+                            <td class="text-right">@devolucion["nombre"]</td>
+                            <td class="text-center">@devolucion["generico"]</td>
+                            <td class="text-center">@devolucion["descripcion"]</td>
+                            <td class="text-center">@devolucion["fecha"]</td>
+                            <td class="text-center">@devolucion["prs"]</td>
+                            <td class="text-center">@devolucion["C_razon"]</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <hr />
+            <div class="clearfix">
+                <dl class="dl-horizontal pull-right">
+                    <dt>Total Pares Rechazados: </dt>
+                    <dd class="text-right">@string.Format("{0:N}", @cantidadTotal)</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        var usuarioMensajes = "@ViewBag.mensajesUsuario";
+
+        $(document).ready(function () {
+
+
+
+            $('#devolucionesDetalle').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+
+
+    </script>
+}
+
+
