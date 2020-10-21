@@ -73,7 +73,7 @@
                             <td class="text-center vert-align">@fecha.ToString("dd/MM/yyyy")</td>
                             <td class="text-right vert-align">@string.Format("{0:N}", devolucion["DMBTR"])</td>
                             <td class="text-center vert-align">
-                                <a class="btn btn-primary btn-xs" href="@Url.Action("DevolucionesDetalle", "DevolucionesTienda", new { @numeroDocumento = @devolucion["BELNR"], date = fechaParam.ToString("dd/MM/yyyy") })">
+                                <a class="btn btn-primary btn-xs" href="@Url.Action("DevolucionesDetalle", "DevolucionesTienda", new { @numeroDocumento = @devolucion["BELNR"],@ndev = @devolucion["XBLNR"], date = fechaParam.ToString("dd/MM/yyyy") })">
                                     Ver Detalle
                                 </a>
                             </td>

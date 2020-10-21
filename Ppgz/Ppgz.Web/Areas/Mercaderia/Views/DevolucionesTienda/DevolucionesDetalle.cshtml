@@ -2,17 +2,19 @@
 @using System.Globalization
 @using Ppgz.Repository
 @{
+    /**/
+
     ViewBag.Title = "Detalle de Devoluciones";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var drDevolucion = (DataRow)ViewBag.Devolucion;
-
+    var drD = (DataTable)ViewBag.devo;
 
     var fechaDevolucion = DateTime.ParseExact(
-                        drDevolucion["BLDAT"].ToString(),
-                        "yyyyMMdd",
-                        CultureInfo.InvariantCulture);
-    
+                drDevolucion["BLDAT"].ToString(),
+                "yyyyMMdd",
+                CultureInfo.InvariantCulture);
+
 
     var drDevolucionDetalles = (DataRow[])ViewBag.DevolucionDetalles;
 
@@ -25,7 +27,7 @@
     var total = decimal.Parse(@ViewBag.devolucion["DMBTR"].ToString()) * -1;
 
     var cantidadTotal = drDevolucionDetalles.Aggregate<DataRow, decimal>(0, (current, dr) => current + decimal.Parse(dr["MENGE"].ToString()));
-    
+
     var fechaParam = (DateTime)ViewBag.Fecha;
 }
 
@@ -83,42 +85,73 @@
                     <a href="@Url.Action("DevolucionesDetalleDescargar", "DevolucionesTienda", new {@numeroDocumento = @drDevolucion["BELNR"], date = fechaParam.ToString("dd/MM/yyyy")})" class="btn btn-primary"><i class="fa fa-download" aria-hidden="true"></i> Descargar</a>
                 </div>
             </div>
-            <hr style="margin-top: 0;"/>
+            <hr style="margin-top: 0;" />
             <table id="devolucionesDetalle" class="table table-striped table-condensed table-bordered">
                 <thead>
-                <tr>
-                    <th class="text-center">Artículo</th>
-                    <th class="text-center">Descripción</th>
-                    <th class="text-center">Total</th>
-                    <th class="text-center">Cantidad</th>
-                </tr>
+                    <tr>
+                        <th class="text-center">Artículo</th>
+                        <th class="text-center">Descripción</th>
+                        <th class="text-center">Total</th>
+                        <th class="text-center">Cantidad</th>
+                    </tr>
                 </thead>
                 <tbody>
-                @foreach (var detalle in drDevolucionDetalles)
-                {
-                    <tr>
+                    @foreach (var detalle in drDevolucionDetalles)
+                    {
+                        <tr>
 
-                        <td class="text-center">@detalle["MATNR"]</td>
-                        <td class="text-center">@detalle["MAKTX"]</td>
-                        <td class="text-right">@string.Format("{0:N}", detalle["DMBTR"])</td>
-                        <td class="text-center">@detalle["MENGE"]</td>
-                    </tr>
-                }
+                            <td class="text-center">@detalle["MATNR"]</td>
+                            <td class="text-center">@detalle["MAKTX"]</td>
+                            <td class="text-right">@string.Format("{0:N}", detalle["DMBTR"])</td>
+                            <td class="text-center">@detalle["MENGE"]</td>
+                        </tr>
+                    }
                 </tbody>
             </table>
-            <hr/>
-            <div class="clearfix">
-                <dl class="dl-horizontal pull-right">
-                    <dt>Total Pares Devueltos: </dt>
-                    <dd class="text-right">@string.Format("{0:N}", @cantidadTotal)</dd>
-                    <dt>Sub Total: </dt>
-                    <dd class="text-right">@string.Format("{0:N}", @subTotal)</dd>
-                    <dt>IVA: </dt>
-                    <dd class="text-right">@string.Format("{0:N}", @impuesto)</dd>
-                    <dt>Total: </dt>
-                    <dd class="text-right">@string.Format("{0:N}", @total)</dd>
-                </dl>
+            <div class="panel panel-default">
+                <div class="panel-heading"><p style="text-align:center;font-weight:bold;font-size:18px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;">Motivos De Devoluciones</p></div>
+                <table id="devolucionesDetalle1" class="table table-striped table-condensed table-bordered">
+                    <thead>
+                        <tr>
+
+                            <th class="text-center">Descripcion</th>
+                            <th class="text-center">Articulo</th>
+                            <th class="text-center">Motivo</th>
+                            <th class="text-center">Cantidad</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (DataRow devolucion in drD.Rows)
+                        {
+
+                            <tr>
+
+
+                                <td class="text-center">@devolucion["descripcion"]</td>
+                                <td class="text-center">@devolucion["item"]</td>
+                                <td class="text-center">@devolucion["mto_rechazo"]</td>
+                                <td class="text-right">@devolucion["pares"]</td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <hr />
+                <div class="clearfix">
+                    <dl class="dl-horizontal pull-right">
+                        <dt>Total Pares Devueltos: </dt>
+                        <dd class="text-right">@string.Format("{0:N}", @cantidadTotal)</dd>
+                        <dt>Sub Total: </dt>
+                        <dd class="text-right">@string.Format("{0:N}", @subTotal)</dd>
+                        <dt>IVA: </dt>
+                        <dd class="text-right">@string.Format("{0:N}", @impuesto)</dd>
+                        <dt>Total: </dt>
+                        <dd class="text-right">@string.Format("{0:N}", @total)</dd>
+                    </dl>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -132,6 +165,12 @@
 
 
             $('#devolucionesDetalle').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+            $('#devolucionesDetalle1').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
                 },

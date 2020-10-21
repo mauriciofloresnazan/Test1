@@ -11,7 +11,7 @@ using System.Collections;
 using System.Data;
 using System.Collections.Generic;
 using System.Text;
-
+using ScaleWrapper;
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
     [Authorize]
@@ -194,7 +194,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTACITASCALIDAD")]
-        public ActionResult DevolucionesDetalle(string numeroDocumento, string date)
+        public ActionResult DevolucionesDetalle(string numeroDocumento, string ndev, string date)
         {
             if (ProveedorActivo == null)
             {
@@ -208,7 +208,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
             var sociedad = SociedadActiva;
             var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorActivo.NumeroProveedor, sociedad, fecha);
-
+            var r = DbScaleGNZN.GetDataTable("select * from fn_gnzn_mtvo_dev('" + ndev + "')");
+            ViewBag.devo = r;
             ViewBag.Devolucion = dsDevoluciones.Tables["T_DEVOLUCIONES"]
                 .Select(string.Format("BELNR = '{0}'", numeroDocumento))[0];
 

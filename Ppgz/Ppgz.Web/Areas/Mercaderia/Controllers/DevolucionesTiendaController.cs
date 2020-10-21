@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Ppgz.Repository;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
-
+using ScaleWrapper;
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
     [Authorize]
@@ -141,7 +141,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CUENTASPAGAR")]
-        public ActionResult DevolucionesDetalle(string numeroDocumento, string date)
+        public ActionResult DevolucionesDetalle(string numeroDocumento, string ndev, string date)
         {
             if (ProveedorCxp == null)
             {
@@ -155,7 +155,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.mercaderia").Valor;
             var sociedad = SociedadActiva;
             var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, fecha);
-
+            var r = DbScaleGNZN.GetDataTable("select * from fn_gnzn_mtvo_dev('" + ndev + "')");
+            ViewBag.devo = r;
             ViewBag.Devolucion = dsDevoluciones.Tables["T_DEVOLUCIONES"]
                 .Select(string.Format("BELNR = '{0}'", numeroDocumento))[0];
 
