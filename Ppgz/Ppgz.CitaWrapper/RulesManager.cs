@@ -562,6 +562,8 @@ namespace Ppgz.CitaWrapper
         /// <returns></returns>
         public static bool PuedeCancelarCita(DateTime fechaCita)
         {
+            var CancelarCita = Convert.ToInt32(GetConfiguraciones()
+                .Single(c => c.Clave == "warehouse.cancel-appointment").Valor);
             if (DateTime.Today.Date >= fechaCita.Date)
             {
                 return false;
@@ -569,7 +571,7 @@ namespace Ppgz.CitaWrapper
 
             if (DateTime.Today.AddDays(1).Date == fechaCita.Date)
             {
-                if (DateTime.Now.Hour > 12)
+                if (DateTime.Now.Hour > CancelarCita)
                 {
                     return false;
                 }
@@ -579,6 +581,8 @@ namespace Ppgz.CitaWrapper
 
         public static bool PuedeEditarCita(DateTime fechaCita)
         {
+            var Editarcita = Convert.ToInt32(GetConfiguraciones()
+                .Single(c => c.Clave == "warehouse.edit-appointment").Valor);
             if (DateTime.Today.Date >= fechaCita.Date)
             {
                 return false;
@@ -586,13 +590,14 @@ namespace Ppgz.CitaWrapper
 
             if (DateTime.Today.AddDays(1).Date == fechaCita.Date)
             {
-                if (DateTime.Now.Hour > 17)
+                if (DateTime.Now.Hour > Editarcita)
                 {
                     return false;
                 }
             }
             return true;
         }
+
 
         public static int GetWeeksInYear(int year)
         {
