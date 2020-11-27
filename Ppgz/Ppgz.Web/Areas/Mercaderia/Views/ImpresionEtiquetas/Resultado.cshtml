@@ -7,10 +7,12 @@
     bool puedeDescargar = ViewBag.PuedeDescargar;
     DataTable resultado= new DataTable();
     List<string> etiquetas = new List<string>();
+    List<string> etiquet = new List<string>();
     string etiquetasPrint = "";
     if (puedeDescargar)
     {
         etiquetas = ViewBag.etiquetas;
+        etiquet = ViewBag.etiq;
         etiquetasPrint = ViewBag.etiquetasPrint;
         resultado = ViewBag.Resultado;
         resultado.DefaultView.Sort = "TYPE DESC";
@@ -59,7 +61,7 @@
                                                         <br><br>
                         @if (puedeDescargar)
                         { 
-                            <img src="http://api.labelary.com/v1/printers/8dpmm/labels/3x2/0/@etiquetas[0]" style="max-height: 200px;">
+                            <img src="http://api.labelary.com/v1/printers/8dpmm/labels/3x2/0/@etiquet[0]" style="max-height: 200px;">
                         }
                         
                     </div>
