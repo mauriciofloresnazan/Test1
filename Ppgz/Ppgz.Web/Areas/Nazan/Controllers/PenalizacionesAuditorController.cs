@@ -107,7 +107,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     var commonManager = new CommonManager();
                     try
                     {
-                        commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Auditoria penalizada", "La Auditoria con ID " + pena.id + " ha sido Penalizada por el motivo  auditoria en fabrica por el monto de " + pena.Total + " pesos, generando el documento contable N° " + result[0] + " ", pena.Correo);
+                        commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Cargo Por Auditoria en Fabrica", "La Auditoria con ID " + pena.id + " ha sido cargada por el motivo de auditoria en fabrica por el monto de " + pena.Total + " pesos, generando el documento contable N° " + result[0] + " ", pena.Correo);
                     }
                     catch (Exception ex)
                     {
