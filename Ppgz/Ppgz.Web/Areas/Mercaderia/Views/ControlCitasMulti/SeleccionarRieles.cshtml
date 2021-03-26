@@ -1,0 +1,411 @@
+﻿@using Ppgz.CitaWrapper
+@using Ppgz.Repository
+@using Ppgz.Web.Areas.Mercaderia
+@{
+    ViewBag.Title = "Selección de Rieles";
+    ViewBag.Descripcion = "Paso 5 Selección de Rieles";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var currentCita = (CurrentCita)ViewBag.CurrentCita;
+
+    var fechaCita = (DateTime)currentCita.Fecha;
+    
+    var horarioRieles = (List<horarioriele>)ViewBag.HorarioRieles;
+
+    var horarios = horarioRieles.Select(hr => new
+    {
+        hr.horario
+    }).Distinct().ToList().OrderBy(h => h.horario.Id);
+
+    var andenes = horarioRieles.Select(hr => new
+    {
+        hr.riele.andene
+    }).Distinct().ToList().OrderBy(a => a.andene.Codigo);
+
+
+    var rielesNecesarios = RulesManager.GetCantidadRieles(currentCita.Cantidad);
+
+    var cantidadMinimaCita = ViewBag.CantidadMinimaCita;
+    
+}
+<link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
+<style>
+    #tb-3 .btn {
+        font-size: .9em;
+    }
+
+    #tb-3 .border-bottom {
+        border-bottom: solid 1px #f1f1f1;
+    }
+
+    .table-rieles .btn-primary.hover, .table-rieles .btn-primary:hover, .table-rieles .open > .dropdown-toggle.btn-primary {
+        background-color: #66aaaa;
+        border-color: #ccc;
+        background-image: none;
+    }
+
+    .table-rieles .btn-primary.active, .table-rieles .btn-primary.hover, .table-rieles .btn-primary:hover, .table-rieles .btn-primary:active, .table-rieles .open > .dropdown-toggle.btn-primary {
+        background-color: #66aaaa;
+        border-color: #ccc;
+        background-image: none;
+    }
+
+
+</style>
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de la cita</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">Proveedor</label>
+            <div class="col-sm-6">
+                <div>@currentCita.Proveedor.Rfc - @currentCita.Proveedor.Nombre1</div>
+            </div>
+
+            <label class="col-sm-2 control-label">Almacén</label>
+            <div class="col-sm-2">
+                <div>@currentCita.Centro</div>
+            </div>
+        </div>
+        <div class="row">
+            <label class="col-sm-2 control-label">Fecha de la cita</label>
+            <div class="col-sm-6">
+                <div>@fechaCita.ToString("dd/MM/yyyy")</div>
+            </div>
+            <label class="col-sm-2 control-label">Total a Entregar</label>
+            <div class="col-sm-2">
+                <h4 style="margin: 0;">@currentCita.Cantidad</h4>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-offset-6 col-sm-6">
+                <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                    <a class="btn btn-primary btn-agendar">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Agendar Cita
+                    </a>
+                    <a class="btn btn-warning" href="@Url.Action("ListaDeOrdenes", "ControlCitasMulti")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Modificar Cita
+                    </a>
+                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitasMulti", new {proveedorId = currentCita.Proveedor.Id})">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitasMulti")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+                <div class="visible-sm visible-xs">
+                    <a class="btn btn-primary btn-block btn-agendar" href="#">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Agendar Cita
+                    </a>
+                    <a class="btn btn-warning btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitasMulti")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Modificar Cita
+                    </a>
+                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitasMulti", new { proveedorId = currentCita.Proveedor.Id })">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-default btn-block" href="@Url.Action("Index", "ControlCitasMulti")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Rieles Disponibles</div>
+    <div class="panel-body">
+
+        <p style="margin: 0;">
+            <i>
+                Debe entergar <strong>@currentCita.Cantidad</strong> pares, por lo que debe seleccionar
+                <strong>@rielesNecesarios</strong> rieles.
+            </i>
+        </p>
+        <p>
+            <div>
+                <div class="col-md-7" style="padding: 0; margin-top: 10px;">Es importante que la selección de rieles tenga en lo posible alguno de los siguientes patrones:</div>
+                <ul class="list-inline col-md-5" style="padding: 0;">
+                    <li><strong>Vertical</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-vertical.jpg")" alt="Vertical" /></li>
+                    <li><strong>Horizontal</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-horizontal.jpg")" alt="Horizontal" /> </li>
+                    <li><strong>Matriz</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-matriz.jpg")" alt="Matriz" /></li>
+                </ul>
+            </div>
+        </p>
+
+
+        <table class="table-rieles" width="100%" id="tb-3" style="">
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        <h2>Horario</h2>
+                    </th>
+                    @foreach (var result in andenes)
+                    {
+                        var anden = result.andene;
+
+                        var borderRight = "";
+                        if (int.Parse(anden.Anden) < andenes.Count())
+                        {
+                            borderRight = "solid 1px #666";
+                        }
+                        <th class="text-center" colspan="2" style="border-right: @borderRight">
+                            <i class="fa fa-truck fa-5x" aria-hidden="true"></i>
+                            ANDEN @anden.Anden
+                            <div class="row">
+                                @foreach (var riel in anden.rieles)
+                                {
+                                    <div class="col-xs-6">Riel @riel.Riel</div>
+
+                                }
+                            </div>
+                        </th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in horarios)
+                {
+                    <tr class="border-bottom">
+
+                        @{
+                            var horario = result.horario;
+                            var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+
+                            var rielPostition = 0;
+                        }
+
+                        <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
+
+                        @foreach (var riel in rieles)
+                        {
+                            rielPostition++;
+
+                            var borderRight = "";
+                            if (rielPostition < rieles.Count())
+                            {
+                                borderRight = "solid 1px #666";
+                            }
+
+                            var disabledChecked = "";
+                            var dataOff = "DISPONIBLE";
+                            var dataOn = "MI RESERVA";
+                            var offStyle = "primary";
+                            var onStyle = "success";
+                            var disponibleClass = "riel-disponible";
+
+                            if (!riel.Disponibilidad)
+                            {
+                                disabledChecked = "disabled";
+                                //dataOn = "OCUPADO";
+                                dataOff = "OCUPADO";
+                                //onStyle = "danger";
+                                offStyle = "danger";
+                                disponibleClass = "";
+                            }
+
+                            <td class="text-center" style="border-right: @borderRight">
+                                <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
+
+                            </td>
+
+                        }
+
+                        @*<td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center" style="border-right: solid 1px #666">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                        <td class="text-center">
+                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
+                    </tr>
+                }
+            </tbody>
+        </table>
+        @using (Html.BeginForm("Agendar", "ControlCitasMulti", new { }, FormMethod.Post, new { id = "form-agendar" }))
+        {
+            @Html.AntiForgeryToken()
+            DateTime fecha = DateTime.Now;
+            <input type="hidden" name="FechaCreacion" value="@fecha" />
+        }
+
+
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
+
+    <script type="text/javascript">
+        var rielesNecesarios = parseInt("@rielesNecesarios");
+        var rielesSeleccionados = [];
+        var enviado = false;
+        $(function() {
+            $('.btn-agendar').click(function() {
+                //Validación de cantidad mínima permitida
+                if (@currentCita.Cantidad < @cantidadMinimaCita){
+                    msgError("La cantidad total de la cita es menor a " + @cantidadMinimaCita + " monto minimo permitido");
+                }
+                else {
+                    // TODO MEJORAR
+                    if (rielesSeleccionados.length === rielesNecesarios) {
+
+                        if (enviado) {
+
+                            msgError("Por favor espere, se esta procesando el registro anterior.");
+                            return;
+                        }
+
+
+                        for (var i = 0; i < rielesNecesarios; i++) {
+                            $('<input>').attr({
+                                type: 'hidden',
+                                name: 'rielesIds',
+                                value: rielesSeleccionados[i]
+                            }).appendTo('#form-agendar');
+                        }
+
+                        $("#form-agendar").submit();
+
+                        $(this).attr("disabled", "disabled");
+
+                        $(this).unbind();
+
+                        $(this).off();
+
+                        enviado = true;
+
+
+                        $.blockUI({ message: '<h2>Por favor espere...</h2>' });
+
+
+                    } else {
+                        msgError("Por favor verifique su selección");
+                    }
+                }
+
+            });
+
+            CargarEventoSeleccion();
+            VerificarRieles();
+
+        });
+
+
+        function comprometerRiel(horarioRielId) {
+            if (rielesSeleccionados.indexOf(horarioRielId) === -1) {
+                rielesSeleccionados.push(horarioRielId);
+            }
+
+
+            $("#" + horarioRielId).addClass("usado");
+        }
+
+        function liberarRiel(horarioRielId) {
+
+            if (rielesSeleccionados.indexOf(horarioRielId + "") > -1) {
+                rielesSeleccionados.splice(rielesSeleccionados.indexOf(horarioRielId + ""), 1);
+            }
+
+            $("#" + horarioRielId).removeClass("usado");
+
+        }
+
+        function VerificarSelecciones() {
+            if (rielesSeleccionados.length === rielesNecesarios) {
+                $('.riel-disponible:not(.usado)').bootstrapToggle('disable');
+            } else {
+
+                $('.riel-disponible:not(.usado)').bootstrapToggle('enable');
+            }
+        }
+
+        function CargarEventoSeleccion() {
+
+            $('.riel-disponible').change(function () {
+
+                var horarioRielId = $(this).attr("id");
+
+                if ($(this).prop('checked') === true) {
+
+                    comprometerRiel(horarioRielId);
+
+                    $(this).addClass("usado");
+                } else {
+                    liberarRiel(horarioRielId);
+                }
+                VerificarSelecciones();
+
+            });
+        }
+
+        function RefrescarRiel(currentValue) {
+
+            var input = $("#" + currentValue.Id);
+
+            if (currentValue.Disponibilidad) {
+                
+                input.attr("data-off", "DISPONIBLE");
+                input.attr("data-offstyle", "primary");
+
+                input.addClass("riel-disponible");
+                input.bootstrapToggle('enable');
+
+            } else {
+
+                input.prop('checked', false);
+
+                liberarRiel(currentValue.Id);
+                input.attr("data-off", "OCUPADO");
+                input.attr("data-offstyle", "danger");
+                input.removeClass("riel-disponible");
+                input.bootstrapToggle('disable');
+            }
+        }
+
+
+        function VerificarRieles() {
+
+            var data = {
+                fecha: "@fechaCita.ToString("ddMMyyyy")"
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("VerificarRieles", "ControlCitasMulti")",
+                data: data,
+                cache: false
+            }).done(function (result) {
+
+                setTimeout(function () { VerificarRieles(); }, 10000);
+
+                $(".riel-disponible").unbind();
+
+                result.forEach(RefrescarRiel);
+                $(".horarioriel").bootstrapToggle('destroy');
+                $(".horarioriel").bootstrapToggle();
+                CargarEventoSeleccion();
+                VerificarSelecciones();
+            }).fail(function (response) {
+                console.log(response);
+
+            });
+     
+        }
+    </script>
+}
