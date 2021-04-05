@@ -2058,6 +2058,7 @@
     <Content Include="Views\Account\CambiarPassword.cshtml" />
     <Content Include="Views\Home\Privacidad.cshtml" />
     <Content Include="Views\Home\Terminos.cshtml" />
+    <Content Include="Views\Politicas\CambiarPassword.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

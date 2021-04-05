@@ -5,7 +5,8 @@
         <div class="jumbotron">
             <h2><small>Hola @ViewBag.Usuario.Nombre,</small><br> Bienvenido al portal Gestión de Proveedores <br> <i>Grupo Nazan</i>
             </h2>
-            <p>Para continuar con el uso del sistema por favor lea y acepte los terminos, las condiciones de servicio y las políticas de seguridad. </p>
+            <p>Para continuar con el uso del sistema por favor lea y acepte los terminos, las condiciones de servicio, las políticas de seguridad y cambia tu contraseña. </p>
+            
             <p>
                 <a class="btn btn-primary btn-lg" href="#" role="button" data-toggle="modal" data-target="#myModalPoliticas">Leer el Documento</a>
             </p>
@@ -28,7 +29,7 @@
                         @Html.Raw(ViewBag.Politicas)
 
                         <div class="clearfix">
-                            <a href="@Url.Action("Aceptar", "Politicas")" class="btn btn-lg btn-primary pull-right"> <i class="fa fa-check"></i> Confirmo que he leído y acepto</a>
+                            <a href="@Url.Action("CambiarPassword", "Politicas")" class="btn btn-lg btn-primary pull-right"> <i class="fa fa-check"></i> Confirmo que he leído y acepto</a>
                         </div>
                     
                 </div>
