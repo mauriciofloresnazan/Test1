@@ -38,6 +38,11 @@ namespace Ppgz.Repository
         public virtual DbSet<crforaneo> crsforaneos { get; set; }
         public virtual DbSet<cuentaproveedore> cuentaproveedores { get; set; }
         public virtual DbSet<Penalizacionauditor> Penalizacionauditores { get; set; }
+        public virtual DbSet<RevisarDatos> RevisarDatos { get; set; }
+        public virtual DbSet<RevisarPedidos> RevisarPedidos { get; set; }
+        public virtual DbSet<EnviarDatos> EnviarDatos { get; set; }
+        public virtual DbSet<MensajeResultado> MensajeResultado { get; set; }
+        public virtual DbSet<EnviarEtiquetas> EnviarEtiquetas { get; set; }
         public virtual DbSet<audi> auditores { get; set; }
         public virtual DbSet<cuenta> cuentas { get; set; }
         public virtual DbSet<cuentasmensaje> cuentasmensajes { get; set; }

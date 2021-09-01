@@ -1,0 +1,174 @@
+﻿@using Ppgz.Repository
+@model dynamic
+
+@{
+    ViewBag.Title = "Registrar Cita";
+    ViewBag.Descripcion = "Paso 1 - Seleccione una Razón Social.";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string[] almacenes = ViewBag.Almacenes;
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Razones Sociales</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+
+            <a class="btn btn-default" href="@Url.Action("Citas", "ReciboPorAsn")">
+                <i class="fa fa-undo" aria-hidden="true"></i> Regresar al listado de Citas
+            </a>
+            <hr />
+
+            <table id="proveedores" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">Número de Proveedor</th>
+                        <th class="text-center">RFC</th>
+                        <th class="text-center">Nombre Proveedor</th>
+                        <th class="text-center"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (proveedore proveedor in (ViewBag.proveedores))
+                    {
+                        <tr>
+                            <td class="text-center vert-align">@proveedor.NumeroProveedor</td>
+                            <td class="text-center vert-align">@proveedor.Rfc</td>
+                            <td class="text-center vert-align">@proveedor.Nombre1</td>
+                            <td class="text-center vert-align">
+                                <div class="btn-group-vertical" role="group" aria-label="...">
+                                    @foreach (var sociedad in proveedor.Sociedades)
+                                    {
+                                        if (sociedad.Activa)
+                                        {
+
+                                            
+                                                <a class="btn btn-primary btn-sm" href="#" data-toggle="modal" data-target="#centro-modal1" data-proveedorid="@proveedor.Id" data-sociedad="@sociedad.Sociedad">@sociedad.Nombre</a>
+                                            
+                                        }
+
+
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="centro-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Seleccione el Almacén de destino de la Cita</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="btn-group" data-toggle="buttons">
+
+                        @foreach (var almacen in almacenes)
+                        {
+                            <label class="btn btn-primary">
+                                <input type="radio" name="radio-almacen" id="@almacen" autocomplete="off"> @almacen
+                            </label>
+
+                        }
+
+                        <label class="btn btn-warning btn-block">
+                            <input type="radio" name="radio-almacen" id="Cross Dock" autocomplete="off">Directo a Tienda
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="centro-modal1" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-center">Cargar Archivo Para Recibo Por Asn</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <div class="btn-group" data-toggle="buttons">
+
+                       
+
+                        <label class="btn btn-warning btn-block">
+                            <input type="radio" name="radio-almacen" id="Cross Dock" autocomplete="off">Cargar Archivo 
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+
+        var url = "@Url.Action("SeleccionarProveedor", "ReciboPorAsn")";
+
+        var proveedorId;
+        var sociedad;
+        function confirmar() {
+            if (confirm('¿Estas seguro de cambiar al modulo con asn?'))
+                return true;
+            else
+                return false;
+        }
+        $(document).ready(function () {
+
+            $('#centro-modal').on('show.bs.modal', function (e) {
+                proveedorId = $(e.relatedTarget).data('proveedorid');
+                sociedad = $(e.relatedTarget).data('sociedad');
+            });
+
+            $("#centro-modal input[name=radio-almacen]:radio").change(function () {
+
+                $('#centro-modal').modal('hide');
+
+                $.blockUI({ message: '<h2>Por favor espere...</h2>' });
+
+                location.href = url + "?proveedorId=" + proveedorId + "&centro=" + $(this).attr("id") + "&sociedad=" + sociedad;
+            });
+
+
+            $('#centro-modal1').on('show.bs.modal', function (e) {
+                proveedorId = $(e.relatedTarget).data('proveedorid');
+                sociedad = $(e.relatedTarget).data('sociedad');
+            });
+
+            $("#centro-modal1 input[name=radio-almacen]:radio").change(function () {
+
+                $('#centro-modal1').modal('hide');
+
+                $.blockUI({ message: '<h2>Por favor espere...</h2>' });
+
+                location.href = url + "?proveedorId=" + proveedorId + "&centro=" + $(this).attr("id") + "&sociedad=" + sociedad;
+            });
+            $('#proveedores').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+
+    </script>
+}

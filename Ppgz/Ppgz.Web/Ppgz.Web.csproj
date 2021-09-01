@@ -211,6 +211,7 @@
     <Compile Include="Areas\Mercaderia\Controllers\ComprobantesReciboController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ProntoPagoController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\RechazosCedisController.cs" />
+    <Compile Include="Areas\Mercaderia\Controllers\ReciboPorAsnController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ReporteAuditoriaController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\ReporteProveedoresController.cs" />
     <Compile Include="Areas\Mercaderia\Controllers\OrdenesCompraController.cs" />
@@ -2026,6 +2027,14 @@
     <Content Include="Areas\Mercaderia\Views\ControlCitasMulti\ListaDeOrdenes.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitasMulti\SeleccionarRieles.cshtml" />
     <Content Include="Areas\Mercaderia\Views\ControlCitasMulti\VisualizarDisponibilidad.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ReciboPorAsn\CargarArchivo.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ReciboPorAsn\CitaDetalle.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ReciboPorAsn\Citas.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ReciboPorAsn\FechaCita.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ReciboPorAsn\Index.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ReciboPorAsn\Resultado.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ReciboPorAsn\SeleccionarRieles.cshtml" />
+    <Content Include="Areas\Mercaderia\Views\ReciboPorAsn\VisualizarDisponibilidad.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

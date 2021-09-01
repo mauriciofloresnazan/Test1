@@ -556,6 +556,22 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             TempData["FlashSuccess"] = "Reenvio de ASN exitoso";
             return RedirectToAction("Index");
         }
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public ActionResult ReEnvioASNCita(int idCita)
+        {
+
+            var scaleManager = new ScaleManagerAsn();
+
+            var db = new Entities();
+
+            var cita = db.citas.Find(idCita);
+            scaleManager.Registrar(cita);
+
+            TempData["FlashSuccess"] = "Reenvio de ASN exitoso";
+            return RedirectToAction("Index");
+        }
 
 
     }

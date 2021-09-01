@@ -36,7 +36,7 @@ namespace Ppgz.Repository
         public Nullable<int> EstatusCitaId { get; set; }
         public bool Penalizado { get; set; }
         public Nullable<System.DateTime> MovimientoCita { get; set; }
-
+        public string TipoCita { get; set; }
         public virtual ICollection<asn> asns { get; set; }
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual estatuscita estatuscita { get; set; }
