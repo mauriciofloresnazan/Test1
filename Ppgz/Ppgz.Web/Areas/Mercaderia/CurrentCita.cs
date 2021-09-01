@@ -18,11 +18,11 @@ namespace Ppgz.Web.Areas.Mercaderia
         }
         public class OrdenDuplicadaException : Exception
         {
-            
+
         }
-        public class OrdenSinDetalleException: Exception
+        public class OrdenSinDetalleException : Exception
         {
-            
+
         }
         public class OrdenCentroException : Exception
         {
@@ -40,33 +40,37 @@ namespace Ppgz.Web.Areas.Mercaderia
             get { return _proveedor; }
         }
 
-        private readonly List<PreAsn> _ordenes;
-        
+        public readonly List<PreAsn> _ordenes;
+
         public readonly string Centro;
         public DateTime? Fecha { get; private set; }
 
-        private readonly List<PreAsn> _ordenesActivas;
+        public readonly List<PreAsn> _ordenesActivas;
 
         public int Cantidad
         {
-            get {
-                if (cantidadSinASN > 0) {
+            get
+            {
+                if (cantidadSinASN > 0)
+                {
                     return cantidadSinASN;
-                } else {
-                        return _ordenes.Sum(o => o.TotalCantidad);
                 }
+                else
+                {
+                    return _ordenes.Sum(o => o.TotalCantidad);
                 }
+            }
         }
 
 
         //Se agrego para poder tener una cantidad sin ASN sin modificar la logica actual
         public int CantidadSinASN { get => cantidadSinASN; set => cantidadSinASN = value; }
 
-        private int cantidadSinASN=0;
+        private int cantidadSinASN = 0;
         //fin
 
 
-        public readonly bool  EsCrossDock;
+        public readonly bool EsCrossDock;
         public List<PreAsn> GetOrdenesActivasDisponibles()
         {
             var documentos = _ordenes
@@ -81,9 +85,9 @@ namespace Ppgz.Web.Areas.Mercaderia
                     .ToList();
             }
 
-            return  _ordenesActivas
+            return _ordenesActivas
                 .Where(o => !documentos.Contains(o.NumeroDocumento))
-                .Where(o=> o.TotalPermitido > 0)
+                .Where(o => o.TotalPermitido > 0)
                 // todo incluir el detalle en la consulta inicial
                 //.Where( o=> o.Detalles.Any(de=> de.Almacen.ToUpper() == Centro))
                 .ToList();
@@ -92,8 +96,8 @@ namespace Ppgz.Web.Areas.Mercaderia
         public PreAsn GetOrdenActivaDisponible(string numeroDocumento)
         {
             var ordenesActivasDisponibles = GetOrdenesActivasDisponibles();
-            return !ordenesActivasDisponibles.Any() ? 
-                null : 
+            return !ordenesActivasDisponibles.Any() ?
+                null :
                 ordenesActivasDisponibles.FirstOrDefault(oa => oa.NumeroDocumento == numeroDocumento);
         }
 
@@ -103,7 +107,7 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             var proveedor = proveedorManager.Find(proveedorId, cuentaId);
 
-            if (proveedor== null)
+            if (proveedor == null)
             {
                 throw new BusinessException("Proveedor incorrecto");
             }
@@ -156,7 +160,7 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             _proveedor = proveedor;
 
-            
+
 
             Centro = "Sin ASN";
         }
@@ -170,14 +174,14 @@ namespace Ppgz.Web.Areas.Mercaderia
                 // TODO pasar a resource
                 throw new BusinessException("Numero de documento incorrecto");
             }
-            
+
             if (!orden.FechasPermitidas.Contains(fecha))
             {
                 // TODO pasar a resource
                 throw new BusinessException("Fecha incorrecta");
-                
+
             }
-            
+
             Fecha = fecha;
         }
 
@@ -187,36 +191,53 @@ namespace Ppgz.Web.Areas.Mercaderia
             Fecha = fecha;
         }
 
+
+
+
+        public void SetFechaAsn(DateTime fecha, string numeroDocumento)
+        {
+            var orden = GetOrdenActivaDisponible(numeroDocumento);
+
+
+            Fecha = fecha;
+        }
+
+        public void SetFechaAsn(DateTime fecha)
+        {
+
+            Fecha = fecha;
+        }
+
         public void AddPreAsn(string numeroDocumento)
         {
             var orden = _ordenesActivas.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
 
-        
+
             if (orden == null)
             {
                 throw new NumeroDocumentoException();
             }
-            
+
 
             if (_ordenes.Any(o => o.NumeroDocumento == numeroDocumento))
             {
                 throw new OrdenDuplicadaException();
             }
 
-            if (!orden.FechasPermitidas.Contains((DateTime) Fecha))
+            if (!orden.FechasPermitidas.Contains((DateTime)Fecha))
             {
                 // TODO pasar a resource
                 throw new FechaException();
             }
 
-           /* var preAsnManager = new PreAsnManager();
-            var detalles = preAsnManager.GetDetalles(Proveedor.Id, numeroDocumento);
+            /* var preAsnManager = new PreAsnManager();
+             var detalles = preAsnManager.GetDetalles(Proveedor.Id, numeroDocumento);
 
 
-            if (!detalles.Any())
-            {
-                throw new OrdenSinDetalleException();
-            }*/
+             if (!detalles.Any())
+             {
+                 throw new OrdenSinDetalleException();
+             }*/
             if (orden.Detalles.Sum(de => de.CantidadPermitida) < 1)
             {
                 throw new OrdenSinDetalleException();
@@ -236,9 +257,48 @@ namespace Ppgz.Web.Areas.Mercaderia
                 throw new OrdenSinDetalleException();
             }
 
-     
+
 
             _ordenes.Add(orden);
+        }
+
+
+        public void AddPreAsnRecibo(string numeroDocumento)
+        {
+            var orden = _ordenesActivas.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+            if (orden == null)
+            {
+                throw new NumeroDocumentoException();
+            }
+            if (orden.Detalles.Sum(de => de.CantidadPermitida) < 1)
+            {
+                throw new OrdenSinDetalleException();
+            }
+
+            if (!EsCrossDock)
+            {
+                if (orden.Detalles.All(de => de.Centro != Centro))
+                {
+                    throw new OrdenCentroException();
+                }
+            }
+
+
+            if (orden.TotalPermitido < 1)
+            {
+                throw new OrdenSinDetalleException();
+            }
+
+            if (_ordenes.Any(o => o.NumeroDocumento == numeroDocumento))
+            {
+
+            }
+            else
+            {
+                _ordenes.Add(orden);
+            }
+
+
         }
 
         public void RemovePreAsn(string numeroDocumento)
@@ -250,10 +310,17 @@ namespace Ppgz.Web.Areas.Mercaderia
             }
         }
 
-
+        public void RemovePreAsnRecibo(string numeroDocumento)
+        {
+            var orden = _ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
+            if (orden != null)
+            {
+                _ordenes.Remove(orden);
+            }
+        }
         public bool HasPreAsn(string numeroDocumento)
         {
-            return _ordenes.Any(o=> o.NumeroDocumento == numeroDocumento);
+            return _ordenes.Any(o => o.NumeroDocumento == numeroDocumento);
         }
 
         public PreAsn GetPreAsn(string numeroDocumento)
@@ -292,9 +359,34 @@ namespace Ppgz.Web.Areas.Mercaderia
             }
 
             detalle.Cantidad = cantidad;
-        } 
+        }
 
+        public void UpdateDetailAsn(string numeroDocumento, string numeroMaterial, int cantidad)
+        {
+            var preAsn = _ordenes.FirstOrDefault(o => o.NumeroDocumento == numeroDocumento);
 
-    
+            if (preAsn == null)
+            {
+                throw new BusinessException("Numero de documento incorrecto");
+            }
+
+            var detalle = preAsn.Detalles.FirstOrDefault(d => d.NumeroMaterial == numeroMaterial);
+
+            if (detalle == null)
+            {
+                throw new BusinessException("Item incorrecto");
+
+            }
+
+            if (cantidad > detalle.CantidadPermitida)
+            {
+                throw new BusinessException("Cantidad incorrecta");
+            }
+
+            detalle.Cantidad = cantidad;
+        }
+
     }
+
+
 }

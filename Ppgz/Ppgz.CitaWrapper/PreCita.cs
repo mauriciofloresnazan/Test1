@@ -20,6 +20,8 @@ namespace Ppgz.CitaWrapper
 
         public string UsuarioId;
 
+        public string TipoCita;
+
         public List<Asn> Asns;
 
         public List<int> HorarioRielesIds;

@@ -148,6 +148,7 @@ namespace Ppgz.Web
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
                 "CONTROLCITAS|Control de Citas Multi Pedidos|Citas|ControlCitasMulti|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Recibo Por Asn|Citas|ReciboPorAsn|fa fa-calendar|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Citas|ControlCitasSA|fa fa-calendar|Mercaderia",
                 "COMPROBANTESRECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",

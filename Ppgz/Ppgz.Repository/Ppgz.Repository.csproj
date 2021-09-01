@@ -106,11 +106,13 @@
     <Compile Include="descuentofactoraje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
-    
-	<Compile Include="Penalizacionauditor.cs">
+    <Compile Include="EnviarDatos.cs" />
+    <Compile Include="EnviarEtiquetas.cs" />
+    <Compile Include="MensajeResultado.cs" />
+    <Compile Include="Penalizacionauditor.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
-	    <Compile Include="audi.cs">
+    <Compile Include="audi.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
     <Compile Include="estatuscita.cs">
@@ -179,6 +181,8 @@
     <Compile Include="proveedorfactoraje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="RevisarDatos.cs" />
+    <Compile Include="RevisarPedidos.cs" />
     <Compile Include="riele.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>

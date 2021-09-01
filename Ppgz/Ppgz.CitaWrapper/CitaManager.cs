@@ -6,6 +6,7 @@ using Ppgz.Repository;
 using SapWrapper;
 using ScaleWrapper;
 using System.Collections.Generic;
+using MySql.Data.MySqlClient;
 
 namespace Ppgz.CitaWrapper
 {
@@ -44,7 +45,7 @@ namespace Ppgz.CitaWrapper
                 cantidadDiariaLimite = Convert.ToInt32(db.configuraciones.Single(c => c.Clave == "warehouse.crossdock-max-pairs.per-day").Valor);
             }
             var cantidadDelDiaEnAlmacen = 0;
-                
+
             var citasDelDiaEnAlpmacen = db.citas.Where(c => c.Almacen == precita.Centro && c.FechaCita == precita.Fecha.Date).ToList();
 
             if (citasDelDiaEnAlpmacen.Any())
@@ -98,7 +99,7 @@ namespace Ppgz.CitaWrapper
                 cantidadDeLaSemanaEnAlmacen = citasDeLaSemanaEnAlmacen.Sum(c => c.asns.Sum(asn => asn.Cantidad));
             }
 
-            
+
             #region ReglasGenerales
             if (!RulesManager.Regla2(precita.Fecha))
             {
@@ -167,7 +168,7 @@ namespace Ppgz.CitaWrapper
                         throw new Exception(string.Format("Fecha incorrecta para la orden {0}", documento));
                     }
                 }
-                
+
 
                 // Para evitar un comportamiento erroneo en el compilador
                 var documento1 = documento;
@@ -196,7 +197,7 @@ namespace Ppgz.CitaWrapper
 
             return true;
         }
-        
+
         public static void RegistrarCita(PreCita precita)
         {
 
@@ -286,10 +287,9 @@ namespace Ppgz.CitaWrapper
 
                 cita = db.citas.Find(cita.Id);
                 scaleManager.Registrar(cita);
-              
+
             });
         }
-
 
         public static void RegistrarCitaSinASN(PreCita precita)
         {
@@ -332,30 +332,6 @@ namespace Ppgz.CitaWrapper
                 RielesOcupados = (sbyte)precita.HorarioRielesIds.Count,
                 OperacionTx = "CREATE"
             };
-
-            //foreach (var asn in precita.Asns)
-            //{
-            //    cita.asns.Add(new asn
-            //    {
-            //        Cantidad = asn.Cantidad,
-            //        NombreMaterial = asn.NombreMaterial,
-            //        NumeroMaterial = asn.NumeroMaterial,
-            //        NumeroPosicion = asn.NumeroPosicion,
-            //        OrdenNumeroDocumento = asn.OrdenNumeroDocumento,
-            //        Tienda = asn.Tienda,
-
-            //        TiendaOrigen = asn.TiendaOrigen,
-            //        Precio = asn.Precio,
-            //        UnidadMedida = asn.UnidadMedida,
-            //        CantidadPedidoSap = asn.CantidadSolicitada,
-            //        InOut = asn.InOut,
-            //        NumeroOrdenSurtido = asn.NumeroSurtido,
-            //        NumeroMaterial2 = asn.NumeroMaterial2,
-            //        Centro = asn.Centro
-            //    });
-            //}
-
-
             db.citas.Add(cita);
             db.SaveChanges();
 
@@ -369,15 +345,6 @@ namespace Ppgz.CitaWrapper
                 db.Entry(horarioRiel).State = EntityState.Modified;
                 db.SaveChanges();
             }
-
-            //Task.Factory.StartNew(() =>
-            //{
-            //    var scaleManager = new ScaleManager();
-
-            //    cita = db.citas.Find(cita.Id);
-            //    scaleManager.Registrar(cita);
-
-            //});
         }
 
 
@@ -397,7 +364,7 @@ namespace Ppgz.CitaWrapper
 
             List<asn> asnantesdeborrar = new List<asn>();
 
-            cita.asns.ToList().ForEach(delegate(asn asnd){
+            cita.asns.ToList().ForEach(delegate (asn asnd) {
 
                 asn asnnew = new asn();
                 asnnew.OrdenNumeroDocumento = asnd.OrdenNumeroDocumento;
@@ -408,7 +375,7 @@ namespace Ppgz.CitaWrapper
 
             cita.asns.ToList().ForEach(asn => db.asns.Remove(asn));
 
-            
+
 
             cita.crs.ToList().ForEach(cr => db.crs.Remove(cr));
 
@@ -426,12 +393,11 @@ namespace Ppgz.CitaWrapper
             ICollection<asn> ordenesAcancelar = new List<asn>();
             foreach (var asn in asnantesdeborrar)
             {
-                if (db.asns.FirstOrDefault(a => a.OrdenNumeroDocumento == asn.OrdenNumeroDocumento && a.NumeroPosicion == asn.NumeroPosicion)==null)
+                if (db.asns.FirstOrDefault(a => a.OrdenNumeroDocumento == asn.OrdenNumeroDocumento && a.NumeroPosicion == asn.NumeroPosicion) == null)
                 {
                     ordenesAcancelar.Add(asn);
-                } 
+                }
             }
-                
 
             var sapOrdenCompraManager = new SapOrdenCompraManager();
             sapOrdenCompraManager.UnsetOrdenesDeCompraCita(ordenesAcancelar);
@@ -455,11 +421,11 @@ namespace Ppgz.CitaWrapper
                 sapOrdenCompraManager.UnsetOrdenesDeCompraCita(ordenesAcancelar);
             }
 
-            
+
         }
 
 
-            public static void ActualizarFechaScale(int citaId)
+        public static void ActualizarFechaScale(int citaId)
         {
             Task.Factory.StartNew(() =>
             {
@@ -467,7 +433,7 @@ namespace Ppgz.CitaWrapper
                 scaleManager.ActualizarFecha(citaId);
             });
         }
-        
+
         public static void ActualizarCantidadScale(int[] asnIds)
         {
             Task.Factory.StartNew(() =>
@@ -479,9 +445,185 @@ namespace Ppgz.CitaWrapper
 
         public static void EliminarAsnScale(asn asnAborrar)
         {
-                var scaleManager = new ScaleManager();
-                scaleManager.EliminarAsn(asnAborrar);
+            var scaleManager = new ScaleManager();
+            scaleManager.EliminarAsn(asnAborrar);
         }
+
+
+
+        public static void RegistrarCitaAsn(PreCita precita)
+        {
+
+            var db = new Entities();
+
+            // Disponibildiad de Rieles
+            if (db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad == false))
+            {
+                throw new Exception("Uno o más rieles seleccionados ya no estan disponibles,  por favor verifique su selección.");
+            }
+
+            if (!db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad))
+            {
+                throw new Exception("Selección de rieles incorrecta.");
+            }
+
+
+            ValidarCita(precita);
+            db = new Entities();
+
+            if (db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad == false))
+            {
+                throw new Exception("Uno o más rieles seleccionados ya no estan disponibles,  por favor verifique su selección.");
+            }
+
+            if (!db.horariorieles.Any(hr => precita.HorarioRielesIds.Contains(hr.Id) && hr.Disponibilidad))
+            {
+                throw new Exception("Selección de rieles incorrecta.");
+            }
+
+            var cita = new cita
+            {
+                FechaCita = precita.Fecha,
+                FechaCreacion = precita.FechaCreacion,
+                UsuarioIdTx = precita.UsuarioId,
+                CantidadTotal = precita.Cantidad,
+                ProveedorId = precita.ProveedorId,
+                Almacen = precita.Centro,
+                RielesOcupados = (sbyte)precita.HorarioRielesIds.Count,
+                OperacionTx = "CREATE",
+                TipoCita = "Cita Por Asn"
+            };
+
+            foreach (var asn in precita.Asns)
+            {
+                cita.asns.Add(new asn
+                {
+                    Cantidad = asn.Cantidad,
+                    NombreMaterial = asn.NombreMaterial,
+                    NumeroMaterial = asn.NumeroMaterial,
+                    NumeroPosicion = asn.NumeroPosicion,
+                    OrdenNumeroDocumento = asn.OrdenNumeroDocumento,
+                    Tienda = asn.Tienda,
+
+                    TiendaOrigen = asn.TiendaOrigen,
+                    Precio = asn.Precio,
+                    UnidadMedida = asn.UnidadMedida,
+                    CantidadPedidoSap = asn.CantidadSolicitada,
+                    InOut = asn.InOut,
+                    NumeroOrdenSurtido = asn.NumeroSurtido,
+                    NumeroMaterial2 = asn.NumeroMaterial2,
+                    Centro = asn.Centro
+                });
+            }
+
+
+            db.citas.Add(cita);
+            db.SaveChanges();
+            var proveedor = db.proveedores.Find(precita.ProveedorId);
+            var pr = Convert.ToInt32(proveedor.NumeroProveedor);
+            var id = string.Format("{0}", DateTime.Now.ToString("yyyyMMddHHmmss"));
+            var spc = db.RevisarDatos.Where(oooo => oooo.Id_Proveedor == pr && oooo.Edo_Rev == 0).GroupBy(x => x.Pedido).Select(x => x.FirstOrDefault());
+            foreach (var csp in spc)
+            {
+                var parameters = new List<MySqlParameter>()
+                {
+                  new MySqlParameter("factASN",csp.Factura),
+                  new MySqlParameter("pedASN",csp.Pedido),
+                  new MySqlParameter("irdASN",id),
+                  new MySqlParameter("ProveedorId",pr),
+                  new MySqlParameter("CitaId",cita.Id),
+
+
+                };
+
+                Db.ExecuteProcedureOut(parameters, "sp_GNZN_Contenedores_ASN");
+            }
+
+            foreach (var horarioRielId in precita.HorarioRielesIds)
+            {
+
+                db = new Entities();
+                var horarioRiel = db.horariorieles.Find(horarioRielId);
+                horarioRiel.Disponibilidad = false;
+                horarioRiel.CitaId = cita.Id;
+                db.Entry(horarioRiel).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+
+            sapOrdenCompraManager.SetOrdenesDeCompraCita(cita.asns);
+
+            Task.Factory.StartNew(() =>
+            {
+                var scaleManager = new ScaleManagerAsn();
+
+                cita = db.citas.Find(cita.Id);
+                scaleManager.Registrar(cita);
+
+            });
+        }
+
+        public static void CancelarCitaAsn(int citaId)
+        {
+            var db = new Entities();
+            var cita = db.citas.Find(citaId);
+
+            if (!RulesManager.PuedeCancelarCita(cita.FechaCita)) return;
+
+            foreach (var horarioRiel in cita.horariorieles.ToList())
+            {
+                horarioRiel.CitaId = null;
+                horarioRiel.Disponibilidad = true;
+                db.Entry(horarioRiel).State = EntityState.Modified;
+            }
+
+            List<asn> asnantesdeborrar = new List<asn>();
+
+            cita.asns.ToList().ForEach(delegate (asn asnd) {
+
+                asn asnnew = new asn();
+                asnnew.OrdenNumeroDocumento = asnd.OrdenNumeroDocumento;
+                asnnew.NumeroPosicion = asnd.NumeroPosicion;
+                asnantesdeborrar.Add(asnnew);
+
+            });
+
+            cita.asns.ToList().ForEach(asn => db.asns.Remove(asn));
+
+
+
+            cita.crs.ToList().ForEach(cr => db.crs.Remove(cr));
+
+            db.Entry(cita).State = EntityState.Deleted;
+            db.SaveChanges();
+
+            Task.Factory.StartNew(() =>
+            {
+                var scaleManager = new ScaleManagerAsn();
+                scaleManager.Cancelar(citaId);
+            });
+
+
+            //Descarmar Ordenes de compra
+            ICollection<asn> ordenesAcancelar = new List<asn>();
+            foreach (var asn in asnantesdeborrar)
+            {
+                if (db.asns.FirstOrDefault(a => a.OrdenNumeroDocumento == asn.OrdenNumeroDocumento && a.NumeroPosicion == asn.NumeroPosicion) == null)
+                {
+                    ordenesAcancelar.Add(asn);
+                }
+            }
+
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+            sapOrdenCompraManager.UnsetOrdenesDeCompraCita(ordenesAcancelar);
+
+            //fin
+
+
+        }
+
+
     }
 }
 

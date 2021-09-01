@@ -148,15 +148,16 @@
 
                                     btnText = string.Format(
                                         @"<div style='font-weight: 1.5em'>Cita #{0} {1}</div>
-                                              <hr style='margin:0; margin-top: 2px;'>
-                                            <div style='word-wrap: break-word;white-space: normal;' class=''>{2}</div>
-                                            <div style='word-wrap: break-word;white-space: normal;background: #407b40;color:#fff; padding: 5px;'>{3}
-                                            </div>
-                                            <div>Total: {4} Pares</div>",
+                                                      <hr style='margin:0; margin-top: 2px;'>
+                                                    <div style='word-wrap: break-word;white-space: normal;' class=''>{2}</div>
+                                                    <div style='word-wrap: break-word;white-space: normal;background: #407b40;color:#fff; padding: 5px;'>{3}
+                                                    </div>
+                                                    <div>Total: {4} Pares</div>
+                                                    <div>{5}</div>",
                                         riel.cita.Id, crossDockLabel,
                                         string.Format("{0} {1} {2} {3}", riel.cita.proveedore.Nombre1, riel.cita.proveedore.Nombre2,
                                         riel.cita.proveedore.Nombre3, riel.cita.proveedore.Nombre4),
-                                        tiendasAlmacen, riel.cita.CantidadTotal);
+                                        tiendasAlmacen, riel.cita.CantidadTotal, riel.cita.TipoCita);
 
                                     btnClass = "btn-success";
                                 }

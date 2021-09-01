@@ -50,6 +50,7 @@
     <Compile Include="DbScale.cs" />
     <Compile Include="DbScaleGNZN.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+	<Compile Include="ScaleManagerAsn.cs" />
     <Compile Include="ScaleManager.cs" />
   </ItemGroup>
   <ItemGroup>

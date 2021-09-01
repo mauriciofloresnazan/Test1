@@ -1,0 +1,137 @@
+﻿@using Ppgz.Repository
+@using Ppgz.Web.Areas.Mercaderia
+@model Ppgz.Web.Areas.Mercaderia.Models.PefilProveedorViewModel
+@{
+    /**/
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var proveedor = (proveedore)ViewBag.proveedor;
+
+    var currentCita = (CurrentCita)ViewBag.CurrentCita;
+    var Resultado = (List<MensajeResultado>)ViewBag.Resultado;
+
+    ViewBag.Title = "Registrar Cita Para Recibo Por Asn";
+    ViewBag.Descripcion = "Paso 2 - Cargar Archivo";
+
+
+}
+
+<h2>Registrar Cita Para Recibo Por Asn</h2>
+<p class="page-description-title">
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de la Cita</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">Proveedor</label>
+            <div class="col-sm-6">
+                <div>@proveedor.Rfc - @proveedor.Nombre1</div>
+            </div>
+
+            <label class="col-sm-2 control-label">Almacén</label>
+            <div class="col-sm-2">
+                <div>@currentCita.Centro</div>
+            </div>
+        </div>
+        @if (currentCita.Fecha != null)
+        {
+            var fecha = (DateTime)@currentCita.Fecha;
+            <div class="row">
+                <label class="col-sm-3 control-label">Fecha de la cita</label>
+                <div class="col-sm-3">
+                    <div>@fecha.ToString("dd/MM/yyyy")</div>
+                </div>
+
+            </div>
+
+        }
+        else
+        {
+           
+        }
+
+
+
+
+
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Cargar Archivo Asn </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("ValidarArchivo", "ReciboPorAsn", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true)
+
+
+
+            <hr />
+
+            <div class="form-group">
+                <label class="control-label col-sm-3">Cargar Archivo Asn</label>
+                <div class="col-sm-7">
+                    <input type="file" name="cargarexcel" id="cargarexcel">
+                </div>
+            </div>
+            <hr />
+
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-7">
+                    <button type="submit" class="btn btn-primary"><i class="fa fa-upload" aria-hidden="true"></i> Cargar</button>
+                    <a class="btn btn-default" href="@Url.Action("Index", "ReciboPorAsn")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Lista de errores en el archivo cargado</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table class="table table-striped table-condensed table-bordered" id="citas">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Mensaje Error</th>
+                            <th class="text-center">Detalle Error</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var Mensaje in Resultado)
+                        {
+                            <tr>
+                                <td class="text-center vert-align">@Mensaje.MsjError</td>
+                                <td class="text-center vert-align">@Mensaje.DatoConDetalle</td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/assets/vendor/bootstrap3-typeahead.min.js")
+
+
+    <script>
+
+
+        $('#citas').DataTable({
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+            },
+            "lengthMenu": [[25, 50, -1], [25, 50, "Todos"]]
+        });
+
+
+    </script>
+}

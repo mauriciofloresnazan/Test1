@@ -799,7 +799,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 			var db = new Entities();
 
 			var fecha = DateTime.Today.Date;
-			var citas = db.citas.Where(c => proveedoresIds.Contains(c.ProveedorId) && c.FechaCita >= fecha).ToList();
+			var citas = db.citas.Where(c => proveedoresIds.Contains(c.ProveedorId) && c.FechaCita >= fecha && c.TipoCita == null).ToList();
 
 			ViewBag.Citas = citas;
 

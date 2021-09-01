@@ -20,6 +20,11 @@
         <EntityTypeShape EntityType="impuls_portalModel.cuenta" Width="1.5" PointX="0.75" PointY="23.625" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.cuentasmensaje" Width="1.5" PointX="12.125" PointY="29.25" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.Penalizacionauditor" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.RevisarDatos" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.RevisarPedidos" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.MensajeResultado" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.EnviarDatos" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.EnviarEtiquetas" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.audi" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.descuentofactoraje" Width="1.5" PointX="14.5" PointY="31" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.estatuscita" Width="1.5" PointX="7.125" PointY="27.375" IsExpanded="true" />
