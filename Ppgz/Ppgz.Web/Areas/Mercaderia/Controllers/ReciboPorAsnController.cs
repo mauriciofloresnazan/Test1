@@ -16,7 +16,7 @@ using Ppgz.Web.Infrastructure;
 using System.Web.Script.Serialization;
 using SapWrapper;
 using System.Text;
-
+using System.Collections;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -27,7 +27,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         readonly ProveedorManager _proveedorManager = new ProveedorManager();
         readonly CommonManager _commonManager = new CommonManager();
         readonly SapReciboAsn DatosSap = new SapReciboAsn();
-
+        private readonly EtiquetasManager _etiquetasManager = new EtiquetasManager();
+        private readonly PlantillaManager _PlantillaManager = new PlantillaManager();
+        
         private const string NombreVarSession = "controlCita";
         private const string NombreVarSession2 = "SociedadCita";
         internal void LimpiarCita()
@@ -121,6 +123,149 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 return RedirectToAction("Index");
             }
         }
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+        public ActionResult SeleccionarProveedores(int proveedorId, string centro, string sociedad)
+        {
+            if (CurrentCita != null)
+            {
+                LimpiarCita();
+            }
+
+            try
+            {
+                var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+                CurrentCita = new CurrentCita(cuenta.Id, proveedorId, centro, sociedad);
+                SociedadCita = sociedad;
+
+                return RedirectToAction("BuscarOrden");
+            }
+            catch (Exception exception)
+            {
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("Index");
+            }
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+        public ActionResult BuscarOrden(int proveedorId = 0)
+        {
+
+            try
+            {
+                if (CurrentCita == null)
+                {
+                    return RedirectToAction("Index");
+                }
+
+            }
+            catch (BusinessException exception)
+            {
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.proveedor = CurrentCita.Proveedor;
+            ViewBag.CurrentCita = CurrentCita;
+
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Generar(int proveedorId, bool nazan, string ordenesy, bool zapato, string tipoimpresora)
+        {
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+            var proveedor = _proveedorManager.Find(proveedorId, cuenta.Id);
+
+            if (proveedor == null)
+            {
+                TempData["FlashError"] = "Proveedor incorrecto";
+                return RedirectToAction("Index");
+            }
+            TempData["nazan"] = nazan;
+            TempData["zapato"] = zapato;
+            TempData["impresora"] = tipoimpresora;
+
+            if (nazan == false && zapato == false)
+            {
+                nazan = true;
+            }
+
+            var resultado = _PlantillaManager.GetArchivoCsv(proveedorId, cuenta.Id, nazan, ordenesy.Split(','), zapato);
+
+            TempData["resultado"] = resultado;
+            TempData["proveedor"] = proveedor;
+
+            if (System.Web.HttpContext.Current.Session[NombreVarSession] != null)
+            {
+                System.Web.HttpContext.Current.Session.Remove(NombreVarSession);
+            }
+
+            var resultados = TempData["resultado"] as Hashtable;
+            var proveedore = TempData["proveedor"] as proveedore;
+            bool nazans = Convert.ToBoolean(TempData["nazan"]);
+            bool zapatos = Convert.ToBoolean(TempData["zapato"]);
+
+            if (resultado == null || proveedor == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+
+            ViewBag.Proveedor = proveedor;
+            ViewBag.Resultado = resultado["return"];
+
+            ViewBag.PuedeDescargar = false;
+
+            if (resultado["csv"] == null) return View();
+            if (resultado["csv"].ToString() == "") return View();
+            if (string.IsNullOrWhiteSpace(resultado["csv"].ToString())) return View();
+            System.Web.HttpContext.Current.Session[NombreVarSession] = resultado["csv"];
+            ViewBag.PuedeDescargar = true;
+            //CSV to DataTable
+            DataTable dt = new DataTable();
+            var s = resultado["csv"].ToString();
+            s = s.Replace("\"", "");
+            string[] tableData = s.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var col = from cl in tableData[0].Split(",".ToCharArray())
+                      select new DataColumn(cl);
+            dt.Columns.AddRange(col.ToArray());
+
+            foreach (var item in tableData.Skip(1))
+            {
+                dt.Rows.Add(item.Split(",".ToCharArray()));
+            }
+
+            //fin
+
+            //string[] etiquetas;
+            List<string> etiquetas = new List<string>();
+            List<string> etiquet = new List<string>();
+            string etiquetasPrint = "";
+
+            foreach (string etiqueta in etiquetas)
+            {
+                etiquetasPrint = etiquetasPrint + etiqueta;
+            }
+
+            ViewBag.etiquetas = etiquetas;
+            ViewBag.etiq = etiquet;
+            ViewBag.etiquetasPrint = etiquetasPrint;
+            TempData["texto"] = etiquetasPrint;
+            return RedirectToAction("Descargar");
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+        public FileContentResult Descargar()
+        {
+            var csv = System.Web.HttpContext.Current.Session["controlCita"].ToString();
+
+            return File(new UTF8Encoding().GetBytes(csv), "text/csv", "ASN.csv");
+
+
+        }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
         public ActionResult CargarArchivo(int proveedorId = 0)
@@ -177,8 +322,27 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 TempData["FlashError"] = "Archivo incorrecto";
                 return RedirectToAction("CargarArchivo");
             }
+
+            if (ws.RowsUsed().ToList().Count == 0)
+            {
+                TempData["FlashError"] = "Archivo Nulo";
+                return RedirectToAction("CargarArchivo");
+            }
             for (var i = 2; i < ws.RowsUsed().ToList().Count + 1; i++)
             {
+
+               
+                if (ws.Row(i).Cell(1).Value.ToString() == "" || ws.Row(i).Cell(2).Value.ToString() == ""||
+                    ws.Row(i).Cell(3).Value.ToString() == ""|| ws.Row(i).Cell(4).Value.ToString() == ""||
+                    ws.Row(i).Cell(5).Value.ToString() == ""|| ws.Row(i).Cell(6).Value.ToString() == ""||
+                    ws.Row(i).Cell(7).Value.ToString() == "")
+                {
+
+                    TempData["FlashError"] = "Archivo Con filas nulas";
+                    return RedirectToAction("CargarArchivo");
+                }
+
+
                 var Carga = ws.Row(i).Cell(1).Value.ToString();
                 var Caja = ws.Row(i).Cell(2).Value.ToString();
                 var Factura = ws.Row(i).Cell(3).Value.ToString();
@@ -734,6 +898,16 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
         public ActionResult Resultado(int citaId)
         {
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+            var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
+            var db2 = new Entities();
+            var cita = db2.citas.FirstOrDefault(c => c.Id == citaId && proveedoresIds.Contains(c.ProveedorId));
+            if (!RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
+            {
+                //TODO
+                TempData["FlashError"] = "Espere un momento se estan procesando las etiquetas";
+                return RedirectToAction("Citas");
+            }
             var proveedor = TempData["proveedor"] as proveedore;
             ViewBag.Proveedor = proveedor;
             ViewBag.PuedeDescargar = false;
@@ -795,5 +969,87 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return byteArray;
         }
 
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+        public ActionResult Individual(int citaId )
+        {
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+            var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
+
+            var db = new Entities();
+            var cita = db.citas.FirstOrDefault(c => c.Id == citaId && proveedoresIds.Contains(c.ProveedorId));
+            if (cita == null)
+            {
+                //TODO
+                TempData["FlashError"] = "Cita incorrecta";
+                return RedirectToAction("Citas");
+            }
+            if (!RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
+            {
+                //TODO
+                TempData["FlashError"] = "Espere un momento se estan procesando las etiquetas";
+                return RedirectToAction("Citas");
+            }
+            var db2 = new Entities();
+            
+            ViewBag.etiq = db2.EnviarEtiquetas.Where(csa => csa.cita == citaId).ToList();
+
+            return View();
+        }
+
+        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+        public ActionResult Resultadoind(string cantidades, string materiales)
+        {
+            string[] ordenes = cantidades.Split(',');
+            var proveedor = TempData["proveedor"] as proveedore;
+            ViewBag.Proveedor = proveedor;
+            ViewBag.PuedeDescargar = false;
+            ViewBag.PuedeDescargar = true;
+            List<string> etiquetas = new List<string>();
+            string etiquetasPrint = "";
+            foreach (var ordencompra in ordenes)
+            {
+
+                var db = new Entities();
+                var archivo1 = db.EnviarEtiquetas.Where(et => et.caja == ordencompra).FirstOrDefault();
+
+
+                etiquetas.Add(@"^XA
+^JZN
+^PR9			
+^PQ1
+^FO0,10^A0N ,45,25^FD" + archivo1.carga + @"^FS
+^FO0,65^A0N ,150,70^FD" + archivo1.cita + @"^FS
+^FO230,5^BY,2.5^BAN,170Y^FD" + archivo1.recibo + @"^FS
+^FO5,195^A0N ,45,25^FDPares:^FS
+^FO60,190^A0N ,55,55^FD" + archivo1.pares + @"^FS
+^FO230,218^A0N ,30,25^FDTienda:^FS
+^FO300,218^A0N ,30,25^FD " + archivo1.tienda + @"^FS
+^FO400,218^A0N ,30,25^FDIDProv:^FS
+^FO500,218^A0N ,30,25^FD" + archivo1.Id_Proveedor + @"^FS
+^FO200,250^BY,2.1^BAN,122Y^FD" + ordencompra + @"^FS
+^FO0,240^A0N ,25,25^FD Color:^FS
+^FO0,265^A0N ,35,35^FD" + archivo1.color + @"^FS
+^FO0,310^A0N ,25,25^FDEstilo:^FS
+^FO80,305^A0N ,35,35^FD" + archivo1.estilo + @"^FS
+^FO0,340^A0N ,25,25^FDFactura:^FS
+^FO0,370^A0N ,35,35^FD" + archivo1.factura + @"^FS
+^XZ");
+
+            }
+
+                foreach (string etiqueta in etiquetas)
+                {
+                    etiquetasPrint = etiquetasPrint + etiqueta;
+                }
+
+                ViewBag.etiquetas = etiquetas;
+                ViewBag.etiquetasPrint = etiquetasPrint;
+                TempData["texto"] = etiquetasPrint;
+            
+
+            return View();
+        }
     }
 }

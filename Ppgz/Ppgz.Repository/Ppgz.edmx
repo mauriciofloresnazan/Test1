@@ -311,7 +311,28 @@
           <Property Name="color" Type="varchar" MaxLength="45"  Nullable="true"/>
          <Property Name="Id_Proveedor" Type="int" Nullable="true"/>
         </EntityType>
-            
+        <EntityType Name="citasscale">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+          <Property Name="IdCita" Type="int" Nullable="true"/>
+          <Property Name="Pares" Type="int" Nullable="true"/>
+          <Property Name="FechaCita"  Type="datetime" Precision="0" Nullable="true" />
+          <Property Name="FechaCarga"  Type="datetime" Precision="0" Nullable="true" />
+        </EntityType>
+
+        <EntityType Name="reenvioasn">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
+          <Property Name="IdCita" Type="int" Nullable="true"/>
+          <Property Name="Pares" Type="int" Nullable="true"/>
+          <Property Name="FechaCita"  Type="datetime" Precision="0" Nullable="true" />
+          <Property Name="FechaCarga"  Type="datetime" Precision="0" Nullable="true" />
+          <Property Name="Almacen" Type="varchar" MaxLength="45" />
+        </EntityType>
         <EntityType Name="descuentosfactoraje">
           <Key>
             <PropertyRef Name="idDescuentosFactoraje" />
@@ -1038,6 +1059,8 @@
           <EntitySet Name="gnzn_asn_resultado_de_sprev_asn" EntityType="Self.gnzn_asn_resultado_de_sprev_asn" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="gnzn_datos_asn_contendores" EntityType="Self.gnzn_datos_asn_contendores" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="gnzn_asn_etiquetas" EntityType="Self.gnzn_asn_etiquetas" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="citasscale" EntityType="Self.citasscale" Schema="impuls_portal" store:Type="Tables" />
+          <EntitySet Name="reenvioasn" EntityType="Self.reenvioasn" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="estatuscitas" EntityType="Self.estatuscitas" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="estatusfactoraje" EntityType="Self.estatusfactoraje" Schema="impuls_portal" store:Type="Tables" />
           <EntitySet Name="facturas" EntityType="Self.facturas" Schema="impuls_portal" store:Type="Tables" />
@@ -1503,6 +1526,27 @@
           <Property Name="estilo" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="color" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Name="Id_Proveedor" Type="Int32"/>
+        </EntityType>
+        <EntityType Name="citasscal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdCita" Type="Int32"/>
+          <Property Name="Pares" Type="Int32"/>
+          <Property Name="FechaCita" Type="DateTime" Nullable="true" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FechaCarga" Type="DateTime" Nullable="true" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="reenvio">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdCita" Type="Int32"/>
+          <Property Name="Pares" Type="Int32"/>
+          <Property Name="FechaCita" Type="DateTime" Nullable="true" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FechaCarga" Type="DateTime" Nullable="true" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Almacen" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="descuentofactoraje">
           <Key>
@@ -2166,6 +2210,8 @@
           <EntitySet Name="gnzn_asn_resultado_de_sprev_asn" EntityType="Self.MensajeResultado"/>
           <EntitySet Name="gnzn_datos_asn_contendores" EntityType="Self.EnviarDatos"/>
           <EntitySet Name="gnzn_asn_etiquetas" EntityType="Self.EnviarEtiquetas"/>
+          <EntitySet Name="citasscale" EntityType="Self.citasscal"/>
+          <EntitySet Name="reenvioasn" EntityType="Self.reenvio"/>
           <EntitySet Name="descuentosfactoraje" EntityType="Self.descuentofactoraje" />
           <EntitySet Name="estatuscitas" EntityType="Self.estatuscita" />
           <EntitySet Name="estatusfactoraje" EntityType="Self.estatusfactoraje" />
@@ -2619,6 +2665,29 @@
                 <ScalarProperty Name="estilo" ColumnName="estilo"/>
                 <ScalarProperty Name="color" ColumnName="color"/>
                 <ScalarProperty Name="Id_Proveedor" ColumnName="Id_Proveedor"/>
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="citasscale">
+            <EntityTypeMapping TypeName="impuls_portalModel.citasscal">
+              <MappingFragment StoreEntitySet="citasscale">
+                <ScalarProperty Name="Id" ColumnName="Id"/>
+                <ScalarProperty Name="IdCita" ColumnName="IdCita"/>
+                <ScalarProperty Name="Pares" ColumnName="Pares"/>
+                <ScalarProperty Name="FechaCita" ColumnName="FechaCita"/>
+                <ScalarProperty Name="FechaCarga" ColumnName="FechaCarga"/>
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="reenvioasn">
+            <EntityTypeMapping TypeName="impuls_portalModel.reenvio">
+              <MappingFragment StoreEntitySet="reenvioasn">
+                <ScalarProperty Name="Id" ColumnName="Id"/>
+                <ScalarProperty Name="IdCita" ColumnName="IdCita"/>
+                <ScalarProperty Name="Pares" ColumnName="Pares"/>
+                <ScalarProperty Name="FechaCita" ColumnName="FechaCita"/>
+                <ScalarProperty Name="FechaCarga" ColumnName="FechaCarga"/>
+                <ScalarProperty Name="Almacen" ColumnName="Almacen"/>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

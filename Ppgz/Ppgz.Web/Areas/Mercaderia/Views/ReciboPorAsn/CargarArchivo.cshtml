@@ -50,13 +50,8 @@
         }
         else
         {
-           
+
         }
-
-
-
-
-
     </div>
 </div>
 <div class="panel panel-default">
@@ -67,11 +62,7 @@
             @Html.AntiForgeryToken()
 
             @Html.ValidationSummary(true)
-
-
-
             <hr />
-
             <div class="form-group">
                 <label class="control-label col-sm-3">Cargar Archivo Asn</label>
                 <div class="col-sm-7">
@@ -84,6 +75,7 @@
                 <div class="col-sm-offset-3 col-sm-7">
                     <button type="submit" class="btn btn-primary"><i class="fa fa-upload" aria-hidden="true"></i> Cargar</button>
                     <a class="btn btn-default" href="@Url.Action("Index", "ReciboPorAsn")"><i class="fa fa-undo" aria-hidden="true"></i> Cancelar</a>
+                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ReciboPorAsn")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Plantilla</a>
                 </div>
             </div>
         }
@@ -99,7 +91,7 @@
                         <tr>
                             <th class="text-center">Mensaje Error</th>
                             <th class="text-center">Detalle Error</th>
-                            
+
                         </tr>
                     </thead>
                     <tbody>

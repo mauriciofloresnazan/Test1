@@ -105,12 +105,14 @@
                 <div class="text-center">
                     <div class="btn-group" data-toggle="buttons">
 
-                       
+
 
                         <label class="btn btn-warning btn-block">
-                            <input type="radio" name="radio-almacen" id="Cross Dock" autocomplete="off">Cargar Archivo 
+                            <input type="radio" name="radio-almacen" id="Cross Dock" autocomplete="off">Cargar Archivo
                         </label>
-
+                        <label class="btn btn-success btn-block">
+                            <input type="radio" name="radio-almacenes" id="Cross Dock" autocomplete="off">Descargar Plantilla
+                        </label>
                     </div>
 
                 </div>
@@ -123,6 +125,7 @@
     <script type="text/javascript">
 
         var url = "@Url.Action("SeleccionarProveedor", "ReciboPorAsn")";
+        var urls = "@Url.Action("SeleccionarProveedores", "ReciboPorAsn")";
 
         var proveedorId;
         var sociedad;
@@ -162,6 +165,23 @@
 
                 location.href = url + "?proveedorId=" + proveedorId + "&centro=" + $(this).attr("id") + "&sociedad=" + sociedad;
             });
+
+
+
+            $('#centro-modal1').on('show.bs.modal', function (e) {
+                proveedorId = $(e.relatedTarget).data('proveedorid');
+                sociedad = $(e.relatedTarget).data('sociedad');
+            });
+
+            $("#centro-modal1 input[name=radio-almacenes]:radio").change(function () {
+
+                $('#centro-modal1').modal('hide');
+
+                $.blockUI({ message: '<h2>Por favor espere...</h2>' });
+
+                location.href = urls + "?proveedorId=" + proveedorId + "&centro=" + $(this).attr("id") + "&sociedad=" + sociedad;
+            });
+
             $('#proveedores').DataTable({
                 "language": {
                     "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"

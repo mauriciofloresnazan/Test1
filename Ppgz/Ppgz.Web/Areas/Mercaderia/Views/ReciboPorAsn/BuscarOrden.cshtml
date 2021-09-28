@@ -1,0 +1,333 @@
+﻿@using Ppgz.Repository
+@using Ppgz.Web.Areas.Mercaderia
+@model Ppgz.Web.Areas.Mercaderia.Models.PefilProveedorViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var proveedor = (proveedore)ViewBag.proveedor;
+
+    var currentCita = (CurrentCita)ViewBag.CurrentCita;
+
+
+    ViewBag.Title = "Descargar Plantilla";
+    ViewBag.Descripcion = "Busque las Ordenes de Compra";
+
+
+}
+
+<h2>Descargar Plantilla</h2>
+<p class="page-description-title">
+    <i class="fa fa-calendar" aria-hidden="true"></i> <i>@ViewBag.Descripcion</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Datos de las ordenes</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">Proveedor</label>
+            <div class="col-sm-6">
+                <div>@proveedor.Rfc - @proveedor.Nombre1</div>
+            </div>
+
+            <label class="col-sm-2 control-label">Almacén</label>
+            <div class="col-sm-2">
+                <div>@currentCita.Centro</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Buscar Ordenes de Compras</div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Generar", "ReciboPorAsn", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true)
+
+            <input type="hidden" name="proveedorId" value="@proveedor.Id" />
+
+            <div class="auto" id="auto" style="display: none">
+                <label class="col-sm-3 control-label">Tipo de Etiqueta</label>
+                <div style="display:flex">
+                    <div style="width:50%">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="nazan" id="nazanTipo" value="true" checked>
+                                Nazan
+                            </label>
+                        </div>
+                    </div>
+                    <div style="width:50%">
+                        <label class="col-sm-3 control-label">Cadenas Comerciales</label>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="nazan" id="precioTipo" value="false">
+                                Etiqueta de Caja
+                            </label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="nazan" id="zapatoTipo" value="false">
+                                Etiqueta Colgante
+                            </label>
+                            <div id="radioImpre" style="display:none">
+                                <br />
+                                <strong> Seleccione la impresora adecuada:</strong><br />
+                                <label>
+                                    <input type="radio" name="tipoimpre" id="imptoshiba" value="false">
+                                    Impresora Toshiba
+                                </label>
+                                <label>
+                                    <input type="radio" name="tipoimpre" id="impzebra" value="false" checked>
+                                    Impresora Zebra
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <p class="form-legend" style="">
+                <i></i>
+            </p>
+
+            <table cellspacing="5" cellpadding="5" border="0">
+                <tbody>
+                    <tr>
+                        <td><label>Orden Inicial: <input class="form-control input-sm" id="min" name="min" type="text"></label> </td>
+                        <td> <label>Orden Final: <input class="form-control input-sm" id="max" name="max" type="text"></label></td>
+
+
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-striped table-condensed" id="ordenes">
+
+                <thead>
+
+                    <tr>
+                        <th class="text-center">Número de Documento</th>
+
+
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var orden in currentCita.GetOrdenesActivasDisponibles())
+                    {
+
+                        <tr>
+                            <td class="text-center">@orden.NumeroDocumento</td>
+
+
+                        </tr>
+
+                    }
+
+
+                </tbody>
+            </table>
+
+        }
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-7">
+                <button type="button" onclick="envio()" class="btn btn-success"><i class="fa fa-download" aria-hidden="true"></i> Descargar Plantilla</button>
+                <a class="btn btn-default" href="@Url.Action("Index", "ReciboPorAsn")"><i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
+                <a class="btn btn-primary" href="@Url.Action("CargarArchivo", "ReciboPorAsn")"><i class="fa fa-upload" aria-hidden="true"></i> Cargar Archivo</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal" id="modal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alerta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Debe seleccionar al menos una orden</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/assets/vendor/bootstrap3-typeahead.min.js")
+
+
+<script type="text/javascript">
+
+    var form = $("#form");
+    var table;
+
+    $.fn.dataTable.ext.search.push(
+
+        function (settings, data, dataIndex) {
+            var min = parseInt($('#min').val(), 10);
+            var max = parseInt($('#max').val(), 10);
+            var Ordenes = parseFloat(data[0]) || 0; // use data for the age column
+
+            if ((isNaN(min) && isNaN(max)) ||
+                (isNaN(min) && Ordenes <= max) ||
+                (min <= Ordenes && isNaN(max)) ||
+                (min <= Ordenes && Ordenes <= max)) {
+                return true;
+            }
+            return false;
+        }
+    );
+
+
+
+    function envio() {
+        var ordenes = '';
+        var contador = 0;
+        table.rows({ selected: true }).data().each(function (d) {
+            ///console.log('loop: ' + JSON.stringify(d));
+            if (contador == 0) {
+                ordenes = d[0];
+                contador = 1;
+            } else {
+                ordenes = ordenes + ',' + d[0];
+            }
+
+        });
+
+        if (ordenes == '') {
+            ///alert('Debe seleccionar al menos una orden');
+            $('#modal').modal('show');
+        } else {
+            if ($("#nazanTipo").prop("checked")) {
+                $('<input />').attr('type', 'hidden')
+                    .attr('nazan', "ordenes")
+                    .attr('value', true)
+                    .appendTo(form);
+            }
+            if ($("#zapatoTipo").prop("checked")) {
+                var input = $("<input>").attr({ "type": "hidden", "name": "zapato" }).val(true);
+                $('#form').append(input);
+            } else {
+                var input = $("<input>").attr({ "type": "hidden", "name": "zapato" }).val(false);
+                $('#form').append(input);
+            }
+            var input = $("<input>").attr({ "type": "hidden", "name": "ordenesy" }).val(ordenes);
+
+            var input2 = "";
+
+            if ($("#impzebra").prop("checked")) {
+                input2 = $("<input>").attr({ "type": "hidden", "name": "tipoimpresora" }).val('Zebra');
+            } else {
+                input2 = $("<input>").attr({ "type": "hidden", "name": "tipoimpresora" }).val('Toshiba');
+            }
+
+
+            $('#form').append(input);
+
+            $('#form').append(input2);
+
+            $('#form').submit();
+
+        }
+
+        
+
+        //alert('selecionado: ' + JSON.stringify(ordenes));
+        ///console.log('selecionado: ' + JSON.stringify(ordenes));
+
+    }
+
+    $(document).ready(function () {
+        $('input[type=radio][name=nazan]').change(function () {
+            if ($("#zapatoTipo").prop("checked")) {
+                $('#radioImpre').show();
+            } else {
+                $('#radioImpre').hide();
+            }
+        });
+
+
+        table = $('#ordenes').DataTable({
+            dom: 'Bfrtip',
+            "language": {
+                "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json",
+            },
+            select: {
+                style: 'multi'
+            },
+            buttons: [
+                'pageLength',
+                {
+                    text: 'Seleccionar Todo',
+                    action: function () {
+                        table.rows().select();
+                    }
+                },
+                {
+                    text: 'Deseleccionar Todo',
+                    action: function () {
+                        table.rows().deselect();
+                    }
+                },
+                {
+                    text: 'Ordenes por Rango',
+                    action: function () {
+                        table.rows({ search: 'applied' }).select();
+                    }
+                }
+            ],
+
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+        });
+        table.buttons(0, null).container().prependTo(
+            table.table().container()
+        );
+
+        $('#min, #max').keyup(function () {
+            table.draw();
+        });
+        //form.submit(function () {
+        //    alert('selecionado: ' + JSON.stringify(table.rows({ selected: true }).data()));
+        //    console.log('selecionado: ' + JSON.stringify(table.rows({ selected: true }).data()));
+        //   if ($("#nazanTipo").prop("checked")) {
+        //        $('<input />').attr('type', 'hidden')
+        //            .attr('nazan', "ordenes")
+        //            .attr('value', true)
+        //            .appendTo(form);
+        //    }
+
+        //});
+
+
+    });
+
+
+    $('input[name=nazan]').change(function () {
+
+        if ($('input[name=nazan]:checked').attr('id') == "nazanTipo") {
+            $('#ordenesimprimir').DataTable().search("Nazan").draw();
+        }
+        if ($('input[name=nazan]:checked').attr('id') == "precioTipo") {
+            $('#ordenesimprimir').DataTable().search("Cadena").draw();
+
+        }
+        if ($('input[name=nazan]:checked').attr('id') == "zapatoTipo") {
+            $('#ordenesimprimir').DataTable().search("cadena").draw();
+        }
+    });
+
+    $('#ordenesimprimir').find('.ocultar').hide();
+
+</script>
+}

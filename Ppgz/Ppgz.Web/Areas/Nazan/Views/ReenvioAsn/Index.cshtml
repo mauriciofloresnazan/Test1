@@ -1,0 +1,104 @@
+﻿@using Ppgz.Repository
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+    var CitasScale = (List<reenvio>)ViewBag.CitasScal;
+}
+<h2>Citas no Registradas en Scale</h2>
+@*<p class="page-description-title"><i class="fa fa-calendar" aria-hidden="true"></i> <i>Registro desde hace 3 meses</i></p>*@
+<div class="panel panel-default">
+    <div class="panel-heading">Lista de Citas</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <br />
+            <div class="table-responsive">
+                <table class="table table-striped table-condensed table-bordered" id="citas">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Id Cita</th>
+                            <th class="text-center">Cantidad</th>
+                            <th class="text-center">Fecha Cita</th>
+                            <th class="text-center" style="width: 100px">
+                                Opciones
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var CitaSca in CitasScale)
+                        {
+                           
+                            <tr>
+                                <td class="text-center vert-align">@CitaSca.IdCita</td>
+                                <td class="text-center vert-align">@CitaSca.Pares</td>
+                                <td class="text-center vert-align">@CitaSca.FechaCita</td>
+                                <td class="text-center vert-align">
+                                    <div class="btn-group btn-group-justified">
+                                        @if (CitaSca.FechaCita >= DateTime.Today)
+                                        {
+
+                                                <a class="btn btn-xs btn-default" href="#" onclick="javascript:ShowModalReEnvio(@CitaSca.IdCita);" title="ReEnvio de ASN">
+                                                    <i class="fa fa-paper-plane-o" aria-hidden="true"></i>
+                                                </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="modal-reenvio" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("ReEnvioASN", "ReenvioAsn", new { }, FormMethod.Post, new { id = "form-reenvio" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="idCita" />
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Reenvio ASN a Scale</h4>
+                </div>
+                <div class="modal-body">
+                    <label>¿Esta seguro de Reeviar la ASN a Scale?</label>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Reenviar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            $('#citas').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+
+            
+          
+        });
+
+        
+        function ShowModalReEnvio(citaId) {
+            $('#form-reenvio > input[name="idCita"]').val(citaId);
+            $("#modal-reenvio").modal('show');
+        }
+        
+
+    </script>
+
+}

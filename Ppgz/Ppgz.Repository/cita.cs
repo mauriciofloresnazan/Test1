@@ -24,7 +24,7 @@ namespace Ppgz.Repository
         public int Id { get; set; }
         public string Codigo { get; set; }
         public System.DateTime FechaCita { get; set; }
-        public Nullable<System.DateTime> FechaCreacion { get; set; }
+        public System.DateTime FechaCreacion { get; set; }
         public string Almacen { get; set; }
         public Nullable<int> CantidadTotal { get; set; }
         public int ProveedorId { get; set; }

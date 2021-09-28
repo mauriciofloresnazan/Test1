@@ -786,8 +786,13 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				TempData["FlashError"] = "Cita incorrecta";
 				return RedirectToAction("Citas");
 			}
-
-			ViewBag.Cita = cita;
+            //if (!RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
+            //{
+            //    //TODO
+            //    TempData["FlashError"] = "La cita no puede ser Editada";
+            //    return RedirectToAction("Citas");
+            //}
+            ViewBag.Cita = cita;
 
 			return View();
 		}
@@ -849,7 +854,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				db.Entry(hriel).State = EntityState.Modified;
 			}
 
-			if (!RulesManager.PuedeEditarCita(cita.FechaCita))
+			if (!RulesManager.PuedeEditarCita(cita.FechaCita,cita.FechaCreacion))
 			{
 				//TODO
 				TempData["FlashError"] = "La cita no puede ser Editada";

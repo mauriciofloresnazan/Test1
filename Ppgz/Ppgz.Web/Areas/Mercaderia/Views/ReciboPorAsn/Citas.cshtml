@@ -30,6 +30,7 @@
                         <th class="text-center">
                         </th>
                         <th class="text-center">Impresion de etiquetas</th>
+                        <th class="text-center">Impresion de etiquetas Individual</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,7 +62,13 @@
                             <a class="btn btn-success btn-sm" href="@Url.Action("Resultado", "ReciboPorAsn", new {@citaId = @cita.Id})">
                                 <i class="fa fa-download" aria-hidden="true"></i> Imprimir Etiquetas
                             </a>
-      
+
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-success btn-sm" href="@Url.Action("Individual", "ReciboPorAsn", new {@citaId = @cita.Id})">
+                                <i class="fa fa-download" aria-hidden="true"></i> Imprimir Etiquetas Individuales
+                            </a>
+
                         </td>
                     </tr>
                     }

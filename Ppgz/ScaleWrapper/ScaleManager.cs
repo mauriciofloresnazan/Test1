@@ -415,7 +415,44 @@ namespace ScaleWrapper
                 ErrorAppLog.Error(string.Format("Cita # {0} incorrecta", citaId));
                 return;
             }
+            var horarios = cita.horariorieles;
+            foreach (horarioriele hor in horarios)
+            {
+                Char delimiter = ':';
+                String[] substrings = hor.horario.HoraDesde.Split(delimiter);
+                String[] substrings2 = substrings[1].Split(null);
 
+                var horacitascale = Int32.Parse(substrings[0].ToString());
+
+                if (substrings2[1].ToString() == "pm")
+                {
+                    if (horacitascale != 12)
+                    {
+                        horacitascale = horacitascale + 12;
+                    }
+
+                }
+
+                if (cita.FechaCita.Hour == 0)
+                {
+
+                    cita.FechaCita = cita.FechaCita.AddHours(horacitascale);
+                    cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(substrings2[0].ToString()));
+
+                }
+                else if (cita.FechaCita.Hour > horacitascale)
+                {
+                    var restar = 0 - cita.FechaCita.Hour;
+                    var fecha = new DateTime(cita.FechaCita.Year, cita.FechaCita.Month, cita.FechaCita.Day);
+                    cita.FechaCita = fecha;
+                    cita.FechaCita = cita.FechaCita.AddHours(horacitascale);
+                    cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(substrings2[0].ToString()));
+
+                }
+
+
+
+            }
             const string sql = @"
 
                 UPDATE DOWNLOAD_RECEIPT_DETAIL
@@ -436,7 +473,7 @@ namespace ScaleWrapper
                 new SqlParameter("@user_def5", cita.FechaCita.ToString("yyyyMMdd")),
 
                 new SqlParameter("@RECEIPT_DATE", cita.FechaCita),
-                new SqlParameter("@ARRIVED_DATE_TIME", cita.FechaCita),
+                new SqlParameter("@ARRIVED_DATE_TIME", cita.FechaCita.ToString("yyyy-MM-ddTHH:mm:ss")),
                 new SqlParameter("@user_def1", cita.FechaCita.ToString("yyyyMMdd")),
             };
 

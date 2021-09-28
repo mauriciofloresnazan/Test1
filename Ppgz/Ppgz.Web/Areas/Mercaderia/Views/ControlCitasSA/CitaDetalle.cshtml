@@ -32,7 +32,7 @@
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
     <i class="fa fa-calendar" aria-hidden="true"></i>
-    @if (!RulesManager.PuedeEditarCita(cita.FechaCita))
+    @if (!RulesManager.PuedeEditarCita(cita.FechaCita,cita.FechaCreacion))
     {
         <i>Puede consultar el detalle.</i>
     }
@@ -68,22 +68,40 @@
             <div class="col-sm-4">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
 
-                    @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+                    @if (!RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
                     {
-                        <a class="btn btn-primary btn-actualizar" href="#" onclick=" javascript: ActualizarCita(); ">
-                            <i class="fa fa-check-square" aria-hidden="true"></i> Guardar Cambios
-                        </a>
+
+                        TempData["FlashError"] = "La cita no puede ser Editada";
+
+                    }
+                    else
+                    {
+                        if (RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
+                        {
+                            <a class="btn btn-primary btn-actualizar" href="#" onclick=" javascript: ActualizarCita(); ">
+                                <i class="fa fa-check-square" aria-hidden="true"></i> Guardar Cambios
+                            </a>
+                        }
                     }
                     <a class="btn btn-default" href="@Url.Action("Citas", "ControlCitasSA")">
                         <i class="fa fa-undo" aria-hidden="true"></i> Regresar
                     </a>
                 </div>
                 <div class="visible-sm visible-xs">
-                    @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+                    @if (!RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
                     {
-                        <a class="btn btn-primary btn-block btn-actualizar" href="#" onclick=" javascript: ActualizarCita(); ">
-                            <i class="fa fa-check-square" aria-hidden="true"></i> Guardar Cambios
-                        </a>
+
+                        TempData["FlashError"] = "Espera un momento para editar la cita se esta procesando";
+
+                    }
+                    else
+                    {
+                        if (RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
+                        {
+                            <a class="btn btn-primary btn-actualizar" href="#" onclick=" javascript: ActualizarCita(); ">
+                                <i class="fa fa-check-square" aria-hidden="true"></i> Guardar Cambios
+                            </a>
+                        }
                     }
 
                     <a class="btn btn-default btn-block" href="@Url.Action("Citas", "ControlCitasSA")">
@@ -283,7 +301,7 @@
 
 
 
-            @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+            @if (RulesManager.PuedeEditarCita(cita.FechaCita,cita.FechaCreacion))
             {
                 <text>
             $('#asn .cantidad-entregar').on('click', function () {
@@ -367,7 +385,7 @@
             }
 
         });
-        @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+        @if (RulesManager.PuedeEditarCita(cita.FechaCita,cita.FechaCreacion))
         {
         <text>
             function calcularTotalEntregar() {

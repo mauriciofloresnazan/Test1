@@ -25,6 +25,8 @@
         <EntityTypeShape EntityType="impuls_portalModel.MensajeResultado" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.EnviarDatos" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.EnviarEtiquetas" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.citasscal" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="impuls_portalModel.reenvio" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.audi" Width="1.5" PointX="13.875" PointY="34.125" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.descuentofactoraje" Width="1.5" PointX="14.5" PointY="31" IsExpanded="true" />
         <EntityTypeShape EntityType="impuls_portalModel.estatuscita" Width="1.5" PointX="7.125" PointY="27.375" IsExpanded="true" />

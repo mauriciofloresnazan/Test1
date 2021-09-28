@@ -579,8 +579,10 @@ namespace Ppgz.CitaWrapper
             return true;
         }
 
-        public static bool PuedeEditarCita(DateTime fechaCita)
+        public static bool PuedeEditarCita(DateTime fechaCita, DateTime FechaCreacion)
         {
+            var dia = FechaCreacion.AddMinutes(15);
+           
             var Editarcita = Convert.ToInt32(GetConfiguraciones()
                 .Single(c => c.Clave == "warehouse.edit-appointment").Valor);
             if (DateTime.Today.Date >= fechaCita.Date)
@@ -588,12 +590,19 @@ namespace Ppgz.CitaWrapper
                 return false;
             }
 
+          
             if (DateTime.Today.AddDays(1).Date == fechaCita.Date)
             {
                 if (DateTime.Now.Hour > Editarcita)
                 {
                     return false;
                 }
+            }
+
+            if (DateTime.Now < dia)
+            {
+                return false;
+
             }
             return true;
         }

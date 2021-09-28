@@ -32,7 +32,7 @@
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
     <i class="fa fa-calendar" aria-hidden="true"></i>
-    @if (!RulesManager.PuedeEditarCita(cita.FechaCita))
+    @if (!RulesManager.PuedeEditarCita(cita.FechaCita,cita.FechaCreacion))
     {
         <i>Puede consultar el detalle.</i>
     }
@@ -68,7 +68,7 @@
             <div class="col-sm-4">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
 
-                    @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+                    @if (RulesManager.PuedeEditarCita(cita.FechaCita,cita.FechaCreacion))
                     {
                         <a class="btn btn-primary btn-actualizar" href="#" onclick=" javascript: ActualizarCita(); ">
                             <i class="fa fa-check-square" aria-hidden="true"></i> Guardar Cambios
@@ -79,7 +79,7 @@
                     </a>
                 </div>
                 <div class="visible-sm visible-xs">
-                    @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+                    @if (RulesManager.PuedeEditarCita(cita.FechaCita,cita.FechaCreacion))
                     {
                         <a class="btn btn-primary btn-block btn-actualizar" href="#" onclick=" javascript: ActualizarCita(); ">
                             <i class="fa fa-check-square" aria-hidden="true"></i> Guardar Cambios
@@ -239,7 +239,7 @@
 
 
 
-            @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+            @if (RulesManager.PuedeEditarCita(cita.FechaCita,cita.FechaCreacion))
             {
                 <text>
             $('#asn .cantidad-entregar').on('click', function () {
@@ -323,7 +323,7 @@
             }
 
         });
-        @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+        @if (RulesManager.PuedeEditarCita(cita.FechaCita,cita.FechaCreacion))
         {
         <text>
             function calcularTotalEntregar() {

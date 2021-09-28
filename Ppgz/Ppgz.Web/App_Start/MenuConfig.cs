@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Principal;
@@ -126,6 +127,7 @@ namespace Ppgz.Web
                 "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores|Index|AdministrarProveedores|fa fa-address-book-o|Nazan",
                 "NIVELSERVICIO|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan",
                 "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
+                "ADMINISTRARCITAS|Reenvio De Asn A Scale|Index|ReenvioAsn|fa fa-paper-plane-o|Nazan",
                 "VISTACITASCALIDAD|Informacion de citas para calidad|Index|AdministrarCitas1|fa fa-calendar|Nazan",
                 "VISTACITASCOMPRADORES|Informacion de citas para Compradores|Index|AdministrarCitasCompradores|fa fa-calendar|Nazan",
                 "VISTACITASCALIDAD|Reporte Devoluciones De tienda|Index|InformacionDevolucionesTienda|fa fa-area-chart|Nazan",
@@ -142,8 +144,18 @@ namespace Ppgz.Web
         }
         public static string[] MenuMercaderia()
         {
-            string[] menuLista =
+            Infrastructure.CommonManager _commonManager = new Infrastructure.CommonManager();
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+            if (cuenta != null)
             {
+                var men = Convert.ToInt32(cuenta.SinASN);
+
+
+
+                if (men == 1)
+                {
+                    string[] menuLista =
+                    {
                 "GESTIONPROVEEDORES|Administración de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Mercaderia",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
@@ -164,8 +176,39 @@ namespace Ppgz.Web
                 "REPORTESAUDITORIA|Descuentos por Auditorias |Index|ReporteAuditoria|fa fa-line-chart|Mercaderia",
                 "PRONTOPAGO|Pronto pago|Index|ProntoPago|fa fa-bar-chart|Mercaderia",
 
-			};
-            return menuLista;
+            };
+                    return menuLista;
+                }
+                else
+                {
+                    string[] menuLista =
+    {
+                "GESTIONPROVEEDORES|Administración de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Mercaderia",
+                "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Mercaderia",
+                "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Control de Citas Multi Pedidos|Citas|ControlCitasMulti|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Control de Citas|Citas|ControlCitasSA|fa fa-calendar|Mercaderia",
+                "COMPROBANTESRECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
+                "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
+                "IMPRESIONETIQUETA|Impresión de Etiquetas Individual|Index|ImpresionEtiquetasIndividual|fa fa-ticket|Mercaderia",
+                "FACTURAS|Administración de Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
+                "CUENTASPAGAR|Devoluciones de Tienda|Index|DevolucionesTienda|fa fa-motorcycle|Mercaderia",
+                "CUENTASPAGAR|Rechazos De Cedis|Index|RechazosCedis|fa fa-spinner|Mercaderia",
+                "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
+                "ADMINISTRARUSUARIOS|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
+                "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
+                "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Mercaderia",
+                "REPORTESPROVEEDORES|Reportes Proveedores|Index|ReporteProveedores|fa fa-bar-chart|Mercaderia",
+                "REPORTESAUDITORIA|Descuentos por Auditorias |Index|ReporteAuditoria|fa fa-line-chart|Mercaderia",
+                "PRONTOPAGO|Pronto pago|Index|ProntoPago|fa fa-bar-chart|Mercaderia",
+
+            };
+                    return menuLista;
+
+                }
+
+            }
+            return null;
         }
         public static string[] MenuServicio()
         {

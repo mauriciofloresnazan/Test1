@@ -80,6 +80,7 @@
     <Compile Include="cita.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="citasscal.cs" />
     <Compile Include="configuracione.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
@@ -181,6 +182,7 @@
     <Compile Include="proveedorfactoraje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="reenvio.cs" />
     <Compile Include="RevisarDatos.cs" />
     <Compile Include="RevisarPedidos.cs" />
     <Compile Include="riele.cs">

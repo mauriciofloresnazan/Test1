@@ -43,6 +43,8 @@ namespace Ppgz.Repository
         public virtual DbSet<EnviarDatos> EnviarDatos { get; set; }
         public virtual DbSet<MensajeResultado> MensajeResultado { get; set; }
         public virtual DbSet<EnviarEtiquetas> EnviarEtiquetas { get; set; }
+        public virtual DbSet<citasscal> citasscal { get; set; }
+        public virtual DbSet<reenvio> reenvio { get; set; }
         public virtual DbSet<audi> auditores { get; set; }
         public virtual DbSet<cuenta> cuentas { get; set; }
         public virtual DbSet<cuentasmensaje> cuentasmensajes { get; set; }
