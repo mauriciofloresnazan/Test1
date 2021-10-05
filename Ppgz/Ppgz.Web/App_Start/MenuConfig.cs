@@ -127,6 +127,7 @@ namespace Ppgz.Web
                 "ADMINISTRARPROVEEDORESNAZAN|Administración de Proveedores|Index|AdministrarProveedores|fa fa-address-book-o|Nazan",
                 "NIVELSERVICIO|Gestion Nivel de Servicios|Index|RegistrarNivelServicio|fa fa-file-text|Nazan",
                 "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
+                "ADMINISTRARCITAS|Impresion Etiquetas Con Asn|Citas|ImpresionEtiquetaAsn|fa fa-ticket|Nazan",
                 "ADMINISTRARCITAS|Reenvio De Asn A Scale|Index|ReenvioAsn|fa fa-paper-plane-o|Nazan",
                 "VISTACITASCALIDAD|Informacion de citas para calidad|Index|AdministrarCitas1|fa fa-calendar|Nazan",
                 "VISTACITASCOMPRADORES|Informacion de citas para Compradores|Index|AdministrarCitasCompradores|fa fa-calendar|Nazan",

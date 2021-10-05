@@ -608,6 +608,20 @@ namespace Ppgz.CitaWrapper
         }
 
 
+        public static bool PuedeImprimir(DateTime FechaCreacion)
+        {
+            var dia = FechaCreacion.AddMinutes(5);
+
+            
+            if (DateTime.Now < dia)
+            {
+                return false;
+
+            }
+            return true;
+        }
+
+
         public static int GetWeeksInYear(int year)
         {
             DateTime date1 = new DateTime(year, 12, 31);

@@ -844,6 +844,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
         public ActionResult CitaDetalle(int citaId)
         {
+            TempData["FlashError"] = "Las Citas Con ASn No Se Pueden Modificar";
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
             var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
             var db = new Entities();
@@ -902,9 +903,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
             var db2 = new Entities();
             var cita = db2.citas.FirstOrDefault(c => c.Id == citaId && proveedoresIds.Contains(c.ProveedorId));
-            if (!RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
+            if (!RulesManager.PuedeImprimir(cita.FechaCreacion))
             {
-                //TODO
+
                 TempData["FlashError"] = "Espere un momento se estan procesando las etiquetas";
                 return RedirectToAction("Citas");
             }
@@ -985,9 +986,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 TempData["FlashError"] = "Cita incorrecta";
                 return RedirectToAction("Citas");
             }
-            if (!RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
+            if (!RulesManager.PuedeImprimir(cita.FechaCreacion))
             {
-                //TODO
+
                 TempData["FlashError"] = "Espere un momento se estan procesando las etiquetas";
                 return RedirectToAction("Citas");
             }

@@ -1,0 +1,119 @@
+﻿@using System.Data
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Generar  Etiquetas - Resultado";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var proveedor = (proveedore)ViewBag.Proveedor;
+    bool puedeDescargar = ViewBag.PuedeDescargar;
+   
+    List<string> etiquetas = new List<string>();
+    string etiquetasPrint = "";
+    if (puedeDescargar)
+    {
+        etiquetas = ViewBag.etiquetas;
+        etiquetasPrint = ViewBag.etiquetasPrint;
+
+    }
+
+
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-ticket" aria-hidden="true"></i> <i>Generación del archivo de Etiquetas</i>
+</p>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Resultado de la generación</div>
+    <div class="panel-body">
+
+
+        <dl class="dl-horizontal">
+            
+            <dt>Resultado</dt>
+            <dd>
+                <div class="row">
+                    <div class="col-sm-12" style="">
+                        
+                                                    @if (puedeDescargar)
+                                                    {
+                                                        <b>
+                                                            Vista Previa de primera etiqueta:
+                                                        </b>
+                                                    }
+                                                    else
+                                                    {
+                                                        <b>
+                                                            Etiquetas no disponibles
+                                                        </b>
+                                                    }
+
+                                                        <br><br>
+                        @if (puedeDescargar)
+                        { 
+                            <img src="http://api.labelary.com/v1/printers/8dpmm/labels/3x2/0/@etiquetas[0]" style="max-height: 200px;">
+                        }
+                        
+                    </div>
+                </div>
+
+            </dd>
+            @if (puedeDescargar)
+            {
+                <dt>Archivo</dt>
+                <dd><a class="btn btn-primary" href="@Url.Action("ImpresionEtiquetas","ImpresionEtiquetaAsn")" id="btnImprimir" onclick="disablePrint(this)" @*onclick="printZpl($('#impeti').val())"*@><i class="fa fa-print"></i> Imprimir</a> Use <img src="~/assets/img/Firefox_Logo.png" style="height: 40px;"> para imprimir etiquetas</dd>
+            } 
+        </dl>
+        <a class="btn btn-default" href="@Url.Action("Citas", "ImpresionEtiquetaAsn")"><i class="fa fa-undo" aria-hidden="true"></i> Regresar</a>
+            @if (puedeDescargar)
+            {
+                <input type="hidden" id="impeti" value="@etiquetasPrint" name="impeti" />
+            }        
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+
+        var form = $("#form");
+
+        $(document).ready(function () {
+            form.submit(function () {
+                $('<input />').attr('type', 'hidden')
+                    .attr('name', "ordenes")
+                    .attr('value', ["1", "2"])
+                    .appendTo(form);
+
+                if ($("#nazanTipo").prop("checked")) {
+                    $('<input />').attr('type', 'hidden')
+                       .attr('nazan', "ordenes")
+                       .attr('value', true)
+                       .appendTo(form);
+                }
+
+            });
+        });
+
+
+        function printZpl(zpl) {
+            var printWindow = window.open();
+            printWindow.document.open('text/plain')
+            printWindow.document.write(zpl);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        }
+
+        function disablePrint(link) {
+            link.onclick = function (event) {
+                event.preventDefault();
+            }
+        }
+    </script>
+
+
+}
