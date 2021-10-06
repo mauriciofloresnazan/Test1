@@ -219,7 +219,7 @@ namespace Ppgz.Services
         /// Actualizacion de los campos básico y genericos del usuario
         /// es valido para todos los tipos Proveedor, MaestroProveedor y Nazan
         /// </summary>
-        public AspNetUser Actualizar(string id, string nombre = null, string apellido = null, string email = null,
+        public AspNetUser Actualizar(string id, string responsable = null,string nombre = null, string apellido = null, string email = null,
             string telefono = null, string cargo = null, string password = null)
         {
                     
@@ -234,6 +234,11 @@ namespace Ppgz.Services
 			if (_db.AspNetUsers.FirstOrDefault(u => u.Email == email && u.Id != id) != null)
             {
                 throw new BusinessException("La Dirección de correo ya ha sido utilizada por otro usuario");
+            }
+            if (responsable != null)
+            {
+                ValidarNombreApellido(responsable);
+                usuario.UserName = responsable;
             }
             if (nombre != null)
 			{

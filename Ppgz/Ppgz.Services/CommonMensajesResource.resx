@@ -142,7 +142,7 @@
     <value>Usuario o Password incorrecto</value>
   </data>
   <data name="Error_NombreApellido" xml:space="preserve">
-    <value>Nombre o apellido incorrecto</value>
+    <value>Nombre de Usuario, Nombre o apellido incorrecto</value>
   </data>
   <data name="ERROR_NombreUsuarioExistente" xml:space="preserve">
     <value>El nombre de usuario ya fue utilizado. Por favor intente con otro.</value>

@@ -408,10 +408,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
  
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
-        public JsonResult ActualizarResponsable(string usuarioId, string nombre, string apellido, string cargo, string telefono, string email)
+        public JsonResult ActualizarResponsable(string usuarioId,string responsable, string nombre, string apellido, string cargo, string telefono, string email)
         {
             var model = new CuentaViewModel
             {
+                UserName = responsable,
                 ResponsableNombre = nombre,
                 ResponsableApellido = apellido,
                 ResponsableCargo = cargo,
@@ -424,7 +425,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             TryValidateModel(model);
             
             var usuarioManager = new UsuarioManager();
-
+            if (!ModelState.IsValidField("UserName"))
+                return Json(new { error = "Login incorrecto" });
             if (!ModelState.IsValidField("ResponsableNombre"))
                 return Json(new { error = "Nombre incorrecto" });
             if (!ModelState.IsValidField("ResponsableApellido"))
@@ -438,7 +440,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             try
             {
-                usuarioManager.Actualizar(usuarioId, nombre, apellido, email, telefono, cargo);
+                usuarioManager.Actualizar(usuarioId,responsable, nombre, apellido, email, telefono, cargo);
             }
             catch (Exception exception)
             {
