@@ -433,7 +433,14 @@ namespace Ppgz.CitaWrapper
                 scaleManager.ActualizarFecha(citaId);
             });
         }
-
+        public static void ActualizarFechaScaleEnroque(int citaId)
+        {
+            Task.Factory.StartNew(() =>
+            {
+                var scaleManager = new ScaleManager();
+                scaleManager.ActualizarFechaEnroque(citaId);
+            });
+        }
         public static void ActualizarCantidadScale(int[] asnIds)
         {
             Task.Factory.StartNew(() =>

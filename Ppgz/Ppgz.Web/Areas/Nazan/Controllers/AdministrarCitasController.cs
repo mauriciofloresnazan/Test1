@@ -142,6 +142,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                              + ".<br>" + horarioNuevo,
                              correo);
                     }
+                    CitaManager.ActualizarFechaScaleEnroque(Convert.ToInt32(citaId1));
                 }
                 if (citaId2 != null)
                 {
@@ -172,6 +173,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                              + ".<br>" + horarioNuevo,
                              correo);
                     }
+                    CitaManager.ActualizarFechaScaleEnroque(Convert.ToInt32(citaId2));
                 }
 
 

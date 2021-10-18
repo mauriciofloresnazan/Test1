@@ -487,6 +487,86 @@ namespace ScaleWrapper
             }
         }
 
+
+
+        public void ActualizarFechaEnroque(int citaId)
+        {
+            var entities = new Entities();
+
+            var cita = entities.citas.Find(citaId);
+
+            if (cita == null)
+            {
+                ErrorAppLog.Error(string.Format("Cita # {0} incorrecta", citaId));
+                return;
+            }
+            var horarios = cita.horariorieles;
+            foreach (horarioriele hor in horarios)
+            {
+                Char delimiter = ':';
+                String[] substrings = hor.horario.HoraDesde.Split(delimiter);
+                String[] substrings2 = substrings[1].Split(null);
+
+                var horacitascale = Int32.Parse(substrings[0].ToString());
+
+                if (substrings2[1].ToString() == "pm")
+                {
+                    if (horacitascale != 12)
+                    {
+                        horacitascale = horacitascale + 12;
+                    }
+
+                }
+
+                if (cita.FechaCita.Hour == 0)
+                {
+
+                    cita.FechaCita = cita.FechaCita.AddHours(horacitascale);
+                    cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(substrings2[0].ToString()));
+
+                }
+                else if (cita.FechaCita.Hour > horacitascale)
+                {
+                    var restar = 0 - cita.FechaCita.Hour;
+                    var fecha = new DateTime(cita.FechaCita.Year, cita.FechaCita.Month, cita.FechaCita.Day);
+                    cita.FechaCita = fecha;
+                    cita.FechaCita = cita.FechaCita.AddHours(horacitascale);
+                    cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(substrings2[0].ToString()));
+
+                }
+
+
+
+            }
+            const string sql = @"
+
+                
+
+                UPDATE DOWNLOAD_RECEIPT_HEADER
+                SET    
+	                   ARRIVED_DATE_TIME = @ARRIVED_DATE_TIME
+	                   
+                WHERE  USER_DEF8 = @CitaId";
+
+            var parameters = new List<SqlParameter>
+            {
+                new SqlParameter("@CitaId", citaId),
+                new SqlParameter("@ARRIVED_DATE_TIME", cita.FechaCita.ToString("yyyy-MM-ddTHH:mm:ss")),
+            };
+
+            try
+            {
+                DbScale.Insert(sql, parameters);
+            }
+            catch (Exception exception)
+            {
+                ErrorAppLog.Error(string.Format("Cita # {0}. {1}", citaId, exception.Message));
+            }
+        }
+
+
+
+
         public void ActualizarCantidad(int[] asnIds)
         {
             var entities = new Entities();
