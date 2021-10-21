@@ -128,6 +128,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             {
                 _usuarioManager.Actualizar(
                     id,
+                    model.UserName,
                     model.Nombre,
                     model.Apellido,
                     model.Email,

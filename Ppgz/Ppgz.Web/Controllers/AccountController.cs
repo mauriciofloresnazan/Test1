@@ -305,7 +305,7 @@ namespace Ppgz.Web.Controllers
             var usuarioManager = new UsuarioManager();
             try
             {
-                usuarioManager.Actualizar(usuario.Id, null, null, null, null, null, model.Password);
+                usuarioManager.Actualizar(usuario.Id, null, null, null, null,null, null, model.Password);
 
                 TempData["FlashSuccess"] = "Contraseña actualizada exitosamente";
                 return RedirectToAction("Index","Home");
