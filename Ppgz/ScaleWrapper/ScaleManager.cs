@@ -540,12 +540,10 @@ namespace ScaleWrapper
             }
             const string sql = @"
 
-                
-
                 UPDATE DOWNLOAD_RECEIPT_HEADER
-                SET    
-	                   ARRIVED_DATE_TIME = @ARRIVED_DATE_TIME
-	                   
+                SET     
+	                   ARRIVED_DATE_TIME = @ARRIVED_DATE_TIME,
+	                   INTERFACE_CONDITION = 'Ready'
                 WHERE  USER_DEF8 = @CitaId";
 
             var parameters = new List<SqlParameter>
