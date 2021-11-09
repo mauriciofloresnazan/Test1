@@ -32,7 +32,7 @@
 <h2>@ViewBag.Title</h2>
 <p class="page-description-title">
     <i class="fa fa-calendar" aria-hidden="true"></i>
-    @if (!RulesManager.PuedeEditarCita(cita.FechaCita))
+    @if (!RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
     {
         <i>Puede consultar el detalle.</i>
     }
@@ -192,7 +192,7 @@
 
 
 
-            @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+            @if (RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
             {
                 <text>
             $('#asn .cantidad-entregar').on('click', function () {
@@ -276,7 +276,7 @@
             }
 
         });
-        @if (RulesManager.PuedeEditarCita(cita.FechaCita))
+        @if (RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
         {
         <text>
             function calcularTotalEntregar() {

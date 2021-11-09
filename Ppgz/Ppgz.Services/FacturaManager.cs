@@ -45,7 +45,7 @@ namespace Ppgz.Services
 
         public void ProcesarFacturasAtoradas()
         {
-            List<factura> Facturas = _db.facturas.Where(f => f.Procesado == false).ToList();
+            List<factura> Facturas = _db.facturas.Where(f => f.Procesado == false && f.TipoFactura == "Mercaderia").ToList();
 
             foreach (factura itemFactura in Facturas)
             {
@@ -74,6 +74,38 @@ namespace Ppgz.Services
 
         }
 
+        public void ProcesarFacturasAtoradasServicio()
+        {
+            List<factura> Facturas = _db.facturas.Where(f => f.Procesado == false && f.TipoFactura== "Servicios").ToList();
+
+            foreach (factura itemFactura in Facturas)
+            {
+                var resultado = CargarFacturaAtoradaServicios(itemFactura.proveedor_id, itemFactura.XmlRuta);
+                if (resultado != null)
+                {
+                    if (itemFactura.Estatus != "S" && itemFactura.Estatus != "H")
+                    {
+                        itemFactura.Estatus = resultado.Estatus;
+                        itemFactura.Procesado = false;
+                        itemFactura.Comentario = string.Format
+                            ("Tipo:{1} {0}Mensaje:{2}",
+                            Environment.NewLine,
+                            resultado.ErrorTable.Rows[0]["TYPE"],
+                            resultado.ErrorTable.Rows[0]["MESSAGE"]);
+                    }
+                    else
+                    {
+                        itemFactura.Estatus = resultado.Estatus;
+                        itemFactura.Procesado = true;
+                        itemFactura.NumeroGenerado = resultado.FacturaNumero;
+                        itemFactura.Comentario = "Factura Procesada";
+
+                    }
+                    _db.SaveChanges();
+                }
+            }
+
+        }
 
         //CargarFacturas de Servicio
         public void CargarFacturaServicio(int proveedorId, int cuentaId, string xmlFilePath, string pdfFilePath)
@@ -253,31 +285,35 @@ namespace Ppgz.Services
                 XmlRuta = newXmlPath,
                 PdfRuta = newPdfPath,
                 Estatus = facturaSap.Estatus,
-                Procesado = true,
                 numeroProveedor = proveedor.NumeroProveedor,
                 EstatusOriginal = facturaSap.Estatus,
                 FechaPortal = fecha,
-                RFCReceptor = RFCReceptor ?? string.Empty
+                RFCReceptor = RFCReceptor ?? string.Empty,
+                TipoFactura="Servicios"
             };
 
             if (factura.Estatus != "S" && factura.Estatus != "H")
             {
-
+                
                 string errorsap = facturaSap.ErrorTable.Rows[0]["MESSAGE"].ToString();
-
-                File.Delete(newXmlPath);
-                File.Delete(newPdfPath);
-                throw new BusinessException(errorsap);
-
+                factura.Comentario = string.Format
+                   ("Tipo:{1} {0}Mensaje:{2}",
+                   Environment.NewLine,
+                   facturaSap.ErrorTable.Rows[0]["TYPE"],
+                   facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
+                
+                factura.Procesado = false;
+ 
             }
             else
             {
+                factura.Procesado = true;
                 factura.NumeroGenerado = facturaSap.FacturaNumero;
-                _db.facturas.Add(factura);
-                _db.SaveChanges();
+               
             }
 
-
+            _db.facturas.Add(factura);
+            _db.SaveChanges();
 
         }
 
@@ -400,6 +436,86 @@ namespace Ppgz.Services
                 return null;
             }
 
+        }
+
+
+
+        public SapFacturaManager.Resultado CargarFacturaAtoradaServicios(int proveedorId, string xmlFilePath)
+        {
+            var serializer = new XmlSerializer(typeof(Comprobante));
+            var xmlFileStream = new FileStream(xmlFilePath, FileMode.Open);
+            var comprobante = (Comprobante)serializer.Deserialize(xmlFileStream);
+            var proveedor = new proveedore();
+            var RFC = "";
+            var RFCReceptor = "";
+            var Serie = "";
+            var Folio = "";
+            var SubTotal = "";
+            var Fecha = "";
+            var Total = "";
+
+            if (comprobante.Version33 == "3.3")
+            {
+                proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc33);
+                RFC = comprobante.Emisor.Rfc33;
+                RFCReceptor = comprobante.Receptor.Rfc33;
+                Serie = comprobante.Serie33;
+                Folio = comprobante.Folio33;
+                SubTotal = comprobante.SubTotal33;
+                Total = comprobante.Total33;
+                Fecha = comprobante.Fecha33;
+            }
+            else
+            {
+                proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc);
+                RFC = comprobante.Emisor.Rfc;
+                RFCReceptor = comprobante.Receptor.Rfc;
+                Serie = comprobante.Serie;
+                Folio = comprobante.Folio;
+                SubTotal = comprobante.SubTotal;
+                Total = comprobante.Total;
+                Fecha = comprobante.Fecha;
+            }
+
+            var refe = "";
+            if (comprobante.Serie == "")
+            {
+                refe = Folio;
+            }
+            else
+            {
+                refe = Serie + Folio;
+            }
+            xmlFileStream.Close();
+            xmlFileStream.Dispose();
+
+                    var cantidad = new decimal();
+
+                    if (comprobante.Version33 == "3.3")
+                    {
+                        //Creacion de la factura para la miro
+                        cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad33));
+                    }
+                    else
+                    {
+                        //Creacion de la factura para la miro
+                        cantidad = comprobante.Conceptos.Concepto.Aggregate<Concepto, decimal>(0, (current, concepto) => current + Convert.ToDecimal(concepto.Cantidad));
+
+                    }
+
+
+                    var sapFacturaManager = new SapFacturaManager();
+
+                    var facturaSap = sapFacturaManager.CrearFacturaServicio(
+                        proveedor.NumeroProveedor,
+                        refe,
+                        DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
+                        SubTotal,
+                        Total,
+                        cantidad.ToString(CultureInfo.InvariantCulture),
+                         comprobante.Complemento.TimbreFiscalDigital.UUID,
+                         RFC);
+                    return facturaSap;
         }
 
         public void CargarFactura(int proveedorId, int cuentaId, string xmlFilePath, string pdfFilePath)
@@ -609,7 +725,9 @@ namespace Ppgz.Services
                         numeroProveedor = proveedor.NumeroProveedor,
                         EstatusOriginal = facturaSap.Estatus,
                         FechaPortal = fecha,
-                        RFCReceptor = RFCReceptor ?? string.Empty
+                        RFCReceptor = RFCReceptor ?? string.Empty,
+                        TipoFactura = "Mercaderia"
+
                     };
 
                     if (factura.Estatus != "S" && factura.Estatus != "H")
@@ -654,7 +772,8 @@ namespace Ppgz.Services
                         Comentario = "N° de pares en Scale y SAP son diferentes",
                         EstatusOriginal = "p",
                         FechaPortal = fecha,
-                        RFCReceptor = RFCReceptor ?? string.Empty
+                        RFCReceptor = RFCReceptor ?? string.Empty,
+                        TipoFactura = "Mercaderia"
 
                     };
 
@@ -685,7 +804,8 @@ namespace Ppgz.Services
                     Comentario = "Factura no disponible en Scale",
                     EstatusOriginal = "P",
                     FechaPortal = fecha,
-                    RFCReceptor = RFCReceptor ?? string.Empty
+                    RFCReceptor = RFCReceptor ?? string.Empty,
+                    TipoFactura="Mercaderia"
 
                 };
 
@@ -847,7 +967,9 @@ namespace Ppgz.Services
                 numeroProveedor = proveedor.NumeroProveedor,
                 EstatusOriginal = "S",
                 FechaPortal = fecha,
-                RFCReceptor = RFCReceptor ?? string.Empty
+                RFCReceptor = RFCReceptor ?? string.Empty,
+                TipoFactura="Mercaderia"
+                
             };
 
             return factura;

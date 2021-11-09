@@ -19,6 +19,14 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             return View();
         }
 
+        public ActionResult ProcesarFacturasServicios()
+        {
+            _facturaManager.ProcesarFacturasAtoradasServicio();
+
+            return View();
+        }
+
+
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARFACTURAS")]
         public ActionResult Index(string fecha = null)
         {

@@ -31,6 +31,7 @@ namespace Ppgz.Repository
         public string EstatusOriginal { get; set; }
         public System.DateTime FechaPortal { get; set; }
         public String RFCReceptor { get; set; }
+        public String TipoFactura { get; set; }
 
         public virtual proveedore proveedore { get; set; }
     }

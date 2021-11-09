@@ -2045,6 +2045,7 @@
     <Content Include="Areas\Nazan\Views\ImpresionEtiquetaAsn\Individual.cshtml" />
     <Content Include="Areas\Nazan\Views\ImpresionEtiquetaAsn\Resultado.cshtml" />
     <Content Include="Areas\Nazan\Views\ImpresionEtiquetaAsn\Resultadoind.cshtml" />
+    <Content Include="Areas\Nazan\Views\AdministrarFacturas\ProcesarFacturasServicios.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />
