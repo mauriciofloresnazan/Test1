@@ -613,17 +613,17 @@ namespace Ppgz.CitaWrapper
 
 
             //Descarmar Ordenes de compra
-            ICollection<asn> ordenesAcancelar = new List<asn>();
-            foreach (var asn in asnantesdeborrar)
-            {
-                if (db.asns.FirstOrDefault(a => a.OrdenNumeroDocumento == asn.OrdenNumeroDocumento && a.NumeroPosicion == asn.NumeroPosicion) == null)
-                {
-                    ordenesAcancelar.Add(asn);
-                }
-            }
+            //ICollection<asn> ordenesAcancelar = new List<asn>();
+            //foreach (var asn in asnantesdeborrar)
+            //{
+            //    if (db.asns.FirstOrDefault(a => a.OrdenNumeroDocumento == asn.OrdenNumeroDocumento && a.NumeroPosicion == asn.NumeroPosicion) == null)
+            //    {
+            //        ordenesAcancelar.Add(asn);
+            //    }
+            //}
 
-            var sapOrdenCompraManager = new SapOrdenCompraManager();
-            sapOrdenCompraManager.UnsetOrdenesDeCompraCita(ordenesAcancelar);
+            //var sapOrdenCompraManager = new SapOrdenCompraManager();
+            //sapOrdenCompraManager.UnsetOrdenesDeCompraCita(ordenesAcancelar);
 
             //fin
 
