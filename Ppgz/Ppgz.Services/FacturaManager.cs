@@ -83,7 +83,7 @@ namespace Ppgz.Services
                 var resultado = CargarFacturaAtoradaServicios(itemFactura.proveedor_id, itemFactura.XmlRuta);
                 if (resultado != null)
                 {
-                    if (itemFactura.Estatus != "S" && itemFactura.Estatus != "H")
+                    if (resultado.Estatus != "S" && resultado.Estatus != "H")
                     {
                         itemFactura.Estatus = resultado.Estatus;
                         itemFactura.Procesado = false;

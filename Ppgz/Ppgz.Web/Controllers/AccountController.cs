@@ -11,12 +11,19 @@ using Microsoft.Owin.Security.DataProtection;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
 using Ppgz.Web.Models;
+using ScaleWrapper;
+using System.Data.SqlClient;
+using log4net;
+using System.Data;
 
 namespace Ppgz.Web.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["ScaleGNZN"].ConnectionString;
+        public readonly ILog ErrorAppLog = LogManager.GetLogger(@"ErrorAppLog");
+
         public AccountController()
             : this(new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext())))
         {
@@ -38,8 +45,322 @@ namespace Ppgz.Web.Controllers
             {
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
+            string connectionString = "Data Source=172.25.4.43;Initial Catalog=GNZN;User ID=wsp;Password=wsp@2017;";
+            SqlConnection connectiones = new SqlConnection(@connectionString);
+            var id = string.Format("{0}", DateTime.Now.ToString("yyyy-MM-dd hh:mm"));
+            var fecha1 = Convert.ToString(id);
+            var i2 = string.Format("{0}", DateTime.Now.ToString("yyyy-MM-dd 08:20"));
+            var f2 = Convert.ToString(i2);
+            var i3 = string.Format("{0}", DateTime.Now.ToString("yyyy-MM-dd 12:20"));
+            var f3 = Convert.ToString(i3);
+            var i4 = string.Format("{0}", DateTime.Now.ToString("yyyy-MM-dd 03:20"));
+            var f4 = Convert.ToString(i4);
+            var i5 = string.Format("{0}", DateTime.Now.ToString("yyyy-MM-dd 06:20"));
+            var f5 = Convert.ToString(i5);
+            var fecha = string.Format("{0}", DateTime.Now.ToString("yyyy-MM-dd hh:mm"));
+            var ids = DateTime.Now.Hour;
+            var idv = string.Format("{0}", DateTime.Now.ToString("yyyy-MM-dd"));
+            connectiones.Open();
+            string cadena = (@"SELECT *
+            FROM[GNZN].[dbo].[GNZN_Estatus_Aplicaciones] where Hora_Reporte = '8' and CONVERT(VARCHAR(10), Fecha_Ejecucion, 120) =  '" + idv + "' and Sistema = 'PORTAL'");
+            SqlCommand comando = new SqlCommand(cadena, connectiones);
+            SqlDataReader registro = comando.ExecuteReader();
+            if (registro.Read())
+            {
 
-            ViewBag.ReturnUrl = returnUrl;
+            }
+            else
+            {
+                if (fecha1 == f2)
+                {
+                    string query = @"INSERT INTO GNZN_Estatus_Aplicaciones 
+                            (Fecha_Registro,
+                             Fecha_ejecucion,
+                             Hora_Reporte,
+                             Sistema,
+                             Origen,
+                             Estatus)
+                VALUES('" + id + @"',
+                             '" + id + @"',
+                             '" + ids + @"',
+                             'PORTAL',
+                             'CLIENTE',
+                             'OK'); ";
+                    SqlCommand commando = new SqlCommand(query, connectiones);
+                    try
+                    {
+                        connectiones.Close();
+                        connectiones.Open();
+                        commando.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                    }
+                    finally
+                    {
+                        connectiones.Close();
+                    }
+                    string querys = @"INSERT INTO GNZN_Estatus_Aplicaciones 
+                            (Fecha_Registro,
+                             Fecha_ejecucion,
+                             Hora_Reporte,
+                             Sistema,
+                             Origen,
+                             Estatus)
+                VALUES('" + id + @"',
+                             '" + id + @"',
+                             '" + ids + @"',
+                             'PORTAL',
+                             'SERVIDOR',
+                             'OK'); ";
+                    SqlCommand commandos = new SqlCommand(querys, connectiones);
+                    try
+                    {
+                        connectiones.Close();
+                        connectiones.Open();
+                        commandos.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                    }
+                    finally
+                    {
+                        connectiones.Close();
+                    }
+
+                }
+            }
+            connectiones.Close();
+            connectiones.Open();
+            string cadenas = (@"SELECT *
+            FROM[GNZN].[dbo].[GNZN_Estatus_Aplicaciones] where Hora_Reporte = '12' and CONVERT(VARCHAR(10), Fecha_Ejecucion, 120) =  '" + idv + "' and Sistema = 'PORTAL'");
+            SqlCommand comandos = new SqlCommand(cadenas, connectiones);
+            SqlDataReader registros = comandos.ExecuteReader();
+            if (registros.Read())
+            {
+
+            }
+            else
+            {
+                if (fecha1 == f3)
+                {
+                    string query = @"INSERT INTO GNZN_Estatus_Aplicaciones 
+                            (Fecha_Registro,
+                             Fecha_ejecucion,
+                             Hora_Reporte,
+                             Sistema,
+                             Origen,
+                             Estatus)
+                VALUES('" + id + @"',
+                             '" + id + @"',
+                             '" + ids + @"',
+                             'PORTAL',
+                             'CLIENTE',
+                             'OK'); ";
+                    SqlCommand commando = new SqlCommand(query, connectiones);
+                    try
+                    {
+                        connectiones.Close();
+                        connectiones.Open();
+                        commando.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                    }
+                    finally
+                    {
+                        connectiones.Close();
+                    }
+                    string querys = @"INSERT INTO GNZN_Estatus_Aplicaciones 
+                            (Fecha_Registro,
+                             Fecha_ejecucion,
+                             Hora_Reporte,
+                             Sistema,
+                             Origen,
+                             Estatus)
+                VALUES('" + id + @"',
+                             '" + id + @"',
+                             '" + ids + @"',
+                             'PORTAL',
+                             'SERVIDOR',
+                             'OK'); ";
+                    SqlCommand commandos = new SqlCommand(querys, connectiones);
+                    try
+                    {
+                        connectiones.Close();
+                        connectiones.Open();
+                        commandos.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                    }
+                    finally
+                    {
+                        connectiones.Close();
+                    }
+
+                }
+            }
+            connectiones.Close();
+            connectiones.Open();
+            string cadenas1 = (@"SELECT *
+            FROM[GNZN].[dbo].[GNZN_Estatus_Aplicaciones] where Hora_Reporte = '15' and CONVERT(VARCHAR(10), Fecha_Ejecucion, 120) =  '" + idv + "' and Sistema = 'PORTAL'");
+            SqlCommand comandos1 = new SqlCommand(cadenas1, connectiones);
+            SqlDataReader registros1 = comandos1.ExecuteReader();
+            if (registros1.Read())
+            {
+
+            }
+            else
+            {
+                if (fecha1 == f4)
+                {
+                    string query = @"INSERT INTO GNZN_Estatus_Aplicaciones 
+                            (Fecha_Registro,
+                             Fecha_ejecucion,
+                             Hora_Reporte,
+                             Sistema,
+                             Origen,
+                             Estatus)
+                VALUES('" + id + @"',
+                             '" + id + @"',
+                             '" + ids + @"',
+                             'PORTAL',
+                             'CLIENTE',
+                             'OK'); ";
+                    SqlCommand commando = new SqlCommand(query, connectiones);
+                    try
+                    {
+                        connectiones.Close();
+                        connectiones.Open();
+                        commando.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                    }
+                    finally
+                    {
+                        connectiones.Close();
+                    }
+                    string querys = @"INSERT INTO GNZN_Estatus_Aplicaciones 
+                            (Fecha_Registro,
+                             Fecha_ejecucion,
+                             Hora_Reporte,
+                             Sistema,
+                             Origen,
+                             Estatus)
+                VALUES('" + id + @"',
+                             '" + id + @"',
+                             '" + ids + @"',
+                             'PORTAL',
+                             'SERVIDOR',
+                             'OK'); ";
+                    SqlCommand commandos = new SqlCommand(querys, connectiones);
+                    try
+                    {
+                        connectiones.Close();
+                        connectiones.Open();
+                        commandos.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                    }
+                    finally
+                    {
+                        connectiones.Close();
+                    }
+                }
+            }
+            connectiones.Close();
+            connectiones.Open();
+            string cadenas2 = (@"SELECT *
+            FROM[GNZN].[dbo].[GNZN_Estatus_Aplicaciones] where Hora_Reporte = '18' and CONVERT(VARCHAR(10), Fecha_Ejecucion, 120) =  '" + idv + "' and Sistema = 'PORTAL'");
+            SqlCommand comandos2 = new SqlCommand(cadenas2, connectiones);
+            SqlDataReader registros2 = comandos2.ExecuteReader();
+            if (registros2.Read())
+            {
+
+            }
+            else
+            {
+                if (fecha1 == f5)
+                {
+                    string query = @"INSERT INTO GNZN_Estatus_Aplicaciones 
+                            (Fecha_Registro,
+                             Fecha_ejecucion,
+                             Hora_Reporte,
+                             Sistema,
+                             Origen,
+                             Estatus)
+                VALUES('" + id + @"',
+                             '" + id + @"',
+                             '" + ids + @"',
+                             'PORTAL',
+                             'CLIENTE',
+                             'OK'); ";
+                    SqlCommand commando = new SqlCommand(query, connectiones);
+                    try
+                    {
+                        connectiones.Close();
+                        connectiones.Open();
+                        commando.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                    }
+                    finally
+                    {
+                        connectiones.Close();
+                    }
+                    string querys = @"INSERT INTO GNZN_Estatus_Aplicaciones 
+                            (Fecha_Registro,
+                             Fecha_ejecucion,
+                             Hora_Reporte,
+                             Sistema,
+                             Origen,
+                             Estatus)
+                VALUES('" + id + @"',
+                             '" + id + @"',
+                             '" + ids + @"',
+                             'PORTAL',
+                             'SERVIDOR',
+                             'OK'); ";
+                    SqlCommand commandos = new SqlCommand(querys, connectiones);
+                    try
+                    {
+                        connectiones.Close();
+                        connectiones.Open();
+                        commandos.ExecuteNonQuery();
+
+                    }
+                    catch (SqlException e)
+                    {
+
+                    }
+                    finally
+                    {
+                        connectiones.Close();
+                    }
+                }
+            }
+
+
+
+                ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 

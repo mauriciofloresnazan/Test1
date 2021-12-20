@@ -249,7 +249,7 @@
           <Property Name="CitaId" Type="int" Nullable="true"/>        
           <Property Name="Estilo" Type="varchar" MaxLength="45"  Nullable="true"/>  
         <Property Name="Color" Type="varchar" MaxLength="40"  Nullable="true"/>
-          <Property Name="Cuenta" Type="varchar" MaxLength="45" Nullable="true"/>
+          <Property Name="Cuenta" Type="varchar" MaxLength="100" Nullable="true"/>
         </EntityType>
          <EntityType Name="gnzn_asn_pedidos_disponibles_sap">
           <Key>
@@ -261,7 +261,7 @@
           <Property Name="Cantidad" Type="int" Nullable="true"/>
          <Property Name="Id_Proveedor" Type="int" Nullable="true"/>
          <Property Name="Numero_linea" Type="varchar" MaxLength="10"  Nullable="true"/>
-           <Property Name="Cuenta" Type="varchar" MaxLength="45"  Nullable="true"/>
+           <Property Name="Cuenta" Type="varchar" MaxLength="100"  Nullable="true"/>
         </EntityType>
         
         <EntityType Name="gnzn_asn_resultado_de_sprev_asn">
@@ -272,7 +272,7 @@
           <Property Name="MsjError" Type="varchar" MaxLength="100"  Nullable="true"/>
           <Property Name="DatoConDetalle" Type="varchar" MaxLength="200"  Nullable="true"/>
           <Property Name="IdProveedor" Type="int" Nullable="true"/>
-          <Property Name="Cuenta" Type="varchar" MaxLength="45"  Nullable="true"/>
+          <Property Name="Cuenta" Type="varchar" MaxLength="100"  Nullable="true"/>
         </EntityType>
         
         <EntityType Name="gnzn_datos_asn_contendores">
@@ -1467,7 +1467,7 @@
          <Property Name="CitaId" Type="Int32"/>
          <Property Name="Estilo" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
         <Property Name="Color" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
-          <Property Name="Cuenta" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Cuenta" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="RevisarPedidos">
           <Key>
@@ -1479,7 +1479,7 @@
           <Property Name="Cantidad" Type="Int32"/>
         <Property Name="Id_Proveedor" Type="Int32"/>
         <Property Name="Numero_linea" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Cuenta" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Cuenta" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="MensajeResultado">
           <Key>
@@ -1489,7 +1489,7 @@
           <Property Name="MsjError" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="DatoConDetalle" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="IdProveedor" Type="Int32"/>
-          <Property Name="Cuenta" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Cuenta" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         
           <EntityType Name="EnviarDatos">

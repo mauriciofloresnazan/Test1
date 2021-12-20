@@ -361,7 +361,10 @@ namespace ScaleWrapper
 
             if (borrarEti == null)
             {
-                var spc = db.RevisarDatos.Where(oooo => oooo.Edo_Rev == 0 || oooo.CitaId == citaId).GroupBy(x => x.Caja).Select(x => x.FirstOrDefault());
+                var db11 = new Entities();
+                var proveedores1 = cita.proveedore;
+                var pvres = Convert.ToInt32(proveedor.NumeroProveedor);
+                var spc = db.RevisarDatos.Where(oooo => oooo.Id_Proveedor == pvres && oooo.Edo_Rev == 0).GroupBy(x => x.Caja).Select(x => x.FirstOrDefault());
                 foreach (var eti in spc)
                 {
                     var archivo = new EnviarEtiquetas();
