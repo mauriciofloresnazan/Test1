@@ -342,6 +342,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     return RedirectToAction("CargarArchivo");
                 }
 
+                if (ws.Row(i).Cell(1).Value.ToString() == "0" || ws.Row(i).Cell(2).Value.ToString() == "0" ||
+                ws.Row(i).Cell(3).Value.ToString() == "0" || ws.Row(i).Cell(4).Value.ToString() == "0" ||
+                ws.Row(i).Cell(5).Value.ToString() == "0" || ws.Row(i).Cell(6).Value.ToString() == "0" ||
+                ws.Row(i).Cell(7).Value.ToString() == "0")
+                {
+
+                    TempData["FlashError"] = "Archivo Con filas con valor en cero";
+                    return RedirectToAction("CargarArchivo");
+                }
 
                 var Carga = ws.Row(i).Cell(1).Value.ToString();
                 var Caja = ws.Row(i).Cell(2).Value.ToString();
@@ -824,6 +833,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             db.RevisarPedidos.RemoveRange(borrarPedi);
             db.SaveChanges();
             LimpiarCita();
+            System.Threading.Thread.Sleep(60000);
             TempData["FlashSuccess"] = "Ha terminado de configurar su cita exitosamente";
             return RedirectToAction("Citas");
         }
@@ -836,7 +846,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var db = new Entities();
             var fecha = DateTime.Today.Date;
             var citas = db.citas.Where(c => proveedoresIds.Contains(c.ProveedorId) && c.FechaCita >= fecha && c.TipoCita != null).ToList();
-            
             ViewBag.Citas = citas;
             return View();
         }

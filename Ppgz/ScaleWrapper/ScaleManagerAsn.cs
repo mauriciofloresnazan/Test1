@@ -104,23 +104,6 @@ namespace ScaleWrapper
 
         private void InsertarDetailsContenedor(SqlCommand command, cita cita, List<EnviarDatos> asns)
         {
-
-            var sql = new StringBuilder();
-
-            sql.AppendLine(@"
-
-                INSERT INTO DOWNLOAD_RECEIPT_CONTAINER 
-                   (INTERFACE_RECORD_ID, 
-                    INTERFACE_LINK_ID,
-                    INTERFACE_ACTION_CODE, 
-                    INTERFACE_CONDITION, 
-                    container_id, 
-                    container_type, 
-                   DATE_TIME_STAMP, 
-                   REASON_CODE, 
-                   QUANTITY, 
-                  TMP_ERP_ORDER_LINE_NUM) 
-                VALUES");
             var db = new Entities();
             var proveedor = cita.proveedore;
             var pvr = Convert.ToInt32(proveedor.NumeroProveedor);
@@ -149,25 +132,48 @@ namespace ScaleWrapper
             var dat = db.EnviarDatos.Where(op =>op.CitaId==cita.Id).ToList();
             for (var index = 0; index < dat.Count; index++)
             {
-                if (index > 0)
+                 var asn = dat[index];
+                string connectionString = "Data Source=172.18.15.20;Initial Catalog=ILS;User ID=wsp;Password=wsp@2017;";
+                SqlConnection connectiones = new SqlConnection(@connectionString);
+                string query = @"INSERT INTO DOWNLOAD_RECEIPT_CONTAINER 
+                   (INTERFACE_RECORD_ID, 
+                    INTERFACE_LINK_ID,
+                    INTERFACE_ACTION_CODE, 
+                    INTERFACE_CONDITION, 
+                    container_id, 
+                    container_type, 
+                   DATE_TIME_STAMP, 
+                   REASON_CODE, 
+                   QUANTITY, 
+                  TMP_ERP_ORDER_LINE_NUM) 
+            VALUES('" + asn.INTERFACE_RECORD_ID + @"',
+                             '" + asn.INTERFACE_LINK_ID + @"',
+                             '" + asn.INTERFACE_ACTION_CODE + @"',
+                             '" + asn.INTERFACE_CONDITION + @"',
+                             '" + asn.container_id + @"',
+                             '" + asn.container_type + @"',
+                             '" + asn.DATE_TIME_STAMP.ToString("yyyyMMdd") + @"',
+                             '" + asn.REASON_CODE + @"',
+                             '" + Convert.ToInt32(asn.QUANTITY) + @"',
+                             '" + Convert.ToInt32(asn.TMP_ERP_ORDER_LINE_NUM) + @"'); ";
+                SqlCommand commando = new SqlCommand(query, connectiones);
+                try
                 {
-                    sql.Append(",");
-                }
+                    connectiones.Close();
+                    connectiones.Open();
+                    commando.ExecuteNonQuery();
 
-                var asn = dat[index];
-                var id = string.Format("{0}{1}", DateTime.Now.ToString("yyyyMMddHHmmssfff"), index);
-                sql.AppendLine("('" + asn.INTERFACE_RECORD_ID + "','" + asn.INTERFACE_LINK_ID + "','" + asn.INTERFACE_ACTION_CODE + "','" + asn.INTERFACE_CONDITION + "','" + asn.container_id + "','" + asn.container_type + "','" + asn.DATE_TIME_STAMP.ToString("yyyyMMdd") + "','" + asn.REASON_CODE + "','" + Convert.ToInt32(asn.QUANTITY) + "','" + Convert.ToInt32(asn.TMP_ERP_ORDER_LINE_NUM) + "')");
-            }
-            command.CommandText = sql.ToString();
-            // Si los parametros nos son null los recorremos
-            if (parameters != null)
-            {
-                foreach (SqlParameter param in parameters)
+                }
+                catch (SqlException e)
                 {
-                    command.Parameters.Add(param);
+
+                }
+                finally
+                {
+                    connectiones.Close();
                 }
             }
-            command.ExecuteNonQuery();
+
         }
 
 
@@ -365,6 +371,7 @@ namespace ScaleWrapper
                 var proveedores1 = cita.proveedore;
                 var pvres = Convert.ToInt32(proveedor.NumeroProveedor);
                 var spc = db.RevisarDatos.Where(oooo => oooo.Id_Proveedor == pvres && oooo.Edo_Rev == 0).GroupBy(x => x.Caja).Select(x => x.FirstOrDefault());
+                db.Database.CommandTimeout = 240;
                 foreach (var eti in spc)
                 {
                     var archivo = new EnviarEtiquetas();
@@ -381,6 +388,7 @@ namespace ScaleWrapper
                     db.EnviarEtiquetas.Add(archivo);
 
                 }
+                
                 db.SaveChanges();
 
   
