@@ -133,7 +133,7 @@ namespace ScaleWrapper
             for (var index = 0; index < dat.Count; index++)
             {
                  var asn = dat[index];
-                string connectionString = "Data Source=172.18.15.20;Initial Catalog=ILS;User ID=wsp;Password=wsp@2017;";
+                string connectionString = "Data Source=172.25.4.43;Initial Catalog=ILS;User ID=wsp;Password=wsp@2017;";
                 SqlConnection connectiones = new SqlConnection(@connectionString);
                 string query = @"INSERT INTO DOWNLOAD_RECEIPT_CONTAINER 
                    (INTERFACE_RECORD_ID, 
@@ -261,6 +261,7 @@ namespace ScaleWrapper
             int insd = inOut == "1" ? 1 : 0;
             string ordencomprastring = cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra";
             var spc1 = db.RevisarDatos.Where(oooo => oooo.Id_Proveedor == pvr && oooo.Edo_Rev == 0||oooo.CitaId==citaId).GroupBy(x => x.Pedido).Select(x => x.FirstOrDefault());
+            db.Database.CommandTimeout = 0;
             foreach (var fac in spc1)
             {
                 if (fac.Pedido == numeroOrden)
@@ -371,7 +372,7 @@ namespace ScaleWrapper
                 var proveedores1 = cita.proveedore;
                 var pvres = Convert.ToInt32(proveedor.NumeroProveedor);
                 var spc = db.RevisarDatos.Where(oooo => oooo.Id_Proveedor == pvres && oooo.Edo_Rev == 0).GroupBy(x => x.Caja).Select(x => x.FirstOrDefault());
-                db.Database.CommandTimeout = 240;
+                db.Database.CommandTimeout = 0;
                 foreach (var eti in spc)
                 {
                     var archivo = new EnviarEtiquetas();
@@ -421,7 +422,7 @@ namespace ScaleWrapper
 
             }
             var modif = db.EnviarEtiquetas.Where(oooo =>oooo.cita == citaId).GroupBy(x => x.caja).Select(x => x.FirstOrDefault());
-
+            db.Database.CommandTimeout = 0;
             foreach (var eti in modif)
              {
 

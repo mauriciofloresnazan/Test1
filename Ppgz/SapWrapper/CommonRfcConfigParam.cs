@@ -12,6 +12,7 @@ namespace SapWrapper
             //TODO PASAR A UN COMPONENTE UNICO
             var db = new Entities();
             var configuraciones = db.configuraciones.ToList();
+            db.Database.CommandTimeout = 0;
 
             Add(Name, configuraciones.Single(co => co.Clave == "rfc.main.name").Valor);
             Add(AppServerHost, configuraciones.Single(co => co.Clave == "rfc.main.appserverhost").Valor);
