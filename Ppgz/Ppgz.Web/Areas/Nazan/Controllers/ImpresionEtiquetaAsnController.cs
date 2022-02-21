@@ -24,7 +24,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var db = new Entities();
             var fecha = DateTime.Today.Date;
             var fechas = DateTime.Today;
-            var citas = db.citas.Where(c =>c.FechaCita >= fecha && c.TipoCita != null).ToList();
+            var citas = db.citas.Where(c => c.FechaCita >= fecha && c.TipoCita == "Cita Por Asn").ToList();
             ViewBag.Citas = citas;
             return View();
         }

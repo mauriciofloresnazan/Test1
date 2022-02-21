@@ -117,7 +117,9 @@
           <Property Name="EstatusCitaId" Type="int" />
           <Property Name="Penalizado" Type="bool" Nullable="false" />
           <Property Name="MovimientoCita" Type="datetime" Precision="0" />
-        <Property Name="TipoCita" Type="varchar" MaxLength="40" Nullable="true" />
+          <Property Name="TipoCita" Type="varchar" MaxLength="40" Nullable="true" />
+          <Property Name="HoraInicio" Type="varchar" MaxLength="200" Nullable="true" />
+          <Property Name="IdRiel" Type="varchar" MaxLength="200" Nullable="true" />
         </EntityType>
         <EntityType Name="configuracionfactoraje">
           <Key>
@@ -221,7 +223,7 @@
           <Property Name="auditor" Type="varchar" MaxLength="100"  Nullable="true"/>
           <Property Name="procesado" Type="bool" Nullable="false" />
           <Property Name="Correo" Type="varchar" MaxLength="241" />
-        <Property Name="Totalsum" Type="decimal" Precision="18" Scale="2" Nullable="true" />
+          <Property Name="Totalsum" Type="decimal" Precision="18" Scale="2" Nullable="true" />
         </EntityType>
         <EntityType Name="auditor">
           <Key>
@@ -243,15 +245,15 @@
           <Property Name="Tienda" Type="varchar" MaxLength="25"  Nullable="true"/>
           <Property Name="EAN" Type="varchar" MaxLength="20"  Nullable="true"/>
           <Property Name="Pares" Type="int" Nullable="true"/>
-        <Property Name="Material" Type="varchar" MaxLength="20"  Nullable="true"/>
+          <Property Name="Material" Type="varchar" MaxLength="20"  Nullable="true"/>
           <Property Name="Id_Proveedor" Type="int" Nullable="true"/>
           <Property Name="Edo_Rev" Type="int" Nullable="true"/>
-          <Property Name="CitaId" Type="int" Nullable="true"/>        
-          <Property Name="Estilo" Type="varchar" MaxLength="45"  Nullable="true"/>  
-        <Property Name="Color" Type="varchar" MaxLength="40"  Nullable="true"/>
+          <Property Name="CitaId" Type="int" Nullable="true"/>
+          <Property Name="Estilo" Type="varchar" MaxLength="45"  Nullable="true"/>
+          <Property Name="Color" Type="varchar" MaxLength="40"  Nullable="true"/>
           <Property Name="Cuenta" Type="varchar" MaxLength="100" Nullable="true"/>
         </EntityType>
-         <EntityType Name="gnzn_asn_pedidos_disponibles_sap">
+        <EntityType Name="gnzn_asn_pedidos_disponibles_sap">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -259,11 +261,11 @@
           <Property Name="Pedido" Type="varchar" MaxLength="10"  Nullable="true"/>
           <Property Name="Material" Type="varchar" MaxLength="18"  Nullable="true"/>
           <Property Name="Cantidad" Type="int" Nullable="true"/>
-         <Property Name="Id_Proveedor" Type="int" Nullable="true"/>
-         <Property Name="Numero_linea" Type="varchar" MaxLength="10"  Nullable="true"/>
-           <Property Name="Cuenta" Type="varchar" MaxLength="100"  Nullable="true"/>
+          <Property Name="Id_Proveedor" Type="int" Nullable="true"/>
+          <Property Name="Numero_linea" Type="varchar" MaxLength="10"  Nullable="true"/>
+          <Property Name="Cuenta" Type="varchar" MaxLength="100"  Nullable="true"/>
         </EntityType>
-        
+
         <EntityType Name="gnzn_asn_resultado_de_sprev_asn">
           <Key>
             <PropertyRef Name="IdRev" />
@@ -274,7 +276,7 @@
           <Property Name="IdProveedor" Type="int" Nullable="true"/>
           <Property Name="Cuenta" Type="varchar" MaxLength="100"  Nullable="true"/>
         </EntityType>
-        
+
         <EntityType Name="gnzn_datos_asn_contendores">
           <Key>
             <PropertyRef Name="id" />
@@ -288,28 +290,28 @@
           <Property Name="container_type" Type="varchar" MaxLength="10"  Nullable="true"/>
           <Property Name="DATE_TIME_STAMP"  Type="datetime" Precision="0" Nullable="true" />
           <Property Name="REASON_CODE" Type="varchar" MaxLength="5"  Nullable="true"/>
-         <Property Name="QUANTITY" Type="int" Nullable="true"/>
-         <Property Name="TMP_ERP_ORDER_LINE_NUM" Type="int" Nullable="true"/>
-         <Property Name="Id_Proveedor" Type="int" Nullable="true"/>
-         <Property Name="Pedido" Type="varchar" MaxLength="25"  Nullable="true"/>
-        <Property Name="CitaId" Type="int" Nullable="true"/>
+          <Property Name="QUANTITY" Type="int" Nullable="true"/>
+          <Property Name="TMP_ERP_ORDER_LINE_NUM" Type="int" Nullable="true"/>
+          <Property Name="Id_Proveedor" Type="int" Nullable="true"/>
+          <Property Name="Pedido" Type="varchar" MaxLength="25"  Nullable="true"/>
+          <Property Name="CitaId" Type="int" Nullable="true"/>
         </EntityType>
-        
-          <EntityType Name="gnzn_asn_etiquetas">
+
+        <EntityType Name="gnzn_asn_etiquetas">
           <Key>
             <PropertyRef Name="id_eti" />
           </Key>
           <Property Name="id_eti" Type="int" StoreGeneratedPattern="Identity" Nullable="false"/>
-           <Property Name="cita" Type="int" Nullable="true"/>
+          <Property Name="cita" Type="int" Nullable="true"/>
           <Property Name="carga" Type="varchar" MaxLength="45"  Nullable="true"/>
           <Property Name="recibo" Type="varchar" MaxLength="45"  Nullable="true"/>
           <Property Name="factura" Type="varchar" MaxLength="45"  Nullable="true"/>
           <Property Name="tienda" Type="varchar" MaxLength="10"  Nullable="true"/>
           <Property Name="caja" Type="varchar" MaxLength="45"  Nullable="true"/>
-            <Property Name="pares" Type="int" Nullable="true"/>
+          <Property Name="pares" Type="int" Nullable="true"/>
           <Property Name="estilo" Type="varchar" MaxLength="45"  Nullable="true"/>
           <Property Name="color" Type="varchar" MaxLength="45"  Nullable="true"/>
-         <Property Name="Id_Proveedor" Type="int" Nullable="true"/>
+          <Property Name="Id_Proveedor" Type="int" Nullable="true"/>
         </EntityType>
         <EntityType Name="citasscale">
           <Key>
@@ -415,6 +417,10 @@
           <Property Name="AlmacenRielId" Type="int" Nullable="false" />
           <Property Name="CitaId" Type="int" />
           <Property Name="ComentarioBloqueo" Type="varchar" MaxLength="2000" />
+          <Property Name="Citas" Type="varchar" MaxLength="200" />
+          <Property Name="CantidadTotal" Type="int" />
+          <Property Name="CantidadPorCita" Type="varchar" MaxLength="200" />
+          <Property Name="TipoCita" Type="varchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="horarios">
           <Key>
@@ -1327,6 +1333,8 @@
           <Property Name="Penalizado" Type="Boolean" Nullable="false" />
           <Property Name="MovimientoCita" Type="DateTime"/>
           <Property Name="TipoCita" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="true" />
+          <Property Name="HoraInicio" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="true" />
+          <Property Name="IdRiel" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="true" />
           <NavigationProperty Name="asns" Relationship="Self.fk_asn_cita" FromRole="citas" ToRole="asn" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.fk_citas_usuario" FromRole="citas" ToRole="AspNetUsers" />
           <NavigationProperty Name="estatuscita" Relationship="Self.fk_citas_estatus" FromRole="citas" ToRole="estatuscitas" />
@@ -1439,7 +1447,7 @@
           <Property Name="auditor" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="procesado" Type="Boolean" Nullable="false" />
           <Property Name="Correo" Type="String" MaxLength="241" FixedLength="false" Unicode="false" />
-         <Property Name="Totalsum" Type="Decimal" Nullable="false" />
+          <Property Name="Totalsum" Type="Decimal" Nullable="false" />
         </EntityType>
         <EntityType Name="audi">
           <Key>
@@ -1463,10 +1471,10 @@
           <Property Name="Pares" Type="Int32"/>
           <Property Name="Material" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Id_Proveedor" Type="Int32"/>
-         <Property Name="Edo_Rev" Type="Int32"/>
-         <Property Name="CitaId" Type="Int32"/>
-         <Property Name="Estilo" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-        <Property Name="Color" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="Edo_Rev" Type="Int32"/>
+          <Property Name="CitaId" Type="Int32"/>
+          <Property Name="Estilo" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="Color" Type="String" MaxLength="40" FixedLength="false" Unicode="false" />
           <Property Name="Cuenta" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="RevisarPedidos">
@@ -1477,8 +1485,8 @@
           <Property Name="Pedido" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Material" Type="String" MaxLength="18" FixedLength="false" Unicode="false" />
           <Property Name="Cantidad" Type="Int32"/>
-        <Property Name="Id_Proveedor" Type="Int32"/>
-        <Property Name="Numero_linea" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Id_Proveedor" Type="Int32"/>
+          <Property Name="Numero_linea" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Cuenta" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="MensajeResultado">
@@ -1491,8 +1499,8 @@
           <Property Name="IdProveedor" Type="Int32"/>
           <Property Name="Cuenta" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
         </EntityType>
-        
-          <EntityType Name="EnviarDatos">
+
+        <EntityType Name="EnviarDatos">
           <Key>
             <PropertyRef Name="id" />
           </Key>
@@ -1503,16 +1511,16 @@
           <Property Name="INTERFACE_CONDITION" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="container_id" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Name="container_type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-         <Property Name="DATE_TIME_STAMP" Type="DateTime" Nullable="true" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DATE_TIME_STAMP" Type="DateTime" Nullable="true" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="REASON_CODE" Type="String" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="QUANTITY" Type="Int32"/>
           <Property Name="TMP_ERP_ORDER_LINE_NUM" Type="Int32"/>
           <Property Name="Id_Proveedor" Type="Int32"/>
-            <Property Name="Pedido" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Pedido" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
           <Property Name="CitaId" Type="Int32"/>
         </EntityType>
 
-          <EntityType Name="EnviarEtiquetas">
+        <EntityType Name="EnviarEtiquetas">
           <Key>
             <PropertyRef Name="id_eti" />
           </Key>
@@ -1634,6 +1642,10 @@
           <Property Name="AlmacenRielId" Type="Int32" Nullable="false" />
           <Property Name="CitaId" Type="Int32" />
           <Property Name="ComentarioBloqueo" Type="String" MaxLength="2000" FixedLength="false" Unicode="false" />
+          <Property Name="Citas" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="CantidadTotal" Type="Int32" />
+          <Property Name="CantidadPorCita" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TipoCita" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="cita" Relationship="Self.fk_horariorieles_citas" FromRole="horariorieles" ToRole="citas" />
           <NavigationProperty Name="horario" Relationship="Self.fk_horariorieles_horarios" FromRole="horariorieles" ToRole="horarios" />
           <NavigationProperty Name="riele" Relationship="Self.fk_horariorieles_rieles" FromRole="horariorieles" ToRole="rieles" />
@@ -2470,6 +2482,8 @@
                 <ScalarProperty Name="Penalizado" ColumnName="Penalizado" />
                 <ScalarProperty Name="MovimientoCita" ColumnName="MovimientoCita" />
                 <ScalarProperty Name="TipoCita" ColumnName="TipoCita" />
+                <ScalarProperty Name="HoraInicio" ColumnName="HoraInicio" />
+                <ScalarProperty Name="IdRiel" ColumnName="IdRiel" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2572,7 +2586,7 @@
                 <ScalarProperty Name="auditor" ColumnName="auditor"/>
                 <ScalarProperty Name="procesado" ColumnName="procesado"/>
                 <ScalarProperty Name="Correo" ColumnName="Correo"/>
-              <ScalarProperty Name="Totalsum" ColumnName="Totalsum"/>
+                <ScalarProperty Name="Totalsum" ColumnName="Totalsum"/>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2588,7 +2602,7 @@
           <EntitySetMapping Name="gnzn_tmp_asn_revision_datos">
             <EntityTypeMapping TypeName="impuls_portalModel.RevisarDatos">
               <MappingFragment StoreEntitySet="gnzn_tmp_asn_revision_datos">
-                
+
                 <ScalarProperty Name="id" ColumnName="id"/>
                 <ScalarProperty Name="Carga" ColumnName="Carga"/>
                 <ScalarProperty Name="Caja" ColumnName="Caja"/>
@@ -2614,13 +2628,13 @@
                 <ScalarProperty Name="Pedido" ColumnName="Pedido"/>
                 <ScalarProperty Name="Material" ColumnName="Material"/>
                 <ScalarProperty Name="Cantidad" ColumnName="Cantidad"/>
-              <ScalarProperty Name="Id_Proveedor" ColumnName="Id_Proveedor"/>
-              <ScalarProperty Name="Numero_linea" ColumnName="Numero_linea"/>
-              <ScalarProperty Name="Cuenta" ColumnName="Cuenta"/>
+                <ScalarProperty Name="Id_Proveedor" ColumnName="Id_Proveedor"/>
+                <ScalarProperty Name="Numero_linea" ColumnName="Numero_linea"/>
+                <ScalarProperty Name="Cuenta" ColumnName="Cuenta"/>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-                    <EntitySetMapping Name="gnzn_asn_resultado_de_sprev_asn">
+          <EntitySetMapping Name="gnzn_asn_resultado_de_sprev_asn">
             <EntityTypeMapping TypeName="impuls_portalModel.MensajeResultado">
               <MappingFragment StoreEntitySet="gnzn_asn_resultado_de_sprev_asn">
                 <ScalarProperty Name="IdRev" ColumnName="IdRev"/>
@@ -2630,9 +2644,9 @@
                 <ScalarProperty Name="Cuenta" ColumnName="Cuenta"/>
               </MappingFragment>
             </EntityTypeMapping>
-             
+
           </EntitySetMapping>
-          
+
           <EntitySetMapping Name="gnzn_datos_asn_contendores">
             <EntityTypeMapping TypeName="impuls_portalModel.EnviarDatos">
               <MappingFragment StoreEntitySet="gnzn_datos_asn_contendores">
@@ -2653,7 +2667,7 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-            <EntitySetMapping Name="gnzn_asn_etiquetas">
+          <EntitySetMapping Name="gnzn_asn_etiquetas">
             <EntityTypeMapping TypeName="impuls_portalModel.EnviarEtiquetas">
               <MappingFragment StoreEntitySet="gnzn_asn_etiquetas">
                 <ScalarProperty Name="id_eti" ColumnName="id_eti"/>
@@ -2779,6 +2793,10 @@
                 <ScalarProperty Name="AlmacenRielId" ColumnName="AlmacenRielId" />
                 <ScalarProperty Name="CitaId" ColumnName="CitaId" />
                 <ScalarProperty Name="ComentarioBloqueo" ColumnName="ComentarioBloqueo" />
+                <ScalarProperty Name="Citas" ColumnName="Citas" />
+                <ScalarProperty Name="CantidadTotal" ColumnName="CantidadTotal" />
+                <ScalarProperty Name="CantidadPorCita" ColumnName="CantidadPorCita" />
+                <ScalarProperty Name="TipoCita" ColumnName="TipoCita" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

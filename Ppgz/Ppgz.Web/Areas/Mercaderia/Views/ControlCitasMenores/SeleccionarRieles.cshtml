@@ -1,20 +1,21 @@
 ﻿@using Ppgz.CitaWrapper
 @using Ppgz.Repository
 @using Ppgz.Web.Areas.Mercaderia
-@using System.Web.Script.Serialization;
+@using System.Data.Entity;
+@using System.Linq;
 @using Ppgz.Web.Infrastructure;
+
+
 @{
-    ViewBag.Title = "Verificación de Disponibilidad";
-    ViewBag.Descripcion = "Verifique el espacio disponible para su cita y seleccione el dia mas adecuado";
+    ViewBag.Title = "Selección de Rieles";
+    ViewBag.Descripcion = "Paso 5 Selección de Rieles";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
 
-    var fechaCita = ViewBag.date;
+    var fechaCita = (DateTime)currentCita.Fecha;
 
     var horarioRieles = (List<horarioriele>)ViewBag.HorarioRieles;
-
-    var fechas = (List<DateTime>)ViewBag.Fechas;
 
     var horarios = horarioRieles.Select(hr => new
     {
@@ -26,10 +27,10 @@
         hr.riele.andene
     }).Distinct().ToList().OrderBy(a => a.andene.Codigo);
 
-    var jsonSerialiser = new JavaScriptSerializer();
-    var Fechasjson = jsonSerialiser.Serialize(fechas);
 
-    //var rielesNecesarios = RulesManager.GetCantidadRieles(currentCita.Cantidad);
+    var rielesNecesarios = RulesManager.GetCantidadRieles(currentCita.Cantidad);
+
+    var cantidadMinimaCita = ViewBag.CantidadMinimaCita;
 
 }
 <link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
@@ -68,60 +69,54 @@
             <div class="col-sm-6">
                 <div>@currentCita.Proveedor.Rfc - @currentCita.Proveedor.Nombre1</div>
             </div>
+
+            <label class="col-sm-2 control-label">Almacén</label>
+            <div class="col-sm-2">
+                <div>@currentCita.Centro</div>
+            </div>
         </div>
         <div class="row">
             <label class="col-sm-2 control-label">Fecha de la cita</label>
-            <div class="col-sm-4">
+            <div class="col-sm-6">
                 <div>@fechaCita.ToString("dd/MM/yyyy")</div>
             </div>
-
-
-            <div class="col-sm-4">
-                @using (Html.BeginForm("VisualizarDisponibilidad", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "formu" }))
-                {
-                    @Html.AntiForgeryToken()
-
-                    @Html.ValidationSummary(true)
-                    @Html.Hidden("fechaspermitidas", @Fechasjson)
-                    @Html.Hidden("numeroDocumento", (string)@ViewBag.NumeroDocumento)
-                    <div class="form-group">
-                        <label class="col-sm-4 control-label">Cambiar Fecha</label>
-                        <div class="col-sm-7">
-                            <input type="text" class="form-control" value="@fechaCita.ToString("dd/MM/yyyy")" name="fecha" id="fecha" placeholder="Fecha" required />
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-sm-offset-4 col-sm-7">
-                            <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-arrow-right" aria-hidden="true" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La fecha de la cita no podrá ser modificada luego de este paso."></i> Siguiente</button>
-                        </div>
-                    </div>
-
-                }
+            <label class="col-sm-2 control-label">Total a Entregar</label>
+            <div class="col-sm-2">
+                <h4 style="margin: 0;">@currentCita.Cantidad</h4>
             </div>
-
-
-
-
         </div>
         <div class="row">
 
-            @using (Html.BeginForm("AgregarPrimeraOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "formue" }))
-            {
-                @Html.AntiForgeryToken()
-
-                @Html.ValidationSummary(true)
-                @Html.Hidden("numeroDocumento", (string)@ViewBag.NumeroDocumento)
-
-                <input type="hidden" class="form-control" value="@fechaCita.ToString("dd/MM/yyyy")" name="fecha" />
-
-                <div class="form-group">
-                    <div class="col-sm-5" style="margin-left: 10px;">
-                        <button type="submit" class="btn btn-success btn-block"><i class="fa fa-arrow-right" aria-hidden="true" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La fecha de la cita no podrá ser modificada luego de este paso."></i> Siguiente</button>
-                    </div>
+            <div class="col-sm-offset-6 col-sm-6">
+                <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                    <a class="btn btn-primary btn-agendar">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Agendar Cita
+                    </a>
+                    <a class="btn btn-warning" href="@Url.Action("ListaDeOrdenes", "ControlCitasMenores")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Modificar Cita
+                    </a>
+                    <a class="btn btn-success" href="@Url.Action("BuscarOrden", "ControlCitasMenores", new {proveedorId = currentCita.Proveedor.Id})">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-danger" href="@Url.Action("Index", "ControlCitasMenores")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
                 </div>
-
-            }
+                <div class="visible-sm visible-xs">
+                    <a class="btn btn-primary btn-block btn-agendar" href="#">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Agendar Cita
+                    </a>
+                    <a class="btn btn-warning btn-block" href="@Url.Action("ListaDeOrdenes", "ControlCitasMenores")">
+                        <i class="fa fa-check-square" aria-hidden="true"></i> Modificar Cita
+                    </a>
+                    <a class="btn btn-success btn-block" href="@Url.Action("BuscarOrden", "ControlCitasMenores", new { proveedorId = currentCita.Proveedor.Id })">
+                        <i class="fa fa-plus" aria-hidden="true"></i> Nueva Orden
+                    </a>
+                    <a class="btn btn-default btn-block" href="@Url.Action("Index", "ControlCitasMenores")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
+                        <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
+                    </a>
+                </div>
+            </div>
         </div>
 
 
@@ -134,6 +129,24 @@
 <div class="panel panel-default">
     <div class="panel-heading">Rieles Disponibles</div>
     <div class="panel-body">
+
+        <p style="margin: 0;">
+            <i>
+                Debe entergar <strong>@currentCita.Cantidad</strong> pares, por lo que debe seleccionar
+                <strong>@rielesNecesarios</strong> rieles.
+            </i>
+        </p>
+        <p>
+            <div>
+                <div class="col-md-7" style="padding: 0; margin-top: 10px;">Es importante que la selección de rieles tenga en lo posible alguno de los siguientes patrones:</div>
+                <ul class="list-inline col-md-5" style="padding: 0;">
+                    <li><strong>Vertical</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-vertical.jpg")" alt="Vertical" /></li>
+                    <li><strong>Horizontal</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-horizontal.jpg")" alt="Horizontal" /> </li>
+                    <li><strong>Matriz</strong> <img src="@Url.Content("~/assets/img/riel-ejemplo-matriz.jpg")" alt="Matriz" /></li>
+                </ul>
+            </div>
+        </p>
+
 
         <table class="table-rieles" width="100%" id="tb-3" style="">
             <thead>
@@ -189,14 +202,65 @@
                             }
                             var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
                             var par = Convert.ToInt32(resul.Valor);
-                            var disabledChecked = "disabled";
-                            var dataOff = "DISPONIBLE";
+                            var Total = par - riel.CantidadTotal;
+                            var disabledChecked = "";
+                            var dataOff = "Disponible:";
                             var dataOn = "MI RESERVA";
                             var offStyle = "primary";
                             var onStyle = "success";
                             var disponibleClass = "riel-disponible";
+                            var db = new Entities();
+                            var t = riel.CantidadTotal + currentCita.Cantidad;
+                            if (t < par && riel.Disponibilidad == false && riel.CitaId != null)
+                            {
+                                if (t < par && riel.Disponibilidad == false && riel.Citas != null)
+                                {
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "Disponible:" + Total;
+                                    //onStyle = "danger";
+                                    offStyle = "primary";
+                                    disponibleClass = "riel-disponible";
 
-                            if (!riel.Disponibilidad)
+
+                                }
+                                else
+                                {
+
+
+                                    disabledChecked = "disabled";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "OCUPADO";
+                                    //onStyle = "danger";
+                                    offStyle = "danger";
+                                    disponibleClass = "";
+
+                                    if (riel.CantidadTotal == 0 && riel.Disponibilidad == true)
+                                    {
+                                        disabledChecked = "disabled";
+                                        //dataOn = "OCUPADO";
+                                        dataOff = "hjjjh:" + Total;
+                                        //onStyle = "danger";
+                                        offStyle = "warning";
+                                        disponibleClass = "";
+                                    }
+                                    else
+                                    {
+                                        if (riel.Disponibilidad == true && riel.Citas == null)
+                                        {
+
+                                            disabledChecked = "disabled";
+                                            //dataOn = "OCUPADO";
+                                            dataOff = "OCUPADO";
+                                            //onStyle = "danger";
+                                            offStyle = "danger";
+                                            disponibleClass = "";
+                                        }
+
+                                    }
+
+                                }
+                            }
+                            else
                             {
                                 disabledChecked = "disabled";
                                 //dataOn = "OCUPADO";
@@ -204,16 +268,30 @@
                                 //onStyle = "danger";
                                 offStyle = "danger";
                                 disponibleClass = "";
-                            }
-                            else
-                            {
-                                if (riel.CantidadTotal < par && riel.Disponibilidad == true && riel.CitaId != null)
+
+                                if (riel.CantidadTotal == 0 && riel.Disponibilidad == true)
                                 {
-                                    dataOff = "OCUPADO";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "Disponible:" + Total;
                                     //onStyle = "danger";
-                                    offStyle = "danger";
-                                    disponibleClass = "";
+                                    offStyle = "warning";
+                                    disponibleClass = "riel-disponible";
                                 }
+                                else
+                                {
+                                    if (riel.Disponibilidad == true && riel.CitaId == null)
+                                    {
+
+                                        disabledChecked = "disabled";
+                                        //dataOn = "OCUPADO";
+                                        dataOff = "OCUPADO";
+                                        //onStyle = "danger";
+                                        offStyle = "danger";
+                                        disponibleClass = "";
+                                    }
+
+                                }
+
                             }
 
                             <td class="text-center" style="border-right: @borderRight">
@@ -239,10 +317,11 @@
                 }
             </tbody>
         </table>
-        @using (Html.BeginForm("Agendar", "ControlCitas", new { }, FormMethod.Post, new { id = "form-agendar" }))
+        @using (Html.BeginForm("Agendar", "ControlCitasMenores", new { }, FormMethod.Post, new { id = "form-agendar" }))
         {
             @Html.AntiForgeryToken()
-
+            DateTime fecha = DateTime.Now;
+            <input type="hidden" name="FechaCreacion" value="@fecha" />
         }
 
 
@@ -250,72 +329,44 @@
 </div>
 @section Scripts {
     @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
-    <script>
-        $(document).ready(function () {
-            $('#formu').validator();
-        });
-
-
-        $('#fecha').datetimepicker({
-            locale: 'es',
-            format: 'DD/MM/YYYY',
-            enabledDates: [
-                @foreach (var fecha in fechas)
-                {
-                    <text>
-                    "@fecha.ToString("yyyy-MM-dd")",
-                    </text>
-                }
-        ]
-
-
-    });
-    </script>
 
     <script type="text/javascript">
-        var rielesNecesarios = 22;
+        var rielesNecesarios = parseInt("@rielesNecesarios");
         var rielesSeleccionados = [];
         var enviado = false;
         $(function() {
             $('.btn-agendar').click(function() {
-
-                // TODO MEJORAR
-                if (rielesSeleccionados.length === rielesNecesarios) {
-
-                    if (enviado) {
-
-                        msgError("Por favor espere, se esta procesando el registro anterior.");
-                        return;
-                    }
-
-
-                    for (var i = 0; i < rielesNecesarios; i++) {
-                        $('<input>').attr({
-                            type: 'hidden',
-                            name: 'rielesIds',
-                            value: rielesSeleccionados[i]
-                        }).appendTo('#form-agendar');
-                    }
-
-                    $("#form-agendar").submit();
-
-                    $(this).attr("disabled", "disabled");
-
-                    $(this).unbind();
-
-                    $(this).off();
-
-                    enviado = true;
-
-
-                    $.blockUI({ message: '<h2>Por favor espere...</h2>' });
-
-
-                } else {
-                    msgError("Por favor verifique su selección");
-
+                //Validación de cantidad mínima permitida
+                if (@currentCita.Cantidad  > @cantidadMinimaCita){
+                    msgError("La cantidad total de la cita es mayor a " + @cantidadMinimaCita + " monto maximo permitido");
                 }
+                else {
+                    // TODO MEJORAR
+                    if (rielesSeleccionados.length === rielesNecesarios) {
 
+                        if (enviado) {
+
+                            msgError("Por favor espere, se esta procesando el registro anterior.");
+                            return;
+                        }
+
+
+                        for (var i = 0; i < rielesNecesarios; i++) {
+                            $('<input>').attr({
+                                type: 'hidden',
+                                name: 'rielesIds',
+                                value: rielesSeleccionados[i]
+                            }).appendTo('#form-agendar');
+                        }
+
+                        $("#form-agendar").submit();
+
+
+                        $.blockUI({ message: '<h2>Por favor espere...</h2>' });
+
+
+                    }
+                }
 
             });
 
@@ -376,24 +427,7 @@
 
             var input = $("#" + currentValue.Id);
 
-            if (currentValue.Disponibilidad) {
 
-                input.attr("data-off", "DISPONIBLE");
-                input.attr("data-offstyle", "primary");
-
-                input.addClass("riel-disponible");
-                input.bootstrapToggle('enable');
-
-            } else {
-
-                input.prop('checked', false);
-
-                liberarRiel(currentValue.Id);
-                input.attr("data-off", "OCUPADO");
-                input.attr("data-offstyle", "danger");
-                input.removeClass("riel-disponible");
-                input.bootstrapToggle('disable');
-            }
         }
 
 
@@ -405,7 +439,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("VerificarRieles", "ControlCitas")",
+                url: "@Url.Action("VerificarRieles", "ControlCitasMenores")",
                 data: data,
                 cache: false
             }).done(function (result) {

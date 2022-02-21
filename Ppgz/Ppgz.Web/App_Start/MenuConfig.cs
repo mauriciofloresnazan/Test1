@@ -11,7 +11,7 @@ namespace Ppgz.Web
         //PARA INCLUIR EN EL MENÚ, SEGUIR LOS PASOS:
         public static string[] TiposLista()
         {
-            string[] tipos = 
+            string[] tipos =
             {
                 "NAZAN",
                 "MERCADERIA",
@@ -22,7 +22,7 @@ namespace Ppgz.Web
         public static List<string> GetMenuFuncionalidad(this IPrincipal user)
         {
             Infrastructure.CommonManager _commonManager = new Infrastructure.CommonManager();
-            var cuenta =  _commonManager.GetCuentaUsuarioAutenticado();
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
             List<string> resultMenu = new List<string>();
             string[] tipos = TiposLista();
@@ -50,13 +50,13 @@ namespace Ppgz.Web
                 {
                     if ((t == "MERCADERIA" || t == "NAZAN") && cuenta.Factoraje == false)
                     {
-                        foreach(var item in menulist)
+                        foreach (var item in menulist)
                         {
-                            if(item.Substring(0,10)=="PRONTOPAGO")
+                            if (item.Substring(0, 10) == "PRONTOPAGO")
                                 menulist = menulist.Where(w => w != item).ToArray();
                             //menulist = menulist.Take(menulist.Count() - 1).ToArray();
                         }
-                        
+
                     }
                 }
 
@@ -134,13 +134,14 @@ namespace Ppgz.Web
                 "VISTACITASCALIDAD|Reporte Devoluciones De tienda|Index|InformacionDevolucionesTienda|fa fa-area-chart|Nazan",
                 "VISTACITASCALIDAD|Reporte De Rechazos De Cedis|Index|ReporteRechazosCedis|fa fa-spinner|Nazan",
                 "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
+                 "PENALIZACIONES|Administración de Penalizaciones Menor a 270|Index|PenalizacionesMenor|fa fa-exclamation-circle|Nazan",
                 "AUDITORIA|Administración de Cargos Por Auditoria|Index|PenalizacionesAuditor|fa fa-exclamation-triangle|Nazan",
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
                 "CONFIGNEG|Configuración de Negocio|Index|Configneg|fa fa-cogs|Nazan",
                 "VISTAPROVEEDOR|Vista de Proveedor|Index|VistaProveedor|fa fa-binoculars|Nazan",
-				"PRONTOPAGO|Pronto Pago|Index|ProntoPago|fa fa-binoculars|Nazan"
-			};
+                "PRONTOPAGO|Pronto Pago|Index|ProntoPago|fa fa-binoculars|Nazan"
+            };
             return menuLista;
         }
         public static string[] MenuMercaderia()
@@ -162,6 +163,7 @@ namespace Ppgz.Web
                 "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
                 "CONTROLCITAS|Control de Citas Multi Pedidos|Citas|ControlCitasMulti|fa fa-calendar|Mercaderia",
                 "CONTROLCITAS|Recibo Por Asn|Citas|ReciboPorAsn|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Control de Citas Menores 270 Pares|Citas|ControlCitasMenores|fa fa-calendar|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Citas|ControlCitasSA|fa fa-calendar|Mercaderia",
                 "COMPROBANTESRECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
@@ -308,13 +310,13 @@ namespace Ppgz.Web
                     };
                     break;
                 case "ProntoPago":
-					menu = new List<string>
-					{
-						"PRONTOPAGO|Nueva Solicitud|Index|ProntoPago|fa fa-calculator|Mercaderia",
-						"PRONTOPAGO|Ver Solicitudes|VerSolicitudes?proveedorId=" + parametros["proveedorId"] + "|ProntoPago|fa fa-calculator|Mercaderia"
-					};
-					break;
-				default:
+                    menu = new List<string>
+                    {
+                        "PRONTOPAGO|Nueva Solicitud|Index|ProntoPago|fa fa-calculator|Mercaderia",
+                        "PRONTOPAGO|Ver Solicitudes|VerSolicitudes?proveedorId=" + parametros["proveedorId"] + "|ProntoPago|fa fa-calculator|Mercaderia"
+                    };
+                    break;
+                default:
                     string menuDefault = "";
                     menuDefault = NombreXController(nombreControllerActual, "MERCADERIA");
                     menu = new List<string>
@@ -394,6 +396,15 @@ namespace Ppgz.Web
 
                     };
                     break;
+                case "PenalizacionesMenor":
+                    menu = new List<string>
+                    {
+                        "PENALIZACIONES|Administración de Penalizaciones|Index|PenalizacionesMenor|fa fa-exclamation-circle|Nazan",
+                        "PENALIZACIONES|Lista de Penalizaciones|Editar|PenalizacionesMenor|fa fa-calculator|Nazan",
+                        "PENALIZACIONES|Reporte de Penalizaciones|Reporte|PenalizacionesMenor|fa fa-line-chart|Nazan"
+
+                    };
+                    break;
                 case "PenalizacionesAuditor":
                     menu = new List<string>
                     {
@@ -408,9 +419,12 @@ namespace Ppgz.Web
                     {
                         "ADMINISTRARCITAS|Administración de Citas|Index|AdministrarCitas|fa fa-calendar|Nazan",
                         "ADMINISTRARCITAS|Vista Diaria|Enroque|AdministrarCitas|fa fa-calendar|Nazan",
+                         "ADMINISTRARCITAS|Administración de Citas Menores a 270 Pares|IndexM|AdministrarCitas|fa fa-calendar|Nazan",
                         "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
+                        "PENALIZACIONES|Administración de Penalizaciones Citas Menores 270|Index|PenalizacionesMenor|fa fa-exclamation-circle|Nazan",
                         "ADMINISTRARCITAS|Bloquear Rieles|DisponibilidadRieles|AdministrarCitas|fa fa-ban|Nazan",
                          "ADMINISTRARCITAS|Desbloquear Rieles|DisponibilidadRieles1|AdministrarCitas|fa fa-unlock|Nazan",
+
                     };
                     break;
                 case "AdministrarCitas1":
@@ -418,7 +432,8 @@ namespace Ppgz.Web
                     {
                         "VISTACITASCALIDAD|Administración de Citas|Index|AdministrarCitas1|fa fa-calendar|Nazan",
                         "VISTACITASCALIDAD|Vista Diaria|Enroque1|AdministrarCitas1|fa fa-calendar|Nazan",
-                        
+                         "ADMINISTRARCITAS|Administración de Citas Menores a 270 Pares|IndexM|AdministrarCitas1|fa fa-calendar|Nazan",
+
                     };
                     break;
                 case "AdministrarCitasCompradores":
@@ -426,6 +441,7 @@ namespace Ppgz.Web
                     {
                         "VISTACITASCOMPRADORES|Administración de Citas|Index|AdministrarCitasCompradores|fa fa-calendar|Nazan",
                         "VISTACITASCOMPRADORES|Vista Diaria|Enroque1|AdministrarCitasCompradores|fa fa-calendar|Nazan",
+                         "ADMINISTRARCITAS|Administración de Citas Menores a 270 Pares|IndexM|AdministrarCitasCompradores|fa fa-calendar|Nazan",
 
                     };
                     break;
@@ -472,7 +488,7 @@ namespace Ppgz.Web
             Startup listasStartup = new Startup();
             if (tipo == "NAZAN")
             {
-                Dictionary<string,string> rolesNazan = listasStartup.GetRolesNazan();
+                Dictionary<string, string> rolesNazan = listasStartup.GetRolesNazan();
                 foreach (KeyValuePair<string, string> role in rolesNazan)
                 {
                     if (user.IsInRole(role.Key))
@@ -507,4 +523,3 @@ namespace Ppgz.Web
         }
     }
 }
-                

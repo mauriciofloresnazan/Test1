@@ -14,10 +14,7 @@
     {
         hr.riele.andene
     }).Distinct().ToList().OrderBy(a => a.andene.Codigo);
-
-    var citas = horarioRieles.Where(hr => hr.CitaId != null).Select(hr => hr.cita).Distinct().ToList();
-
-    var totalCantidad = citas.Sum(c => c.CantidadTotal);
+    var cantidadMinimaCita = ViewBag.Total;
     var horariobase = horarios.FirstOrDefault().horario;
     var numrieles = horarioRieles.Where(hr => hr.CitaId != null).ToList();
     var numrieles1 = horarioRieles.Where(hr => hr.ComentarioBloqueo != "bloqueado" && hr.ComentarioBloqueo != null && hr.ComentarioBloqueo != "BLOQUEADO").ToList();
@@ -132,10 +129,12 @@
                             var btnClass = "btn-primary";
 
 
-
                             if (!riel.Disponibilidad)
                             {
-                                if (riel.cita != null)
+
+
+
+                                if (riel.cita != null && riel.CantidadPorCita == null && riel.TipoCita != "Cita Menor")
                                 {
                                     var crossDockLabel = "";
                                     var tiendasAlmacen = "Almacén: " + riel.cita.Almacen;
@@ -148,12 +147,12 @@
 
                                     btnText = string.Format(
                                         @"<div style='font-weight: 1.5em'>Cita #{0} {1}</div>
-                                              <hr style='margin:0; margin-top: 2px;'>
-                                            <div style='word-wrap: break-word;white-space: normal;' class=''>{2}</div>
-                                            <div style='word-wrap: break-word;white-space: normal;background: #407b40;color:#fff; padding: 5px;'>{3}
-                                            </div>
-                                            <div>Total: {4} Pares</div>
-                                            <div>{5}</div>",
+                                                      <hr style='margin:0; margin-top: 2px;'>
+                                                    <div style='word-wrap: break-word;white-space: normal;' class=''>{2}</div>
+                                                    <div style='word-wrap: break-word;white-space: normal;background: #407b40;color:#fff; padding: 5px;'>{3}
+                                                    </div>
+                                                    <div>Total: {4} Pares</div>
+                                                    <div>{5}</div>",
                                         riel.cita.Id, crossDockLabel,
                                         string.Format("{0} {1} {2} {3}", riel.cita.proveedore.Nombre1, riel.cita.proveedore.Nombre2,
                                         riel.cita.proveedore.Nombre3, riel.cita.proveedore.Nombre4),
@@ -163,12 +162,14 @@
                                 }
                                 else
                                 {
+
                                     btnClass = "btn-danger";
 
                                     if (riel.ComentarioBloqueo != null)
                                     {
                                         int bloqueo = 0;
                                         string[] split = riel.ComentarioBloqueo.Split(new Char[] { '#' });
+
                                         if (split.Length > 2)
                                         {
                                             split[1] = split[1].Replace(",", "");
@@ -181,7 +182,9 @@
                                         }
 
                                         cantidadBloqueada += bloqueo;
-                                        btnText = string.Format("<p style='word-wrap: break-word;white-space: normal;'>{0}</p><hr style='margin:0'>", riel.ComentarioBloqueo);
+                                        btnText = string.Format("<p style='word-wrap: break-word;white-space: normal;'>Proveedores/Comentario: {0}</p><hr style='margin:0'>" +
+                                            "<p style='word-wrap: break-word;white-space: normal;'>Pares: {1}</p><hr style='margin:0'>" + "<p style='word-wrap: break-word;white-space: normal;'>Citas: {2}</p><hr style='margin:0'>" +
+                                            "<p style='word-wrap: break-word;white-space: normal;'>", riel.ComentarioBloqueo, riel.CantidadTotal, riel.Citas);
                                     }
                                     else
                                     {
@@ -189,6 +192,33 @@
                                     }
                                 }
                             }
+                            else
+                            {
+                                if (riel.Disponibilidad == true && riel.Citas != null)
+                                {
+                                    btnClass = "btn-danger";
+
+                                    int bloqueo = 0;
+                                    string[] split = riel.ComentarioBloqueo.Split(new Char[] { '#' });
+
+                                    if (split.Length > 2)
+                                    {
+                                        split[1] = split[1].Replace(",", "");
+                                        split[1] = split[1].Replace(" ", "");
+                                        if (String.IsNullOrEmpty(split[1]) || String.IsNullOrWhiteSpace(split[1]))
+                                        {
+                                            split[1] = "0";
+                                        }
+                                        int.TryParse(split[1], out bloqueo);
+                                    }
+
+                                    cantidadBloqueada += bloqueo;
+                                    btnText = string.Format("<p style='word-wrap: break-word;white-space: normal;'>Proveedores/Comentario: {0}</p><hr style='margin:0'>" +
+                                        "<p style='word-wrap: break-word;white-space: normal;'>Pares: {1}</p><hr style='margin:0'>" + "<p style='word-wrap: break-word;white-space: normal;'>Citas: {2}</p><hr style='margin:0'>" +
+                                        "<p style='word-wrap: break-word;white-space: normal;'>", riel.ComentarioBloqueo, riel.CantidadTotal, riel.Citas);
+                                }
+                            }
+
 
                             <td class="text-center" width="@tdWidth" style="border-right: @borderRight;">
 
@@ -219,11 +249,11 @@
         var rielesSeleccionados = [];
 
         $(document).ready(function () {
-            var descargar = @totalCantidad + @cantidadBloqueada;
+            var sum = @cantidadMinimaCita + @cantidadBloqueada;
             var per = @capacidadmax /  @totalrieles *100;
             var text = per.toFixed(2) + " %";
             $('#hPorcentaje').text(text);
-            $('#hDescargar').text(descargar);
+            $('#hDescargar').text(sum);
 
             $('#fecha').datetimepicker({
                 locale: 'es',

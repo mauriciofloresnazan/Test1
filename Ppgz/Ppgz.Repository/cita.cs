@@ -37,6 +37,8 @@ namespace Ppgz.Repository
         public bool Penalizado { get; set; }
         public Nullable<System.DateTime> MovimientoCita { get; set; }
         public string TipoCita { get; set; }
+        public string HoraInicio { get; set; }
+        public string IdRiel { get; set; }
         public virtual ICollection<asn> asns { get; set; }
         public virtual AspNetUser AspNetUser { get; set; }
         public virtual estatuscita estatuscita { get; set; }

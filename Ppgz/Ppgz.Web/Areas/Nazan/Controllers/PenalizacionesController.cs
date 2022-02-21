@@ -28,7 +28,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             var fecha = DateTime.Today.AddMonths(-3);
 
-            ViewBag.Citas = db.citas.Where(c => c.FechaCita > fecha & c.FechaCita < DateTime.Today).OrderByDescending(c => c.FechaCita).ToList();
+            ViewBag.Citas = db.citas.Where(c => c.FechaCita > fecha & c.FechaCita < DateTime.Today &&c.TipoCita!="Cita Menor").OrderByDescending(c => c.FechaCita).ToList();
 
             ViewBag.EstatusCita = db.estatuscitas.ToList();
 
@@ -56,7 +56,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             ///var fecha = DateTime.Today.AddMonths(-3);
 
-            ViewBag.Citas = db.citas.Where(c => c.FechaCita > dateFechaDesde & c.FechaCita < dateFechaHasta & c.estatuscita != null).OrderByDescending(c => c.FechaCita).ToList();
+            ViewBag.Citas = db.citas.Where(c => c.FechaCita > dateFechaDesde & c.FechaCita < dateFechaHasta & c.estatuscita != null&&c.TipoCita!="Cita Menor").OrderByDescending(c => c.FechaCita).ToList();
 
             ViewBag.EstatusCita = db.estatuscitas.ToList();
             ViewBag.FechaDesde = dateFechaDesde;

@@ -29,7 +29,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         readonly SapReciboAsn DatosSap = new SapReciboAsn();
         private readonly EtiquetasManager _etiquetasManager = new EtiquetasManager();
         private readonly PlantillaManager _PlantillaManager = new PlantillaManager();
-        
+
         private const string NombreVarSession = "controlCita";
         private const string NombreVarSession2 = "SociedadCita";
         internal void LimpiarCita()
@@ -331,10 +331,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             for (var i = 2; i < ws.RowsUsed().ToList().Count + 1; i++)
             {
 
-               
-                if (ws.Row(i).Cell(1).Value.ToString() == "" || ws.Row(i).Cell(2).Value.ToString() == ""||
-                    ws.Row(i).Cell(3).Value.ToString() == ""|| ws.Row(i).Cell(4).Value.ToString() == ""||
-                    ws.Row(i).Cell(5).Value.ToString() == ""|| ws.Row(i).Cell(6).Value.ToString() == ""||
+
+                if (ws.Row(i).Cell(1).Value.ToString() == "" || ws.Row(i).Cell(2).Value.ToString() == "" ||
+                    ws.Row(i).Cell(3).Value.ToString() == "" || ws.Row(i).Cell(4).Value.ToString() == "" ||
+                    ws.Row(i).Cell(5).Value.ToString() == "" || ws.Row(i).Cell(6).Value.ToString() == "" ||
                     ws.Row(i).Cell(7).Value.ToString() == "")
                 {
 
@@ -373,9 +373,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 archivo.Pares = pares;
                 archivo.Material = result[0];
                 archivo.Id_Proveedor = Convert.ToInt32(proveedor.NumeroProveedor);
-                archivo.Estilo =result[3];
-                archivo.Color =result[4];
-                archivo.Cuenta= Convert.ToString(cuenta.NombreCuenta);
+                archivo.Estilo = result[3];
+                archivo.Color = result[4];
+                archivo.Cuenta = Convert.ToString(cuenta.NombreCuenta);
                 db.RevisarDatos.Add(archivo);
                 db.SaveChanges();
                 var orden = CurrentCita._ordenesActivas.FirstOrDefault(o => o.NumeroDocumento == Pedido);
@@ -411,8 +411,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         sap.Material = preAsnDetail.NumeroMaterial;
                         sap.Cantidad = preAsnDetail.Cantidad;
                         sap.Id_Proveedor = Convert.ToInt32(proveedor2.NumeroProveedor);
-                        sap.Numero_linea =preAsnDetail.NumeroPosicion; 
-                        sap.Cuenta=Convert.ToString(cuenta1.NombreCuenta);
+                        sap.Numero_linea = preAsnDetail.NumeroPosicion;
+                        sap.Cuenta = Convert.ToString(cuenta1.NombreCuenta);
                         db1.RevisarPedidos.Add(sap);
                         db1.SaveChanges();
 
@@ -432,7 +432,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var db3 = new Entities();
             var proveedorval = CurrentCita.Proveedor;
             var pov = Convert.ToInt32(proveedor1.NumeroProveedor);
-            var validarped = db3.MensajeResultado.Where(m => m.IdProveedor == pov && m.MsjError== "Pedido No Valido en SAP").GroupBy(x => x.DatoConDetalle).Select(x => x.FirstOrDefault());
+            var validarped = db3.MensajeResultado.Where(m => m.IdProveedor == pov && m.MsjError == "Pedido No Valido en SAP").GroupBy(x => x.DatoConDetalle).Select(x => x.FirstOrDefault());
             foreach (var csp in validarped)
             {
                 var result = DatosSap.MensajeError(csp.DatoConDetalle);
@@ -447,12 +447,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
                     var db1 = new Entities();
                     csp.MsjError = Convert.ToString(csp.DatoConDetalle);
-                    csp.DatoConDetalle= string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}", result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], "/", "Favor de comunicarse con su comprador");
-                    csp.Cuenta= Convert.ToString(cuenta.NombreCuenta);
+                    csp.DatoConDetalle = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}", result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], "/", "Favor de comunicarse con su comprador");
+                    csp.Cuenta = Convert.ToString(cuenta.NombreCuenta);
                     db1.Entry(csp).State = EntityState.Modified;
                     db1.SaveChanges();
                 }
-                
+
 
             }
             var archivo1 = db2.MensajeResultado.FirstOrDefault(val => val.IdProveedor == pov);
@@ -643,11 +643,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
              select p).ToList()
            .ForEach(x => x.Cantidad = 0);
             db2.SaveChanges();
-            
+
             foreach (var o in revisar)
             {
-                var preAsn = pedidos.FirstOrDefault(or => or.Material == o.Material && or.Pedido==o.Pedido);
-                var dato = revisar.Where(x => x.Material == preAsn.Material && x.Pedido==preAsn.Pedido).Sum(x => x.Pares);
+                var preAsn = pedidos.FirstOrDefault(or => or.Material == o.Material && or.Pedido == o.Pedido);
+                var dato = revisar.Where(x => x.Material == preAsn.Material && x.Pedido == preAsn.Pedido).Sum(x => x.Pares);
                 if (preAsn == null)
                 {
                     return RedirectToAction("FechaCita");
@@ -668,14 +668,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 }
 
             }
-            var archivo2 = db2.RevisarPedidos.Where(rp=> rp.Id_Proveedor==pvr).ToList();
+            var archivo2 = db2.RevisarPedidos.Where(rp => rp.Id_Proveedor == pvr).ToList();
             foreach (var orden in archivo2)
             {
                 var numero = orden.Pedido;
                 var numero1 = orden.Material;
                 var numero2 = orden.Cantidad;
 
-                CurrentCita.UpdateDetailAsn(numero,numero1,numero2);
+                CurrentCita.UpdateDetailAsn(numero, numero1, numero2);
 
             }
             return RedirectToAction("SeleccionarRieles", new { numeroDocumento });
@@ -764,8 +764,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [HttpPost]
         public ActionResult Agendar(int[] rielesIds, DateTime FechaCreacion)
         {
- 
-                if (CurrentCita.Fecha == null)
+
+            if (CurrentCita.Fecha == null)
             {
                 // Todo mejorar
                 return RedirectToAction("Citas");
@@ -781,7 +781,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 HorarioRielesIds = rielesIds.ToList(),
                 FechaCreacion = (DateTime)FechaCreacion,
                 Sociedad = SociedadCita,
-                TipoCita="Cita Por Asn"
+                TipoCita = "Cita Por Asn"
             };
             foreach (var preAsn in CurrentCita.GetPreAsns())
             {
@@ -807,7 +807,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     });
                 }
             }
-            
+
             try
             {
                 CitaManager.RegistrarCitaAsn(preCita);
@@ -828,12 +828,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var db = new Entities();
             var proveedorc = CurrentCita.Proveedor;
             var p = Convert.ToInt32(proveedorc.NumeroProveedor);
-          
+
             var borrarPedi = db.RevisarPedidos.Where(m => m.Id_Proveedor == p).ToList();
             db.RevisarPedidos.RemoveRange(borrarPedi);
             db.SaveChanges();
             LimpiarCita();
-            System.Threading.Thread.Sleep(60000);
+            System.Threading.Thread.Sleep(210000);
             TempData["FlashSuccess"] = "Ha terminado de configurar su cita exitosamente";
             return RedirectToAction("Citas");
         }
@@ -845,7 +845,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
             var db = new Entities();
             var fecha = DateTime.Today.Date;
-            var citas = db.citas.Where(c => proveedoresIds.Contains(c.ProveedorId) && c.FechaCita >= fecha && c.TipoCita != null).ToList();
+            var citas = db.citas.Where(c => proveedoresIds.Contains(c.ProveedorId) && c.FechaCita >= fecha && c.TipoCita == "Cita Por Asn").ToList();
             ViewBag.Citas = citas;
             return View();
         }
@@ -877,10 +877,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var cita = db.citas.FirstOrDefault(c => proveedoresIds.Contains(c.ProveedorId) && c.Id == citaId);
             var proveedor = cita.proveedore;
             var pvr = Convert.ToInt32(proveedor.NumeroProveedor);
-            var borrardatos = db.RevisarDatos.Where(m => m.CitaId==citaId && m.Id_Proveedor == pvr).ToList();
-            var borrardatos0 = db.RevisarDatos.Where(m => m.Edo_Rev==0 && m.Id_Proveedor == pvr).ToList();
-            var borrareti = db.EnviarEtiquetas.Where(m => m.cita==citaId && m.Id_Proveedor==pvr).ToList();
-            var borrarCon = db.EnviarDatos.Where(m => m.CitaId==citaId && m.Id_Proveedor==pvr).ToList();
+            var borrardatos = db.RevisarDatos.Where(m => m.CitaId == citaId && m.Id_Proveedor == pvr).ToList();
+            var borrardatos0 = db.RevisarDatos.Where(m => m.Edo_Rev == 0 && m.Id_Proveedor == pvr).ToList();
+            var borrareti = db.EnviarEtiquetas.Where(m => m.cita == citaId && m.Id_Proveedor == pvr).ToList();
+            var borrarCon = db.EnviarDatos.Where(m => m.CitaId == citaId && m.Id_Proveedor == pvr).ToList();
             db.RevisarDatos.RemoveRange(borrardatos);
             db.RevisarDatos.RemoveRange(borrardatos0);
             db.EnviarEtiquetas.RemoveRange(borrareti);
@@ -926,7 +926,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             string etiquetasPrint = "";
 
             var db = new Entities();
-            var archivo1 = db.EnviarEtiquetas.Where(et=> et.cita==citaId).ToList();
+            var archivo1 = db.EnviarEtiquetas.Where(et => et.cita == citaId).ToList();
             foreach (var et in archivo1)
             {
 
@@ -934,24 +934,24 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 ^JZN
 ^PR9			
 ^PQ1
-^FO0,10^A0N ,45,25^FD"+et.carga+@"^FS
-^FO0,65^A0N ,150,70^FD" + et.cita+ @"^FS
-^FO230,5^BY,2.5^BAN,170Y^FD"+et.recibo+@"^FS
+^FO0,10^A0N ,45,25^FD" + et.carga + @"^FS
+^FO0,65^A0N ,150,70^FD" + et.cita + @"^FS
+^FO230,5^BY,2.5^BAN,170Y^FD" + et.recibo + @"^FS
 ^FO5,195^A0N ,45,25^FDPares:^FS
-^FO60,190^A0N ,55,55^FD "+et.pares+@"^FS
+^FO60,190^A0N ,55,55^FD " + et.pares + @"^FS
 ^FO230,218^A0N ,30,25^FDTienda:^FS
-^FO300,218^A0N ,30,25^FD "+et.tienda+@"^FS
+^FO300,218^A0N ,30,25^FD " + et.tienda + @"^FS
 ^FO400,218^A0N ,30,25^FDIDProv:^FS
-^FO500,218^A0N ,30,25^FD"+et.Id_Proveedor+ @"^FS
-^FO200,250^BY,2.1^BAN,122Y^FD"+et.caja+@"^FS
+^FO500,218^A0N ,30,25^FD" + et.Id_Proveedor + @"^FS
+^FO200,250^BY,2.1^BAN,122Y^FD" + et.caja + @"^FS
 ^FO0,240^A0N ,25,25^FD Color:^FS
-^FO0,265^A0N ,35,35^FD"+et.color+@"^FS
+^FO0,265^A0N ,35,35^FD" + et.color + @"^FS
 ^FO0,310^A0N ,25,25^FDEstilo:^FS
-^FO80,305^A0N ,35,35^FD"+et.estilo+@"^FS
+^FO80,305^A0N ,35,35^FD" + et.estilo + @"^FS
 ^FO0,340^A0N ,25,25^FDFactura:^FS
-^FO0,370^A0N ,35,35^FD"+et.factura+@"^FS
+^FO0,370^A0N ,35,35^FD" + et.factura + @"^FS
 ^XZ");
-     }
+            }
 
 
             foreach (string etiqueta in etiquetas)
@@ -981,7 +981,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult Individual(int citaId )
+        public ActionResult Individual(int citaId)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
@@ -1002,7 +1002,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 return RedirectToAction("Citas");
             }
             var db2 = new Entities();
-            
+
             ViewBag.etiq = db2.EnviarEtiquetas.Where(csa => csa.cita == citaId).ToList();
 
             return View();
@@ -1049,15 +1049,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             }
 
-                foreach (string etiqueta in etiquetas)
-                {
-                    etiquetasPrint = etiquetasPrint + etiqueta;
-                }
+            foreach (string etiqueta in etiquetas)
+            {
+                etiquetasPrint = etiquetasPrint + etiqueta;
+            }
 
-                ViewBag.etiquetas = etiquetas;
-                ViewBag.etiquetasPrint = etiquetasPrint;
-                TempData["texto"] = etiquetasPrint;
-            
+            ViewBag.etiquetas = etiquetas;
+            ViewBag.etiquetasPrint = etiquetasPrint;
+            TempData["texto"] = etiquetasPrint;
+
 
             return View();
         }

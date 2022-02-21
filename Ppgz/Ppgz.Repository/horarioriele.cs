@@ -21,7 +21,11 @@ namespace Ppgz.Repository
         public int AlmacenRielId { get; set; }
         public Nullable<int> CitaId { get; set; }
         public string ComentarioBloqueo { get; set; }
-    
+        public string Citas { get; set; }
+        public Nullable<int> CantidadTotal { get; set; }
+        public string CantidadPorCita { get; set; }
+        public string TipoCita { get; set; }
+
         public virtual cita cita { get; set; }
         public virtual horario horario { get; set; }
         public virtual riele riele { get; set; }

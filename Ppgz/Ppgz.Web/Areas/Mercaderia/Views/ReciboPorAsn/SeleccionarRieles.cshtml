@@ -1,6 +1,7 @@
 ﻿@using Ppgz.CitaWrapper
 @using Ppgz.Repository
 @using Ppgz.Web.Areas.Mercaderia
+@using Ppgz.Web.Infrastructure;
 @{
     ViewBag.Title = "Selección de Rieles";
     ViewBag.Descripcion = "Paso 5 Selección de Rieles";
@@ -9,7 +10,7 @@
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
 
     var fechaCita = (DateTime)currentCita.Fecha;
-    
+
     var horarioRieles = (List<horarioriele>)ViewBag.HorarioRieles;
 
     var horarios = horarioRieles.Select(hr => new
@@ -26,7 +27,7 @@
     var rielesNecesarios = RulesManager.GetCantidadRieles(currentCita.Cantidad);
 
     var cantidadMinimaCita = ViewBag.CantidadMinimaCita;
-    
+
 }
 <link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
 <style>
@@ -49,8 +50,6 @@
         border-color: #ccc;
         background-image: none;
     }
-
-
 </style>
 
 <h2>@ViewBag.Title</h2>
@@ -185,13 +184,15 @@
                             {
                                 borderRight = "solid 1px #666";
                             }
-
+                            var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
+                            var par = Convert.ToInt32(resul.Valor);
                             var disabledChecked = "";
                             var dataOff = "DISPONIBLE";
                             var dataOn = "MI RESERVA";
                             var offStyle = "primary";
                             var onStyle = "success";
                             var disponibleClass = "riel-disponible";
+
 
                             if (!riel.Disponibilidad)
                             {
@@ -202,6 +203,18 @@
                                 offStyle = "danger";
                                 disponibleClass = "";
                             }
+                            else
+                            {
+                                if (riel.CantidadTotal < par && riel.Disponibilidad == true && riel.Citas != null)
+                                {
+                                    disabledChecked = "disabled";
+                                    dataOff = "OCUPADO";
+                                    //onStyle = "danger";
+                                    offStyle = "danger";
+                                    disponibleClass = "";
+                                }
+
+                            }
 
                             <td class="text-center" style="border-right: @borderRight">
                                 <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
@@ -211,17 +224,17 @@
                         }
 
                         @*<td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
                     </tr>
                 }
             </tbody>
@@ -251,7 +264,7 @@
         $(function() {
             $('.btn-agendar').click(function() {
                 //Validación de cantidad mínima permitida
-            
+
                     // TODO MEJORAR
                     if (rielesSeleccionados.length === rielesNecesarios) {
 
@@ -287,7 +300,7 @@
                     } else {
                         msgError("Por favor verifique su selección");
                     }
-               
+
 
             });
 
@@ -348,24 +361,7 @@
 
             var input = $("#" + currentValue.Id);
 
-            if (currentValue.Disponibilidad) {
-                
-                input.attr("data-off", "DISPONIBLE");
-                input.attr("data-offstyle", "primary");
 
-                input.addClass("riel-disponible");
-                input.bootstrapToggle('enable');
-
-            } else {
-
-                input.prop('checked', false);
-
-                liberarRiel(currentValue.Id);
-                input.attr("data-off", "OCUPADO");
-                input.attr("data-offstyle", "danger");
-                input.removeClass("riel-disponible");
-                input.bootstrapToggle('disable');
-            }
         }
 
 
@@ -395,7 +391,7 @@
                 console.log(response);
 
             });
-     
+
         }
     </script>
 }

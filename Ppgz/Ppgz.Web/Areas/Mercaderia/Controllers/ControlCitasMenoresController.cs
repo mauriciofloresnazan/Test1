@@ -17,42 +17,44 @@ using System.Web.Script.Serialization;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
-    [Authorize]
-    [TerminosCondiciones]
-    public class ControlCitasMultiController : Controller
-    {
-        readonly ProveedorManager _proveedorManager = new ProveedorManager();
-        readonly CommonManager _commonManager = new CommonManager();
 
-        private const string NombreVarSession = "controlCita";
+
+	[Authorize]
+	[TerminosCondiciones]
+	public class ControlCitasMenoresController : Controller
+	{
+		readonly ProveedorManager _proveedorManager = new ProveedorManager();
+		readonly CommonManager _commonManager = new CommonManager();
+
+		private const string NombreVarSession = "controlCita";
         private const string NombreVarSession2 = "SociedadCita";
         internal void LimpiarCita()
-        {
-            if (System.Web.HttpContext.Current.Session[NombreVarSession] != null)
-            {
-                System.Web.HttpContext.Current.Session.Remove(NombreVarSession);
-            }
+		{
+			if (System.Web.HttpContext.Current.Session[NombreVarSession] != null)
+			{
+				System.Web.HttpContext.Current.Session.Remove(NombreVarSession);
+			}
             if (System.Web.HttpContext.Current.Session[NombreVarSession2] != null)
             {
                 System.Web.HttpContext.Current.Session.Remove(NombreVarSession2);
             }
         }
 
-        internal CurrentCita CurrentCita
-        {
-            get
-            {
-                if (System.Web.HttpContext.Current.Session[NombreVarSession] == null)
-                {
-                    return null;
-                }
-                return (CurrentCita)System.Web.HttpContext.Current.Session[NombreVarSession];
-            }
-            set
-            {
-                System.Web.HttpContext.Current.Session[NombreVarSession] = value;
-            }
-        }
+		internal CurrentCita CurrentCita
+		{
+			get
+			{
+				if (System.Web.HttpContext.Current.Session[NombreVarSession] == null)
+				{
+					return null;
+				}
+				return (CurrentCita)System.Web.HttpContext.Current.Session[NombreVarSession];
+			}
+			set
+			{
+				System.Web.HttpContext.Current.Session[NombreVarSession] = value;
+			}
+		}
 
         internal string SociedadCita
         {
@@ -70,68 +72,68 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
         }
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult Index()
-        {
-            LimpiarCita();
-
-            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+		public ActionResult Index()
+		{
+			LimpiarCita();
+			
+			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
             ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
 
             ViewBag.Almacenes = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.warehouses").Valor.Split(',');
+			
+			return View();
+		}
+		
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public ActionResult SeleccionarProveedor(int proveedorId, string centro, string sociedad)
+		{
+			if (CurrentCita != null)
+			{
+				LimpiarCita();
+			}
 
-            return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult SeleccionarProveedor(int proveedorId, string centro, string sociedad)
-        {
-            if (CurrentCita != null)
-            {
-                LimpiarCita();
-            }
-
-            try
-            {
-                var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-                CurrentCita = new CurrentCita(cuenta.Id, proveedorId, centro, sociedad);
+			try
+			{
+				var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+				CurrentCita = new CurrentCita(cuenta.Id, proveedorId, centro, sociedad);
                 SociedadCita = sociedad;
 
                 return RedirectToAction("BuscarOrden");
-            }
-            catch (Exception exception)
-            {
-                TempData["FlashError"] = exception.Message;
-                return RedirectToAction("Index");
-            }
-        }
+			}
+			catch (Exception exception)
+			{
+				TempData["FlashError"] = exception.Message;
+				return RedirectToAction("Index"); 
+			}
+		}
+		
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public ActionResult BuscarOrden(int proveedorId = 0)
+		{
+			try
+			{
+				if (CurrentCita == null)
+				{
+					return RedirectToAction("Index");
+				}
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult BuscarOrden(int proveedorId = 0)
-        {
-            try
-            {
-                if (CurrentCita == null)
-                {
-                    return RedirectToAction("Index");
-                }
+			}
+			catch (BusinessException exception)
+			{
+				TempData["FlashError"] = exception.Message;
+				return RedirectToAction("Index");
+			}
 
-            }
-            catch (BusinessException exception)
-            {
-                TempData["FlashError"] = exception.Message;
-                return RedirectToAction("Index");
-            }
+			ViewBag.proveedor = CurrentCita.Proveedor; 
+			ViewBag.CurrentCita = CurrentCita;
+			
+			return View();
+		}
 
-            ViewBag.proveedor = CurrentCita.Proveedor;
-            ViewBag.CurrentCita = CurrentCita;
-
-            return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        [ValidateAntiForgeryToken]
-        [HttpPost]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		[ValidateAntiForgeryToken]
+		[HttpPost]
         public ActionResult BuscarOrden(string numeroDocumento)
         {
             string[] orden = numeroDocumento.Split(',');
@@ -163,7 +165,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         foreach (var documentos in orden)
                         {
                             CurrentCita.AddPreAsn(documentos);
-
+                            
                         }
                         return RedirectToAction("ListaDeOrdenes", new { numeroDocumento });
                     }
@@ -193,14 +195,14 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         return RedirectToAction("BuscarOrden", new { proveedor.Id });
                     }
                 }
+                
+                    if (CurrentCita.GetOrdenActivaDisponible(documento) == null)
+                    {
+                        TempData["FlashError"] = "Número de documento incorrecto";
+                        return RedirectToAction("BuscarOrden", new { proveedor.Id });
 
-                if (CurrentCita.GetOrdenActivaDisponible(documento) == null)
-                {
-                    TempData["FlashError"] = "Número de documento incorrecto";
-                    return RedirectToAction("BuscarOrden", new { proveedor.Id });
-
-                }
-
+                    }
+                
             }
             TempData["numeroDocumento"] = numeroDocumento;
             ViewBag.CurrentCita = CurrentCita;
@@ -209,27 +211,27 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult FechaCita()
-        {
+		public ActionResult FechaCita()
+		{
 
-            if (CurrentCita == null)
-            {
-                return RedirectToAction("Index");
-            }
+			if (CurrentCita == null)
+			{
+				return RedirectToAction("Index");
+			}
 
-            if (CurrentCita.Fecha != null)
-            {
-                // TODO redireccionar a la seccion de busqueda o al checkout
-                return RedirectToAction("Index");
-            }
+			if (CurrentCita.Fecha != null)
+			{
+				// TODO redireccionar a la seccion de busqueda o al checkout
+				return RedirectToAction("Index");
+			}
 
 
-            if (TempData["numeroDocumento"] == null)
-            {
-                return RedirectToAction("Index");
-            }
+			if (TempData["numeroDocumento"] == null)
+			{
+				return RedirectToAction("Index");
+			}
             var proveedor = CurrentCita.Proveedor;
-            var numeroDocumento = (string)TempData["numeroDocumento"];
+            var numeroDocumento = (string) TempData["numeroDocumento"];
 
 
             string[] ordenes = numeroDocumento.Split(',');
@@ -252,70 +254,16 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                 ViewBag.CurrentCita = CurrentCita;
             }
+
+
             return View();
-        }
+		}
 
 
         [ValidateAntiForgeryToken]
         [HttpPost]
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
         public ActionResult VisualizarDisponibilidad(string numeroDocumento, string fecha, string fechaspermitidas)
-        {
-
-            /*
-             * 
-             * Se valida que los horarios de los riales de la fecha seleccionada esten habilitados y se consultan
-             * 
-             * */
-
-            var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-            var FechasPermitidas = new JavaScriptSerializer().Deserialize<List<DateTime>>(fechaspermitidas);
-
-            try
-            {
-                var parameters = new List<MySqlParameter>()
-                {
-                    new MySqlParameter
-                    {
-                        ParameterName = "pTotal",
-                        Direction = ParameterDirection.Output,
-                        MySqlDbType = MySqlDbType.VarChar
-                    },
-                    new MySqlParameter("pFecha", date)
-                };
-
-                Db.ExecuteProcedureOut(parameters, "config_appointment");
-            }
-            catch (Exception exception)
-            {
-                TempData["FlashError"] = exception.Message;
-                return RedirectToAction("ListaDeOrdenes");
-            }
-            var db = new Entities();
-
-            var horarioRieles = db.horariorieles.Where(h => h.Fecha == date.Date).ToList();
-
-            ViewBag.HorarioRieles = horarioRieles;
-            ViewBag.date = date;
-            ViewBag.numeroDocumento = numeroDocumento;
-            ViewBag.CurrentCita = CurrentCita;
-            ViewBag.Fechas = FechasPermitidas;
-
-            //fin
-
-
-
-
-            return View();
-        }
-
-
-
-
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult AgregarPrimeraOrden(string numeroDocumento, string fecha)
         {
             string[] ordenes = numeroDocumento.Split(',');
             foreach (var ordencompra in ordenes)
@@ -368,12 +316,95 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     return RedirectToAction("BuscarOrden", new { proveedor.Id });
                 }
             }
+
+            /*
+             * 
+             * Se valida que los horarios de los riales de la fecha seleccionada esten habilitados y se consultan
+             * 
+             * */
+
+            var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+            var FechasPermitidas = new JavaScriptSerializer().Deserialize<List<DateTime>>(fechaspermitidas);
+
+            try
+            {
+                var parameters = new List<MySqlParameter>()
+                {
+                    new MySqlParameter
+                    {
+                        ParameterName = "pTotal",
+                        Direction = ParameterDirection.Output,
+                        MySqlDbType = MySqlDbType.VarChar
+                    },
+                    new MySqlParameter("pFecha", date)
+                };
+
+                Db.ExecuteProcedureOut(parameters, "config_appointment");
+            }
+            catch (Exception exception)
+            {
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("ListaDeOrdenes");
+            }
+            var db = new Entities();
+
+            var horarioRieles = db.horariorieles.Where(h => h.Fecha == date.Date).ToList();
+
+            ViewBag.HorarioRieles = horarioRieles;
+            ViewBag.date = date;
+            ViewBag.numeroDocumento = numeroDocumento;
+            ViewBag.CurrentCita = CurrentCita;
+            ViewBag.Fechas = FechasPermitidas;
+            var f = Convert.ToDateTime(fecha);
+            var result = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
+            var par = Convert.ToInt32(result.Valor);
+            var bloq = db.horariorieles.Where(hr => hr.Fecha == f && hr.Disponibilidad == true && hr.CantidadTotal < par && hr.Citas!=null).ToList();
+
+            //fin
+            foreach (var horarioRielId in bloq)
+            {
+
+                var horarioRiel = db.horariorieles.Find(horarioRielId.Id);
+                horarioRiel.Disponibilidad = false;
+                
+                db.Entry(horarioRiel).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+
+            return View();
+        }
+
+
+
+
+        [ValidateAntiForgeryToken]
+		[HttpPost]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public ActionResult AgregarPrimeraOrden(string numeroDocumento, string fecha)
+		{
+            var db = new Entities();
+            var f = Convert.ToDateTime(fecha);
+            var result = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
+            var par = Convert.ToInt32(result.Valor);
+            var bloq = db.horariorieles.Where(hr => hr.Fecha == f && hr.Disponibilidad == true && hr.CantidadTotal < par && hr.CitaId != null).ToList();
+
+            //fin
+            foreach (var horarioRielId in bloq)
+            {
+
+                var horarioRiel = db.horariorieles.Find(horarioRielId.Id);
+                horarioRiel.Disponibilidad = false;
+
+                db.Entry(horarioRiel).State = EntityState.Modified;
+                db.SaveChanges();
+            }
             return RedirectToAction("Asn", new { numeroDocumento });
         }
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult Asn(string numeroDocumento)
-        {
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public ActionResult Asn(string numeroDocumento)
+		{
             if (numeroDocumento == null)
             {
                 return RedirectToAction("Index");
@@ -396,71 +427,71 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 {
                     return RedirectToAction("ListaDeOrdenes");
                 }
-
-                ViewBag.OrdenCompra = CurrentCita.GetPreAsn(ordencompra);
-                ViewBag.CurrentCita = CurrentCita;
-
+                
+                    ViewBag.OrdenCompra = CurrentCita.GetPreAsn(ordencompra);
+                    ViewBag.CurrentCita = CurrentCita;
+                
             }
-
-
-
+            
+           
+          
             return View();
-
-        }
-
-        [HttpPost]
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public JsonResult AsnActualizarDetalle(string numeroDocumento, string numeroPosicion, string numeroMaterial, int cantidad)
-        {
-            try
-            {
-                CurrentCita.UpdateDetail(numeroDocumento, numeroPosicion, numeroMaterial, cantidad);
-            }
-            catch (Exception exception)
-            {
-                Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                return Json(exception.Message);
-            }
-            return Json("Actualizado correctamente");
-        }
-
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult ListaDeOrdenes()
-        {
-
-            if (CurrentCita == null)
-            {
-                return RedirectToAction("Index");
-            }
-
-            if (CurrentCita.Fecha == null)
-            {
-                return RedirectToAction("BuscarOrden");
-            }
-
-            ViewBag.CurrentCita = CurrentCita;
-
-            return View();
-        }
+		
+		}
+		
+		[HttpPost]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public JsonResult AsnActualizarDetalle(string numeroDocumento, string numeroPosicion,  string numeroMaterial, int cantidad)
+		{
+			try
+			{
+				CurrentCita.UpdateDetail(numeroDocumento, numeroPosicion, numeroMaterial, cantidad);
+			}
+			catch (Exception exception)
+			{
+				Response.StatusCode = (int)HttpStatusCode.BadRequest;
+				return Json(exception.Message);
+			}
+			return Json("Actualizado correctamente");
+		}
 
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult EliminarOrden(string numeroDocumento)
-        {
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public ActionResult ListaDeOrdenes()
+		{
+
+			if (CurrentCita == null)
+			{
+				return RedirectToAction("Index");
+			}
+
+			if (CurrentCita.Fecha == null)
+			{
+				return RedirectToAction("BuscarOrden");
+			}
+
+			ViewBag.CurrentCita = CurrentCita;
+			
+			return View();
+		}
+
+
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public ActionResult EliminarOrden(string numeroDocumento)
+		{
             string[] ordenes = numeroDocumento.Split(',');
             foreach (var ordencompra in ordenes)
             {
                 CurrentCita.RemovePreAsn(ordencompra);
             }
-            TempData["FlashSuccess"] = "Orden eliminada exitosamente";
-            return RedirectToAction("ListaDeOrdenes");
-        }
+			TempData["FlashSuccess"] = "Orden eliminada exitosamente";
+			return RedirectToAction("ListaDeOrdenes");
+		}
 
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public void DescargarPlantilla(FormCollection collection)
-        {
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public void DescargarPlantilla(FormCollection collection)
+		{
             var numeroDocumento = collection["numeroDocumento"];
             string[] ordenes = numeroDocumento.Split(',');
             foreach (var ordencompra in ordenes)
@@ -493,7 +524,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     {
                         if (preAsnDetail.CantidadPermitida > 0)
                         {
-                            dt.Rows.Add(preAsn.NumeroDocumento, preAsnDetail.NumeroPosicion, preAsnDetail.NumeroMaterial,
+                            dt.Rows.Add(preAsn.NumeroDocumento , preAsnDetail.NumeroPosicion, preAsnDetail.NumeroMaterial,
                                 preAsnDetail.DescripcionMaterial, preAsnDetail.CantidadPermitida);
 
                         }
@@ -501,7 +532,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 }
                 FileManager.ExportExcel(dt, CurrentCita.Proveedor.Nombre1 + CurrentCita.Proveedor.Nombre2 + CurrentCita.Proveedor.Nombre3 + CurrentCita.Proveedor.Nombre4 + "_plantilla", HttpContext);
             }
-        }
+		}
 
 
         [HttpPost]
@@ -611,7 +642,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         {
             //Validacion de cantidad mínima
             //const string sql = @"SELECT Clave, Valor FROM configuraciones WHERE Clave = 'warehouse.min-pairs.per-meet' AND Habilitado = 1";
-            var result = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
+                    var result = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
             //var result = Db.GetDataTable(sql);
 
             if (String.IsNullOrEmpty(result.Valor))
@@ -622,58 +653,59 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             {
                 ViewBag.CantidadMinimaCita = Convert.ToInt32(result.Valor);
             }
-
+            
             if (CurrentCita == null)
-            {
-                return RedirectToAction("Index");
-            }
+			{
+				return RedirectToAction("Index");
+			}
+			
+			if (CurrentCita.Fecha == null)
+			{
+				return RedirectToAction("BuscarOrden");
+			}
 
-            if (CurrentCita.Fecha == null)
-            {
-                return RedirectToAction("BuscarOrden");
-            }
+			if (CurrentCita.Cantidad < 1)
+			{
+				TempData["FlashError"] = "Debe incluir al menos un (1) PAR para poder agendar la Cita";
+				return RedirectToAction("BuscarOrden");
+			}
 
-            if (CurrentCita.Cantidad < 1)
-            {
-                TempData["FlashError"] = "Debe incluir al menos un (1) PAR para poder agendar la Cita";
-                return RedirectToAction("BuscarOrden");
-            }
-
-            var date = ((DateTime)CurrentCita.Fecha).Date;
-
-            try
-            {
-                var parameters = new List<MySqlParameter>()
-                {
-                    new MySqlParameter
-                    {
-                        ParameterName = "pTotal",
-                        Direction = ParameterDirection.Output,
-                        MySqlDbType = MySqlDbType.VarChar
-                    },
-                    new MySqlParameter("pFecha", date)
-                };
-
-                Db.ExecuteProcedureOut(parameters, "config_appointment");
-            }
-            catch (Exception exception)
-            {
-                TempData["FlashError"] = exception.Message;
-                return RedirectToAction("ListaDeOrdenes");
-            }
-
-            ViewBag.CurrentCita = CurrentCita;
+            var date = ((DateTime) CurrentCita.Fecha).Date;
 
             var db = new Entities();
+            
 
-            var horarioRieles = db.horariorieles.Where(h => h.Fecha == date.Date).ToList();
+            try
+		    {
+		        var parameters = new List<MySqlParameter>()
+		        {
+		            new MySqlParameter
+		            {
+		                ParameterName = "pTotal",
+		                Direction = ParameterDirection.Output,
+		                MySqlDbType = MySqlDbType.VarChar
+		            },
+		            new MySqlParameter("pFecha", date)
+		        };
 
-            ViewBag.HorarioRieles = horarioRieles;
-            return View();
-        }
+		        Db.ExecuteProcedureOut(parameters, "config_appointment");
+		    }
+		    catch (Exception exception)
+		    {
+                TempData["FlashError"] = exception.Message;
+                return RedirectToAction("ListaDeOrdenes");
+		    }
+			
+			ViewBag.CurrentCita = CurrentCita;
 
-        public JsonResult VerificarRieles(string fecha)
-        {
+			var horarioRieles = db.horariorieles.Where(h => h.Fecha == date.Date).ToList();
+
+			ViewBag.HorarioRieles = horarioRieles;
+			return View();
+		}
+
+	    public JsonResult VerificarRieles(string fecha)
+	    {
             var date = DateTime.ParseExact(fecha, "ddMMyyyy", CultureInfo.InvariantCulture);
 
             var db = new Entities();
@@ -686,19 +718,20 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     hr.Id,
                     hr.Disponibilidad
                 }));
-        }
+	    }
 
 
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        public ActionResult Agendar(int[] rielesIds, DateTime FechaCreacion)
-        {
-            if (CurrentCita.Fecha == null)
-            {
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		[ValidateAntiForgeryToken]
+		[HttpPost]
+		public ActionResult Agendar(int[] rielesIds, DateTime FechaCreacion)
+		{
+			if (CurrentCita.Fecha == null)
+			{
                 // Todo mejorar
-                return RedirectToAction("Citas");
-            }
+				return RedirectToAction("Citas");
+			}
+
 
             var preCita = new PreCita()
             {
@@ -713,17 +746,17 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 Sociedad = SociedadCita
             };
 
-            foreach (var preAsn in CurrentCita.GetPreAsns())
-            {
-                foreach (var preAsnDetail in preAsn.Detalles.Where(preAsnDetail => preAsnDetail.Cantidad > 0))
-                {
-                    preCita.Asns.Add(new Asn
-                    {
-                        Cantidad = preAsnDetail.Cantidad,
-                        NombreMaterial = preAsnDetail.DescripcionMaterial,
-                        NumeroMaterial = preAsnDetail.NumeroMaterial,
-                        NumeroPosicion = preAsnDetail.NumeroPosicion,
-                        OrdenNumeroDocumento = preAsn.NumeroDocumento,
+			foreach (var preAsn in CurrentCita.GetPreAsns())
+			{
+				foreach (var preAsnDetail in preAsn.Detalles.Where(preAsnDetail => preAsnDetail.Cantidad > 0))
+				{
+					preCita.Asns.Add(new Asn
+					{
+						Cantidad = preAsnDetail.Cantidad,
+						NombreMaterial = preAsnDetail.DescripcionMaterial,
+						NumeroMaterial = preAsnDetail.NumeroMaterial,
+						NumeroPosicion = preAsnDetail.NumeroPosicion,
+						OrdenNumeroDocumento = preAsn.NumeroDocumento,
                         Tienda = preAsn.Tienda,
 
                         TiendaOrigen = preAsn.TiendaOrigen,
@@ -735,12 +768,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         NumeroMaterial2 = preAsnDetail.NumeroMaterial2,
 
                         Centro = preAsn.Centro
-                    });
-                }
-            }
-            try
-            {
-                /*
+					});
+				}
+			}
+		    try
+		    {
+		        /*
                 var url = CommonManager.GetConfiguraciones().Single(c => c.Clave == "wfc.url.cita.add").Valor;;
                 var client = new RestClient(url);
 			    var request = new RestRequest(string.Empty, Method.POST);
@@ -758,32 +791,65 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 TempData["FlashSuccess"] = response.Content + ", " + response.StatusDescription;
                 return RedirectToAction("SeleccionarRieles");
                 */
-                CitaManager.RegistrarCita(preCita);
-
-            }
-            catch (ScaleException exception)
-            {
+		        CitaManager.RegistrarCitaMenor(preCita);
+		        
+		    }
+		    catch (ScaleException exception)
+		    {
                 LimpiarCita();
                 TempData["FlashError"] = exception.Message;
                 return RedirectToAction("Citas");
+		    }
+			catch (Exception exception)
+			{
+
+				//TODO
+				TempData["FlashError"] = exception.Message;
+				return RedirectToAction("SeleccionarRieles");
+			}
+            var db = new Entities();
+            foreach (var horarioRielId in preCita.HorarioRielesIds)
+            {
+                var horarioRiel = db.horariorieles.Find(horarioRielId);
+                var pro = horarioRiel.ComentarioBloqueo;
+                var proveedor = string.Format("{0} {1}{2}",
+                                                pro, ",",
+                                                CurrentCita.Proveedor.Nombre1
+                                                );
+
+                var canxcita = horarioRiel.CantidadPorCita;
+                var cacita = string.Format("{0} {1}{2}",
+                                                canxcita, ",",
+                                               CurrentCita.Cantidad);
+                horarioRiel.CantidadPorCita = cacita;
+                horarioRiel.ComentarioBloqueo =proveedor;
+                db.Entry(horarioRiel).State = EntityState.Modified;
+                db.SaveChanges();
             }
-            catch (Exception exception)
+            var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
+            var par = Convert.ToInt32(resul.Valor);
+            var bloq = db.horariorieles.Where(hr => hr.Fecha == CurrentCita.Fecha && hr.Disponibilidad == true && hr.CantidadTotal < par && hr.CitaId != null).ToList();
+
+            //fin
+            foreach (var horarioRielId in bloq)
             {
 
-                //TODO
-                TempData["FlashError"] = exception.Message;
-                return RedirectToAction("SeleccionarRieles");
+                var horarioRiel = db.horariorieles.Find(horarioRielId.Id);
+                horarioRiel.Disponibilidad = false;
+
+                db.Entry(horarioRiel).State = EntityState.Modified;
+                db.SaveChanges();
             }
 
             //TODO
             LimpiarCita();
-            TempData["FlashSuccess"] = "Ha terminado de configurar su cita exitosamente";
-            return RedirectToAction("Citas");
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult Citas()
-        {
+			TempData["FlashSuccess"] = "Ha terminado de configurar su cita exitosamente";
+			return RedirectToAction("Citas");
+		}
+		
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public ActionResult Citas()
+		{
             //Test para probar las reglas de las fechas
             //DateTime myDT = new DateTime(2018, 1, 5);
             //DateTime orden = new DateTime(2018, 1, 22);
@@ -793,35 +859,35 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-
-
-            var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
-            var db = new Entities();
-
-            var fecha = DateTime.Today.Date;
-            var citas = db.citas.Where(c => proveedoresIds.Contains(c.ProveedorId) && c.FechaCita >= fecha && c.TipoCita == null).ToList();
-
-            ViewBag.Citas = citas;
-
-            return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult CitaDetalle(int citaId)
-        {
-            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+        
 
             var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
+			var db = new Entities();
 
-            var db = new Entities();
-            var cita = db.citas.FirstOrDefault(c => c.Id == citaId && proveedoresIds.Contains(c.ProveedorId));
+			var fecha = DateTime.Today.Date;
+			var citas = db.citas.Where(c => proveedoresIds.Contains(c.ProveedorId) && c.FechaCita >= fecha && c.TipoCita == "Cita Menor").ToList();
 
-            if (cita == null)
-            {
-                //TODO
-                TempData["FlashError"] = "Cita incorrecta";
-                return RedirectToAction("Citas");
-            }
+			ViewBag.Citas = citas;
+
+			return View();
+		}
+
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public ActionResult CitaDetalle(int citaId)
+		{
+			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+			var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
+
+			var db = new Entities();
+			var cita = db.citas.FirstOrDefault(c => c.Id == citaId && proveedoresIds.Contains(c.ProveedorId));
+
+			if (cita == null)
+			{
+				//TODO
+				TempData["FlashError"] = "Cita incorrecta";
+				return RedirectToAction("Citas");
+			}
             if (!RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
             {
                 //TODO
@@ -831,105 +897,198 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             ViewBag.Cita = cita;
 
             return View();
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult CancelarCita(int citaId)
-        {
+		}
+		
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public ActionResult CancelarCita(int citaId)
+		{
+            string connectionString = "server=172.22.10.21;user id=impuls_portal;password=7emporal@S;database=impuls_portal; SslMode = none";
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
-            var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
+			var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
+			
+			var db = new Entities();
 
-            var db = new Entities();
+			var cita = db.citas.FirstOrDefault(c => proveedoresIds.Contains(c.ProveedorId) && c.Id == citaId);
 
-            var cita = db.citas.FirstOrDefault(c => proveedoresIds.Contains(c.ProveedorId) && c.Id == citaId);
+            var citas = db.citas.Where(c => c.Id == citaId ).ToList();
 
-            if (cita == null)
+            foreach (var pr in citas)
             {
-                //TODO
-                TempData["FlashError"] = "Cita incorrecta";
-                return RedirectToAction("Citas");
-            }
+                var conv = Convert.ToInt64(pr.IdRiel);
+                var hr = db.horariorieles.Where(ho => ho.Id == conv ).FirstOrDefault();
+                 var c=hr.CantidadTotal;
+                var horarioRiel = db.citas.Find(pr.Id);
+                var pro=horarioRiel.proveedore.Nombre1;
+                var ca=horarioRiel.CantidadTotal;
 
-            if (!RulesManager.PuedeCancelarCita(cita.FechaCita))
-            {
-                //TODO
-                TempData["FlashError"] = "La cita no puede ser Cancelada";
-                return RedirectToAction("Citas");
-            }
-
-            CitaManager.CancelarCita(citaId);
-
-            //TODO
-            TempData["FlashSuccess"] = "Cita cancelada exitosamente";
-            return RedirectToAction("Citas");
-        }
-
-        [ValidateAntiForgeryToken]
-        [HttpPost]
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult ActualizarCita(int citaId, FormCollection collection)
-        {
-            var db = new Entities();
-
-            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-            var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
-            var cita = db.citas.FirstOrDefault(c => proveedoresIds.Contains(c.ProveedorId) && c.Id == citaId);
-
-            if (cita == null)
-            {
-                //TODO
-                TempData["FlashError"] = "Cita incorrecta";
-                return RedirectToAction("Citas");
-            }
-
-            foreach (var hriel in cita.horariorieles.ToList())
-            {
-                hriel.CitaId = null;
-                hriel.Disponibilidad = true;
-                db.Entry(hriel).State = EntityState.Modified;
-            }
-
-            if (!RulesManager.PuedeEditarCita(cita.FechaCita, cita.FechaCreacion))
-            {
-                //TODO
-                TempData["FlashError"] = "La cita no puede ser Editada";
-                return RedirectToAction("Citas");
-            }
-
-            var asnIds = new List<int>();
-
-            foreach (var element in collection)
-            {
-                if (element.ToString().IndexOf("asnid-", StringComparison.Ordinal) == 0)
+                
+                c -= ca;
+               
+                if (c == 0)
                 {
-                    var asnId = int.Parse(element.ToString().Replace("asnid-", string.Empty));
+                    hr.Disponibilidad = true;
+                    hr.CitaId = null;
+                    hr.Citas = null;
+                    hr.ComentarioBloqueo = null;
+                    hr.CantidadPorCita = null;
+                    hr.TipoCita = null;
+                    db.Entry(hr).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                hr.CantidadTotal = c;
+                db.Entry(hr).State = EntityState.Modified;
+                db.SaveChanges();
+
+                MySqlConnection connectione = new MySqlConnection(@connectionString);
+                string querys = @"UPDATE horariorieles SET ComentarioBloqueo = REPLACE(ComentarioBloqueo,'" + pro + " ,' ,'')where Id='" + conv + "'; ";
+                MySqlCommand commandos = new MySqlCommand(querys, connectione);
+                try
+                {
+                    connectione.Close();
+                    connectione.Open();
+                    commandos.ExecuteNonQuery();
+
+                }
+                catch (MySqlException e)
+                {
+
+                }
+                finally
+                {
+                    connectione.Close();
+                }
 
 
-                    var cantidad = int.Parse(collection[element.ToString()]);
 
-                    var asn = db.asns.FirstOrDefault(a => a.Id == asnId && a.CitaId == citaId);
+                MySqlConnection connection = new MySqlConnection(@connectionString);
+                string quer = @"UPDATE horariorieles SET CantidadPorCita = REPLACE(CantidadPorCita,'" + ca + " ,','')where Id='" + conv + "'; ";
+                MySqlCommand comman = new MySqlCommand(quer, connection);
+                try
+                {
+                    connection.Close();
+                    connection.Open();
+                    comman.ExecuteNonQuery();
 
-                    if (asn == null)
-                    {
-                        //TODO
-                        TempData["FlashError"] = "Asns incorrectos en la edición.";
-                        return RedirectToAction("Citas");
-                    }
-                    if (cantidad > 0)
-                    {
+                }
+                catch (MySqlException e)
+                {
+
+                }
+                finally
+                {
+                    connection.Close();
+                }
+            }
+
+            
+            MySqlConnection connectiones = new MySqlConnection(@connectionString);
+            string query = @"UPDATE horariorieles SET Citas = REPLACE(Citas,'" + citaId + " ,',''); ";
+            MySqlCommand commando = new MySqlCommand(query, connectiones);
+            try
+            {
+                connectiones.Close();
+                connectiones.Open();
+                commando.ExecuteNonQuery();
+
+            }
+            catch (MySqlException e)
+            {
+
+            }
+            finally
+            {
+                connectiones.Close();
+            }
+
+
+            if (cita == null)
+			{
+				//TODO
+				TempData["FlashError"] = "Cita incorrecta";
+				return RedirectToAction("Citas");
+			}
+
+			if (!RulesManager.PuedeCancelarCita(cita.FechaCita))
+			{
+				//TODO
+				TempData["FlashError"] = "La cita no puede ser Cancelada";
+				return RedirectToAction("Citas");
+			}
+
+			CitaManager.CancelarCitaMenor(citaId);
+
+			//TODO
+			TempData["FlashSuccess"] = "Cita cancelada exitosamente";
+			return RedirectToAction("Citas");
+		}
+		
+		[ValidateAntiForgeryToken]
+		[HttpPost]
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public ActionResult ActualizarCita(int citaId, FormCollection collection)
+		{
+           
+            var db = new Entities();
+
+			var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+			var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
+			var cita = db.citas.FirstOrDefault(c => proveedoresIds.Contains(c.ProveedorId) && c.Id == citaId);
+			
+			if (cita == null)
+			{
+				//TODO
+				TempData["FlashError"] = "Cita incorrecta";
+				return RedirectToAction("Citas");
+			}
+
+			foreach (var hriel in cita.horariorieles.ToList())
+			{
+				hriel.CitaId = null;
+				hriel.Disponibilidad = true;
+				db.Entry(hriel).State = EntityState.Modified;
+			}
+
+			if (!RulesManager.PuedeEditarCita(cita.FechaCita,cita.FechaCreacion))
+			{
+				//TODO
+				TempData["FlashError"] = "La cita no puede ser Editada";
+				return RedirectToAction("Citas");
+			}
+
+		    var asnIds = new List<int>();
+
+			foreach (var element in collection)
+			{
+				if (element.ToString().IndexOf("asnid-", StringComparison.Ordinal) == 0)
+				{
+					var asnId = int.Parse(element.ToString().Replace("asnid-", string.Empty));
+                    
+
+					var cantidad = int.Parse(collection[element.ToString()]);
+
+					var asn = db.asns.FirstOrDefault(a => a.Id == asnId && a.CitaId == citaId);
+
+					if (asn == null)
+					{
+						//TODO
+						TempData["FlashError"] = "Asns incorrectos en la edición.";
+						return RedirectToAction("Citas");
+					}
+					if (cantidad > 0)
+					{
                         asnIds.Add(asnId);
                         asn.Cantidad = cantidad;
-                        db.Entry(asn).State = EntityState.Modified;
-                    }
-                    else
-                    {
+						db.Entry(asn).State = EntityState.Modified;
+					}
+					else
+					{
 
                         //Cuando el valor de la ASN llega a Cero se envia a Scale para su elimicacion y a Sap para desmarcar
                         try
                         {
                             CitaManager.EliminarAsnScale(asn);
-
+                            
                         }
                         finally
                         {
@@ -941,17 +1100,17 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                             CitaManager.DesmarcarEnActualizacion(asnAborrar);
                         }
-
-                    }
-                }
-                if (element.ToString().IndexOf("horarioriel", StringComparison.Ordinal) == 0)
-                {
+                       
+					}
+				}
+				if (element.ToString().IndexOf("horarioriel", StringComparison.Ordinal) == 0)
+				{
 
                     //Fix para manejar multiples rieles
                     var rieles = collection[element.ToString()];
                     if (rieles.Contains(","))
                     {
-                        var arrayRieles = rieles.Split(',');
+                        var arrayRieles=rieles.Split(',');
                         foreach (var riel in arrayRieles)
                         {
                             var horarioRielId = int.Parse(riel);
@@ -984,36 +1143,47 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         db.Entry(horarioRiel).State = EntityState.Modified;
                     }
 
-                }
+				}
 
 
-            }
+			}
 
+			db.SaveChanges();
+
+			cita = db.citas.FirstOrDefault(c => proveedoresIds.Contains(c.ProveedorId) && c.Id == citaId);
+			if (cita != null)
+			{
+				cita.CantidadTotal = cita.asns.Sum(a => a.Cantidad);
+				cita.RielesOcupados = (sbyte) cita.horariorieles.Count;
+				db.Entry(cita).State = EntityState.Modified;
+			}
+            
+            var ci=cita.IdRiel;
+            var con = Convert.ToString(ci);
+            var conv = Convert.ToInt64(ci);
+            var hor = db.citas.Where(hr => hr.IdRiel == con).ToList();
+          
+            var sum = hor.Sum(s => s.CantidadTotal);
+
+            var hora = db.horariorieles.Where(hr => hr.Id == conv).FirstOrDefault();
+            hora.CantidadTotal = sum;
+            db.Entry(hora).State = EntityState.Modified;
+           
+
+            
             db.SaveChanges();
-
-            cita = db.citas.FirstOrDefault(c => proveedoresIds.Contains(c.ProveedorId) && c.Id == citaId);
-            if (cita != null)
-            {
-                cita.CantidadTotal = cita.asns.Sum(a => a.Cantidad);
-                cita.RielesOcupados = (sbyte)cita.horariorieles.Count;
-                db.Entry(cita).State = EntityState.Modified;
-            }
-
-
-            db.SaveChanges();
-
             CitaManager.ActualizarCantidadScale(asnIds.ToArray());
 
-            TempData["FlashSuccess"] = "Cita actualizada exitosamente";
-            return RedirectToAction("Citas");
-        }
-
-        [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public JsonResult CalcularRieles(int cantidad)
-        {
-            return Json(new { rieles = RulesManager.GetCantidadRieles(cantidad) });
-
-        }
-
-    }
+			TempData["FlashSuccess"] = "Cita actualizada exitosamente";
+			return RedirectToAction("Citas");
+		}
+		
+		[Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
+		public JsonResult CalcularRieles(int cantidad)
+		{
+				return Json(new { rieles = RulesManager.GetCantidadRieles(cantidad) });
+			
+		}
+	
+	}
 }

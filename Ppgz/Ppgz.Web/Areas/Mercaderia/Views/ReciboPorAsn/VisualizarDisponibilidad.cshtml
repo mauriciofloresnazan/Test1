@@ -2,6 +2,7 @@
 @using Ppgz.Repository
 @using Ppgz.Web.Areas.Mercaderia
 @using System.Web.Script.Serialization;
+@using Ppgz.Web.Infrastructure;
 @{
     ViewBag.Title = "Verificación de Disponibilidad";
     ViewBag.Descripcion = "Verifique el espacio disponible para su cita y seleccione el dia mas adecuado";
@@ -52,8 +53,6 @@
         border-color: #ccc;
         background-image: none;
     }
-
-
 </style>
 
 <h2>@ViewBag.Title</h2>
@@ -103,7 +102,7 @@
 
 
 
-            </div>
+        </div>
 
         <div class="row">
 
@@ -120,7 +119,7 @@
                     <div class="col-sm-5" style="margin-left: 10px;">
                         <button type="submit" class="btn btn-success btn-block"><i class="fa fa-arrow-right" aria-hidden="true" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La fecha de la cita no podrá ser modificada luego de este paso."></i> Siguiente</button>
                     </div>
-                    <div class=""col-sm-7" style="margin-left: 10px; btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
+                    <div class="" col-sm-7" style="margin-left: 10px; btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
                         <a class="btn btn-danger" href="@Url.Action("Index", "ReciboPorAsn")" data-toggle="confirmation" data-btn-ok-label="Si" data-title="¿Está seguro?" data-content="La cita será cancelada.">
                             <i class="fa fa-times" aria-hidden="true"></i> Cancelar Cita
                         </a>
@@ -180,10 +179,10 @@
                     <tr class="border-bottom">
 
                         @{
-                    var horario = result.horario;
-                    var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+                            var horario = result.horario;
+                            var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
 
-                    var rielPostition = 0;
+                            var rielPostition = 0;
                         }
 
                         <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
@@ -197,7 +196,8 @@
                             {
                                 borderRight = "solid 1px #666";
                             }
-
+                            var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
+                            var par = Convert.ToInt32(resul.Valor);
                             var disabledChecked = "disabled";
                             var dataOff = "DISPONIBLE";
                             var dataOn = "MI RESERVA";
@@ -214,6 +214,16 @@
                                 offStyle = "danger";
                                 disponibleClass = "";
                             }
+                            else
+                            {
+                                if (riel.CantidadTotal < par && riel.Disponibilidad == true && riel.CitaId != null)
+                                {
+                                    dataOff = "OCUPADO";
+                                    //onStyle = "danger";
+                                    offStyle = "danger";
+                                    disponibleClass = "";
+                                }
+                            }
 
                             <td class="text-center" style="border-right: @borderRight">
                                 <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
@@ -223,25 +233,25 @@
                         }
 
                         @*<td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
                     </tr>
                 }
             </tbody>
         </table>
-        @using (Html.BeginForm("Agendar", "ReciboPorAsn", new { }, FormMethod.Post, new { id="form-agendar" }))
+        @using (Html.BeginForm("Agendar", "ReciboPorAsn", new { }, FormMethod.Post, new { id = "form-agendar" }))
         {
             @Html.AntiForgeryToken()
-            
+
         }
 
 
@@ -249,7 +259,7 @@
 </div>
 @section Scripts {
     @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
-<script>
+    <script>
         $(document).ready(function () {
             $('#formu').validator();
         });
@@ -269,7 +279,7 @@
 
 
     });
-</script>
+    </script>
 
     <script type="text/javascript">
 
@@ -382,7 +392,7 @@
             var input = $("#" + currentValue.Id);
 
             if (currentValue.Disponibilidad) {
-                
+
                 input.attr("data-off", "DISPONIBLE");
                 input.attr("data-offstyle", "primary");
 
@@ -428,7 +438,7 @@
                 console.log(response);
 
             });
-     
+
         }
     </script>
 }

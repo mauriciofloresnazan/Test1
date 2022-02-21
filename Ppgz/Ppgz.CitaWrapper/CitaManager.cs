@@ -273,6 +273,7 @@ namespace Ppgz.CitaWrapper
                 var horarioRiel = db.horariorieles.Find(horarioRielId);
                 horarioRiel.Disponibilidad = false;
                 horarioRiel.CitaId = cita.Id;
+                horarioRiel.CantidadTotal = cita.CantidadTotal;
                 db.Entry(horarioRiel).State = EntityState.Modified;
                 db.SaveChanges();
             }
@@ -290,6 +291,134 @@ namespace Ppgz.CitaWrapper
 
             });
         }
+
+
+        public static void RegistrarCitaMenor(PreCita precita)
+        {
+
+            var db = new Entities();
+            foreach (var horarioRielId in precita.HorarioRielesIds)
+            {
+
+
+                var horarioRiel = db.horariorieles.Find(horarioRielId);
+
+                if (horarioRielId == 0)
+                {
+                    throw new Exception("Este riel no tiene capacidad favor de seleccionar otro riel");
+                }
+            }
+            // Disponibildiad de Rieles
+            foreach (var horarioRielId in precita.HorarioRielesIds)
+            {
+
+                var cantidadDiariaLimite = Convert.ToInt32(db.configuraciones.Single(c => c.Clave == "warehouse.min-pairs.per-meet").Valor);
+                var horarioRiel = db.horariorieles.Find(horarioRielId);
+                var cantidad = horarioRiel.CantidadTotal;
+                var to = precita.Cantidad;
+                var sum = cantidad + to;
+                if (sum > cantidadDiariaLimite)
+                {
+                    throw new Exception("Uno o más rieles seleccionados ya no estan disponibles,  por favor verifique su selección.");
+                }
+            }
+
+            foreach (var horarioRielId in precita.HorarioRielesIds)
+            {
+
+
+                var horarioRiel = db.horariorieles.Find(horarioRielId);
+                var cantidad = horarioRiel.CantidadTotal;
+                var to = precita.Cantidad;
+                var sum = cantidad + to;
+                horarioRiel.CantidadTotal = sum;
+                db.Entry(horarioRiel).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+
+            ValidarCita(precita);
+            db = new Entities();
+
+            var cita = new cita
+            {
+                FechaCita = precita.Fecha,
+                FechaCreacion = precita.FechaCreacion,
+                UsuarioIdTx = precita.UsuarioId,
+                CantidadTotal = precita.Cantidad,
+                ProveedorId = precita.ProveedorId,
+                Almacen = precita.Centro,
+                RielesOcupados = (sbyte)precita.HorarioRielesIds.Count,
+                OperacionTx = "CREATE",
+                TipoCita = "Cita Menor"
+            };
+
+            foreach (var asn in precita.Asns)
+            {
+                cita.asns.Add(new asn
+                {
+                    Cantidad = asn.Cantidad,
+                    NombreMaterial = asn.NombreMaterial,
+                    NumeroMaterial = asn.NumeroMaterial,
+                    NumeroPosicion = asn.NumeroPosicion,
+                    OrdenNumeroDocumento = asn.OrdenNumeroDocumento,
+                    Tienda = asn.Tienda,
+
+                    TiendaOrigen = asn.TiendaOrigen,
+                    Precio = asn.Precio,
+                    UnidadMedida = asn.UnidadMedida,
+                    CantidadPedidoSap = asn.CantidadSolicitada,
+                    InOut = asn.InOut,
+                    NumeroOrdenSurtido = asn.NumeroSurtido,
+                    NumeroMaterial2 = asn.NumeroMaterial2,
+                    Centro = asn.Centro
+                });
+            }
+
+
+            db.citas.Add(cita);
+            db.SaveChanges();
+
+            foreach (var horarioRielId in precita.HorarioRielesIds)
+            {
+
+                db = new Entities();
+                var horarioRiel = db.horariorieles.Find(horarioRielId);
+                var cit = db.citas.Find(cita.Id);
+                var hora = horarioRiel.horario.HoraDesde;
+                cit.HoraInicio = hora;
+                var c = horarioRiel.Citas;
+                var citas = string.Format("{0} {1}{2}",
+                                                c, ",",
+                                               cita.Id
+                                                );
+                var riel = Convert.ToString(horarioRielId);
+                cit.IdRiel = riel;
+                horarioRiel.Citas = citas;
+                horarioRiel.Disponibilidad = false;
+                horarioRiel.TipoCita = "Cita Menor";
+                horarioRiel.CitaId = cita.Id;
+                db.Entry(horarioRiel).State = EntityState.Modified;
+                db.Entry(cit).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+
+            sapOrdenCompraManager.SetOrdenesDeCompraCita(cita.asns);
+
+            Task.Factory.StartNew(() =>
+            {
+                var scaleManager = new ScaleManager();
+
+                cita = db.citas.Find(cita.Id);
+                scaleManager.Registrar(cita);
+
+            });
+        }
+
+
+
 
         public static void RegistrarCitaSinASN(PreCita precita)
         {
@@ -357,8 +486,10 @@ namespace Ppgz.CitaWrapper
 
             foreach (var horarioRiel in cita.horariorieles.ToList())
             {
+
                 horarioRiel.CitaId = null;
                 horarioRiel.Disponibilidad = true;
+                horarioRiel.CantidadTotal = 0;
                 db.Entry(horarioRiel).State = EntityState.Modified;
             }
 
@@ -407,6 +538,58 @@ namespace Ppgz.CitaWrapper
 
         }
 
+
+        public static void CancelarCitaMenor(int citaId)
+        {
+            var db = new Entities();
+            var cita = db.citas.Find(citaId);
+
+            if (!RulesManager.PuedeCancelarCita(cita.FechaCita)) return;
+
+            List<asn> asnantesdeborrar = new List<asn>();
+
+            cita.asns.ToList().ForEach(delegate (asn asnd) {
+
+                asn asnnew = new asn();
+                asnnew.OrdenNumeroDocumento = asnd.OrdenNumeroDocumento;
+                asnnew.NumeroPosicion = asnd.NumeroPosicion;
+                asnantesdeborrar.Add(asnnew);
+
+            });
+
+            cita.asns.ToList().ForEach(asn => db.asns.Remove(asn));
+
+
+
+            cita.crs.ToList().ForEach(cr => db.crs.Remove(cr));
+
+            db.Entry(cita).State = EntityState.Deleted;
+            db.SaveChanges();
+
+            Task.Factory.StartNew(() =>
+            {
+                var scaleManager = new ScaleManager();
+                scaleManager.Cancelar(citaId);
+            });
+
+
+            //Descarmar Ordenes de compra
+            ICollection<asn> ordenesAcancelar = new List<asn>();
+            foreach (var asn in asnantesdeborrar)
+            {
+                if (db.asns.FirstOrDefault(a => a.OrdenNumeroDocumento == asn.OrdenNumeroDocumento && a.NumeroPosicion == asn.NumeroPosicion) == null)
+                {
+                    ordenesAcancelar.Add(asn);
+                }
+            }
+
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
+            sapOrdenCompraManager.UnsetOrdenesDeCompraCita(ordenesAcancelar);
+
+            //fin
+
+
+        }
 
         public static void DesmarcarEnActualizacion(asn asnDes)
         {
@@ -553,6 +736,7 @@ namespace Ppgz.CitaWrapper
                 var horarioRiel = db.horariorieles.Find(horarioRielId);
                 horarioRiel.Disponibilidad = false;
                 horarioRiel.CitaId = cita.Id;
+                horarioRiel.CantidadTotal = cita.CantidadTotal;
                 db.Entry(horarioRiel).State = EntityState.Modified;
                 db.SaveChanges();
             }

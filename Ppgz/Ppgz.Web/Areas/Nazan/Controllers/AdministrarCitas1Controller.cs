@@ -42,18 +42,41 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                ViewBag.Citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat).ToList();
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat&&c.TipoCita!="Cita Menor").ToList();
             }
             else
             {
                 var fecha = DateTime.Today;
-                ViewBag.Citas = db.citas.Where(c => c.FechaCita == fecha).ToList();
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita == fecha && c.TipoCita!="Cita Menor").ToList();
             }
 
             ViewBag.EstatusCita = db.estatuscitas.ToList();
 
             return View();
         }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        public ActionResult IndexM(string fechaFrom, string fechaTo)
+        {
+            var db = new Entities();
+            if (!String.IsNullOrEmpty(fechaFrom) && !String.IsNullOrEmpty(fechaTo))
+            {
+                var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat && c.TipoCita == "Cita Menor").ToList();
+            }
+            else
+            {
+                var fecha = DateTime.Today;
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita == fecha && c.TipoCita == "Cita Menor").ToList();
+            }
+
+            ViewBag.EstatusCita = db.estatuscitas.ToList();
+
+            return View();
+        }
+
+
 
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTACITASCALIDAD")]
         public ActionResult CitaDetalle(int citaId)
@@ -74,12 +97,38 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             return View();
         }
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTACITASCALIDAD")]
+        public ActionResult CitaDetalle1(int citaId)
+        {
+
+
+            var db = new Entities();
+            var cita = db.citas.FirstOrDefault(c => c.Id == citaId);
+
+            if (cita == null)
+            {
+                //TODO
+                TempData["FlashError"] = "Cita incorrecta";
+                return RedirectToAction("Citas");
+            }
+
+            ViewBag.Cita = cita;
+
+            return View();
+        }
+
+
+
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTACITASCALIDAD")]
         public ActionResult Enroque1(string fecha = null)
         {
+
             if (fecha == null)
             {
                 fecha = DateTime.Today.Date.ToString("dd/MM/yyyy");
+
             }
 
             var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -88,6 +137,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var db = new Entities();
 
             var horarioRieles = db.horariorieles.Where(h => h.Fecha == date).ToList();
+
+            var total = db.citas.Where(c => c.FechaCita == date).ToList();
+
+            var sum = total.Sum(s => s.CantidadTotal);
+
+            ViewBag.Total = sum;
             var capacidadRiel = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
 
             int rielcap = 0;
@@ -162,6 +217,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                              + ".<br>" + horarioNuevo,
                              correo);
                     }
+                    CitaManager.ActualizarFechaScaleEnroque(Convert.ToInt32(citaId1));
                 }
                 if (citaId2 != null)
                 {
@@ -192,6 +248,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                              + ".<br>" + horarioNuevo,
                              correo);
                     }
+                    CitaManager.ActualizarFechaScaleEnroque(Convert.ToInt32(citaId2));
                 }
 
 

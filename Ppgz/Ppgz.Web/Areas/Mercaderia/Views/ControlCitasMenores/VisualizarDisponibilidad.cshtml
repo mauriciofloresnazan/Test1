@@ -2,6 +2,8 @@
 @using Ppgz.Repository
 @using Ppgz.Web.Areas.Mercaderia
 @using System.Web.Script.Serialization;
+@using System.Data.Entity;
+@using System.Linq;
 @using Ppgz.Web.Infrastructure;
 @{
     ViewBag.Title = "Verificación de Disponibilidad";
@@ -77,7 +79,7 @@
 
 
             <div class="col-sm-4">
-                @using (Html.BeginForm("VisualizarDisponibilidad", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "formu" }))
+                @using (Html.BeginForm("VisualizarDisponibilidad", "ControlCitasMenores", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "formu" }))
                 {
                     @Html.AntiForgeryToken()
 
@@ -106,7 +108,7 @@
         </div>
         <div class="row">
 
-            @using (Html.BeginForm("AgregarPrimeraOrden", "ControlCitas", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "formue" }))
+            @using (Html.BeginForm("AgregarPrimeraOrden", "ControlCitasMenores", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "formue" }))
             {
                 @Html.AntiForgeryToken()
 
@@ -189,14 +191,67 @@
                             }
                             var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
                             var par = Convert.ToInt32(resul.Valor);
-                            var disabledChecked = "disabled";
-                            var dataOff = "DISPONIBLE";
+                            var Total = par - riel.CantidadTotal;
+                            var disabledChecked = "";
+                            var dataOff = "Disponible:";
                             var dataOn = "MI RESERVA";
                             var offStyle = "primary";
                             var onStyle = "success";
                             var disponibleClass = "riel-disponible";
+                            var db = new Entities();
+                            var t = riel.CantidadTotal + currentCita.Cantidad;
+                            if (t < par && riel.Disponibilidad == false && riel.CitaId != null)
+                            {
+                                if (t < par && riel.Disponibilidad == false && riel.Citas != null)
+                                {
 
-                            if (!riel.Disponibilidad)
+                                    disabledChecked = "disabled";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "Disponible:" + Total;
+                                    //onStyle = "danger";
+                                    offStyle = "primary";
+                                    disponibleClass = "";
+
+
+                                }
+                                else
+                                {
+
+
+                                    disabledChecked = "disabled";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "OCUPADO";
+                                    //onStyle = "danger";
+                                    offStyle = "danger";
+                                    disponibleClass = "";
+
+                                    if (riel.CantidadTotal == 0 && riel.Disponibilidad == true)
+                                    {
+                                        disabledChecked = "disabled";
+                                        //dataOn = "OCUPADO";
+                                        dataOff = "hjjjh:" + Total;
+                                        //onStyle = "danger";
+                                        offStyle = "warning";
+                                        disponibleClass = "";
+                                    }
+                                    else
+                                    {
+                                        if (riel.Disponibilidad == true && riel.Citas == null)
+                                        {
+
+                                            disabledChecked = "disabled";
+                                            //dataOn = "OCUPADO";
+                                            dataOff = "OCUPADO";
+                                            //onStyle = "danger";
+                                            offStyle = "danger";
+                                            disponibleClass = "";
+                                        }
+
+                                    }
+
+                                }
+                            }
+                            else
                             {
                                 disabledChecked = "disabled";
                                 //dataOn = "OCUPADO";
@@ -204,16 +259,31 @@
                                 //onStyle = "danger";
                                 offStyle = "danger";
                                 disponibleClass = "";
-                            }
-                            else
-                            {
-                                if (riel.CantidadTotal < par && riel.Disponibilidad == true && riel.CitaId != null)
+
+                                if (riel.CantidadTotal == 0 && riel.Disponibilidad == true)
                                 {
-                                    dataOff = "OCUPADO";
+                                    disabledChecked = "disabled";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "Disponible:" + Total;
                                     //onStyle = "danger";
-                                    offStyle = "danger";
+                                    offStyle = "warning";
                                     disponibleClass = "";
                                 }
+                                else
+                                {
+                                    if (riel.Disponibilidad == true && riel.CitaId == null)
+                                    {
+
+                                        disabledChecked = "disabled";
+                                        //dataOn = "OCUPADO";
+                                        dataOff = "OCUPADO";
+                                        //onStyle = "danger";
+                                        offStyle = "danger";
+                                        disponibleClass = "";
+                                    }
+
+                                }
+
                             }
 
                             <td class="text-center" style="border-right: @borderRight">
@@ -239,7 +309,7 @@
                 }
             </tbody>
         </table>
-        @using (Html.BeginForm("Agendar", "ControlCitas", new { }, FormMethod.Post, new { id = "form-agendar" }))
+        @using (Html.BeginForm("Agendar", "ControlCitasMenores", new { }, FormMethod.Post, new { id = "form-agendar" }))
         {
             @Html.AntiForgeryToken()
 
@@ -382,7 +452,7 @@
                 input.attr("data-offstyle", "primary");
 
                 input.addClass("riel-disponible");
-                input.bootstrapToggle('enable');
+                input.bootstrapToggle('disable');
 
             } else {
 
@@ -405,7 +475,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("VerificarRieles", "ControlCitas")",
+                url: "@Url.Action("VerificarRieles", "ControlCitasMenores")",
                 data: data,
                 cache: false
             }).done(function (result) {
