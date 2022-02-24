@@ -9,7 +9,7 @@
     var currentCita = (CurrentCita)ViewBag.CurrentCita;
 
     var fechaCita = (DateTime)currentCita.Fecha;
-    
+
     var horarioRieles = (List<horarioriele>)ViewBag.HorarioRieles;
 
     var horarios = horarioRieles.Select(hr => new
@@ -23,8 +23,8 @@
     }).Distinct().ToList().OrderBy(a => a.andene.Codigo);
 
 
-    //var rielesNecesarios = RulesManager.GetCantidadRieles(currentCita.CantidadSinASN);
-    
+    var rielesNecesarios = RulesManager.GetCantidadRieles(currentCita.CantidadSinASN);
+
 }
 <link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
 <style>
@@ -47,8 +47,6 @@
         border-color: #ccc;
         background-image: none;
     }
-
-
 </style>
 
 <h2>@ViewBag.Title</h2>
@@ -120,7 +118,9 @@
     <div class="panel-body">
         <p style="margin: 0;">
             <i>
-
+                Debe entergar <strong>@currentCita.CantidadSinASN</strong> pares, por lo que debe seleccionar
+                <strong>@rielesNecesarios</strong> rieles.
+            </i>
         </p>
         <p>
             <div>
@@ -220,17 +220,17 @@
 
                         }
                         @*<td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center" style="border-right: solid 1px #666">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                        <td class="text-center">
-                            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center" style="border-right: solid 1px #666">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+                            <td class="text-center">
+                                <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
                     </tr>
                 }
             </tbody>
@@ -248,7 +248,7 @@
     @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
 
     <script type="text/javascript">
-        
+        var rielesNecesarios = parseInt("@rielesNecesarios");
         var rielesSeleccionados = [];
         var enviado = false;
         $(function() {
@@ -284,18 +284,17 @@
                     $.blockUI({ message: '<h2>Por favor espere...</h2>' });
 
 
-               
+
 
 
             });
 
-            CargarEventoSeleccion();
-          
 
+            CargarEventoSeleccion();
+            VerificarRieles();
         });
 
-
-        function comprometerRiel(horarioRielId) {
+  function comprometerRiel(horarioRielId) {
             if (rielesSeleccionados.indexOf(horarioRielId) === -1) {
                 rielesSeleccionados.push(horarioRielId);
             }
@@ -314,7 +313,14 @@
 
         }
 
-        
+        function VerificarSelecciones() {
+            if (rielesSeleccionados.length === rielesNecesarios) {
+                $('.riel-disponible:not(.usado)').bootstrapToggle('disable');
+            } else {
+
+                $('.riel-disponible:not(.usado)').bootstrapToggle('enable');
+            }
+        }
 
         function CargarEventoSeleccion() {
 
@@ -340,7 +346,7 @@
             var input = $("#" + currentValue.Id);
 
             if (currentValue.Disponibilidad) {
-                
+
                 input.attr("data-off", "DISPONIBLE");
                 input.attr("data-offstyle", "primary");
 
@@ -386,7 +392,7 @@
                 console.log(response);
 
             });
-     
+
         }
     </script>
 }

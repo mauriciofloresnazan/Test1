@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Ppgz.Services;
 using Ppgz.Web.Infrastructure;
-using ScaleWrapper;
+using System.Xml;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -28,15 +29,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             return View();
         }
-            
+
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public ActionResult Facturas(int proveedorId)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
             var proveedor = _proveedorManager.Find(proveedorId, cuenta.Id);
-            
-            if (proveedor ==  null)
+
+            if (proveedor == null)
             {
                 // TODO
                 TempData["FlashError"] = "Proveedor incorrecto";
@@ -50,7 +51,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             return View();
 
         }
-        
+
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public ActionResult CargarFactura(int proveedorId)
         {
@@ -110,7 +111,69 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 throw new BusinessException("El archivo no puede ser procesado");
             }
 
+
+
+
             _facturaManager.ValidarFactura(file.InputStream);
+
+            /*
+            var fileName = Path.GetFileName(file.FileName);
+
+            if (fileName == null)
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_PdfInvalido);
+            }
+
+            var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+
+            file.SaveAs(path);
+
+            return "~/Uploads/" + fileName;*/
+        }
+
+
+
+        internal void ValidarPdfVersion4(HttpPostedFileBase file)
+        {
+            if (file != null && file.ContentType != "application/pdf")
+            {
+                throw new BusinessException("Pdf Invalido");
+            }
+
+            if (file == null)
+            {
+                throw new BusinessException("Pdf Invalido");
+            }
+            /*
+            var fileName = Path.GetFileName(file.FileName);
+
+            if (fileName == null)
+            {
+                throw new BusinessException(MensajesResource.ERROR_MensajesInstitucionales_PdfInvalido);
+            }
+
+            var path = Path.Combine(Server.MapPath("~/Uploads/"), fileName);
+
+            file.SaveAs(path);
+
+            return "~/Uploads/" + fileName;*/
+        }
+        internal void ValidarXmlVersion4(HttpPostedFileBase file)
+        {
+            if (file != null && file.ContentType != "text/xml")
+            {
+                throw new BusinessException("El archivo no puede ser procesado");
+            }
+
+            if (file == null)
+            {
+                throw new BusinessException("El archivo no puede ser procesado");
+            }
+
+
+
+
+            _facturaManager.ValidarFacturaVersion4(file.InputStream);
 
             /*
             var fileName = Path.GetFileName(file.FileName);
@@ -139,7 +202,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             if (proveedor == null)
             {
-   
+
                 TempData["FlashError"] = "Proveedor incorrecto";
                 return RedirectToAction("Index");
             }
@@ -151,11 +214,11 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var tempXmlPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".xml");
             var tempPdfPath = Path.Combine(Server.MapPath("~/Uploads/"), "temp-" + Guid.NewGuid() + ".pdf");
 
-            
+
             try
             {
 
-                
+
                 if (Request.Files.Count == 0)
                 {
                     ModelState.AddModelError(string.Empty, "Archivos incorrectos");
@@ -177,22 +240,42 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                 }
 
-                var xmlFile = Request.Files["xml"];
-                ValidarXml(xmlFile);
-                xmlFile.SaveAs(tempXmlPath);
+                var xmlFiles = Request.Files["xml"];
+                xmlFiles.SaveAs(tempXmlPath);
+                XmlDocument doc = new XmlDocument();
+                doc.Load(tempXmlPath);//Leer el XML
 
-                var pdfFile = Request.Files["pdf"];
-                ValidarPdf(pdfFile);
-                pdfFile.SaveAs(tempPdfPath);
+                //agregamos un Namespace, que usaremos para buscar que el nodo no exista:
+                XmlNamespaceManager nsm = new XmlNamespaceManager(doc.NameTable);
+                nsm.AddNamespace("cfdi", "http://www.sat.gob.mx/cfd/3");
+                XmlNode nodeComprobante = doc.SelectSingleNode("//cfdi:Comprobante", nsm);
 
+                if (nodeComprobante == null)
+                {
+                    var xmlFile = Request.Files["xml"];
+                    ValidarXmlVersion4(xmlFile);
+                    xmlFile.SaveAs(tempXmlPath);
 
-                _facturaManager.CargarFactura(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
+                    var pdfFile = Request.Files["pdf"];
+                    ValidarPdfVersion4(pdfFile);
+                    pdfFile.SaveAs(tempPdfPath);
+                    _facturaManager.CargarFacturaV4(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
 
+                }
+                else
+                {
+                    var xmlFile = Request.Files["xml"];
+                    ValidarXml(xmlFile);
+                    xmlFile.SaveAs(tempXmlPath);
 
+                    var pdfFile = Request.Files["pdf"];
+                    ValidarPdf(pdfFile);
+                    pdfFile.SaveAs(tempPdfPath);
 
-
+                    _facturaManager.CargarFactura(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
+                }
                 TempData["FlashSuccess"] = "Factura registrada satisfactoriamente";
-                return RedirectToAction("Facturas", new {proveedorId = proveedor.Id});
+                return RedirectToAction("Facturas", new { proveedorId = proveedor.Id });
             }
             catch (BusinessException businessEx)
             {
@@ -226,7 +309,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
         }
 
-                
+
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public FileResult DescargarXml(int facturaId, int proveedorId)
         {
@@ -237,7 +320,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 throw new Exception("Proveedor incorrecto");
             }
 
-           var factura = _facturaManager.Find(facturaId, proveedorId);
+            var factura = _facturaManager.Find(facturaId, proveedorId);
 
             if (factura == null)
             {
@@ -252,7 +335,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 
         }
-        
+
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-FACTURAS")]
         public FileResult DescargarPdf(int facturaId, int proveedorId)
         {
