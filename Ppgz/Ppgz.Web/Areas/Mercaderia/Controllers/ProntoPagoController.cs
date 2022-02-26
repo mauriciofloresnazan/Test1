@@ -126,79 +126,167 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     return View();
                 }
 
-                //Validamos el xml
-                var xmlFile = notaCreditoView.notaCreditoXml;
-                ValidarXml(xmlFile);
+                var xmlFiles = notaCreditoView.notaCreditoXml;
+                xmlFiles.SaveAs(tempXmlPath);
+                XmlDocument doc = new XmlDocument();
+                doc.Load(tempXmlPath);//Leer el XML
 
-                //Validamos el pdf
-                var pdfFile = notaCreditoView.notaCreditoPdf;
-                ValidarPdf(pdfFile);
+                //agregamos un Namespace, que usaremos para buscar que el nodo no exista:
+                XmlNamespaceManager nsm = new XmlNamespaceManager(doc.NameTable);
+                nsm.AddNamespace("cfdi", "http://www.sat.gob.mx/cfd/3");
+                XmlNode nodeComprobante = doc.SelectSingleNode("//cfdi:Comprobante", nsm);
 
-                xmlFile.SaveAs(tempXmlPath);
-                pdfFile.SaveAs(tempPdfPath);
-
-
-                try
+                if (nodeComprobante == null)
                 {
+                    var xmlFile = Request.Files["xml"];
+                    ValidarXmlVersion4(xmlFile);
+                    xmlFile.SaveAs(tempXmlPath);
 
-                    //Paso 1: Validamos la factura
-                    factura facturaModel = _facturaManager.CargarFacturaFactoraje(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
+                    var pdfFile = Request.Files["pdf"];
+                    ValidarPdfVersion4(pdfFile);
+                    pdfFile.SaveAs(tempPdfPath);
 
-                    string numeroProveedor = proveedor.NumeroProveedor;
-                    DateTime fechaFactura = facturaModel.Fecha;
-                    string importe = facturaModel.Total.ToString();
-                    string cabecera = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.numeroProveedor.ToString();
-                    string posicion = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.numeroProveedor.ToString();
-                    string folio = facturaModel.Serie.ToString() + facturaModel.Folio.ToString();
-
-                    //Validamos que el importe de la factura 
-                    var Solicitud = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje);
-                    double MontoFacturar = Solicitud.DescuentoPP;
-                    double diferencia = MontoFacturar - Convert.ToDouble(facturaModel.Total);
-
-                    if (diferencia > .5 || diferencia < -.5)
-                    {
-                        TempData["FlashError"] = "El monto de la factura no coincide con el monto a pagar.";
-                        return RedirectToAction("VerSolicitudes", new { proveedorId = proveedor.Id });
-                    }
-
-                    //Paso 2: Ejecutamos la funcion de SAP
-                    Resultado cargarNotaCredito = sapFacturaManager.CrearNotaCredito(numeroProveedor, fechaFactura, importe, cabecera, posicion, folio, Solicitud.Sociedad);
-
-                    if (cargarNotaCredito.Estatus == "1")
-                    {
-                        //Paso 3: Guardamos la factura en la bd
-                        facturaModel.NumeroGenerado = cargarNotaCredito.FacturaNumero;
-                        _facturaManager.GuardaFacturaFactoraje(facturaModel);
-
-                        //Paso 4: Actualizamos el estatus de la solicitud
-                        solicitudFManager.UpdateEstatusSolicitud(notaCreditoView.idSolicitudesFactoraje, 4);
-
-                        solicitudesfactoraje sf = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje);
-                        sf.NumeroGenerado = Convert.ToInt32(facturaModel.NumeroGenerado);
-                        solicitudFManager.UpdateSolicitud(sf);
-
-                        _logsFactoraje.InsertLog(SociedadActiva, this.User.Identity.Name.ToString(), "Carga Nota Credito", notaCreditoView.idSolicitudesFactoraje, "Carga nota de credito");
-
-                        TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente.";
-
-                    }
-                    else
+                    try
                     {
 
-                        TempData["FlashError"] = "Error al cargar la nota de credito en SAP. " + cargarNotaCredito.ErrorTable.ToString();
+                        //Paso 1: Validamos la factura
+                        factura facturaModel = _facturaManager.CargarFacturaFactorajeV4(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
+
+                        string numeroProveedor = proveedor.NumeroProveedor;
+                        DateTime fechaFactura = facturaModel.Fecha;
+                        string importe = facturaModel.Total.ToString();
+                        string cabecera = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.numeroProveedor.ToString();
+                        string posicion = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.numeroProveedor.ToString();
+                        string folio = facturaModel.Serie.ToString() + facturaModel.Folio.ToString();
+
+                        //Validamos que el importe de la factura 
+                        var Solicitud = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje);
+                        double MontoFacturar = Solicitud.DescuentoPP;
+                        double diferencia = MontoFacturar - Convert.ToDouble(facturaModel.Total);
+
+                        if (diferencia > .5 || diferencia < -.5)
+                        {
+                            TempData["FlashError"] = "El monto de la factura no coincide con el monto a pagar.";
+                            return RedirectToAction("VerSolicitudes", new { proveedorId = proveedor.Id });
+                        }
+
+                        //Paso 2: Ejecutamos la funcion de SAP
+                        Resultado cargarNotaCredito = sapFacturaManager.CrearNotaCredito(numeroProveedor, fechaFactura, importe, cabecera, posicion, folio, Solicitud.Sociedad);
+
+                        if (cargarNotaCredito.Estatus == "1")
+                        {
+                            //Paso 3: Guardamos la factura en la bd
+                            facturaModel.NumeroGenerado = cargarNotaCredito.FacturaNumero;
+                            _facturaManager.GuardaFacturaFactoraje(facturaModel);
+
+                            //Paso 4: Actualizamos el estatus de la solicitud
+                            solicitudFManager.UpdateEstatusSolicitud(notaCreditoView.idSolicitudesFactoraje, 4);
+
+                            solicitudesfactoraje sf = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje);
+                            sf.NumeroGenerado = Convert.ToInt32(facturaModel.NumeroGenerado);
+                            solicitudFManager.UpdateSolicitud(sf);
+
+                            _logsFactoraje.InsertLog(SociedadActiva, this.User.Identity.Name.ToString(), "Carga Nota Credito", notaCreditoView.idSolicitudesFactoraje, "Carga nota de credito");
+
+                            TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente.";
+
+                        }
+                        else
+                        {
+
+                            TempData["FlashError"] = "Error al cargar la nota de credito en SAP. " + cargarNotaCredito.ErrorTable.ToString();
+
+                        }
+                    }
+                    catch (Exception ioe)
+                    {
+
+                        TempData["FlashError"] = "Error al cargar la nota de credito en SAP. " + ioe.Message.ToString();
 
                     }
+
+                    return RedirectToAction("VerSolicitudes", new { proveedorId = proveedor.Id });
                 }
-                catch (Exception ioe)
+                else
                 {
+                    //Validamos el xml
+                    var xmlFile = notaCreditoView.notaCreditoXml;
+                    ValidarXml(xmlFile);
 
-                    TempData["FlashError"] = "Error al cargar la nota de credito en SAP. " + ioe.Message.ToString();
+                    //Validamos el pdf
+                    var pdfFile = notaCreditoView.notaCreditoPdf;
+                    ValidarPdf(pdfFile);
 
+                    xmlFile.SaveAs(tempXmlPath);
+                    pdfFile.SaveAs(tempPdfPath);
+
+
+
+                    try
+                    {
+
+                        //Paso 1: Validamos la factura
+                        factura facturaModel = _facturaManager.CargarFacturaFactoraje(proveedor.Id, cuenta.Id, tempXmlPath, tempPdfPath);
+
+                        string numeroProveedor = proveedor.NumeroProveedor;
+                        DateTime fechaFactura = facturaModel.Fecha;
+                        string importe = facturaModel.Total.ToString();
+                        string cabecera = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.numeroProveedor.ToString();
+                        string posicion = facturaModel.Folio.ToString() + "PP" + "de" + facturaModel.numeroProveedor.ToString();
+                        string folio = facturaModel.Serie.ToString() + facturaModel.Folio.ToString();
+
+                        //Validamos que el importe de la factura 
+                        var Solicitud = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje);
+                        double MontoFacturar = Solicitud.DescuentoPP;
+                        double diferencia = MontoFacturar - Convert.ToDouble(facturaModel.Total);
+
+                        if (diferencia > .5 || diferencia < -.5)
+                        {
+                            TempData["FlashError"] = "El monto de la factura no coincide con el monto a pagar.";
+                            return RedirectToAction("VerSolicitudes", new { proveedorId = proveedor.Id });
+                        }
+
+                        //Paso 2: Ejecutamos la funcion de SAP
+                        Resultado cargarNotaCredito = sapFacturaManager.CrearNotaCredito(numeroProveedor, fechaFactura, importe, cabecera, posicion, folio, Solicitud.Sociedad);
+
+                        if (cargarNotaCredito.Estatus == "1")
+                        {
+                            //Paso 3: Guardamos la factura en la bd
+                            facturaModel.NumeroGenerado = cargarNotaCredito.FacturaNumero;
+                            _facturaManager.GuardaFacturaFactoraje(facturaModel);
+
+                            //Paso 4: Actualizamos el estatus de la solicitud
+                            solicitudFManager.UpdateEstatusSolicitud(notaCreditoView.idSolicitudesFactoraje, 4);
+
+                            solicitudesfactoraje sf = solicitudFManager.GetSolicitudById(notaCreditoView.idSolicitudesFactoraje);
+                            sf.NumeroGenerado = Convert.ToInt32(facturaModel.NumeroGenerado);
+                            solicitudFManager.UpdateSolicitud(sf);
+
+                            _logsFactoraje.InsertLog(SociedadActiva, this.User.Identity.Name.ToString(), "Carga Nota Credito", notaCreditoView.idSolicitudesFactoraje, "Carga nota de credito");
+
+                            TempData["FlashSuccess"] = "Nota de credito registrada satisfactoriamente.";
+
+                        }
+                        else
+                        {
+
+                            TempData["FlashError"] = "Error al cargar la nota de credito en SAP. " + cargarNotaCredito.ErrorTable.ToString();
+
+                        }
+                    }
+                    catch (Exception ioe)
+                    {
+
+                        TempData["FlashError"] = "Error al cargar la nota de credito en SAP. " + ioe.Message.ToString();
+
+                    }
+
+                    return RedirectToAction("VerSolicitudes", new { proveedorId = proveedor.Id });
                 }
-
-                return RedirectToAction("VerSolicitudes", new { proveedorId = proveedor.Id });
             }
+
+
+
             catch (BusinessException businessEx)
             {
 
