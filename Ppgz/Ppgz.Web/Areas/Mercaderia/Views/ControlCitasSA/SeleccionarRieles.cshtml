@@ -261,6 +261,7 @@
                         return;
                     }
 
+                if (rielesSeleccionados.length === rielesNecesarios) {
 
                     for (var i = 0; i < rielesSeleccionados.length; i++) {
                         $('<input>').attr({
@@ -283,7 +284,9 @@
 
                     $.blockUI({ message: '<h2>Por favor espere...</h2>' });
 
-
+                } else {
+                    msgError("Por favor verifique su selección");
+                }
 
 
 

@@ -331,10 +331,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             for (var i = 2; i < ws.RowsUsed().ToList().Count + 1; i++)
             {
 
-               
-                if (ws.Row(i).Cell(1).Value.ToString() == "" || ws.Row(i).Cell(2).Value.ToString() == ""||
-                    ws.Row(i).Cell(3).Value.ToString() == ""|| ws.Row(i).Cell(4).Value.ToString() == ""||
-                    ws.Row(i).Cell(5).Value.ToString() == ""|| ws.Row(i).Cell(6).Value.ToString() == ""||
+
+                if (ws.Row(i).Cell(1).Value.ToString() == "" || ws.Row(i).Cell(2).Value.ToString() == "" ||
+                    ws.Row(i).Cell(3).Value.ToString() == "" || ws.Row(i).Cell(4).Value.ToString() == "" ||
+                    ws.Row(i).Cell(5).Value.ToString() == "" || ws.Row(i).Cell(6).Value.ToString() == "" ||
                     ws.Row(i).Cell(7).Value.ToString() == "")
                 {
 
@@ -373,9 +373,9 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 archivo.Pares = pares;
                 archivo.Material = result[0];
                 archivo.Id_Proveedor = Convert.ToInt32(proveedor.NumeroProveedor);
-                archivo.Estilo =result[3];
-                archivo.Color =result[4];
-                archivo.Cuenta= Convert.ToString(cuenta.NombreCuenta);
+                archivo.Estilo = result[3];
+                archivo.Color = result[4];
+                archivo.Cuenta = Convert.ToString(cuenta.NombreCuenta);
                 db.RevisarDatos.Add(archivo);
                 db.SaveChanges();
                 var orden = CurrentCita._ordenesActivas.FirstOrDefault(o => o.NumeroDocumento == Pedido);
@@ -411,8 +411,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                         sap.Material = preAsnDetail.NumeroMaterial;
                         sap.Cantidad = preAsnDetail.Cantidad;
                         sap.Id_Proveedor = Convert.ToInt32(proveedor2.NumeroProveedor);
-                        sap.Numero_linea =preAsnDetail.NumeroPosicion; 
-                        sap.Cuenta=Convert.ToString(cuenta1.NombreCuenta);
+                        sap.Numero_linea = preAsnDetail.NumeroPosicion;
+                        sap.Cuenta = Convert.ToString(cuenta1.NombreCuenta);
                         db1.RevisarPedidos.Add(sap);
                         db1.SaveChanges();
 
@@ -422,10 +422,13 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             ViewBag.NumeroDocumento = CurrentCita._ordenes;
             var cuentas = _commonManager.GetCuentaUsuarioAutenticado();
             var proveedor1 = CurrentCita.Proveedor;
+            var prov= Convert.ToInt32(proveedor2.NumeroProveedor);
+            var carga = db2.RevisarDatos.Where(crg => crg.Id_Proveedor == prov && crg.Edo_Rev == 0).FirstOrDefault();
             var parameters = new List<MySqlParameter>()
                 {
                   new MySqlParameter("IDProv",proveedor1.NumeroProveedor ),
                   new MySqlParameter("Cuenta",cuentas.NombreCuenta),
+                  new MySqlParameter("Car",carga.Carga),
                 };
 
             Db.ExecuteProcedureOut(parameters, "sp_valida_archivoASN");
