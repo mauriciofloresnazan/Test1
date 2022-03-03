@@ -138,13 +138,18 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                 if (nodeComprobante == null)
                 {
-                    var xmlFile = Request.Files["xml"];
-                    ValidarXmlVersion4(xmlFile);
-                    xmlFile.SaveAs(tempXmlPath);
 
-                    var pdfFile = Request.Files["pdf"];
+                    //Validamos el xml
+                    var xmlFile = notaCreditoView.notaCreditoXml;
+                    ValidarXmlVersion4(xmlFile);
+
+                    //Validamos el pdf
+                    var pdfFile = notaCreditoView.notaCreditoPdf;
                     ValidarPdfVersion4(pdfFile);
+
+                    xmlFile.SaveAs(tempXmlPath);
                     pdfFile.SaveAs(tempPdfPath);
+
 
                     try
                     {
