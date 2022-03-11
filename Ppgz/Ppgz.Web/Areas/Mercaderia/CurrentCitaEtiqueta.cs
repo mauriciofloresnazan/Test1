@@ -120,18 +120,11 @@ namespace Ppgz.Web.Areas.Mercaderia
             if (String.Equals(centro, "CROSS DOCK", StringComparison.CurrentCultureIgnoreCase))
             {
                 EsCrossDock = true;
-                _ordenesActivas = result
-                    .Where(o => o.EsCrossDock)
-                    .Where(o => o.TotalPermitido > 0)
-                    .ToList();
+                _ordenesActivas = result;
             }
             else
             {
-                _ordenesActivas = result
-                    .Where(o => !o.EsCrossDock)
-                    .Where(o => o.Detalles.Any(de => String.Equals(de.Centro, centro, StringComparison.CurrentCultureIgnoreCase)))
-                    .Where(o => o.TotalPermitido > 0)
-                    .ToList();
+                _ordenesActivas = result;
             }
 
 

@@ -422,10 +422,13 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             ViewBag.NumeroDocumento = CurrentCita._ordenes;
             var cuentas = _commonManager.GetCuentaUsuarioAutenticado();
             var proveedor1 = CurrentCita.Proveedor;
+            var prov= Convert.ToInt32(proveedor2.NumeroProveedor);
+            var carga = db2.RevisarDatos.Where(crg => crg.Id_Proveedor == prov && crg.Edo_Rev == 0).FirstOrDefault();
             var parameters = new List<MySqlParameter>()
                 {
                   new MySqlParameter("IDProv",proveedor1.NumeroProveedor ),
                   new MySqlParameter("Cuenta",cuentas.NombreCuenta),
+                  new MySqlParameter("Car",carga.Carga),
                 };
 
             Db.ExecuteProcedureOut(parameters, "sp_valida_archivoASN");
