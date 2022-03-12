@@ -166,10 +166,12 @@
                             var horario = result.horario;
                             var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
                             var rielPostition = 0;
+                            var res = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
+                            var pa = Convert.ToInt32(res.Valor);
                             var db = new Entities();
                             var ca = db.horariorieles.Where(cit => cit.TipoCita == "Cita Menor").FirstOrDefault();
                             var an = ca.CantidadTotal + cita.CantidadTotal;
-                            var blo = horarioRieles.FirstOrDefault(ri => ri.CantidadTotal < 270 && an < 270 && ri.TipoCita == "Cita Menor" && ri.Disponibilidad == false);
+                            var blo = horarioRieles.FirstOrDefault(ri => ri.CantidadTotal < pa && an < pa && ri.TipoCita == "Cita Menor" && ri.Disponibilidad == false);
 
                         }
 
@@ -185,8 +187,9 @@
                                 {
                                     borderRight = "solid 1px #666";
                                 }
-
-                                var Total = 270 - riel.CantidadTotal;
+                                var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
+                                var par = Convert.ToInt32(resul.Valor);
+                                var Total = par - riel.CantidadTotal;
                                 var disabledChecked = "";
                                 var dataOff = "Disponible:";
                                 var dataOn = "MI RESERVA";
@@ -195,9 +198,9 @@
                                 var disponibleClass = "riel-disponible";
 
                                 var t = riel.CantidadTotal + cita.CantidadTotal;
-                                if (t < 271 && riel.Disponibilidad == false && riel.CitaId != null)
+                                if (t < par && riel.Disponibilidad == false && riel.CitaId != null)
                                 {
-                                    if (t < 271 && riel.Disponibilidad == false && riel.Citas != null)
+                                    if (t < par && riel.Disponibilidad == false && riel.Citas != null)
                                     {
 
 
@@ -301,7 +304,9 @@
                                     borderRight = "solid 1px #666";
                                 }
 
-                                var Total = 270 - riel.CantidadTotal;
+                                var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
+                                var par = Convert.ToInt32(resul.Valor);
+                                var Total = par - riel.CantidadTotal;
                                 var disabledChecked = "";
                                 var dataOff = "Disponible:";
                                 var dataOn = "MI RESERVA";
@@ -310,9 +315,9 @@
                                 var disponibleClass = "riel-disponible";
 
                                 var t = riel.CantidadTotal + cita.CantidadTotal;
-                                if (t < 271 && riel.Disponibilidad == false && riel.CitaId != null)
+                                if (t < par && riel.Disponibilidad == false && riel.CitaId != null)
                                 {
-                                    if (t < 271 && riel.Disponibilidad == false && riel.Citas != null)
+                                    if (t < par && riel.Disponibilidad == false && riel.Citas != null)
                                     {
 
                                         var horarioRiel = db.horariorieles.Find(riel.Id);
