@@ -81,6 +81,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             if (fecha == null)
             {
                 fecha = DateTime.Today.Date.ToString("dd/MM/yyyy");
+
             }
 
             var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -89,6 +90,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var db = new Entities();
 
             var horarioRieles = db.horariorieles.Where(h => h.Fecha == date).ToList();
+
+            var total = db.citas.Where(c => c.FechaCita == date).ToList();
+
+            var sum = total.Sum(s => s.CantidadTotal);
+
+            ViewBag.Total = sum;
             var capacidadRiel = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
 
             int rielcap = 0;

@@ -1,4 +1,3 @@
-
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -23,19 +22,18 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         {
             var parameters = new List<MySqlParameter>
             {
-				new MySqlParameter
-				{
-					ParameterName = "pTotal",
-					Direction = ParameterDirection.Output,
-					MySqlDbType = MySqlDbType.VarChar
-				},
-				new MySqlParameter("pFecha", date)
-			};
+                new MySqlParameter
+                {
+                    ParameterName = "pTotal",
+                    Direction = ParameterDirection.Output,
+                    MySqlDbType = MySqlDbType.VarChar
+                },
+                new MySqlParameter("pFecha", date)
+            };
 
             Db.ExecuteProcedureOut(parameters, "config_appointment");
         }
-
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTACITASCALIDAD")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
         public ActionResult Index(string fechaFrom, string fechaTo)
         {
             var db = new Entities();
@@ -43,12 +41,34 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                ViewBag.Citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat).ToList();
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat && c.TipoCita != "Cita Menor").ToList();
             }
             else
             {
                 var fecha = DateTime.Today;
-                ViewBag.Citas = db.citas.Where(c => c.FechaCita == fecha).ToList();
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita == fecha && c.TipoCita != "Cita Menor").ToList();
+            }
+
+            ViewBag.EstatusCita = db.estatuscitas.ToList();
+
+            return View();
+        }
+
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        public ActionResult IndexM(string fechaFrom, string fechaTo)
+        {
+            var db = new Entities();
+            if (!String.IsNullOrEmpty(fechaFrom) && !String.IsNullOrEmpty(fechaTo))
+            {
+                var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat && c.TipoCita == "Cita Menor").ToList();
+            }
+            else
+            {
+                var fecha = DateTime.Today;
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita == fecha && c.TipoCita == "Cita Menor").ToList();
             }
 
             ViewBag.EstatusCita = db.estatuscitas.ToList();
@@ -81,6 +101,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             if (fecha == null)
             {
                 fecha = DateTime.Today.Date.ToString("dd/MM/yyyy");
+
             }
 
             var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
@@ -89,6 +110,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var db = new Entities();
 
             var horarioRieles = db.horariorieles.Where(h => h.Fecha == date).ToList();
+
+            var total = db.citas.Where(c => c.FechaCita == date).ToList();
+
+            var sum = total.Sum(s => s.CantidadTotal);
+
+            ViewBag.Total = sum;
             var capacidadRiel = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
 
             int rielcap = 0;
@@ -207,7 +234,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 return RedirectToAction("Enroque", new { fecha = horarioRiel1.Fecha.ToString("dd/MM/yyyy"), Area = "Nazan" });
             }
         }
-       
+
 
     }
 }
