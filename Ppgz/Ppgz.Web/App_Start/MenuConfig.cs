@@ -156,7 +156,9 @@ namespace Ppgz.Web
 
                 if (men == 1)
                 {
-                    string[] menuLista =
+                    if (cuenta.NombreCuenta == "Equipo Piloto")
+                    {
+                        string[] menuLista =
                     {
                 "GESTIONPROVEEDORES|Administración de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Mercaderia",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Mercaderia",
@@ -180,16 +182,18 @@ namespace Ppgz.Web
                 "PRONTOPAGO|Pronto pago|Index|ProntoPago|fa fa-bar-chart|Mercaderia",
 
             };
-                    return menuLista;
-                }
-                else
-                {
-                    string[] menuLista =
-    {
+                        return menuLista;
+                    }
+                    else
+                    {
+
+                        string[] menuLista =
+                    {
                 "GESTIONPROVEEDORES|Administración de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Mercaderia",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
                 "CONTROLCITAS|Control de Citas Multi Pedidos|Citas|ControlCitasMulti|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Recibo Por Asn|Citas|ReciboPorAsn|fa fa-calendar|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Citas|ControlCitasSA|fa fa-calendar|Mercaderia",
                 "COMPROBANTESRECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
@@ -206,7 +210,70 @@ namespace Ppgz.Web
                 "PRONTOPAGO|Pronto pago|Index|ProntoPago|fa fa-bar-chart|Mercaderia",
 
             };
-                    return menuLista;
+                        return menuLista;
+                    }
+
+
+                }
+                else
+                {
+
+                    if (cuenta.NombreCuenta == "Equipo Piloto")
+                    {
+                        string[] menuLista =
+                    {
+                "GESTIONPROVEEDORES|Administración de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Mercaderia",
+                "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Mercaderia",
+                "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Control de Citas Multi Pedidos|Citas|ControlCitasMulti|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Recibo Por Asn|Citas|ReciboPorAsn|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Control de Citas Menores 270 Pares|Citas|ControlCitasMenores|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Control de Citas|Citas|ControlCitasSA|fa fa-calendar|Mercaderia",
+                "COMPROBANTESRECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
+                "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
+                "IMPRESIONETIQUETA|Impresión de Etiquetas Individual|Index|ImpresionEtiquetasIndividual|fa fa-ticket|Mercaderia",
+                "FACTURAS|Administración de Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
+                "CUENTASPAGAR|Devoluciones de Tienda|Index|DevolucionesTienda|fa fa-motorcycle|Mercaderia",
+                "CUENTASPAGAR|Rechazos De Cedis|Index|RechazosCedis|fa fa-spinner|Mercaderia",
+                "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
+                "ADMINISTRARUSUARIOS|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
+                "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
+                "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Mercaderia",
+                "REPORTESPROVEEDORES|Reportes Proveedores|Index|ReporteProveedores|fa fa-bar-chart|Mercaderia",
+                "REPORTESAUDITORIA|Descuentos por Auditorias |Index|ReporteAuditoria|fa fa-line-chart|Mercaderia",
+                "PRONTOPAGO|Pronto pago|Index|ProntoPago|fa fa-bar-chart|Mercaderia",
+
+            };
+                        return menuLista;
+                    }
+                    else
+                    {
+
+                        string[] menuLista =
+                    {
+                "GESTIONPROVEEDORES|Administración de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Mercaderia",
+                "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Mercaderia",
+                "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Control de Citas Multi Pedidos|Citas|ControlCitasMulti|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Recibo Por Asn|Citas|ReciboPorAsn|fa fa-calendar|Mercaderia",
+                "CONTROLCITAS|Control de Citas|Citas|ControlCitasSA|fa fa-calendar|Mercaderia",
+                "COMPROBANTESRECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
+                "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
+                "IMPRESIONETIQUETA|Impresión de Etiquetas Individual|Index|ImpresionEtiquetasIndividual|fa fa-ticket|Mercaderia",
+                "FACTURAS|Administración de Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
+                "CUENTASPAGAR|Devoluciones de Tienda|Index|DevolucionesTienda|fa fa-motorcycle|Mercaderia",
+                "CUENTASPAGAR|Rechazos De Cedis|Index|RechazosCedis|fa fa-spinner|Mercaderia",
+                "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
+                "ADMINISTRARUSUARIOS|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Mercaderia",
+                "ADMINISTRARPERFILES|Administración de Perfiles|Index|AdministrarPerfiles|fa fa fa-road|Mercaderia",
+                "CUENTASPAGAR|Cuentas por Pagar|Index|CuentasPagar|fa fa-calculator|Mercaderia",
+                "REPORTESPROVEEDORES|Reportes Proveedores|Index|ReporteProveedores|fa fa-bar-chart|Mercaderia",
+                "REPORTESAUDITORIA|Descuentos por Auditorias |Index|ReporteAuditoria|fa fa-line-chart|Mercaderia",
+                "PRONTOPAGO|Pronto pago|Index|ProntoPago|fa fa-bar-chart|Mercaderia",
+
+            };
+                        return menuLista;
+                    }
 
                 }
 

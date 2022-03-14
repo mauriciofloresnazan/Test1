@@ -43,19 +43,38 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                 var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
-                ViewBag.Citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat).ToList();
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat && c.TipoCita != "Cita Menor").ToList();
             }
             else
             {
                 var fecha = DateTime.Today;
-                ViewBag.Citas = db.citas.Where(c => c.FechaCita == fecha).ToList();
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita == fecha && c.TipoCita != "Cita Menor").ToList();
             }
 
             ViewBag.EstatusCita = db.estatuscitas.ToList();
 
             return View();
         }
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS,NAZAN-VISTACITASCOMPRADORES")]
+        public ActionResult IndexM(string fechaFrom, string fechaTo)
+        {
+            var db = new Entities();
+            if (!String.IsNullOrEmpty(fechaFrom) && !String.IsNullOrEmpty(fechaTo))
+            {
+                var fechaf = DateTime.ParseExact(fechaFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                var fechat = DateTime.ParseExact(fechaTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita >= fechaf && c.FechaCita <= fechat && c.TipoCita == "Cita Menor").ToList();
+            }
+            else
+            {
+                var fecha = DateTime.Today;
+                ViewBag.Citas = db.citas.Where(c => c.FechaCita == fecha && c.TipoCita == "Cita Menor").ToList();
+            }
 
+            ViewBag.EstatusCita = db.estatuscitas.ToList();
+
+            return View();
+        }
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTACITASCOMPRADORES")]
         public ActionResult CitaDetalle(int citaId)
         {

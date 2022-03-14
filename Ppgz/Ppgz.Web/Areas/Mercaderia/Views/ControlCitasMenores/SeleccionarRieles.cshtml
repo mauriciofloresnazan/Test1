@@ -191,7 +191,7 @@
                             var pa = Convert.ToInt32(res.Valor);
                             var ca = db.horariorieles.Where(cit => cit.TipoCita == "Cita Menor").FirstOrDefault();
                             var an = ca.CantidadTotal + currentCita.Cantidad;
-                            var blo = horarioRieles.FirstOrDefault(ri => ri.CantidadTotal < pa && an < pa && ri.TipoCita == "Cita Menor" && ri.Disponibilidad == false);
+                            var blo = horarioRieles.FirstOrDefault(ri => ri.CantidadTotal <= pa && an <= pa && ri.TipoCita == "Cita Menor" && ri.Disponibilidad == false);
 
                         }
 
@@ -218,9 +218,9 @@
                                 var disponibleClass = "riel-disponible";
 
                                 var t = riel.CantidadTotal + currentCita.Cantidad;
-                                if (t < par && riel.Disponibilidad == false && riel.CitaId != null)
+                                if (t <= par && riel.Disponibilidad == false && riel.CitaId != null)
                                 {
-                                    if (t < par && riel.Disponibilidad == false && riel.Citas != null)
+                                    if (t <= par && riel.Disponibilidad == false && riel.Citas != null)
                                     {
 
 
@@ -334,9 +334,9 @@
                                 var disponibleClass = "riel-disponible";
 
                                 var t = riel.CantidadTotal + currentCita.Cantidad;
-                                if (t < par && riel.Disponibilidad == false && riel.CitaId != null)
+                                if (t <= par && riel.Disponibilidad == false && riel.CitaId != null)
                                 {
-                                    if (t < par && riel.Disponibilidad == false && riel.Citas != null)
+                                    if (t <= par && riel.Disponibilidad == false && riel.Citas != null)
                                     {
 
                                         disabledChecked = "disabled";

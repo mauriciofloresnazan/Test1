@@ -33,7 +33,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             Db.ExecuteProcedureOut(parameters, "config_appointment");
         }
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS,NAZAN-VISTACITASCALIDAD")]
         public ActionResult Index(string fechaFrom, string fechaTo)
         {
             var db = new Entities();
@@ -55,7 +55,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         }
 
 
-        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS,NAZAN-VISTACITASCALIDAD")]
         public ActionResult IndexM(string fechaFrom, string fechaTo)
         {
             var db = new Entities();
