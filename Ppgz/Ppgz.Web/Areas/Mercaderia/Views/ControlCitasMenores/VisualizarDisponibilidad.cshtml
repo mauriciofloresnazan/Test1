@@ -169,98 +169,57 @@
             <tbody>
                 @foreach (var result in horarios)
                 {
-                    <tr class="border-bottom">
+                <tr class="border-bottom">
 
-                        @{
-                            var horario = result.horario;
-                            var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
-                            var rielPostition = 0;
-                            var db = new Entities();
-                            var res = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
-                            var pa = Convert.ToInt32(res.Valor);
-                            var ca = db.horariorieles.Where(cit => cit.TipoCita == "Cita Menor").FirstOrDefault();
-                            var an = ca.CantidadTotal + currentCita.Cantidad;
-                            var blo = horarioRieles.FirstOrDefault(ri => ri.CantidadTotal < pa && an < pa && ri.TipoCita == "Cita Menor" && ri.Disponibilidad == false);
+                    @{
+                        var horario = result.horario;
+                        var rieles = horarioRieles.Where(hr => hr.HorarioId == horario.Id);
+                        var rielPostition = 0;
+                        
+                    }
 
-                        }
-
-                        <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
-                        @if (blo == null)
+                    <td class="text-center vert-align">@horario.HoraDesde - @horario.HoraHasta</td>
+                    @if (ViewBag.HorarioR == null)
+                    {
+                        foreach (var riel in rieles)
                         {
-                            foreach (var riel in rieles)
+                            rielPostition++;
+
+                            var borderRight = "";
+                            if (rielPostition < rieles.Count())
                             {
-                                rielPostition++;
+                                borderRight = "solid 1px #666";
+                            }
+                            var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
+                            var par = Convert.ToInt32(resul.Valor);
+                            var Total = par - riel.CantidadTotal;
+                            var disabledChecked = "";
+                            var dataOff = "Disponible:";
+                            var dataOn = "MI RESERVA";
+                            var offStyle = "primary";
+                            var onStyle = "success";
+                            var disponibleClass = "riel-disponible";
 
-                                var borderRight = "";
-                                if (rielPostition < rieles.Count())
+                            var t = riel.CantidadTotal + currentCita.Cantidad;
+                            if (t <= par && riel.Disponibilidad == false && riel.CitaId != null)
+                            {
+                                if (t <= par && riel.Disponibilidad == false && riel.Citas != null)
                                 {
-                                    borderRight = "solid 1px #666";
-                                }
-                                var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
-                                var par = Convert.ToInt32(resul.Valor);
-                                var Total = par - riel.CantidadTotal;
-                                var disabledChecked = "";
-                                var dataOff = "Disponible:";
-                                var dataOn = "MI RESERVA";
-                                var offStyle = "primary";
-                                var onStyle = "success";
-                                var disponibleClass = "riel-disponible";
-
-                                var t = riel.CantidadTotal + currentCita.Cantidad;
-                                if (t < par && riel.Disponibilidad == false && riel.CitaId != null)
-                                {
-                                    if (t < par && riel.Disponibilidad == false && riel.Citas != null)
-                                    {
 
 
-                                        disabledChecked = "disabled";
-                                        //dataOn = "OCUPADO";
-                                        dataOff = "Disponible:" + Total;
-                                        //onStyle = "danger";
-                                        offStyle = "primary";
-                                        disponibleClass = "";
+                                    disabledChecked = "disabled";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "Disponible:" + Total;
+                                    //onStyle = "danger";
+                                    offStyle = "primary";
+                                    disponibleClass = "";
 
 
-                                    }
-                                    else
-                                    {
-
-
-                                        disabledChecked = "disabled";
-                                        //dataOn = "OCUPADO";
-                                        dataOff = "OCUPADO";
-                                        //onStyle = "danger";
-                                        offStyle = "danger";
-                                        disponibleClass = "";
-
-                                        if (riel.CantidadTotal == 0 && riel.Disponibilidad == true)
-                                        {
-                                            disabledChecked = "disabled";
-                                            //dataOn = "OCUPADO";
-                                            dataOff = "hjjjh:" + Total;
-                                            //onStyle = "danger";
-                                            offStyle = "warning";
-                                            disponibleClass = "";
-                                        }
-                                        else
-                                        {
-                                            if (riel.Disponibilidad == true && riel.Citas == null)
-                                            {
-
-                                                disabledChecked = "disabled";
-                                                //dataOn = "OCUPADO";
-                                                dataOff = "OCUPADO";
-                                                //onStyle = "danger";
-                                                offStyle = "danger";
-                                                disponibleClass = "";
-                                            }
-
-                                        }
-
-                                    }
                                 }
                                 else
                                 {
+
+
                                     disabledChecked = "disabled";
                                     //dataOn = "OCUPADO";
                                     dataOff = "OCUPADO";
@@ -272,14 +231,14 @@
                                     {
                                         disabledChecked = "disabled";
                                         //dataOn = "OCUPADO";
-                                        dataOff = "Disponible:" + Total;
+                                        dataOff = "hjjjh:" + Total;
                                         //onStyle = "danger";
                                         offStyle = "warning";
                                         disponibleClass = "";
                                     }
                                     else
                                     {
-                                        if (riel.Disponibilidad == true && riel.CitaId == null)
+                                        if (riel.Disponibilidad == true && riel.Citas == null)
                                         {
 
                                             disabledChecked = "disabled";
@@ -293,55 +252,29 @@
                                     }
 
                                 }
-
-                                <td class="text-center" style="border-right: @borderRight">
-                                    <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
-
-                                </td>
-
                             }
-                        }
-                        else
-                        {
-                            foreach (var riel in rieles)
+                            else
                             {
-                                rielPostition++;
+                                disabledChecked = "disabled";
+                                //dataOn = "OCUPADO";
+                                dataOff = "OCUPADO";
+                                //onStyle = "danger";
+                                offStyle = "danger";
+                                disponibleClass = "";
 
-                                var borderRight = "";
-                                if (rielPostition < rieles.Count())
+                                if (riel.CantidadTotal == 0 && riel.Disponibilidad == true)
                                 {
-                                    borderRight = "solid 1px #666";
+                                    disabledChecked = "disabled";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "Disponible:" + Total;
+                                    //onStyle = "danger";
+                                    offStyle = "warning";
+                                    disponibleClass = "riel-disponible";
                                 }
-
-                                var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
-                                var par = Convert.ToInt32(resul.Valor);
-                                var Total = par - riel.CantidadTotal;
-                                var disabledChecked = "";
-                                var dataOff = "Disponible:";
-                                var dataOn = "MI RESERVA";
-                                var offStyle = "primary";
-                                var onStyle = "success";
-                                var disponibleClass = "riel-disponible";
-
-                                var t = riel.CantidadTotal + currentCita.Cantidad;
-                                if (t < par && riel.Disponibilidad == false && riel.CitaId != null)
+                                else
                                 {
-                                    if (t < par && riel.Disponibilidad == false && riel.Citas != null)
+                                    if (riel.Disponibilidad == true && riel.CitaId == null)
                                     {
-
-
-                                        disabledChecked = "disabled";
-                                        //dataOn = "OCUPADO";
-                                        dataOff = "Disponible:" + Total;
-                                        //onStyle = "danger";
-                                        offStyle = "primary";
-                                        disponibleClass = "riel-disponible";
-
-
-                                    }
-                                    else
-                                    {
-
 
                                         disabledChecked = "disabled";
                                         //dataOn = "OCUPADO";
@@ -349,35 +282,59 @@
                                         //onStyle = "danger";
                                         offStyle = "danger";
                                         disponibleClass = "";
-
-                                        if (riel.CantidadTotal == 0 && riel.Disponibilidad == true)
-                                        {
-                                            disabledChecked = "disabled";
-                                            //dataOn = "OCUPADO";
-                                            dataOff = "hjjjh:" + Total;
-                                            //onStyle = "danger";
-                                            offStyle = "warning";
-                                            disponibleClass = "";
-                                        }
-                                        else
-                                        {
-                                            if (riel.Disponibilidad == true && riel.Citas == null)
-                                            {
-
-                                                disabledChecked = "disabled";
-                                                //dataOn = "OCUPADO";
-                                                dataOff = "OCUPADO";
-                                                //onStyle = "danger";
-                                                offStyle = "danger";
-                                                disponibleClass = "";
-                                            }
-
-                                        }
-
                                     }
+
+                                }
+
+                            }
+
+                            <td class="text-center" style="border-right: @borderRight">
+                                <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
+
+                            </td>
+
+                        }
+                    }
+                    else if (ViewBag.Ho != null)
+                    {
+                        foreach (var riel in rieles)
+                        {
+                            rielPostition++;
+
+                            var borderRight = "";
+                            if (rielPostition < rieles.Count())
+                            {
+                                borderRight = "solid 1px #666";
+                            }
+                            var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
+                            var par = Convert.ToInt32(resul.Valor);
+                            var Total = par - riel.CantidadTotal;
+                            var disabledChecked = "";
+                            var dataOff = "Disponible:";
+                            var dataOn = "MI RESERVA";
+                            var offStyle = "primary";
+                            var onStyle = "success";
+                            var disponibleClass = "riel-disponible";
+
+                            var t = riel.CantidadTotal + currentCita.Cantidad;
+                            if (t <= par && riel.Disponibilidad == false && riel.CitaId != null)
+                            {
+                                if (t <= par && riel.Disponibilidad == false && riel.Citas != null)
+                                {
+
+                                    disabledChecked = "disabled";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "Disponible:" + Total;
+                                    //onStyle = "danger";
+                                    offStyle = "primary";
+                                    disponibleClass = "riel-disponible";
+
+
                                 }
                                 else
                                 {
+
+
                                     disabledChecked = "disabled";
                                     //dataOn = "OCUPADO";
                                     dataOff = "OCUPADO";
@@ -389,14 +346,14 @@
                                     {
                                         disabledChecked = "disabled";
                                         //dataOn = "OCUPADO";
-                                        dataOff = "Ocupado:" + Total;
+                                        dataOff = "hjjjh:" + Total;
                                         //onStyle = "danger";
                                         offStyle = "warning";
-
+                                        disponibleClass = "";
                                     }
                                     else
                                     {
-                                        if (riel.Disponibilidad == true && riel.CitaId == null)
+                                        if (riel.Disponibilidad == true && riel.Citas == null)
                                         {
 
                                             disabledChecked = "disabled";
@@ -410,29 +367,180 @@
                                     }
 
                                 }
+                            }
+                            else
+                            {
+                                disabledChecked = "disabled";
+                                //dataOn = "OCUPADO";
+                                dataOff = "OCUPADO";
+                                //onStyle = "danger";
+                                offStyle = "danger";
+                                disponibleClass = "";
 
-                                <td class="text-center" style="border-right: @borderRight">
-                                    <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
+                                if (riel.CantidadTotal == 0 && riel.Disponibilidad == true)
+                                {
+                                    disabledChecked = "disabled";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "Ocupado:" + Total;
+                                    //onStyle = "danger";
+                                    offStyle = "warning";
 
-                                </td>
+                                }
+                                else
+                                {
+                                    if (riel.Disponibilidad == true && riel.CitaId == null)
+                                    {
+
+                                        disabledChecked = "disabled";
+                                        //dataOn = "OCUPADO";
+                                        dataOff = "OCUPADO";
+                                        //onStyle = "danger";
+                                        offStyle = "danger";
+                                        disponibleClass = "";
+                                    }
+
+                                }
 
                             }
+
+                            <td class="text-center" style="border-right: @borderRight">
+                                <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
+
+                            </td>
+
                         }
+                    }
+                    else if (ViewBag.Ho == null)
+                    {
+                        foreach (var riel in rieles)
+                        {
+                            rielPostition++;
+
+                            var borderRight = "";
+                            if (rielPostition < rieles.Count())
+                            {
+                                borderRight = "solid 1px #666";
+                            }
+                            var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
+                            var par = Convert.ToInt32(resul.Valor);
+                            var Total = par - riel.CantidadTotal;
+                            var disabledChecked = "";
+                            var dataOff = "Disponible:";
+                            var dataOn = "MI RESERVA";
+                            var offStyle = "primary";
+                            var onStyle = "success";
+                            var disponibleClass = "riel-disponible";
+
+                            var t = riel.CantidadTotal + currentCita.Cantidad;
+                            if (t <= par && riel.Disponibilidad == false && riel.CitaId != null)
+                            {
+                                if (t <= par && riel.Disponibilidad == false && riel.Citas != null)
+                                {
 
 
-                        @*<td class="text-center" style="border-right: solid 1px #666">
-                    <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                <td class="text-center" style="border-right: solid 1px #666">
-                    <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                <td class="text-center" style="border-right: solid 1px #666">
-                    <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                <td class="text-center" style="border-right: solid 1px #666">
-                    <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                <td class="text-center" style="border-right: solid 1px #666">
-                    <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
-                <td class="text-center">
-                    <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
-                    </tr>
+                                    disabledChecked = "disabled";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "Disponible:" + Total;
+                                    //onStyle = "danger";
+                                    offStyle = "primary";
+                                    disponibleClass = "";
+
+
+                                }
+                                else
+                                {
+
+
+                                    disabledChecked = "disabled";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "OCUPADO";
+                                    //onStyle = "danger";
+                                    offStyle = "danger";
+                                    disponibleClass = "";
+
+                                    if (riel.CantidadTotal == 0 && riel.Disponibilidad == true)
+                                    {
+                                        disabledChecked = "disabled";
+                                        //dataOn = "OCUPADO";
+                                        dataOff = "hjjjh:" + Total;
+                                        //onStyle = "danger";
+                                        offStyle = "warning";
+                                        disponibleClass = "";
+                                    }
+                                    else
+                                    {
+                                        if (riel.Disponibilidad == true && riel.Citas == null)
+                                        {
+
+                                            disabledChecked = "disabled";
+                                            //dataOn = "OCUPADO";
+                                            dataOff = "OCUPADO";
+                                            //onStyle = "danger";
+                                            offStyle = "danger";
+                                            disponibleClass = "";
+                                        }
+
+                                    }
+
+                                }
+                            }
+                            else
+                            {
+                                disabledChecked = "disabled";
+                                //dataOn = "OCUPADO";
+                                dataOff = "OCUPADO";
+                                //onStyle = "danger";
+                                offStyle = "danger";
+                                disponibleClass = "";
+
+                                if (riel.CantidadTotal == 0 && riel.Disponibilidad == true)
+                                {
+                                    disabledChecked = "disabled";
+                                    //dataOn = "OCUPADO";
+                                    dataOff = "Disponible:" + Total;
+                                    //onStyle = "danger";
+                                    offStyle = "warning";
+                                    disponibleClass = "riel-disponible";
+                                }
+                                else
+                                {
+                                    if (riel.Disponibilidad == true && riel.CitaId == null)
+                                    {
+
+                                        disabledChecked = "disabled";
+                                        //dataOn = "OCUPADO";
+                                        dataOff = "OCUPADO";
+                                        //onStyle = "danger";
+                                        offStyle = "danger";
+                                        disponibleClass = "";
+                                    }
+
+                                }
+
+                            }
+
+                            <td class="text-center" style="border-right: @borderRight">
+                                <input id="@riel.Id" class="horarioriel @disponibleClass" type="checkbox" @disabledChecked data-toggle="toggle" data-on="@dataOn" data-off="@dataOff" data-onstyle="@onStyle" data-height="40" data-width="100px" data-offstyle="@offStyle">
+
+                            </td>
+
+                        }
+                    }
+
+
+                    @*<td class="text-center" style="border-right: solid 1px #666">
+            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+        <td class="text-center" style="border-right: solid 1px #666">
+            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+        <td class="text-center" style="border-right: solid 1px #666">
+            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+        <td class="text-center" style="border-right: solid 1px #666">
+            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+        <td class="text-center" style="border-right: solid 1px #666">
+            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>
+        <td class="text-center">
+            <input type="checkbox" data-toggle="toggle" data-on="MI RESERVA" data-off="DISPONIBLE" data-onstyle="success" data-height="40" data-width="100px" data-offstyle="primary"></td>*@
+                </tr>
                 }
             </tbody>
         </table>

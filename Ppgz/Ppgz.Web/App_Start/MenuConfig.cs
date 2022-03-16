@@ -151,12 +151,28 @@ namespace Ppgz.Web
             if (cuenta != null)
             {
                 var men = Convert.ToInt32(cuenta.SinASN);
-
-
-
                 if (men == 1)
                 {
-                    if (cuenta.NombreCuenta == "Equipo Piloto")
+                    if (cuenta.Id == 3 || cuenta.Id == 4 || cuenta.Id == 6 || cuenta.Id == 7 || cuenta.Id == 7 || cuenta.Id == 15 || cuenta.Id == 16
+                    || cuenta.Id == 17 || cuenta.Id == 20 || cuenta.Id == 21 || cuenta.Id == 23 || cuenta.Id == 25 || cuenta.Id == 27 || cuenta.Id == 28 
+                    || cuenta.Id == 31 || cuenta.Id == 34 || cuenta.Id == 35 || cuenta.Id == 38 || cuenta.Id == 39 || cuenta.Id == 40 || cuenta.Id == 42
+                    || cuenta.Id == 46 || cuenta.Id == 47 || cuenta.Id == 48 || cuenta.Id == 52 || cuenta.Id == 53 || cuenta.Id == 57 || cuenta.Id == 58
+                    || cuenta.Id == 59 || cuenta.Id == 60 || cuenta.Id == 63 || cuenta.Id == 69 || cuenta.Id == 71 || cuenta.Id == 73 || cuenta.Id == 75
+                    || cuenta.Id == 78 || cuenta.Id == 81 || cuenta.Id == 82 || cuenta.Id == 85 || cuenta.Id == 87 || cuenta.Id == 30 || cuenta.Id == 86
+                    || cuenta.Id == 97 || cuenta.Id == 98 || cuenta.Id == 100 || cuenta.Id == 106 || cuenta.Id == 111|| cuenta.Id == 112 || cuenta.Id == 113
+                    || cuenta.Id == 114 || cuenta.Id == 116 || cuenta.Id == 128 || cuenta.Id == 129 || cuenta.Id == 134 || cuenta.Id == 124 || cuenta.Id == 146
+                    || cuenta.Id == 151 || cuenta.Id == 152 || cuenta.Id == 160 || cuenta.Id == 162 || cuenta.Id == 165 || cuenta.Id == 172 || cuenta.Id == 175
+                    || cuenta.Id == 183 || cuenta.Id == 185 || cuenta.Id == 186 || cuenta.Id == 193 || cuenta.Id == 196 || cuenta.Id == 201 || cuenta.Id == 203
+                    || cuenta.Id == 208 || cuenta.Id == 206 || cuenta.Id == 214 || cuenta.Id == 218 || cuenta.Id == 220 || cuenta.Id == 225 || cuenta.Id == 229
+                    || cuenta.Id == 230 || cuenta.Id == 233 || cuenta.Id == 234 || cuenta.Id == 236 || cuenta.Id == 241 || cuenta.Id == 243 || cuenta.Id == 244
+                    || cuenta.Id == 246 || cuenta.Id == 254 || cuenta.Id == 261 || cuenta.Id == 271 || cuenta.Id == 272 || cuenta.Id == 273 || cuenta.Id == 182
+                    || cuenta.Id == 280 || cuenta.Id == 181 || cuenta.Id == 268 || cuenta.Id == 296 || cuenta.Id == 41 || cuenta.Id == 312 || cuenta.Id == 321
+                    || cuenta.Id == 34 || cuenta.Id == 305 || cuenta.Id == 332 || cuenta.Id == 260 || cuenta.Id == 349 || cuenta.Id == 350|| cuenta.Id == 352 
+                    || cuenta.Id == 361 || cuenta.Id == 363 || cuenta.Id == 366 || cuenta.Id == 45 || cuenta.Id == 306 || cuenta.Id == 378|| cuenta.Id == 384 
+                    || cuenta.Id == 320 || cuenta.Id == 153 || cuenta.Id == 164 || cuenta.Id == 342 || cuenta.Id == 29 || cuenta.Id == 54|| cuenta.Id == 221 
+                    || cuenta.Id == 402 || cuenta.Id == 242 || cuenta.Id == 158 || cuenta.Id == 105 || cuenta.Id == 301 || cuenta.Id == 102 || cuenta.Id == 407 
+                    || cuenta.Id == 137 || cuenta.Id == 405 || cuenta.Id == 414 || cuenta.Id == 33 || cuenta.Id == 421 || cuenta.Id == 132 || cuenta.Id == 432 
+                    || cuenta.Id == 61 || cuenta.Id == 109 || cuenta.Id == 445 || cuenta.Id == 446 || cuenta.Id == 121 || cuenta.Id == 51||cuenta.Id==254)
                     {
                         string[] menuLista =
                     {
@@ -218,7 +234,26 @@ namespace Ppgz.Web
                 else
                 {
 
-                    if (cuenta.NombreCuenta == "Equipo Piloto")
+                    if (cuenta.Id == 3 || cuenta.Id == 4 || cuenta.Id == 6 || cuenta.Id == 7 || cuenta.Id == 7 || cuenta.Id == 15 || cuenta.Id == 16
+                    || cuenta.Id == 17 || cuenta.Id == 20 || cuenta.Id == 21 || cuenta.Id == 23 || cuenta.Id == 25 || cuenta.Id == 27 || cuenta.Id == 28
+                    || cuenta.Id == 31 || cuenta.Id == 34 || cuenta.Id == 35 || cuenta.Id == 38 || cuenta.Id == 39 || cuenta.Id == 40 || cuenta.Id == 42
+                    || cuenta.Id == 46 || cuenta.Id == 47 || cuenta.Id == 48 || cuenta.Id == 52 || cuenta.Id == 53 || cuenta.Id == 57 || cuenta.Id == 58
+                    || cuenta.Id == 59 || cuenta.Id == 60 || cuenta.Id == 63 || cuenta.Id == 69 || cuenta.Id == 71 || cuenta.Id == 73 || cuenta.Id == 75
+                    || cuenta.Id == 78 || cuenta.Id == 81 || cuenta.Id == 82 || cuenta.Id == 85 || cuenta.Id == 87 || cuenta.Id == 30 || cuenta.Id == 86
+                    || cuenta.Id == 97 || cuenta.Id == 98 || cuenta.Id == 100 || cuenta.Id == 106 || cuenta.Id == 111 || cuenta.Id == 112 || cuenta.Id == 113
+                    || cuenta.Id == 114 || cuenta.Id == 116 || cuenta.Id == 128 || cuenta.Id == 129 || cuenta.Id == 134 || cuenta.Id == 124 || cuenta.Id == 146
+                    || cuenta.Id == 151 || cuenta.Id == 152 || cuenta.Id == 160 || cuenta.Id == 162 || cuenta.Id == 165 || cuenta.Id == 172 || cuenta.Id == 175
+                    || cuenta.Id == 183 || cuenta.Id == 185 || cuenta.Id == 186 || cuenta.Id == 193 || cuenta.Id == 196 || cuenta.Id == 201 || cuenta.Id == 203
+                    || cuenta.Id == 208 || cuenta.Id == 206 || cuenta.Id == 214 || cuenta.Id == 218 || cuenta.Id == 220 || cuenta.Id == 225 || cuenta.Id == 229
+                    || cuenta.Id == 230 || cuenta.Id == 233 || cuenta.Id == 234 || cuenta.Id == 236 || cuenta.Id == 241 || cuenta.Id == 243 || cuenta.Id == 244
+                    || cuenta.Id == 246 || cuenta.Id == 254 || cuenta.Id == 261 || cuenta.Id == 271 || cuenta.Id == 272 || cuenta.Id == 273 || cuenta.Id == 182
+                    || cuenta.Id == 280 || cuenta.Id == 181 || cuenta.Id == 268 || cuenta.Id == 296 || cuenta.Id == 41 || cuenta.Id == 312 || cuenta.Id == 321
+                    || cuenta.Id == 34 || cuenta.Id == 305 || cuenta.Id == 332 || cuenta.Id == 260 || cuenta.Id == 349 || cuenta.Id == 350 || cuenta.Id == 352
+                    || cuenta.Id == 361 || cuenta.Id == 363 || cuenta.Id == 366 || cuenta.Id == 45 || cuenta.Id == 306 || cuenta.Id == 378 || cuenta.Id == 384
+                    || cuenta.Id == 320 || cuenta.Id == 153 || cuenta.Id == 164 || cuenta.Id == 342 || cuenta.Id == 29 || cuenta.Id == 54 || cuenta.Id == 221
+                    || cuenta.Id == 402 || cuenta.Id == 242 || cuenta.Id == 158 || cuenta.Id == 105 || cuenta.Id == 301 || cuenta.Id == 102 || cuenta.Id == 407
+                    || cuenta.Id == 137 || cuenta.Id == 405 || cuenta.Id == 414 || cuenta.Id == 33 || cuenta.Id == 421 || cuenta.Id == 132 || cuenta.Id == 432
+                    || cuenta.Id == 61 || cuenta.Id == 109 || cuenta.Id == 445 || cuenta.Id == 446 || cuenta.Id == 121 || cuenta.Id == 51||cuenta.Id== 254)
                     {
                         string[] menuLista =
                     {
@@ -226,9 +261,7 @@ namespace Ppgz.Web
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
                 "CONTROLCITAS|Control de Citas Multi Pedidos|Citas|ControlCitasMulti|fa fa-calendar|Mercaderia",
-                "CONTROLCITAS|Recibo Por Asn|Citas|ReciboPorAsn|fa fa-calendar|Mercaderia",
                 "CONTROLCITAS|Control de Citas Menores 270 Pares|Citas|ControlCitasMenores|fa fa-calendar|Mercaderia",
-                "CONTROLCITAS|Control de Citas|Citas|ControlCitasSA|fa fa-calendar|Mercaderia",
                 "COMPROBANTESRECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas Individual|Index|ImpresionEtiquetasIndividual|fa fa-ticket|Mercaderia",
@@ -255,8 +288,6 @@ namespace Ppgz.Web
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Mercaderia",
                 "CONTROLCITAS|Control de Citas|Citas|ControlCitas|fa fa-calendar|Mercaderia",
                 "CONTROLCITAS|Control de Citas Multi Pedidos|Citas|ControlCitasMulti|fa fa-calendar|Mercaderia",
-                "CONTROLCITAS|Recibo Por Asn|Citas|ReciboPorAsn|fa fa-calendar|Mercaderia",
-                "CONTROLCITAS|Control de Citas|Citas|ControlCitasSA|fa fa-calendar|Mercaderia",
                 "COMPROBANTESRECIBO|Comprobante de Recibo|Index|ComprobantesRecibo|fa fa-file-o|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas Individual|Index|ImpresionEtiquetasIndividual|fa fa-ticket|Mercaderia",

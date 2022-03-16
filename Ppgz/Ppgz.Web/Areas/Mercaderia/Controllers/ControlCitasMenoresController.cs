@@ -355,23 +355,19 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             ViewBag.numeroDocumento = numeroDocumento;
             ViewBag.CurrentCita = CurrentCita;
             ViewBag.Fechas = FechasPermitidas;
-            var f = Convert.ToDateTime(fecha);
-            var result = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
-            var par = Convert.ToInt32(result.Valor);
-            var bloq = db.horariorieles.Where(hr => hr.Fecha == f && hr.Disponibilidad == true && hr.CantidadTotal < par && hr.Citas!=null).ToList();
-
-            //fin
-            foreach (var horarioRielId in bloq)
+            var hora = db.horariorieles.Where(h => h.Fecha == date.Date && h.TipoCita == "Cita Menor").FirstOrDefault();
+            var horaa = db.horariorieles.Where(h => h.Fecha == date.Date && h.TipoCita == "Cita Menor").ToList();
+            foreach (var riel in horaa)
             {
 
-                var horarioRiel = db.horariorieles.Find(horarioRielId.Id);
-                horarioRiel.Disponibilidad = false;
-                
-                db.Entry(horarioRiel).State = EntityState.Modified;
-                db.SaveChanges();
+                ViewBag.HorarioR = hora;
+                var res = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
+                var pa = Convert.ToInt32(res.Valor);
+                var ca = db.horariorieles.Where(cit => cit.Fecha == date.Date && cit.TipoCita == "Cita Menor").FirstOrDefault();
+                var an = ca.CantidadTotal + CurrentCita.Cantidad;
+                var blo = horarioRieles.FirstOrDefault(ri => ri.CantidadTotal <= pa && an <= pa && ri.TipoCita == "Cita Menor" && ri.Disponibilidad == false);
+                ViewBag.Ho = blo;
             }
-
-
             return View();
         }
 
@@ -642,7 +638,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         {
             //Validacion de cantidad mínima
             //const string sql = @"SELECT Clave, Valor FROM configuraciones WHERE Clave = 'warehouse.min-pairs.per-meet' AND Habilitado = 1";
-                    var result = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
+            var result = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
             //var result = Db.GetDataTable(sql);
 
             if (String.IsNullOrEmpty(result.Valor))
@@ -653,55 +649,71 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             {
                 ViewBag.CantidadMinimaCita = Convert.ToInt32(result.Valor);
             }
-            
+
             if (CurrentCita == null)
-			{
-				return RedirectToAction("Index");
-			}
-			
-			if (CurrentCita.Fecha == null)
-			{
-				return RedirectToAction("BuscarOrden");
-			}
+            {
+                return RedirectToAction("Index");
+            }
 
-			if (CurrentCita.Cantidad < 1)
-			{
-				TempData["FlashError"] = "Debe incluir al menos un (1) PAR para poder agendar la Cita";
-				return RedirectToAction("BuscarOrden");
-			}
+            if (CurrentCita.Fecha == null)
+            {
+                return RedirectToAction("BuscarOrden");
+            }
 
-            var date = ((DateTime) CurrentCita.Fecha).Date;
+            if (CurrentCita.Cantidad < 1)
+            {
+                TempData["FlashError"] = "Debe incluir al menos un (1) PAR para poder agendar la Cita";
+                return RedirectToAction("BuscarOrden");
+            }
+
+            var date = ((DateTime)CurrentCita.Fecha).Date;
 
             var db = new Entities();
-            
+
 
             try
-		    {
-		        var parameters = new List<MySqlParameter>()
-		        {
-		            new MySqlParameter
-		            {
-		                ParameterName = "pTotal",
-		                Direction = ParameterDirection.Output,
-		                MySqlDbType = MySqlDbType.VarChar
-		            },
-		            new MySqlParameter("pFecha", date)
-		        };
+            {
+                var parameters = new List<MySqlParameter>()
+                {
+                    new MySqlParameter
+                    {
+                        ParameterName = "pTotal",
+                        Direction = ParameterDirection.Output,
+                        MySqlDbType = MySqlDbType.VarChar
+                    },
+                    new MySqlParameter("pFecha", date)
+                };
 
-		        Db.ExecuteProcedureOut(parameters, "config_appointment");
-		    }
-		    catch (Exception exception)
-		    {
+                Db.ExecuteProcedureOut(parameters, "config_appointment");
+            }
+            catch (Exception exception)
+            {
                 TempData["FlashError"] = exception.Message;
                 return RedirectToAction("ListaDeOrdenes");
-		    }
-			
-			ViewBag.CurrentCita = CurrentCita;
+            }
 
-			var horarioRieles = db.horariorieles.Where(h => h.Fecha == date.Date).ToList();
+            ViewBag.CurrentCita = CurrentCita;
 
-			ViewBag.HorarioRieles = horarioRieles;
-			return View();
+            var horarioRieles = db.horariorieles.Where(h => h.Fecha == date.Date).ToList();
+
+            ViewBag.HorarioRieles = horarioRieles;
+
+            var hora = db.horariorieles.Where(h => h.Fecha == date.Date && h.TipoCita == "Cita Menor").FirstOrDefault();
+                var horaa = db.horariorieles.Where(h => h.Fecha == date.Date && h.TipoCita == "Cita Menor").ToList();
+                foreach (var riel in horaa)
+                {
+
+                    ViewBag.HorarioR = hora;
+                    var res = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
+                    var pa = Convert.ToInt32(res.Valor);
+                    var ca = db.horariorieles.Where(cit => cit.Fecha == date.Date && cit.TipoCita == "Cita Menor").FirstOrDefault();
+                    var an = ca.CantidadTotal + CurrentCita.Cantidad;
+                    var blo = horarioRieles.FirstOrDefault(ri => ri.CantidadTotal <= pa && an <= pa && ri.TipoCita == "Cita Menor" && ri.Disponibilidad == false);
+                    ViewBag.Ho = blo;
+                }
+
+
+            return View();
 		}
 
 	    public JsonResult VerificarRieles(string fecha)

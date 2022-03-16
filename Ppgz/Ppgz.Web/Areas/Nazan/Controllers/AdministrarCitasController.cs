@@ -407,24 +407,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         public ActionResult CambiarFechaMenor(int citaId, string fecha)
         {
 
-
             var db = new Entities();
-            var f = Convert.ToDateTime(fecha);
-            var resul = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.min-pairs.per-meet");
-            var par = Convert.ToInt32(resul.Valor);
-            var bloq = db.horariorieles.Where(hr => hr.Fecha == f && hr.Disponibilidad == true && hr.CantidadTotal < par && hr.CitaId != null).ToList();
-
-            //fin
-            foreach (var horarioRielId in bloq)
-            {
-
-                var horarioRiel = db.horariorieles.Find(horarioRielId.Id);
-                horarioRiel.Disponibilidad = false;
-
-                db.Entry(horarioRiel).State = EntityState.Modified;
-                db.SaveChanges();
-            }
-
             var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
             var cita = db.citas.FirstOrDefault(c => c.FechaCita >= DateTime.Today && c.Id == citaId);
@@ -435,7 +418,11 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 return RedirectToAction("Index");
             }
 
-
+            if (date.Date == cita.FechaCita.Date)
+            {
+                TempData["FlashError"] = "Fecha incorrecta para el cambio";
+                return RedirectToAction("Index");
+            }
             if (date.Date < DateTime.Today.Date)
             {
                 TempData["FlashError"] = "Fecha incorrecta para el cambio";
@@ -466,6 +453,22 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             ViewBag.HorarioRieles = horarioRieles;
 
+
+            var hora = db.horariorieles.Where(h => h.Fecha == date.Date && h.TipoCita == "Cita Menor").FirstOrDefault();
+            var horaa = db.horariorieles.Where(h => h.Fecha == date.Date && h.TipoCita == "Cita Menor").ToList();
+            foreach (var riel in horaa)
+            {
+
+                ViewBag.HorarioR = hora;
+                var res = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
+                var pa = Convert.ToInt32(res.Valor);
+                var ca = db.horariorieles.Where(cit => cit.Fecha == date.Date && cit.TipoCita == "Cita Menor").FirstOrDefault();
+                var an = ca.CantidadTotal + cita.CantidadTotal;
+                var blo = horarioRieles.FirstOrDefault(ri => ri.CantidadTotal <= pa && an <= pa && ri.TipoCita == "Cita Menor" && ri.Disponibilidad == false);
+                ViewBag.Ho = blo;
+            }
+
+
             return View();
         }
 
@@ -495,7 +498,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             if (date.Date < DateTime.Today.Date)
             {
                 TempData["FlashError"] = "Fecha incorrecta para el cambio";
-                return RedirectToAction("Index");
+                return RedirectToAction("IndexM");
             }
 
             foreach (var horarioRileId in horarioRielesIds)
@@ -505,7 +508,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 if (horarioRiel == null)
                 {
                     TempData["FlashError"] = "Rieles incorrectos";
-                    return RedirectToAction("Index");
+                    return RedirectToAction("IndexM");
                 }
 
             }
