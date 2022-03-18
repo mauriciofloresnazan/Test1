@@ -172,7 +172,7 @@ namespace Ppgz.Web
                     || cuenta.Id == 320 || cuenta.Id == 153 || cuenta.Id == 164 || cuenta.Id == 342 || cuenta.Id == 29 || cuenta.Id == 54|| cuenta.Id == 221 
                     || cuenta.Id == 402 || cuenta.Id == 242 || cuenta.Id == 158 || cuenta.Id == 105 || cuenta.Id == 301 || cuenta.Id == 102 || cuenta.Id == 407 
                     || cuenta.Id == 137 || cuenta.Id == 405 || cuenta.Id == 414 || cuenta.Id == 33 || cuenta.Id == 421 || cuenta.Id == 132 || cuenta.Id == 432 
-                    || cuenta.Id == 61 || cuenta.Id == 109 || cuenta.Id == 445 || cuenta.Id == 446 || cuenta.Id == 121 || cuenta.Id == 51||cuenta.Id==254)
+                    || cuenta.Id == 61 || cuenta.Id == 109 || cuenta.Id == 445 || cuenta.Id == 446 || cuenta.Id == 121 || cuenta.Id == 51||cuenta.Id==254 ||cuenta.Id==383)
                     {
                         string[] menuLista =
                     {
@@ -253,7 +253,7 @@ namespace Ppgz.Web
                     || cuenta.Id == 320 || cuenta.Id == 153 || cuenta.Id == 164 || cuenta.Id == 342 || cuenta.Id == 29 || cuenta.Id == 54 || cuenta.Id == 221
                     || cuenta.Id == 402 || cuenta.Id == 242 || cuenta.Id == 158 || cuenta.Id == 105 || cuenta.Id == 301 || cuenta.Id == 102 || cuenta.Id == 407
                     || cuenta.Id == 137 || cuenta.Id == 405 || cuenta.Id == 414 || cuenta.Id == 33 || cuenta.Id == 421 || cuenta.Id == 132 || cuenta.Id == 432
-                    || cuenta.Id == 61 || cuenta.Id == 109 || cuenta.Id == 445 || cuenta.Id == 446 || cuenta.Id == 121 || cuenta.Id == 51||cuenta.Id== 254)
+                    || cuenta.Id == 61 || cuenta.Id == 109 || cuenta.Id == 445 || cuenta.Id == 446 || cuenta.Id == 121 || cuenta.Id == 51||cuenta.Id== 254 || cuenta.Id == 383)
                     {
                         string[] menuLista =
                     {

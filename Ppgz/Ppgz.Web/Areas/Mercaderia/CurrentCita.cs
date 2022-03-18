@@ -184,6 +184,12 @@ namespace Ppgz.Web.Areas.Mercaderia
 
             Fecha = fecha;
         }
+        public void SetFechaMenor(DateTime fecha, string numeroDocumento)
+        {
+            
+
+            Fecha = fecha;
+        }
 
         public void SetFecha(DateTime fecha)
         {

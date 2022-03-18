@@ -276,45 +276,53 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                 var proveedor = CurrentCita.Proveedor;
 
-                try
+                if (CurrentCita._ordenes.Any(o => o.NumeroDocumento == ordencompra))
                 {
-                    CurrentCita.SetFecha(DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture), ordencompra);
+                    CurrentCita.SetFechaMenor(DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture), ordencompra);
+                }
+                else
+                {
+                    try
+                    {
+                        CurrentCita.SetFecha(DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture), ordencompra);
 
-                    CurrentCita.AddPreAsn(ordencompra);
+                        CurrentCita.AddPreAsn(ordencompra);
 
 
 
+                    }
+                    catch (CurrentCita.OrdenDuplicadaException)
+                    {
+                        TempData["FlashError"] = "El número de documento ya se encuentra en la lista";
+                        return RedirectToAction("BuscarOrden", new { proveedor.Id });
+                    }
+                    catch (CurrentCita.OrdenSinDetalleException)
+                    {
+                        TempData["FlashError"] = "La orden no contiene items para entregar, por favor seleccione otra orden";
+                        return RedirectToAction("BuscarOrden", new { proveedor.Id });
+                    }
+                    catch (CurrentCita.NumeroDocumentoException)
+                    {
+                        TempData["FlashError"] = "Número de documento incorrecto";
+                        return RedirectToAction("BuscarOrden", new { proveedor.Id });
+                    }
+                    catch (BusinessException exception)
+                    {
+                        TempData["FlashError"] = exception.Message;
+                        return RedirectToAction("BuscarOrden", new { proveedor.Id });
+                    }
+                    catch (CurrentCita.FechaException)
+                    {
+                        TempData["FlashError"] = "La orden no puede ser entregada en la fecha de la cita";
+                        return RedirectToAction("BuscarOrden", new { proveedor.Id });
+                    }
+                    catch (CurrentCita.OrdenCentroException)
+                    {
+                        TempData["FlashError"] = "La orden no contiene items para el Almacén seleccionado";
+                        return RedirectToAction("BuscarOrden", new { proveedor.Id });
+                    }
                 }
-                catch (CurrentCita.OrdenDuplicadaException)
-                {
-                    TempData["FlashError"] = "El número de documento ya se encuentra en la lista";
-                    return RedirectToAction("BuscarOrden", new { proveedor.Id });
-                }
-                catch (CurrentCita.OrdenSinDetalleException)
-                {
-                    TempData["FlashError"] = "La orden no contiene items para entregar, por favor seleccione otra orden";
-                    return RedirectToAction("BuscarOrden", new { proveedor.Id });
-                }
-                catch (CurrentCita.NumeroDocumentoException)
-                {
-                    TempData["FlashError"] = "Número de documento incorrecto";
-                    return RedirectToAction("BuscarOrden", new { proveedor.Id });
-                }
-                catch (BusinessException exception)
-                {
-                    TempData["FlashError"] = exception.Message;
-                    return RedirectToAction("BuscarOrden", new { proveedor.Id });
-                }
-                catch (CurrentCita.FechaException)
-                {
-                    TempData["FlashError"] = "La orden no puede ser entregada en la fecha de la cita";
-                    return RedirectToAction("BuscarOrden", new { proveedor.Id });
-                }
-                catch (CurrentCita.OrdenCentroException)
-                {
-                    TempData["FlashError"] = "La orden no contiene items para el Almacén seleccionado";
-                    return RedirectToAction("BuscarOrden", new { proveedor.Id });
-                }
+
             }
 
             /*
