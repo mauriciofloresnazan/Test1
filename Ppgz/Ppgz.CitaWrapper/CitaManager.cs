@@ -312,7 +312,7 @@ namespace Ppgz.CitaWrapper
             foreach (var horarioRielId in precita.HorarioRielesIds)
             {
 
-                var cantidadDiariaLimite = Convert.ToInt32(db.configuraciones.Single(c => c.Clave == "warehouse.min-pairs.per-meet").Valor);
+                var cantidadDiariaLimite = Convert.ToInt32(db.configuraciones.Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min").Valor);
                 var horarioRiel = db.horariorieles.Find(horarioRielId);
                 var cantidad = horarioRiel.CantidadTotal;
                 var to = precita.Cantidad;
@@ -564,6 +564,7 @@ namespace Ppgz.CitaWrapper
             cita.crs.ToList().ForEach(cr => db.crs.Remove(cr));
 
             db.Entry(cita).State = EntityState.Deleted;
+            db.Database.CommandTimeout = 0;
             db.SaveChanges();
 
             Task.Factory.StartNew(() =>

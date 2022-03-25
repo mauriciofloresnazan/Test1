@@ -371,11 +371,18 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 ViewBag.HorarioR = hora;
                 var res = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
                 var pa = Convert.ToInt32(res.Valor);
-                var ca = db.horariorieles.Where(cit => cit.Fecha == date.Date && cit.TipoCita == "Cita Menor").FirstOrDefault();
+                var ca = db.horariorieles.Where(cit => cit.Fecha == date.Date && cit.TipoCita == "Cita Menor" && cit.Id == riel.Id).FirstOrDefault();
                 var an = ca.CantidadTotal + CurrentCita.Cantidad;
                 var blo = horarioRieles.FirstOrDefault(ri => ri.CantidadTotal <= pa && an <= pa && ri.TipoCita == "Cita Menor" && ri.Disponibilidad == false);
+                if (blo != null)
+                {
+                    ViewBag.Ho = blo;
+                    return View();
+                }
                 ViewBag.Ho = blo;
             }
+
+
             return View();
         }
 
@@ -714,15 +721,20 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     ViewBag.HorarioR = hora;
                     var res = CommonManager.GetConfiguraciones().Single(c => c.Clave == "warehouse.platform-rail.max-pair.30min");
                     var pa = Convert.ToInt32(res.Valor);
-                    var ca = db.horariorieles.Where(cit => cit.Fecha == date.Date && cit.TipoCita == "Cita Menor").FirstOrDefault();
-                    var an = ca.CantidadTotal + CurrentCita.Cantidad;
-                    var blo = horarioRieles.FirstOrDefault(ri => ri.CantidadTotal <= pa && an <= pa && ri.TipoCita == "Cita Menor" && ri.Disponibilidad == false);
+                var ca = db.horariorieles.Where(cit => cit.Fecha == date.Date && cit.TipoCita == "Cita Menor" && cit.Id == riel.Id).FirstOrDefault();
+                var an = ca.CantidadTotal + CurrentCita.Cantidad;
+                var blo = horarioRieles.FirstOrDefault(ri => ri.CantidadTotal <= pa && an <= pa && ri.TipoCita == "Cita Menor" && ri.Disponibilidad == false);
+                if (blo != null)
+                {
                     ViewBag.Ho = blo;
+                    return View();
                 }
+                ViewBag.Ho = blo;
+            }
 
 
             return View();
-		}
+        }
 
 	    public JsonResult VerificarRieles(string fecha)
 	    {
