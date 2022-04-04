@@ -16,10 +16,10 @@
 }
 
 
-<h2>@ViewBag.Title</h2>
+<h2>@ViewBag.Title @ViewBag.RAZ</h2>
 <p class="page-description-title">
     <i class="fa fa-calculator" aria-hidden="true"></i>
-    <i>En esta sección podrán gestionar el detalle del pago</i>
+    <i>En esta sección podrán gestionar el detalle del pago de @ViewBag.RAZ</i>
 </p>
 <a class="btn btn-link" href="@Url.Action("Pagos", "CuentasPagar", new{ date = fechaParam.ToString("dd/MM/yyyy")})"> <i class="fa fa-arrow-left" aria-hidden="true"></i> Ver otro pago</a>
 

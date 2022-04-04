@@ -9,9 +9,9 @@
         .Aggregate<DataRow, decimal>(0, (current, pagoPendiente) => current + decimal.Parse(pagoPendiente["DMBTR"].ToString()));
 }
 
-<h2>@ViewBag.Title</h2>
+<h2>@ViewBag.Title @ViewBag.RAZ</h2>
 <p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i>
-    <i>En esta sección podrán gestionar los pagos pendientes</i>
+    <i>En esta sección podrán gestionar los pagos pendientes de @ViewBag.RAZ</i>
 </p>
 
 <div class="panel panel-default">

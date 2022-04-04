@@ -43,6 +43,7 @@
                         <th class="text-center">UUID</th>
                         <th class="text-center">Fecha</th>
                         <th class="text-center">Total</th>
+                        <th class="text-center">RFC</th>
                         <th class="text-center"><a class="btn btn-primary btn-xs" href="@Url.Action("CargarFactura", "Facturas", new { proveedorId = proveedor.Id })"><i class="fa fa-plus" aria-hidden="true"></i> Cargar </a></th>
                     </tr>
                 </thead>
@@ -65,6 +66,7 @@
                             <td class="text-center vert-align">@factura.Uuid</td>
                             <td class="text-center vert-align">@factura.Fecha.ToString("dd/MM/yyyy")</td>
                             <td class="text-center vert-align">@factura.Total</td>
+                            <td class="text-center vert-align">@factura.RFCReceptor</td>
                             <td class="text-center vert-align">
                                 
                                 <div class="btn-group " role="group" aria-label="Archivos">

@@ -33,8 +33,22 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 System.Web.HttpContext.Current.Session["proveedorcxp"] = value;
             }
         }
+        internal string SociedadActiva
+        {
+            get
+            {
+                if (System.Web.HttpContext.Current.Session["sociedadactiva"] != null)
+                {
+                    return (string)System.Web.HttpContext.Current.Session["sociedadactiva"];
+                }
+                return null;
+            }
+            set
+            {
+                System.Web.HttpContext.Current.Session["sociedadactiva"] = value;
+            }
+        }
 
-     
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-CUENTASPAGAR")]
         public ActionResult Index()
         {
@@ -46,7 +60,7 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
         }
 
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-CUENTASPAGAR")]
-        public ActionResult SeleccionarProveedor(int proveedorId)
+        public ActionResult SeleccionarProveedor(int proveedorId, string sociedad)
         {
 
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -61,13 +75,15 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             }
 
             ProveedorCxp = proveedor;
+            SociedadActiva = sociedad;
             return RedirectToAction("Pagos");
         }
 
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-CUENTASPAGAR")]
         public ActionResult Pagos(string date = null)
         {
-
+            var db = new Entities();
+            var _configuraciones = db.configuraciones.ToList();
             var fecha = DateTime.Today;
 
             if (!string.IsNullOrWhiteSpace(date))
@@ -85,13 +101,13 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             var partidasManager = new PartidasManager();
 
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
-            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, fecha);
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, SociedadActiva, fecha);
 
             ViewBag.Pagos = dsPagos.Tables["T_LISTA_PAGOS"];
-
+            var raz = _configuraciones.Single(c => c.Clave == "sociedades.nombre." +SociedadActiva + @"").Valor;
             ViewBag.Proveedor = ProveedorCxp;
-
+            ViewBag.RAZ = raz;
             ViewBag.Fecha = fecha;
 
             return View();
@@ -111,7 +127,8 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            var sociedad = SociedadActiva;
             var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             ViewBag.Pago = dsPagos.Tables["T_LISTA_PAGOS"]
@@ -119,7 +136,10 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             ViewBag.PagoDetalles = dsPagos.Tables["T_PAGOS"]
                 .Select(string.Format("BELNR_PAGO = '{0}'", numeroDocumento));
-
+            var db = new Entities();
+            var _configuraciones = db.configuraciones.ToList();
+            var raz = _configuraciones.Single(c => c.Clave == "sociedades.nombre." + sociedad + @"").Valor;
+            ViewBag.RAZ = raz;
             ViewBag.Proveedor = ProveedorCxp;
 
             ViewBag.Fecha = fecha;
@@ -138,7 +158,8 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            var sociedad = SociedadActiva;
             var dsPagos = partidasManager.GetPagos(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
 
@@ -239,8 +260,10 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 row++;
 
             }
-
-            FileManager.ExportExcel(workbook, "PAG_" + pago["BELNR"], HttpContext);
+            var db = new Entities();
+            var _configuraciones = db.configuraciones.ToList();
+            var raz = _configuraciones.Single(c => c.Clave == "sociedades.nombre." + sociedad + @"").Valor;
+            FileManager.ExportExcel(workbook, "PAG_" + raz +"-" +pago["BELNR"] +sociedad, HttpContext);
         }
         [Authorize(Roles = "MAESTRO-SERVICIO,SERVICIO-CUENTASPAGAR")]
         public ActionResult Devoluciones()
@@ -256,11 +279,15 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            var sociedad = SociedadActiva;
             var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             ViewBag.Devoluciones = dsDevoluciones.Tables["T_DEVOLUCIONES"];
-
+            var db = new Entities();
+            var _configuraciones = db.configuraciones.ToList();
+            var raz = _configuraciones.Single(c => c.Clave == "sociedades.nombre." + sociedad + @"").Valor;
+            ViewBag.RAZ = raz;
             ViewBag.Proveedor = ProveedorCxp;
             ViewBag.Fecha = fecha;
             return View();
@@ -278,7 +305,8 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             var fecha = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            var sociedad = SociedadActiva;
             var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             ViewBag.Devolucion = dsDevoluciones.Tables["T_DEVOLUCIONES"]
@@ -289,7 +317,10 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var drsImpuesto = dsDevoluciones.Tables["T_MAT_DEV"]
                 .Select(string.Format("BELNR = '{0}' AND  BUZID = 'T'", numeroDocumento));
-
+            var db = new Entities();
+            var _configuraciones = db.configuraciones.ToList();
+            var raz = _configuraciones.Single(c => c.Clave == "sociedades.nombre." + sociedad + @"").Valor;
+            ViewBag.RAZ = raz;
             Decimal impuesto = 0;
             if (drsImpuesto.Any())
             {
@@ -314,9 +345,9 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
             var fecha = DateTime.ParseExact(date, "dd/MM/yyyy", CultureInfo.InvariantCulture);
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
 
-
+            var sociedad = SociedadActiva;
             var dsDevoluciones = partidasManager.GetDevoluciones(ProveedorCxp.NumeroProveedor, sociedad, fecha);
 
             var drDevolucion = dsDevoluciones.Tables["T_DEVOLUCIONES"]
@@ -365,8 +396,10 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
                 ws.Cell(row, "D").Value = dr["MENGE"].ToString();
                 row++;
             }
-
-            FileManager.ExportExcel(workbook, "DEV_" + drDevolucion["XBLNR"], HttpContext);
+            var db = new Entities();
+            var _configuraciones = db.configuraciones.ToList();
+            var raz = _configuraciones.Single(c => c.Clave == "sociedades.nombre." + sociedad + @"").Valor;
+            FileManager.ExportExcel(workbook, "DEV_" + raz +"-"+drDevolucion["XBLNR"] +sociedad, HttpContext);
         }
 
 
@@ -382,11 +415,15 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            var sociedad = SociedadActiva;
             var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
-
+            var db = new Entities();
+            var _configuraciones = db.configuraciones.ToList();
+            var raz = _configuraciones.Single(c => c.Clave == "sociedades.nombre." + sociedad + @"").Valor;
+            ViewBag.RAZ = raz;
             ViewBag.Proveedor = ProveedorCxp;
 
             return View();
@@ -404,9 +441,13 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            var sociedad = SociedadActiva;
             var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
-
+            var db = new Entities();
+            var _configuraciones = db.configuraciones.ToList();
+            var raz = _configuraciones.Single(c => c.Clave == "sociedades.nombre." + sociedad + @"").Valor;
+            ViewBag.RAZ = raz;
             ViewBag.PagosPendientes = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
 
             ViewBag.Proveedor = ProveedorCxp;
@@ -425,7 +466,8 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             var partidasManager = new PartidasManager();
 
-            var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            //var sociedad = CommonManager.GetConfiguraciones().Single(c => c.Clave == "rfc.common.function.param.bukrs.servicio").Valor;
+            var sociedad = SociedadActiva;
             var dsPagosPendientes = partidasManager.GetPartidasAbiertas(ProveedorCxp.NumeroProveedor, sociedad, DateTime.Today);
 
             var dt = dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"];
@@ -519,7 +561,11 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
                 row++;
             }
-            FileManager.ExportExcel(workbook, "CXP_" + ProveedorCxp.Rfc, HttpContext);
+            var db = new Entities();
+            var _configuraciones = db.configuraciones.ToList();
+            var raz = _configuraciones.Single(c => c.Clave == "sociedades.nombre." + sociedad + @"").Valor;
+            
+            FileManager.ExportExcel(workbook, "CXP_"+raz +"-" +ProveedorCxp.Rfc, HttpContext);
         }
 
 

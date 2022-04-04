@@ -20,6 +20,14 @@
         width: 111%;
         margin-left: -7%;
     }
+
+        .panelFacturas #facturas {
+            width: 1205px !important;
+        }
+
+        .panelFacturas #tab {
+            width: 101% !important;
+        }
 </style>
 <h2>Facturas Registradas</h2>
 <p class="page-description-title"><i class="fa fa-file-text-o" aria-hidden="true"></i> <i>Puede consultar los registros</i></p>
@@ -31,7 +39,7 @@
         <p>
             El sistema muestra las facturas con fechas incluidas en los meses seleccionados
         </p>
-        <div class="col-md-12">
+        <div class="col-md-12"id="tab">
 
             <div class="form-inline  col-md-8">
                 <div class="form-group">
@@ -45,12 +53,12 @@
                 <button id="btnExport" value="Export to Excel" /><img src="~/assets/img/excel.gif" class="botonExcel" />
             </div>
             <div style="display:flex">
+                <label class="col-sm-5 control-label"> Selecciona La Razon Social</label>
+                <div class="col-sm-8" style="margin-top: -9px;">
 
-                <div class="col-sm-8">
-                    <label class="col-sm-5 control-label"> Selecciona La Razon Social</label>
                     <div class="radio">
                         <label>
-                            <input type="radio" name="nazan" id="Todas" value="false" >
+                            <input type="radio" name="nazan" id="Todas" value="false" checked>
                             Todas
                         </label>
                     </div>
@@ -62,8 +70,15 @@
                     </div>
                     <div class="radio">
                         <label>
-                            <input type="radio" name="nazan" id="Kafa" value="false">
-                            Kafa
+                            <input type="radio" name="nazan" id="NAZFER" value="false">
+                            NAZFER
+                        </label>
+
+                    </div> 
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="nazan" id="ANMAR" value="false">
+                            ANMAR
                         </label>
 
                     </div>
@@ -89,7 +104,7 @@
                             <th class="text-center">Total</th>
                             <th class="text-center">Estatus</th>
                             <th class="text-center">Comentario</th>
-                            <th class="text-center ocultar ">RFC Receptor</th>
+                            <th class="text-center">RFC Receptor</th>
                             <th class="text-center">Opciones</th>
                         </tr>
                     </thead>
@@ -141,7 +156,7 @@
                                     @factura.Estatus
                                 </th>
                                 <td class="text-justify vert-align">@factura.Comentario</td>
-                                <td class="text-justify vert-align ocultar">@factura.RFCReceptor</td>
+                                <td class="text-justify vert-align">@factura.RFCReceptor</td>
 
                                 <td class="text-center vert-align">
 
@@ -298,8 +313,11 @@
                 $('#facturas').DataTable().search("NCC1011058I0").draw();
 
             }
-            if ($('input[name=nazan]:checked').attr('id') == "Kafa") {
-                $('#facturas').DataTable().search("KSO1712181EA").draw();
+            if ($('input[name=nazan]:checked').attr('id') == "NAZFER") {
+                $('#facturas').DataTable().search("NAZ890526N46").draw();
+            }
+            if ($('input[name=nazan]:checked').attr('id') == "ANMAR") {
+                $('#facturas').DataTable().search("ASC090330TT3").draw();
             }
 
             if ($('input[name=nazan]:checked').attr('id') == "Todas") {
