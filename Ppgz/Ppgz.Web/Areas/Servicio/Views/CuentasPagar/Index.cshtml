@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "Cuentas por Pagar";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string[,] soc = ViewBag.Sociedades;
 }
 
 <h2 class="form-signin-heading">Cuentas por Pagar</h2>
@@ -28,16 +29,18 @@
                             <td class="text-center vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
                             <td class="text-center">
                                 <div class="btn-group-vertical" role="group" aria-label="...">
-                                    @foreach (var sociedad in proveedor.Sociedades)
+                                    @for (int i = 0; i < (soc.Length / 2); i++)
                                     {
-                                        if (sociedad.Activa)
-                                        {
-                                            <a class="btn btn-primary btn-sm" href="@Url.Action("SeleccionarProveedor", "CuentasPagar", new { @proveedorId = @proveedor.Id, @sociedad = @sociedad.Sociedad })"> @sociedad.Nombre</a>
-                                        }
+                                        string numero = soc[i, 0];
+                                        string nombre = soc[i, 1];
+                                    <a class="btn btn-primary btn-sm" href="@Url.Action("SeleccionarProveedor", "CuentasPagar", new { @proveedorId = @proveedor.Id, @sociedad = numero })">
+                                       @nombre
+                                    </a>
 
+                        }
 
-                                    }
-                                </div>
+                                    
+</div>
 
                             </td>
                         </tr>

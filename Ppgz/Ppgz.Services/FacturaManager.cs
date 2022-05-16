@@ -286,17 +286,17 @@ namespace Ppgz.Services
                 }
 
 
-                var sapFacturaManager = new SapFacturaManager();
+                //var sapFacturaManager = new SapFacturaManager();
 
-                var facturaSap = sapFacturaManager.CrearFacturaServicio(
-                    proveedor.NumeroProveedor,
-                    refe,
-                    DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
-                    SubTotal,
-                    Total,
-                    cantidad.ToString(CultureInfo.InvariantCulture),
-                     comprobante.Complemento.TimbreFiscalDigital.UUID,
-                     RFC);
+                //var facturaSap = sapFacturaManager.CrearFacturaServicio(
+                //    proveedor.NumeroProveedor,
+                //    refe,
+                //    DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
+                //    SubTotal,
+                //    Total,
+                //    cantidad.ToString(CultureInfo.InvariantCulture),
+                //     comprobante.Complemento.TimbreFiscalDigital.UUID,
+                //     RFC);
                 var factura = new factura
                 {
                     Serie = Serie ?? string.Empty,
@@ -307,33 +307,35 @@ namespace Ppgz.Services
                     Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
                     XmlRuta = newXmlPath,
                     PdfRuta = newPdfPath,
-                    Estatus = facturaSap.Estatus,
+                    Estatus = "S",
                     numeroProveedor = proveedor.NumeroProveedor,
-                    EstatusOriginal = facturaSap.Estatus,
+                    EstatusOriginal = "S",
                     FechaPortal = fecha,
                     RFCReceptor = RFCReceptor ?? string.Empty,
-                    TipoFactura = "Servicios"
-                };
+                    TipoFactura = "Servicios",
+                    Comentario = "Factura Validada",
+                    Procesado = true
+            };
 
-                if (factura.Estatus != "S" && factura.Estatus != "H")
-                {
+                //if (factura.Estatus != "S" && factura.Estatus != "H")
+                //{
 
-                    string errorsap = facturaSap.ErrorTable.Rows[0]["MESSAGE"].ToString();
-                    factura.Comentario = string.Format
-                       ("Tipo:{1} {0}Mensaje:{2}",
-                       Environment.NewLine,
-                       facturaSap.ErrorTable.Rows[0]["TYPE"],
-                       facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
+                //    string errorsap = facturaSap.ErrorTable.Rows[0]["MESSAGE"].ToString();
+                //    factura.Comentario = string.Format
+                //       ("Tipo:{1} {0}Mensaje:{2}",
+                //       Environment.NewLine,
+                //       facturaSap.ErrorTable.Rows[0]["TYPE"],
+                //       facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
 
-                    factura.Procesado = false;
+                //    factura.Procesado = false;
 
-                }
-                else
-                {
-                    factura.Procesado = true;
-                    factura.NumeroGenerado = facturaSap.FacturaNumero;
+                //}
+                //else
+                //{
+                //    factura.Procesado = true;
+                //    factura.NumeroGenerado = facturaSap.FacturaNumero;
 
-                }
+                //}
 
                 _db.facturas.Add(factura);
                 _db.SaveChanges();
@@ -468,17 +470,17 @@ namespace Ppgz.Services
                 }
 
 
-                var sapFacturaManager = new SapFacturaManager();
+                //var sapFacturaManager = new SapFacturaManager();
 
-                var facturaSap = sapFacturaManager.CrearFacturaServicio(
-                    proveedor.NumeroProveedor,
-                    refe,
-                    DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
-                    SubTotal,
-                    Total,
-                    cantidad.ToString(CultureInfo.InvariantCulture),
-                     comprobante.Complemento.TimbreFiscalDigital.UUID,
-                     RFC);
+                //var facturaSap = sapFacturaManager.CrearFacturaServicio(
+                //    proveedor.NumeroProveedor,
+                //    refe,
+                //    DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
+                //    SubTotal,
+                //    Total,
+                //    cantidad.ToString(CultureInfo.InvariantCulture),
+                //     comprobante.Complemento.TimbreFiscalDigital.UUID,
+                //     RFC);
                 var factura = new factura
                 {
                     Serie = Serie ?? string.Empty,
@@ -489,33 +491,35 @@ namespace Ppgz.Services
                     Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
                     XmlRuta = newXmlPath,
                     PdfRuta = newPdfPath,
-                    Estatus = facturaSap.Estatus,
+                    Estatus = "S",
                     numeroProveedor = proveedor.NumeroProveedor,
-                    EstatusOriginal = facturaSap.Estatus,
+                    EstatusOriginal = "S",
                     FechaPortal = fecha,
                     RFCReceptor = RFCReceptor ?? string.Empty,
-                    TipoFactura = "Servicios"
+                    TipoFactura = "Servicios",
+                    Procesado = true,
+                    Comentario = "Factura Validada"
                 };
 
-                if (factura.Estatus != "S" && factura.Estatus != "H")
-                {
+                //if (factura.Estatus != "S" && factura.Estatus != "H")
+                //{
 
-                    string errorsap = facturaSap.ErrorTable.Rows[0]["MESSAGE"].ToString();
-                    factura.Comentario = string.Format
-                       ("Tipo:{1} {0}Mensaje:{2}",
-                       Environment.NewLine,
-                       facturaSap.ErrorTable.Rows[0]["TYPE"],
-                       facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
+                //    string errorsap = facturaSap.ErrorTable.Rows[0]["MESSAGE"].ToString();
+                //    factura.Comentario = string.Format
+                //       ("Tipo:{1} {0}Mensaje:{2}",
+                //       Environment.NewLine,
+                //       facturaSap.ErrorTable.Rows[0]["TYPE"],
+                //       facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
 
-                    factura.Procesado = false;
+                //    factura.Procesado = false;
 
-                }
-                else
-                {
-                    factura.Procesado = true;
-                    factura.NumeroGenerado = facturaSap.FacturaNumero;
+                //}
+                //else
+                //{
+                //    factura.Procesado = true;
+                //    factura.NumeroGenerado = facturaSap.FacturaNumero;
 
-                }
+                //}
 
                 _db.facturas.Add(factura);
                 _db.SaveChanges();
@@ -930,17 +934,17 @@ namespace Ppgz.Services
                 }
 
 
-                var sapFacturaManager = new SapFacturaManager();
+                //var sapFacturaManager = new SapFacturaManager();
 
-                var facturaSap = sapFacturaManager.CrearFacturaServicio(
-                    proveedor.NumeroProveedor,
-                    refe,
-                    DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
-                    SubTotal,
-                    Total,
-                    cantidad.ToString(CultureInfo.InvariantCulture),
-                     comprobante.Complemento.TimbreFiscalDigital.UUID,
-                     RFC);
+                //var facturaSap = sapFacturaManager.CrearFacturaServicio(
+                //    proveedor.NumeroProveedor,
+                //    refe,
+                //    DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
+                //    SubTotal,
+                //    Total,
+                //    cantidad.ToString(CultureInfo.InvariantCulture),
+                //     comprobante.Complemento.TimbreFiscalDigital.UUID,
+                //     RFC);
                 var factura = new factura
                 {
                     Serie = Serie ?? string.Empty,
@@ -951,33 +955,35 @@ namespace Ppgz.Services
                     Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
                     XmlRuta = newXmlPath,
                     PdfRuta = newPdfPath,
-                    Estatus = facturaSap.Estatus,
+                    Estatus = "S",
                     numeroProveedor = proveedor.NumeroProveedor,
-                    EstatusOriginal = facturaSap.Estatus,
+                    EstatusOriginal = "S",
                     FechaPortal = fecha,
                     RFCReceptor = RFCReceptor ?? string.Empty,
+                    Comentario = "Factura Validada",
+                    Procesado = true,
                     TipoFactura = "Servicios"
                 };
 
-                if (factura.Estatus != "S" && factura.Estatus != "H")
-                {
+                //if (factura.Estatus != "S" && factura.Estatus != "H")
+                //{
 
-                    string errorsap = facturaSap.ErrorTable.Rows[0]["MESSAGE"].ToString();
-                    factura.Comentario = string.Format
-                       ("Tipo:{1} {0}Mensaje:{2}",
-                       Environment.NewLine,
-                       facturaSap.ErrorTable.Rows[0]["TYPE"],
-                       facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
+                //    string errorsap = facturaSap.ErrorTable.Rows[0]["MESSAGE"].ToString();
+                //    factura.Comentario = string.Format
+                //       ("Tipo:{1} {0}Mensaje:{2}",
+                //       Environment.NewLine,
+                //       facturaSap.ErrorTable.Rows[0]["TYPE"],
+                //       facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
 
-                    factura.Procesado = false;
+                //    factura.Procesado = false;
 
-                }
-                else
-                {
-                    factura.Procesado = true;
-                    factura.NumeroGenerado = facturaSap.FacturaNumero;
+                //}
+                //else
+                //{
+                //    factura.Procesado = true;
+                //    factura.NumeroGenerado = facturaSap.FacturaNumero;
 
-                }
+                //}
 
                 _db.facturas.Add(factura);
                 _db.SaveChanges();
@@ -1175,17 +1181,17 @@ namespace Ppgz.Services
                 }
 
 
-                var sapFacturaManager = new SapFacturaManager();
+                //var sapFacturaManager = new SapFacturaManager();
 
-                var facturaSap = sapFacturaManager.CrearFacturaServicio(
-                    proveedor.NumeroProveedor,
-                    refe,
-                    DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
-                    SubTotal,
-                    Total,
-                    cantidad.ToString(CultureInfo.InvariantCulture),
-                     comprobante.Complemento.TimbreFiscalDigital.UUID,
-                     RFC);
+                //var facturaSap = sapFacturaManager.CrearFacturaServicio(
+                //    proveedor.NumeroProveedor,
+                //    refe,
+                //    DateTime.ParseExact(Fecha, "yyyy-MM-dd'T'HH:mm:ss", CultureInfo.InvariantCulture),
+                //    SubTotal,
+                //    Total,
+                //    cantidad.ToString(CultureInfo.InvariantCulture),
+                //     comprobante.Complemento.TimbreFiscalDigital.UUID,
+                //     RFC);
                 var factura = new factura
                 {
                     Serie = Serie ?? string.Empty,
@@ -1196,33 +1202,35 @@ namespace Ppgz.Services
                     Uuid = comprobante.Complemento.TimbreFiscalDigital.UUID,
                     XmlRuta = newXmlPath,
                     PdfRuta = newPdfPath,
-                    Estatus = facturaSap.Estatus,
+                    Estatus = "S",
                     numeroProveedor = proveedor.NumeroProveedor,
-                    EstatusOriginal = facturaSap.Estatus,
+                    EstatusOriginal = "S",
                     FechaPortal = fecha,
                     RFCReceptor = RFCReceptor ?? string.Empty,
+                    Comentario = "Factura Validada",
+                    Procesado = true,
                     TipoFactura = "Servicios"
                 };
 
-                if (factura.Estatus != "S" && factura.Estatus != "H")
-                {
+                //if (factura.Estatus != "S" && factura.Estatus != "H")
+                //{
 
-                    string errorsap = facturaSap.ErrorTable.Rows[0]["MESSAGE"].ToString();
-                    factura.Comentario = string.Format
-                       ("Tipo:{1} {0}Mensaje:{2}",
-                       Environment.NewLine,
-                       facturaSap.ErrorTable.Rows[0]["TYPE"],
-                       facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
+                //    string errorsap = facturaSap.ErrorTable.Rows[0]["MESSAGE"].ToString();
+                //    factura.Comentario = string.Format
+                //       ("Tipo:{1} {0}Mensaje:{2}",
+                //       Environment.NewLine,
+                //       facturaSap.ErrorTable.Rows[0]["TYPE"],
+                //       facturaSap.ErrorTable.Rows[0]["MESSAGE"]);
 
-                    factura.Procesado = false;
+                //    factura.Procesado = false;
 
-                }
-                else
-                {
-                    factura.Procesado = true;
-                    factura.NumeroGenerado = facturaSap.FacturaNumero;
+                //}
+                //else
+                //{
+                //    factura.Procesado = true;
+                //    factura.NumeroGenerado = facturaSap.FacturaNumero;
 
-                }
+                //}
 
                 _db.facturas.Add(factura);
                 _db.SaveChanges();

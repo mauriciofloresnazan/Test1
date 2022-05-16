@@ -56,6 +56,18 @@ namespace Ppgz.Web.Areas.Servicio.Controllers
 
             ViewBag.proveedores = _proveedorManager.FindByCuentaId(cuenta.Id);
 
+            string listadoSociedades = CommonManager.GetConfiguraciones().Single(c => c.Clave == "sociedades.listaservicios").Valor;
+            string[] lsociedad = listadoSociedades.Trim().Split(',').ToArray();
+            string[,] lSociedades = new string[lsociedad.Count(), 2];
+
+            for (int i = 0; i < lsociedad.Count(); i++)
+            {
+                lSociedades[i, 0] = lsociedad[i];
+                lSociedades[i, 1] = CommonManager.GetConfiguraciones().Single(c => c.Clave == "sociedades.nombre." + lsociedad[i]).Valor; ;
+            }
+
+            ViewBag.Sociedades = lSociedades;
+
             return View();
         }
 
