@@ -1,11 +1,12 @@
 ﻿@using Ppgz.CitaWrapper
 @using Ppgz.Repository
+@using System.Data
 @{
     ViewBag.Title = "Detalle de la Cita";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var cita = (cita)ViewBag.Cita;
-
+    var graf = (DataTable)ViewBag.Resss;
 }
 <style>
     .btn-file {
@@ -68,13 +69,13 @@
             <div class="col-sm-4">
                 <div class="btn-group btn-group-justified hidden-sm hidden-xs" role="group" aria-label="Opciones Cita">
 
-                    
+
                     <a class="btn btn-default" href="@Url.Action("Index", "AdministrarCitas1")">
                         <i class="fa fa-undo" aria-hidden="true"></i> Regresar
                     </a>
                 </div>
                 <div class="visible-sm visible-xs">
-                  
+
                     <a class="btn btn-default btn-block" href="@Url.Action("Index", "AdministrarCitas1")">
                         <i class="fa fa-undo" aria-hidden="true"></i> Regresar
                     </a>
@@ -96,7 +97,7 @@
             <thead>
                 <tr>
 
-                    
+
                     <th class="text-center">Descripción</th>
                     <th class="text-center">Cantidad a Entregar</th>
 
@@ -105,15 +106,15 @@
             <tbody>
 
 
-                @foreach (var detalle in cita.asns)
+                @foreach (DataRow graficas in graf.Rows)
                 {
 
 
 
-                    <tr data-asnid="@detalle.Id" data-numeroposicion="@detalle.NumeroPosicion" data-numeromaterial="@detalle.NumeroMaterial" data-descripcionmaterial="@detalle.NombreMaterial" data-cantidadpermitida="@detalle.Cantidad">
-                       
-                        <td class="text-center vert-align"> @detalle.NombreMaterial</td>
-                        <td class="text-center vert-align cantidad-entregar" style="font-weight: bold; cursor: pointer; ">@detalle.Cantidad</td>
+                    <tr>
+
+                        <td class="text-center vert-align"> @graficas["NombreMaterial"]</td>
+                        <td class="text-center vert-align cantidad-entregar" style="font-weight: bold; cursor: pointer; ">@graficas["Cantidad"]</td>
                     </tr>
                 }
             </tbody>
@@ -121,7 +122,6 @@
 
     </div>
 </div>
-
 
 
 @using (Html.BeginForm("ActualizarCita", "ControlCitas", new { }, FormMethod.Post, new { id = "form-actualizar" }))
@@ -157,7 +157,7 @@
                 hora: "Anden @horarioRiel.riele.andene.Codigo / Riel @horarioRiel.riele.Codigo (@horarioRiel.horario.HoraDesde - @horarioRiel.horario.HoraHasta)"
 
             });
-            
+
             </text>
         }
 
@@ -305,7 +305,7 @@
             }
 
 
-            
+
 
         function ActualizarCitaRieles() {
 
@@ -323,8 +323,8 @@
                         value: $(this).attr("value")
                 }).appendTo('#form-actualizar');
             });
-     
-            
+
+
 
             $("#form-actualizar").submit();
 

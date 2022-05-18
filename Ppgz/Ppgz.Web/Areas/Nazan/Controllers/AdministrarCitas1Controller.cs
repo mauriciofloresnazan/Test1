@@ -92,7 +92,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 
             ViewBag.Cita = cita;
+            ViewBag.Cita = cita;
 
+            var resss = Db.GetDataTable(@"SELECT  NombreMaterial,sum(cantidad) as Cantidad  
+           from portalqa.asn where CitaId='" + citaId + "' GROUP BY NumeroMaterial");
+
+
+            ViewBag.Resss = resss;
             return View();
         }
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-VISTACITASCALIDAD")]
