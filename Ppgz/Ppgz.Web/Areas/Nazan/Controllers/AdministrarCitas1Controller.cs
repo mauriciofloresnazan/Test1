@@ -92,10 +92,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
 
             ViewBag.Cita = cita;
-            ViewBag.Cita = cita;
 
-            var resss = Db.GetDataTable(@"SELECT  NombreMaterial,sum(cantidad) as Cantidad  
-           from portalqa.asn where CitaId='" + citaId + "' GROUP BY NumeroMaterial");
+            var resss = Db.GetDataTable(@"SELECT min(NombreMaterial) as NombreMaterial,sum(cantidad) as Cantidad  
+           from impuls_portal.asn where CitaId='" + citaId + "' GROUP BY NumeroMaterial");
 
 
             ViewBag.Resss = resss;
