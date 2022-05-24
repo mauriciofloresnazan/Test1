@@ -230,6 +230,7 @@
     <Compile Include="Areas\Nazan\Controllers\ImpresionEtiquetaAsnController.cs" />
     <Compile Include="Areas\Nazan\Controllers\MonitoreoSistemasController.cs" />
     <Compile Include="Areas\Nazan\Controllers\PenalizacionesMenorController.cs" />
+    <Compile Include="Areas\Nazan\Controllers\ApiBuhoController.cs" />
     <Compile Include="Areas\Nazan\Controllers\ReenvioAsnController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarCitasController.cs" />
     <Compile Include="Areas\Nazan\Controllers\AdministrarFacturasController.cs" />
@@ -2068,6 +2069,7 @@
     <Content Include="Areas\Nazan\Views\AdministrarCitas1\IndexM.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitas1\CitaDetalle1.cshtml" />
     <Content Include="Areas\Nazan\Views\AdministrarCitasCompradores\IndexM.cshtml" />
+    <Content Include="Areas\Nazan\Views\ApiBuho\ApiBuho.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\Impuls.pubxml" />
     <None Include="Properties\PublishProfiles\ppgz.pubxml" />

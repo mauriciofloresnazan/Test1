@@ -63,6 +63,7 @@
     <Compile Include="SapOrdenCompraManager.cs" />
     <Compile Include="SapPartidaManager.cs" />
     <Compile Include="BwReporteProveedorManager.cs" />
+    <Compile Include="SapBuho.cs" />
     <Compile Include="SapReciboAsn.cs" />
     <Compile Include="SapPenalizacionesManager.cs" />
     <Compile Include="SapProntoPagoManager.cs" />
