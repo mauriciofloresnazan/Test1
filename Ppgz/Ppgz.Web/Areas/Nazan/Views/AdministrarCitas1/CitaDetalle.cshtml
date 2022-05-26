@@ -108,14 +108,20 @@
 
                 @foreach (DataRow graficas in graf.Rows)
                 {
+                    var sum = graficas.ItemArray[0];
+                    var Cantidad = Db.GetDataTable(@"select sum(cantidad) as cantidad from Impuls_Portal.asn where NombreMaterial like'" + sum + "%' and CitaId='" + @cita.Id+ "'");
+                    ViewBag.c = Cantidad;
+                    foreach (DataRow canti in Cantidad.Rows)
+                    {
+
+                        <tr>
+
+                            <td class="text-center vert-align"> @graficas["NombreMaterial"]</td>
+                            <td class="text-center vert-align"> @canti["cantidad"]</td>
 
 
-
-                    <tr>
-
-                        <td class="text-center vert-align"> @graficas["NombreMaterial"]</td>
-                        <td class="text-center vert-align cantidad-entregar" style="font-weight: bold; cursor: pointer; ">@graficas["Cantidad"]</td>
-                    </tr>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>
