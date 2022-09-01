@@ -255,7 +255,13 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
         [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
 		public JsonResult BuscarProveedor(string numeroProveedor)
 		{
-		    try
+            int length = numeroProveedor.Length;
+
+            if (length < 10)
+            {
+                return Json(new { error = "Inserta el numero de proveedor completo" });
+            }
+            try
 		    {
                 var proveedor = _proveedorManager.FindProveedorEnSap(numeroProveedor);
 		        return proveedor == null
@@ -301,10 +307,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 		}
 
 
-		[Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
-		public ActionResult AsociarProveedor(int id, string numeroProveedor)
-		{
-			try
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARPROVEEDORESNAZAN-MODIFICAR")]
+        public ActionResult AsociarProveedor(int id, string numeroProveedor)
+        {
+            try
             {
                 _cuentaManager.AsociarProveedorSapEnCuenta(id, numeroProveedor);
 

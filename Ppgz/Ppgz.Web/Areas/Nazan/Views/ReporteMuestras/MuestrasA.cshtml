@@ -1,0 +1,377 @@
+﻿@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Muestras Cedis";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var drm = (DataTable)ViewBag.Res;
+
+}
+<style type="text/css">
+    .zoom {
+        /* Aumentamos la anchura y altura durante 2 segundos */
+        transition: width 1.5s, height 1.5s, transform 1.5s;
+    }
+
+        .zoom:hover {
+            /* tranformamos el elemento al pasar el mouse por encima al doble de
+           su tamaño con scale(2). */
+            transform: scale(1.5);
+        }
+</style>
+<h2>Muestras autorizadas</h2>
+<div class="panel panel-default">
+    <div class="panel-heading">Seleccione la Fecha</div>
+    <div class="panel-body">
+            <div class="">
+                <label class="col-sm-2 control-label"> Fecha Desde</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="fechaDesde1" id="fechaDesde1" placeholder="Fecha" />
+                </div>
+                <label class="col-sm-2 control-label"> Fecha Hasta</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" name="fechaHasta1" id="fechaHasta1" placeholder="Fecha" />
+                </div>
+                <div class="col-sm-2">
+                    <input type="button" class="btn btn-primary" id="btnFiltrar" value="Filtrar" onclick="javascript: Filtrar();">
+
+                </div>
+            </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading"><p style="text-align:center;font-weight:bold;font-size:18px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;">Muestras Cedis</p></div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="row" style="display: none;">
+                <label class="col-sm-2">Fecha</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" name="fecha" id="fecha" placeholder="Fecha" />
+                    <input type="text" class="form-control" name="fechas" id="fechas" placeholder="Fechas" />
+                </div>
+            </div>
+            @using (Html.BeginForm("ResultadoA", "ReporteMuestras", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.ValidationSummary(true)
+                <div class="table-responsive">
+                    <table id="muestras" class="table table-striped table-condensed table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">id</th>
+                                <th class="text-center">Foto</th>
+                                <th class="text-center">Proveedor</th>
+                                <th class="text-center">Contacto</th>
+                                <th class="text-center">Marca</th>
+                                <th class="text-center">Estilo</th>
+                                <th class="text-center">Color</th>
+                                <th class="text-center">Acabado</th>
+                                <th class="text-center">Nombre Material</th>
+                                <th class="text-center">Materia lSuela</th>
+                                <th class="text-center">Altura</th>
+                                <th class="text-center">Tallas</th>
+                                <th class="text-center">EM</th>
+                                <th class="text-center">Costo</th>
+                                <th class="text-center">Opciones</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (DataRow muestras in drm.Rows)
+                            {
+
+
+
+                                byte[] Imagen = (byte[])muestras.ItemArray[1];
+                                string cf = Convert.ToString(muestras.ItemArray[14]);
+                                string valor = Convert.ToBase64String(Imagen);
+                                var img = "data:image/" + "jpg;png;base64," + valor;
+                                <tr>
+                                    <td class="text-center vert-align">@muestras["id"]</td>
+                                    <td class="text-center vert-align"><img src="@img" class="zoom" width="80" height="80" /></td>
+                                    <td class="text-center vert-align">@muestras["NombreProveedor"]</td>
+                                    <td class="text-center vert-align">@muestras["Contacto"]</td>
+                                    <td class="text-center vert-align">@muestras["MarcaAgrupa"]</td>
+                                    <td class="text-center vert-align">@muestras["Estilo"]</td>
+                                    <td class="text-center vert-align">@muestras["Color"]</td>
+                                    <td class="text-center vert-align">@muestras["Acabado"]</td>
+                                    <td class="text-center vert-align">@muestras["NombreMaterial"]</td>
+                                    <td class="text-center vert-align">@muestras["MaterialSuela"]</td>
+                                    <td class="text-center vert-align">@muestras["Tallas"]</td>
+                                    <td class="text-center vert-align">@muestras["Altura"]</td>
+                                    <td class="text-center vert-align">@muestras["EM"]</td>
+                                    <td class="text-center vert-align">$@muestras["Costo"]</td>
+                                    <td class="text-center vert-align">
+                                        <div class="btn-group btn-group-justified">
+
+                                            <a class="btn btn-info btn-xs btn-editar-Muestra" data-idproveedor="@muestras["id"]" data-nombreproveedor="@muestras["NombreProveedor"]"
+                                               data-contacto="@muestras["Contacto"]" data-marca="@muestras["MarcaAgrupa"]" data-estilo="@muestras["Estilo"]" data-color="@muestras["Color"]"
+                                               data-acabado="@muestras["Acabado"]" data-nombrematerial="@muestras["NombreMaterial"]" data-materialsuela="@muestras["MaterialSuela"]" data-tallas="@muestras["Tallas"]"
+                                               data-altura="@muestras["Altura"]" data-em="@muestras["EM"]" data-costo="@muestras["Costo"]" data-comentariofinal="@muestras["ComentarioFinal"]">
+                                                <i class="fa fa-edit" aria-hidden="true"></i> Editar
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-7">
+                            <button type="button" onclick="envio()" class="btn btn-primary"><i class="fa fa-play" aria-hidden="true"></i> Generar Excel</button>
+
+
+                            <a class="btn btn-default" href="@Url.Action("Inicio", "Muestrario")">
+                                <i class="fa fa-undo" aria-hidden="true"></i> Cancelar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+            </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="modal-Editar" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("Modificar", "ReporteMuestras", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="hidden" id="proveedorid" name="proveedorid" />
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Completar informacion</h4>
+                </div>
+                <div id="cuerpo" class="modal-body">
+                    <label>Id Muestra</label><br />
+                    <input type="text" id="idproveedor" name="idproveedor" readonly /><br />
+                    <label>Campo1</label>
+                    <input id="nombreproveedor" name="nombreproveedor" type="text" class="form-control" readonly />
+                    <label>Campo2</label>
+                    <input id="contacto" name="contacto" type="text" class="form-control" readonly />
+                    <label>Campo3</label>
+                    <input id="marca" name="marca" type="text" class="form-control" readonly />
+                    <label>Campo4</label>
+                    <input id="estilo" name="estilo" type="text" class="form-control" readonly />
+                    @*<label>Proveedor</label>
+                    <input id="nombreproveedor" name="nombreproveedor" type="text" class="form-control" readonly />
+                    <label>Contacto</label>
+                    <input id="contacto" name="contacto" type="text" class="form-control" readonly />
+                    <label>Marca</label>
+                    <input id="marca" name="marca" type="text" class="form-control" readonly />
+                    <label>Estilo</label>
+                    <input id="estilo" name="estilo" type="text" class="form-control" readonly />
+                    <label>Color</label>
+                    <input id="color" name="color" type="text" class="form-control" readonly />
+                    <label>Acabado</label>
+                    <input id="acabado" name="acabado" type="text" class="form-control" readonly />
+                    <label>Nombre Material</label>
+                    <input id="nombrematerial" name="nombrematerial" type="text" class="form-control" readonly />
+                    <label>Material de Suela</label>
+                    <input id="materialsuela" name="materialsuela" type="text" class="form-control" readonly />
+                    <label>Rango Tallas</label>
+                    <input id="tallas" name="tallas" type="text" class="form-control" readonly />
+                    <label>Altura</label>
+                    <input id="altura" name="altura" type="text" class="form-control" readonly />
+                    <label>E/M</label>
+                    <input id="em" name="em" type="text" class="form-control" readonly />
+                    <label>Costo</label>
+                    <input id="costo" name="costo" type="text" class="form-control" readonly oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" />*@
+                    @*<label for="estatus">Seleeciona un estatus:</label><br />
+                    <select name="ComentarioFinal" id="ComentarioFinal" required>
+                        <option value=""></option>
+                        <option value="Autorizado">Autorizado</option>
+                        <option value="Cambio">Cambio</option>
+                    </select>*@
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Agregar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="modal" id="modal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alerta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Debe seleccionar al menos un registro</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <script type="text/javascript">
+
+        var form = $("#form");
+        var table;
+        $.fn.dataTable.ext.search.push(
+
+            function (settings, data, dataIndex) {
+                var min = parseInt($('#min').val(), 10);
+                var max = parseInt($('#max').val(), 10);
+                var Etiquetas = parseFloat(data[0]) || 0; // use data for the age column
+
+                if ((isNaN(min) && isNaN(max)) ||
+                    (isNaN(min) && Etiquetas <= max) ||
+                    (min <= Etiquetas && isNaN(max)) ||
+                    (min <= Etiquetas && Etiquetas <= max)) {
+                    return true;
+                }
+                return false;
+            }
+        );
+        $(document).ready(function () {
+            $('#fechas').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+
+            $('#fechaDesde1').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+
+            $('#fechaHasta1').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+            table = $('#muestras').DataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json",
+                },
+                dom: 'Bfrtip',
+                select: {
+                    style: 'multi'
+                },
+                buttons: [
+                    'pageLength',
+                    {
+                        text: 'Seleccionar Todo',
+                        action: function () {
+                            table.rows().select();
+                        }
+                    },
+                    {
+                        text: 'Deseleccionar Todo',
+                        action: function () {
+                            table.rows().deselect();
+                        }
+                    },
+                    {
+                        text: 'etiquetas por rango',
+                        action: function () {
+                            table.rows({ search: 'applied' }).select();
+                        }
+                    }
+
+                ],
+            });
+            table.buttons(0, null).container().prependTo(
+                table.table().container()
+            );
+
+            $('#min, #max').keyup(function () {
+                table.draw();
+            });
+        });
+
+
+        $(".btn-editar-Muestra").click(function () {
+            var proveedorid = $(this).data("proveedorid");
+            var idproveedor = $(this).data("idproveedor");
+            //var nombreproveedor = $(this).data("nombreproveedor");
+            //var contacto = $(this).data("contacto");
+            //var marca = $(this).data("marca");
+            //var estilo = $(this).data("estilo");
+            //var Color = $(this).data("color");
+            //var Acabado = $(this).data("acabado");
+            //var NombreMaterial = $(this).data("nombrematerial");
+            //var MaterialSuela = $(this).data("materialsuela");
+            //var Tallas = $(this).data("tallas");
+            //var Altura = $(this).data("altura");
+            //var EM = $(this).data("em");
+            //var Costo = $(this).data("costo");
+            //var ComentarioFinal = $(this).data("comentariofinal");
+            $("#proveedorid").val(proveedorid);
+            $("#idproveedor").val(idproveedor);
+            //$("#nombreproveedor").val(nombreproveedor);
+            //$("#contacto").val(contacto);
+            //$("#marca").val(marca);
+            //$("#estilo").val(estilo);
+            //$("#color").val(Color);
+            //$("#acabado").val(Acabado);
+            //$("#nombrematerial").val(NombreMaterial);
+            //$("#materialsuela").val(MaterialSuela);
+            //$("#tallas").val(Tallas);
+            //$("#altura").val(Altura);
+            //$("#em").val(EM);
+            //$("#costo").val(Costo);
+            //$("#comentariofinal").val(ComentarioFinal);
+            $("#modal-Editar").modal("show");
+        });
+function Filtrar() {
+    var fechaf = $("#fechaDesde1").val();
+    var fechat = $("#fechaHasta1").val();
+
+            var url = "@Url.Action("MuestrasA", "ReporteMuestras")";
+    var fecha = $('#fecha').val();
+    url = url + "?fechaDesde=" + fechaf + "&fechaHasta=" + fechat ;
+            location.href = url;
+        }
+        function envio() {
+            var Id = '';
+            var Ids = '';
+            var contador = 0;
+            table.rows({ selected: true }).data().each(function (d) {
+                ///console.log('loop: ' + JSON.stringify(d));
+                if (contador == 0) {
+                    Id = d[0];
+                    Ids = d[0];
+                    contador = 1;
+                } else {
+                    Id = Id + ',' + d[0];
+                    Ids = Ids + ',' + d[0];
+                }
+
+            });
+
+            if (Id == '') {
+                ///alert('Debe seleccionar al menos una orden');
+                $('#modal').modal('show');
+            } else {
+                var input3 = $("<input>").attr({ "type": "hidden", "name": "Id" }).val(Id);
+                var input4 = $("<input>").attr({ "type": "hidden", "name": "Ids" }).val(Ids);
+                $('#form').append(input3);
+                $('#form').append(input4);
+                $('#form').submit();
+
+            }
+
+        }
+    </script>
+}
+
+

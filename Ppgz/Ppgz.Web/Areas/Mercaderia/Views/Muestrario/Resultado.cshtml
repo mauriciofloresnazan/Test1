@@ -1,0 +1,48 @@
+﻿@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Muestras Cedis";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var proveedor = (proveedore)ViewBag.Proveedor;
+
+}
+<style type="text/css">
+    
+</style>
+<br />
+<br />
+<br />
+<br />
+<h2>Muestras Cedis</h2>
+<div class="panel panel-default">
+    <div class="panel-heading"><p style="text-align:center;font-weight:bold;font-size:18px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;">Descargar Excel</p></div>
+    <div class="panel-body">
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-7">
+                            <a class="btn btn-primary" href="@Url.Action("Impresion", "Muestrario")">
+                               Descargar Excel
+                            </a>
+                            <a class="btn btn-default" href="@Url.Action("ImprimirEtiqueta", "Muestrario", new { proveedorId = proveedor.Id })">
+                                <i class="fa fa-undo" aria-hidden="true"></i> Regresar a Etiquetas
+                            </a>
+                        </div>
+                    </div>
+        </div>
+</div>
+@section Scripts {
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/highcharts-3d.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+    <script type="text/javascript">
+       
+      
+    </script>
+}
+
+

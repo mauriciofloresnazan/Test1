@@ -165,7 +165,7 @@
             <div class="modal-body">
                 <label>Seleccione la nueva fecha</label>
 
-                <input type="text" class="form-control fecha" name="fecha" id="fecha" placeholder="Fecha" />
+                <input type="text" class="form-control fecha" name="fecha" id="fechas" placeholder="Fecha" />
             </div>
             <div class="modal-footer">
                 <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
@@ -238,7 +238,16 @@
                 format: 'DD/MM/YYYY',
                 defaultDate: new Date()
             });
-
+            var date = new Date();
+            var currentMonth = date.getMonth();
+            var currentDate = date.getDate();
+            var currentYear = date.getFullYear();
+            $('#fechas').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                minDate: new Date(currentYear, currentMonth, currentDate),
+                defaultDate: new Date()
+            });
             $('#fechaFrom').datetimepicker({
                 locale: 'es',
                 format: 'DD/MM/YYYY',
@@ -305,7 +314,7 @@
 
         function CambiarFecha() {
             var url = "@Url.Action("CambiarFechaMenor", "AdministrarCitas")";
-            var fecha = $('#fecha').val();
+            var fecha = $('#fechas').val();
             url = url + "?citaId=" + citaIdCambiarFecha + "&fecha=" + fecha;
             location.href = url;
         }

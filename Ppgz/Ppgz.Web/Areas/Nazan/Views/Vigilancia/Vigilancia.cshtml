@@ -1,0 +1,309 @@
+﻿@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Monitoreo Sistemas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var graf = (DataTable)ViewBag.Resss;
+    var img = ViewBag.Res;
+
+}
+<br />
+<br />
+<br />
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>Entrada Proveedores</i>
+</p>
+<div class="panel panel-default">
+    <div class="panel-heading"><p style="text-align:center;font-weight:bold;font-size:18px;font-family: Helvetica Neue,Helvetica,Arial,sans-serif;">Programa entrada proveedores en vigilancia</p></div>
+    <div class="panel-body">
+
+        <div class="col-md-12">
+            <table id="Monitor" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">citas</th>
+                        <th class="text-center">Id Proveedor</th>
+                        <th class="text-center">Nombre Proveedor</th>
+                        <th class="text-center">Fecha Cita</th>
+                        <th class="text-center">Hora Cita</th>
+                        <th class="text-center">Pares</th>
+                        <th class="text-center">Marca</th>
+                        <th class="text-center">Estatus</th>
+                        <th class="text-center">Gafete</th>
+                        <th class="text-center">Guardia</th>
+                        <th class="text-center">Fecha Ingreso</th>
+                        <th class="text-center">Fecha Salida</th>
+                        <th class="text-center">Mercancia No Nazan</th>
+                        <th class="text-center">Vales de Salida</th>
+                        <th class="text-center">Opciones</th>
+
+
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow graficas in graf.Rows)
+                    {
+
+
+
+
+                        <tr>
+                            <td class="text-center vert-align">@graficas["IdCita"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["IdProv"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["NombreProv"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["FechaCita"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["HoraCita24"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["CantidadCita"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["Marca"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["Estatus"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["Gafete"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["idGuardia"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["FechaIngreso"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["fechaSalida"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["MercanciaNoNAzan"]</td>
+                            <td class="text-center vert-align ocultar">@graficas["ParesEnValesSalida"]</td>
+                            <td class="text-center vert-align">
+                                <div class="btn-group btn-group-justified">
+
+
+                                    <a class="btn btn-primary btn-info btn-xs btn-Entrada " data-idpr="@graficas["IdCtrl"]">
+                                        <i class="fa fa-edit" aria-hidden="true"></i> Entrada
+                                    </a>
+
+                                </div>
+                                <br />
+                                <div class="btn-group btn-group-justified">
+
+
+                                    <a class="btn btn-danger btn-info btn-xs btn-Salida " data-idpr="@graficas["IdCtrl"]">
+                                        <i class="fa fa-edit" aria-hidden="true"></i> Salida
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+            <table id="muestras" class="table table-striped table-condensed table-bordered align-middle">
+                <thead>
+                    <tr>
+                        <th class="text-center">id</th>
+                        <th class="text-center">Foto</th>
+                        <th class="text-center">Proveedor</th>
+                        <th class="text-center">Contacto</th>
+                        <th class="text-center">Marca</th>
+                        <th class="text-center">Estilo</th>
+                        <th class="text-center">Color</th>
+                        <th class="text-center">Acabado</th>
+                        <th class="text-center">Nombre Material</th>
+                        <th class="text-center">Material Suela</th>
+                        <th class="text-center">Altura</th>
+                        <th class="text-center">Tallas</th>
+                        <th class="text-center">EM</th>
+                        <th class="text-center">Costo</th>
+                        <th class="text-center">Opciones</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow Estatus in img.Rows)
+                    {
+                        byte[] Imagen = (byte[])Estatus.ItemArray[2];
+                        string valor = Convert.ToBase64String(Imagen);
+                        var imgs = "data:image/" + "jpg;png;base64," + valor;
+                        <tr>
+                            <td class="text-center vert-align">@Estatus["ID"]</td>
+                            <td class="text-center vert-align">@Estatus["Nombre"]</td>
+                            <td class="text-center vert-align"><img src="@imgs" class="zoom" width="80" height="80" /></td>
+                            <td class="text-center vert-align">@Estatus["EXTENSION"]</td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="modal-Entrada" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("EnviarDatos", "Vigilancia", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="hidden" id="proveedorid" name="proveedorid" />
+                <input type="hidden" id="idproveedor" name="idproveedor" />
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Registrar entrada</h4>
+                </div>
+                <div id="cuerpo" class="modal-body">
+                    <label for="gafete">Gafete Asignado</label><br />
+                    <select name="gafete" id="gafete" required>
+                        <option value=""></option>
+                        <option value="g1">gafete 1</option>
+                        <option value="g2">gafete 2</option>
+                        <option value="g3">gafete 3</option>
+                        <option value="g4">gafete 4</option>
+                    </select><br />
+                    <label for="guardia">Guardia</label><br />
+                    <select name="guardia" id="guardia" required>
+                        <option value=""></option>
+                        <option value="id-g1">guardia 1</option>
+                        <option value="id-g1">guardia 2</option>
+                        <option value="id-g1">guardia 3</option>
+                        <option value="id-g1">guardia 4</option>
+                    </select><br />
+                    <label for="Mercancia">Mercancia solo para nazan</label><br />
+                    <select name="Mercancia" id="Mercancia" required>
+                        <option value=""></option>
+                        <option value="Si">Si</option>
+                        <option value="No">No</option>
+                    </select><br />
+                    <video id="video" playsinline autoplay></video>
+                    <button id="snap">Capture</button>
+                    <canvas id="canvas" width="500" height="500"></canvas>
+                </div>
+
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Registrar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="modal fade" tabindex="-1" id="modal-Salida" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("EnviarDatos", "Vigilancia", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="hidden" id="proveedorid" name="proveedorid" />
+                <input type="hidden" id="idproveedor" name="idproveedor" />
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Registrar Salida</h4>
+                </div>
+                @*<div id="cuerpo" class="modal-body">
+                        <label for="gafete">Gafete Asignado</label><br />
+                        <select name="gafete" id="gafete" required>
+                            <option value=""></option>
+                            <option value="g1">gafete 1</option>
+                            <option value="g2">gafete 2</option>
+                            <option value="g3">gafete 3</option>
+                            <option value="g4">gafete 4</option>
+                        </select><br />
+                        <label for="guardia">Guardia</label><br />
+                        <select name="guardia" id="guardia" required>
+                            <option value=""></option>
+                            <option value="id-g1">guardia 1</option>
+                            <option value="id-g1">guardia 2</option>
+                            <option value="id-g1">guardia 3</option>
+                            <option value="id-g1">guardia 4</option>
+                        </select><br />
+                        <label for="Mercancia">Mercancia solo para nazan</label><br />
+                        <select name="Mercancia" id="Mercancia" required>
+                            <option value=""></option>
+                            <option value="Si">Si</option>
+                            <option value="No">No</option>
+                        </select><br />
+                        <video id="video" playsinline autoplay></video>
+                        <button id="snap">Capture</button>
+                        <canvas id="canvas" width="500" height="500"></canvas>
+                    </div>*@
+
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Registrar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/assets/dt/dataTables.buttons.js"></script>
+    <script src="~/assets/dt/dataTables.buttons.min.js"></script>
+    <script src="~/assets/dt/buttons.html5.min.js"></script>
+    @*<script src="~/assets/dt/jquery.dataTables.min.js"></script>*@
+    <script src="~/assets/dt/jszip.min.js"></script>
+    <script src="~/assets/dt/pdfmake.min.js"></script>
+    @*<script src="~/assets/dt/vfs_fonts.js"></script>*@
+    <script type="text/javascript">
+
+        document.title = "Entrada Proveedores";
+        $(document).ready(function () {
+            $('#Monitor').dataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json",
+                },
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength',
+                ]
+            });
+        });
+        $(".btn-Entrada").click(function () {
+            var proveedorid = $(this).data("provid");
+            var idproveedor = $(this).data("idpr");
+
+            $("#proveedorid").val(proveedorid);
+            $("#idproveedor").val(idproveedor);
+            $("#modal-Entrada").modal("show");
+        });
+
+        $(".btn-Salida").click(function () {
+            var proveedorid = $(this).data("provid");
+            var idproveedor = $(this).data("idpr");
+
+            $("#proveedorid").val(proveedorid);
+            $("#idproveedor").val(idproveedor);
+            $("#modal-Salida").modal("show");
+        });
+
+        'use strict';
+
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const snap = document.getElementById("snap");
+        const errorMsgElement = document.querySelector('span#errorMsg');
+
+        const constraints = {
+            video: {
+                width: 500, height: 500
+            }
+        };
+
+        // Access webcam
+        async function init() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia(constraints);
+                handleSuccess(stream);
+            } catch (e) {
+                errorMsgElement.innerHTML = `navigator.getUserMedia error:${e.toString()}`;
+            }
+        }
+
+        // Success
+        function handleSuccess(stream) {
+            window.stream = stream;
+            video.srcObject = stream;
+        }
+
+        // Load init
+        init();
+
+        // Draw image
+        var context = canvas.getContext('2d');
+        snap.addEventListener("click", function () {
+            context.drawImage(video, 0, 0, 640, 480);
+        });
+    </script>
+}
+
+

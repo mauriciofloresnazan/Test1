@@ -3,38 +3,57 @@
 @using Ppgz.Web.Infrastructure
 @if (Request.IsAuthenticated)
 {
-    var commonManager = new CommonManager();
-    var cuenta = commonManager.GetCuentaUsuarioAutenticado();
+    List<string> menuF = MenuConfig.GetMenuFuncionalidad(this.User);
+
+  
+        var commonManager = new CommonManager();
+        var cuenta = commonManager.GetCuentaUsuarioAutenticado();
 
 
 
-    using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
-    {
+        using (Html.BeginForm("LogOff", "Account", new { area = "" }, FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+        {
         @Html.AntiForgeryToken()
 
-        <ul id="menuBar" class="nav navbar-nav navbar-right">
-            <li>
-                @Html.ActionLink("¡BIENVENIDO " + User.Identity.GetUserName().ToUpper() + "!", "Index", "Home", routeValues: null, htmlAttributes: new { title = "Manage" })
-            </li>
-            <li>
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i> Ayuda<span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                    <li><a href="@Url.Action("Ayuda","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual de Usuario</a></li>
-                    <li><a href="@Url.Action("AyudaCedis","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual entrega de mercancía en CEDIS</a></li>
-                    <li><a href="@Url.Action("ManualCalidad","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual de revisión de calidad en cedis</a></li>
-                    <li><a href="@Url.Action("ManualEtiquetas","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual de Impresion Etiqueta Individual</a></li>
-                </ul>
+<ul id="menuBar" class="nav navbar-nav navbar-right">
+    <li>
+        @Html.ActionLink("¡BIENVENIDO " + User.Identity.GetUserName().ToUpper() + "!", "Index", "Home", routeValues: null, htmlAttributes: new { title = "Manage" })
+    </li>
+    @if (User.Identity.Name == "Invitado")
+    {
 
-            </li>
+    }
+    else
+    {
+        <li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><i class="fa fa-question-circle" aria-hidden="true"></i> Ayuda<span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                <li><a href="@Url.Action("Ayuda","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual de Usuario</a></li>
+                <li><a href="@Url.Action("AyudaCedis","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual entrega de mercancía en CEDIS</a></li>
+                <li><a href="@Url.Action("ManualCalidad","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual de revisión de calidad en cedis</a></li>
+                <li><a href="@Url.Action("ManualEtiquetas","Home")"><i class="fa fa-download" aria-hidden="true"></i> Descargar Manual de Impresion Etiqueta Individual</a></li>
+            </ul>
 
-            @if (cuenta != null)
-            {
-                <li id="mensajes-notificador">
-                    <a class="btn btn-link" href="@Url.Action("Index", "MensajesInstitucionales", new {area = @cuenta.Tipo})"><i class="fa fa-envelope" aria-hidden="true"></i> <span class="badge"></span></a>
-                </li>
-            }
-            <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión</a></li>
-        </ul>
+        </li>
+
+
+    }
+
+    @if (cuenta != null)
+    {
+        if (User.Identity.Name == "Invitado")
+        {
+
+        }
+        else
+        {
+         <li id="mensajes-notificador">
+            <a class="btn btn-link" href="@Url.Action("Index", "MensajesInstitucionales", new { area = @cuenta.Tipo })"><i class="fa fa-envelope" aria-hidden="true"></i> <span class="badge"></span></a>
+        </li>
+         }
+        }
+    <li><a href="javascript:document.getElementById('logoutForm').submit()"><i class="fa fa-sign-out" aria-hidden="true"></i> Cerrar Sesión</a></li>
+</ul>
     }
     if (cuenta != null)
     {
@@ -76,7 +95,7 @@
                 { "Nombre": " GLAM GLAM MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/GLAMGLAMMANUAL.pdf", "proveedores": [146, 320, 92, 305, 86, 20, 129, 21, 72, 114, 15, 116, 73, 122] },
                 { "Nombre": " HEAD OVER HILLS MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/HEADOVERHILLSMANUAL.pdf", "proveedores": [146, 20, 114] },
                 { "Nombre": " LOGAN MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/LOGANMANUAL.pdf", "proveedores": [273] },
-                { "Nombre": " MANCHITAS MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/MANCHITASMANUAL.pdf", "proveedores": [305, 20, 71, 199, 29, 101] },
+                { "Nombre": " MANCHITAS MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/MANCHITASMANUAL.pdf", "proveedores": [305, 20, 71,29, 101] },
                 { "Nombre": " MIRACOL MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/MIRACOLMANUAL.pdf", "proveedores": [54, 55, 20, 204, 114, 4, 117] },
                 { "Nombre": " MOO MOO MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/MOOMOOMANUAL.pdf", "proveedores": [54, 20, 122] },
                 { "Nombre": "OVX MANUAL", "URL": "https://proveedores.impuls.com.mx/Manuales/OVXMANUAL.pdf", "proveedores": [54, 172] },

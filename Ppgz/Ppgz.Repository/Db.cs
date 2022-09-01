@@ -10,7 +10,7 @@ namespace Ppgz.Repository
     public static class Db
     {
         //TODO MOVER A LA CONFIGURACION
-    
+
         private static readonly DbProviderFactory Factory = DbProviderFactories.GetFactory("MySql.Data.MySqlClient");
         private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
@@ -106,6 +106,7 @@ namespace Ppgz.Repository
                     }
 
                     connection.Open();
+                    command.CommandTimeout = 0;
                     command.ExecuteNonQuery();
                     connection.Close();
 

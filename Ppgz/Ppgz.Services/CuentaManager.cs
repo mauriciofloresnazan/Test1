@@ -232,22 +232,35 @@ namespace Ppgz.Services
 
         public void AsociarProveedorSapEnCuenta(int cuentaId, string numeroProveedor)
         {
+            var db = new Entities();
+            var pr = db.proveedores.FirstOrDefault(val => val.NumeroProveedor == numeroProveedor);
             var proveedorManager = new ProveedorManager();
-            if (proveedorManager.FindByNumeroProveedor(numeroProveedor.PadLeft(10, '0')) != null) 
-            {
-                throw new BusinessException(CommonMensajesResource.ERROR_ProveedorSapYaAsociado);
+            if (pr != null) {
+
+                pr.CuentaId = cuentaId;
+                db.Entry(pr).State = EntityState.Modified;
+                db.SaveChanges();
             }
-            if (_db.cuentas.Find(cuentaId) == null)
+            else
             {
-                throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+                if (proveedorManager.FindByNumeroProveedor(numeroProveedor.PadLeft(10, '0')) != null)
+                {
+                    throw new BusinessException(CommonMensajesResource.ERROR_ProveedorSapYaAsociado);
+                }
+                if (_db.cuentas.Find(cuentaId) == null)
+                {
+                    throw new BusinessException(CommonMensajesResource.ERROR_Cuenta_Id);
+                }
+
+                var proveedor = proveedorManager.FindProveedorEnSap(numeroProveedor);
+                proveedor.CuentaId = cuentaId;
+                proveedor.OperacionTx = "CREATE";
+
+                _db.proveedores.Add(proveedor);
+                _db.SaveChanges();
             }
             
-            var proveedor =  proveedorManager.FindProveedorEnSap(numeroProveedor);
-            proveedor.CuentaId = cuentaId;
-            proveedor.OperacionTx = "CREATE";
             
-            _db.proveedores.Add(proveedor);
-            _db.SaveChanges();
 
         }
 

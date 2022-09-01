@@ -387,6 +387,8 @@
           <Property Name="FechaPortal" Type="timestamp" Precision="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="RFCReceptor" Type="varchar" MaxLength="40" Nullable="false" />
           <Property Name="TipoFactura" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="MetodoPago" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="formapago" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="facturasfactoraje">
           <Key>
@@ -1611,6 +1613,8 @@
           <Property Name="FechaPortal" Type="DateTime" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="RFCReceptor" Type="String" MaxLength="40" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="TipoFactura" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="MetodoPago" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="formapago" Type="Int32" Nullable="false"/>
           <NavigationProperty Name="proveedore" Relationship="Self.fk_facturas_proveedores" FromRole="facturas" ToRole="proveedores" />
         </EntityType>
         <EntityType Name="facturasfactoraje">
@@ -2761,6 +2765,8 @@
                 <ScalarProperty Name="FechaPortal" ColumnName="FechaPortal" />
                 <ScalarProperty Name="RFCReceptor" ColumnName="RFCReceptor" />
                 <ScalarProperty Name="TipoFactura" ColumnName="TipoFactura" />
+                <ScalarProperty Name="MetodoPago" ColumnName="MetodoPago" />
+                <ScalarProperty Name="formapago" ColumnName="formapago" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

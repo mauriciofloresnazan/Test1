@@ -260,11 +260,12 @@ namespace SatWrapper
         [XmlAttribute(AttributeName = "tipoDeComprobante")]
         public string TipoDeComprobante { get; set; }
         [XmlAttribute(AttributeName = "metodoDePago")]
-        public string MetodoDePago { get; set; }
+        public string formapago { get; set; }
         [XmlAttribute(AttributeName = "LugarExpedicion")]
         public string LugarExpedicion { get; set; }
         [XmlAttribute(AttributeName = "NumCtaPago")]
         public string NumCtaPago { get; set; }
+  
 
         //CFDI3.3
         [XmlAttribute(AttributeName = "Version")]
@@ -279,6 +280,12 @@ namespace SatWrapper
         public string Total33 { get; set; }
         [XmlAttribute(AttributeName = "SubTotal")]
         public string SubTotal33 { get; set; }
+
+        [XmlAttribute(AttributeName = "FormaPago")]
+        public string formapago33 { get; set; }
+
+        [XmlAttribute(AttributeName = "MetodoPago")]
+        public string MetodoPago33 { get; set; }
 
     }
 }

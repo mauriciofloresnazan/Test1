@@ -1,0 +1,170 @@
+﻿@using Ppgz.Repository
+@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Agregar Muestras";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var drDevol = (DataTable)ViewBag.Res;
+
+
+}
+
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>En esta sección podras cargar las muestras</i>
+</p>
+<a class="btn btn-info btn-xs" href="#" onclick="javascript:ShowModalCrear();" title="Agregar nueva penalizacion">
+    Agregar Muestra<i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+</a>
+<br />
+<br />
+<br />
+
+<div class="panel panel-default">
+    <div class="panel-heading">Detalle de muestras</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="col-sm-6">
+
+            </div>
+            <hr />
+
+
+            <table id="rechazos" class="table table-striped table-condensed table-bordered">
+                <thead>
+                    <tr>
+                        <th class="text-center">id</th>
+                        <th class="text-center">Foto</th>
+                        <th class="text-center">NombreProveedor</th>
+                        <th class="text-center">Contacto</th>
+                        <th class="text-center">Marca</th>
+                        <th class="text-center">Estilo</th>
+                        <th class="text-center">Color</th>
+                        <th class="text-center">Acabado</th>
+                        <th class="text-center">NombreMaterial</th>
+                        <th class="text-center">MaterialSuela</th>
+                        <th class="text-center">Altura</th>
+                        <th class="text-center">Tallas</th>
+                        <th class="text-center">EM</th>
+                        <th class="text-center">Costo</th>
+                        <th class="text-center">ComentarioFinal</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DataRow devolucion in drDevol.Rows)
+                    {
+
+                        byte[] imagen = (byte[])devolucion["imagen"];
+                        byte[] Imagen = (byte[])devolucion.ItemArray[1];
+
+
+                        string valor = Convert.ToBase64String(Imagen, 0, Imagen.Length);
+
+                        var img = "data:image/" + "png;base64," + valor;
+
+                        <tr>
+                            <td class="text-center vert-align">@devolucion["id"]</td>
+                            <td class="text-center vert-align">@img</td>
+                            <td class="text-center vert-align">@devolucion["NombreProveedor"]</td>
+                            <td class="text-center vert-align">@devolucion["Contacto"]</td>
+                            <td class="text-center vert-align">@devolucion["Marca"]</td>
+                            <td class="text-center vert-align">@devolucion["Estilo"]</td>
+                            <td class="text-center vert-align">@devolucion["Color"]</td>
+                            <td class="text-center vert-align">@devolucion["Acabado"]</td>
+                            <td class="text-center vert-align">@devolucion["NombreMaterial"]</td>
+                            <td class="text-center vert-align">@devolucion["MaterialSuela"]</td>
+                            <td class="text-center vert-align">@devolucion["Altura"]</td>
+                            <td class="text-center vert-align">@devolucion["EM"]</td>
+                            <td class="text-center vert-align">@devolucion["Costo"]</td>
+                            <td class="text-center vert-align">@devolucion["ComentarioFinal"]</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="modal-crear" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("CrearInvitado", "Muestrario", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar Muestra</h4>
+                </div>
+                <div id="cuerpo" class="modal-body">
+                    <label>Selecciona tu foto</label>
+                    <input type="file" name="foto" id="foto" required>
+                    <label>Proveedor</label>
+                    <input id="proveedornombre1" name="proveedornombre1" type="text" class="form-control" required autocomplete="off" />
+                    <label>Contacto</label>
+                    <input id="proveedornumero" name="proveedornumero" type="text" class="form-control" required autocomplete="off" />
+                    <label>Marca</label>
+                    <input id="proveedorcuenta" name="proveedorcuenta" type="text" class="form-control" required autocomplete="off" />
+                    <label>Estilo</label>
+                    <input id="Estilo" name="Estilo" type="text" class="form-control" required autocomplete="off" />
+                    <label>Color</label>
+                    <input id="Color" name="Color" type="text" class="form-control" required autocomplete="off" />
+                    <label>Acabado</label>
+                    <input id="Acabado" name="Acabado" type="text" class="form-control" required autocomplete="off" />
+                    <label>Nombre Material</label>
+                    <input id="NombreMaterial" name="NombreMaterial" type="text" class="form-control" required  autocomplete="off"/>
+                    <label>Material de Suela</label>
+                    <input id="MaterialSuela" name="MaterialSuela" type="text" class="form-control" required  autocomplete="off"/>
+                    <label>Altura</label>
+                    <input id="Altura" name="Altura" type="text" class="form-control" required  autocomplete="off"/>
+                    <label>Rango Tallas</label>
+                    <input id="RangoTallas" name="RangoTallas" type="text" class="form-control" required autocomplete="off" />
+                    <label>E/M</label>
+                    <input id="EM" name="EM" type="text" class="form-control" required  autocomplete="off"/>
+                    <label>Costo</label>
+                    <input id="Costo" name="Costo" type="text" class="form-control" required oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" autocomplete="off"/>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Guardar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#detallePago').dataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json",
+                },
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength', 'copy', 'excel', 'pdf', 'print'
+                ]
+            });
+        });
+
+        function ShowModalCrear() {
+            $("#modal-crear").modal('show');
+        }
+
+
+    </script>
+}

@@ -1,0 +1,68 @@
+﻿@{
+	ViewBag.Title = "Agregar Muestras";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="form-signin-heading">Agregar Muestras</h2>
+<p class="page-description-title"><i class="fa fa-calculator" aria-hidden="true"></i> <i>Seleccione una Razón Social.</i></p>
+
+<div class="panel panel-default">
+	<div class="panel-heading">Razones Sociales</div>
+	<div class="panel-body">
+		<div class="col-md-12">
+			<table id="auditorias" class="table table-striped table-condensed table-bordered">
+				<thead>
+					<tr>
+						<th class="text-center">Número Proveedor</th>
+						<th class="text-center">RFC</th>
+						<th class="text-center">Razón Social</th>
+						<th class="text-center">Sociedades</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var proveedor in (ViewBag.proveedores))
+					{
+						<tr>
+							<td class="text-center">@proveedor.NumeroProveedor</td>
+							<td class="text-center">@proveedor.Rfc</td>
+							<td class="text-center vert-align">@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4</td>
+                            <td class="text-center">
+                                
+                                <div class="btn-group-vertical" role="group" aria-label="...">
+                                    @foreach (var sociedad in proveedor.Sociedades)
+                                    {
+                                        if (sociedad.Activa)
+                                        {
+                                            <a class="btn btn-primary btn-sm" href="@Url.Action("Muestras", "Muestrario", new { @proveedorId = @proveedor.Id, @sociedad = @sociedad.Sociedad,@NumeroProveedor=@proveedor.NumeroProveedor })"> @sociedad.Nombre</a>
+                                        }
+
+
+                                    }
+                                </div>
+                            </td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+@section Scripts {
+	<script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#navbar > ul > li.dropdown.active > ul").hide();
+
+            $('#auditorias').DataTable({
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json"
+                },
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+        });
+
+	</script>
+}
+
+

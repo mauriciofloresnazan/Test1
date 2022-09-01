@@ -1,0 +1,207 @@
+﻿@using Ppgz.Repository
+@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+
+@{
+    ViewBag.Title = "Estatus Muestras";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var drEsta = (DataTable)ViewBag.Res;
+
+}
+<head>
+    <style type="text/css">
+        .zoom {
+            /* Aumentamos la anchura y altura durante 2 segundos */
+            transition: width 1.5s, height 1.5s, transform 1.5s;
+        }
+
+            .zoom:hover {
+                /* tranformamos el elemento al pasar el mouse por encima al doble de
+           su tamaño con scale(2). */
+                transform: scale(1.5);
+            }
+    </style>
+</head>
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>En esta sección podras ver el estatus de las muestras entregadas en cedis </i>
+</p>
+@*<div class="panel panel-default">
+
+    <div class="panel-heading">Seleccione la Fecha de muestras a consultar</div>
+    <div class="panel-body">
+
+        <div class="">
+            <label class="col-sm-2 control-label"> Fecha Desde</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="fechaDesde" id="fechaDesde" placeholder="Fecha" />
+            </div>
+            <label class="col-sm-2 control-label"> Fecha Hasta</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="fechaHasta" id="fechaHasta" placeholder="Fecha" />
+            </div>
+            <div class="col-sm-2">
+                <input type="button" class="btn btn-primary" id="btnFiltrar" value="Filtrar" onclick="javascript: Filtrar();">
+
+            </div>
+        </div>
+    </div>
+</div>*@
+<div class="panel panel-default">
+    <div class="panel-heading" style="font-size:17px">Estatus de muestras entregadas en cedis</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table id="muestras" class="table table-striped table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">id</th>
+                            <th class="text-center">Foto</th>
+                            <th class="text-center">Proveedor</th>
+                            <th class="text-center">Contacto</th>
+                            <th class="text-center">Marca</th>
+                            <th class="text-center">Estilo</th>
+                            <th class="text-center">Color</th>
+                            <th class="text-center">Acabado</th>
+                            <th class="text-center">Nombre Material</th>
+                            <th class="text-center">Material Suela</th>
+                            <th class="text-center">Altura</th>
+                            <th class="text-center">Tallas</th>
+                            <th class="text-center">EM</th>
+                            <th class="text-center">Costo</th>
+                            <th class="text-center">Opciones</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (DataRow Estatus in drEsta.Rows)
+                        {
+
+                            byte[] Imagen = (byte[])Estatus.ItemArray[1];
+                            string cf = Convert.ToString(Estatus.ItemArray[16]);
+                            string valor = Convert.ToBase64String(Imagen);
+                            var img = "data:image/" + "jpg;png;base64," + valor;
+                            <tr>
+                                <td class="text-center vert-align">@Estatus["id"]</td>
+                                <td class="text-center vert-align"><img src="@img" class="zoom" width="80" height="80" /></td>
+                                <td class="text-center vert-align">@Estatus["NombreProveedor"]</td>
+                                <td class="text-center vert-align">@Estatus["Contacto"]</td>
+                                <td class="text-center vert-align">@Estatus["MarcaAgrupa"]</td>
+                                <td class="text-center vert-align">@Estatus["Estilo"]</td>
+                                <td class="text-center vert-align">@Estatus["Color"]</td>
+                                <td class="text-center vert-align">@Estatus["Acabado"]</td>
+                                <td class="text-center vert-align">@Estatus["NombreMaterial"]</td>
+                                <td class="text-center vert-align">@Estatus["MaterialSuela"]</td>
+                                <td class="text-center vert-align">@Estatus["Tallas"]</td>
+                                <td class="text-center vert-align">@Estatus["Altura"]</td>
+                                <td class="text-center vert-align">@Estatus["EM"]</td>
+                                <td class="text-center vert-align">@Estatus["Costo"]</td>
+                                <td class="text-center vert-align">
+                                    <div class="btn-group btn-group-justified">
+                                     
+                                       
+                                            <a class="btn btn-danger btn-info btn-xs btn-editar-Muestra"data-idpr="@Estatus["id"]">
+                                                <i class="fa fa-edit" aria-hidden="true"></i> Registrar
+                                            </a>
+                                       
+                                        
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+            </div>
+        </div>
+</div>
+<div class="modal fade" tabindex="-1" id="modal-Editar" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("Actualizar", "MuestrarioInvitado", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="hidden" id="proveedorid" name="proveedorid" />
+                <input type="hidden" id="idproveedor" name="idproveedor" />
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Editar Muestra</h4>
+                </div>
+                <div id="cuerpo" class="modal-body">
+                    <label for="estatus">Seleeciona el canal a entregar:</label><br />
+                    <select name="Canal" id="Canal" required>
+                        <option value=""></option>
+                        <option value="Menudeo">Menudeo</option>
+                        <option value="Mayoreo">Mayoreo</option>
+                        <option value="Kipon">Kipon</option>
+                        <option value="Wosh">Wosh</option>
+                    </select><br />
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Editar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#fecha').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+            $('#fechaDesde').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+
+            $('#fechaHasta').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+            $('#muestras').dataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json",
+                },
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength',
+                ]
+            });
+        });
+        $(".btn-editar-Muestra").click(function () {
+            var proveedorid = $(this).data("provid");
+            var idproveedor = $(this).data("idpr");
+
+            $("#proveedorid").val(proveedorid);
+            $("#idproveedor").val(idproveedor);
+            $("#modal-Editar").modal("show");
+        });
+
+         @*function Filtrar() {
+    var fechaf = $("#fechaDesde").val();
+    var fechat = $("#fechaHasta").val();
+
+            var url = "@Url.Action("EstatusA", "Muestrario")";
+    var fecha = $('#fecha').val();
+    url = url + "?fechaDesde=" + fechaf + "&fechaHasta=" + fechat ;
+            location.href = url;
+        }*@
+    </script>
+}

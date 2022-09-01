@@ -133,8 +133,9 @@ namespace Ppgz.Web
                 "VISTACITASCOMPRADORES|Informacion de citas para Compradores|Index|AdministrarCitasCompradores|fa fa-calendar|Nazan",
                 "VISTACITASCALIDAD|Reporte Devoluciones De tienda|Index|InformacionDevolucionesTienda|fa fa-area-chart|Nazan",
                 "VISTACITASCALIDAD|Reporte De Rechazos De Cedis|Index|ReporteRechazosCedis|fa fa-spinner|Nazan",
+                "MUESTRAS|Muestras Registradas|Inicio|ReporteMuestras|fa fa-cube|Nazan",
                 "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
-                 "PENALIZACIONES|Administración de Penalizaciones Menor a 270|Index|PenalizacionesMenor|fa fa-exclamation-circle|Nazan",
+                "PENALIZACIONES|Administración de Penalizaciones Menor a 270|Index|PenalizacionesMenor|fa fa-exclamation-circle|Nazan",
                 "AUDITORIA|Administración de Cargos Por Auditoria|Index|PenalizacionesAuditor|fa fa-exclamation-triangle|Nazan",
                 "ADMINISTRARFACTURAS|Administración de Facturas|Index|AdministrarFacturas|fa fa-file-text-o|Nazan",
                 "CONFIGSYS|Configuración de Sistema|Index|Configsys|fa fa-cogs|Nazan",
@@ -152,9 +153,17 @@ namespace Ppgz.Web
             {
                 var men = Convert.ToInt32(cuenta.SinASN);
 
+                var cuentaa = Convert.ToString(cuenta.NombreCuenta);
+                if (cuentaa == "Invitado")
+                {
+                    string[] menuLista =
+                       {
+                "MUESTRASINVITADOS|Muestras Cedis |Inicio|MuestrarioInvitado|fa fa-address-card|Mercaderia",
 
-
-                if (men == 1)
+            };
+                    return menuLista;
+                }
+                 else if (men == 1)
                 {
                     string[] menuLista =
                     {
@@ -169,6 +178,7 @@ namespace Ppgz.Web
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas Individual|Index|ImpresionEtiquetasIndividual|fa fa-ticket|Mercaderia",
                 "FACTURAS|Administración de Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
+                "MUESTRAS|Muestras Cedis |Index|Muestrario|fa fa-medium|Mercaderia",
                 "CUENTASPAGAR|Devoluciones de Tienda|Index|DevolucionesTienda|fa fa-motorcycle|Mercaderia",
                 "CUENTASPAGAR|Rechazos De Cedis|Index|RechazosCedis|fa fa-spinner|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
@@ -195,6 +205,7 @@ namespace Ppgz.Web
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas Individual|Index|ImpresionEtiquetasIndividual|fa fa-ticket|Mercaderia",
                 "FACTURAS|Administración de Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
+                "MUESTRAS|Muestras Cedis |Index|Muestrario|fa fa-medium|Mercaderia",
                 "CUENTASPAGAR|Devoluciones de Tienda|Index|DevolucionesTienda|fa fa-motorcycle|Mercaderia",
                 "CUENTASPAGAR|Rechazos De Cedis|Index|RechazosCedis|fa fa-spinner|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
@@ -219,8 +230,6 @@ namespace Ppgz.Web
             {
                 "GESTIONPROVEEDORES|Administración de Proveedores|Index|GestionProveedores|fa fa-address-book-o|Servicio",
                 "ORDENESCOMPRA|Órdenes de Compra|Index|OrdenesCompra|fa fa-list-alt|Servicio",
-
-
                 "FACTURAS|Administración de Facturas|Index|Facturas|fa fa-file-text-o|Servicio",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Servicio",
                 "ADMINISTRARUSUARIOS|Administración de Usuarios|Index|AdministrarUsuarios|fa fa fa-users|Servicio",
@@ -307,6 +316,26 @@ namespace Ppgz.Web
                     menu = new List<string>
                     {
                         "CUENTASPAGAR|Devoluciones de Tienda|Devoluciones|DevolucionesTienda|fa fa-motorcycle|Mercaderia"
+                    };
+                    break;
+                case "Muestrario":
+                    menu = new List<string>
+                    {
+                        "MUESTRAS|Agregar Muestra |Muestras?proveedorId=" + parametros["proveedorId"]  + "|Muestrario|fa fa-medium|Mercaderia",
+                        "MUESTRAS|Muestras Pendientes de autorizar|Estatus?proveedorId=" + parametros["proveedorId"]  + "|Muestrario|fa fa-american-sign-language-interpreting|Mercaderia",
+                        "MUESTRAS|Muestras autorizadas|EstatusA?proveedorId=" + parametros["proveedorId"]  + "|Muestrario|fa fa-handshake-o|Mercaderia",
+                        "MUESTRAS|Imprimir Etiquetas |ImprimirEtiqueta?proveedorId=" + parametros["proveedorId"]  + "|Muestrario|fa fa-ticket|Mercaderia",
+                        "MUESTRAS|Entregar muestra registrada a otro canal|Seleccionar?proveedorId=" + parametros["proveedorId"]  + "|Muestrario|fa fa-check-circle-o|Mercaderia"
+                    };
+                    break;
+                case "MuestrarioInvitado":
+                    menu = new List<string>
+                    {
+                        "MUESTRASINVITADOS|Agregar Muestra |Inicio|MuestrarioInvitado|fa fa-medium|Mercaderia",
+                        "MUESTRASINVITADOS|Muestras Pendientes de autorizar|InicioP|MuestrarioInvitado|fa fa-american-sign-language-interpreting|Mercaderia",
+                        "MUESTRASINVITADOS|Muestras autorizadas|InicioA|MuestrarioInvitado|fa fa-handshake-o|Mercaderia",
+                        "MUESTRASINVITADOS|Imprimir Etiquetas |InicioE|MuestrarioInvitado|fa fa-ticket|Mercaderia",
+                        "MUESTRASINVITADOS|Entregar muestra registrada a otro canal|InicioC|MuestrarioInvitado|fa fa-check-circle-o|Mercaderia"
                     };
                     break;
                 case "ProntoPago":
@@ -425,6 +454,17 @@ namespace Ppgz.Web
                         "ADMINISTRARCITAS|Bloquear Rieles|DisponibilidadRieles|AdministrarCitas|fa fa-ban|Nazan",
                          "ADMINISTRARCITAS|Desbloquear Rieles|DisponibilidadRieles1|AdministrarCitas|fa fa-unlock|Nazan",
 
+                    };
+                    break;
+                case "ReporteMuestras":
+                    menu = new List<string>
+                    {
+                        "MUESTRAS|Ingeso Muestras a Cedis|Inicio|ReporteMuestras|fa fa-barcode|Nazan",
+                        "MUESTRAS|muestras pendientes de autorizar|Muestras|ReporteMuestras|fa fa-american-sign-language-interpreting|Nazan",
+                        "MUESTRAS|Modificar Muestras|ModificarMuestras|ReporteMuestras|fa fa-unlock-alt|Nazan",
+                        "MUESTRAS|muestras autorizadas|MuestrasA|ReporteMuestras|fa fa-handshake-o|Nazan",
+                        "MUESTRAS|Autorizar Muestras|AutorizarMuestras|ReporteMuestras|fa fa-unlock|Nazan",
+                        
                     };
                     break;
                 case "AdministrarCitas1":

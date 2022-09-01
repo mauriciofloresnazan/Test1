@@ -1,0 +1,311 @@
+﻿@using Ppgz.Repository
+@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Agregar Muestras";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var proveedor = (proveedore)ViewBag.Proveedor;
+    var drMues = (DataTable)ViewBag.Res;
+    var penalizacionAuditor = (List<Penalizacionauditor>)ViewBag.Penalizacion;
+
+}
+<head>
+    <style type="text/css">
+        .zoom {
+            /* Aumentamos la anchura y altura durante 2 segundos */
+            transition: width 1.5s, height 1.5s, transform 1.5s;
+        }
+
+            .zoom:hover {
+                /* tranformamos el elemento al pasar el mouse por encima al doble de
+           su tamaño con scale(2). */
+                transform: scale(1.5);
+            }
+
+        
+    </style>
+</head>
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>En esta sección podras cargar las muestras</i>
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "Muestrario")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar proveedor</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">Seleccione la Fecha</div>
+    <div class="panel-body">
+        <div class="">
+            <label class="col-sm-2 control-label"> Fecha Desde</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="fechaDesde1" id="fechaDesde1" placeholder="Fecha" />
+            </div>
+            <label class="col-sm-2 control-label"> Fecha Hasta</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="fechaHasta1" id="fechaHasta1" placeholder="Fecha" />
+            </div>
+            <div class="col-sm-2">
+                <input type="button" class="btn btn-primary" id="btnFiltrar" value="Filtrar" onclick="javascript: Filtrar();">
+
+            </div>
+        </div>
+    </div>
+</div>
+<a style="font-size:17px;" class="btn btn-info btn-xs btn-agregar-Muestra" data-proveedorid="@proveedor.Id"  data-proveedornombre1="@proveedor.Nombre1 @proveedor.Nombre2 @proveedor.Nombre3 @proveedor.Nombre4" data-proveedornumero="@proveedor.NumeroTelefono" data-proveedorcuenta="@proveedor.cuenta.NombreCuenta"><i class="fa fa-edit" aria-hidden="true"></i> Agregar Muestra </a>
+<br />
+<br />
+<div class="panelFacturas panel panel-default">
+    <div class="panel-heading" style="font-size:17px">muestras por entregar en cedis</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table id="muestras" class="table table-striped table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">id</th>
+                            <th class="text-center">Foto</th>
+                            <th class="text-center">Proveedor</th>
+                            <th class="text-center">Contacto</th>
+                            <th class="text-center">Marca Agrupa</th>
+                            <th class="text-center">Estilo</th>
+                            <th class="text-center">Color</th>
+                            <th class="text-center">Acabado</th>
+                            <th class="text-center">Nombre Material</th>
+                            <th class="text-center">Materia lSuela</th>
+                            <th class="text-center">Altura</th>
+                            <th class="text-center">Tallas</th>
+                            <th class="text-center">EM</th>
+                            <th class="text-center">Costo</th>
+                            <th class="text-center">canal</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (DataRow muestras in drMues.Rows)
+                        {
+
+                            byte[] Imagen = (byte[])muestras.ItemArray[1];
+                            string cf =Convert.ToString(muestras.ItemArray[14]);
+                            string valor = Convert.ToBase64String(Imagen);
+                            var img = "data:image/" + "jpg;png;base64," + valor;
+                        <tr>
+                            <td class="text-center vert-align">@muestras["id"]</td>
+                            <td class="text-center vert-align"><img src="@img" class="zoom" width="80" height="80" /></td>
+                            <td class="text-center vert-align">@muestras["NombreProveedor"]</td>
+                            <td class="text-center vert-align">@muestras["Contacto"]</td>
+                            <td class="text-center vert-align">@muestras["MarcaAgrupa"]</td>
+                            <td class="text-center vert-align">@muestras["Estilo"]</td>
+                            <td class="text-center vert-align">@muestras["Color"]</td>
+                            <td class="text-center vert-align">@muestras["Acabado"]</td>
+                            <td class="text-center vert-align">@muestras["NombreMaterial"]</td>
+                            <td class="text-center vert-align">@muestras["MaterialSuela"]</td>
+                            <td class="text-center vert-align">@muestras["Altura"]</td>
+                            <td class="text-center vert-align">@muestras["Tallas"]</td>
+                            <td class="text-center vert-align">@muestras["EM"]</td>
+                            <td class="text-center vert-align">@muestras["Costo"]</td>
+                            <td class="text-center vert-align">@muestras["canalm"]</td>
+                        </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+            </div>
+        </div>
+</div>
+<div class="modal fade" tabindex="-1" id="modal-Agregar" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("Crear", "Muestrario", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="proveedorid" name="proveedorid" />
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar Muestra</h4>
+                </div>
+                <div id="cuerpo" class="modal-body">
+                    <label>Selecciona tu foto</label>
+                    <input type="file" name="foto" id="foto" required>
+                    <label>Proveedor</label>
+                    <input id="proveedornombre1" name="proveedornombre1" type="text" class="form-control" readonly />
+                    <label>Contacto</label>
+                    <input id="proveedornumero" name="proveedornumero" type="text" class="form-control" readonly />
+                    @*<label>Marca</label>
+                    <input id="proveedorcuenta" name="proveedorcuenta" type="text" class="form-control" required />*@
+                    <label>Marca Agrupa</label>
+                    <input id="marcaagrupa" name="marcaagrupa" type="text" class="form-control" required />
+                    <label for="Canal">Canal</label><br />
+                    <select name="Canal" id="Canal" required>
+                        <option value=""></option>
+                        <option value="Menudeo">Menudeo</option>
+                        <option value="Mayoreo">Mayoreo</option>
+                        <option value="Kipon">Kipon</option>
+                        <option value="Wosh">Wosh</option>
+                    </select><br />
+                    <label>Estilo</label>
+                    <input id="Estilo" name="Estilo" type="text" class="form-control" required autocomplete="off" />
+                    <label>Color</label>
+                    <input id="Color" name="Color" type="text" class="form-control" required  autocomplete="on"/>
+                    @*<label>Acabado</label>
+        <input id="Acabado" name="Acabado" type="text" class="form-control" required autocomplete="off" />*@
+                    <label for="Acabado">Acabado</label><br />
+                    <select name="Acabado" id="Acabado" required>
+                        <option value=""></option>
+                        <option value="Coagulado">Coagulado</option>
+                        <option value="Textil">Textil</option>
+                        <option value="Piel">Piel</option>
+                        <option value="FULL PLASTIC">FULL PLASTIC</option>
+                    </select><br />
+                    <label>Nombre Material</label>
+                    <input id="NombreMaterial" name="NombreMaterial" type="text" class="form-control" required autocomplete="on"   />
+                    @*<label>Material de Suela</label>
+        <input id="MaterialSuela" name="MaterialSuela" type="text" class="form-control" required autocomplete="off" />*@
+                    <label for="MaterialSuela">MaterialSuela</label><br />
+                    <select name="MaterialSuela" id="MaterialSuela" required>
+                        <option value=""></option>
+                        <option value="ABS">ABS</option>
+                        <option value="Cuero">CUERO</option>
+                        <option value="EVA">EVA</option>
+                        <option value="EVA/HULE">EVA/HULE</option>
+                        <option value="EVA/TPU">EVA/TPU</option>
+                        <option value="EXTRALIGTH">EXTRALIGTH</option>
+                        <option value="FLOWTEK">FLOWTEK</option>
+                        <option value="HULE">HULE</option>
+                        <option value="NEOLITE">NEOLITE</option>
+                        <option value="P.U.">P.U.</option>
+                        <option value="PHYLON">PHYLON</option>
+                        <option value="P.V.C.">P.V.C.</option>
+                        <option value="RANIL">RANIL</option>
+                        <option value="RUFLEX">RUFLEX</option>
+                        <option value="T.R.">T.R.</option>
+                        <option value="T.P.U.">T.P.U.</option>
+                    </select><br />
+                    <label>Rango Tallas</label>
+                    <input id="RangoTallas" name="RangoTallas" type="text" class="form-control" required autocomplete="on" />
+                    @*<label>Altura</label>
+        <input id="Altura" name="Altura" type="text" class="form-control" required autocomplete="off" />*@
+                    <label for="Altura">Altura</label><br />
+                    <select name="Altura" id="Altura" required>
+                        <option value=""></option>
+                        <option value="PISO">PISO</option>
+                        <option value="4 CM">4 CM</option>
+                        <option value="5 CM">5 CM</option>
+                        <option value="6 CM">6 CM</option>
+                        <option value="7 CM">7 CM</option>
+                        <option value="8 CM">8 CM</option>
+                        <option value="9 CM">9 CM</option>
+                        <option value="10 CM">10 CM</option>
+                        <option value="11 CM">11 CM</option>
+                        <option value="11 CM">12 CM</option>
+                    </select><br />
+                    <label for="EM">Enteros/Medios</label><br />
+                    <select name="EM" id="EM" required>
+                        <option value=""></option>
+                        <option value="Entero">Entero</option>
+                        <option value="Medios">Medios</option>
+                    </select><br />
+                    <label>Costo</label>
+                    <input id="Costo" name="Costo" type="text" autocomplete=" on" class="form-control" required oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" />
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Agregar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#fechas').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+
+            $('#fechaDesde1').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+
+            $('#fechaHasta1').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+            $('#muestras').dataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json",
+                },
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength', 
+                ]
+            });
+        });
+        $(".btn-agregar-Muestra").click(function () {
+            var proveedorid = $(this).data("proveedorid");
+            var proveedornombre1 = $(this).data("proveedornombre1");
+            var proveedornumero = $(this).data("proveedornumero");
+            //var proveedorcuenta = $(this).data("proveedorcuenta");
+            $("#proveedorid").val(proveedorid);
+            $("#proveedornombre1").val(proveedornombre1);
+            $("#proveedornumero").val(proveedornumero);
+            //$("#proveedorcuenta").val(proveedorcuenta);
+            $("#modal-Agregar").modal("show");
+        });
+
+        $(function () {
+            var requiredCheckboxes = $('.options :checkbox[required]');
+            requiredCheckboxes.change(function () {
+                if (requiredCheckboxes.is(':checked')) {
+                    requiredCheckboxes.removeAttr('required');
+                } else {
+                    requiredCheckboxes.attr('required', 'required');
+                }
+            });
+        });
+        function Filtrar() {
+    var fechaf = $("#fechaDesde1").val();
+    var fechat = $("#fechaHasta1").val();
+            var prov=@proveedor.Id;
+            var url = "@Url.Action("Muestras", "Muestrario")";
+            var fecha = $('#fecha').val();
+            url = url + "?fechaDesde=" + fechaf + "&fechaHasta=" + fechat + "&proveedorId=" + prov;
+            location.href = url;
+        }
+
+    </script>
+}

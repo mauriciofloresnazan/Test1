@@ -76,8 +76,23 @@
                                         }
                                     }
                                 }
-                                <li role="separator" class="divider"></li>
-                                <li class=""><a href="@Url.Action("CambiarPassword","Account", new { Area = ""})"><i class="fa fa-key" aria-hidden="true"></i> Cambiar contraseña</a></li>
+                                @if (Request.IsAuthenticated)
+                                {
+                                    List<string> menuF = MenuConfig.GetMenuFuncionalidad(this.User);
+
+                                    if (User.Identity.Name == "Invitado")
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                        <li role="separator" class="divider"></li>
+                                        <li class=""><a href="@Url.Action("CambiarPassword","Account", new { Area = ""})"><i class="fa fa-key" aria-hidden="true"></i> Cambiar contraseña</a></li>
+                                    }
+
+                                }
+
+
                             </ul>
                         </li>
                     }

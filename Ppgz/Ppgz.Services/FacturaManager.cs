@@ -1946,6 +1946,8 @@ namespace Ppgz.Services
             var SubTotal = "";
             var Fecha = "";
             var Total = "";
+            var FormaPago = "";
+            var MetodoPago = "";
 
             if (comprobante.Version33 == "3.3")
             {
@@ -1957,6 +1959,8 @@ namespace Ppgz.Services
                 SubTotal = comprobante.SubTotal33;
                 Total = comprobante.Total33;
                 Fecha = comprobante.Fecha33;
+                FormaPago = comprobante.formapago33;
+                MetodoPago = comprobante.MetodoPago33;
             }
             else
             {
@@ -1968,6 +1972,8 @@ namespace Ppgz.Services
                 SubTotal = comprobante.SubTotal;
                 Total = comprobante.Total;
                 Fecha = comprobante.Fecha;
+                FormaPago = comprobante.formapago;
+                MetodoPago = comprobante.Sello;
             }
 
             var refe = "";
@@ -2111,7 +2117,9 @@ namespace Ppgz.Services
                         EstatusOriginal = facturaSap.Estatus,
                         FechaPortal = fecha,
                         RFCReceptor = RFCReceptor ?? string.Empty,
-                        TipoFactura = "Mercaderia"
+                        TipoFactura = "Mercaderia",
+                        MetodoPago = MetodoPago,
+                        formapago = Convert.ToInt32(FormaPago)
 
                     };
 
@@ -2158,7 +2166,9 @@ namespace Ppgz.Services
                         EstatusOriginal = "p",
                         FechaPortal = fecha,
                         RFCReceptor = RFCReceptor ?? string.Empty,
-                        TipoFactura = "Mercaderia"
+                        TipoFactura = "Mercaderia",
+                        MetodoPago = MetodoPago,
+                        formapago = Convert.ToInt32(FormaPago)
 
                     };
 
@@ -2190,7 +2200,9 @@ namespace Ppgz.Services
                     EstatusOriginal = "P",
                     FechaPortal = fecha,
                     RFCReceptor = RFCReceptor ?? string.Empty,
-                    TipoFactura = "Mercaderia"
+                    TipoFactura = "Mercaderia",
+                    MetodoPago = MetodoPago,
+                    formapago = Convert.ToInt32(FormaPago)
 
                 };
 

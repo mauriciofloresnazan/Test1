@@ -368,19 +368,21 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     return RedirectToAction("BuscarOrden", new { proveedor.Id });
                 }
             }
-            return RedirectToAction("Asn", new { numeroDocumento });
+            TempData["resultado"] = numeroDocumento;
+            return RedirectToAction("Asn");
         }
 
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult Asn(string numeroDocumento)
+        public ActionResult Asn()
         {
-            if (numeroDocumento == null)
+            foreach (var preAsn in CurrentCita.GetPreAsns())
             {
-                return RedirectToAction("Index");
-            }
-            string[] ordenes = numeroDocumento.Split(',');
-            foreach (var ordencompra in ordenes)
-            {
+                var pr = preAsn.NumeroDocumento;
+                if (pr == null)
+
+                    return RedirectToAction("Index");
+
+
                 if (CurrentCita == null)
                 {
                     return RedirectToAction("Index");
@@ -392,18 +394,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     return RedirectToAction("BuscarOrden");
                 }
 
-                if (!CurrentCita.HasPreAsn(ordencompra))
+                if (!CurrentCita.HasPreAsn(pr))
                 {
                     return RedirectToAction("ListaDeOrdenes");
                 }
 
-                ViewBag.OrdenCompra = CurrentCita.GetPreAsn(ordencompra);
+                ViewBag.OrdenCompra = CurrentCita.GetPreAsn(pr);
                 ViewBag.CurrentCita = CurrentCita;
 
             }
-
-
-
             return View();
 
         }
@@ -506,12 +505,15 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
         [HttpPost]
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
-        public ActionResult CargarDesdePlantilla(FormCollection collection)
+        public ActionResult CargarDesdePlantilla()
         {
-            var numeroDocumento = collection["numeroDocumento"];
-            string[] ordenes = numeroDocumento.Split(',');
-            foreach (var ordencompra in ordenes)
+
+            foreach (var preAsn in CurrentCita.GetPreAsns())
             {
+                var pr = preAsn.NumeroDocumento;
+
+
+
                 if (CurrentCita == null)
                 {
                     return RedirectToAction("Index");
@@ -520,89 +522,89 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 {
                     return RedirectToAction("BuscarOrden");
                 }
-                if (!CurrentCita.HasPreAsn(ordencompra))
+                if (!CurrentCita.HasPreAsn(pr))
                 {
                     return RedirectToAction("Index");
                 }
-            }
-            var file = Request.Files[0];
 
-            if (file != null && file.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            {
-                TempData["FlashError"] = "Archivo incorrecto";
-                return RedirectToAction("Asn", new { numeroDocumento });
-            }
+                var file = Request.Files[0];
 
-            if (file == null)
-            {
-                TempData["FlashError"] = "Archivo incorrecto";
-                return RedirectToAction("Asn", new { numeroDocumento });
-            }
-
-            var fileName = Path.GetFileName(file.FileName);
-
-
-
-            if (fileName == null)
-            {
-                TempData["FlashError"] = "Archivo incorrecto";
-                return RedirectToAction("Asn", new { numeroDocumento });
-            }
-
-            /*var ordenCompra = CurrentCita.GetPreAsn(numeroDocumento);
-            var detalles = ordenCompra.Detalles;
-            */
-
-            var wb = new XLWorkbook(file.InputStream);
-
-
-            var ws = wb.Worksheet(1);
-
-            try
-            {
-                for (var i = 2; i < ws.RowsUsed().ToList().Count + 1; i++)
+                if (file != null && file.ContentType != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
                 {
-                    var numeroOrden = ws.Row(i).Cell(1).Value.ToString();
-                    var numeroPosicion = ws.Row(i).Cell(2).Value.ToString();
-                    var numeroMaterial = ws.Row(i).Cell(3).Value.ToString();
-                    var cantidad = int.Parse(ws.Row(i).Cell(5).Value.ToString());
+                    TempData["FlashError"] = "Archivo incorrecto";
+                    return RedirectToAction("Asn", new { pr });
+                }
 
-                    try
+                if (file == null)
+                {
+                    TempData["FlashError"] = "Archivo incorrecto";
+                    return RedirectToAction("Asn", new { pr });
+                }
+
+                var fileName = Path.GetFileName(file.FileName);
+
+
+
+                if (fileName == null)
+                {
+                    TempData["FlashError"] = "Archivo incorrecto";
+                    return RedirectToAction("Asn", new { pr });
+                }
+
+                /*var ordenCompra = CurrentCita.GetPreAsn(numeroDocumento);
+                var detalles = ordenCompra.Detalles;
+                */
+
+                var wb = new XLWorkbook(file.InputStream);
+
+
+                var ws = wb.Worksheet(1);
+
+                try
+                {
+                    for (var i = 2; i < ws.RowsUsed().ToList().Count + 1; i++)
                     {
-                        CurrentCita.UpdateDetail(numeroOrden, numeroPosicion, numeroMaterial, cantidad);
-                    }
-                    catch (Exception exception)
-                    {
-                        throw new BusinessException(string.Format("Material {0}: {1}", numeroMaterial, exception.Message));
-                    }
+                        var numeroOrden = ws.Row(i).Cell(1).Value.ToString();
+                        var numeroPosicion = ws.Row(i).Cell(2).Value.ToString();
+                        var numeroMaterial = ws.Row(i).Cell(3).Value.ToString();
+                        var cantidad = int.Parse(ws.Row(i).Cell(5).Value.ToString());
+
+                        try
+                        {
+                            CurrentCita.UpdateDetail(numeroOrden, numeroPosicion, numeroMaterial, cantidad);
+                        }
+                        catch (Exception exception)
+                        {
+                            throw new BusinessException(string.Format("Material {0}: {1}", numeroMaterial, exception.Message));
+                        }
 
 
-                    /*                    var detalle = detalles.FirstOrDefault(d => d.NumeroPosicion == numeroPosicion && d.NumeroMaterial == numeroMaterial);
+                        /*                    var detalle = detalles.FirstOrDefault(d => d.NumeroPosicion == numeroPosicion && d.NumeroMaterial == numeroMaterial);
 
-                                        if (detalle != null)
-                                        {
-                                            if (cantidad > detalle.CantidadPermitida)
+                                            if (detalle != null)
                                             {
-                                                throw new BusinessException(string.Format("Error en la cantidad del Material {0}", detalle.NumeroMaterial));
-                                            }
-                                            detalle.Cantidad  = cantidad;
-                                        }*/
+                                                if (cantidad > detalle.CantidadPermitida)
+                                                {
+                                                    throw new BusinessException(string.Format("Error en la cantidad del Material {0}", detalle.NumeroMaterial));
+                                                }
+                                                detalle.Cantidad  = cantidad;
+                                            }*/
+                    }
+                }
+                catch (BusinessException businessException)
+                {
+                    TempData["FlashError"] = businessException.Message;
+                    return RedirectToAction("Asn", new { pr });
+                }
+                catch (Exception)
+                {
+                    TempData["FlashError"] = "Archivo incorrecto";
+                    return RedirectToAction("Asn", new { pr });
                 }
             }
-            catch (BusinessException businessException)
-            {
-                TempData["FlashError"] = businessException.Message;
-                return RedirectToAction("Asn", new { numeroDocumento });
-            }
-            catch (Exception)
-            {
-                TempData["FlashError"] = "Archivo incorrecto";
-                return RedirectToAction("Asn", new { numeroDocumento });
-            }
-
             //TODO
             TempData["FlashSuccess"] = "Archivo cargado exitosamente";
-            return RedirectToAction("Asn", new { numeroDocumento });
+            return RedirectToAction("Asn");
 
         }
 

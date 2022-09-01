@@ -1,0 +1,294 @@
+﻿@using Ppgz.Repository
+@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+@{
+    ViewBag.Title = "Impresion Etiquetas Muestras";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var drMues = (DataTable)ViewBag.Res;
+
+
+}
+<head>
+    <style type="text/css">
+        .zoom {
+            /* Aumentamos la anchura y altura durante 2 segundos */
+            transition: width 1.5s, height 1.5s, transform 1.5s;
+        }
+
+            .zoom:hover {
+                /* tranformamos el elemento al pasar el mouse por encima al doble de
+           su tamaño con scale(2). */
+                transform: scale(1.5);
+            }
+
+        
+    </style>
+</head>
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>En esta sección podras Imprimir las etiquetas de muestras cargadas</i>
+</p>
+@*<div class="panel panel-default">
+
+    <div class="panel-heading">Seleccione la Fecha de etiquetas a imprimir</div>
+    <div class="panel-body">
+
+        <div class="">
+            <label class="col-sm-2 control-label"> Fecha Desde</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="fechaDesde" id="fechaDesde" placeholder="Fecha" />
+            </div>
+            <label class="col-sm-2 control-label"> Fecha Hasta</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="fechaHasta" id="fechaHasta" placeholder="Fecha" />
+            </div>
+            <div class="col-sm-2">
+                <input type="button" class="btn btn-primary" id="btnFiltrar" value="Filtrar" onclick="javascript: Filtrar();">
+
+            </div>
+        </div>
+    </div>
+</div>*@
+<br />
+<div class="panelFacturas panel panel-default">
+    <div class="panel-heading" style="font-size:17px">Impresion de etiquetas de muestras pendientes por entregar en cedis</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                @using (Html.BeginForm("Resultado", "MuestrarioInvitado", new { ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", @id = "form", role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true)
+                    <table cellspacing="5" cellpadding="5" border="0">
+                        <tbody>
+                            <tr>
+                                <td><label>Id Inicial <input class="form-control input-sm" id="min" name="min" type="text"></label> </td>
+                                <td> <label>Id Final <input class="form-control input-sm" id="max" name="max" type="text"></label></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table id="muestras" class="table table-striped table-condensed table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="text-center">id</th>
+                                <th class="text-center">Foto</th>
+                                <th class="text-center">Proveedor</th>
+                                <th class="text-center">Contacto</th>
+                                <th class="text-center">Marca</th>
+                                <th class="text-center">Estilo</th>
+                                <th class="text-center">Color</th>
+                                <th class="text-center">Acabado</th>
+                                <th class="text-center">Nombre Material</th>
+                                <th class="text-center">Materia lSuela</th>
+                                <th class="text-center">Altura</th>
+                                <th class="text-center">Tallas</th>
+                                <th class="text-center">EM</th>
+                                <th class="text-center">Costo</th>
+                                <th class="text-center">Canal</th>
+                                <th class="text-center ocultar">id</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (DataRow muestras in drMues.Rows)
+                            {
+
+                                byte[] Imagen = (byte[])muestras.ItemArray[1];
+                                string cf = Convert.ToString(muestras.ItemArray[14]);
+                                string valor = Convert.ToBase64String(Imagen);
+                                var img = "data:image/" + "jpg;png;base64," + valor;
+                                <tr>
+                                    <td class="text-center vert-align">@muestras["id"]</td>
+                                    <td class="text-center vert-align"><img src="@img" class="zoom" width="80" height="80" /></td>
+                                    <td class="text-center vert-align">@muestras["NombreProveedor"]</td>
+                                    <td class="text-center vert-align">@muestras["Contacto"]</td>
+                                    <td class="text-center vert-align">@muestras["MarcaAgrupa"]</td>
+                                    <td class="text-center vert-align">@muestras["Estilo"]</td>
+                                    <td class="text-center vert-align">@muestras["Color"]</td>
+                                    <td class="text-center vert-align">@muestras["Acabado"]</td>
+                                    <td class="text-center vert-align">@muestras["NombreMaterial"]</td>
+                                    <td class="text-center vert-align">@muestras["MaterialSuela"]</td>
+                                    <td class="text-center vert-align">@muestras["Tallas"]</td>
+                                    <td class="text-center vert-align">@muestras["Altura"]</td>
+                                    <td class="text-center vert-align">@muestras["EM"]</td>
+                                    <td class="text-center vert-align">$@muestras["Costo"]</td>
+                                    <td class="text-center vert-align">@muestras["Canalm"]</td>
+                                    <td class="text-center vert-align ocultar">@muestras["id_d"]</td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+                    <div class="form-group">
+                        <div class="col-sm-offset-3 col-sm-7">
+                            <button type="button" onclick="envio()" class="btn btn-primary"><i class="fa fa-play" aria-hidden="true"></i> Generar</button>
+
+
+                            <a class="btn btn-default" href="@Url.Action("inicioE", "MuestrarioInvitado")">
+                                <i class="fa fa-undo" aria-hidden="true"></i> Cancelar
+                            </a>
+                        </div>
+                    </div>
+                }
+            </div>
+            </div>
+        </div>
+</div>
+<div class="modal" id="modal">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Alerta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Debe seleccionar al menos un registro</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+
+    <script type="text/javascript">
+        var form = $("#form");
+        var table;
+        $.fn.dataTable.ext.search.push(
+
+            function (settings, data, dataIndex) {
+                var min = parseInt($('#min').val(), 10);
+                var max = parseInt($('#max').val(), 10);
+                var Etiquetas = parseFloat(data[0]) || 0; // use data for the age column
+
+                if ((isNaN(min) && isNaN(max)) ||
+                    (isNaN(min) && Etiquetas <= max) ||
+                    (min <= Etiquetas && isNaN(max)) ||
+                    (min <= Etiquetas && Etiquetas <= max)) {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        $(document).ready(function () {
+
+            $('#fecha').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+            $('#fechaDesde').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+
+            $('#fechaHasta').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+            table = $('#muestras').DataTable({
+                dom: 'Bfrtip',
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json",
+                },
+                select: {
+                    style: 'multi'
+                },
+                buttons: [
+                    'pageLength',
+                    {
+                        text: 'Seleccionar Todo',
+                        action: function () {
+                            table.rows().select();
+                        }
+                    },
+                    {
+                        text: 'Deseleccionar Todo',
+                        action: function () {
+                            table.rows().deselect();
+                        }
+                    },
+                    {
+                        text: 'etiquetas por rango',
+                        action: function () {
+                            table.rows({ search: 'applied' }).select();
+                        }
+                    }
+                    
+                ],
+
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]]
+            });
+
+
+            table.buttons(0, null).container().prependTo(
+                table.table().container()
+            );
+
+            $('#min, #max').keyup(function () {
+                table.draw();
+            });
+        });
+       
+        function envio() {
+            var Id = '';
+            var Ids = '';
+            var contador = 0;
+            table.rows({ selected: true }).data().each(function (d) {
+                ///console.log('loop: ' + JSON.stringify(d));
+                if (contador == 0) {
+                    Id = d[0];
+                    Ids = d[15];
+                    contador = 1;
+                } else {
+                    Id = Id + ',' + d[0];
+                    Ids = Ids + ',' + d[15];
+                }
+
+            });
+
+            if (Id == '') {
+                ///alert('Debe seleccionar al menos una orden');
+                $('#modal').modal('show');
+            } else {
+                var input3 = $("<input>").attr({ "type": "hidden", "name": "Id" }).val(Id);
+                var input4 = $("<input>").attr({ "type": "hidden", "name": "Ids" }).val(Ids);
+                $('#form').append(input3);
+                $('#form').append(input4);
+                $('#form').submit();
+            }
+
+        }
+
+
+
+        @*function Filtrar() {
+    var fechaf = $("#fechaDesde").val();
+    var fechat = $("#fechaHasta").val();
+
+            var url = "@Url.Action("ImprimirEtiqueta", "Muestrario")";
+    var fecha = $('#fecha').val();
+      var pr = "@proveedor.Nombre1@proveedor.Nombre2@proveedor.Nombre3@proveedor.Nombre4 ";
+    url = url + "?fechaDesde=" + fechaf + "&fechaHasta=" + fechat + "&proveedornombre=" + pr + "&proveedorId=" +@proveedor.Id ;
+            location.href = url;
+        }*@
+
+        $('#muestras').find('.ocultar').hide();
+    </script>
+}

@@ -422,7 +422,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             ViewBag.NumeroDocumento = CurrentCita._ordenes;
             var cuentas = _commonManager.GetCuentaUsuarioAutenticado();
             var proveedor1 = CurrentCita.Proveedor;
-            var prov= Convert.ToInt32(proveedor2.NumeroProveedor);
+            var prov = Convert.ToInt32(proveedor2.NumeroProveedor);
             var carga = db2.RevisarDatos.Where(crg => crg.Id_Proveedor == prov && crg.Edo_Rev == 0).FirstOrDefault();
             var parameters = new List<MySqlParameter>()
                 {
@@ -499,7 +499,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var prov = CurrentCita.Proveedor;
             var pro = Convert.ToInt32(prov.NumeroProveedor);
             var archivos = db5.RevisarDatos.Where(prove => prove.Id_Proveedor == pro && prove.Edo_Rev == 0).GroupBy(x => x.Pedido).Select(x => x.FirstOrDefault());
-
+            db5.Database.CommandTimeout = 0;
             foreach (var ordencompras in archivos)
             {
                 var numeroDocumento = ordencompras.Pedido;
@@ -514,6 +514,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             db.MensajeResultado.RemoveRange(Borrar);
             db.SaveChanges();
             var archivo1 = db.RevisarDatos.Where(provee => provee.Id_Proveedor == p && provee.Edo_Rev == 0).GroupBy(x => x.Pedido).Select(x => x.FirstOrDefault());
+            db.Database.CommandTimeout = 0;
             foreach (var ordencompra in archivo1)
             {
                 var numeroDocumento = ordencompra.Pedido;
@@ -597,6 +598,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     var proveedor1 = CurrentCita.Proveedor;
                     var p = Convert.ToInt32(proveedor1.NumeroProveedor);
                     var archivo1 = db.RevisarDatos.Where(pro => pro.Id_Proveedor == p && pro.Edo_Rev == 0).GroupBy(x => x.Pedido).Select(x => x.FirstOrDefault());
+                    db.Database.CommandTimeout = 0;
                     foreach (var orden in archivo1)
                     {
                         var numero = orden.Pedido;

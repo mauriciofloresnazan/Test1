@@ -714,6 +714,7 @@ namespace Ppgz.CitaWrapper
             var pr = Convert.ToInt32(proveedor.NumeroProveedor);
             var id = string.Format("{0}", DateTime.Now.ToString("yyyyMMddHHmmss"));
             var spc = db.RevisarDatos.Where(oooo => oooo.Id_Proveedor == pr && oooo.Edo_Rev == 0).GroupBy(x => x.Pedido).Select(x => x.FirstOrDefault());
+            db.Database.CommandTimeout = 0;
             foreach (var csp in spc)
             {
                 var parameters = new List<MySqlParameter>()

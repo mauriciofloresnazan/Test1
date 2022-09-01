@@ -1,11 +1,15 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity;
 using System.Dynamic;
 using System.Linq;
 using System.Web.Script.Serialization;
+using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using Ppgz.CitaWrapper;
 using Ppgz.Repository;
 using SapWrapper;
 
@@ -15,6 +19,7 @@ namespace Ppgz.Services
     public class ProveedorManager
     {
         private readonly Entities _db = new Entities();
+        private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 
         public List<proveedore> FindByCuentaId(int cuentaId)
         {
@@ -27,7 +32,17 @@ namespace Ppgz.Services
 
             return proveedores;
         }
+        public List<proveedore> FindByCuenta()
+        {
+            var proveedores = _db.proveedores.Where(p => p.OrganizacionCompra == "OC01").ToList();
 
+            foreach (proveedore proveedor in proveedores)
+            {
+                proveedor.Sociedades = JsonConvert.DeserializeObject<SociedadesProv[]>(proveedor.Sociedad);
+            }
+
+            return proveedores;
+        }
         public proveedore Find(int id)
         {
             return _db.proveedores.Find(id);
@@ -36,6 +51,10 @@ namespace Ppgz.Services
         public proveedore Find(int id, int cuentaId)
         {
             return _db.proveedores.FirstOrDefault(p=> p.Id == id && p.CuentaId == cuentaId);
+        }
+        public proveedore Fi(int id)
+        {
+            return _db.proveedores.FirstOrDefault(p => p.Id == id);
         }
 
         public proveedore FindByNumeroProveedor(string numeroProveedor)
@@ -138,37 +157,50 @@ namespace Ppgz.Services
 
         public void Eliminar(int id)
         {
-            var proveedor = Find(id);
 
-            if (proveedor == null)
+            //var fecha = DateTime.Today;
+            var db = new Entities();
+            var fecha = DateTime.Today.Date;
+            var ci = db.citas.Where(cit => cit.ProveedorId == id && cit.FechaCita >fecha).ToList();
+            foreach(var ct in ci)
             {
-                throw new BusinessException(CommonMensajesResource.ERROR_Proveedor_Id);
+               var citaid= ct.Id;
+                CitaManager.CancelarCita(citaid);
             }
             
-            foreach (var cita in proveedor.citas)
-            {
-                cita.asns.ToList().ForEach(asn => _db.asns.Remove(asn));
+            //var pr = db.proveedores.FirstOrDefault(c=> c.Id==id);
 
 
-                foreach (var horarioRiel in cita.horariorieles.ToList())
-                {
-                    horarioRiel.CitaId = null;
-                    horarioRiel.Disponibilidad = true;
-                    _db.Entry(horarioRiel).State = EntityState.Modified;
-                }
+            //foreach (var cita in pr.citas)
+            //{
+            //    var elc = cita.FechaCita >= fecha;
 
-                cita.crs.ToList().ForEach(cr => _db.crs.Remove(cr));
-   
-            }
-           
-            proveedor.citas.ToList().ForEach(c => _db.citas.Remove(c));
-            proveedor.facturas.ToList().ForEach(f => _db.facturas.Remove(f));
-            proveedor.ordencompras.ToList().ForEach(oc => _db.ordencompras.Remove(oc));
-            proveedor.niveleseervicios.ToList().ForEach(ns => _db.niveleseervicios.Remove(ns));
+            //    cita.asns.ToList().ForEach(asn => _db.asns.Remove(asn));
+
+
+            //    foreach (var horarioRiel in cita.horariorieles.ToList())
+            //    {
+            //        horarioRiel.CitaId = null;
+            //        horarioRiel.Disponibilidad = true;
+            //        _db.Entry(horarioRiel).State = EntityState.Modified;
+            //    }
+
+            //    cita.crs.ToList().ForEach(cr => _db.crs.Remove(cr));
+
+            //}
+            MySqlCommand command = new MySqlCommand(@" SET FOREIGN_KEY_CHECKS=0; UPDATE proveedores SET CuentaId = '0'  WHERE Id = '" + id + "'");
+            MySqlConnection con = new MySqlConnection(ConnectionString);
+            con.Open();
+            command.Connection = con;
+            command.ExecuteNonQuery();
+            //proveedor.citas.ToList().ForEach(c => _db.citas.Remove(c));
+            //proveedor.facturas.ToList().ForEach(f => _db.facturas.Remove(f));
+            //proveedor.ordencompras.ToList().ForEach(oc => _db.ordencompras.Remove(oc));
+            //proveedor.niveleseervicios.ToList().ForEach(ns => _db.niveleseervicios.Remove(ns));
             //proveedor.etiquetas.ToList().ForEach(e => _db.etiquetas.Remove(e));
 
-            _db.Entry(proveedor).State = EntityState.Deleted;
-            _db.SaveChanges();
+            //_db.Entry(proveedor).State = EntityState.Deleted;
+            //_db.SaveChanges();
         }
         
     }

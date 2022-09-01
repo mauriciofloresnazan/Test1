@@ -1,0 +1,52 @@
+﻿@using Ppgz.Repository
+@using System.Data
+@using System.Globalization
+@{
+    var drm = (DataTable)ViewBag.Res;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+<link href="~/assets/vendor/bootstrap-toggle-master/css/bootstrap-toggle.min.css" rel="stylesheet" />
+<div>
+    <h2>
+        Registro de muestras a cedis
+
+    </h2>
+    <p class="page-description-title">
+        <i class="fa fa-info" aria-hidden="true"></i> <i>Muestras Invitado</i>
+    </p>
+</div>
+<br />
+<div class="clearfix"></div>
+@using (Html.BeginForm("Seleccionar", "MuestrarioInvitado", new { }, FormMethod.Post, new { id = "form-crear" }))
+{
+
+    @Html.AntiForgeryToken()
+    <div class="panel panel-default">
+        <div class="panel-heading">Ingresa tu marca</div>
+        <div class="panel-body" style="text-align:center">
+
+
+            <label>Marca Agrupa</label>
+            <input id="marca" name="marca" type="text" class="form-control" autofocus autocomplete="off" />
+            <br />
+            <button type="submit" class="aplicar-enroque-button btn btn-primary">Guardar</button>
+
+
+           
+
+        </div>
+
+            </div>
+        }
+  
+    <!-- Modal -->
+
+
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/assets/vendor/bootstrap-toggle-master/js/bootstrap-toggle.min.js")
+        @Scripts.Render("~/Scripts/bootstrap-formhelpers-phone.en_US.js")
+        @Scripts.Render("~/Scripts/bootstrap-formhelpers-phone.js")
+
+    }

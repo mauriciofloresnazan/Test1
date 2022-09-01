@@ -1,0 +1,370 @@
+﻿@using Ppgz.Repository
+@using System.Data
+@using System.Globalization
+@using Ppgz.Repository
+
+@{
+    ViewBag.Title = "Estatus Muestras";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var proveedor = (proveedore)ViewBag.Proveedor;
+    var drEsta = (DataTable)ViewBag.Res;
+
+}
+<head>
+    <style type="text/css">
+        .zoom {
+            /* Aumentamos la anchura y altura durante 2 segundos */
+            transition: width 1.5s, height 1.5s, transform 1.5s;
+        }
+
+            .zoom:hover {
+                /* tranformamos el elemento al pasar el mouse por encima al doble de
+           su tamaño con scale(2). */
+                transform: scale(1.5);
+            }
+    </style>
+</head>
+<h2>@ViewBag.Title</h2>
+<p class="page-description-title">
+    <i class="fa fa-calculator" aria-hidden="true"></i>
+    <i>En esta sección podras ver el estatus de las muestras entregadas en cedis </i>
+</p>
+<div class="panel panel-default">
+    <div class="panel-heading">Proveedor Seleccionado</div>
+    <div class="panel-body">
+        <div class="row">
+            <label class="col-sm-2 control-label">RFC</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Rfc</div>
+            </div>
+            <label class="col-sm-2 control-label">Nombre</label>
+            <div class="col-sm-3">
+                <div>@proveedor.Nombre1</div>
+            </div>
+            <div class="col-sm-2">
+                <a href="@Url.Action("Index", "Muestrario")" class="btn btn-warning btn-xs"> <i class="fa fa-refresh" aria-hidden="true"></i>  Cambiar</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div class="panel panel-default">
+
+    <div class="panel-heading">Seleccione la Fecha de muestras a consultar</div>
+    <div class="panel-body">
+
+        <div class="">
+            <label class="col-sm-2 control-label"> Fecha Desde</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="fechaDesde" id="fechaDesde" placeholder="Fecha" />
+            </div>
+            <label class="col-sm-2 control-label"> Fecha Hasta</label>
+            <div class="col-sm-3">
+                <input type="text" class="form-control" name="fechaHasta" id="fechaHasta" placeholder="Fecha" />
+            </div>
+            <div class="col-sm-2">
+                <input type="button" class="btn btn-primary" id="btnFiltrar" value="Filtrar" onclick="javascript: Filtrar();">
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading" style="font-size:17px">Estatus de muestras entregadas en cedis</div>
+    <div class="panel-body">
+        <div class="col-md-12">
+            <div class="table-responsive">
+                <table id="muestras" class="table table-striped table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">id</th>
+                            <th class="text-center">Foto</th>
+                            <th class="text-center">Proveedor</th>
+                            <th class="text-center">Contacto</th>
+                            <th class="text-center">Marca</th>
+                            <th class="text-center">Estilo</th>
+                            <th class="text-center">Color</th>
+                            <th class="text-center">Acabado</th>
+                            <th class="text-center">Nombre Material</th>
+                            <th class="text-center">Material Suela</th>
+                            <th class="text-center">Altura</th>
+                            <th class="text-center">Tallas</th>
+                            <th class="text-center">EM</th>
+                            <th class="text-center">Costo</th>
+                            <th class="text-center">canal</th>
+                            <th class="text-center">Opciones</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (DataRow Estatus in drEsta.Rows)
+                        {
+
+                            byte[] Imagen = (byte[])Estatus.ItemArray[1];
+                            string cf = Convert.ToString(Estatus.ItemArray[16]);
+                            string valor = Convert.ToBase64String(Imagen);
+                            var img = "data:image/" + "jpg;png;base64," + valor;
+                            <tr>
+                                <td class="text-center vert-align">@Estatus["id"]</td>
+                                <td class="text-center vert-align"><img src="@img" class="zoom" width="80" height="80" /></td>
+                                <td class="text-center vert-align">@Estatus["NombreProveedor"]</td>
+                                <td class="text-center vert-align">@Estatus["Contacto"]</td>
+                                <td class="text-center vert-align">@Estatus["MarcaAgrupa"]</td>
+                                <td class="text-center vert-align">@Estatus["Estilo"]</td>
+                                <td class="text-center vert-align">@Estatus["Color"]</td>
+                                <td class="text-center vert-align">@Estatus["Acabado"]</td>
+                                <td class="text-center vert-align">@Estatus["NombreMaterial"]</td>
+                                <td class="text-center vert-align">@Estatus["MaterialSuela"]</td>
+                                <td class="text-center vert-align">@Estatus["Tallas"]</td>
+                                <td class="text-center vert-align">@Estatus["Altura"]</td>
+                                <td class="text-center vert-align">@Estatus["EM"]</td>
+                                <td class="text-center vert-align">@Estatus["Costo"]</td>
+                                <td class="text-center vert-align">@Estatus["canalm"]</td>
+                                <td class="text-center vert-align">
+                                    <div class="btn-group btn-group-justified">
+                                 
+                                        @if (cf == "10")
+                                        {
+
+                                        }
+                                        else if (cf == "20")
+                                        {
+                                            <a class="btn btn-info btn-xs btn-editar-Muestra" data-proveedorid="@proveedor.Id" data-idproveedor="@Estatus["id"]" data-nombreproveedor="@Estatus["NombreProveedor"]"
+                                               data-contacto="@Estatus["Contacto"]" data-marca="@Estatus["MarcaAgrupa"]" data-estilo="@Estatus["Estilo"]" data-color="@Estatus["Color"]"
+                                               data-acabado="@Estatus["Acabado"]" data-nombrematerial="@Estatus["NombreMaterial"]" data-materialsuela="@Estatus["MaterialSuela"]" data-tallas="@Estatus["Tallas"]"
+                                               data-altura="@Estatus["Altura"]" data-em="@Estatus["EM"]" data-costo="@Estatus["Costo"]">
+                                                <i class="fa fa-edit" aria-hidden="true"></i> Editar
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
+            </div>
+        </div>
+</div>
+<div class="modal fade" tabindex="-1" id="modal-Editar" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("Modificar", "Muestrario", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="hidden" id="proveedorid" name="proveedorid" />
+                <input type="hidden" id="idproveedor" name="idproveedor" />
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Editar Muestra</h4>
+                </div>
+                <div id="cuerpo" class="modal-body">
+                    <label>Selecciona tu foto</label>
+                    <input type="file" name="foto" id="foto" required>
+                    <label>Proveedor</label>
+                    <input id="nombreproveedor" name="nombreproveedor" type="text" class="form-control" readonly />
+                    <label>Contacto</label>
+                    <input id="contacto" name="contacto" type="text" class="form-control" readonly />
+                    <label>Marca</label>
+                    <input id="marca" name="marca" type="text" class="form-control"  />
+                    <label>Estilo</label>
+                    <input id="estilo" name="estilo" type="text" class="form-control" required autocomplete="off" />
+                    <label>Color</label>
+                    <input id="color" name="color" type="text" class="form-control" required />
+                    <label>Acabado</label>
+                    <input id="acabado" name="acabado" type="text" class="form-control" required />
+                    <label>Nombre Material</label>
+                    <input id="nombrematerial" name="nombrematerial" type="text" class="form-control" required />
+                    <label>Material de Suela</label>
+                    <input id="materialsuela" name="materialsuela" type="text" class="form-control" required />
+                    <label>Rango Tallas</label>
+                    <input id="tallas" name="tallas" type="text" class="form-control" required />
+                    <label>Altura</label>
+                    <input id="altura" name="altura" type="text" class="form-control" required />
+                    <label>E/M</label>
+                    <input id="em" name="em" type="text" class="form-control" required />
+                    <label>Costo</label>
+                    <input id="costo" name="costo" type="text" class="form-control" required oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" />
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Editar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@*<div class="modal fade" tabindex="-1" id="modal-Agregar" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("Modificar", "Muestrario", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <input type="hidden" id="provid" name="provid" />
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Agregar informacion</h4>
+                </div>
+                <div id="cuerpo" class="modal-body">
+                    <label>Selecciona tu foto</label>
+                    <input type="file" name="foto" id="foto" required>
+                    <label>Proveedor</label>
+                    <input id="nombre" name="nombre" type="text" class="form-control" />
+                    <label>Contacto</label>
+                    <input id="co" name="co" type="text" class="form-control" readonly />
+                    <label>Marca</label>
+                    <input id="ma" name="ma" type="text" class="form-control" readonly />
+                    <label>Id Muestra</label>
+                    <input type="text" id="idpr" name="idpr" class="form-control"  readonly />
+                   <label>Estilo</label>
+                    <input id="es" name="es" type="text" class="form-control" required autocomplete="off" />
+                   <label>Color</label>
+                    <input id="col" name="col" type="text" class="form-control" required />
+                    <label>Acabado</label>
+                    <input id="ac" name="ac" type="text" class="form-control" required />
+                    <label>Nombre Material</label>
+                    <input id="material" name="material" type="text" class="form-control" required />
+                    <label>Material de Suela</label>
+                    <input id="suela" name="suela" type="text" class="form-control" required />
+                    <label>Rango Tallas</label>
+                    <input id="ta" name="ta" type="text" class="form-control" required />
+                    <label>Altura</label>
+                    <input id="alt" name="alt" type="text" class="form-control" required />
+                    <label>E/M</label>
+                    <input id="e" name="e" type="text" class="form-control" required />
+                    <label>Costo</label>
+                    <input id="cos" name="cos" type="text" class="form-control" required oninput="this.value = this.value.replace(/[^0-9.]/g, ''); this.value = this.value.replace(/(\..*)\./g, '$1');" />
+                    <label>Campo1</label>
+                    <input id="estatus" name="estatus" type="text" class="form-control" required />
+                    <label>Campo2</label>
+                    <input id="estatus" name="estatus" type="text" class="form-control" required />
+                    <label>Campo3</label>
+                    <input id="estatus" name="estatus" type="text" class="form-control" required />
+                    <label>Campo4</label>
+                    <input id="estatus" name="estatus" type="text" class="form-control" required />
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" data-dismiss="modal">Cancelar</a>
+                    <button type="submit" class="aplicar-enroque-button btn btn-primary">Agregar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>*@
+@section Scripts {
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.32/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.5.1/js/buttons.print.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#fecha').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+            $('#fechaDesde').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+
+            $('#fechaHasta').datetimepicker({
+                locale: 'es',
+                format: 'DD/MM/YYYY',
+                defaultDate: new Date()
+            });
+            $('#muestras').dataTable({
+                "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                "language": {
+                    "url": "https://cdn.datatables.net/plug-ins/1.10.13/i18n/Spanish.json",
+                },
+                dom: 'Bfrtip',
+                buttons: [
+                    'pageLength',
+                ]
+            });
+        });
+        $(".btn-editar-Muestra").click(function () {
+            var proveedorid = $(this).data("proveedorid");
+            var idproveedor = $(this).data("idproveedor");
+            var nombreproveedor = $(this).data("nombreproveedor");
+            var contacto = $(this).data("contacto");
+            var marca = $(this).data("marca");
+            var estilo = $(this).data("estilo");
+            var Color = $(this).data("color");
+            var Acabado = $(this).data("acabado");
+            var NombreMaterial = $(this).data("nombrematerial");
+            var MaterialSuela = $(this).data("materialsuela");
+            var Tallas = $(this).data("tallas");
+            var Altura = $(this).data("altura");
+            var EM = $(this).data("em");
+            var Costo = $(this).data("costo");
+            $("#proveedorid").val(proveedorid);
+            $("#idproveedor").val(idproveedor);
+            $("#nombreproveedor").val(nombreproveedor);
+            $("#contacto").val(contacto);
+            $("#marca").val(marca);
+            $("#estilo").val(estilo);
+            $("#color").val(Color);
+            $("#acabado").val(Acabado);
+            $("#nombrematerial").val(NombreMaterial);
+            $("#materialsuela").val(MaterialSuela);
+            $("#tallas").val(Tallas);
+            $("#altura").val(Altura);
+            $("#em").val(EM);
+            $("#costo").val(Costo);
+            $("#modal-Editar").modal("show");
+        });
+
+
+
+        $(".btn-Agregar-Cambio").click(function () {
+            var provid = $(this).data("provid");
+            var idpr = $(this).data("idpr");
+            //var nombre = $(this).data("nombre");
+            //var co = $(this).data("co");
+            //var ma = $(this).data("ma");
+            //var es = $(this).data("es");
+            //var col = $(this).data("col");
+            //var ac = $(this).data("ac");
+            //var material = $(this).data("material");
+            //var suela = $(this).data("suela");
+            //var ta = $(this).data("ta");
+            //var alt = $(this).data("alt");
+            //var e = $(this).data("e");
+            //var cos = $(this).data("cos");
+            $("#provid").val(provid);
+            $("#idpr").val(idpr);
+            //$("#nombre").val(nombre);
+            //$("#co").val(co);
+            //$("#ma").val(ma);
+            //$("#es").val(es);
+            //$("#col").val(col);
+            //$("#ac").val(ac);
+            //$("#material").val(material);
+            //$("#suela").val(suela);
+            //$("#ta").val(ta);
+            //$("#alt").val(alt);
+            //$("#e").val(e);
+            //$("#cos").val(cos);
+            $("#modal-Agregar").modal("show");
+        });
+
+
+         function Filtrar() {
+    var fechaf = $("#fechaDesde").val();
+    var fechat = $("#fechaHasta").val();
+
+            var url = "@Url.Action("Estatus", "Muestrario")";
+    var fecha = $('#fecha').val();
+      var pr = "@proveedor.Nombre1@proveedor.Nombre2@proveedor.Nombre3@proveedor.Nombre4 ";
+    url = url + "?fechaDesde=" + fechaf + "&fechaHasta=" + fechat + "&proveedornombre=" + pr + "&proveedorId=" +@proveedor.Id ;
+            location.href = url;
+        }
+    </script>
+}
