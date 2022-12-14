@@ -557,7 +557,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     commandos.ExecuteNonQuery();
 
                 }
-                catch (MySqlException e)
+                catch 
                 {
 
                 }
@@ -578,7 +578,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     comman.ExecuteNonQuery();
 
                 }
-                catch (MySqlException e)
+                catch 
                 {
 
                 }
@@ -599,7 +599,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 commando.ExecuteNonQuery();
 
             }
-            catch (MySqlException e)
+            catch 
             {
 
             }
@@ -885,7 +885,8 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             var db = new Entities();
 
             var cita = db.citas.Find(idCita);
-            scaleManager.Registrar(cita);
+            //scaleManager.Registrar(cita);
+            scaleManager.RegistrarMINE(cita);
 
             TempData["FlashSuccess"] = "Reenvio de ASN exitoso";
             return RedirectToAction("Index");

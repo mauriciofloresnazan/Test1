@@ -87,6 +87,7 @@
     <Compile Include="configuracionfactoraje.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>
+    <Compile Include="ConsultasDB.cs" />
     <Compile Include="cr.cs">
       <DependentUpon>Ppgz.tt</DependentUpon>
     </Compile>

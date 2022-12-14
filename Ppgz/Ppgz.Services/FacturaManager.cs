@@ -95,7 +95,152 @@ namespace Ppgz.Services
             }
 
         }
+        public void ProcesarFacturasM()
+        {
 
+            var id = string.Format("{0}", DateTime.Now.AddDays(-4).ToString("yyyy-MM-dd 00:00:00"));
+            var ids = Convert.ToDateTime(id);
+
+
+
+            _db.Database.CommandTimeout = 0;
+            var Facturas = _db.facturas.Where(f => f.MetodoPago == null).ToList();
+            _db.Database.CommandTimeout = 0;
+            foreach (factura itemFactura in Facturas)
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(itemFactura.XmlRuta);//Leer el XML
+
+                //agregamos un Namespace, que usaremos para buscar que el nodo no exista:
+                XmlNamespaceManager nsm = new XmlNamespaceManager(doc.NameTable);
+                nsm.AddNamespace("cfdi", "http://www.sat.gob.mx/cfd/3");
+                XmlNode nodeComprobante = doc.SelectSingleNode("//cfdi:Comprobante", nsm);
+
+                if (nodeComprobante == null)
+                {
+
+                    var serializer = new XmlSerializer(typeof(ComprobanteVersion4));
+                    var xmlFileStream = new FileStream(itemFactura.XmlRuta, FileMode.Open);
+                    var comprobante = (ComprobanteVersion4)serializer.Deserialize(xmlFileStream);
+                    var proveedor = new proveedore();
+                    var RFC = "";
+                    var RFCReceptor = "";
+                    var Serie = "";
+                    var Folio = "";
+                    var SubTotal = "";
+                    var Fecha = "";
+                    var Total = "";
+                    var FormaPago = "";
+                    var MetodoPago = "";
+
+                    if (comprobante.Version33 == "4.0")
+                    {
+                        proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc33);
+                        RFC = comprobante.Emisor.Rfc33;
+                        RFCReceptor = comprobante.Receptor.Rfc33;
+                        Serie = comprobante.Serie33;
+                        Folio = comprobante.Folio33;
+                        SubTotal = comprobante.SubTotal33;
+                        Total = comprobante.Total33;
+                        Fecha = comprobante.Fecha33;
+                        FormaPago = comprobante.formapago33;
+                        MetodoPago = comprobante.MetodoPago33;
+
+                        itemFactura.formapago = FormaPago;
+                        itemFactura.MetodoPago = MetodoPago;
+
+
+
+                        _db.SaveChanges();
+                    }
+                    else
+                    {
+                        proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc);
+                        RFC = comprobante.Emisor.Rfc;
+                        RFCReceptor = comprobante.Receptor.Rfc;
+                        Serie = comprobante.Serie;
+                        Folio = comprobante.Folio;
+                        SubTotal = comprobante.SubTotal;
+                        Total = comprobante.Total;
+                        Fecha = comprobante.Fecha;
+                        FormaPago = comprobante.FormaDePago;
+                        MetodoPago = comprobante.MetodoDePago;
+
+                        itemFactura.formapago = FormaPago;
+                        itemFactura.MetodoPago = MetodoPago;
+
+
+
+                        _db.SaveChanges();
+                    }
+
+
+                }
+                else
+                {
+
+                    var serializer = new XmlSerializer(typeof(Comprobante));
+                    var xmlFileStream = new FileStream(itemFactura.XmlRuta, FileMode.Open);
+                    var comprobante = (Comprobante)serializer.Deserialize(xmlFileStream);
+                    var proveedor = new proveedore();
+                    var RFC = "";
+                    var RFCReceptor = "";
+                    var Serie = "";
+                    var Folio = "";
+                    var SubTotal = "";
+                    var Fecha = "";
+                    var Total = "";
+                    var FormaPago = "";
+                    var MetodoPago = "";
+                    if (comprobante.Version33 == "3.3")
+                    {
+                        proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc33);
+                        RFC = comprobante.Emisor.Rfc33;
+                        RFCReceptor = comprobante.Receptor.Rfc33;
+                        Serie = comprobante.Serie33;
+                        Folio = comprobante.Folio33;
+                        SubTotal = comprobante.SubTotal33;
+                        Total = comprobante.Total33;
+                        Fecha = comprobante.Fecha33;
+                        FormaPago = comprobante.formapago33;
+                        MetodoPago = comprobante.MetodoPago33;
+
+                        itemFactura.formapago = FormaPago;
+                        itemFactura.MetodoPago = MetodoPago;
+
+
+
+                        _db.SaveChanges();
+                    }
+                    else
+                    {
+                        proveedor = _db.proveedores.FirstOrDefault(p => p.Rfc == comprobante.Emisor.Rfc);
+                        RFC = comprobante.Emisor.Rfc;
+                        RFCReceptor = comprobante.Receptor.Rfc;
+                        Serie = comprobante.Serie;
+                        Folio = comprobante.Folio;
+                        SubTotal = comprobante.SubTotal;
+                        Total = comprobante.Total;
+                        Fecha = comprobante.Fecha;
+                        FormaPago = comprobante.FormaDePago;
+                        MetodoPago = comprobante.MetodoDePago;
+
+                        itemFactura.formapago = FormaPago;
+                        itemFactura.MetodoPago = MetodoPago;
+
+
+
+                        _db.SaveChanges();
+                    }
+
+
+                }
+
+
+            }
+
+
+        }
         public void ProcesarFacturasAtoradasServicio()
         {
             List<factura> Facturas = _db.facturas.Where(f => f.Procesado == false && f.TipoFactura == "Servicios").ToList();
@@ -1972,7 +2117,7 @@ namespace Ppgz.Services
                 SubTotal = comprobante.SubTotal;
                 Total = comprobante.Total;
                 Fecha = comprobante.Fecha;
-                FormaPago = comprobante.formapago;
+                FormaPago = comprobante.FormaDePago;
                 MetodoPago = comprobante.Sello;
             }
 
@@ -2119,7 +2264,7 @@ namespace Ppgz.Services
                         RFCReceptor = RFCReceptor ?? string.Empty,
                         TipoFactura = "Mercaderia",
                         MetodoPago = MetodoPago,
-                        formapago = Convert.ToInt32(FormaPago)
+                        formapago = FormaPago
 
                     };
 
@@ -2168,7 +2313,7 @@ namespace Ppgz.Services
                         RFCReceptor = RFCReceptor ?? string.Empty,
                         TipoFactura = "Mercaderia",
                         MetodoPago = MetodoPago,
-                        formapago = Convert.ToInt32(FormaPago)
+                        formapago = FormaPago
 
                     };
 
@@ -2202,7 +2347,7 @@ namespace Ppgz.Services
                     RFCReceptor = RFCReceptor ?? string.Empty,
                     TipoFactura = "Mercaderia",
                     MetodoPago = MetodoPago,
-                    formapago = Convert.ToInt32(FormaPago)
+                    formapago = FormaPago
 
                 };
 
@@ -2360,6 +2505,8 @@ namespace Ppgz.Services
             }
 
             var httpResponse = (HttpWebResponse)httpRequest.GetResponse();
+            escribearchivo(httpResponse.ToString());
+            escribearchivo(httpResponse.StatusDescription);
             using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
             {
                 var rt = streamReader.ReadToEnd();
@@ -2374,7 +2521,7 @@ namespace Ppgz.Services
 
                 if (storys == "INVALID")
                 {
-                    string message = (string)jsonObj["error_details"][0]["message"];
+                    string message = "PAC: " + (string)jsonObj["error_details"][0]["message"];
                     xmlFileStream.Close();
                     xmlFileStream.Dispose();
                     throw new BusinessException(message);
@@ -2384,7 +2531,7 @@ namespace Ppgz.Services
                     string estado = (string)jsonObj["efos"]["estado"];
                     if (storys == "VALID" && estado == "Inexistente")
                     {
-                        string estatus = (string)jsonObj["efos"]["estatus"];
+                        string estatus = "PAC: " + (string)jsonObj["efos"]["estatus"];
                         xmlFileStream.Close();
                         xmlFileStream.Dispose();
                         throw new BusinessException(estatus);
@@ -2975,5 +3122,16 @@ namespace Ppgz.Services
             return monthPath;
         }
 
+        private void escribearchivo(string lines)
+        {
+            string namearchivo = "LOG_MAU_TEMP.txt";
+            string RutaSitio = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); //System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/");
+            string PathGeneric = Path.Combine(RutaSitio + "\\" + namearchivo);
+            StreamWriter ws = new StreamWriter(PathGeneric, true);
+            ws.WriteLine(lines);
+            ws.Flush();
+            ws.Close();
+            //System.IO.File.AppendAllLines(Path.Combine(PathGeneric), lines);
+        }
     }
 }

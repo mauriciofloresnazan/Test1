@@ -91,10 +91,8 @@ namespace Ppgz.CitaWrapper
             {
                 var fechactual = DateTime.Today;
                 var fechafutura = fechactual.AddDays(37);
-
                 while (fechactual < fechafutura)
                 {
-
                     var fechaValida = ValidarReglasGenerales(fechactual);
 
                     if (!Regla2(fechactual))
@@ -306,40 +304,67 @@ namespace Ppgz.CitaWrapper
             var diaSemanaActual = fecha.DayOfWeek;
             var FechaHaciaAdelante = fecha;
             var FechaHaciaAtras = fecha;
-
+            int SemanasHaciaAdelanta = Convert.ToInt32(GetConfiguraciones()
+                    .Single(c => c.Clave == "warehouse.working-next-week.enabled").Valor);
 
             ///Agregamos los dias necesarios para cubrir la semana actual mas 2 semanas segun el dia de la semana
             ///La semana empieza los Lunes
             switch (diaSemanaActual)
             {
-
                 case DayOfWeek.Monday:
-                    FechaHaciaAdelante=FechaHaciaAdelante.AddDays(27);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays((SemanasHaciaAdelanta * 7) - 1);
                     break;
 
                 case DayOfWeek.Tuesday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(26);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays((SemanasHaciaAdelanta * 7) - 2);
                     break;
 
                 case DayOfWeek.Wednesday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(25);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays((SemanasHaciaAdelanta * 7) - 3);
                     break;
 
                 case DayOfWeek.Thursday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(24);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays((SemanasHaciaAdelanta * 7) - 4);
                     break;
 
                 case DayOfWeek.Friday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(23);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays((SemanasHaciaAdelanta * 7) - 5);
                     break;
 
                 case DayOfWeek.Saturday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(22);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays((SemanasHaciaAdelanta * 7) - 6);
                     break;
 
                 case DayOfWeek.Sunday:
-                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(21);
+                    FechaHaciaAdelante = FechaHaciaAdelante.AddDays((SemanasHaciaAdelanta * 7) - 7);
                     break;
+                    //case DayOfWeek.Monday:
+                    //    FechaHaciaAdelante=FechaHaciaAdelante.AddDays(27);
+                    //    break;
+
+                    //case DayOfWeek.Tuesday:
+                    //    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(26);
+                    //    break;
+
+                    //case DayOfWeek.Wednesday:
+                    //    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(25);
+                    //    break;
+
+                    //case DayOfWeek.Thursday:
+                    //    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(24);
+                    //    break;
+
+                    //case DayOfWeek.Friday:
+                    //    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(23);
+                    //    break;
+
+                    //case DayOfWeek.Saturday:
+                    //    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(22);
+                    //    break;
+
+                    //case DayOfWeek.Sunday:
+                    //    FechaHaciaAdelante = FechaHaciaAdelante.AddDays(21);
+                    //    break;
             }
 
 

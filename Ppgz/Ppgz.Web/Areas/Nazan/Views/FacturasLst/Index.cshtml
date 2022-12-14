@@ -1,0 +1,355 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var fechahoy = DateTime.Today;
+}
+<link href="~/Scripts/sweetalert.css" rel="stylesheet" type="text/css">
+<script src="~/Scripts/sweetalert.min.js"></script>
+<script src="~/Scripts/jquery.sweet-alert.init.js"></script>
+
+<div class="row m-b-30">
+    <div class="col-md-12">
+        <div class="card-box">
+            <h4 class="m-t-0 header-title"><b>Consulta Facturas</b></h4>
+            <p class="text-muted m-b-30 font-13">
+                Consulta facturas que tenga archivo xml y pdf cargado en el portal.
+            </p>
+            <div class="row m-b-30">
+                <div class="col-sm-12">
+
+                    <form id="MAForm" class="form-inline" role="form">
+                        <div class="row m-b-10">
+                            <div class="form-group col-sm-6">
+                                <select class="form-control" required id="select_menu" style="width:100%;"
+                                        onmousedown="if(this.options.length>10){this.size=10;}" onchange="this.blur()" onblur="this.size=0;">
+                                    <option value="" selected disabled>Selecciona Proveedor</option>
+                                    <option value="T">Todos</option>
+                                    @if (ViewBag.proveedores != null)
+                                    {
+                                        foreach (var item in ViewBag.proveedores)
+                                        {
+                                            <option value="@item.Id">@item.Nombre1</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-group col-sm-4">
+                                <select class="form-control" required id="select_status">
+                                    <option value="T">Todos</option>
+                                    <option value="S" selected>Satisfactorio</option>
+                                    <option value="P">Proceso</option>
+                                    <option value="E">Error en factura</option>
+                                    <option value="H">Hot validación de costos</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row m-b-10">
+                            <div class="form-group col-sm-3">
+                                <label class="sr-only" for="exampleInputEmail2">Fecha:</label>
+                                <input type="date" value="@fechahoy.ToString("yyyy-MM-dd")" name="dt_seleccionInicio" id="dt_seleccionInicio" class="form-control" placeholder="Fecha" style="width:100%;">
+                            </div>
+
+                            <div class="form-group col-sm-3">
+                                <label class="sr-only" for="exampleInputEmail2">Fecha:</label>
+                                <input type="date" value="@fechahoy.ToString("yyyy-MM-dd")" name="dt_seleccionFin" id="dt_seleccionFin" class="form-control" placeholder="Fecha" style="width:100%;">
+                            </div>
+
+                            <div class="form-group col-sm-4">
+                                <a class="btn btn-primary" href="#" id="btnConsultar">
+                                    <i class="glyphicon glyphicon-search" aria-hidden="true"></i> Consultar
+                                </a>
+                                <a class="btn btn-primary" href="#" id="btnExport">
+                                    <i class="glyphicon glyphicon-floppy-save" aria-hidden="true"></i> Exportar
+                                </a>
+                                <!--<button id="btnExport" value="Export to Excel" /><img src="~/assets/img/excel.gif" class="botonExcel" />-->
+                            </div>
+                            
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<br />
+<div class="row m-b-30 hide" id="divFacturas">
+    <div class="col-md-12">
+        <div class="card-box">
+            <h4 class="m-t-0 header-title"><b>Lista de Facturas</b></h4>
+            <div class="table-responsive" data-pattern="priority-columns">
+                <!--<table id="datatable" class="table table-striped">-->
+                <table id="facturas" class="table table-striped table-condensed table-bordered">
+                    <thead>
+                        <tr>
+                            <th class="text-center">RFC</th>
+                            <th class="text-center">Razón Social</th>
+                            <th class="text-center">Serie</th>
+                            <th class="text-center">Folio</th>
+                            <th class="text-center">Núm.Generado</th>
+                            <th class="text-center">Fecha Factura</th>
+                            <th class="text-center">Fecha Carga Portal</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Estatus</th>
+                            <th class="text-center">Comentario</th>
+                            <th class="text-center">RFC Receptor</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal Ver PDF -->
+<div class="modal fade" id="MyModalPDF" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content ajustedivpdf">
+            <div class="modal-body portapdf" id="portaPDF">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="panel-modaload" class="modal fade myModalInfoBines2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" style="margin-top: 20%" ;>
+        <div class="modal-content p-0 b-0">
+            <div class="panel panel-color panel-primary">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-lg-8 col-lg-offset-2 text-center">
+                            <p class="text-center" style="margin-bottom: 0;">
+                                <img src="../../images/cargando.gif" width="50" />
+                                <br>Estamos Generando la Información Por Favor Espera...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+@section Scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#divFacturas").addClass("hide");
+            $('#btnConsultar').click(function () {
+                $('#btnConsultar').attr("disabled", true);
+                $('#select_menu').attr("disabled", true);
+                $('#select_status').attr("disabled", true);
+                $('#dt_seleccionInicio').attr("disabled", true);
+                $('#dt_seleccionFin').attr("disabled", true);
+                $('#facturas').find('tbody').detach();
+
+                var clientes = $('#select_menu').val();
+                if (clientes == '' || clientes == null) {
+                    //$.Notification.notify('error', 'top right', 'Alerta...', 'Ingrese Proveedor');
+                    swal({
+                        title: "Ingrese Proveedor",
+                        text: "",
+                        type: "info", //l = ["error", "warning", "info", "success", "input", "prompt"],
+                        showConfirmButton: 1, //Pinta el boton de Aceptar
+                        showCancelButton: 0,
+                        allowEscapeKey: 1, //para desabilitar la tecla ESC = 0
+                        allowOutsideClick: 0 //para desabilitar click = 0
+                    });
+                    //alert("Ingrese Proveedor");
+                    $('#btnConsultar').attr("disabled", false);
+                    $('#select_menu').attr("disabled", false);
+                    $('#select_status').attr("disabled", false);
+                    $('#dt_seleccionInicio').attr("disabled", false);
+                    $('#dt_seleccionFin').attr("disabled", false);
+                    return;
+                }
+                if ($('#dt_seleccion').val() == "") {
+                    //$.Notification.autoHideNotify('error', 'top right', 'Alerta...', 'Ingrese Fecha');
+                    alert("Ingrese Fecha");
+                    $('#btnConsultar').attr("disabled", false);
+                    $('#select_menu').attr("disabled", false);
+                    $('#select_status').attr("disabled", false);
+                    $('#dt_seleccionInicio').attr("disabled", false);
+                    $('#dt_seleccionFin').attr("disabled", false);
+                    return;
+                }
+                
+                var formdata = new FormData();
+                var fechaIni = $('#dt_seleccionInicio').val();
+                var fechaFin = $('#dt_seleccionFin').val();
+                var status = $('#select_status').val();
+                if (datediffmonth(fechaIni, fechaFin) > 12) {
+                    swal({
+                        title: "Rango de fechas mayor a 1 año",
+                        text: "",
+                        type: "info",
+                        showConfirmButton: 1,
+                        showCancelButton: 0,
+                        allowEscapeKey: 1,
+                        allowOutsideClick: 0
+                    });
+                    $('#btnConsultar').attr("disabled", false);
+                    $('#select_menu').attr("disabled", false);
+                    $('#select_status').attr("disabled", false);
+                    $('#dt_seleccionInicio').attr("disabled", false);
+                    $('#dt_seleccionFin').attr("disabled", false);
+                    return;
+                }
+                $('.myModalInfoBines2').modal({ backdrop: 'static', keyboard: false });
+                formdata.append("IdProveedor", clientes);
+                formdata.append("fecha", fechaIni);
+                formdata.append("fechaFin", fechaFin);
+                formdata.append("status", status);
+                setTimeout(function () {
+                $.ajax({
+                     url: '@Url.Action("GetFacturasxProveedor", "FacturasLst")',
+                     type: "POST",
+                     data: formdata,
+                     processData: false,
+                     contentType: false,
+                     async: false,
+                     success: function (datas) {
+                         $('.myModalInfoBines2').modal('hide');
+                         $('#btnConsultar').attr("disabled", false);
+                         $('#select_menu').attr("disabled", false);
+                         $('#select_status').attr("disabled", false);
+                         $('#dt_seleccionInicio').attr("disabled", false);
+                         $('#dt_seleccionFin').attr("disabled", false);
+                         if (datas.status == 'error') {
+                             //$.Notification.autoHideNotify('error', 'top right', 'Alerta...', datas.msg);
+                             alert(datas.msg + "-"+ datas.Datos);
+                         } else if (datas.status == 'success') {
+                             var json = JSON.parse(datas.Datos);
+                             $("#divFacturas").removeClass("hide");
+                             table = $('#facturas').dataTable({
+                                 destroy: true,
+                                 responsive: true,
+                                 "searching": true,
+                                 "bPaginate": true,
+                                 pageLength: 5,
+                                 language: {
+                                     "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                                 },
+                                 data: json,
+                                 columns: [
+                                     { 'data': 'rfc' },
+                                     { 'data': 'Nombre' },
+                                     { 'data': 'Serie' },
+                                     { 'data': 'Folio' },
+                                     { 'data': 'NumeroGenerado' },
+                                     { 'data': 'Fecha' },
+                                     { 'data': 'FechaPortal' },
+                                     { 'data': 'Total' },
+                                     { 'data': 'Estatus' },
+                                     { 'data': 'Comentario' },
+                                     { 'data': 'RFCReceptor' },
+                                     //{ 'data': null, title: 'Acciones', wrap: true, "render": function (item) { return item.Estatus == "S" ? '<button type="button" onclick="verificarFile(\'' + item.Uuid + '\', \'' + item.XmlRuta + '\', \'' + item.PdfRuta + '\')" class="btn btn-warning btn-custom waves-effect btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Tooltip on top"><i class="fa fa-search"></i> Verificar</button>' : '<button type="button" onclick="downloadFileTxt(\'' + item.Uuid + '\', \'' + item.XmlRuta + '\', \'' + item.PdfRuta + '\')" class="btn btn-danger btn-custom waves-effect btn-sm" ><i class="fa fa-download"></i> Descargar</button>'} },
+                                     { 'data': null, title: 'Acciones', wrap: true, "render": function (item) { return '<button type="button" onclick="VerFile(\'' + item.Uuid + '\', \'' + item.XmlRuta + '\', \'' + item.PdfRuta.replace(/\\/gi, "\\\\") + '\')" class="btn btn-warning btn-custom waves-effect btn-sm" data-toggle="tooltip" data-placement="top" title="" data-original-title="Tooltip on top"><i class="fa fa-search"></i> PDF</button>' } },
+                                 ],
+                             });
+                         }
+                     },
+                    error: function (datas) {
+                        //$.Notification.autoHideNotify('error', 'top right', 'Alerta...', 'Ocurrio un error al realizar dicha peticion');
+                        alert('Ocurrio un error al realizar dicha peticion');
+                        $('#btnConsultar').attr("disabled", false);
+                        $('#select_menu').attr("disabled", false);
+                        $('#select_status').attr("disabled", false);
+                        $('#dt_seleccionInicio').attr("disabled", false);
+                        $('#dt_seleccionFin').attr("disabled", false);
+                     }
+                });
+                }, 1000);
+            });
+
+            $("#MyModalPDF").on("hidden.bs.modal", function () {
+            });
+
+            $("#btnExport").click(function () {
+                tableToExcel('facturas', $("#dt_seleccionInicio").val());
+            });
+
+
+            var tableToExcel = (function () {
+                var uri = 'data:application/vnd.ms-excel;base64,'
+                    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+                    , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))) }
+                    , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }) }
+                return function (table, name) {
+                    if (!table.nodeType) table = document.getElementById(table)
+                    var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML }
+                    window.location.href = uri + base64(format(template, ctx))
+                }
+            })()
+
+        });
+
+        function VerFile(Uuid, XmlRuta, PdfRuta) {
+            //$('#MyModalPDF').modal('show');
+            var formdata = new FormData();
+            formdata.append("FileName", Uuid);
+            formdata.append("FilePath", PdfRuta);
+            $.ajax({
+                     url: '@Url.Action("CopyFile", "FacturasLst")',
+                     type: "POST",
+                     data: formdata,
+                     processData: false,
+                     contentType: false,
+                     async: false,
+                     success: function (datas) {
+                         $('#MyModalPDF').modal('show');
+                         if (datas.status == 'error') {
+                             //$.Notification.autoHideNotify('error', 'top right', 'Alerta...', datas.msg);
+                             alert(datas.msg + "-"+ datas.Datos);
+                         } else if (datas.status == 'success') {
+                             //var em = '<embed src="~/Uploads/' + datas.Datos +'" id="em_pdf" type="application/pdf" width="100%" height="100%" />';
+                             var em = "<iframe src='../../Uploads/" + datas.Datos +"' width='100%' height='100%' marginheight='1' marginwidth='1' frameborder='0' allowtransparency='true' allowfullscreen ></iframe>";
+                             $("#portaPDF").html(em);
+                             //$("#em_pdf").attr("src", "~/Uploads/" + datas.Datos);
+                         }
+                     },
+                    error: function (datas) {
+                        $.Notification.autoHideNotify('error', 'top right', 'Alerta...', 'Ocurrio un error al realizar dicha peticion');
+                        $('#btnConsultar').attr("disabled", false);
+                        $('#select_menu').attr("disabled", false);
+                        $('#select_status').attr("disabled", false);
+                        $('#dt_seleccion').attr("disabled", false);
+                     }
+                });
+
+        }
+        function datediffmonth(datefrom, dateto) {
+            var dt1 = new Date(datefrom);
+            var dt2 = new Date(dateto);
+            return (dt2.getMonth()+1) - (dt1.getMonth()+1) + (12 * (dt2.getFullYear() - dt1.getFullYear()));
+        }
+    </script>
+
+}
+<style type="text/css">
+    .portapdf {
+        width: 100%;
+        height: 100%;
+        border: 1px solid #484848;
+        margin: 0 auto;
+    }
+
+    .ajustedivpdf {
+        width: 700px;
+        height: 700px;
+        border: 1px solid #484848;
+        margin: 0 auto;
+    }
+</style>
+
+

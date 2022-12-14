@@ -25,7 +25,9 @@ namespace Ppgz.Web.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar nueva contraseña")]
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
         [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "La nueva contraseña y confirmación no coinciden.")]
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         public string ConfirmPassword { get; set; }
     }
 
@@ -61,7 +63,9 @@ namespace Ppgz.Web.Models
 
         [DataType(DataType.Password)]      
         [Display(Name = "Confirmar Contraseña")]
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
         [System.Web.Mvc.Compare("Password", ErrorMessage = "Contraseña y confirmación no coinciden.")]
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         public string ConfirmPassword { get; set; }
     }
 
@@ -91,7 +95,9 @@ namespace Ppgz.Web.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
         [System.Web.Mvc.Compare("Password", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
@@ -113,7 +119,9 @@ namespace Ppgz.Web.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
         [System.Web.Mvc.Compare("Password", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         public string ConfirmPassword { get; set; }
    
     }

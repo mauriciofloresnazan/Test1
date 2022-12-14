@@ -17,6 +17,9 @@ using System.Web.Script.Serialization;
 using SapWrapper;
 using System.Text;
 using System.Collections;
+using OfficeOpenXml;
+using ExcelDataReader;
+using log4net;
 
 namespace Ppgz.Web.Areas.Mercaderia.Controllers
 {
@@ -24,6 +27,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
     [TerminosCondiciones]
     public class ReciboPorAsnController : Controller
     {
+        public readonly ILog ErrorAppLog = LogManager.GetLogger(@"ErrorAppLog");
         readonly ProveedorManager _proveedorManager = new ProveedorManager();
         readonly CommonManager _commonManager = new CommonManager();
         readonly SapReciboAsn DatosSap = new SapReciboAsn();
@@ -81,7 +85,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         public ActionResult Index()
         {
             LimpiarCita();
-
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
             var p = Convert.ToString(cuenta.NombreCuenta);
             var db = new Entities();
@@ -283,7 +286,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 TempData["FlashError"] = exception.Message;
                 return RedirectToAction("Index");
             }
-
             ViewBag.proveedor = CurrentCita.Proveedor;
             ViewBag.CurrentCita = CurrentCita;
             var proveedor1 = CurrentCita.Proveedor;
@@ -314,20 +316,280 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 TempData["FlashError"] = "Archivo incorrecto";
                 return RedirectToAction("CargarArchivo");
             }
-            var wb = new XLWorkbook(file.InputStream);
-            var ws = wb.Worksheet(1);
+            //var wb = new XLWorkbook(file.InputStream);
+            //var ws = wb.Worksheet(1);
 
-            if (ws == null)
-            {
-                TempData["FlashError"] = "Archivo incorrecto";
-                return RedirectToAction("CargarArchivo");
-            }
+            //if (ws == null)
+            //{
+            //    TempData["FlashError"] = "Archivo incorrecto";
+            //    return RedirectToAction("CargarArchivo");
+            //}
 
-            if (ws.RowsUsed().ToList().Count == 0)
+            //if (ws.RowsUsed().ToList().Count == 0)
+            //{
+            //    TempData["FlashError"] = "Archivo Nulo";
+            //    return RedirectToAction("CargarArchivo");
+            //}
+
+            //FileStream stream = File.Open(fileName, FileMode.Open, FileAccess.Read);
+            FileInfo existingFile = new FileInfo(file.FileName);
+            var dbb = new Entities();
+            //using (FileStream stream = existingFile.Open(FileMode.Open, FileAccess.Read))
+            var cuentaaa = _commonManager.GetCuentaUsuarioAutenticado();
+            using (Stream stream = file.InputStream)
+            //using (FileStream stream = file.Open(fileName, FileMode.Open, FileAccess.Read))
             {
-                TempData["FlashError"] = "Archivo Nulo";
-                return RedirectToAction("CargarArchivo");
+                using (IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(stream))
+                {
+                    if(excelReader == null)
+                    {
+                        TempData["FlashError"] = "Archivo incorrecto";
+                        return RedirectToAction("CargarArchivo");
+                    }
+                    DataSet response = excelReader.AsDataSet();
+                    if(response.Tables[0].Rows.Count == 0)
+                    {
+                        TempData["FlashError"] = "Archivo Nulo";
+                        return RedirectToAction("CargarArchivo");
+                    }
+                    DataSet response2 = excelReader.AsDataSet();
+                    List<string[]> articulos =GetDistinctArticulo(response2.Tables[0]);
+                    bool rowsband = false;
+                    
+                    foreach (DataRow dr in response.Tables[0].Rows)
+                    {
+                        if (!rowsband) { rowsband = true; }
+                        else
+                        {
+                            //Do stuff
+                            if (!validadatos(dr[0].ToString(),
+                            dr[1].ToString(),
+                            dr[2].ToString(),
+                            dr[3].ToString(),
+                            dr[4].ToString(),
+                            dr[5].ToString(),
+                            dr[6].ToString()
+                            ))
+                            {
+                                TempData["FlashError"] = "Archivo Con filas nulas o Archivo Con filas con valor en cero";
+                                return RedirectToAction("CargarArchivo");
+                            }
+
+                            var Carga = dr[0].ToString();
+                            var Caja = dr[1].ToString();
+                            var Factura = dr[2].ToString();
+                            var Pedido = dr[3].ToString();
+                            var Tienda = dr[4].ToString();
+                            var Ean = dr[5].ToString();
+                            var pares = int.Parse(dr[6].ToString());
+                            //var result = DatosSap.DatoEan(Ean);
+                            //var db = new Entities();
+                            var proveedor = CurrentCita.Proveedor;
+                            //var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+                            var archivo = new RevisarDatos();
+                            archivo.Carga = Carga;
+                            archivo.Caja = Caja;
+                            archivo.Factura = Factura;
+                            archivo.Pedido = Pedido;
+                            archivo.Tienda = Tienda;
+                            archivo.EAN = Ean;
+                            archivo.Pares = pares;
+                            archivo.Id_Proveedor = Convert.ToInt32(proveedor.NumeroProveedor);
+                            archivo.Cuenta = Convert.ToString(cuentaaa.NombreCuenta);
+
+                            //archivo.Material = result[0];
+                            ////archivo.Material = "000000000016957701";
+                            //archivo.Estilo = result[3];
+                            ////archivo.Estilo = "PT527";
+                            //archivo.Color = result[4];
+                            ////archivo.Color = "NARANJA";
+
+                            //for(int f=0;f< articulos.Count; f++)
+                            ////foreach(string[] reg in articulos)
+                            //{
+                            //    //if (Ean.Equals(reg[2]))
+                            //    if (Ean.Equals(articulos[f][2].ToString()))
+                            //    {
+                            //        archivo.Material = articulos[f][0].ToString();
+                            //        archivo.Estilo = articulos[f][3].ToString();
+                            //        archivo.Color = articulos[f][4].ToString();
+                            //        f = articulos.Count+1;
+                            //        //archivo.Material = reg[0];
+                            //        //archivo.Estilo = reg[3];
+                            //        //archivo.Color = reg[4];
+                            //    }
+                            //}
+                            //IEnumerable<string> result = articulos.Where(a => a.Contains(Ean)).Select(a => a[0]);
+                            try
+                            {
+                                var reg = articulos.FirstOrDefault(item => item.Contains(Ean));
+                                if (reg != null)
+                                {
+                                    archivo.Material = reg[0];
+                                    archivo.Estilo = reg[3];
+                                    archivo.Color = reg[4];
+                                }
+                                else
+                                {
+                                    archivo.Material = "";
+                                    archivo.Estilo = "";
+                                    archivo.Color = "";
+                                }
+                            }
+                            catch (Exception ed)
+                            {
+                                string MsgSelectArticulo=ed.Message;
+                                TempData["FlashError"] = MsgSelectArticulo;
+                                return RedirectToAction("CargarArchivo");
+                            }
+
+                            //Agrega el registro en tabla gnzn_tmp_asn_revision_datos de Mysql
+                            dbb.RevisarDatos.Add(archivo);
+                            //db.SaveChanges();
+                            var orden = CurrentCita._ordenesActivas.FirstOrDefault(o => o.NumeroDocumento == Pedido);
+                            if (orden == null)
+                            {
+
+                            }
+                            else
+                            {
+                                if (CurrentCita._ordenes.Any(o => o.NumeroDocumento == Pedido))
+                                {
+                                }
+                                else
+                                {
+                                    CurrentCita.AddPreAsnRecibo(Pedido);
+
+                                    var preAsn = CurrentCita.GetPreAsn(Pedido);
+                                    foreach (var preAsnDetail in preAsn.Detalles.Where(preAsnDetail => preAsnDetail.Cantidad > 0))
+                                    {
+                                        if (preAsnDetail.CantidadPermitida > 0)
+                                        {
+                                            //var db1 = new Entities();
+                                            var sap = new RevisarPedidos();
+                                            sap.Pedido = preAsn.NumeroDocumento;
+                                            sap.Material = preAsnDetail.NumeroMaterial;
+                                            sap.Cantidad = preAsnDetail.Cantidad;
+                                            sap.Id_Proveedor = Convert.ToInt32(proveedor.NumeroProveedor);
+                                            sap.Numero_linea = preAsnDetail.NumeroPosicion;
+                                            //sap.Cuenta = Convert.ToString(cuenta1.NombreCuenta);
+                                            sap.Cuenta = Convert.ToString(cuentaaa.NombreCuenta);
+                                            //// hace referencia a gnzn_asn_pedidos_disponibles_sap de mysql
+                                            //db1.RevisarPedidos.Add(sap);
+                                            //db1.SaveChanges();
+                                            dbb.RevisarPedidos.Add(sap);
+
+
+                                        }
+                                    }
+                                }
+
+
+                            }
+                        }
+                    }
+                    //REvisar que error si es por la cantidada de registros
+                    try
+                    {
+                        dbb.SaveChanges();
+                    }
+                    catch(Exception e)
+                    {
+                        string MsgError = e.Message;
+                        TempData["FlashError"] = MsgError;
+                        return RedirectToAction("CargarArchivo");
+                    }
+                }
             }
+            
+            /*
+            //Solucion 1
+            string filePath = string.Empty;
+            string path = System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/");
+            string idreg = DateTime.Now.ToString("MMddHHmmss");
+            var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            filePath = path + Path.GetFileName(cuenta.NombreCuenta + "_" + idreg + "_" + file.FileName);
+            file.SaveAs(filePath);
+
+            //FileInfo existingFile = new FileInfo(filePath);
+            using (ExcelPackage package = new ExcelPackage(existingFile)) {
+                ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+                int colCount = worksheet.Dimension.End.Column;
+                //int rowCount = worksheet.Dimension.End.Row;                
+                int rowCount = worksheet.Cells.Where(cell => !string.IsNullOrEmpty(cell.Value?.ToString() ?? string.Empty)).LastOrDefault().End.Row;
+                //int lastRow = worksheet.Cells.Where(cell => !cell.Value.ToString().Equals("")).Last().End.Row;
+                for (int row = 2; row <= rowCount; row++)
+                {
+                    if (!validadatos(worksheet.Cells[row, 1].Value?.ToString().Trim(), 
+                        worksheet.Cells[row, 2].Value?.ToString().Trim(), 
+                        worksheet.Cells[row, 3].Value?.ToString().Trim(), 
+                        worksheet.Cells[row, 4].Value?.ToString().Trim(), 
+                        worksheet.Cells[row, 5].Value?.ToString().Trim(),
+                        worksheet.Cells[row, 6].Value?.ToString().Trim(), 
+                        worksheet.Cells[row, 7].Value?.ToString().Trim() 
+                        ))
+                    {
+                        TempData["FlashError"] = "Archivo Con filas nulas o Archivo Con filas con valor en cero";
+                        return RedirectToAction("CargarArchivo");
+                    }
+
+                    var Carga   = worksheet.Cells[row, 1].Value?.ToString().Trim();
+                    var Caja    = worksheet.Cells[row, 2].Value?.ToString().Trim();
+                    var Factura = worksheet.Cells[row, 3].Value?.ToString().Trim();
+                    var Pedido  = worksheet.Cells[row, 4].Value?.ToString().Trim();
+                    var Tienda  = worksheet.Cells[row, 5].Value?.ToString().Trim();
+                    var Ean     = worksheet.Cells[row, 6].Value?.ToString().Trim();
+                    var pares   = int.Parse(worksheet.Cells[row, 7].Value?.ToString().Trim());
+                    //var result  = DatosSap.DatoEan(Ean);
+                    var db = new Entities();
+                    var proveedor = CurrentCita.Proveedor;
+                    //var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+                    var archivo = new RevisarDatos();
+                    archivo.Carga = Carga;
+                    archivo.Caja = Caja;
+                    archivo.Factura = Factura;
+                    archivo.Pedido = Pedido;
+                    archivo.Tienda = Tienda;
+                    archivo.EAN = Ean;
+                    archivo.Pares = pares;
+                    //archivo.Material = result[0];
+                    archivo.Material = "000000000016957701";
+                    archivo.Id_Proveedor = Convert.ToInt32(proveedor.NumeroProveedor);
+                    //archivo.Estilo = result[3];
+                    archivo.Estilo = "PT527";
+                    //archivo.Color = result[4];
+                    archivo.Color = "NARANJA";
+                    archivo.Cuenta = Convert.ToString(cuenta.NombreCuenta);
+                    db.RevisarDatos.Add(archivo);
+                    db.SaveChanges();
+                    var orden = CurrentCita._ordenesActivas.FirstOrDefault(o => o.NumeroDocumento == Pedido);
+                    if (orden == null)
+                    {
+
+                    }
+                    else
+                    {
+                        if (CurrentCita._ordenes.Any(o => o.NumeroDocumento == Pedido))
+                        {
+                        }
+                        else
+                        {
+                            CurrentCita.AddPreAsnRecibo(Pedido);
+                        }
+
+
+                    }
+
+                }
+            }
+            */
+            //BACK
+            /*
             for (var i = 2; i < ws.RowsUsed().ToList().Count + 1; i++)
             {
 
@@ -362,7 +624,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 var result = DatosSap.DatoEan(Ean);
                 var db = new Entities();
                 var proveedor = CurrentCita.Proveedor;
-                var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+                //var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
                 var archivo = new RevisarDatos();
                 archivo.Carga = Carga;
                 archivo.Caja = Caja;
@@ -375,7 +637,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 archivo.Id_Proveedor = Convert.ToInt32(proveedor.NumeroProveedor);
                 archivo.Estilo = result[3];
                 archivo.Color = result[4];
-                archivo.Cuenta = Convert.ToString(cuenta.NombreCuenta);
+                archivo.Cuenta = Convert.ToString(cuenta.NombreCuenta);                
                 db.RevisarDatos.Add(archivo);
                 db.SaveChanges();
                 var orden = CurrentCita._ordenesActivas.FirstOrDefault(o => o.NumeroDocumento == Pedido);
@@ -396,50 +658,65 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                 }
             }
-            var db2 = new Entities();
-            var proveedor2 = CurrentCita.Proveedor;
-            var cuenta1 = _commonManager.GetCuentaUsuarioAutenticado();
-            foreach (var preAsn in CurrentCita.GetPreAsns())
-            {
-                foreach (var preAsnDetail in preAsn.Detalles.Where(preAsnDetail => preAsnDetail.Cantidad > 0))
-                {
-                    if (preAsnDetail.CantidadPermitida > 0)
-                    {
-                        var db1 = new Entities();
-                        var sap = new RevisarPedidos();
-                        sap.Pedido = preAsn.NumeroDocumento;
-                        sap.Material = preAsnDetail.NumeroMaterial;
-                        sap.Cantidad = preAsnDetail.Cantidad;
-                        sap.Id_Proveedor = Convert.ToInt32(proveedor2.NumeroProveedor);
-                        sap.Numero_linea = preAsnDetail.NumeroPosicion;
-                        sap.Cuenta = Convert.ToString(cuenta1.NombreCuenta);
-                        db1.RevisarPedidos.Add(sap);
-                        db1.SaveChanges();
+            */
+            ////var db2 = new Entities();
+            //var proveedor2 = CurrentCita.Proveedor;
+            ////var cuenta1 = _commonManager.GetCuentaUsuarioAutenticado();
+            //foreach (var preAsn in CurrentCita.GetPreAsns())
+            //{
+            //    foreach (var preAsnDetail in preAsn.Detalles.Where(preAsnDetail => preAsnDetail.Cantidad > 0))
+            //    {
+            //        if (preAsnDetail.CantidadPermitida > 0)
+            //        {
+            //            //var db1 = new Entities();
+            //            var sap = new RevisarPedidos();
+            //            sap.Pedido = preAsn.NumeroDocumento;
+            //            sap.Material = preAsnDetail.NumeroMaterial;
+            //            sap.Cantidad = preAsnDetail.Cantidad;
+            //            sap.Id_Proveedor = Convert.ToInt32(proveedor2.NumeroProveedor);
+            //            sap.Numero_linea = preAsnDetail.NumeroPosicion;
+            //            //sap.Cuenta = Convert.ToString(cuenta1.NombreCuenta);
+            //            sap.Cuenta = Convert.ToString(cuentaaa.NombreCuenta);
+            //            //// hace referencia a gnzn_asn_pedidos_disponibles_sap de mysql
+            //            //db1.RevisarPedidos.Add(sap);
+            //            //db1.SaveChanges();
+            //            dbb.RevisarPedidos.Add(sap);
 
-                    }
-                }
-            }
+
+            //        }
+            //    }
+            //    dbb.SaveChanges();
+            //}
+            
             ViewBag.NumeroDocumento = CurrentCita._ordenes;
-            var cuentas = _commonManager.GetCuentaUsuarioAutenticado();
+            //var cuentas = _commonManager.GetCuentaUsuarioAutenticado();
             var proveedor1 = CurrentCita.Proveedor;
-            var prov = Convert.ToInt32(proveedor2.NumeroProveedor);
-            var carga = db2.RevisarDatos.Where(crg => crg.Id_Proveedor == prov && crg.Edo_Rev == 0).FirstOrDefault();
+            //var prov = Convert.ToInt32(proveedor2.NumeroProveedor);
+            var prov = Convert.ToInt32(proveedor1.NumeroProveedor);
+            //var carga = db2.RevisarDatos.Where(crg => crg.Id_Proveedor == prov && crg.Edo_Rev == 0).FirstOrDefault();
+            var carga = dbb.RevisarDatos.Where(crg => crg.Id_Proveedor == prov && crg.Edo_Rev == 0).FirstOrDefault();
             var parameters = new List<MySqlParameter>()
                 {
                   new MySqlParameter("IDProv",proveedor1.NumeroProveedor ),
-                  new MySqlParameter("Cuenta",cuentas.NombreCuenta),
+                  new MySqlParameter("Cuenta",cuentaaa.NombreCuenta),
                   new MySqlParameter("Car",carga.Carga),
                 };
 
             Db.ExecuteProcedureOut(parameters, "sp_valida_archivoASN");
-            var db3 = new Entities();
+            //var db3 = new Entities();
             var proveedorval = CurrentCita.Proveedor;
             var pov = Convert.ToInt32(proveedor1.NumeroProveedor);
-            var validarped = db3.MensajeResultado.Where(m => m.IdProveedor == pov && m.MsjError == "Pedido No Valido en SAP").GroupBy(x => x.DatoConDetalle).Select(x => x.FirstOrDefault());
+            //MensajeResultado hace referencia a la tabla gnzn_asn_resultado_de_sprev_asn de Mysql
+            //var validarped = db3.MensajeResultado.Where(m => m.IdProveedor == pov && m.MsjError == "Pedido No Valido en SAP").GroupBy(x => x.DatoConDetalle).Select(x => x.FirstOrDefault());
+            var validarped = dbb.MensajeResultado.Where(m => m.IdProveedor == pov && m.MsjError == "Pedido No Valido en SAP").GroupBy(x => x.DatoConDetalle).Select(x => x.FirstOrDefault());
             foreach (var csp in validarped)
             {
+                // *******************************
+                //valida el error de MYSQL con SAP para ver el status de la orden
+                // *******************************
                 var result = DatosSap.MensajeError(csp.DatoConDetalle);
-
+                // variable result se llena con los errores de SAP. 
+                //11 Total de errores que puede regresar
                 if (result[0] == "" && result[1] == "" && result[2] == "" && result[3] == "" && result[4] == "" && result[5] == "" && result[6] == ""
                     && result[7] == "" && result[8] == "" && result[9] == "" && result[10] == "")
                 {
@@ -447,18 +724,22 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 }
                 else
                 {
-                    var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
-                    var db1 = new Entities();
+                    //var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
+                    //var db1 = new Entities();
                     csp.MsjError = Convert.ToString(csp.DatoConDetalle);
                     csp.DatoConDetalle = string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}{11}{12}", result[0], result[1], result[2], result[3], result[4], result[5], result[6], result[7], result[8], result[9], result[10], "/", "Favor de comunicarse con su comprador");
-                    csp.Cuenta = Convert.ToString(cuenta.NombreCuenta);
-                    db1.Entry(csp).State = EntityState.Modified;
-                    db1.SaveChanges();
+                    //csp.Cuenta = Convert.ToString(cuenta1.NombreCuenta);
+                    csp.Cuenta = Convert.ToString(cuentaaa.NombreCuenta);
+                    //db1.Entry(csp).State = EntityState.Modified;
+                    //db1.SaveChanges();
+                    dbb.Entry(csp).State = EntityState.Modified;
+                    dbb.SaveChanges();
                 }
 
 
             }
-            var archivo1 = db2.MensajeResultado.FirstOrDefault(val => val.IdProveedor == pov);
+            //var archivo1 = db2.MensajeResultado.FirstOrDefault(val => val.IdProveedor == pov);
+            var archivo1 = dbb.MensajeResultado.FirstOrDefault(val => val.IdProveedor == pov);
             if (archivo1 == null)
             {
                 TempData["FlashSuccess"] = "Archivo cargado exitosamente";
@@ -466,15 +747,21 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             }
             else
             {
-                var db = new Entities();
+                //var db = new Entities();
                 var proveedorc = CurrentCita.Proveedor;
                 var p = Convert.ToInt32(proveedor1.NumeroProveedor);
-                var Borrar = db.RevisarDatos.Where(m => m.Id_Proveedor == p && m.Edo_Rev == 0).ToList();
-                var Borrarpedidos = db.RevisarPedidos.Where(m => m.Id_Proveedor == p).ToList();
-                db.RevisarDatos.RemoveRange(Borrar);
-                db.SaveChanges();
-                db.RevisarPedidos.RemoveRange(Borrarpedidos);
-                db.SaveChanges();
+                //var Borrar = db.RevisarDatos.Where(m => m.Id_Proveedor == p && m.Edo_Rev == 0).ToList();
+                //var Borrarpedidos = db.RevisarPedidos.Where(m => m.Id_Proveedor == p).ToList();
+                //db.RevisarDatos.RemoveRange(Borrar);
+                //db.SaveChanges();
+                //db.RevisarPedidos.RemoveRange(Borrarpedidos);
+                //db.SaveChanges();
+                var Borrar = dbb.RevisarDatos.Where(m => m.Id_Proveedor == p && m.Edo_Rev == 0).ToList();
+                var Borrarpedidos = dbb.RevisarPedidos.Where(m => m.Id_Proveedor == p).ToList();
+                dbb.RevisarDatos.RemoveRange(Borrar);
+                dbb.SaveChanges();
+                dbb.RevisarPedidos.RemoveRange(Borrarpedidos);
+                dbb.SaveChanges();
 
                 TempData["FlashError"] = "Favor de checar sus errores en el archivo ";
             }
@@ -815,16 +1102,19 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             try
             {
-                CitaManager.RegistrarCitaAsn(preCita);
+                // podemos pasar las ordenes activar del sap en CurrentCita._ordenesActivas
+                CitaManager.RegistrarCitaAsn(preCita,CurrentCita._ordenesActivas);
             }
             catch (ScaleException exception)
             {
-                LimpiarCita();
+                ErrorAppLog.Error(exception.Message, exception);
+               LimpiarCita();
                 TempData["FlashError"] = exception.Message;
                 return RedirectToAction("Citas");
             }
             catch (Exception exception)
             {
+                ErrorAppLog.Error(exception.Message, exception);
                 //TODO
                 TempData["FlashError"] = exception.Message;
                 return RedirectToAction("SeleccionarRieles");
@@ -838,7 +1128,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             db.RevisarPedidos.RemoveRange(borrarPedi);
             db.SaveChanges();
             LimpiarCita();
-            System.Threading.Thread.Sleep(210000);
+            //PARA QUE PUSO EL SLEEP
+            //System.Threading.Thread.Sleep(210000);
             TempData["FlashSuccess"] = "Ha terminado de configurar su cita exitosamente";
             return RedirectToAction("Citas");
         }
@@ -851,6 +1142,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var db = new Entities();
             var fecha = DateTime.Today.Date;
             var citas = db.citas.Where(c => proveedoresIds.Contains(c.ProveedorId) && c.FechaCita >= fecha && c.TipoCita == "Cita Por Asn").ToList();
+            //MySqlDataReader rd = Db.GetDataReader("call sp_GetInsertToScale("+ citas[0].Id.ToString() +");");
+            //DataSet rd = Db.GetDataReader("call sp_GetInsertToScale(" + citas[0].Id.ToString() + ");");
             ViewBag.Citas = citas;
             return View();
         }
@@ -1065,6 +1358,78 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
 
             return View();
+        }
+
+        private bool validadatos(
+            string CARGA    ,string CAJA 
+            ,string FACTURA ,string PEDIDO
+            ,string TIENDA  ,string EAN 
+            ,string PARES)
+        {
+            if (string.IsNullOrEmpty(CARGA)     || 
+                string.IsNullOrEmpty(CAJA)      ||
+                string.IsNullOrEmpty(FACTURA)   ||
+                string.IsNullOrEmpty(PEDIDO)    ||
+                string.IsNullOrEmpty(TIENDA)    ||
+                string.IsNullOrEmpty(EAN)       ||
+                string.IsNullOrEmpty(PARES)
+                )
+                return false;
+
+            if (CARGA.Equals("0")   ||
+                CAJA.Equals("0")    ||
+                FACTURA.Equals("0") ||
+                PEDIDO.Equals("0")  ||
+                TIENDA.Equals("0")  ||
+                EAN.Equals("0")     ||
+                PARES.Equals("0")
+                )
+                return false;
+            
+            return true;
+        }
+
+        private List<string[]> GetDistinctArticulo(DataTable Lst)
+        {
+            List<string[]> regreso = new List<string[]>();
+            //List<string> dtsindupl = new List<string>();
+            //bool band = false;
+            //foreach (DataRow dr in Lst.Rows)
+            //{
+            //    if (!band) band = true;
+            //    else
+            //        if (!dtsindupl.Contains(dr[5].ToString()))
+            //            dtsindupl.Add(dr[5].ToString());
+            //}
+            Lst.Columns.Remove("Column0");
+            Lst.Columns.Remove("Column1");
+            Lst.Columns.Remove("Column2");
+            Lst.Columns.Remove("Column3");
+            Lst.Columns.Remove("Column4");
+            Lst.Columns.Remove("Column6");
+            DataView vista = new DataView(Lst);
+            DataTable dtsindupl = vista.ToTable(true);
+            regreso=SapLoadDatosArticilos(dtsindupl);
+            return regreso;
+
+        }
+
+        //private List<string[]> SapLoadDatosArticilos(List<string> dtsindupl)
+        private List<string[]> SapLoadDatosArticilos(DataTable dtsindupl)
+        {
+            List<string[]> regreso = new List<string[]>();
+            //foreach (string dr in dtsindupl)
+            bool band = false;
+            foreach (DataRow dr in dtsindupl.Rows)
+            {
+                if (!band) band = true;
+                else
+                //string articulo = dr[0].ToString();
+                    regreso.Add(DatosSap.DatoEan(dr[0].ToString()));
+                //regreso.Add(DatosSap.DatoEan(dr));
+            }
+            return regreso;
+            
         }
     }
 }

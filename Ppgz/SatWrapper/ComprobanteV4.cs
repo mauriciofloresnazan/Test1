@@ -280,6 +280,11 @@ namespace SatWrapper
         [XmlAttribute(AttributeName = "SubTotal")]
         public string SubTotal33 { get; set; }
 
+        [XmlAttribute(AttributeName = "FormaPago")]
+        public string formapago33 { get; set; }
+
+        [XmlAttribute(AttributeName = "MetodoPago")]
+        public string MetodoPago33 { get; set; }
     }
 
 

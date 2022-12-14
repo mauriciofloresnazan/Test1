@@ -83,7 +83,6 @@ namespace ScaleWrapper
                         ErrorAppLog.Error(string.Format("  Message: {0}", ex2.Message));
                     }
                 }
-                var exito = "";
             }
 
 
@@ -655,7 +654,7 @@ namespace ScaleWrapper
             }
             catch (Exception exception)
             {
-                ErrorAppLog.Error(string.Format("Elimiacion Asn # {0} CitaId= {3} :. {1}", asnAeliminar.Id, exception.Message, asnAeliminar.cita.Id));
+                ErrorAppLog.Error(string.Format("Elimiacion Asn # {0} CitaId= {2} :. {1}", asnAeliminar.Id, exception.Message, asnAeliminar.cita.Id));
             }
         }
 

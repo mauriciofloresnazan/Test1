@@ -94,7 +94,7 @@ namespace Ppgz.Web.Controllers
                         commando.ExecuteNonQuery();
 
                     }
-                    catch (SqlException e)
+                    catch 
                     {
 
                     }
@@ -123,7 +123,7 @@ namespace Ppgz.Web.Controllers
                         commandos.ExecuteNonQuery();
 
                     }
-                    catch (SqlException e)
+                    catch 
                     {
 
                     }
@@ -169,7 +169,7 @@ namespace Ppgz.Web.Controllers
                         commando.ExecuteNonQuery();
 
                     }
-                    catch (SqlException e)
+                    catch 
                     {
 
                     }
@@ -198,7 +198,7 @@ namespace Ppgz.Web.Controllers
                         commandos.ExecuteNonQuery();
 
                     }
-                    catch (SqlException e)
+                    catch 
                     {
 
                     }
@@ -244,7 +244,7 @@ namespace Ppgz.Web.Controllers
                         commando.ExecuteNonQuery();
 
                     }
-                    catch (SqlException e)
+                    catch 
                     {
 
                     }
@@ -273,7 +273,7 @@ namespace Ppgz.Web.Controllers
                         commandos.ExecuteNonQuery();
 
                     }
-                    catch (SqlException e)
+                    catch 
                     {
 
                     }
@@ -318,7 +318,7 @@ namespace Ppgz.Web.Controllers
                         commando.ExecuteNonQuery();
 
                     }
-                    catch (SqlException e)
+                    catch 
                     {
 
                     }
@@ -347,7 +347,7 @@ namespace Ppgz.Web.Controllers
                         commandos.ExecuteNonQuery();
 
                     }
-                    catch (SqlException e)
+                    catch 
                     {
 
                     }

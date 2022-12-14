@@ -573,7 +573,6 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             List<string> etiquetas = new List<string>();
             string etiquetasPrint = "";
 
-            int i = 1;
             var totalEtiquetas = dt.Rows[0]["tot_etiq"].ToString().Trim();
 
 

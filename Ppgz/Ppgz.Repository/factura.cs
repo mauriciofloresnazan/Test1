@@ -33,7 +33,7 @@ namespace Ppgz.Repository
         public String RFCReceptor { get; set; }
         public String TipoFactura { get; set; }
 
-        public int formapago { get; set; }
+        public String formapago { get; set; }
         public String MetodoPago { get; set; }
         public virtual proveedore proveedore { get; set; }
     }

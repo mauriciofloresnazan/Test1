@@ -3,6 +3,7 @@ using System.Data;
 using System.Linq;
 using SAP.Middleware.Connector;
 using Ppgz.Repository;
+using System;
 
 namespace SapWrapper
 {
@@ -265,27 +266,81 @@ namespace SapWrapper
             return result.Any() ? result[0] : null;
         }
 
-
-        public DataTable SetOrdenesDeCompraCita(ICollection<asn> asns)
+        //Actualiza campo en SAP para que el area de compras no pueda cancelar
+        //la orden de compra y quede marcada con la cita
+        public DataTable SetOrdenesDeCompraCitaQA(ICollection<asn> asns)
         {
             var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
             var rfcRepository = rfcDestinationManager.Repository;
+            //ZFM_EKPO_CITAS
+            //Actualiza campo en SAP para que el area de compras no pueda cancelar
+            //la orden de compra y quede marcada con la cita
+            //recibe de parametro IM_CITAS que es un Tabla (IRfcTable)
             var function = rfcRepository.CreateFunction("ZFM_EKPO_CITAS");
 
 
             IRfcTable IM_CITAS = function.GetTable("IM_CITAS");
 
             //Add select option values to MATNRSELECTION table
+            //Iteracion para llenar IM_CITAS y mandar de parametro a ZFM_EKPO_CITAS
+            foreach (asn asn in asns)
+            {
+                //Obtiene la estructura (IRfcStructure) de ZTY_EKPO_CITAS
+                RfcStructureMetadata am = rfcRepository.GetStructureMetadata("ZTY_EKPO_CITAS");
+                IRfcStructure articol = am.CreateStructure();
+
+                //Populate current MATNRSELECTION row with data from list
+                //Asigna valores a la estructura
+                articol.SetValue("EBELN", asn.OrdenNumeroDocumento);
+                articol.SetValue("EBELP", asn.NumeroPosicion);
+                articol.SetValue("ZZCITAS", "X");
+                //Agrega la estructura a la tabla IM_CITAS
+                IM_CITAS.Append(articol);
+
+            }
+
+            function.SetValue("IM_CITAS", IM_CITAS);
+
+
+            try
+            {
+                function.Invoke(rfcDestinationManager);
+                var result = function.GetTable("ET_RETORNO");
+                var nose = result.ToDataTable("ET_RETORNO");
+                return result.ToDataTable("ET_RETORNO");
+            }
+            catch
+            {
+                return new DataTable();
+            }
+        }
+        public DataTable SetOrdenesDeCompraCita(ICollection<asn> asns)
+        {
+            var rfcDestinationManager = RfcDestinationManager.GetDestination(_rfc);
+            var rfcRepository = rfcDestinationManager.Repository;
+            //ZFM_EKPO_CITAS
+            //Actualiza campo en SAP para que el area de compras no pueda cancelar
+            //la orden de compra y quede marcada con la cita
+            //recibe de parametro IM_CITAS que es un Tabla (IRfcTable)
+            var function = rfcRepository.CreateFunction("ZFM_EKPO_CITAS");
+
+
+            IRfcTable IM_CITAS = function.GetTable("IM_CITAS");
+
+            //Add select option values to MATNRSELECTION table
+            //Iteracion para llenar IM_CITAS y mandar de parametro a ZFM_EKPO_CITAS
             foreach ( asn asn in asns)
             {
-
+                //Obtiene la estructura (IRfcStructure) de ZTY_EKPO_CITAS
                 RfcStructureMetadata am = rfcRepository.GetStructureMetadata("ZTY_EKPO_CITAS");
                 IRfcStructure articol = am.CreateStructure();
 
                //Populate current MATNRSELECTION row with data from list
+               //Asigna valores a la estructura
                 articol.SetValue("EBELN", asn.OrdenNumeroDocumento);
                 articol.SetValue("EBELP", asn.NumeroPosicion);
                 articol.SetValue("ZZCITAS", "X");
+                //Agrega la estructura a la tabla IM_CITAS
                 IM_CITAS.Append(articol);
 
             }

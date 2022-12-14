@@ -323,8 +323,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     System.IO.File.Delete(tempXmlPath);
             }
 
-
-            return View();
+            
         }
 
 
@@ -632,7 +631,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             for (int i = 0; i < dsPagosPendientes.Tables["T_PARTIDAS_ABIERTAS"].Rows.Count; i++)
             {
 
-                bool pagar = true;
+             
 
 
 

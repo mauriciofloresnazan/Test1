@@ -40,5 +40,8 @@
         public string DescripcionMaterial;
 
         public string NumeroMaterial2;
+
+        /*AGREGADO MF 20221130*/
+        public int CantidadPorEntregar;
     }
 }

@@ -49,7 +49,7 @@ namespace Ppgz.Services
                 }
                 result = true;
             }
-            catch(Exception ex)
+            catch
             {
                 return false;
             }

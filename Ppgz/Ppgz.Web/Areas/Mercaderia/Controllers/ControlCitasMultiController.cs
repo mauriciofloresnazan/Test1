@@ -786,6 +786,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
         public ActionResult Citas()
         {
+
+
             //Test para probar las reglas de las fechas
             //DateTime myDT = new DateTime(2018, 1, 5);
             //DateTime orden = new DateTime(2018, 1, 22);
@@ -801,6 +803,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             var db = new Entities();
 
             var fecha = DateTime.Today.Date;
+
+
             var citas = db.citas.Where(c => proveedoresIds.Contains(c.ProveedorId) && c.FechaCita >= fecha && c.TipoCita == null).ToList();
 
             ViewBag.Citas = citas;
@@ -1017,5 +1021,50 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
         }
 
+        public ActionResult GetCitas()
+        {
+            List<cita> Listcita = new List<cita>();
+            DataSet ds = Db.GetDataSet(@"SELECT c.Id,FechaCita,h.HoraDesde,c.RielesOcupados
+, c.CantidadTotal, p.Rfc, p.Nombre1, c.Id
+FROM citas c
+JOIN horariorieles hr ON hr.CitaId = c.Id
+JOIN horarios h ON h.Id = hr.HorarioId
+JOIN proveedores p ON p.Id = c.ProveedorId
+WHERE c.ProveedorId = 77 AND FechaCita >= '2022-11-29' AND c.TipoCita IS NULL");
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    cita objcolectiva = new cita
+                    {
+
+                        Id = dr["Id"].ToString(),
+                        FechaCita = dr["FechaCita"].ToString(),
+                        HoraDesde = dr["HoraDesde"].ToString(),
+                        RielesOcupados = dr["RielesOcupados"].ToString(),
+                        CantidadTotal = dr["CantidadTotal"].ToString(),
+                        Rfc = dr["Rfc"].ToString(),
+                        Nombre1 = dr["Nombre1"].ToString(),
+                        IDCita = dr["Id"].ToString()
+                    };
+                    Listcita.Add(objcolectiva);
+                }
+            }
+            //return Json(new { Datos = Listcita });
+            return Json(new { Tipo = "success", Message = "Registro Actualizado", Datos = Listcita }, JsonRequestBehavior.AllowGet);
+
+        }
+    }
+ 
+    public class cita
+    {
+        public string Id { get; set; }
+        public string FechaCita { get; set; }
+        public string HoraDesde { get; set; }
+        public string RielesOcupados { get; set; }
+        public string CantidadTotal { get; set; }
+        public string Rfc { get; set; }
+        public string Nombre1 { get; set; }
+        public string IDCita { get; set; }
     }
 }

@@ -114,7 +114,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 {
                     commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Cita penalizada", "La Cita con ID "+ cita.Id +" ha sido Penalizada con el motivo "+ estatus.Nombre+" por el monto de "+estatus.Monto+" pesos, generando el documento contable N° "+ result[0] + " ", cita.proveedore.Correo);
                 }
-                catch (Exception ex)
+                catch
                 {
                     TempData["FlashError"] = "Error enviando correo con la notificacion de la penalizacion";
                 }

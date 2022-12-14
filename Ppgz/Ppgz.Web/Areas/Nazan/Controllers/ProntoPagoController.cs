@@ -407,7 +407,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                                             commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Procesada", "La solicitud con id " + propuesta.Id + " ha sido procesada.", proveedorFactoraje.Correo);
                                             enviado = true;
                                         }
-                                        catch (Exception ex)
+                                        catch 
                                         {
                                             enviado = false;
                                             TempData["FlashError"] = "Error enviando correo factoraje";
@@ -422,7 +422,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                                     {
                                         commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Procesada", "La solicitud con id " + propuesta.Id + " ha sido procesada.", proveedor.Correo);
                                     }
-                                    catch (Exception ex)
+                                    catch
                                     {
                                         TempData["FlashError"] = "Error enviando correo";
                                     }
@@ -693,7 +693,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                         commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Aprobada", "La solicitud con id " + solicitudId + " ha sido aprobada y esta lista para cargar la nota de credito.", proveedorFactoraje.Correo);
                         enviado = true;
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         enviado = false;
                         TempData["FlashError"] = "Error enviando correo factoraje";
@@ -708,7 +708,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                 {
                     commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Aprobada", "La solicitud con id " + solicitudId + " ha sido aprobada y esta lista para cargar la nota de credito.", proveedor.Correo);
                 }
-                catch (Exception ex)
+                catch 
                 {
                     TempData["FlashError"] = "Error enviando correo";
                 }
@@ -748,7 +748,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                             commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Rechazada", "La solicitud con id " + solicitudId + " ha sido rechazada.", proveedorFactoraje.Correo);
                             enviado = true;
                         }
-                        catch (Exception ex)
+                        catch
                         {
                             enviado = false;
                             TempData["FlashError"] = "Error enviando correo factoraje";
@@ -764,7 +764,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     {
                         commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Solicitud Rechazada", "La solicitud con id " + solicitudId + " ha sido rechazada.", proveedor.Correo);
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         TempData["FlashError"] = "Error enviando correo";
                     }

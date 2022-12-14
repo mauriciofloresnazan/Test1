@@ -123,11 +123,75 @@ namespace Ppgz.Repository
 
                 }
 
-
             }
             return retornables;
         }
 
+        /*AGREGADO METODO MF 20221130*/
+        public static Dictionary<string, string> ExecuteProcedureOutput(IList<MySqlParameter> parameters, string storeProcedure)
+        {
+            MySqlParameter identity = new MySqlParameter();
+            //List<string,string> retornables = new List<string,string>();
+            Dictionary<string, string> retornables = new Dictionary<string, string>();
+
+            using (DbConnection connection = Factory.CreateConnection())
+            {
+                connection.ConnectionString = ConnectionString;
+
+                using (DbCommand command = Factory.CreateCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandText = storeProcedure;
+                    command.CommandType = CommandType.StoredProcedure;
+
+                    if (parameters != null)
+                    {
+
+                        foreach (MySqlParameter parameter in parameters)
+                        {
+                            if (parameter.Direction == ParameterDirection.InputOutput)
+                            {
+                                identity = parameter;
+                                command.Parameters.Add(identity);
+                            }
+                            else
+                            {
+                                command.Parameters.Add(parameter);
+                            }
+
+
+                        }
+                    }
+
+                    connection.Open();
+                    command.CommandTimeout = 0;
+                    command.ExecuteNonQuery();
+                    connection.Close();
+
+
+
+                }
+            }
+
+            foreach (MySqlParameter parameter in parameters)
+            {
+                if (parameter.Direction == ParameterDirection.InputOutput)
+                {
+                    retornables.Add(parameter.ParameterName, parameter.Value.ToString());
+
+                }
+                if (parameter.Direction == ParameterDirection.Output)
+                {
+                    retornables.Add(parameter.ParameterName, parameter.Value.ToString());
+                }
+                if (parameter.Direction == ParameterDirection.ReturnValue)
+                {
+                    retornables.Add(parameter.ParameterName, parameter.Value.ToString());
+                }
+
+            }
+            return retornables;
+        }
 
         public static int Update(string sql)
         {
@@ -171,27 +235,62 @@ namespace Ppgz.Repository
 
         public static DataSet GetDataSet(string sql)
         {
+            DataSet ds = new DataSet();
             using (DbConnection connection = Factory.CreateConnection())
             {
                 connection.ConnectionString = ConnectionString;
-
-                using (DbCommand command = Factory.CreateCommand())
+                try
                 {
-                    command.Connection = connection;
-                    command.CommandType = CommandType.Text;
-                    command.CommandText = sql;
+                    if (connection.State != ConnectionState.Open) connection.Open();
 
-                    using (DbDataAdapter adapter = Factory.CreateDataAdapter())
+                    using (DbCommand command = Factory.CreateCommand())
                     {
-                        adapter.SelectCommand = command;
+                        command.Connection = connection;
+                        command.CommandType = CommandType.Text;
+                        command.CommandText = sql;
 
-                        DataSet ds = new DataSet();
-                        adapter.Fill(ds);
-
-                        return ds;
+                        using (DbDataAdapter adapter = Factory.CreateDataAdapter())
+                        {
+                            adapter.SelectCommand = command;
+                            adapter.Fill(ds);
+                        }
                     }
                 }
+                catch(Exception ex)
+                {
+                    string MSG = ex.Message;
+                }
+                finally
+                {
+                    connection.Close();
+                }
             }
+            return ds;
+        }
+
+        public static DataSet GetDataReader(string sql)
+        {
+            MySqlConnection cn = new MySqlConnection(ConnectionString);
+            //MySqlDataReader rd=null;
+            DataSet ds = new DataSet();
+            try
+            {
+                cn.Open();
+                MySqlCommand cmd = new MySqlCommand(sql, cn);
+                cmd.CommandTimeout = 0;
+                //rd = cmd.ExecuteReader();
+                MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
+                adapter.Fill(ds);
+            }
+            catch(Exception ex)
+            {
+                string MSGG = ex.Message;                
+            }
+            finally
+            {
+                cn.Close();
+            }
+            return ds;
         }
 
         public static DataSet GetDataSet(IList<MySqlParameter> parameters, string storeProcedure)
@@ -229,6 +328,34 @@ namespace Ppgz.Repository
                     }
                 }
             }
+        }
+
+        public static DataTable GetInsertScale(int cita)
+        {
+            MySqlConnection cn = new MySqlConnection(ConnectionString);
+            DataTable dt = new DataTable();
+            try
+            {
+                cn.Open();
+                MySqlCommand cmd = new MySqlCommand("sp_GetInsertToScale", cn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@cita",cita);
+                using (MySqlDataAdapter sda = new MySqlDataAdapter(cmd))
+                {
+                    
+                    sda.Fill(dt);
+                }
+            }
+            
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+            }
+            finally
+            {
+                cn.Close();
+            }
+            return dt;
         }
 
         public static DataSet GetDataSet(string sql, List<MySqlParameter> parameters = null)

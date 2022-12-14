@@ -109,7 +109,7 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
                     {
                         commonManager.SendNotificacionP("Portal de Proveedores del Grupo Nazan - Cargo Por Auditoria en Fabrica", "La Auditoria con ID " + pena.id + " ha sido cargada por el motivo de auditoria en fabrica por el monto de " + pena.Total + " pesos, generando el documento contable N° " + result[0] + " ", pena.Correo);
                     }
-                    catch (Exception ex)
+                    catch
                     {
                         TempData["FlashError"] = "Error enviando correo con la notificacion de la penalizacion";
                     }

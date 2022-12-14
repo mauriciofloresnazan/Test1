@@ -96,7 +96,7 @@ namespace SapWrapper
 					FacturaNumero = function.GetValue("EX_OBJ_KEY").ToString().Substring(0, 10)
 				};
 			}
-			catch(Exception ioe)
+			catch
 			{
 				resultado = new Resultado
 				{

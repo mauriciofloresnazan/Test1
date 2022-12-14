@@ -18,7 +18,12 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             return View();
         }
+        public ActionResult ProcesarFacturasM()
+        {
+            _facturaManager.ProcesarFacturasM();
 
+            return View();
+        }
         public ActionResult ProcesarFacturasServicios()
         {
             _facturaManager.ProcesarFacturasAtoradasServicio();

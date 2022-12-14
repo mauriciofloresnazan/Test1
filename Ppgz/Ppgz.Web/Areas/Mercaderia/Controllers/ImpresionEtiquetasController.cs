@@ -141,7 +141,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             List<string> etiquet = new List<string>();
             string etiquetasPrint = "";
 
-            int i = 1;
+     
 
             var totalEtiquetas = dt.Rows[0]["tot_etiq"].ToString().Trim();
 

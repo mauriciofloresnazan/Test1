@@ -19,6 +19,9 @@ namespace Ppgz.CitaWrapper
         public string NumeroOrdenSurtido;
         public string Centro;
 
+        /*AGREGADO MF 20221130*/
+        public bool Autorizada;
+        /* ***************** */
         public ICollection<PreAsnDetalle> Detalles { get; set; }
 
         public int TotalPedido

@@ -20,15 +20,17 @@ namespace Ppgz.CitaWrapper
 
             // TODO MEJORAR Limpieza de las ordenes de acuerdo a su fecha de entrega
             var ordenes = ordenesSap.Where(o => o.FechaEntrega > DateTime.Today.AddDays(-22) || o.Autorizada==true).ToList();
-
+            var ordernesNoAuto = ordenesSap.Where(o => o.Autorizada != true).ToList();
             // TODO POSIBLE CARGA DE DATOS INCORRECTA A CAUSA DE LA SINCORNIZACIÓN DE LA RECEPCIÓN CON SAP
             var asnFuturos = db.asns
                 .Where(asn => asn.cita.ProveedorId == proveedor.Id && asn.cita.FechaCita >= DateTime.Today).ToList();
 
             var result = new List<PreAsn>();
-
+            string aaa = "";
             foreach (var orden in ordenes)
             {
+                if (orden.NumeroDocumento.Equals("4502439884"))
+                    aaa = "aaa";
                 var preAsn = new PreAsn
                 {
                     FechaEntrega = orden.FechaEntrega,
@@ -41,8 +43,10 @@ namespace Ppgz.CitaWrapper
                     TiendaOrigen = orden.TiOrig,
                     InOut = orden.InOut,
                     NumeroOrdenSurtido = orden.NumOs,
-                    Centro = orden.Centro
-                   
+                    Centro = orden.Centro,
+                    /* AGREGADO MF 20221130 */
+                    Autorizada = orden.Autorizada
+
                 };
 
                 var detalles = orden.Detalles.Select(detalle => new PreAsnDetalle
@@ -62,12 +66,15 @@ namespace Ppgz.CitaWrapper
                     NumeroMaterial2 = detalle.NumeroMaterial2,
                     Precio = detalle.ValorNeto,
                     UnidadMedida = detalle.UnidadMedidaPedido,
+                    /*AGREGADO MF 20221130*/
+                    CantidadPorEntregar = detalle.CantidadPorEntregar,
 
                     Cantidad = detalle.CantidadPorEntregar - asnFuturos
                         .Where(asn => asn.OrdenNumeroDocumento == detalle.NumeroDocumento
                                && asn.NumeroPosicion == detalle.NumeroPosicion
                                && asn.NumeroMaterial == detalle.NumeroMaterial)
                         .Sum(asn => asn.Cantidad)}).ToList();
+
 
                 preAsn.Detalles = detalles;
                 result.Add(preAsn);

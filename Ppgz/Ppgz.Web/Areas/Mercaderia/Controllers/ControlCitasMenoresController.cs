@@ -935,6 +935,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 		public ActionResult CancelarCita(int citaId)
 		{
             string connectionString = "server=172.22.10.21;user id=impuls_portal;password=7emporal@S;database=impuls_portal; SslMode = none";
+            //string connectionString = "server=localhost;user id=root;password=root;database=impuls_portal; SslMode = none";
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
 
 			var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
@@ -945,13 +946,25 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
             var citas = db.citas.Where(c => c.Id == citaId ).ToList();
 
+
             foreach (var pr in citas)
             {
                 var conv = Convert.ToInt64(pr.IdRiel);
                 var hr = db.horariorieles.Where(ho => ho.Id == conv ).FirstOrDefault();
                  var c=hr.CantidadTotal;
+
+
+                //COMENTARIO AGREGADO *******  LMFZ-20221116
+                //En la tabla citas no esta el campo proveedore.Nombre1
+                //Pudiera quedar con: 
+                
+                var horarioRiel2 = db.proveedores.Find(pr.ProveedorId);
+                var pro2 = horarioRiel2.Nombre1;
+                
                 var horarioRiel = db.citas.Find(pr.Id);
-                var pro=horarioRiel.proveedore.Nombre1;
+                var pro =horarioRiel.proveedore.Nombre1;
+
+
                 var ca=horarioRiel.CantidadTotal;
 
                 
@@ -982,7 +995,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     commandos.ExecuteNonQuery();
 
                 }
-                catch (MySqlException e)
+                catch 
                 {
 
                 }
@@ -1003,7 +1016,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     comman.ExecuteNonQuery();
 
                 }
-                catch (MySqlException e)
+                catch
                 {
 
                 }
@@ -1024,7 +1037,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 commando.ExecuteNonQuery();
 
             }
-            catch (MySqlException e)
+            catch 
             {
 
             }
@@ -1047,8 +1060,17 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 				TempData["FlashError"] = "La cita no puede ser Cancelada";
 				return RedirectToAction("Citas");
 			}
-
-			CitaManager.CancelarCitaMenor(citaId);
+            string aa = "";
+            try
+            {
+                aa=CitaManager.CancelarCitaMenor(citaId);
+            }
+            catch (Exception e) {
+                aa = e.Message;
+                //TODO
+                TempData["FlashError"] = aa;
+                return RedirectToAction("Citas");
+            }
 
 			//TODO
 			TempData["FlashSuccess"] = "Cita cancelada exitosamente";

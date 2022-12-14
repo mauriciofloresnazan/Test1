@@ -49,7 +49,9 @@ namespace Ppgz.Web.Areas.Nazan.Models
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirmar contraseña")]
+#pragma warning disable CS0618 // El tipo o el miembro están obsoletos
         [System.Web.Mvc.Compare("Password", ErrorMessage = "La contraseña y la confirmación no coinciden.")]
+#pragma warning restore CS0618 // El tipo o el miembro están obsoletos
         public string ConfirmarPassword { get; set; }
 
     }

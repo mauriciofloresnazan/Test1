@@ -10,6 +10,8 @@ using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
 using System.Data;
+using System.IO;
+using MySql.Data.MySqlClient;
 
 namespace ScaleWrapper
 {
@@ -18,7 +20,7 @@ namespace ScaleWrapper
 
         public readonly ILog ErrorAppLog = LogManager.GetLogger(@"ErrorAppLog");
         private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["Scale"].ConnectionString;
-
+        
         public void Registrar(cita cita)
         {
             var entities = new Entities();
@@ -50,7 +52,7 @@ namespace ScaleWrapper
                         var documento = numeroDocumento;
 
                         var orden = cita.asns
-                            .FirstOrDefault(asn => asn.OrdenNumeroDocumento == documento);
+                            .FirstOrDefault(asn => asn.OrdenNumeroDocumento == documento & asn.CitaId == cita.Id);
 
                         var almacenScale = entities.ScaleAlmacens.FirstOrDefault(sa => sa.Sap == orden.Centro);
 
@@ -74,6 +76,7 @@ namespace ScaleWrapper
                     InsertarDetailsContenedor(command, cita, dat);
                     // Attempt to commit the transaction.
                     transaction.Commit();
+                    //command.Transaction.Commit();
                 }
                 catch (Exception ex)
                 {
@@ -94,13 +97,310 @@ namespace ScaleWrapper
                         ErrorAppLog.Error(string.Format("  Message: {0}", ex2.Message));
                     }
                 }
-                var exito = "";
             }
 
 
 
         }
 
+        public void RegistrarMINE(cita cita)
+        {
+
+            try
+            {
+                var proveedor = cita.proveedore;
+                var pvr = Convert.ToInt32(proveedor.NumeroProveedor);
+
+                //GetData_Mysql_to_InsertScale.- Obtenemos los valores de la DB MySQL para armar los insert a SCALE
+                // con el SP sp_GetInsertToScale se le pasa el parametro CitaId
+
+                //Variable para concatenar el insert de la cabecera
+                
+                 var InsertHeader = new StringBuilder();
+                 InsertHeader.AppendLine("");
+                
+                //string InsertHeader = @"  INSERT INTO download_receipt_header (interface_record_id, 
+                //        interface_action_code, interface_condition, warehouse, erp_order_num, receipt_id, receipt_id_type, receipt_type, 
+                //        receipt_date, ship_from, ship_from_address1, ship_from_address2, ship_from_city, ship_from_state, ship_from_country, 
+                //        ship_from_postal_code, ship_from_name, ship_from_email_address, ship_from_phone_num, ship_from_fax_num, source_id, 
+                //        source_name, source_address1, source_address2, source_city, source_state, source_postal_code, source_country, 
+                //        source_phone_num, source_fax_num, source_email_address, user_def1, user_def2, user_def3, user_def4, USER_DEF5,
+                //        user_def6, user_def7, user_def8,user_stamp,date_time_stamp, arrived_date_time) 
+                //        SELECT * FROM (
+                //        VALUES ";
+
+                //Variable para concatenar los valores de la cabecera
+                
+                 var ValuesHeader = new StringBuilder();
+                 ValuesHeader.AppendLine(@"");
+                 
+                //string ValuesHeader = "";
+
+                //Variable para concatenar el insert de los detalles
+                
+                 var InsertDetails = new StringBuilder();
+                 InsertDetails.AppendLine("");
+                 
+                //string InsertDetails = @"  INSERT INTO DOWNLOAD_RECEIPT_DETAIL 
+                //        (INTERFACE_RECORD_ID,Interface_link_id,warehouse,
+                //        INTERFACE_ACTION_CODE,INTERFACE_CONDITION,ERP_ORDER_LINE_NUM,item,
+                //        ITEM_NET_PRICE,user_def5,TOTAL_QTY,QUANTITY_UM,DATE_TIME_STAMP) 
+                //        SELECT * FROM ( 
+                //        VALUES ";
+
+                //Variable para concatenar los valores delos detalles
+                
+                 var ValuesDetails = new StringBuilder();
+                 ValuesDetails.AppendLine(@"");
+                 
+                //string ValuesDetails = "";
+
+                //Variable que nos ayuda a guardar de manera temporal el registro anterior del cursor de la iteracion 
+                //almacena el numero de pedido (OrdenNumeroDocumento de la tabla asn)
+                //ejemplo  4502134238
+                string documentoAnterior = "";
+
+                //var parameters = new List<MySqlParameter>()
+                //{
+                //  new MySqlParameter("cita",cita.Id)
+                //};
+                ////Db.StoreProcedure(parameters, "sp_GetInsertToScale");
+                //DataSet ds_HeaderandDetail=Db.GetDataSet(parameters, "sp_GetInsertToScale");
+                DataSet ds_HeaderandDetail = Db.GetDataReader("SET SQL_SAFE_UPDATES=0; call sp_GetInsertToScale(" + cita.Id.ToString() + "," + pvr.ToString() + ");");
+                if (ds_HeaderandDetail.Tables[0].Rows.Count > 0)
+                    {
+                        //Nos ayuda a saber si es el primer registro
+                        bool IsFirstRegistro = true;
+                        //Recorremos los registos del query string QueryMaster
+                        foreach (DataRow dr in ds_HeaderandDetail.Tables[0].Rows)
+                        {
+                            if (IsFirstRegistro)
+                            {
+                                //ValuesHeader = ValuesHeader + dr[1].ToString();
+                                ValuesHeader.AppendLine(dr[1].ToString());
+                                ValuesDetails.AppendLine(dr[2].ToString());
+                                IsFirstRegistro = false;
+                            }
+                            else
+                            {
+                                if (dr[0].ToString().Equals(documentoAnterior))
+                                {
+                                    //ValuesDetails = ValuesDetails + dr[2].ToString();
+                                    ValuesDetails.AppendLine( dr[2].ToString());
+                                }
+                                else
+                                {
+                                    //ValuesHeader = ValuesHeader + dr[1].ToString();
+                                    ValuesHeader.AppendLine(dr[1].ToString());
+                                    //ValuesDetails = ValuesDetails + dr[2].ToString();
+                                    ValuesDetails.AppendLine(dr[2].ToString());
+                                }
+                            }
+                            documentoAnterior = dr[0].ToString();
+                        }
+
+                    //ValuesHeader = ValuesHeader.TrimEnd(',');                    
+                    //ValuesDetails = ValuesDetails.TrimEnd(',');
+                    
+
+                    ////InsertHeader = InsertHeader + ValuesHeader + @") AS a (interface_record_id, 
+                    ////    interface_action_code, interface_condition, warehouse, erp_order_num, receipt_id, receipt_id_type, receipt_type, 
+                    ////    receipt_date, ship_from, ship_from_address1, ship_from_address2, ship_from_city, ship_from_state, ship_from_country, 
+                    ////    ship_from_postal_code, ship_from_name, ship_from_email_address, ship_from_phone_num, ship_from_fax_num, source_id, 
+                    ////    source_name, source_address1, source_address2, source_city, source_state, source_postal_code, source_country, 
+                    ////    source_phone_num, source_fax_num, source_email_address, user_def1, user_def2, user_def3, user_def4, USER_DEF5,
+                    ////    user_def6, user_def7, user_def8,user_stamp,date_time_stamp, arrived_date_time);";
+                    //InsertHeader.AppendLine(@"  INSERT INTO download_receipt_header(interface_record_id,
+                    //    interface_action_code, interface_condition, warehouse, erp_order_num, receipt_id, receipt_id_type, receipt_type,
+                    //    receipt_date, ship_from, ship_from_address1, ship_from_address2, ship_from_city, ship_from_state, ship_from_country,
+                    //    ship_from_postal_code, ship_from_name, ship_from_email_address, ship_from_phone_num, ship_from_fax_num, source_id,
+                    //    source_name, source_address1, source_address2, source_city, source_state, source_postal_code, source_country,
+                    //    source_phone_num, source_fax_num, source_email_address, user_def1, user_def2, user_def3, user_def4, USER_DEF5,
+                    //    user_def6, user_def7, user_def8, user_stamp, date_time_stamp, arrived_date_time)
+                    //    SELECT * FROM(
+                    //    VALUES " + ValuesHeader.ToString() + @") AS a (interface_record_id, 
+                    //        interface_action_code, interface_condition, warehouse, erp_order_num, receipt_id, receipt_id_type, receipt_type, 
+                    //        receipt_date, ship_from, ship_from_address1, ship_from_address2, ship_from_city, ship_from_state, ship_from_country, 
+                    //        ship_from_postal_code, ship_from_name, ship_from_email_address, ship_from_phone_num, ship_from_fax_num, source_id, 
+                    //        source_name, source_address1, source_address2, source_city, source_state, source_postal_code, source_country, 
+                    //        source_phone_num, source_fax_num, source_email_address, user_def1, user_def2, user_def3, user_def4, USER_DEF5,
+                    //        user_def6, user_def7, user_def8,user_stamp,date_time_stamp, arrived_date_time);");
+                    InsertHeader.AppendLine(ValuesHeader.ToString());
+                    ////InsertDetails = InsertDetails + ValuesDetails + @") AS b (INTERFACE_RECORD_ID,Interface_link_id,warehouse,
+                    ////    INTERFACE_ACTION_CODE,INTERFACE_CONDITION,ERP_ORDER_LINE_NUM,item,
+                    ////    ITEM_NET_PRICE,user_def5,TOTAL_QTY,QUANTITY_UM,DATE_TIME_STAMP);";
+                    //InsertDetails.AppendLine(@"  INSERT INTO DOWNLOAD_RECEIPT_DETAIL 
+                    //(INTERFACE_RECORD_ID,Interface_link_id,warehouse,
+                    //INTERFACE_ACTION_CODE,INTERFACE_CONDITION,ERP_ORDER_LINE_NUM,item,
+                    //ITEM_NET_PRICE,user_def5,TOTAL_QTY,QUANTITY_UM,DATE_TIME_STAMP) 
+                    //SELECT * FROM ( 
+                    //VALUES " + ValuesDetails.ToString() + @") AS b (INTERFACE_RECORD_ID,Interface_link_id,warehouse,
+                    //    INTERFACE_ACTION_CODE,INTERFACE_CONDITION,ERP_ORDER_LINE_NUM,item,
+                    //    ITEM_NET_PRICE,user_def5,TOTAL_QTY,QUANTITY_UM,DATE_TIME_STAMP);");
+                    InsertDetails.AppendLine(ValuesDetails.ToString());
+                    }
+
+                
+                 var U_Etiquetas = new StringBuilder();
+                 U_Etiquetas.AppendLine(@"");
+                 
+                //string U_Etiquetas = "";
+                if (ds_HeaderandDetail.Tables[1].Rows.Count > 0)
+                {
+                    string fnAnt = "";
+                    string recibo = "";
+                    foreach (DataRow dr in ds_HeaderandDetail.Tables[1].Rows)
+                    {
+                        if (fnAnt.Equals(dr[0].ToString()))
+                        {
+                            U_Etiquetas.AppendLine(" UPDATE gnzn_asn_etiquetas SET recibo='" + recibo + "' WHERE id_eti=" + dr[1].ToString() + "; ");
+                        }
+                        else
+                        {
+                            var r = DbScale.GetDataTable(dr[0].ToString());
+                            if (r.Rows.Count == 1)
+                            {
+                                var row = r.Rows[0];
+                                var re = row.ItemArray;
+                                var resiosos = row[0];
+                                recibo = Convert.ToString(re[0]);
+                                U_Etiquetas.AppendLine(" UPDATE gnzn_asn_etiquetas SET recibo='" + Convert.ToString(re[0]) + "' WHERE id_eti=" + dr[1].ToString() + "; ");
+                                //U_Etiquetas = U_Etiquetas + "UPDATE gnzn_asn_etiquetas SET recibo='" + Convert.ToString(re[0]) + "' WHERE id_eti=" + dr[1].ToString() + "; ";
+                            }
+                        }
+                        fnAnt = dr[0].ToString();
+                    }
+
+                }
+
+                if (!string.IsNullOrEmpty(U_Etiquetas.ToString()))
+                    Db.Update(U_Etiquetas.ToString());
+
+                var db = new Entities();
+                //var dat = db.EnviarDatos.Where(op => op.Id_Proveedor == pvr).ToList();
+                
+                 var contenedores = new StringBuilder();
+                 contenedores.AppendLine(GetInsertarDetailsContenedor( cita));                 
+                //string contenedores =GetInsertarDetailsContenedor(cita);
+
+                SqlConnection connection = new SqlConnection(ConnectionString);
+                try
+                {    
+                    connection.Open();
+                    SqlCommand command = new SqlCommand();
+                    command.Connection = connection;
+                    command.CommandTimeout = 0;
+                    //command.Transaction = transaction;
+                    command.CommandText = InsertHeader.ToString() + "  " + InsertDetails.ToString() + "  " + contenedores.ToString() + @" 
+                                            BEGIN TRAN
+                                            UPDATE DOWNLOAD_RECEIPT_HEADER SET INTERFACE_CONDITION = 'Ready' WHERE USER_DEF8 = " + cita.Id + @" AND INTERFACE_CONDITION = 'Po_Pr_Proc' go
+                                            COMMIT TRAN";
+                    command.ExecuteNonQuery();
+                }
+                catch (Exception ed)
+                {
+                    ErrorAppLog.Error(string.Format("Commit Exception Type: {0}", ed.GetType()));
+                    ErrorAppLog.Error(string.Format("  Message: {0}", ed.Message));
+                }
+                finally
+                {
+                    ////commit
+                    /////rollback
+                    connection.Close();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ErrorAppLog.Error(string.Format("Commit Exception Type: {0}", ex.GetType()));
+                ErrorAppLog.Error(string.Format("  Message: {0}", ex.Message));
+
+                // Attempt to roll back the transaction.
+                try
+                {
+                    //transaction.Rollback();
+                }
+                catch (Exception ex2)
+                {
+                    // This catch block will handle any errors that may have occurred
+                    // on the server that would cause the rollback to fail, such as
+                    // a closed connection.
+                    ErrorAppLog.Error(string.Format("Rollback Exception Type: {0}", ex2.GetType()));
+                    ErrorAppLog.Error(string.Format("  Message: {0}", ex2.Message));
+                }
+            }
+            
+
+
+
+        }
+
+        private string  GetInsertarDetailsContenedor(cita cita)
+        {
+            var db = new Entities();
+            var proveedor = cita.proveedore;
+            var pvr = Convert.ToInt32(proveedor.NumeroProveedor);
+
+            DataSet ds=Db.GetDataReader(@"SET SQL_SAFE_UPDATES=0;
+  UPDATE gnzn_asn_etiquetas e
+                SET e.pares = (
+                    SELECT sum(pares) FROM gnzn_tmp_asn_revision_datos rv WHERE rv.Id_Proveedor = e.Id_Proveedor
+                                            AND rv.Edo_Rev = 0  AND rv.Caja = e.caja GROUP BY rv.Caja
+                                )
+                WHERE e.Id_Proveedor = " + pvr + " AND e.cita = "+ cita.Id + @";
+     
+     UPDATE gnzn_tmp_asn_revision_datos SET Edo_Rev=1 WHERE Edo_Rev=0 AND Id_Proveedor=" + pvr + " AND CitaId=" + cita.Id + @";
+
+SELECT concat('
+INSERT INTO DOWNLOAD_RECEIPT_CONTAINER (INTERFACE_RECORD_ID, INTERFACE_LINK_ID,INTERFACE_ACTION_CODE, INTERFACE_CONDITION, container_id, container_type, DATE_TIME_STAMP, REASON_CODE, QUANTITY, TMP_ERP_ORDER_LINE_NUM)
+select 
+''',IFNULL(INTERFACE_RECORD_ID,''),''',''',IFNULL(INTERFACE_LINK_ID,''),''',''',IFNULL(INTERFACE_ACTION_CODE,''),
+''',''',IFNULL(INTERFACE_CONDITION,''),''',''',IFNULL(container_id,''),''',''',IFNULL(container_type,''),''',''',IFNULL(DATE_FORMAT(DATE_TIME_STAMP,'%Y%c%d'),''),
+''',''',IFNULL(REASON_CODE,''),''',',IFNULL(convert(QUANTITY,CHAR),'0'),',',IFNULL(convert(TMP_ERP_ORDER_LINE_NUM,CHAR),'0'),' go ')
+
+ FROM gnzn_datos_asn_contendores WHERE CitaId=" + cita.Id+";");
+
+            var query = new StringBuilder();
+            
+
+            var valores = new StringBuilder();
+            //string valores = "";
+            if(ds.Tables[0].Rows.Count > 0)
+            {                
+                foreach(DataRow dr in ds.Tables[0].Rows)
+                {
+                    
+                    //valores = valores + dr[0].ToString();                    
+                    valores.AppendLine(dr[0].ToString());
+                }
+            }
+            //valores = valores.ToString().TrimEnd(',');
+            //valores.Remove(valores.Length -1, 1);
+            query.AppendLine(valores.ToString());
+            //query.AppendLine(@"INSERT INTO DOWNLOAD_RECEIPT_CONTAINER 
+            //       (INTERFACE_RECORD_ID, 
+            //        INTERFACE_LINK_ID,
+            //        INTERFACE_ACTION_CODE, 
+            //        INTERFACE_CONDITION, 
+            //        container_id, 
+            //        container_type, 
+            //       DATE_TIME_STAMP, 
+            //       REASON_CODE, 
+            //       QUANTITY, 
+            //      TMP_ERP_ORDER_LINE_NUM) 
+            //        SELECT * FROM (
+            //    VALUES" + valores.ToString() + @")AS c (INTERFACE_RECORD_ID, 
+            //        INTERFACE_LINK_ID,
+            //        INTERFACE_ACTION_CODE, 
+            //        INTERFACE_CONDITION, 
+            //        container_id, 
+            //        container_type, 
+            //       DATE_TIME_STAMP, 
+            //       REASON_CODE, 
+            //       QUANTITY, 
+            //      TMP_ERP_ORDER_LINE_NUM);");
+            return query.ToString();
+        }
 
         private void InsertarDetailsContenedor(SqlCommand command, cita cita, List<EnviarDatos> asns)
         {
@@ -123,6 +423,7 @@ namespace ScaleWrapper
              where r.Edo_Rev == 0 && r.Id_Proveedor == pvr
              select r).ToList()
            .ForEach(b => b.CitaId = cita.Id);
+
             (from r in db.RevisarDatos
              where r.Edo_Rev == 0 && r.Id_Proveedor==pvr
              select r).ToList()
@@ -133,8 +434,9 @@ namespace ScaleWrapper
             for (var index = 0; index < dat.Count; index++)
             {
                  var asn = dat[index];
-                string connectionString = "Data Source=172.25.4.43;Initial Catalog=ILS;User ID=wsp;Password=wsp@2017;";
-                SqlConnection connectiones = new SqlConnection(@connectionString);
+                //string connectionString = "Data Source=172.25.4.43;Initial Catalog=ILS;User ID=wsp;Password=wsp@2017;";
+                //SqlConnection connectiones = new SqlConnection(@connectionString);
+                SqlConnection connectiones = new SqlConnection(ConnectionString);
                 string query = @"INSERT INTO DOWNLOAD_RECEIPT_CONTAINER 
                    (INTERFACE_RECORD_ID, 
                     INTERFACE_LINK_ID,
@@ -164,7 +466,7 @@ namespace ScaleWrapper
                     commando.ExecuteNonQuery();
 
                 }
-                catch (SqlException e)
+                catch
                 {
 
                 }
@@ -180,10 +482,7 @@ namespace ScaleWrapper
         internal string InsertarHeader(SqlCommand command, cita cita, string almacenScale, string numeroOrden,
             string tiendaOrigen, string tiendaDestino, string numeroOrdenSurtido, string inOut, int i, int citaId)
         {
-
             var proveedor = cita.proveedore;
-
-
 
             var id = string.Format("{0}{1}{2}", "ASN_", DateTime.Now.ToString("yyyyMMddHHmmss"), i);
             var sourcename = string.Format("{0} {1} {2} {3}",
@@ -191,8 +490,6 @@ namespace ScaleWrapper
                                                 proveedor.Nombre2,
                                                 proveedor.Nombre3,
                                                 proveedor.Nombre4);
-
-
             /*/
              * 
              * Agregar horario de cita mediante escaneo de los horarios de los rieles
@@ -203,6 +500,26 @@ namespace ScaleWrapper
             var pvr = Convert.ToInt32(proveedores.NumeroProveedor);
             var oo = db.EnviarDatos.Where(pp => pp.container_type != null && pp.Id_Proveedor == pvr && pp.CitaId==citaId).ToList();
             var horarios = cita.horariorieles;
+            /*
+            DataSet dt = Db.GetDataSet(sql:@"SELECT 
+                            TIME_FORMAT(TIME(STR_TO_DATE(h.HoraDesde, '%h:%i %p')), '%H') 'HORA',
+                            TIME_FORMAT(TIME(STR_TO_DATE(h.HoraDesde, '%h:%i %p')), '%i') 'MINUTOS',
+                            TIME_FORMAT(TIME(STR_TO_DATE(h.HoraDesde, '%h:%i %p')), '%p') 'PM/AM'
+                            FROM citas c
+                            JOIN horariorieles hr ON hr.CitaId = c.Id
+                            JOIN horarios h ON h.Id = hr.HorarioId
+                            WHERE c.Id IN(" + citaId + @"); 
+                        SELECT 
+id,Carga,Caja,Factura,Pedido,Tienda,Ean,pares,Material,Id_Proveedor,Edo_Rev,CitaId,Estilo,Color,Cuenta
+                            FROM gnzn_tmp_asn_revision_datos WHERE Id_Proveedor = " + pvr + @"
+                            AND Edo_Rev = 0 OR CitaId = "+ citaId + @" AND Pedido = '"+ numeroOrden + @"'
+                            GROUP BY Pedido ORDER BY id  limit 1; ");
+            foreach(DataRow dr in dt.Tables[0].Rows)
+            {
+                cita.FechaCita = cita.FechaCita.AddHours(Int32.Parse(dr["HORA"].ToString()));
+                cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(dr["MINUTOS"].ToString()));
+            }
+            */
             foreach (horarioriele hor in horarios)
             {
                 Char delimiter = ':';
@@ -236,38 +553,135 @@ namespace ScaleWrapper
                     cita.FechaCita = cita.FechaCita.AddMinutes(Int32.Parse(substrings2[0].ToString()));
 
                 }
-
-
-
             }
             //Fin
 
 
             var user_def4 = "";
             var user_def6 = "";
-
+            string ordencomprastring = "";
             if (cita.Almacen.ToUpper() == "CROSS DOCK")
             {
                 user_def4 = "'" + tiendaDestino + "'";
                 user_def6 = "'" + numeroOrdenSurtido + "'";
+                ordencomprastring = "Cross Dock";
             }
             else
             {
                 user_def4 = "NULL";
                 user_def6 = "NULL";
+                ordencomprastring = "Orden de Compra";
 
             }
 
             int insd = inOut == "1" ? 1 : 0;
-            string ordencomprastring = cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra";
+            //string ordencomprastring = cita.Almacen == "Cross Dock" ? "Cross Dock" : "Orden de Compra";
             var spc1 = db.RevisarDatos.Where(oooo => oooo.Id_Proveedor == pvr && oooo.Edo_Rev == 0||oooo.CitaId==citaId).GroupBy(x => x.Pedido).Select(x => x.FirstOrDefault());
+
+            #region Mio insert scale
+            //foreach (DataRow dr2 in dt.Tables[1].Rows)
+            //{
+            //    #region download_receipt_header_MINE
+            //    var sql2 = string.Format(@"
+
+            //    INSERT INTO download_receipt_header 
+            //                (interface_record_id, 
+            //                 interface_action_code, 
+            //                 interface_condition, 
+            //                 warehouse, 
+            //                 erp_order_num, 
+            //                 receipt_id, 
+            //                 receipt_id_type, 
+            //                 receipt_type, 
+            //                 receipt_date, 
+            //                 ship_from, 
+            //                 ship_from_address1, 
+            //                 ship_from_address2, 
+            //                 ship_from_city, 
+            //                 ship_from_state, 
+            //                 ship_from_country, 
+            //                 ship_from_postal_code, 
+            //                 ship_from_name, 
+            //                 ship_from_email_address, 
+            //                 ship_from_phone_num, 
+            //                 ship_from_fax_num, 
+            //                 source_id, 
+            //                 source_name, 
+            //                 source_address1, 
+            //                 source_address2, 
+            //                 source_city, 
+            //                 source_state, 
+            //                 source_postal_code, 
+            //                 source_country, 
+            //                 source_phone_num, 
+            //                 source_fax_num, 
+            //                 source_email_address, 
+            //                 user_def1, 
+            //                 user_def2, 
+            //                 user_def3, 
+            //                 user_def4, 
+            //                 USER_DEF5,
+            //                 user_def6, 
+            //                 user_def7, 
+            //                 user_def8,
+            //                 user_stamp,
+            //                 date_time_stamp, 
+            //                 arrived_date_time) 
+            //    VALUES      ('" + id + @"', 
+            //                 'Save', 
+            //                 'Ready', 
+            //                 '" + almacenScale + @"', 
+            //                 '" + numeroOrden + @"',  
+            //                 dbo.GNZN_Fn_Folio_Recibo('" + numeroOrden + @"', '" + cita.Id + @"'),
+            //                 '" + ordencomprastring + @"',  
+            //                 '" + ordencomprastring + @"',
+            //                 '" + cita.FechaCita.ToString("yyyy-MM-ddTHH:mm:ss") + @"',  
+            //                 '" + proveedor.NumeroProveedor + @"',  
+            //                 '" + proveedor.Calle + @"',  
+            //                 '" + proveedor.Direccion + @"',  
+            //                 '" + proveedor.Poblacion + @"',  
+            //                 '" + proveedor.EstadoNombre + @"',  
+            //                 'MEXICO', 
+            //                 '" + proveedor.CodigoPostal + @"', 
+            //                 '" + sourcename.Substring(0, Math.Min(sourcename.Length, 50)) + @"',  
+            //                 '" + proveedor.Correo + @"',  
+            //                 '" + proveedor.NumeroTelefono + @"',  
+            //                 '', 
+            //                 '" + proveedor.NumeroProveedor + @"',  
+            //                 '" + sourcename.Substring(0, Math.Min(sourcename.Length, 50)) + @"',
+            //                 '" + proveedor.Calle + @"',  
+            //                 '" + proveedor.Direccion + @"',  
+            //                 '" + proveedor.Poblacion + @"',  
+            //                 '" + proveedor.EstadoNombre + @"',
+            //                 '" + proveedor.CodigoPostal + @"',   
+            //                 'MEXICO', 
+            //                 '" + proveedor.NumeroTelefono + @"',  
+            //                 '', 
+            //                 '" + proveedor.Correo + @"',
+            //                 '" + cita.FechaCita.ToString("yyyyMMdd") + @"',  
+            //                 '" + proveedor.OrganizacionCompra + @"',  
+            //                 '" + tiendaOrigen + @"',  
+            //                 " + user_def4 + @",         
+            //                 '" + dr2["Factura"].ToString() + @"',        
+            //                 " + user_def6 + @",  
+            //                 " + insd + @",  
+            //                 '" + cita.Id + @"', 
+            //                 '" + cita.CantidadTotal + @"', 
+            //                 GETDATE(), 
+            //                 '" + cita.FechaCita.ToString("yyyy-MM-ddTHH:mm:ss") + @"');");
+            //    #endregion
+            //    command.CommandText = sql2;
+            //}
+            #endregion
+
+            #region comentado por le query que trae las dos tablas
             db.Database.CommandTimeout = 0;
             foreach (var fac in spc1)
             {
                 if (fac.Pedido == numeroOrden)
                 {
 
-
+                    #region download_receipt_header
                     var sql = string.Format(@"
 
                 INSERT INTO download_receipt_header 
@@ -355,16 +769,32 @@ namespace ScaleWrapper
                              '" + cita.CantidadTotal + @"', 
                              GETDATE(), 
                              '" + cita.FechaCita.ToString("yyyy-MM-ddTHH:mm:ss") + @"');");
-
+                    #endregion
                     command.CommandText = sql;
 
                 }
             }
+            #endregion
 
 
+            //var parameters = new List<MySqlParameter>()
+            //    {
+            //        new MySqlParameter("IdCita", citaId),
+            //        new MySqlParameter("ProveedorId", pvr),
+            //        new MySqlParameter("numeroOrden", numeroOrden),
+            //        new MySqlParameter
+            //        {
+            //            ParameterName = "idEtiqueta",
+            //            Direction = ParameterDirection.Output,
+            //            MySqlDbType = MySqlDbType.Int64
+            //        }
+            //    };
 
-            var borrarEti = db.EnviarEtiquetas.Where(m => m.cita==citaId).FirstOrDefault();
+            ////DataSet idEtiqueta=Db.GetDataSet(parameters, "sp_InsertEtiquetasfromAsnRevDat");
+            //Dictionary<string, string> idEtiqueta = Db.ExecuteProcedureOutput(parameters,"sp_InsertEtiquetasfromAsnRevDat");
 
+
+            var borrarEti = db.EnviarEtiquetas.Where(m => m.cita == citaId).FirstOrDefault();
 
             if (borrarEti == null)
             {
@@ -389,12 +819,13 @@ namespace ScaleWrapper
                     db.EnviarEtiquetas.Add(archivo);
 
                 }
-                
+
                 db.SaveChanges();
 
-  
-        }
-            else {
+
+            }
+            else
+            {
 
                 if (borrarEti.cita != citaId)
                 {
@@ -418,13 +849,25 @@ namespace ScaleWrapper
                     db.SaveChanges();
 
                 }
-
-
             }
-            var modif = db.EnviarEtiquetas.Where(oooo =>oooo.cita == citaId).GroupBy(x => x.caja).Select(x => x.FirstOrDefault());
+
+
+            ////if (idEtiqueta.Tables[0].Rows.Count > 0)
+            //if (idEtiqueta.Values.Count > 0)
+            //{
+            //    var r = DbScale.GetDataTable("select  dbo.GNZN_Fn_Folio_Recibo(" + numeroOrden + ", " + citaId + ")");
+            //    if (r.Rows.Count == 1)
+            //    {
+            //        var row = r.Rows[0];
+            //        var re = row.ItemArray;
+            //        var resiosos = row[0];
+            //        Db.Update("UPDATE gnzn_asn_etiquetas SET recibo='"+ Convert.ToString(re[0]) + "' WHERE id_eti="+ idEtiqueta["idEtiqueta"] + "; ");
+            //    }
+            //}
+            var modif = db.EnviarEtiquetas.Where(oooo => oooo.cita == citaId).GroupBy(x => x.caja).Select(x => x.FirstOrDefault());
             db.Database.CommandTimeout = 0;
             foreach (var eti in modif)
-             {
+            {
 
                 if (eti.recibo == numeroOrden)
                 {
@@ -441,6 +884,7 @@ namespace ScaleWrapper
                 }
             }
             db.SaveChanges();
+
             foreach (var lin in oo)
             {
                 if (Convert.ToInt64(lin.Pedido) == Convert.ToInt64(numeroOrden))
@@ -450,13 +894,14 @@ namespace ScaleWrapper
                     db.SaveChanges();
                 }
             }
-            
 
+            //int regAfectados = Db.Update("update gnzn_datos_asn_contendores set  INTERFACE_LINK_ID =concat('ASN_', DATE_FORMAT(NOW(), '%Y%m%d%H%i%s') ,'1') where  (container_type IS NOT NULL OR container_type <>'') AND Id_Proveedor=" + pvr + " AND CitaId=" + citaId + " AND Pedido=" + numeroOrden + ";");
 
             command.ExecuteNonQuery();
 
             return id;
         }
+
 
         internal void InsertarDetails(SqlCommand command, string interfaceLinkId, string almacenScale, List<asn> asns, int citaId)
         {
@@ -555,7 +1000,23 @@ namespace ScaleWrapper
                     command.Parameters.Add(param);
                 }
             }
-            command.ExecuteNonQuery();
+            try
+            {
+                //begin tRAN
+                //conexionSQL.Oope()
+                command.ExecuteNonQuery();
+                //conexion.Close();
+                
+            }
+            catch(Exception ed)
+            {
+                string MsgExecInsertDOWNLOAD_RECEIPT_DETAIL = ed.Message;
+            }
+            finally
+            {
+                ////commit
+                /////rollback
+            }
 
         }
 
@@ -635,5 +1096,19 @@ namespace ScaleWrapper
                 ErrorAppLog.Error(string.Format("Cita # {0}. {1}", citaId, exception.Message));
             }
         }
+
+        private void escribearchivo(string lines)
+        {
+            string namearchivo = "LOG_MAU_TEMP.txt";
+            string RutaSitio = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments); //System.Web.Hosting.HostingEnvironment.MapPath("~/App_Data/");
+            string PathGeneric = Path.Combine(RutaSitio + "\\" + namearchivo);
+            StreamWriter ws = new StreamWriter(PathGeneric, true);
+            ws.WriteLine(lines);
+            ws.Flush();
+            ws.Close();
+            //System.IO.File.AppendAllLines(Path.Combine(PathGeneric), lines);
+        }
+
+        
     }
 }
