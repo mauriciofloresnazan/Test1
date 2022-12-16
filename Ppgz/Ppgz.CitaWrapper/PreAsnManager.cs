@@ -26,11 +26,8 @@ namespace Ppgz.CitaWrapper
                 .Where(asn => asn.cita.ProveedorId == proveedor.Id && asn.cita.FechaCita >= DateTime.Today).ToList();
 
             var result = new List<PreAsn>();
-            string aaa = "";
             foreach (var orden in ordenes)
             {
-                if (orden.NumeroDocumento.Equals("4502439884"))
-                    aaa = "aaa";
                 var preAsn = new PreAsn
                 {
                     FechaEntrega = orden.FechaEntrega,

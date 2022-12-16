@@ -142,7 +142,8 @@ namespace Ppgz.Web
                 "CONFIGNEG|Configuración de Negocio|Index|Configneg|fa fa-cogs|Nazan",
                 "VISTAPROVEEDOR|Vista de Proveedor|Index|VistaProveedor|fa fa-binoculars|Nazan",
                 "PRONTOPAGO|Pronto Pago|Index|ProntoPago|fa fa-binoculars|Nazan",
-                "LISTARFACTURAS|Consulta Facturas|Index|FacturasLst|fa fa-file-pdf-o|Nazan"
+                "LISTARFACTURAS|Consulta Facturas|Index|FacturasLst|fa fa-file-pdf-o|Nazan",
+                "VIGILANCIA|Vigilancia|Vigilancia|Vigilancia|fa-video-camera|Nazan"
             };
             return menuLista;
         }

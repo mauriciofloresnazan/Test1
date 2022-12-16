@@ -293,7 +293,7 @@ namespace ScaleWrapper
                     //command.Transaction = transaction;
                     command.CommandText = InsertHeader.ToString() + "  " + InsertDetails.ToString() + "  " + contenedores.ToString() + @" 
                                             BEGIN TRAN
-                                            UPDATE DOWNLOAD_RECEIPT_HEADER SET INTERFACE_CONDITION = 'Ready' WHERE USER_DEF8 = " + cita.Id + @" AND INTERFACE_CONDITION = 'Po_Pr_Proc' go
+                                            UPDATE DOWNLOAD_RECEIPT_HEADER SET INTERFACE_CONDITION = 'Ready' WHERE USER_DEF8 = " + cita.Id + @" AND INTERFACE_CONDITION = 'Po_Pr_Proc'
                                             COMMIT TRAN";
                     command.ExecuteNonQuery();
                 }

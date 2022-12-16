@@ -1,14 +1,9 @@
 ﻿using System;
 using System.Configuration;
-using System.Data.Entity;
+using System.Data;
 using System.Data.SqlClient;
-using System.Globalization;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using MySql.Data.MySqlClient;
-using Ppgz.Repository;
-using Ppgz.Services;
 using ScaleWrapper;
 namespace Ppgz.Web.Areas.Nazan.Controllers
 {
@@ -19,11 +14,32 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
         public ActionResult Vigilancia()
         {
-            var id = string.Format("{0}", DateTime.Now.ToString("yyyy-MM-dd"));
-            var resss = DbScaleGNZN.GetDataTable("select * from GNZN_Control_vigilancia");
-            ViewBag.Resss = resss;
-            var r = DbScaleGNZN.GetDataTable("select * from GNZN.DBO.GNZN_DOCUMENTOS");
-            ViewBag.Res = r;
+            //ViewBag.Resss = "";
+            //ViewBag.Res = "";
+            //var id = string.Format("{0}", DateTime.Now.ToString("yyyy-MM-dd"));
+            //var resss = DbScaleGNZN.GetDataTable(@"select
+            //IdCtrl,convert(int,IdCita) IdCita, IdProv, NombreProv, FechaCita, HoraCita24, convert(int,CantidadCita) CantidadCita, Marca, Estatus, Gafete, IdGuardia, FechaIngreso, fechaSalida, MercanciaNoNazan, ParesEnValesSalida
+            //                 from GNZN_Control_vigilancia");
+            //ViewBag.Resss = resss;
+            //var r = DbScaleGNZN.GetDataTable("select * from GNZN.DBO.GNZN_DOCUMENTOS");
+            //ViewBag.Res = r;
+
+            DataSet ds = DbScaleGNZN.GetDataSet(@"select
+                                        IdCtrl,convert(int,IdCita) IdCita, convert(int,IdProv) IdProv, NombreProv, 
+                                        FechaCita, HoraCita24, convert(int,CantidadCita) CantidadCita, Marca, Estatus, Gafete, 
+                                        IdGuardia, FechaIngreso, fechaSalida, MercanciaNoNazan, ParesEnValesSalida
+                                         from GNZN.DBO.GNZN_Control_vigilancia GO
+                                select * from GNZN.DBO.GNZN_DOCUMENTOS GO");
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                ViewBag.Resss = ds.Tables[0];
+            }
+            if (ds.Tables[1].Rows.Count > 0)
+            {
+                ViewBag.Res = ds.Tables[1];
+            }
+            
+            
             return View();
         }
 
