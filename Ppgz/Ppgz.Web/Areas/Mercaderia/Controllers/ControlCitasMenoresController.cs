@@ -1075,8 +1075,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
         public ActionResult CancelarCita(int citaId)
         {
-            string connectionString = "server=172.22.10.21;user id=impuls_portal;password=7emporal@S;database=impuls_portal; SslMode = none";
-            //string connectionString = "server=localhost;user id=root;password=root;database=impuls_portal; SslMode = none";
+            //string connectionString = "server=172.22.10.21;user id=impuls_portal;password=7emporal@S;database=impuls_portal; SslMode = none";
+            string connectionString = "server=localhost;user id=root;password=root;database=impuls_portal; SslMode = none";
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
             var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
             var db = new Entities();
@@ -1087,6 +1087,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
             string citas_restablecer = "";
             string CantidadPorCita_restablecer = "";
             string ComentarioBloqueo_restablecer = "";
+            int cantidadTotal = 0;
+            string new_citaID_en_hr = "";
 
             foreach (var pr in citas)
             {
@@ -1110,7 +1112,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                             && v_CantidadPorCita.Length == v_ComentarioBloqueo.Length
                             && v_citas.Length == v_ComentarioBloqueo.Length)
                         {
-
+                            
                             for (int i = 0; i < v_citas.Length; i++)
                             //foreach (string v_cita in v_citas)
                             {
@@ -1119,8 +1121,12 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                                     citas_restablecer = citas_restablecer + " ," + v_citas[i].Trim();
                                     CantidadPorCita_restablecer = CantidadPorCita_restablecer + " ," + v_CantidadPorCita[i].Trim();
                                     ComentarioBloqueo_restablecer = ComentarioBloqueo_restablecer + " ," + v_ComentarioBloqueo[i].Trim();
+                                    cantidadTotal += Convert.ToInt32(v_CantidadPorCita[i].Trim());
+                                    if (hr.CitaId.Equals(citaId.ToString()))
+                                        new_citaID_en_hr = v_citas[i].Trim();
                                 }
                             }
+
                         }
                     }
 
@@ -1140,7 +1146,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
 
                 string update_hr = @"UPDATE horariorieles AS hr
                     JOIN citas AS c ON c.Id = hr.CitaId AND hr.Id = c.IdRiel
-                    SET hr.CantidadTotal = (hr.CantidadTotal - c.CantidadTotal) ";
+                    SET hr.CantidadTotal = "+ cantidadTotal.ToString();
                 if (c == 0)
                 {
                     update_hr = update_hr + @" 
@@ -1162,9 +1168,10 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                 else
                 {
                     update_hr = update_hr + @"
-                    ,hr.Citas = '" + citas_restablecer + @"'
-                    ,hr.CantidadPorCita = '" + CantidadPorCita_restablecer + @"'
-                    ,hr.ComentarioBloqueo = '" + ComentarioBloqueo_restablecer + "' ";
+                        ,hr.CitaId= " + new_citaID_en_hr +@"
+                        ,hr.Citas = '" + citas_restablecer + @"'
+                        ,hr.CantidadPorCita = '" + CantidadPorCita_restablecer + @"'
+                        ,hr.ComentarioBloqueo = '" + ComentarioBloqueo_restablecer + "' ";
                 }
 
                 update_hr = update_hr + @"
@@ -1194,77 +1201,8 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
                     connectione.Close();
                 }
 
-                /*
-                 * @"UPDATE horariorieles AS hr
-                    JOIN citas AS c ON c.Id = hr.CitaId
-                    SET hr.CantidadTotal = (hr.CantidadTotal - c.CantidadTotal)
-                    WHERE hr.Id= " + hr.Id + " AND c.Id="+pr.Id+";"
-                */
-                //    hr.CantidadTotal = c;
-                //    db.Entry(hr).State = EntityState.Modified;
-                //    db.SaveChanges();
-
-                //    MySqlConnection connectione = new MySqlConnection(@connectionString);
-                //    string querys = @"UPDATE horariorieles SET ComentarioBloqueo = REPLACE(ComentarioBloqueo,'" + pro + " ,' ,'')where Id='" + conv + "'; ";
-                //    MySqlCommand commandos = new MySqlCommand(querys, connectione);
-                //    try
-                //    {
-                //        connectione.Close();
-                //        connectione.Open();
-                //        commandos.ExecuteNonQuery();
-
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        string e = ex.Message;
-                //    }
-                //    finally
-                //    {
-                //        connectione.Close();
-                //    }
-
-
-
-                //    MySqlConnection connection = new MySqlConnection(@connectionString);
-                //    string quer = @"UPDATE horariorieles SET CantidadPorCita = REPLACE(CantidadPorCita,'" + ca + " ,','')where Id='" + conv + "'; ";
-                //    MySqlCommand comman = new MySqlCommand(quer, connection);
-                //    try
-                //    {
-                //        connection.Close();
-                //        connection.Open();
-                //        comman.ExecuteNonQuery();
-
-                //    }
-                //    catch
-                //    {
-
-                //    }
-                //    finally
-                //    {
-                //        connection.Close();
-                //    }
+                
             }
-
-
-                //MySqlConnection connectiones = new MySqlConnection(@connectionString);
-                //string query = @"UPDATE horariorieles SET Citas = REPLACE(Citas,'" + citaId + " ,',''); ";
-                //MySqlCommand commando = new MySqlCommand(query, connectiones);
-                //try
-                //{
-                //    connectiones.Close();
-                //    connectiones.Open();
-                //    commando.ExecuteNonQuery();
-
-                //}
-                //catch
-                //{
-
-                //}
-                //finally
-                //{
-                //    connectiones.Close();
-                //}
-
 
                 if (cita == null)
             {
