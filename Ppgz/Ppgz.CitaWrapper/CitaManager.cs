@@ -745,9 +745,6 @@ namespace Ppgz.CitaWrapper
                 });
 
                 cita.asns.ToList().ForEach(asn => db.asns.Remove(asn));
-
-
-
                 cita.crs.ToList().ForEach(cr => db.crs.Remove(cr));
 
                 db.Entry(cita).State = EntityState.Deleted;
@@ -784,6 +781,64 @@ namespace Ppgz.CitaWrapper
             return ee;
         }
 
+        public static string CancelarCitaMenor20230101(int citaId)
+        {
+            string ee = "";
+            try
+            {
+                var db = new Entities();
+                var cita = db.citas.Find(citaId);
+
+                if (!RulesManager.PuedeCancelarCita(cita.FechaCita)) return "";
+
+                List<asn> asnantesdeborrar = new List<asn>();
+
+                cita.asns.ToList().ForEach(delegate (asn asnd)
+                {
+
+                    asn asnnew = new asn();
+                    asnnew.OrdenNumeroDocumento = asnd.OrdenNumeroDocumento;
+                    asnnew.NumeroPosicion = asnd.NumeroPosicion;
+                    asnantesdeborrar.Add(asnnew);
+
+                });
+
+                //public static Dictionary<string, string> ExecuteProcedureOutput(IList<MySqlParameter> parameters, string storeProcedure)
+
+                var parameters = new List<MySqlParameter>()
+                    {
+                        new MySqlParameter("cita", citaId.ToString()),
+                    };
+                Db.ExecuteProcedureOutput(parameters,"sp_val_eliminacitamenor");
+                Task.Factory.StartNew(() =>
+                {
+                    var scaleManager = new ScaleManager();
+                    scaleManager.Cancelar(citaId);
+                });
+
+
+                //Descarmar Ordenes de compra
+                ICollection<asn> ordenesAcancelar = new List<asn>();
+                foreach (var asn in asnantesdeborrar)
+                {
+                    if (db.asns.FirstOrDefault(a => a.OrdenNumeroDocumento == asn.OrdenNumeroDocumento && a.NumeroPosicion == asn.NumeroPosicion) == null)
+                    {
+                        ordenesAcancelar.Add(asn);
+                    }
+                }
+
+                var sapOrdenCompraManager = new SapOrdenCompraManager();
+                sapOrdenCompraManager.UnsetOrdenesDeCompraCita(ordenesAcancelar);
+
+                //fin
+
+            }
+            catch (Exception ex)
+            {
+                ee = ex.Message;
+            }
+            return ee;
+        }
         public static void DesmarcarEnActualizacion(asn asnDes)
         {
             var db = new Entities();

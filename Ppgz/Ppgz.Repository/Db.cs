@@ -168,8 +168,6 @@ namespace Ppgz.Repository
                     command.ExecuteNonQuery();
                     connection.Close();
 
-
-
                 }
             }
 
