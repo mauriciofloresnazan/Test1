@@ -803,13 +803,15 @@ namespace Ppgz.CitaWrapper
 
                 });
 
-                //public static Dictionary<string, string> ExecuteProcedureOutput(IList<MySqlParameter> parameters, string storeProcedure)
+                DataSet ds_eliminaCita = Db.GetDataReader("call sp_val_eliminacitamenor('" + citaId.ToString() + "');");
+                if (ds_eliminaCita.Tables[0].Rows.Count > 0) {
+                    foreach (DataRow dr in ds_eliminaCita.Tables[0].Rows) {
+                        if (!dr["msg"].ToString().Equals("Cita eliminada")) {
+                            return dr["msg"].ToString();
+                        }
+                    }
+                }
 
-                var parameters = new List<MySqlParameter>()
-                    {
-                        new MySqlParameter("cita", citaId.ToString()),
-                    };
-                Db.ExecuteProcedureOutput(parameters,"sp_val_eliminacitamenor");
                 Task.Factory.StartNew(() =>
                 {
                     var scaleManager = new ScaleManager();
