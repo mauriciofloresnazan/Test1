@@ -866,6 +866,21 @@ namespace Ppgz.CitaWrapper
                 scaleManager.ActualizarFecha(citaId);
             });
         }
+
+        public static string ActualizaFechaCitaLocal(int citaId,int nuevoriel, DateTime nuevafecha)
+        {
+            string msgregreso = "";
+            DataSet ds_eliminaCita = Db.GetDataReader("call sp_val_actualizacitamenor('" + citaId.ToString() + "','" + nuevoriel.ToString() + "','" + nuevafecha.ToString("yyyy-MM-dd") + "');");
+            if (ds_eliminaCita.Tables[0].Rows.Count > 0)
+            {
+                foreach (DataRow dr in ds_eliminaCita.Tables[0].Rows)
+                {
+                    msgregreso = dr["msg"].ToString();
+                }
+            }            
+            return msgregreso;
+        }
+
         public static void ActualizarFechaScaleEnroque(int citaId)
         {
             Task.Factory.StartNew(() =>

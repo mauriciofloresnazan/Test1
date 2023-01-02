@@ -541,7 +541,7 @@
                 }
             </tbody>
         </table>
-        @using (Html.BeginForm("CambiarFechaMenor", "AdministrarCitas", new { }, FormMethod.Post, new { id = "form-cambiar-fecha" }))
+        @using (Html.BeginForm("CambiarFechaMenor_Corregido_20230102", "AdministrarCitas", new { }, FormMethod.Post, new { id = "form-cambiar-fecha" }))
         {
             @Html.AntiForgeryToken()
             DateTime fecha = DateTime.Now;

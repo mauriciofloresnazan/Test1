@@ -1075,8 +1075,6 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         [Authorize(Roles = "MAESTRO-MERCADERIA,MERCADERIA-CONTROLCITAS")]
         public ActionResult CancelarCita20230101(int citaId)
         {
-            //string connectionString = "server=172.22.10.21;user id=impuls_portal;password=7emporal@S;database=impuls_portal; SslMode = none";
-            string connectionString = "server=localhost;user id=root;password=root;database=impuls_portal; SslMode = none";
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
             var proveedoresIds = _proveedorManager.FindByCuentaId(cuenta.Id).Select(p => p.Id).ToList();
             var db = new Entities();

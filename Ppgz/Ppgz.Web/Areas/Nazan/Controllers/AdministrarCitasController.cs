@@ -524,10 +524,10 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             {
                 var conv = Convert.ToInt64(pr.IdRiel);
                 var hr = db.horariorieles.Where(ho => ho.Id == conv).FirstOrDefault();
-                var c = hr.CantidadTotal;
+                var c = hr.CantidadTotal; // trae la cantidadTotal de horariorieles
                 var horarioRiel = db.citas.Find(pr.Id);
                 var pro = horarioRiel.proveedore.Nombre1;
-                var ca = horarioRiel.CantidadTotal;
+                var ca = horarioRiel.CantidadTotal; // trae la cantidadTotal de citas
 
 
                 c -= ca;
@@ -666,6 +666,74 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
 
             TempData["FlashSuccess"] = "Cambio de fecha aplicado exitosamente";
             return RedirectToAction("IndexM");
+        }
+
+        [Authorize(Roles = "MAESTRO-NAZAN,NAZAN-ADMINISTRARCITAS")]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public async Task<ActionResult> CambiarFechaMenor_Corregido_20230102(int citaId, string fecha, DateTime FechaCreacion, int[] horarioRielesIds)
+        {
+            var date = DateTime.ParseExact(fecha, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+
+            var db = new Entities();
+
+            var cita = db.citas.FirstOrDefault(c => c.FechaCita >= DateTime.Today && c.Id == citaId);
+
+            if (cita == null)
+            {
+                TempData["FlashError"] = "Cita incorrecta";
+                return RedirectToAction("Index");
+            }
+
+            if (date.Date < DateTime.Today.Date)
+            {
+                TempData["FlashError"] = "Fecha incorrecta para el cambio";
+                return RedirectToAction("IndexM");
+            }
+
+            foreach (var horarioRileId in horarioRielesIds)
+            {
+                var horarioRiel = db.horariorieles.FirstOrDefault(hr => hr.Id == horarioRileId);
+
+                if (horarioRiel == null)
+                {
+                    TempData["FlashError"] = "Rieles incorrectos";
+                    return RedirectToAction("IndexM");
+                }
+
+            }
+
+            var citas = db.citas.Where(c => c.Id == citaId).ToList();
+
+            string msg = "";
+            foreach (var horarioRileId in horarioRielesIds)
+            {
+                msg = CitaManager.ActualizaFechaCitaLocal(citaId, horarioRileId, date);
+            }
+            
+            if (msg.Equals("Cita actualizada"))
+            {
+                CitaManager.ActualizarFechaScale(citaId);
+                var correos = cita.proveedore.cuenta.AspNetUsers.Select(u => u.Email).ToArray();
+
+                var commonManager = new CommonManager();
+
+                foreach (var correo in correos)
+                {
+                    await commonManager.SendHtmlMail(
+                         "Modificación de la Cita #" + cita.Id,
+                         "La cita #." + cita.Id + " se ha modificado para la fecha " + cita.FechaCita.ToString("dd/MM/yyyy"),
+                         correo);
+                }
+
+                TempData["FlashSuccess"] = "Cambio de fecha aplicado exitosamente";
+                return RedirectToAction("IndexM");
+            }
+            else
+            {
+                TempData["FlashError"] = "Error en el cambio - " + msg;
+                return RedirectToAction("IndexM");
+            }
         }
 
         public JsonResult VerificarRieles(string fecha)
