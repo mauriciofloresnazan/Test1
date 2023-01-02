@@ -870,7 +870,7 @@ namespace Ppgz.CitaWrapper
         public static string ActualizaFechaCitaLocal(int citaId,int nuevoriel, DateTime nuevafecha)
         {
             string msgregreso = "";
-            DataSet ds_eliminaCita = Db.GetDataReader("call sp_val_actualizacitamenor('" + citaId.ToString() + "','" + nuevoriel.ToString() + "','" + nuevafecha.ToString("yyyy-MM-dd") + "');");
+            DataSet ds_eliminaCita = Db.GetDataReader("call sp_val_actualizacitamenor(" + citaId.ToString() + "," + nuevoriel.ToString() + ",'" + nuevafecha.ToString("yyyy-MM-dd") + "');");
             if (ds_eliminaCita.Tables[0].Rows.Count > 0)
             {
                 foreach (DataRow dr in ds_eliminaCita.Tables[0].Rows)
