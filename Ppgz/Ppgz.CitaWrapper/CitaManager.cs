@@ -475,7 +475,6 @@ namespace Ppgz.CitaWrapper
             
         }
 
-
         public static void RegistrarCitaMenor(PreCita precita)
         {
 
@@ -600,9 +599,6 @@ namespace Ppgz.CitaWrapper
             });
         }
 
-
-
-
         public static void RegistrarCitaSinASN(PreCita precita)
         {
 
@@ -658,7 +654,6 @@ namespace Ppgz.CitaWrapper
                 db.SaveChanges();
             }
         }
-
 
         public static void CancelarCita(int citaId)
         {
@@ -720,7 +715,6 @@ namespace Ppgz.CitaWrapper
 
 
         }
-
 
         public static string CancelarCitaMenor(int citaId)
         {
@@ -841,6 +835,7 @@ namespace Ppgz.CitaWrapper
             }
             return ee;
         }
+
         public static void DesmarcarEnActualizacion(asn asnDes)
         {
             var db = new Entities();
@@ -856,7 +851,6 @@ namespace Ppgz.CitaWrapper
 
 
         }
-
 
         public static void ActualizarFechaScale(int citaId)
         {
@@ -889,6 +883,7 @@ namespace Ppgz.CitaWrapper
                 scaleManager.ActualizarFechaEnroque(citaId);
             });
         }
+
         public static void ActualizarCantidadScale(int[] asnIds)
         {
             Task.Factory.StartNew(() =>
@@ -903,9 +898,7 @@ namespace Ppgz.CitaWrapper
             var scaleManager = new ScaleManager();
             scaleManager.EliminarAsn(asnAborrar);
         }
-
-
-
+        
         public static void RegistrarCitaAsn(PreCita precita,List<PreAsn> ordenesactivas)
         {
 
@@ -1007,9 +1000,9 @@ namespace Ppgz.CitaWrapper
                 db.SaveChanges();
             }
 
-            //var sapOrdenCompraManager = new SapOrdenCompraManager();
+            var sapOrdenCompraManager = new SapOrdenCompraManager();
 
-            //sapOrdenCompraManager.SetOrdenesDeCompraCita(cita.asns);
+            sapOrdenCompraManager.SetOrdenesDeCompraCita(cita.asns);
 
             //Task.Factory.StartNew(() =>
             //{

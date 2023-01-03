@@ -7,11 +7,8 @@ using System.Text;
 using log4net;
 using Ppgz.Repository;
 using System.Data.Entity;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
 using System.Data;
 using System.IO;
-using MySql.Data.MySqlClient;
 
 namespace ScaleWrapper
 {
