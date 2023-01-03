@@ -78,7 +78,9 @@ namespace Ppgz.Web.Areas.Nazan.Controllers
             }
         }
 
-         private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        //private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["portalqa"].ConnectionString;
+
         public ActionResult Inicio()
         {
             var resultado = TempData["resultado"];
@@ -278,7 +280,7 @@ WHERE id = id_muestras and Estatus in (30,40,50,60,70) and canalm='" + user + "'
         public ActionResult Resultado(string Id)
         {
 
-            var Res = Db.GetDataTable("SELECT * FROM portalqa.muestras where id in (" + Id + ") ");
+            var Res = Db.GetDataTable("SELECT * FROM muestras where id in (" + Id + ") ");
             ViewBag.Res = Res;
             TempData["resultado"] = Id;
             TempData["FlashSuccess"] = "Excel generado correctamente";
@@ -287,7 +289,7 @@ WHERE id = id_muestras and Estatus in (30,40,50,60,70) and canalm='" + user + "'
         public ActionResult ResultadoA(string Id)
         {
 
-            var Res = Db.GetDataTable("SELECT * FROM portalqa.muestras where id in (" + Id + ") ");
+            var Res = Db.GetDataTable("SELECT * FROM muestras where id in (" + Id + ") ");
             ViewBag.Res = Res;
             TempData["resultado"] = Id;
             TempData["FlashSuccess"] = "Excel generado correctamente";
@@ -303,7 +305,7 @@ WHERE id = id_muestras and Estatus in (30,40,50,60,70) and canalm='" + user + "'
             var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillamuestras.xlsx"));
             var ws = workbook.Worksheet(1);
 
-            var Res = Db.GetDataTable("SELECT * FROM portalqa.muestras where id in (" + i + ") ");
+            var Res = Db.GetDataTable("SELECT * FROM muestras where id in (" + i + ") ");
             var row = 3;
             foreach (DataRow rows in Res.Rows)
             {
@@ -350,7 +352,7 @@ WHERE id = id_muestras and Estatus in (30,40,50,60,70) and canalm='" + user + "'
             var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillamuestras.xlsx"));
             var ws = workbook.Worksheet(1);
 
-            var Res = Db.GetDataTable("SELECT * FROM portalqa.muestras where id in (" + i + ") ");
+            var Res = Db.GetDataTable("SELECT * FROM muestras where id in (" + i + ") ");
             var row = 3;
             foreach (DataRow rows in Res.Rows)
             {

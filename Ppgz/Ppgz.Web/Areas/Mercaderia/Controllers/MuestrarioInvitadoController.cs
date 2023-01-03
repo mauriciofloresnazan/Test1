@@ -61,6 +61,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
 
         private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        //private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["portalqa"].ConnectionString;
         public ActionResult Inicio()
         {
             var resultado = TempData["resultado"];
@@ -311,7 +312,7 @@ WHERE id = id_muestras and Impresion=0 and MarcaAgrupa='" + marca + "'");
             var rs = 3;
             var rss = 9;
 
-            var res = Db.GetDataTable("SELECT * FROM portalqa.muestras where id in (" + ids + ") ");
+            var res = Db.GetDataTable("SELECT * FROM muestras where id in (" + ids + ") ");
                 var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillaetiquetas.xlsx"));
                 var ws = workbook.Worksheet(1);
 
@@ -446,7 +447,7 @@ WHERE id = id_muestras and Impresion=0 and MarcaAgrupa='" + marca + "'");
 
            
             var Res1 = Db.GetDataTable(@"SELECT id_muestras,GROUP_CONCAT(canalm) as canales
-FROM portalqa.canalmuestras
+FROM canalmuestras
 where id_muestras='"+idproveedor+"'  and canalm like '%"+Canal+"%'");
 
 

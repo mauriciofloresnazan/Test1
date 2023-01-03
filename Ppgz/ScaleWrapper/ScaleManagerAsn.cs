@@ -352,7 +352,7 @@ SELECT concat('
 INSERT INTO DOWNLOAD_RECEIPT_CONTAINER (INTERFACE_RECORD_ID, INTERFACE_LINK_ID,INTERFACE_ACTION_CODE, INTERFACE_CONDITION, container_id, container_type, DATE_TIME_STAMP, REASON_CODE, QUANTITY, TMP_ERP_ORDER_LINE_NUM)
 select 
 ''',IFNULL(INTERFACE_RECORD_ID,''),''',''',IFNULL(INTERFACE_LINK_ID,''),''',''',IFNULL(INTERFACE_ACTION_CODE,''),
-''',''',IFNULL(INTERFACE_CONDITION,''),''',''',IFNULL(container_id,''),''',''',IFNULL(container_type,''),''',''',IFNULL(DATE_FORMAT(DATE_TIME_STAMP,'%Y%c%d'),''),
+''',''',IFNULL(INTERFACE_CONDITION,''),''',''',IFNULL(container_id,''),''',''',IFNULL(container_type,''),''',''',IFNULL(DATE_FORMAT(DATE_TIME_STAMP,'%Y%m%d'),''),
 ''',''',IFNULL(REASON_CODE,''),''',',IFNULL(convert(QUANTITY,CHAR),'0'),',',IFNULL(convert(TMP_ERP_ORDER_LINE_NUM,CHAR),'0'),' go ')
 
  FROM gnzn_datos_asn_contendores WHERE CitaId=" + cita.Id+";");

@@ -61,6 +61,7 @@ namespace Ppgz.Web.Areas.Mercaderia.Controllers
         }
 
         private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        //private static readonly string ConnectionString = ConfigurationManager.ConnectionStrings["portalqa"].ConnectionString;
         public ActionResult Index()
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -108,7 +109,6 @@ WHERE id = id_muestras and Estatus in (20,30) and nombreproveedor='" + pr+"'");
             return View();
         }
 
-
         public ActionResult EstatusA(string ProveedorNombre, int proveedorId, string NumeroProveedor, string sociedad, string fechaDesde = null, string fechaHasta = null)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -147,6 +147,7 @@ WHERE id = id_muestras and NombreProveedor='" + pr + "' and Estatus=40" );
             ViewBag.Proveedor = proveedor;
             return View();
         }
+
         public ActionResult Muestras(int proveedorId, string NumeroProveedor, string sociedad, string fechaDesde = null, string fechaHasta = null)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -195,6 +196,7 @@ WHERE id = id_muestras and Estatus=0 and NombreProveedor='" + pr+"'");
             ViewBag.Proveedor = proveedor;
             return View();
         }
+
         public ActionResult Crear(int proveedorId, HttpPostedFileBase foto, string proveedornombre1, string proveedornumero,string marcaagrupa,string Canal, string proveedorcuenta, string Estilo, string Color, string Acabado, string NombreMaterial, string MaterialSuela, string Altura,
             string RangoTallas, string EM, string Costo)
         {
@@ -236,9 +238,6 @@ WHERE id = id_muestras and Estatus=0 and NombreProveedor='" + pr+"'");
             TempData["FlashSuccess"] = "Muestra registrada correctamente";
             return RedirectToAction("Muestras", new { proveedorId = proveedorId });
         }
-
-
-
 
         public ActionResult Modificar(int proveedorId, string idproveedor, HttpPostedFileBase foto, string nombreproveedor, string contacto, string marca, string Estilo, string Color, string Acabado, string NombreMaterial, string MaterialSuela, string Altura,
     string tallas, string EM, string Costo)
@@ -307,6 +306,7 @@ WHERE id = id_muestras and Impresion=0 and NombreProveedor='" + pr + "'");
             ViewBag.Proveedor = proveedor;
             return View();
         }
+
         public ActionResult Resultado(string Id,int prove,string ids)
         {
             var cuenta = _commonManager.GetCuentaUsuarioAutenticado();
@@ -344,7 +344,7 @@ WHERE id = id_muestras and Impresion=0 and NombreProveedor='" + pr + "'");
             var rs = 3;
             var rss = 9;
 
-            var res = Db.GetDataTable("SELECT * FROM portalqa.muestras where id in (" + ids + ") ");
+            var res = Db.GetDataTable("SELECT * FROM muestras where id in (" + ids + ") ");
                 var workbook = new XLWorkbook(Server.MapPath(@"~/App_Data/plantillaetiquetas.xlsx"));
                 var ws = workbook.Worksheet(1);
 
@@ -440,7 +440,7 @@ WHERE id = id_muestras and Impresion=0 and NombreProveedor='" + pr + "'");
                 rss++; rss++; rss++; rss++; rss++; rss++; rss++; rss++; rss++; rss++; rss++; rss++; rss++;
             }
 
-            MySqlCommand command = new MySqlCommand(@"UPDATE canalmuestras SET impresion = '"+1+ "'  WHERE id_d in(" + id + ")");
+            MySqlCommand command = new MySqlCommand(@"UPDATE canalmuestras SET impresion = '" + 1+ "'  WHERE id_d in(" + id + ")");
             MySqlConnection con = new MySqlConnection(ConnectionString);
             con.Open();
             command.Connection = con;
@@ -449,7 +449,8 @@ WHERE id = id_muestras and Impresion=0 and NombreProveedor='" + pr + "'");
 
             FileManager.ExportExcel(workbook, "etiquetasMuestras", HttpContext);
 
-            return View();
+            //return View();
+            return RedirectToAction("Muestras");
         }
 
 
@@ -485,7 +486,7 @@ WHERE id = id_muestras and Impresion=0 and NombreProveedor='" + pr + "'");
         public ActionResult Actualizar(int proveedorId,string Canal, int idproveedor)
         {
             var Res1 = Db.GetDataTable(@"SELECT id_muestras,GROUP_CONCAT(canalm) as canales
-FROM portalqa.canalmuestras
+FROM canalmuestras
 where id_muestras='" + idproveedor + "'  and canalm like '%" + Canal + "%'");
 
             foreach (DataRow rows in Res1.Rows)

@@ -133,7 +133,7 @@ namespace Ppgz.Web
                 "VISTACITASCOMPRADORES|Informacion de citas para Compradores|Index|AdministrarCitasCompradores|fa fa-calendar|Nazan",
                 "VISTACITASCALIDAD|Reporte Devoluciones De tienda|Index|InformacionDevolucionesTienda|fa fa-area-chart|Nazan",
                 "VISTACITASCALIDAD|Reporte De Rechazos De Cedis|Index|ReporteRechazosCedis|fa fa-spinner|Nazan",
-                
+                "MUESTRAS|Muestras Registradas|Inicio|ReporteMuestras|fa fa-cube|Nazan",
                 "PENALIZACIONES|Administración de Penalizaciones|Index|Penalizaciones|fa fa-exclamation-circle|Nazan",
                 "PENALIZACIONES|Administración de Penalizaciones Menor a 270|Index|PenalizacionesMenor|fa fa-exclamation-circle|Nazan",
                 "AUDITORIA|Administración de Cargos Por Auditoria|Index|PenalizacionesAuditor|fa fa-exclamation-triangle|Nazan",
@@ -179,7 +179,7 @@ namespace Ppgz.Web
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas Individual|Index|ImpresionEtiquetasIndividual|fa fa-ticket|Mercaderia",
                 "FACTURAS|Administración de Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
-                
+                "MUESTRAS|Muestras Cedis |Index|Muestrario|fa fa-medium|Mercaderia",
                 "CUENTASPAGAR|Devoluciones de Tienda|Index|DevolucionesTienda|fa fa-motorcycle|Mercaderia",
                 "CUENTASPAGAR|Rechazos De Cedis|Index|RechazosCedis|fa fa-spinner|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
@@ -206,7 +206,7 @@ namespace Ppgz.Web
                 "IMPRESIONETIQUETA|Impresión de Etiquetas|Index|ImpresionEtiquetas|fa fa-ticket|Mercaderia",
                 "IMPRESIONETIQUETA|Impresión de Etiquetas Individual|Index|ImpresionEtiquetasIndividual|fa fa-ticket|Mercaderia",
                 "FACTURAS|Administración de Facturas|Index|Facturas|fa fa-file-text-o|Mercaderia",
-                
+                "MUESTRAS|Muestras Cedis |Index|Muestrario|fa fa-medium|Mercaderia",
                 "CUENTASPAGAR|Devoluciones de Tienda|Index|DevolucionesTienda|fa fa-motorcycle|Mercaderia",
                 "CUENTASPAGAR|Rechazos De Cedis|Index|RechazosCedis|fa fa-spinner|Mercaderia",
                 "MENSAJESINSTITUCIONALES|Mensajes Institucionales|Index|MensajesInstitucionales|fa fa-envelope-open|Mercaderia",
