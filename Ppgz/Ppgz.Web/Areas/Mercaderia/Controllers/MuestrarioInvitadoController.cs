@@ -178,6 +178,7 @@ WHERE id = id_muestras and MarcaAgrupa='" + marca + "' and Estatus=40" );
             }
             return View();
         }
+
         public ActionResult CrearInvitado(HttpPostedFileBase foto, string proveedornombre1, string proveedornumero,string marcaagrupa,string Canal, string proveedorcuenta, string Estilo, string Color, string Acabado, string NombreMaterial, string MaterialSuela, string Altura,
             string RangoTallas, string EM, string Costo)
         {
@@ -219,9 +220,6 @@ WHERE id = id_muestras and MarcaAgrupa='" + marca + "' and Estatus=40" );
             TempData["FlashSuccess"] = "Muestra registrada correctamente";
             return RedirectToAction("MuestrasInvitado", new { marca = marcaagrupa });
         }
-
-
-
 
         public ActionResult Modificar(string idproveedor, HttpPostedFileBase foto, string nombreproveedor, string contacto, string marca, string Estilo, string Color, string Acabado, string NombreMaterial, string MaterialSuela, string Altura,
     string tallas, string EM, string Costo)

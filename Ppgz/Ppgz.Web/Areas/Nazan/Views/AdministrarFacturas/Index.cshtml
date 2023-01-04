@@ -104,6 +104,8 @@
                             <th class="text-center">Total</th>
                             <th class="text-center">Estatus</th>
                             <th class="text-center">Comentario</th>
+                            <th class="text-center">Metodo de Pago</th>
+                            <th class="text-center">Forma de pago</th>
                             <th class="text-center">RFC Receptor</th>
                             <th class="text-center">Opciones</th>
                         </tr>
@@ -137,36 +139,38 @@
                                 estatusFacturas = "#e4f631";
                             }
 
-                            <tr style="background-color: @estatusFacturas;">
+                        <tr style="background-color: @estatusFacturas;">
 
 
-                                <td class="text-center vert-align">@factura.proveedore.Rfc</td>
-                                <td class="text-center vert-align" style="white-space: inherit; font-size: .8em;">@factura.proveedore.Nombre1 @factura.proveedore.Nombre2 @factura.proveedore.Nombre3 @factura.proveedore.Nombre4</td>
-                                <td class="text-center vert-align">@factura.Serie</td>
-                                <td class="text-center vert-align">@factura.Folio</td>
-                                <td class="text-justify vert-align" style="text-align: center; font-size: 14px;  font-weight: bold;">@factura.EstatusOriginal</td>
-                                <td class="text-center vert-align">@factura.NumeroGenerado</td>
-                                <td class="text-center vert-align" style="white-space: inherit; font-size: .8em;">@factura.Uuid</td>
-                                <td class="text-center vert-align">@factura.Fecha.ToString("dd/MM/yyyy")</td>
-                                <td class="text-center vert-align">@factura.FechaPortal</td>
+                            <td class="text-center vert-align">@factura.proveedore.Rfc</td>
+                            <td class="text-center vert-align" style="white-space: inherit; font-size: .8em;">@factura.proveedore.Nombre1 @factura.proveedore.Nombre2 @factura.proveedore.Nombre3 @factura.proveedore.Nombre4</td>
+                            <td class="text-center vert-align">@factura.Serie</td>
+                            <td class="text-center vert-align">@factura.Folio</td>
+                            <td class="text-justify vert-align" style="text-align: center; font-size: 14px;  font-weight: bold;">@factura.EstatusOriginal</td>
+                            <td class="text-center vert-align">@factura.NumeroGenerado</td>
+                            <td class="text-center vert-align" style="white-space: inherit; font-size: .8em;">@factura.Uuid</td>
+                            <td class="text-center vert-align">@factura.Fecha.ToString("dd/MM/yyyy")</td>
+                            <td class="text-center vert-align">@factura.FechaPortal</td>
 
-                                <td class="text-center vert-align">@factura.Total</td>
+                            <td class="text-center vert-align">@factura.Total</td>
 
-                                <th class="text-center vert-align">
-                                    @factura.Estatus
-                                </th>
-                                <td class="text-justify vert-align">@factura.Comentario</td>
-                                <td class="text-justify vert-align">@factura.RFCReceptor</td>
+                            <th class="text-center vert-align">
+                                @factura.Estatus
+                            </th>
+                            <td class="text-justify vert-align">@factura.Comentario</td>
+                            <td class="text-justify vert-align">@factura.MetodoPago</td>
+                            <td class="text-justify vert-align">@factura.formapago</td>
+                            <td class="text-justify vert-align">@factura.RFCReceptor</td>
 
-                                <td class="text-center vert-align">
+                            <td class="text-center vert-align">
 
-                                    <div class="btn-group btn-group-vertical" role="group" aria-label="Archivos">
-                                        <a class="btn btn-danger btn-xs btn-block" href="@Url.Action("DescargarXml", "AdministrarFacturas", new {proveedorId = @factura.proveedore.Id, facturaId = @factura.Id})"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-file-code-o" aria-hidden="true"></i> XML </a>
-                                        <a class="btn btn-warning btn-xs btn-block" href="@Url.Action("DescargarPdf", "AdministrarFacturas", new {proveedorId = @factura.proveedore.Id, facturaId = @factura.Id})"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF </a>
-                                        <a class="btn btn-primary btn-xs btn-block btn-modificar-factura" data-facturaid="@factura.Id" data-facturaserie="@factura.Serie" data-facturafolio="@factura.Folio" data-facturaestatus="@factura.EstatusOriginal" data-facturauuid="@factura.Uuid" data-facturacomentario="@factura.Comentario" data-facturanumerogenerado="@factura.NumeroGenerado"><i class="fa fa-edit" aria-hidden="true"></i> MODIFICAR </a>
-                                    </div>
-                                </td>
-                            </tr>
+                                <div class="btn-group btn-group-vertical" role="group" aria-label="Archivos">
+                                    <a class="btn btn-danger btn-xs btn-block" href="@Url.Action("DescargarXml", "AdministrarFacturas", new {proveedorId = @factura.proveedore.Id, facturaId = @factura.Id})"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-file-code-o" aria-hidden="true"></i> XML </a>
+                                    <a class="btn btn-warning btn-xs btn-block" href="@Url.Action("DescargarPdf", "AdministrarFacturas", new {proveedorId = @factura.proveedore.Id, facturaId = @factura.Id})"><i class="fa fa-download" aria-hidden="true"></i> <i class="fa fa-file-pdf-o" aria-hidden="true"></i> PDF </a>
+                                    <a class="btn btn-primary btn-xs btn-block btn-modificar-factura" data-facturaid="@factura.Id" data-facturaserie="@factura.Serie" data-facturafolio="@factura.Folio" data-facturaestatus="@factura.EstatusOriginal" data-facturauuid="@factura.Uuid" data-facturacomentario="@factura.Comentario" data-facturanumerogenerado="@factura.NumeroGenerado"><i class="fa fa-edit" aria-hidden="true"></i> MODIFICAR </a>
+                                </div>
+                            </td>
+                        </tr>
                         }
 
                     </tbody>

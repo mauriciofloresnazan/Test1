@@ -15,6 +15,7 @@ using System.Xml;
 using Newtonsoft.Json;
 using System.Data.SqlClient;
 using System.Web.Script.Serialization;
+using System.Data;
 
 namespace Ppgz.Services
 {
@@ -3132,6 +3133,26 @@ namespace Ppgz.Services
             ws.Flush();
             ws.Close();
             //System.IO.File.AppendAllLines(Path.Combine(PathGeneric), lines);
+        }
+
+        public DataSet GetFacturasbyFecha(string fechaInicio,string fechaFin)
+        {
+            DataSet regreso = new DataSet();
+            try
+            {
+                string queryfacturas = @"SELECT 
+f.Id,f.proveedor_id,f.Uuid,f.Serie,f.Folio,f.Fecha,f.Total,f.XmlRuta,f.PdfRuta,f.Estatus,f.Comentario,f.NumeroGenerado,f.Procesado,f.numeroProveedor,f.FechaPortal,f.EstatusOriginal,f.RFCReceptor,f.TipoFactura,f.MetodoPago,f.formapago
+,p.Id as idPro,p.Rfc,p.Nombre1,p.Nombre2,p.Nombre3,p.Nombre4
+FROM facturas f
+LEFT JOIN proveedores p ON p.Id = f.proveedor_id
+WHERE f.Fecha >='" + fechaInicio + "' AND Fecha <= '" + fechaFin + "';";
+                regreso = Db.GetDataSet(queryfacturas);
+            }
+            catch(Exception e)
+            {
+                throw e;
+            }
+            return regreso;
         }
     }
 }
