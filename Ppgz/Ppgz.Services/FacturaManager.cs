@@ -320,6 +320,8 @@ namespace Ppgz.Services
                 var SubTotal = "";
                 var Fecha = "";
                 var Total = "";
+                var FormaPago = "";
+                var MetodoPago = "";
 
                 if (comprobante.Version33 == "3.3")
                 {
@@ -331,6 +333,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal33;
                     Total = comprobante.Total33;
                     Fecha = comprobante.Fecha33;
+                    FormaPago = comprobante.formapago33;
+                    MetodoPago = comprobante.MetodoPago33;
                 }
                 else
                 {
@@ -342,6 +346,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal;
                     Total = comprobante.Total;
                     Fecha = comprobante.Fecha;
+                    FormaPago = comprobante.FormaDePago;
+                    MetodoPago = comprobante.MetodoDePago;
                 }
 
                 var refe = "";
@@ -460,7 +466,9 @@ namespace Ppgz.Services
                     RFCReceptor = RFCReceptor ?? string.Empty,
                     TipoFactura = "Servicios",
                     Comentario = "Factura Validada",
-                    Procesado = true
+                    Procesado = true,
+                    MetodoPago = MetodoPago,
+                    formapago = FormaPago
             };
 
                 //if (factura.Estatus != "S" && factura.Estatus != "H")
@@ -482,9 +490,12 @@ namespace Ppgz.Services
                 //    factura.NumeroGenerado = facturaSap.FacturaNumero;
 
                 //}
+                InsertFactura(factura);
 
+                /*
                 _db.facturas.Add(factura);
                 _db.SaveChanges();
+                */
 
             }
             else if(comprobante.Receptor.Rfc33 == "ASC090330TT3")
@@ -504,6 +515,8 @@ namespace Ppgz.Services
                 var SubTotal = "";
                 var Fecha = "";
                 var Total = "";
+                var MetodoPago = "";
+                var FormaPago = "";
 
                 if (comprobante.Version33 == "3.3")
                 {
@@ -515,6 +528,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal33;
                     Total = comprobante.Total33;
                     Fecha = comprobante.Fecha33;
+                    MetodoPago = comprobante.MetodoPago33;
+                    FormaPago = comprobante.formapago33;
                 }
                 else
                 {
@@ -526,6 +541,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal;
                     Total = comprobante.Total;
                     Fecha = comprobante.Fecha;
+                    MetodoPago = comprobante.MetodoDePago;
+                    FormaPago = comprobante.FormaDePago;
                 }
 
                 var refe = "";
@@ -644,7 +661,9 @@ namespace Ppgz.Services
                     RFCReceptor = RFCReceptor ?? string.Empty,
                     TipoFactura = "Servicios",
                     Procesado = true,
-                    Comentario = "Factura Validada"
+                    Comentario = "Factura Validada",
+                    MetodoPago = MetodoPago,
+                    formapago= FormaPago
                 };
 
                 //if (factura.Estatus != "S" && factura.Estatus != "H")
@@ -667,11 +686,11 @@ namespace Ppgz.Services
 
                 //}
 
+                InsertFactura(factura);
+                /*
                 _db.facturas.Add(factura);
                 _db.SaveChanges();
-
-
-
+                */
 
 
             }
@@ -692,6 +711,8 @@ namespace Ppgz.Services
                 var SubTotal = "";
                 var Fecha = "";
                 var Total = "";
+                var MetodoPago = "";
+                var FormaPago = "";
 
                 if (comprobante.Version33 == "3.3")
                 {
@@ -703,6 +724,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal33;
                     Total = comprobante.Total33;
                     Fecha = comprobante.Fecha33;
+                    MetodoPago = comprobante.MetodoPago33;
+                    FormaPago = comprobante.formapago33;
                 }
                 else
                 {
@@ -714,6 +737,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal;
                     Total = comprobante.Total;
                     Fecha = comprobante.Fecha;
+                    MetodoPago = comprobante.MetodoDePago;
+                    FormaPago = comprobante.FormaDePago;
                 }
 
                 var refe = "";
@@ -830,7 +855,9 @@ namespace Ppgz.Services
                     EstatusOriginal = facturaSap.Estatus,
                     FechaPortal = fecha,
                     RFCReceptor = RFCReceptor ?? string.Empty,
-                    TipoFactura = "Servicios"
+                    TipoFactura = "Servicios",
+                    MetodoPago = MetodoPago,
+                    formapago = FormaPago
                 };
 
                 if (factura.Estatus != "S" && factura.Estatus != "H")
@@ -852,9 +879,11 @@ namespace Ppgz.Services
                     factura.NumeroGenerado = facturaSap.FacturaNumero;
 
                 }
-
+                InsertFactura(factura);
+                /*
                 _db.facturas.Add(factura);
                 _db.SaveChanges();
+                */
             }
             
 
@@ -908,6 +937,8 @@ namespace Ppgz.Services
                 var SubTotal = "";
                 var Fecha = "";
                 var Total = "";
+                var FormaPago = "";
+                var MetodoPago = "";
 
                 if (comprobante.Version33 == "4.0")
                 {
@@ -919,6 +950,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal33;
                     Total = comprobante.Total33;
                     Fecha = comprobante.Fecha33;
+                    FormaPago = comprobante.formapago33;
+                    MetodoPago = comprobante.MetodoPago33;
                 }
                 else
                 {
@@ -930,6 +963,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal;
                     Total = comprobante.Total;
                     Fecha = comprobante.Fecha;
+                    FormaPago = comprobante.FormaDePago;
+                    MetodoPago = comprobante.MetodoDePago;
                 }
 
                 var refe = "";
@@ -1108,7 +1143,9 @@ namespace Ppgz.Services
                     RFCReceptor = RFCReceptor ?? string.Empty,
                     Comentario = "Factura Validada",
                     Procesado = true,
-                    TipoFactura = "Servicios"
+                    TipoFactura = "Servicios",
+                    MetodoPago = MetodoPago,
+                    formapago = FormaPago
                 };
 
                 //if (factura.Estatus != "S" && factura.Estatus != "H")
@@ -1130,10 +1167,11 @@ namespace Ppgz.Services
                 //    factura.NumeroGenerado = facturaSap.FacturaNumero;
 
                 //}
-
+                InsertFactura(factura);
+                /*
                 _db.facturas.Add(factura);
                 _db.SaveChanges();
-
+                */
 
 
             }
@@ -1155,6 +1193,8 @@ namespace Ppgz.Services
                 var SubTotal = "";
                 var Fecha = "";
                 var Total = "";
+                var MetodoPago = "";
+                var FormaPago = "";
 
                 if (comprobante.Version33 == "4.0")
                 {
@@ -1166,6 +1206,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal33;
                     Total = comprobante.Total33;
                     Fecha = comprobante.Fecha33;
+                    MetodoPago = comprobante.MetodoPago33;
+                    FormaPago = comprobante.formapago33;
                 }
                 else
                 {
@@ -1177,6 +1219,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal;
                     Total = comprobante.Total;
                     Fecha = comprobante.Fecha;
+                    MetodoPago = comprobante.MetodoDePago;
+                    FormaPago = comprobante.FormaDePago;
                 }
 
                 var refe = "";
@@ -1355,7 +1399,9 @@ namespace Ppgz.Services
                     RFCReceptor = RFCReceptor ?? string.Empty,
                     Comentario = "Factura Validada",
                     Procesado = true,
-                    TipoFactura = "Servicios"
+                    TipoFactura = "Servicios",
+                    MetodoPago = MetodoPago,
+                    formapago = FormaPago
                 };
 
                 //if (factura.Estatus != "S" && factura.Estatus != "H")
@@ -1377,10 +1423,11 @@ namespace Ppgz.Services
                 //    factura.NumeroGenerado = facturaSap.FacturaNumero;
 
                 //}
-
+                InsertFactura(factura);
+                /*
                 _db.facturas.Add(factura);
                 _db.SaveChanges();
-
+                */
 
             }
             else if (comprobante.Receptor.Rfc33 == "NCC1011058I0")
@@ -1400,6 +1447,8 @@ namespace Ppgz.Services
                 var SubTotal = "";
                 var Fecha = "";
                 var Total = "";
+                var MetodoPago = "";
+                var FormaPago = "";
 
                 if (comprobante.Version33 == "4.0")
                 {
@@ -1411,6 +1460,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal33;
                     Total = comprobante.Total33;
                     Fecha = comprobante.Fecha33;
+                    MetodoPago = comprobante.MetodoPago33;
+                    FormaPago = comprobante.formapago33;
                 }
                 else
                 {
@@ -1422,6 +1473,8 @@ namespace Ppgz.Services
                     SubTotal = comprobante.SubTotal;
                     Total = comprobante.Total;
                     Fecha = comprobante.Fecha;
+                    MetodoPago = comprobante.MetodoDePago;
+                    FormaPago = comprobante.FormaDePago;
                 }
 
                 var refe = "";
@@ -1598,7 +1651,9 @@ namespace Ppgz.Services
                     EstatusOriginal = facturaSap.Estatus,
                     FechaPortal = fecha,
                     RFCReceptor = RFCReceptor ?? string.Empty,
-                    TipoFactura = "Servicios"
+                    TipoFactura = "Servicios",
+                    MetodoPago = MetodoPago,
+                    formapago = FormaPago
                 };
 
                 if (factura.Estatus != "S" && factura.Estatus != "H")
@@ -1620,9 +1675,11 @@ namespace Ppgz.Services
                     factura.NumeroGenerado = facturaSap.FacturaNumero;
 
                 }
-
+                InsertFactura(factura);
+                /*
                 _db.facturas.Add(factura);
                 _db.SaveChanges();
+                */
             }
 
            
@@ -2285,10 +2342,12 @@ namespace Ppgz.Services
                         DbScale.Update("UPDATE GNZN_Cifras_Control_CR_Facturas SET Fecha_CXP = '" + myDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "' WHERE Proveedor = '" + proveedor.NumeroProveedor + "' AND Factura='" + refe + "';");
                     }
 
-
+                    InsertFactura(factura);
+                    /*
                     _db.facturas.Add(factura);
 
                     _db.SaveChanges();
+                    */
                 }
                 else
                 {
@@ -2318,9 +2377,12 @@ namespace Ppgz.Services
 
                     };
 
+                    InsertFactura(factura);
+                    /*
                     _db.facturas.Add(factura);
 
                     _db.SaveChanges();
+                    */
                 }
 
             }
@@ -2351,10 +2413,12 @@ namespace Ppgz.Services
                     formapago = FormaPago
 
                 };
-
+                InsertFactura(factura);
+                /*
                 _db.facturas.Add(factura);
 
                 _db.SaveChanges();
+                */
             }
 
         }
@@ -2402,6 +2466,8 @@ namespace Ppgz.Services
             var SubTotal = "";
             var Fecha = "";
             var Total = "";
+            var FormaPago = "";
+            var MetodoPago = "";
 
             if (comprobante.Version33 == "4.0")
             {
@@ -2413,6 +2479,8 @@ namespace Ppgz.Services
                 SubTotal = comprobante.SubTotal33;
                 Total = comprobante.Total33;
                 Fecha = comprobante.Fecha33;
+                FormaPago = comprobante.formapago33;
+                MetodoPago = comprobante.MetodoPago33;
             }
             else
             {
@@ -2424,6 +2492,8 @@ namespace Ppgz.Services
                 SubTotal = comprobante.SubTotal;
                 Total = comprobante.Total;
                 Fecha = comprobante.Fecha;
+                FormaPago = comprobante.FormaDePago;
+                MetodoPago = comprobante.Sello;
             }
 
             var refe = "";
@@ -2627,7 +2697,9 @@ namespace Ppgz.Services
                         EstatusOriginal = facturaSap.Estatus,
                         FechaPortal = fecha,
                         RFCReceptor = RFCReceptor ?? string.Empty,
-                        TipoFactura = "Mercaderia"
+                        TipoFactura = "Mercaderia",
+                        MetodoPago = MetodoPago,
+                        formapago = FormaPago
 
                     };
 
@@ -2647,10 +2719,12 @@ namespace Ppgz.Services
                         DbScale.Update("UPDATE GNZN_Cifras_Control_CR_Facturas SET Fecha_CXP = '" + myDateTime.ToString("yyyy-MM-dd HH:mm:ss.fff") + "' WHERE Proveedor = '" + proveedor.NumeroProveedor + "' AND Factura='" + refe + "';");
                     }
 
-
+                    InsertFactura(factura);
+                    /*
                     _db.facturas.Add(factura);
 
                     _db.SaveChanges();
+                    */
                 }
                 else
                 {
@@ -2674,13 +2748,18 @@ namespace Ppgz.Services
                         EstatusOriginal = "p",
                         FechaPortal = fecha,
                         RFCReceptor = RFCReceptor ?? string.Empty,
-                        TipoFactura = "Mercaderia"
+                        TipoFactura = "Mercaderia",
+                        MetodoPago = MetodoPago,
+                        formapago = FormaPago
 
                     };
 
+                    InsertFactura(factura);
+                    /*
                     _db.facturas.Add(factura);
 
                     _db.SaveChanges();
+                    */
                 }
 
             }
@@ -2706,13 +2785,18 @@ namespace Ppgz.Services
                     EstatusOriginal = "P",
                     FechaPortal = fecha,
                     RFCReceptor = RFCReceptor ?? string.Empty,
-                    TipoFactura = "Mercaderia"
+                    TipoFactura = "Mercaderia",
+                    MetodoPago = MetodoPago,
+                    formapago = FormaPago
 
                 };
 
+                InsertFactura(factura);
+                /*
                 _db.facturas.Add(factura);
 
                 _db.SaveChanges();
+                */
             }
 
         }
@@ -3153,6 +3237,21 @@ WHERE f.Fecha >='" + fechaInicio + "' AND Fecha <= '" + fechaFin + "';";
                 throw e;
             }
             return regreso;
+        }
+
+        public void InsertFactura(factura objfactura)
+        {
+            string insert= @"INSERT INTO facturas (
+proveedor_id, Uuid, Serie, Folio, Fecha, Total, XmlRuta, PdfRuta, Estatus, Comentario, NumeroGenerado, Procesado, 
+numeroProveedor, FechaPortal, EstatusOriginal, RFCReceptor, TipoFactura, MetodoPago, formapago)
+VALUES ("+ objfactura.proveedor_id + ",(SELECT uuid()),'" + objfactura.Serie + "','" + objfactura.Folio + @"',
+'"+objfactura.Fecha.ToString("yyyy-MM-dd HH:mm:ss") +@"',
+"+ objfactura.Total.ToString() + ",'" + objfactura.XmlRuta + "','" + objfactura.PdfRuta+"','"+objfactura.Estatus+@"',
+'"+ objfactura.Comentario + "','"+objfactura.NumeroGenerado + "'," +objfactura.Procesado.ToString() +@",
+'"+ objfactura.numeroProveedor+"',now(),'"+objfactura.EstatusOriginal +"','" + objfactura.RFCReceptor+@"',
+'"+ objfactura.TipoFactura + "','" + objfactura.MetodoPago + "','" + objfactura.formapago+"');";
+
+            Db.Insert(insert, new List<MySql.Data.MySqlClient.MySqlParameter>());
         }
     }
 }
